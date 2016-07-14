@@ -302,7 +302,7 @@ public class SRU extends BaseApi implements OpacApi {
     }
 
     @Override
-    public List<SearchField> getSearchFields() throws OpacErrorException,
+    public List<SearchField> parseSearchFields() throws OpacErrorException,
             NotReachableException {
         List<SearchField> searchFields = new ArrayList<>();
         Set<String> fieldsCompat = searchQueries.keySet();

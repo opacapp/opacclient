@@ -129,7 +129,7 @@ public class Bibliotheca extends BaseApi {
     protected String branch_inputfield = "zstauswahl";
 
     @Override
-    public List<SearchField> getSearchFields() throws IOException,
+    public List<SearchField> parseSearchFields() throws IOException,
             JSONException {
         if (!initialised) {
             start();

@@ -8,7 +8,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-import java.util.ListIterator;
 import java.util.Map;
 import java.util.Set;
 
@@ -231,7 +230,7 @@ public class TestApi extends BaseApi {
     }
 
     @Override
-    public List<SearchField> getSearchFields()
+    public List<SearchField> parseSearchFields()
             throws IOException, OpacErrorException, JSONException {
         List<SearchField> fields = new ArrayList<>();
         fields.add(new TextSearchField("free", "Freie Suche", false, false, "Freie Suche", true,

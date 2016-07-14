@@ -632,7 +632,7 @@ public class Open extends BaseApi implements OpacApi {
     }
 
     @Override
-    public List<SearchField> getSearchFields()
+    public List<SearchField> parseSearchFields()
             throws IOException, OpacErrorException, JSONException {
         String url =
                 opac_url + "/" + data.getJSONObject("urls").getString("advanced_search") +

@@ -692,7 +692,7 @@ public abstract class Pica extends BaseApi implements OpacApi {
     }
 
     @Override
-    public List<SearchField> getSearchFields() throws IOException, JSONException {
+    public List<SearchField> parseSearchFields() throws IOException, JSONException {
         if (!initialised) {
             start();
         }

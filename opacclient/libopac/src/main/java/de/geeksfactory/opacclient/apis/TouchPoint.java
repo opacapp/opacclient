@@ -163,7 +163,7 @@ public class TouchPoint extends BaseApi implements OpacApi {
     protected Account logged_in_as;
     protected String ENCODING = "UTF-8";
 
-    public List<SearchField> getSearchFields() throws IOException,
+    public List<SearchField> parseSearchFields() throws IOException,
             JSONException {
         if (!initialised) {
             start();

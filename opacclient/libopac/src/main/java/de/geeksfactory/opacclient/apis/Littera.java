@@ -21,7 +21,6 @@
  */
 package de.geeksfactory.opacclient.apis;
 
-import de.geeksfactory.opacclient.networking.HttpClientFactory;
 import org.apache.http.client.utils.URIBuilder;
 import org.joda.time.LocalDate;
 import org.joda.time.format.DateTimeFormat;
@@ -47,6 +46,7 @@ import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import de.geeksfactory.opacclient.networking.HttpClientFactory;
 import de.geeksfactory.opacclient.objects.Copy;
 import de.geeksfactory.opacclient.objects.Detail;
 import de.geeksfactory.opacclient.objects.DetailledItem;
@@ -287,7 +287,7 @@ public class Littera extends SearchOnlyApi {
     }
 
     @Override
-    public List<SearchField> getSearchFields()
+    public List<SearchField> parseSearchFields()
             throws IOException, OpacErrorException, JSONException {
         start();
         final List<SearchField> fields = new ArrayList<>();

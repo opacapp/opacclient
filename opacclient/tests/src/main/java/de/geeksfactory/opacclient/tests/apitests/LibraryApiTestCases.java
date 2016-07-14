@@ -28,7 +28,7 @@ import de.geeksfactory.opacclient.objects.DetailledItem;
 import de.geeksfactory.opacclient.objects.Library;
 import de.geeksfactory.opacclient.objects.SearchRequestResult;
 import de.geeksfactory.opacclient.objects.SearchResult;
-import de.geeksfactory.opacclient.searchfields.JavaMeaningDetector;
+import de.geeksfactory.opacclient.searchfields.MeaningDetectorImpl;
 import de.geeksfactory.opacclient.searchfields.SearchField;
 import de.geeksfactory.opacclient.searchfields.SearchField.Meaning;
 import de.geeksfactory.opacclient.searchfields.SearchQuery;
@@ -80,7 +80,7 @@ public class LibraryApiTestCases {
         Security.addProvider(new BouncyCastleProvider());
         api = OpacApiFactory.create(library, "OpacApp/Test");
         fields = api.getSearchFields();
-        JavaMeaningDetector detector = new JavaMeaningDetector(library);
+        MeaningDetectorImpl detector = new MeaningDetectorImpl(library);
         for (int i = 0; i < fields.size(); i++) {
             fields.set(i, detector.detectMeaning(fields.get(i)));
         }

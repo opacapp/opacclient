@@ -25,7 +25,6 @@ import org.json.JSONException;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -38,8 +37,6 @@ import de.geeksfactory.opacclient.networking.SSLSecurityException;
 import de.geeksfactory.opacclient.objects.Account;
 import de.geeksfactory.opacclient.objects.SearchRequestResult;
 import de.geeksfactory.opacclient.objects.SearchResult;
-import de.geeksfactory.opacclient.searchfields.AndroidMeaningDetector;
-import de.geeksfactory.opacclient.searchfields.MeaningDetector;
 import de.geeksfactory.opacclient.searchfields.SearchField;
 import de.geeksfactory.opacclient.searchfields.SearchField.Meaning;
 import de.geeksfactory.opacclient.searchfields.SearchQuery;
@@ -529,15 +526,6 @@ public class SearchResultListFragment extends CustomListFragment {
                     if (fields.size() == 0) {
                         throw new OpacErrorException(
                                 getString(R.string.no_fields_found));
-                    }
-                    if (app.getApi().shouldUseMeaningDetector()) {
-                        MeaningDetector md = new AndroidMeaningDetector(
-                                getActivity(), app.getLibrary());
-                        for (int i = 0; i < fields.size(); i++) {
-                            fields.set(i, md.detectMeaning(fields.get(i)));
-                        }
-                        Collections.sort(fields,
-                                new SearchField.OrderComparator());
                     }
                     return fields;
                 } catch (JSONException | IOException e) {

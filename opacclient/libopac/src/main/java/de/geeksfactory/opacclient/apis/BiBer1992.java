@@ -119,7 +119,7 @@ public class BiBer1992 extends BaseApi {
      * <option selected value="ZWST0">Alle Bibliotheksorte</option> </select>
      */
     @Override
-    public List<SearchField> getSearchFields() throws IOException {
+    public List<SearchField> parseSearchFields() throws IOException {
         List<SearchField> fields = new ArrayList<>();
 
         HttpGet httpget;

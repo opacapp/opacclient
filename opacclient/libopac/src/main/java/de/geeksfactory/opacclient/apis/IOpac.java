@@ -923,7 +923,7 @@ public class IOpac extends BaseApi implements OpacApi {
     }
 
     @Override
-    public List<SearchField> getSearchFields() throws IOException {
+    public List<SearchField> parseSearchFields() throws IOException {
         List<SearchField> fields = new ArrayList<>();
 
         // Extract all search fields, except media types
