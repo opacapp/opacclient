@@ -37,7 +37,6 @@ import de.geeksfactory.opacclient.objects.DetailledItem;
 import de.geeksfactory.opacclient.objects.Filter;
 import de.geeksfactory.opacclient.objects.Library;
 import de.geeksfactory.opacclient.objects.SearchRequestResult;
-import de.geeksfactory.opacclient.searchfields.MeaningDetector;
 import de.geeksfactory.opacclient.searchfields.SearchField;
 import de.geeksfactory.opacclient.searchfields.SearchQuery;
 
@@ -377,12 +376,6 @@ public interface OpacApi {
      * @return combination (bitwise OR) of <code>SUPPORT_FLAG_*</code> constants
      */
     public int getSupportFlags();
-
-    /**
-     * Returns whether the {@link MeaningDetector} should be used to automatically detect the
-     * meanings of this library's search fields
-     */
-    public boolean shouldUseMeaningDetector();
 
     /**
      * Sets the StringProvider to use for error messages etc.

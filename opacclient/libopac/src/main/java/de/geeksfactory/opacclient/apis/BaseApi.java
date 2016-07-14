@@ -640,8 +640,7 @@ public abstract class BaseApi implements OpacApi {
         return "ISO-8859-1";
     }
 
-    @Override
-    public boolean shouldUseMeaningDetector() {
+    protected boolean shouldUseMeaningDetector() {
         return true;
     }
 
