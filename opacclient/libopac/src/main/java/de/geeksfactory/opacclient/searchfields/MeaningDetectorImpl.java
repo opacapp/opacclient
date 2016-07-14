@@ -5,12 +5,9 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.net.URL;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -32,7 +29,7 @@ public class MeaningDetectorImpl implements MeaningDetector {
         classLoader = getClass().getClassLoader();
 
         if (lib != null) {
-            File file;
+            InputStream file;
             if ((file = getFile("general.json")) != null) // General
             {
                 loadFile(file);
@@ -48,28 +45,25 @@ public class MeaningDetectorImpl implements MeaningDetector {
         }
     }
 
-    private File getFile(String s) {
-        URL res = classLoader.getResource(DIR + "/" + s);
-        return res != null ? new File(res.getFile()) : null;
+    private InputStream getFile(String s) {
+        return classLoader.getResourceAsStream(DIR + "/" + s);
     }
 
-    private static String readFile(File file) throws IOException {
-        InputStream fis = new FileInputStream(file);
-
-        BufferedReader reader = new BufferedReader(new InputStreamReader(fis, "utf-8"));
+    private static String readFile(InputStream is) throws IOException {
+        BufferedReader reader = new BufferedReader(new InputStreamReader(is, "utf-8"));
         String line;
         StringBuilder builder = new StringBuilder();
         while ((line = reader.readLine()) != null) {
             builder.append(line);
         }
 
-        fis.close();
+        is.close();
         return builder.toString();
     }
 
-    private void loadFile(File file) {
+    private void loadFile(InputStream is) {
         try {
-            String jsonStr = readFile(file);
+            String jsonStr = readFile(is);
             JSONObject json = new JSONObject(jsonStr);
 
             // Detect layout of the JSON entries. Can be "field name":

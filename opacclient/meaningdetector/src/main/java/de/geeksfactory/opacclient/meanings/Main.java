@@ -32,6 +32,9 @@ import de.geeksfactory.opacclient.utils.JsonKeyIterator;
 
 public class Main {
 
+    public static final String BIBS_DIR = "../opacapp/src/main/assets/bibs/";
+    public static final String MEANINGS_DIR = "../libopac/src/main/resources/meanings/";
+
     public static void main(String[] args) throws IOException, JSONException {
         Security.addProvider(new BouncyCastleProvider());
         Collection<String[]> libraries = libraries();
@@ -45,8 +48,7 @@ public class Main {
             try {
                 library = Library.fromJSON(
                         libraryName,
-                        new JSONObject(readFile("opacapp/src/main/assets/bibs/"
-                                + libraryName + ".json")));
+                        new JSONObject(readFile(BIBS_DIR + libraryName + ".json")));
                 Future<Map<String, List<SearchField>>> future = service
                         .submit(new GetSearchFieldsCallable(library));
                 tasks.add(new TaskInfo(library, future));
@@ -125,7 +127,7 @@ public class Main {
 
     private static Collection<String[]> libraries() {
         List<String[]> libraries = new ArrayList<>();
-        for (String file : new File("opacapp/src/main/assets/bibs/").list()) {
+        for (String file : new File(BIBS_DIR).list()) {
             libraries.add(new String[]{file.replace(".json", "")});
         }
         return libraries;
@@ -155,7 +157,7 @@ public class Main {
 
     private static void addIgnoredField(String name) throws IOException,
             JSONException {
-        String filename = "opacapp/src/main/assets/meanings/ignore.json";
+        String filename = MEANINGS_DIR + "ignore.json";
         JSONArray json = new JSONArray(readFile(filename));
         json.put(name);
         writeFile(filename, json.toString(4));
@@ -163,7 +165,7 @@ public class Main {
 
     private static void saveMeaning(String name, Meaning meaning)
             throws IOException, JSONException {
-        String filename = "opacapp/src/main/assets/meanings/general.json";
+        String filename = MEANINGS_DIR + "general.json";
         JSONObject json = new JSONObject(readFile(filename));
 
         // Detect layout of the JSON entries. Can be "field name":
