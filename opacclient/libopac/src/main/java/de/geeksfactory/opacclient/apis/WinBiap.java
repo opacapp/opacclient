@@ -849,7 +849,7 @@ public class WinBiap extends BaseApi implements OpacApi {
     }
 
     @Override
-    public List<SearchField> getSearchFields() throws IOException {
+    public List<SearchField> parseSearchFields() throws IOException {
         // extract branches and categories
         String html = httpGet(opac_url + "/search.aspx", getDefaultEncoding());
         Document doc = Jsoup.parse(html);

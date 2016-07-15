@@ -17,7 +17,7 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
 @RunWith(Parameterized.class)
-public class IOpacAccountTest extends BaseAccountTest {
+public class IOpacAccountTest extends BaseHtmlTest {
     private String file;
 
     public IOpacAccountTest(String file) {

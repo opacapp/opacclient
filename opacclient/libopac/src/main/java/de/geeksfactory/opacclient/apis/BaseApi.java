@@ -35,6 +35,7 @@ import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.protocol.BasicHttpContext;
 import org.apache.http.protocol.HttpContext;
 import org.apache.http.util.EntityUtils;
+import org.json.JSONException;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -46,6 +47,7 @@ import java.net.URISyntaxException;
 import java.net.URLDecoder;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -60,6 +62,9 @@ import de.geeksfactory.opacclient.networking.SSLSecurityException;
 import de.geeksfactory.opacclient.objects.CoverHolder;
 import de.geeksfactory.opacclient.objects.Library;
 import de.geeksfactory.opacclient.objects.SearchRequestResult;
+import de.geeksfactory.opacclient.searchfields.MeaningDetector;
+import de.geeksfactory.opacclient.searchfields.MeaningDetectorImpl;
+import de.geeksfactory.opacclient.searchfields.SearchField;
 import de.geeksfactory.opacclient.searchfields.SearchQuery;
 
 /**
@@ -635,8 +640,7 @@ public abstract class BaseApi implements OpacApi {
         return "ISO-8859-1";
     }
 
-    @Override
-    public boolean shouldUseMeaningDetector() {
+    protected boolean shouldUseMeaningDetector() {
         return true;
     }
 
@@ -650,6 +654,23 @@ public abstract class BaseApi implements OpacApi {
     public void setStringProvider(StringProvider stringProvider) {
         this.stringProvider = stringProvider;
     }
+
+    @Override
+    public List<SearchField> getSearchFields()
+            throws JSONException, OpacErrorException, IOException {
+        List<SearchField> fields = parseSearchFields();
+        if (shouldUseMeaningDetector()) {
+            MeaningDetector md = new MeaningDetectorImpl(library);
+            for (int i = 0; i < fields.size(); i++) {
+                fields.set(i, md.detectMeaning(fields.get(i)));
+            }
+            Collections.sort(fields, new SearchField.OrderComparator());
+        }
+        return fields;
+    }
+
+    protected abstract List<SearchField> parseSearchFields() throws IOException, OpacErrorException,
+            JSONException;
 
     public static String buildHttpGetParams(List<NameValuePair> params)
             throws UnsupportedEncodingException {

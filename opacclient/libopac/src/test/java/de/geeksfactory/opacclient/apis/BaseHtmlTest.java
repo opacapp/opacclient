@@ -11,7 +11,7 @@ import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
-public class BaseAccountTest {
+public class BaseHtmlTest {
     /**
      * Reads content from an InputStream into a string
      *
@@ -53,10 +53,20 @@ public class BaseAccountTest {
         }
     }
 
-
     protected static void assertContainsData(Map<String, String> item, String key) {
         assertTrue(item.containsKey(key));
         assertNotNull(item.get(key));
         assertNotEquals(item.get(key).trim(), "");
+    }
+
+    protected static void assertContainsData(String text) {
+        assertNotNull(text);
+        assertNotEquals(text, "");
+    }
+
+    protected static void assertNullOrNotEmpty(String text) {
+        if (text != null) {
+            assertNotEquals(text, "");
+        }
     }
 }

@@ -21,7 +21,7 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
 @RunWith(Parameterized.class)
-public class BibliothecaAccountTest extends BaseAccountTest {
+public class BibliothecaAccountTest extends BaseHtmlTest {
     private String file;
 
     public BibliothecaAccountTest(String file) {
@@ -132,7 +132,7 @@ public class BibliothecaAccountTest extends BaseAccountTest {
     @Test
     public void testParseMediaList()
             throws OpacApi.OpacErrorException, JSONException, NotReachableException {
-        String html = readResource("/bibliotheca/" + file);
+        String html = readResource("/bibliotheca/account/" + file);
         if (html == null) return; // we may not have all files for all libraries
         AccountData data = Bibliotheca.parse_account(new Account(), Jsoup.parse(html),
                 getData(file));
@@ -148,7 +148,7 @@ public class BibliothecaAccountTest extends BaseAccountTest {
     @Test
     public void testParseReservationList()
             throws OpacApi.OpacErrorException, JSONException, NotReachableException {
-        String html = readResource("/bibliotheca/" + file);
+        String html = readResource("/bibliotheca/account/" + file);
         if (html == null) return; // we may not have all files for all libraries
         if (file.equals("gladbeck.html") || file.equals("halle.html") ||
                 file.equals("albstadt.html") || file.equals("bernau.html"))

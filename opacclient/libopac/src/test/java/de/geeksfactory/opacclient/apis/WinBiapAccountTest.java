@@ -18,7 +18,7 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
 @RunWith(Parameterized.class)
-public class WinBiapAccountTest extends BaseAccountTest {
+public class WinBiapAccountTest extends BaseHtmlTest {
     private String file;
 
     public WinBiapAccountTest(String file) {

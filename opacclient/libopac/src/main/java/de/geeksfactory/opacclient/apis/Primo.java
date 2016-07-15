@@ -416,7 +416,7 @@ public class Primo extends BaseApi {
     }
 
     @Override
-    public List<SearchField> getSearchFields()
+    public List<SearchField> parseSearchFields()
             throws IOException, OpacErrorException, JSONException {
         start();
         String html =

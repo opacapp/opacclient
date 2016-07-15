@@ -8,7 +8,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 
-public class ZonesTest extends BaseAccountTest {
+public class ZonesTest extends BaseHtmlTest {
     private static final String BASE_URL = "https://katalog.stbib-koeln.de/alswww2.dll/";
 
     @Test

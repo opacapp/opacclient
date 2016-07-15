@@ -16,7 +16,7 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
 @RunWith(Parameterized.class)
-public class ZonesAccountTest extends BaseAccountTest {
+public class ZonesAccountTest extends BaseHtmlTest {
     private String file;
 
     public ZonesAccountTest(String file) {

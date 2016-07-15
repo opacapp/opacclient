@@ -4,11 +4,10 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.File;
+import java.io.BufferedReader;
 import java.io.IOException;
-import java.nio.ByteBuffer;
-import java.nio.charset.Charset;
-import java.nio.file.Files;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -19,50 +18,52 @@ import de.geeksfactory.opacclient.objects.Library;
 import de.geeksfactory.opacclient.searchfields.SearchField.Meaning;
 import de.geeksfactory.opacclient.utils.JsonKeyIterator;
 
-public class JavaMeaningDetector implements MeaningDetector {
+public class MeaningDetectorImpl implements MeaningDetector {
 
-    private final String assets_fieldsdir;
+    private static final String DIR = "meanings";
     private Map<String, String> meanings;
+    private ClassLoader classLoader;
 
-    public JavaMeaningDetector(Library lib) {
-        this(lib, "opacapp/src/main/assets/meanings");
-    }
-
-    public JavaMeaningDetector(Library lib, String assets_fieldsdir) {
+    public MeaningDetectorImpl(Library lib) {
         meanings = new HashMap<>();
-        this.assets_fieldsdir = assets_fieldsdir;
+        classLoader = getClass().getClassLoader();
+
         if (lib != null) {
-            File file;
-            if ((file = new File(assets_fieldsdir, "general.json")).exists()) // General
+            InputStream file;
+            if ((file = getFile("general.json")) != null) // General
             {
                 loadFile(file);
             }
-            if ((file = new File(assets_fieldsdir, lib.getApi() + ".json")).exists()) // Api
-            // specific
+            if ((file = getFile(lib.getApi() + ".json")) != null) // Api specific
             {
                 loadFile(file);
             }
-            if ((file = new File(assets_fieldsdir, lib.getIdent() + ".json")).exists()) // Library
-            // specific
+            if ((file = getFile(lib.getIdent() + ".json")) != null) // Library specific
             {
                 loadFile(file);
             }
         }
     }
 
-    private static String readFile(File file) throws IOException {
-        byte[] encoded = Files.readAllBytes(file.toPath());
-        return Charset.forName("UTF-8").decode(ByteBuffer.wrap(encoded))
-                      .toString();
+    private InputStream getFile(String s) {
+        return classLoader.getResourceAsStream(DIR + "/" + s);
     }
 
-    private static void writeFile(File file, String data) throws IOException {
-        Files.write(file.toPath(), data.getBytes("UTF-8"));
+    private static String readFile(InputStream is) throws IOException {
+        BufferedReader reader = new BufferedReader(new InputStreamReader(is, "utf-8"));
+        String line;
+        StringBuilder builder = new StringBuilder();
+        while ((line = reader.readLine()) != null) {
+            builder.append(line);
+        }
+
+        is.close();
+        return builder.toString();
     }
 
-    private void loadFile(File file) {
+    private void loadFile(InputStream is) {
         try {
-            String jsonStr = readFile(file);
+            String jsonStr = readFile(is);
             JSONObject json = new JSONObject(jsonStr);
 
             // Detect layout of the JSON entries. Can be "field name":
@@ -122,6 +123,16 @@ public class JavaMeaningDetector implements MeaningDetector {
         return field;
     }
 
+    /**
+     * Adds a meaning to this MeaningDetector. This will not be persisted.
+     *
+     * @param name    the name of the field
+     * @param meaning the meaning to assign
+     */
+    public void addMeaning(String name, Meaning meaning) {
+        meanings.put(name, meaning.toString());
+    }
+
     private SearchField processMeaning(SearchField field, String meaningName) {
         Meaning meaning = Meaning.valueOf(meaningName);
         if (field instanceof TextSearchField && meaning == Meaning.FREE) {
@@ -143,46 +154,11 @@ public class JavaMeaningDetector implements MeaningDetector {
 
     public Set<String> getIgnoredFields() throws IOException,
             JSONException {
-        JSONArray json = new JSONArray(readFile(new File(assets_fieldsdir,
-                "ignore.json")));
+        JSONArray json = new JSONArray(readFile(getFile("ignore.json")));
         Set<String> ignored = new HashSet<>();
         for (int i = 0; i < json.length(); i++) {
             ignored.add(json.getString(i));
         }
         return ignored;
-    }
-
-    public void addMeaning(String name, Meaning meaning)
-            throws IOException, JSONException {
-        File file = new File(assets_fieldsdir, "general.json");
-        String jsonStr = readFile(file);
-        JSONObject json = new JSONObject(jsonStr);
-
-        // Detect layout of the JSON entries. Can be "field name":
-        // "meaning" or "meaning": [ "field name", "field name", ... ]
-        Iterator<String> iter = new JsonKeyIterator(json);
-        if (!iter.hasNext()) {
-            return; // No entries
-        }
-
-        String firstKey = iter.next();
-        Object firstValue = json.get(firstKey);
-        boolean arrayLayout = firstValue instanceof JSONArray;
-        if (arrayLayout) {
-            json.getJSONArray(meaning.toString()).put(name);
-        } else {
-            json.put(name, meaning.toString());
-        }
-        writeFile(file, json.toString(4));
-
-        meanings.put(name, meaning.toString());
-    }
-
-    public void addIgnoredField(String name) throws IOException,
-            JSONException {
-        File file = new File(assets_fieldsdir, "ignore.json");
-        JSONArray json = new JSONArray(readFile(file));
-        json.put(name);
-        writeFile(file, json.toString(4));
     }
 }

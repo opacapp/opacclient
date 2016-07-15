@@ -111,7 +111,7 @@ public class Zones extends BaseApi {
     private String accountobj;
 
     @Override
-    public List<SearchField> getSearchFields() throws
+    public List<SearchField> parseSearchFields() throws
             IOException {
         if (!initialised) start();
         List<SearchField> fields = new ArrayList<>();
