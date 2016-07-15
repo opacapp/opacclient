@@ -1,6 +1,7 @@
 package de.geeksfactory.opacclient.reporting;
 
 import org.joda.time.DateTime;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 /**
@@ -42,5 +43,20 @@ public class Report {
 
     public JSONObject getData() {
         return data;
+    }
+
+    @Override
+    public String toString() {
+        try {
+            return "Report{" +
+                    "library='" + library + '\'' +
+                    ", api='" + api + '\'' +
+                    ", type='" + type + '\'' +
+                    ", date=" + date +
+                    ", data=" + data.toString(2) +
+                    '}';
+        } catch (JSONException e) {
+            return null;
+        }
     }
 }

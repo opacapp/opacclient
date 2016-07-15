@@ -68,6 +68,7 @@ import de.geeksfactory.opacclient.storage.AccountDataSource;
 import de.geeksfactory.opacclient.storage.StarContentProvider;
 import de.geeksfactory.opacclient.utils.DebugTools;
 import de.geeksfactory.opacclient.utils.ErrorReporter;
+import de.geeksfactory.opacclient.webservice.WebserviceReportHandler;
 
 @ReportsCrashes(mailTo = "info@opacapp.de",
         mode = org.acra.ReportingInteractionMode.NOTIFICATION,
@@ -195,7 +196,7 @@ public class OpacClient extends Application {
         currentLang = getResources().getConfiguration().locale.getLanguage();
         return OpacApiFactory
                 .create(lib, new AndroidStringProvider(), new AndroidHttpClientFactory(),
-                        currentLang);
+                        currentLang, new WebserviceReportHandler());
     }
 
     private OpacApi initApi(Library lib) {
