@@ -224,6 +224,20 @@ public class BiBer1992 extends BaseApi {
             fields.add(brDropdown);
         }
 
+        Elements sort_opts = doc.select("form select[name=SORTX] option");
+        if (sort_opts.size() > 0) {
+            DropdownSearchField sortDropdown = new DropdownSearchField();
+            sortDropdown.setId(sort_opts.get(0).parent().attr("name"));
+            sortDropdown.setDisplayName(sort_opts.get(0).parent().parent()
+                                                 .previousElementSibling().text()
+                                                 .replace("\u00a0", "")
+                                                 .replace("?", "").trim());
+            for (Element opt : sort_opts) {
+                sortDropdown.addDropdownValue(opt.val(), opt.text());
+            }
+            fields.add(sortDropdown);
+        }
+
         return fields;
     }
 
