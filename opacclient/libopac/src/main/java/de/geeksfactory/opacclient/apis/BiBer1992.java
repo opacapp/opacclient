@@ -475,6 +475,14 @@ public class BiBer1992 extends BaseApi {
             // needed for Friedrichshafen: "Warenkorb", "Vormerkung"
             // Herford: "Medienkorb"
             desc = desc.replaceAll("<a .*?</a>", "");
+            // remove newlines (useless in HTML)
+            desc = desc.replaceAll("\\n", "");
+            // remove hidden divs ("Titel übernommen!" in Wuerzburg)
+            desc = desc.replaceAll("<div[^>]*style=\"display:none\">.*</div>", "");
+            // remove all invalid HTML tags
+            desc = desc.replaceAll("</?(tr|td|font|table|tbody|div)[^>]*>", "");
+            // replace multiple line breaks by one
+            desc = desc.replaceAll("(<br( /)?>\\s*)+", "<br>");
             sr.setInnerhtml(desc);
 
             if (tr.select("font.p04x09b").size() > 0
