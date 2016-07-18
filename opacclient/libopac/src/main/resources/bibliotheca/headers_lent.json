@@ -1,0 +1,14 @@
+{
+  "Verfasser": "author",
+  "Titel": "title",
+  "Frist": "returndate",
+  "Buchungsnummer": "barcode",
+  "\u00a0": "prolongurl",
+  "Zweigstelle": "homebranch",
+  "Rückgabe": "returndate",
+  "Medienart": "format",
+  "Status": "status",
+  "Barcode": "barcode",
+  "Mediengruppe": "format",
+  "Ausleihstatus": "status"
+}

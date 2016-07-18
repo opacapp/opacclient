@@ -1,0 +1,9 @@
+{
+  "Verfasser": "author",
+  "Titel": "title",
+  "Mediengruppe": "format",
+  "Medienart": "format",
+  "Bereit": "availability",
+  "\u00a0": "cancelurl",
+  "Zweigstelle": "branch"
+}
