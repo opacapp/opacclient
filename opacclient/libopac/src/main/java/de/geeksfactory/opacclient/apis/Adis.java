@@ -585,7 +585,11 @@ public class Adis extends BaseApi implements OpacApi {
         DetailledItem res = new DetailledItem();
 
         if (doc.select("#R001 img").size() == 1) {
-            res.setCover(doc.select("#R001 img").first().absUrl("src"));
+            String cover_url = doc.select("#R001 img").first().absUrl("src");
+            if (!cover_url.endsWith("erne.gif")) {
+                // If there is no cover, the first image usually is the "n Stars" rating badge
+                res.setCover(cover_url);
+            }
         }
 
         for (Element tr : doc.select("#R06 .aDISListe table tbody tr")) {
