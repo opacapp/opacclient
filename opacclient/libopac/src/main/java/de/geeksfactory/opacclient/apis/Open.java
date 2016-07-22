@@ -239,7 +239,7 @@ public class Open extends BaseApi implements OpacApi {
                             doc.select("select[name$=" + number + "SearchField]").first();
                     Element searchValue =
                             doc.select("input[name$=" + number + "SearchValue]").first();
-                    searchField.val(field.getId());
+                    setSelectValue(searchField, field.getId());
                     searchValue.val(query.getValue());
                 } else {
                     Element input = doc.select("input[name=" + field.getId() + "]").first();
@@ -248,13 +248,7 @@ public class Open extends BaseApi implements OpacApi {
             } else if (query.getSearchField() instanceof DropdownSearchField) {
                 DropdownSearchField field = (DropdownSearchField) query.getSearchField();
                 Element select = doc.select("select[name=" + field.getId() + "]").first();
-                for (Element opt : select.select("option")) {
-                    if (query.getValue().equals(opt.val())) {
-                        opt.attr("selected", "selected");
-                    } else {
-                        opt.removeAttr("selected");
-                    }
-                }
+                setSelectValue(select, query.getValue());
             } else if (query.getSearchField() instanceof CheckboxSearchField) {
                 CheckboxSearchField field = (CheckboxSearchField) query.getSearchField();
                 Element input = doc.select("input[name=" + field.getId() + "]").first();
@@ -271,6 +265,16 @@ public class Open extends BaseApi implements OpacApi {
         Document doc2 = Jsoup.parse(html);
         doc2.setBaseUri(postUrl);
         return parse_search(doc2, 0);
+    }
+
+    protected void setSelectValue(Element select, String value) {
+        for (Element opt : select.select("option")) {
+            if (value.equals(opt.val())) {
+                opt.attr("selected", "selected");
+            } else {
+                opt.removeAttr("selected");
+            }
+        }
     }
 
     protected SearchRequestResult parse_search(Document doc, int page) throws OpacErrorException {
