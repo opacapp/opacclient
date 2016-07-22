@@ -247,8 +247,14 @@ public class Open extends BaseApi implements OpacApi {
                 }
             } else if (query.getSearchField() instanceof DropdownSearchField) {
                 DropdownSearchField field = (DropdownSearchField) query.getSearchField();
-                Element input = doc.select("select[name=" + field.getId() + "]").first();
-                input.val(query.getValue());
+                Element select = doc.select("select[name=" + field.getId() + "]").first();
+                for (Element opt : select.select("option")) {
+                    if (query.getValue().equals(opt.val())) {
+                        opt.attr("selected", "selected");
+                    } else {
+                        opt.removeAttr("selected");
+                    }
+                }
             } else if (query.getSearchField() instanceof CheckboxSearchField) {
                 CheckboxSearchField field = (CheckboxSearchField) query.getSearchField();
                 Element input = doc.select("input[name=" + field.getId() + "]").first();
