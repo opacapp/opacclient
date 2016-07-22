@@ -239,7 +239,7 @@ public class Open extends BaseApi implements OpacApi {
                             doc.select("select[name$=" + number + "SearchField]").first();
                     Element searchValue =
                             doc.select("input[name$=" + number + "SearchValue]").first();
-                    searchField.val(field.getId());
+                    setSelectValue(searchField, field.getId());
                     searchValue.val(query.getValue());
                 } else {
                     Element input = doc.select("input[name=" + field.getId() + "]").first();
@@ -247,8 +247,8 @@ public class Open extends BaseApi implements OpacApi {
                 }
             } else if (query.getSearchField() instanceof DropdownSearchField) {
                 DropdownSearchField field = (DropdownSearchField) query.getSearchField();
-                Element input = doc.select("select[name=" + field.getId() + "]").first();
-                input.val(query.getValue());
+                Element select = doc.select("select[name=" + field.getId() + "]").first();
+                setSelectValue(select, query.getValue());
             } else if (query.getSearchField() instanceof CheckboxSearchField) {
                 CheckboxSearchField field = (CheckboxSearchField) query.getSearchField();
                 Element input = doc.select("input[name=" + field.getId() + "]").first();
@@ -265,6 +265,16 @@ public class Open extends BaseApi implements OpacApi {
         Document doc2 = Jsoup.parse(html);
         doc2.setBaseUri(postUrl);
         return parse_search(doc2, 0);
+    }
+
+    protected void setSelectValue(Element select, String value) {
+        for (Element opt : select.select("option")) {
+            if (value.equals(opt.val())) {
+                opt.attr("selected", "selected");
+            } else {
+                opt.removeAttr("selected");
+            }
+        }
     }
 
     protected SearchRequestResult parse_search(Document doc, int page) throws OpacErrorException {
@@ -542,10 +552,11 @@ public class Open extends BaseApi implements OpacApi {
             item.addDetail(new Detail(name, value));
         }
         // Details
-        for (Element detail : doc
-                .select("div[id$=CatalogueDetailView] .spacingBottomSmall:has(span+span)")) {
+        String DETAIL_SELECTOR = "div[id$=CatalogueDetailView] .spacingBottomSmall:has(span+span)," +
+                "div[id$=CatalogueDetailView] .spacingBottomSmall:has(span+a)";
+        for (Element detail : doc.select(DETAIL_SELECTOR)) {
             String name = detail.select("span").get(0).text().replace(": ", "");
-            String value = detail.select("span").get(1).text();
+            String value = detail.select("span, a").get(1).text();
             item.addDetail(new Detail(name, value));
         }
 

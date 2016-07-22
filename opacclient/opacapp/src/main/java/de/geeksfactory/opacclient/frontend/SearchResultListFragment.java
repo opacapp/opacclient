@@ -470,21 +470,6 @@ public class SearchResultListFragment extends CustomListFragment {
             if (result == null) {
 
                 if (exception instanceof OpacErrorException) {
-                    if (exception.getMessage().equals("is_a_redirect")
-                            && getActivity() != null) {
-                        // Some libraries (SISIS) do not show a result list if
-                        // only one result
-                        // is found but instead directly show the result
-                        // details.
-                        Intent intent = new Intent(getActivity(),
-                                SearchResultDetailActivity.class);
-                        intent.putExtra(SearchResultDetailFragment.ARG_ITEM_ID,
-                                (String) null);
-                        startActivity(intent);
-                        getActivity().finish();
-                        return;
-                    }
-
                     showConnectivityError(exception.getMessage());
                 } else if (exception instanceof SSLSecurityException) {
                     if (getActivity() != null) {

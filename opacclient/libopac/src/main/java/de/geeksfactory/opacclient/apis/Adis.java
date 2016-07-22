@@ -365,11 +365,41 @@ public class Adis extends BaseApi implements OpacApi {
         Document docresults = htmlPost(opac_url + ";jsessionid=" + s_sid,
                 nvpairs);
 
-        return parse_search(docresults, 1);
+        return parse_search_wrapped(docresults, 1);
+    }
+
+    public class SingleResultFound extends Exception {
+    }
+
+    protected SearchRequestResult parse_search_wrapped(Document doc, int page) throws IOException, OpacErrorException {
+        try {
+            return parse_search(doc, page);
+        } catch (SingleResultFound e) {
+            // Zurück zur Trefferliste
+            List<NameValuePair> nvpairs = new ArrayList<>();
+            for (Element input : doc.select("input, select")) {
+                if (!"image".equals(input.attr("type"))
+                        && !"submit".equals(input.attr("type"))
+                        && !"".equals(input.attr("name"))) {
+                    nvpairs.add(new BasicNameValuePair(input.attr("name"), input
+                            .attr("value")));
+                }
+            }
+            nvpairs.add(new BasicNameValuePair("$Toolbar_1.x", "1"));
+            nvpairs.add(new BasicNameValuePair("$Toolbar_1.y", "1"));
+
+            doc  = htmlPost(opac_url + ";jsessionid=" + s_sid, nvpairs);
+
+            try {
+                return parse_search(doc, page);
+            } catch (SingleResultFound e1) {
+                throw new NotReachableException();
+            }
+        }
     }
 
     private SearchRequestResult parse_search(Document doc, int page)
-            throws OpacErrorException {
+            throws OpacErrorException, SingleResultFound {
 
         if (doc.select(".message h1").size() > 0
                 && doc.select("#right #R06").size() == 0) {
@@ -390,14 +420,15 @@ public class Adis extends BaseApi implements OpacApi {
                                                 .trim());
             if (matcher.matches()) {
                 total_result_count = Integer.parseInt(matcher.group(1));
+            } else if (doc.select("#right #R06").text().trim().endsWith("Treffer: 1")) {
+                total_result_count = 1;
             }
         }
 
         if (doc.select("#right #R03").size() == 1
                 && doc.select("#right #R03").text().trim()
                       .endsWith("Treffer: 1")) {
-            s_reusedoc = doc;
-            throw new OpacErrorException("is_a_redirect");
+            throw new SingleResultFound();
         }
 
         Pattern patId = Pattern
@@ -405,17 +436,19 @@ public class Adis extends BaseApi implements OpacApi {
 
         int nr = 1;
 
-        String selector_row, selector_link, selector_img, selector_num;
+        String selector_row, selector_link, selector_img, selector_num, selector_text;
         if (doc.select("table.rTable_table tbody").size() > 0) {
             selector_row = "table.rTable_table tbody tr";
             selector_link = ".rTable_td_text a";
+            selector_text = ".rList_name";
             selector_img = ".rTable_td_img img, .rTable_td_text img";
             selector_num = "tr td:first-child";
         } else {
-            // Berlin
+            // New version, e.g. Berlin
             selector_row = ".rList li.rList_li_even, .rList li.rList_li_odd";
             selector_link = ".rList_titel a";
-            selector_img = ".rlist_icon img, .rList_titel img";
+            selector_text = ".rList_name";
+            selector_img = ".rlist_icon img, .rList_titel img, .rList_medium .icon, .rList_availability .icon, .rList_img img";
             selector_num = ".rList_num";
         }
         for (Element tr : doc.select(selector_row)) {
@@ -423,7 +456,17 @@ public class Adis extends BaseApi implements OpacApi {
 
             Element innerele = tr.select(selector_link).first();
             innerele.select("img").remove();
-            res.setInnerhtml(innerele.html());
+            String descr = innerele.html();
+
+            for (Element n : tr.select(selector_text)) {
+                String t = n.text().replace("\u00a0", " ").trim();
+                if (t.length() > 0) {
+                    descr += "<br />" + t.trim();
+                }
+            }
+
+            res.setInnerhtml(descr);
+
             try {
                 res.setNr(Integer.parseInt(tr.select(selector_num).text().trim()));
             } catch (NumberFormatException e) {
@@ -437,6 +480,7 @@ public class Adis extends BaseApi implements OpacApi {
 
             for (Element img : tr.select(selector_img)) {
                 String ttext = img.attr("title");
+                String src = img.attr("abs:src");
                 if (types.containsKey(ttext)) {
                     res.setType(types.get(ttext));
                 } else if (ttext.contains("+")
@@ -520,7 +564,7 @@ public class Adis extends BaseApi implements OpacApi {
 
             Document docresults = htmlPost(opac_url + ";jsessionid=" + s_sid,
                     nvpairs);
-            res = parse_search(docresults, p);
+            res = parse_search_wrapped(docresults, p);
         }
         return res;
     }
@@ -569,7 +613,11 @@ public class Adis extends BaseApi implements OpacApi {
         DetailledItem res = new DetailledItem();
 
         if (doc.select("#R001 img").size() == 1) {
-            res.setCover(doc.select("#R001 img").first().absUrl("src"));
+            String cover_url = doc.select("#R001 img").first().absUrl("src");
+            if (!cover_url.endsWith("erne.gif")) {
+                // If there is no cover, the first image usually is the "n Stars" rating badge
+                res.setCover(cover_url);
+            }
         }
 
         for (Element tr : doc.select("#R06 .aDISListe table tbody tr")) {
@@ -664,11 +712,11 @@ public class Adis extends BaseApi implements OpacApi {
         nvpairs = s_pageform;
         nvpairs.add(new BasicNameValuePair("$Toolbar_1.x", "1"));
         nvpairs.add(new BasicNameValuePair("$Toolbar_1.y", "1"));
-        parse_search(htmlPost(opac_url + ";jsessionid=" + s_sid, nvpairs), 1);
+        parse_search_wrapped(htmlPost(opac_url + ";jsessionid=" + s_sid, nvpairs), 1);
         nvpairs = s_pageform;
         nvpairs.add(new BasicNameValuePair("$Toolbar_3.x", "1"));
         nvpairs.add(new BasicNameValuePair("$Toolbar_3.y", "1"));
-        parse_search(htmlPost(opac_url + ";jsessionid=" + s_sid, nvpairs), 1);
+        parse_search_wrapped(htmlPost(opac_url + ";jsessionid=" + s_sid, nvpairs), 1);
 
         res.setId(""); // null would be overridden by the UI, because there _is_
         // an id,< we just can not use it.
@@ -927,12 +975,12 @@ public class Adis extends BaseApi implements OpacApi {
             nvpairs = s_pageform;
             nvpairs.add(new BasicNameValuePair("$Toolbar_1.x", "1"));
             nvpairs.add(new BasicNameValuePair("$Toolbar_1.y", "1"));
-            parse_search(htmlPost(opac_url + ";jsessionid=" + s_sid, nvpairs),
+            parse_search_wrapped(htmlPost(opac_url + ";jsessionid=" + s_sid, nvpairs),
                     1);
             nvpairs = s_pageform;
             nvpairs.add(new BasicNameValuePair("$Toolbar_3.x", "1"));
             nvpairs.add(new BasicNameValuePair("$Toolbar_3.y", "1"));
-            parse_search(htmlPost(opac_url + ";jsessionid=" + s_sid, nvpairs),
+            parse_search_wrapped(htmlPost(opac_url + ";jsessionid=" + s_sid, nvpairs),
                     1);
         } catch (OpacErrorException e) {
             // TODO Auto-generated catch block
