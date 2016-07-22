@@ -310,7 +310,7 @@ public class SISIS extends BaseApi implements OpacApi {
         String html = httpGet(
                 opac_url + "/search.do?"
                         + URLEncodedUtils.format(params, "UTF-8"), ENCODING);
-        return parse_search(html, 1);
+        return parse_search_wrapped(html, 1);
     }
 
     public SearchRequestResult volumeSearch(Map<String, String> query)
@@ -324,7 +324,7 @@ public class SISIS extends BaseApi implements OpacApi {
         String html = httpGet(
                 opac_url + "/search.do?"
                         + URLEncodedUtils.format(params, "UTF-8"), ENCODING);
-        return parse_search(html, 1);
+        return parse_search_wrapped(html, 1);
     }
 
     @Override
@@ -337,11 +337,27 @@ public class SISIS extends BaseApi implements OpacApi {
         String html = httpGet(opac_url
                 + "/hitList.do?methodToCall=pos&identifier=" + identifier
                 + "&curPos=" + (((page - 1) * resultcount) + 1), ENCODING);
-        return parse_search(html, page);
+        return parse_search_wrapped(html, page);
+    }
+
+    public class SingleResultFound extends Exception {
+    }
+
+    protected SearchRequestResult parse_search_wrapped(String html, int page) throws IOException, OpacErrorException {
+        try {
+            return parse_search(html, page);
+        } catch (SingleResultFound e) {
+            html = httpGet(opac_url + "/hitList.do?methodToCall=backToPrimaryHitList", ENCODING);
+            try {
+                return parse_search(html, page);
+            } catch (SingleResultFound e1) {
+                throw new NotReachableException();
+            }
+        }
     }
 
     protected SearchRequestResult parse_search(String html, int page)
-            throws OpacErrorException, IOException {
+            throws OpacErrorException, SingleResultFound {
         Document doc = Jsoup.parse(html);
         doc.setBaseUri(opac_url + "/searchfoo");
 
@@ -359,8 +375,7 @@ public class SISIS extends BaseApi implements OpacApi {
 
         String resultnumstr = doc.select(".box-header h2").first().text();
         if (resultnumstr.contains("(1/1)") || resultnumstr.contains(" 1/1")) {
-            html = httpGet(opac_url + "/hitList.do?methodToCall=backToPrimaryHitList", ENCODING);
-            return parse_search(html, page);
+            throw new SingleResultFound();
         } else if (resultnumstr.contains("(")) {
             results_total = Integer.parseInt(resultnumstr.replaceAll(
                     ".*\\(([0-9]+)\\).*", "$1"));

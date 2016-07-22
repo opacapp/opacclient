@@ -53,6 +53,7 @@ import java.util.regex.Pattern;
 
 import de.geeksfactory.opacclient.i18n.StringProvider;
 import de.geeksfactory.opacclient.networking.HttpClientFactory;
+import de.geeksfactory.opacclient.networking.NotReachableException;
 import de.geeksfactory.opacclient.objects.Account;
 import de.geeksfactory.opacclient.objects.AccountData;
 import de.geeksfactory.opacclient.objects.Copy;
@@ -325,7 +326,7 @@ public class TouchPoint extends BaseApi implements OpacApi {
         String html = httpGet(
                 opac_url + "/search.do?"
                         + URLEncodedUtils.format(params, "UTF-8"), ENCODING);
-        return parse_search(html, 1);
+        return parse_search_wrapped(html, 1);
     }
 
     public SearchRequestResult volumeSearch(Map<String, String> query)
@@ -339,7 +340,7 @@ public class TouchPoint extends BaseApi implements OpacApi {
         String html = httpGet(
                 opac_url + "/search.do?"
                         + URLEncodedUtils.format(params, "UTF-8"), ENCODING);
-        return parse_search(html, 1);
+        return parse_search_wrapped(html, 1);
     }
 
     @Override
@@ -352,11 +353,28 @@ public class TouchPoint extends BaseApi implements OpacApi {
         String html = httpGet(opac_url
                 + "/hitList.do?methodToCall=pos&identifier=" + identifier
                 + "&curPos=" + (((page - 1) * resultcount) + 1), ENCODING);
-        return parse_search(html, page);
+        return parse_search_wrapped(html, page);
+    }
+
+    public class SingleResultFound extends Exception {
+    }
+
+    protected SearchRequestResult parse_search_wrapped(String html, int page) throws IOException, OpacErrorException {
+        try {
+            return parse_search(html, page);
+        } catch (SingleResultFound e) {
+            html = httpGet(opac_url + "/hitList.do?methodToCall=backToCompleteList&identifier=" +
+                    identifier, ENCODING);
+            try {
+                return parse_search(html, page);
+            } catch (SingleResultFound e1) {
+                throw new NotReachableException();
+            }
+        }
     }
 
     protected SearchRequestResult parse_search(String html, int page)
-            throws OpacErrorException, IOException {
+            throws OpacErrorException, IOException, IOException, SingleResultFound {
         Document doc = Jsoup.parse(html);
 
         if (doc.select("#RefineHitListForm").size() > 0) {
@@ -379,9 +397,7 @@ public class TouchPoint extends BaseApi implements OpacApi {
 
         String resultnumstr = doc.select(".box-header h2").first().text();
         if (resultnumstr.contains("(1/1)") || resultnumstr.contains(" 1/1")) {
-            html = httpGet(opac_url + "/hitList.do?methodToCall=backToCompleteList&identifier=" +
-                    identifier, ENCODING);
-            return parse_search(html, page);
+            throw new SingleResultFound();
         } else if (resultnumstr.contains("(")) {
             results_total = Integer.parseInt(resultnumstr.replaceAll(
                     ".*\\(([0-9]+)\\).*", "$1"));
