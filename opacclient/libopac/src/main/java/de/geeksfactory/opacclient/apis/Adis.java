@@ -369,7 +369,7 @@ public class Adis extends BaseApi implements OpacApi {
     }
 
     private SearchRequestResult parse_search(Document doc, int page)
-            throws OpacErrorException {
+            throws OpacErrorException, IOException {
 
         if (doc.select(".message h1").size() > 0
                 && doc.select("#right #R06").size() == 0) {
@@ -390,14 +390,30 @@ public class Adis extends BaseApi implements OpacApi {
                                                 .trim());
             if (matcher.matches()) {
                 total_result_count = Integer.parseInt(matcher.group(1));
+            } else if (doc.select("#right #R06").text().trim().endsWith("Treffer: 1")) {
+                total_result_count = 1;
             }
         }
 
         if (doc.select("#right #R03").size() == 1
                 && doc.select("#right #R03").text().trim()
                       .endsWith("Treffer: 1")) {
-            s_reusedoc = doc;
-            throw new OpacErrorException("is_a_redirect");
+
+            // Zurück zur Trefferliste
+            List<NameValuePair> nvpairs = new ArrayList<>();
+            for (Element input : doc.select("input, select")) {
+                if (!"image".equals(input.attr("type"))
+                        && !"submit".equals(input.attr("type"))
+                        && !"".equals(input.attr("name"))) {
+                    nvpairs.add(new BasicNameValuePair(input.attr("name"), input
+                            .attr("value")));
+                }
+            }
+            nvpairs.add(new BasicNameValuePair("$Toolbar_1.x", "1"));
+            nvpairs.add(new BasicNameValuePair("$Toolbar_1.y", "1"));
+
+            doc  = htmlPost(opac_url + ";jsessionid=" + s_sid, nvpairs);
+            return parse_search(doc, page);
         }
 
         Pattern patId = Pattern
