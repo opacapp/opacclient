@@ -669,7 +669,7 @@ public abstract class BaseApi implements OpacApi {
         return fields;
     }
 
-    protected abstract List<SearchField> parseSearchFields() throws IOException, OpacErrorException,
+    public abstract List<SearchField> parseSearchFields() throws IOException, OpacErrorException,
             JSONException;
 
     public static String buildHttpGetParams(List<NameValuePair> params)
