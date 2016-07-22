@@ -548,10 +548,11 @@ public class Open extends BaseApi implements OpacApi {
             item.addDetail(new Detail(name, value));
         }
         // Details
-        for (Element detail : doc
-                .select("div[id$=CatalogueDetailView] .spacingBottomSmall:has(span+span)")) {
+        String DETAIL_SELECTOR = "div[id$=CatalogueDetailView] .spacingBottomSmall:has(span+span)," +
+                "div[id$=CatalogueDetailView] .spacingBottomSmall:has(span+a)";
+        for (Element detail : doc.select(DETAIL_SELECTOR)) {
             String name = detail.select("span").get(0).text().replace(": ", "");
-            String value = detail.select("span").get(1).text();
+            String value = detail.select("span, a").get(1).text();
             item.addDetail(new Detail(name, value));
         }
 
