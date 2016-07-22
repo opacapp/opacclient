@@ -348,7 +348,7 @@ public class Bibliotheca extends BaseApi {
         return parseSearch(html, page, data);
     }
 
-    static SearchRequestResult parseSearch(String html, int page, JSONObject data) {
+    public static SearchRequestResult parseSearch(String html, int page, JSONObject data) {
         Document doc = Jsoup.parse(html);
         doc.setBaseUri(data.optString("baseurl"));
         Elements table = doc
