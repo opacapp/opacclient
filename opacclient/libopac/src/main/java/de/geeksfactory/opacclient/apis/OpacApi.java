@@ -528,22 +528,25 @@ public interface OpacApi {
         }
 
         /**
-         * Set details the user should confirm if {@link #getStatus()} is
-         * <code>CONFIRMATION_NEEDED</code>.
+         * If {@link #getStatus()} is <code>CONFIRMATION_NEEDED</code>, this gives you more
+         * information to display to the user. This is a list of of unknown length. Every list entry
+         * is an array of strings that of size one or two (which can vary between the elements of
+         * the list). If the size of such an array A is two, then A[0] contains a description of
+         * A[1], e.g. <code>A = {"Fee", "2 EUR"}</code> or <code>A = {"Pickup location", "Central library"}</code>.
+         * If the size is only one, it is a general message to be shown, e.g.
+         * <code>{"This action will cost 2 EUR."}</code>.
          *
-         * @return ContentValue tuples with key to give back and value to show to the users.
+         * @return A list of String[] entries, as described above.
          */
         public List<String[]> getDetails() {
             return details;
         }
 
         /**
-         * Set values the user should select one of if {@link #getStatus()} is set to
-         * <code>CONFIRMATION_NEEDED</code> .
+         * Set details the user should confirm if {@link #getStatus()} is
+         * <code>CONFIRMATION_NEEDED</code>.
          *
-         * @param details List containing reservation details. A detail is stored as an array of two
-         *                strings, the detail's description (e.g. "Fee") and the detail itself (e.g.
-         *                "2 EUR")
+         * @param details List containing reservation details. See {@link #getDetails()} for what this means.
          */
         public void setDetails(List<String[]> details) {
             this.details = details;
