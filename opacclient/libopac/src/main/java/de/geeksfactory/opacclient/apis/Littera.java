@@ -21,7 +21,6 @@
  */
 package de.geeksfactory.opacclient.apis;
 
-import de.geeksfactory.opacclient.networking.HttpClientFactory;
 import org.apache.http.client.utils.URIBuilder;
 import org.joda.time.LocalDate;
 import org.joda.time.format.DateTimeFormat;
@@ -47,6 +46,7 @@ import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import de.geeksfactory.opacclient.networking.HttpClientFactory;
 import de.geeksfactory.opacclient.objects.Copy;
 import de.geeksfactory.opacclient.objects.Detail;
 import de.geeksfactory.opacclient.objects.DetailledItem;
@@ -177,8 +177,8 @@ public class Littera extends SearchOnlyApi {
         final URIBuilder builder = new URIBuilder(getApiUrl());
         final List<SearchQuery> nonEmptyQuery = new ArrayList<>();
         for (SearchQuery q : query) {
-            if (q.getValue().isEmpty()) {
-            } else if (q.getKey().startsWith("sort")) {
+            if (q.getValue().equals("")) continue;
+            if (q.getKey().startsWith("sort")) {
                 builder.addParameter(q.getKey(), q.getValue());
             } else {
                 nonEmptyQuery.add(q);
@@ -241,7 +241,7 @@ public class Littera extends SearchOnlyApi {
         for (final Element tr : detailTable.select("tr")) {
             final String desc = tr.child(0).text();
             final String content = tr.child(1).text();
-            if (desc != null && !desc.trim().isEmpty()) {
+            if (desc != null && !desc.trim().equals("")) {
                 result.addDetail(new Detail(desc, content));
             } else if (!result.getDetails().isEmpty()) {
                 final Detail lastDetail = result.getDetails().get(result.getDetails().size() - 1);
@@ -287,7 +287,7 @@ public class Littera extends SearchOnlyApi {
     }
 
     @Override
-    public List<SearchField> getSearchFields()
+    public List<SearchField> parseSearchFields()
             throws IOException, OpacErrorException, JSONException {
         start();
         final List<SearchField> fields = new ArrayList<>();

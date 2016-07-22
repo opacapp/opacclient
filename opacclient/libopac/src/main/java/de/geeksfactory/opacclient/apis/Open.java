@@ -247,8 +247,14 @@ public class Open extends BaseApi implements OpacApi {
                 }
             } else if (query.getSearchField() instanceof DropdownSearchField) {
                 DropdownSearchField field = (DropdownSearchField) query.getSearchField();
-                Element input = doc.select("select[name=" + field.getId() + "]").first();
-                input.val(query.getValue());
+                Element select = doc.select("select[name=" + field.getId() + "]").first();
+                for (Element opt : select.select("option")) {
+                    if (query.getValue().equals(opt.val())) {
+                        opt.attr("selected", "selected");
+                    } else {
+                        opt.removeAttr("selected");
+                    }
+                }
             } else if (query.getSearchField() instanceof CheckboxSearchField) {
                 CheckboxSearchField field = (CheckboxSearchField) query.getSearchField();
                 Element input = doc.select("input[name=" + field.getId() + "]").first();
@@ -511,7 +517,7 @@ public class Open extends BaseApi implements OpacApi {
                             NO_MOBILE + "&id=" + id, getDefaultEncoding());
             return parse_result(Jsoup.parse(html));
         } catch (JSONException e) {
-            throw new IOException(e);
+            throw new IOException(e.getMessage());
         }
     }
 
@@ -632,7 +638,7 @@ public class Open extends BaseApi implements OpacApi {
     }
 
     @Override
-    public List<SearchField> getSearchFields()
+    public List<SearchField> parseSearchFields()
             throws IOException, OpacErrorException, JSONException {
         String url =
                 opac_url + "/" + data.getJSONObject("urls").getString("advanced_search") +

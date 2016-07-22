@@ -440,7 +440,7 @@ public class Heidi extends BaseApi implements OpacApi {
     }
 
     @Override
-    public List<SearchField> getSearchFields() throws IOException,
+    public List<SearchField> parseSearchFields() throws IOException,
             OpacErrorException, JSONException {
         String html = httpGet(opac_url + "/search.cgi?art=f", ENCODING, false,
                 cookieStore);

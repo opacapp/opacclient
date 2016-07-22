@@ -377,7 +377,7 @@ public class WebOpacNet extends BaseApi implements OpacApi {
     }
 
     @Override
-    public List<SearchField> getSearchFields() throws IOException,
+    public List<SearchField> parseSearchFields() throws IOException,
             JSONException {
         List<SearchField> fields = new ArrayList<>();
 

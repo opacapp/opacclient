@@ -1,0 +1,16 @@
+{
+    "account_supported": true,
+    "api": "sisis",
+    "city": "Koblenz",
+    "country": "Deutschland",
+    "data": {
+        "baseurl": "https://bibopac1.rac.hs-koblenz.de/webOPACClient-Koblenz"
+    },
+    "geo": [
+        50.3569429,
+        7.5889959
+    ],
+    "information": "https://www.hs-koblenz.de/rmc/bibliothek/bibliothek-koblenz/",
+    "state": "Rheinland-Pfalz",
+    "title": "Hochschulbibliothek"
+}

@@ -71,7 +71,7 @@ public class HttpClientFactory {
         try {
             in = new FileInputStream(ssl_store_path);
         } catch (FileNotFoundException e) {
-            in = new FileInputStream("opacapp/src/main/res/raw/ssl_trust_store.bks");
+            in = new FileInputStream("../opacapp/src/main/res/raw/ssl_trust_store.bks");
         }
         try {
             trustStore.load(in,

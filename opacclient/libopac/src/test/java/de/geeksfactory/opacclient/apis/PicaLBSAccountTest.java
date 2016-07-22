@@ -17,7 +17,7 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
 @RunWith(Parameterized.class)
-public class PicaLBSAccountTest extends BaseAccountTest {
+public class PicaLBSAccountTest extends BaseHtmlTest {
     private String file;
 
     public PicaLBSAccountTest(String file) {

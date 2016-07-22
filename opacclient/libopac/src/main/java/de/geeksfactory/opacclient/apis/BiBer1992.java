@@ -119,7 +119,7 @@ public class BiBer1992 extends BaseApi {
      * <option selected value="ZWST0">Alle Bibliotheksorte</option> </select>
      */
     @Override
-    public List<SearchField> getSearchFields() throws IOException {
+    public List<SearchField> parseSearchFields() throws IOException {
         List<SearchField> fields = new ArrayList<>();
 
         HttpGet httpget;
@@ -222,6 +222,20 @@ public class BiBer1992 extends BaseApi {
                 brDropdown.addDropdownValue(opt.val(), opt.text());
             }
             fields.add(brDropdown);
+        }
+
+        Elements sort_opts = doc.select("form select[name=SORTX] option");
+        if (sort_opts.size() > 0) {
+            DropdownSearchField sortDropdown = new DropdownSearchField();
+            sortDropdown.setId(sort_opts.get(0).parent().attr("name"));
+            sortDropdown.setDisplayName(sort_opts.get(0).parent().parent()
+                                                 .previousElementSibling().text()
+                                                 .replace("\u00a0", "")
+                                                 .replace("?", "").trim());
+            for (Element opt : sort_opts) {
+                sortDropdown.addDropdownValue(opt.val(), opt.text());
+            }
+            fields.add(sortDropdown);
         }
 
         return fields;
@@ -461,6 +475,14 @@ public class BiBer1992 extends BaseApi {
             // needed for Friedrichshafen: "Warenkorb", "Vormerkung"
             // Herford: "Medienkorb"
             desc = desc.replaceAll("<a .*?</a>", "");
+            // remove newlines (useless in HTML)
+            desc = desc.replaceAll("\\n", "");
+            // remove hidden divs ("Titel übernommen!" in Wuerzburg)
+            desc = desc.replaceAll("<div[^>]*style=\"display:none\">.*</div>", "");
+            // remove all invalid HTML tags
+            desc = desc.replaceAll("</?(tr|td|font|table|tbody|div)[^>]*>", "");
+            // replace multiple line breaks by one
+            desc = desc.replaceAll("(<br( /)?>\\s*)+", "<br>");
             sr.setInnerhtml(desc);
 
             if (tr.select("font.p04x09b").size() > 0

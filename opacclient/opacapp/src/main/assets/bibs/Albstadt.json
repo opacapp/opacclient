@@ -5,14 +5,15 @@
     "country": "Deutschland",
     "data": {
         "accounttable": {
-            "author": 1,
-            "barcode": -1,
+            "author": 2,
+            "barcode": 1,
             "homebranch": 0,
             "lendingbranch": 0,
-            "prolongurl": 6,
-            "returndate": 3,
-            "status": 5,
-            "title": 2
+            "prolongurl": 7,
+            "returndate": 4,
+            "status": 6,
+            "title": 3,
+            "format": 5
         },
         "baseurl": "https://wwwopac.rz-kiru.de/albstadt",
         "copiestable": {
@@ -31,7 +32,8 @@
             "branch": 0,
             "cancelurl": 5,
             "expirationdate": -1,
-            "title": 2
+            "title": 2,
+            "format": 3
         }
     },
     "geo": [

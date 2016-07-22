@@ -9,7 +9,7 @@ android:
         - extra-android-m2repository
 script:
     - cd opacclient
-    - ./gradlew check lint test
+    - ./gradlew check lint test jacocoRootReport coveralls
 cache:
     directories:
         - $HOME/.gradle

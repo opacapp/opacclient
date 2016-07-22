@@ -45,7 +45,6 @@ import de.geeksfactory.opacclient.storage.AccountDataSource;
 public class SyncAccountService extends WakefulIntentService {
 
     private static final String NAME = "SyncAccountService";
-    private boolean failed = false;
 
     public SyncAccountService() {
         super(NAME);
@@ -65,11 +64,15 @@ public class SyncAccountService extends WakefulIntentService {
         ConnectivityManager connMgr = (ConnectivityManager) getSystemService(
                 Context.CONNECTIVITY_SERVICE);
         NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
+        boolean failed;
         if (networkInfo != null) {
             if (!sp.getBoolean("notification_service_wifionly", false) ||
                     networkInfo.getType() == ConnectivityManager.TYPE_WIFI ||
                     networkInfo.getType() == ConnectivityManager.TYPE_ETHERNET) {
-                syncAccounts();
+                OpacClient app = (OpacClient) getApplication();
+                AccountDataSource data = new AccountDataSource(this);
+                ReminderHelper helper = new ReminderHelper(app);
+                failed = syncAccounts(app, data, sp, helper);
             } else {
                 failed = true;
             }
@@ -92,11 +95,10 @@ public class SyncAccountService extends WakefulIntentService {
         }
     }
 
-    private void syncAccounts() {
-        OpacClient app = (OpacClient) getApplication();
-        AccountDataSource data = new AccountDataSource(this);
+    boolean syncAccounts(OpacClient app, AccountDataSource data, SharedPreferences sp,
+            ReminderHelper helper) {
+        boolean failed = false;
         List<Account> accounts = data.getAccountsWithPassword();
-        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(this);
 
         if (!sp.contains("update_151_clear_cache")) {
             data.invalidateCachedData();
@@ -128,9 +130,10 @@ public class SyncAccountService extends WakefulIntentService {
                 data.update(account);
                 data.storeCachedAccountData(account, res);
             } finally {
-                new ReminderHelper(app).generateAlarms();
+                helper.generateAlarms();
             }
         }
+        return failed;
     }
 
 }

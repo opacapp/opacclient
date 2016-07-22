@@ -35,7 +35,7 @@
         "reservationtable": {
             "author": 0,
             "availability": 2,
-            "cancelurl": 3,
+            "cancelurl": 4,
             "title": 1
         }
     },

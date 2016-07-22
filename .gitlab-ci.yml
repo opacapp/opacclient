@@ -3,11 +3,6 @@ lint:
         - cd opacclient
         - sed -i "s/.*versionName .*/        versionName \"git-${CI_BUILD_REF}\"/g" opacapp/build.gradle
         - GRADLE_USER_HOME=/cache ANDROID_HOME=/android-sdk-linux ./gradlew check lint test assembleDebug
-        - mkdir -p /out/build$CI_BUILD_ID/lint/
-        - cp opacapp/build/outputs/lint-results.html /out/build$CI_BUILD_ID/lint/
-        - cp opacapp/build/outputs/lint-results.xml /out/build$CI_BUILD_ID/lint/
-        - cp -r opacapp/build/outputs/lint-results_files /out/build$CI_BUILD_ID/lint/
-        - cp -r libopac/build/reports/tests /out/build$CI_BUILD_ID/tests-libopac
     except:
         - android-studio-library
 

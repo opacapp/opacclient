@@ -1,0 +1,268 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/2002/REC-xhtml1-20020801/DTD/xhtml1-transitional.dtd">
+<!-- saved from url=(0066)https://stadtbibliothekbernau-bei-berlin.internetopac.de/index.asp -->
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="de"><head><meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
+
+<title>Benutzerkonto</title>
+
+<link href="./bernau_files/style.css.asp" rel="stylesheet" type="text/css">
+
+<link href="./bernau_files/print.css" rel="stylesheet" type="text/css" media="print"><meta http-equiv="refresh" content="180; URL=index.asp?target=logoff&amp;pagetimeout=true">
+</head>
+ <body>
+ <script src="./bernau_files/jquery-1.7.2.min.js" type="text/javascript"></script>
+ 
+  
+ 
+ <script type="text/javascript">
+    var EU_LAW_INFO_COOKIE = 'EU_LAW_INFO';
+    function setCookie(c_name,value,exdays)
+	{
+	var exdate=new Date();
+	exdate.setDate(exdate.getDate() + exdays);
+	var c_value=escape(value) + ((exdays==null) ? "" : "; expires="+exdate.toUTCString())+"; path=/";
+	document.cookie=c_name + "=" + c_value;
+	}
+    function setlocalcookie() {
+     setCookie(EU_LAW_INFO_COOKIE, true,3650);
+     $("#CookieAcknowledgeInfo").hide();          
+	}
+</script>
+		
+<div id="CookieAcknowledgeInfo" style="display: block;z-index:1001;height:32;width:100%;position:fixed;bottom:0;left:0;background:rgba(213,213,213,0.85);">
+<div class="CookieAcknowledgeMessage" style="float:left;font-size:small;">
+<p style="float:left;font-size:small;padding-top:3px;">Diese Seite verwendet Cookies.</p>
+</div>  
+<div class="CookieDetailsLink" style="float:left;margin-left:10px;margin-right:10px">
+<p><a style="font-size:small;" href="https://stadtbibliothekbernau-bei-berlin.internetopac.de/CookieLaw/CookieLaw_Sprache1.htm" target="_blank">Details anzeigen</a></p>
+</div>
+<div class="CookieAcknowledgeImage" style="float:left;margin-right:10px">
+    <input type="image" id="CookieAcknowledgeImage" onclick="setlocalcookie()" src="./bernau_files/false.png" style="width:20px;heigth:20px; padding-top:16px;">
+</div>
+</div>
+
+
+<form action="https://stadtbibliothekbernau-bei-berlin.internetopac.de/index.asp" name="webopac" id="webopac" method="post">
+
+
+    <input type="hidden" name="kontofenster" value="true">
+    
+    <div class="kontospacer">&nbsp;</div>
+    <div class="maindivkonto">
+
+
+<script type="text/javascript">
+<!--
+     a = document.cookie;
+     res = '';
+     while(a != '')
+     {
+      cookiename = a.substring(0,a.search('='));
+      cookiewert = a.substring(a.search('=')+1,a.search(';'));
+
+      if(cookiename == 'weblogon790632347' && cookiewert == 'false'){top.location.href='index.asp?kontofenster=true&amp;target=login';}
+      if(cookiename == ' weblogon790632347' && cookiewert == 'false'){top.location.href='index.asp?kontofenster=true&amp;target=login';}
+      i = a.search(';')+1;
+      if(i == 0){i = a.length}
+      a = a.substring(i,a.length);
+     }
+     //-->
+</script>
+
+
+
+<script type="text/javascript">
+<!--
+
+window.focus();
+
+
+function OpenPrintWindow()
+	{
+// [2011-08-04.Tae] EAG 40925 >>>>
+//		    win1=window.open("kontodruck.asp","printWindow", "width=400,height=15,innerWidth=400,innerHeight=15,dependent,scrollbars");
+		win1=window.open("print.asp?whichOne=FIRST","printWindow", "width=400,height=400,innerWidth=400,innerHeight=400,dependent,scrollbars");
+// [2011-08-04.Tae] EAG 40925 <<<<
+//    win1=window.open("kontodruck.asp","printWindow");
+    }
+
+
+function istzahl(zahl)
+{
+        var laenge=parseInt(zahl.length);
+        var a=0;
+        while ((a<laenge) && ((zahl.charAt(a) == "1") || 
+        (zahl.charAt(a) == "2") || (zahl.charAt(a) == "3") ||
+        (zahl.charAt(a) == "4") || (zahl.charAt(a) == "5") ||
+        (zahl.charAt(a) == "6") || (zahl.charAt(a) == "7") ||
+        (zahl.charAt(a) == "8") || (zahl.charAt(a) == "9") || 
+        (zahl.charAt(a) == "0")))
+                {
+                a++;
+                }
+        return (a == parseInt(zahl.length));
+        }
+
+function datumtest(datum)
+{
+var rg = 0;
+var jetzt = new Date();
+var tag, monat, jahr, vergl;
+
+if (!(datum.length==10 && istzahl(datum.substring(0,2)) && datum.charAt(2)=="." &&
+	istzahl(datum.substring(3,5)) && datum.charAt(5)=="." &&
+	istzahl(datum.substring(6,10))))
+	rg=1;
+
+if (rg==0)
+{
+	tag=datum.substring(0,2);
+	monat=datum.substring(3,5);
+	jahr=datum.substring(6,10);
+	vergl = new Date(jahr,monat-1,tag);
+
+	if (!(((monat==1 || monat==3 || monat==5 || monat==7 || monat==8 || monat==10 || monat==12) && tag<=31 && tag >=1) || 
+        	((monat==4 || monat==6 || monat==9 || monat==11) && tag<=30 && tag >=1) || 
+        	(monat==2 && jahr%4==0 && tag<=29 && tag >=1) || 
+        	(monat==2 && jahr%4!=0 && tag<=28 && tag>=1))) 
+		rg=2;
+
+	if (vergl.getTime() > jetzt.getTime())
+		rg=2;
+}
+
+return (rg);
+}
+
+
+
+function test(){
+var now;
+now = new Date();
+sParms = "anmBest.asp?DB=X";
+
+
+	if (webopac.txtname.value.length == 0)
+		{
+			alert('Sie haben vergessen, Ihren Namen einzugeben.');
+			webopac.txtname.focus();
+			return false;
+		}
+	/*	else
+		{
+			sParms += "&NAME=" + document.Anmeldung.name.value;
+		}*/
+		
+	if (webopac.vorname.value.length == 0)
+		{
+			alert('Sie haben vergessen, Ihren Vornamen einzugeben.');
+			webopac.vorname.focus();
+			return false;
+		}
+	/*	else
+		{
+			sParms += "&VORNAME="+document.Anmeldung.vorname.value;
+		}*/
+		
+	if (webopac.strasse.value.length == 0)
+		{	
+			alert('Sie haben vergessen, Ihre Straße einzugeben.');
+			webopac.strasse.focus();
+			return false;
+		}
+	/*	else
+		{
+			sParms += "&STRASSE="+document.Anmeldung.strasse.value;
+		}*/
+		
+	if (webopac.plz.value.length == 0)
+		{	
+			alert('Sie haben vergessen, Ihre Postleitzahl einzugeben.');
+			webopac.plz.focus();
+			return false;
+		}
+	/*	else
+		{
+			sParms += "&PLZ="+document.Anmeldung.plz.value;
+		}*/
+
+	if (webopac.ort.value.length == 0)
+		{	
+			alert('Sie haben vergessen, Ihren Ort einzugeben.');
+			webopac.ort.focus();
+			return false;
+		}
+		
+	/*if (webopac.email.value.length > 0){
+		if (webopac.email.value.length>5 && webopac.email.value.indexOf('.')>0 && webopac.email.value.indexOf('@')>0 && (webopac.email.value.lastIndexOf('.')+1 < webopac.email.value.length) && (webopac.email.value.lastIndexOf('.') > webopac.email.value.indexOf('@')+1)){
+
+		}else{
+			alert("Bitte geben Sie Ihre E-Mail-Adresse an!");
+			return false;
+			}
+		}
+		
+		else
+		{
+			sParms += "&ORT="+document.Anmeldung.ort.value;
+		}*/
+
+//********
+
+	
+/*if (document.Anmeldung.telefon.value.length > 0){sParms += "&TELEFON="+document.Anmeldung.telefon.value;}
+if (document.Anmeldung.passwort.value.length > 0){sParms += "&PASS="+document.Anmeldung.passwort.value;}
+if (document.Anmeldung.nation.value.length > 0){sParms += "&NATION="+document.Anmeldung.nation.value;}
+if (document.Anmeldung.fax.value.length > 0){sParms += "&FAX="+document.Anmeldung.fax.value;}
+if (document.Anmeldung.email.value.length > 0){sParms += "&EMAIL="+document.Anmeldung.email.value;}
+if (document.Anmeldung.titel.value.length > 0){sParms += "&TITEL="+document.Anmeldung.titel.value;}
+if (document.Anmeldung.geschl.options[document.Anmeldung.geschl.selectedIndex].text.length >0){sParms += "&GESCHL="+document.Anmeldung.geschl.value;}*/
+return true;
+/*location.href = sParms;*/
+}
+
+function linksetzen()
+{
+	self.close()
+}
+
+
+ function NeuLaden()
+	{
+		if (navigator.appName == 'Netscape')
+		{
+			if (document.cookie.indexOf('=1',0) > 0)
+			{
+				document.cookie = 'konto=0';
+			}
+			else 
+			{
+				document.cookie = 'konto=1';
+				window.parent.location.reload();
+			}
+		}
+	
+	}	
+//-->
+</script>
+
+<div class="kontotitelzeile">Konto für Ausweis Nr: &nbsp;01142599</div><div class="kontozeile_center"><br></div><div class="kontozeile_center">Ausweis gültig bis: &nbsp;Wednesday, January 1, 2020</div><div class="menuzeile" align="center"><div class="kontomenuspacer_newwin">&nbsp;</div><div class="menufeld"><a href="https://stadtbibliothekbernau-bei-berlin.internetopac.de/index.asp?kontofenster=true&amp;target=konto">Konto</a></div><div class="anywidth menufeld"><a href="https://stadtbibliothekbernau-bei-berlin.internetopac.de/index.asp?kontofenster=true&amp;target=alleverl">Alle verlängern</a></div><div class="menufeld"><a href="https://stadtbibliothekbernau-bei-berlin.internetopac.de/index.asp?kontofenster=true&amp;target=logoff">Konto verlassen</a></div></div><div class="kontozeile_center" id="benddatakt"></div><div class="kontozeile_center" id="seitedr"><a href="https://stadtbibliothekbernau-bei-berlin.internetopac.de/index.asp#" onclick="print();">Konto drucken</a></div>
+
+<script type="text/javascript">
+		//if (top.menubar.testLog()){
+		//	location.href="nix.html";
+		//}
+</script>
+
+<div class="kontozeile_center"><br><br><b>Entliehene Medien:</b></div><div class="kontozeile_center">
+<table width="95%" border="0" cellspacing="0" cellpadding="0">
+    <tbody><tr class="exemplarmenubar">
+        <th class="tabHeaderKonto">Verfasser</th><th class="tabHeaderKonto">Titel</th><th class="tabHeaderKonto">Frist</th><th class="tabHeaderKonto">Mediengruppe</th><th class="tabHeaderKonto">&nbsp;</th></tr><tr class="tabKonto"><td class="abstand"></td><td class="abstand">Weihnachten nach dem Krieg</td><td class="abstand">8/2/2016</td><td class="abstand">Belletristik</td><td valign="top"><a href="https://stadtbibliothekbernau-bei-berlin.internetopac.de/index.asp?kontofenster=true&amp;target=verl_1"><img src="./bernau_files/pfeil.gif" alt="Verlängern" height="16" width="18" class="konto_verl_bild"></a></td></tr><tr class="tabKonto"><td class="abstand"></td><td class="abstand">Weihnachtsgeschichten</td><td class="abstand">8/2/2016</td><td class="abstand">Belletristik</td><td valign="top"><a href="https://stadtbibliothekbernau-bei-berlin.internetopac.de/index.asp?kontofenster=true&amp;target=verl_2"><img src="./bernau_files/pfeil.gif" alt="Verlängern" height="16" width="18" class="konto_verl_bild"></a></td></tr><tr class="tabKonto"><td class="abstand"></td><td class="abstand">Wenn Weihnachten kommt</td><td class="abstand">8/2/2016</td><td class="abstand">Belletristik</td><td valign="top"><a href="https://stadtbibliothekbernau-bei-berlin.internetopac.de/index.asp?kontofenster=true&amp;target=verl_3"><img src="./bernau_files/pfeil.gif" alt="Verlängern" height="16" width="18" class="konto_verl_bild"></a></td></tr><tr><td align="left" colspan="5"><br><b>Anzahl:  3</b></td></tr></tbody></table></div><div class="kontozeile_center"><br><br><b>Vorbestellte Medien:</b></div><div class="kontozeile_center"><table border="0" cellspacing="0" cellpadding="0" width="95%"><tbody><tr class="exemplarmenubar"><th class="tabHeaderKonto">Verfasser</th><th class="tabHeaderKonto">Titel</th><th class="tabHeaderKonto">bereit bis</th><th class="tabHeaderKonto">Mediengruppe</th><th class="tabKonto">&nbsp;</th></tr><tr><td align="left" colspan="5"><br><b>Anzahl:  0</b></td></tr></tbody></table></div><div id="DivPatronAccountView" class="cultureRegion"><input name="PatronId" type="hidden" value="01113596"><input name="PatronCardId" type="hidden" value="01142599"><input name="PatronBirthDate" type="hidden" value="01.01.1950"><input name="Culture" type="hidden" value="de-DE"><input name="EMEDIENDIREKT_URL" type="hidden" value="lookupuseraccount"></div>
+
+</div>
+</form>
+
+
+
+
+
+</body></html>

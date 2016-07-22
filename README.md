@@ -32,8 +32,10 @@ projects because it does not depend on Android APIs. More information about the 
 Contributing
 ------------
 We'd like to invite you to contribute to our project, e.g. by improving the user interface or adding support
-for new libraries. Checking out the project with Android Studio should be fairly straightforward, but we
-also got a little bit of information in the [project wiki](https://github.com/opacapp/opacclient/wiki).
+for new libraries. Additionally, you could help to extend our test suite to increase this number: [![Coverage Status](https://coveralls.io/repos/github/opacapp/opacclient/badge.svg?branch=master)](https://coveralls.io/github/opacapp/opacclient?branch=master) :wink:.
+
+Checking out the project with Android Studio should be fairly straightforward, but we
+also have a little bit of information in the [project wiki](https://github.com/opacapp/opacclient/wiki).
 Contributions are best submitted via GitHub pull requests.
 
 If you get stuck anywhere in the process, please do not hestitate to ask us anytime at info@opacapp.de.

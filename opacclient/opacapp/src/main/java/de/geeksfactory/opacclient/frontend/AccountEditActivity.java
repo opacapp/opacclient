@@ -176,8 +176,9 @@ public class AccountEditActivity extends AppCompatActivity {
         }
         account.setName(etName.getText().toString().trim());
         account.setPassword(etPassword.getText().toString().trim());
-        if (etPassword.getText().toString().trim().equals("")) {
-            // Don't check user credentials if there are no credentials
+        if (!lib.isAccountSupported() || etPassword.getText().toString().trim().equals("")) {
+            // Don't check user credentials if there are no credentials or if the library does not
+            // support account features
             save();
             close();
             return;

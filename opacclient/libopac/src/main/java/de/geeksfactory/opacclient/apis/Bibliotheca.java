@@ -129,7 +129,7 @@ public class Bibliotheca extends BaseApi {
     protected String branch_inputfield = "zstauswahl";
 
     @Override
-    public List<SearchField> getSearchFields() throws IOException,
+    public List<SearchField> parseSearchFields() throws IOException,
             JSONException {
         if (!initialised) {
             start();
@@ -277,6 +277,7 @@ public class Bibliotheca extends BaseApi {
         nameValuePairs.add(new BasicNameValuePair("stichtit", "stich"));
 
         int ifeldCount = 0;
+        String order = "asc";
         for (SearchQuery query : queries) {
             if (query.getValue().equals("")) {
                 continue;
@@ -296,8 +297,7 @@ public class Bibliotheca extends BaseApi {
             if (key.equals("orderselect") && query.getValue().contains(":")) {
                 nameValuePairs.add(new BasicNameValuePair("orderselect", query
                         .getValue().split(":")[0]));
-                nameValuePairs.add(new BasicNameValuePair("order", query
-                        .getValue().split(":")[1]));
+                order = query.getValue().split(":")[1];
             } else {
                 nameValuePairs
                         .add(new BasicNameValuePair(key, query.getValue()));
@@ -331,7 +331,10 @@ public class Bibliotheca extends BaseApi {
 
         String html = httpPost(opac_url + "/index.asp",
                 new UrlEncodedFormEntity(nameValuePairs), getDefaultEncoding());
-        return parse_search(html, 1);
+        if (html.contains("<a href=\"index.asp?order=" + order + "\">")) {
+            html = httpGet(opac_url + "/index.asp?order=" + order, getDefaultEncoding());
+        }
+        return parseSearch(html, 1, data);
     }
 
     @Override
@@ -342,12 +345,12 @@ public class Bibliotheca extends BaseApi {
 
         String html = httpGet(opac_url + "/index.asp?scrollAction=" + page,
                 getDefaultEncoding());
-        return parse_search(html, page);
+        return parseSearch(html, page, data);
     }
 
-    protected SearchRequestResult parse_search(String html, int page) {
+    static SearchRequestResult parseSearch(String html, int page, JSONObject data) {
         Document doc = Jsoup.parse(html);
-        doc.setBaseUri(opac_url);
+        doc.setBaseUri(data.optString("baseurl"));
         Elements table = doc
                 .select(".resulttab tr.result_trefferX, .resulttab tr.result_treffer");
         List<SearchResult> results = new ArrayList<>();
@@ -433,7 +436,7 @@ public class Bibliotheca extends BaseApi {
         }
         String html = httpGet(opac_url + "/index.asp?MedienNr=" + a,
                 getDefaultEncoding());
-        DetailledItem result = parse_result(html);
+        DetailledItem result = parseResult(html, data);
         if (result.getId() == null) {
             result.setId(a);
         }
@@ -445,12 +448,12 @@ public class Bibliotheca extends BaseApi {
         String html = httpGet(opac_url + "/index.asp?detmediennr=" + nr,
                 getDefaultEncoding());
 
-        return parse_result(html);
+        return parseResult(html, data);
     }
 
-    protected DetailledItem parse_result(String html) {
+    static DetailledItem parseResult(String html, JSONObject data) {
         Document doc = Jsoup.parse(html);
-        doc.setBaseUri(opac_url);
+        doc.setBaseUri(data.optString("baseurl"));
 
         DetailledItem result = new DetailledItem();
 
@@ -1010,6 +1013,7 @@ public class Bibliotheca extends BaseApi {
                                   .select("tr.tabKonto");
 
         DateTimeFormatter fmt = DateTimeFormat.forPattern("dd.MM.yyyy").withLocale(Locale.GERMAN);
+        DateTimeFormatter fmt2 = DateTimeFormat.forPattern("d/M/yyyy").withLocale(Locale.GERMAN);
 
         for (int i = 0; i < exemplartrs.size(); i++) {
             Element tr = exemplartrs.get(i);
@@ -1035,7 +1039,11 @@ public class Bibliotheca extends BaseApi {
                         try {
                             item.setDeadline(fmt.parseLocalDate(tr.child(index).text()));
                         } catch (IllegalArgumentException e1) {
-                            e1.printStackTrace();
+                            try {
+                                item.setDeadline(fmt2.parseLocalDate(tr.child(index).text()));
+                            } catch (IllegalArgumentException e2) {
+                                e2.printStackTrace();
+                            }
                         }
                     } else {
                         item.set(key, tr.child(index).text());
@@ -1076,13 +1084,21 @@ public class Bibliotheca extends BaseApi {
                         try {
                             item.setReadyDate(fmt.parseLocalDate(tr.child(index).text()));
                         } catch (IllegalArgumentException e1) {
-                            item.setStatus(tr.child(index).text());
+                            try {
+                                item.setReadyDate(fmt2.parseLocalDate(tr.child(index).text()));
+                            } catch (IllegalArgumentException e2) {
+                                e2.printStackTrace();
+                            }
                         }
                     } else if (key.equals("expirationdate")) {
                         try {
                             item.setExpirationDate(fmt.parseLocalDate(tr.child(index).text()));
                         } catch (IllegalArgumentException e1) {
-                            item.setStatus(tr.child(index).text());
+                            try {
+                                item.setExpirationDate(fmt2.parseLocalDate(tr.child(index).text()));
+                            } catch (IllegalArgumentException e2) {
+                                item.setStatus(tr.child(index).text());
+                            }
                         }
                     } else {
                         item.set(key, tr.child(index).text());
