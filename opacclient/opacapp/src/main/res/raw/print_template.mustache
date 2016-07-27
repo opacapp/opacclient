@@ -1,0 +1,106 @@
+<!doctype html>
+<head>
+    <title>{{title}}</title>
+</head>
+<body>
+    <h1>{{title}}</h1>
+    <h2>Details</h2>
+    
+    <!-- one row for every detail -->
+    <table>
+    	{{#details}}
+	        <tr>
+	            <th>{{desc}}</th>
+	            <td>{{content}}</td>
+	        </tr>
+        {{/details}}
+    </table>
+
+    <!-- Only show heading if there are copies -->
+    {{^copies.isEmpty}}
+    	<h2>Copies</h2>
+    <!-- one table for every copy, show all the rows that have data -->
+    	{{#copies}}
+		    <table>
+		    	{{#barcode}}
+			        <tr>
+			            <th>Barcode</th>
+			            <td>{{barcode}}</td>
+			        </tr>
+			    {{/barcode}}
+
+			    {{#department}}
+			        <tr>
+			            <th>Department</th>
+			            <td>{{department}}</td>
+			        </tr>
+			    {{/department}}
+
+			    {{#branch}}
+			        <tr>
+			            <th>Branch</th>
+			            <td>{{branch}}</td>
+			        </tr>
+			    {{/branch}}
+
+			    {{#status}}
+			        <tr>
+			            <th>Status</th>
+			            <td>{{status}}</td>
+			        </tr>
+			    {{/status}}
+
+			    {{#location}}
+			        <tr>
+			            <th>Location</th>
+			            <td>{{location}}</td>
+			        </tr>
+			    {{/location}}
+
+			    {{#returnDate}}
+			        <tr>
+			            <th>Return Date</th>
+			            <td>{{returnDate}}</td>
+			        </tr>
+			    {{/returnDate}}
+
+			    {{#reservations}}
+			        <tr>
+			            <th>Reservations</th>
+			            <td>{{reservations}}</td>
+			        </tr>
+			    {{/reservations}}
+
+			    {{#shelfmark}}
+			        <tr>
+			            <th>Shelf Mark</th>
+			            <td>{{shelfmark}}</td>
+			        </tr>
+			    {{/shelfmark}}
+
+			    {{#resInfo}}
+			        <tr>
+			            <th>Reservation Information</th>
+			            <td>{{resInfo}}</td>
+			        </tr>
+			    {{/resInfo}}
+
+			    {{#url}}
+			        <tr>
+			            <th>URL</th>
+			            <td>{{url}}</td>
+			        </tr>
+			    {{/url}}
+		    </table>
+	    {{/copies}}
+    {{/copies.isEmpty}}
+    <!-- Only show heading if there are volumes -->
+    {{^volumes.isEmpty}}
+    	<h2>Volumes</h2>
+	    <ul>
+	    	{{#volumes}}
+	        	<li>{{title}}</li>
+	        {{/volumes}}
+	    </ul>
+    {{/volumes.isEmpty}}
+</body>

@@ -3,6 +3,12 @@
       xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
+        android:id="@+id/action_print"
+        android:icon="@drawable/ic_print_shop_white_24dp"
+        app:showAsAction="ifRoom"
+        android:title="@string/print">
+    </item>
+    <item
         android:id="@+id/action_share"
         android:icon="@drawable/ic_share_toolbar_white_24dp"
         app:showAsAction="ifRoom"
