@@ -4,7 +4,7 @@
     "city": "Leichlingen",
     "country": "Deutschland",
     "data": {
-        "baseurl": "https://webopac.kdvz.de/leichlingen"
+        "baseurl": "https://webopac.citkomm.de/leichlingen"
     },
     "geo": [
         51.102509,

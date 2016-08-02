@@ -4,7 +4,7 @@
     "city": "Olsberg",
     "country": "Deutschland",
     "data": {
-        "baseurl": "http://webopac.kdvz.de/olsberg"
+        "baseurl": "https://webopac.citkomm.de/olsberg"
     },
     "geo": [
         51.3556649,

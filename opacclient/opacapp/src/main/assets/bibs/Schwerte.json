@@ -4,7 +4,7 @@
     "city": "Schwerte",
     "country": "Deutschland",
     "data": {
-        "baseurl": "http://webopac.kdvz.de/schwerte"
+        "baseurl": "https://webopac.citkomm.de/schwerte"
     },
     "geo": [
         51.44007500000001,

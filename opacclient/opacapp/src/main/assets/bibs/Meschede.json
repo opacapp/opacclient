@@ -4,7 +4,7 @@
     "city": "Meschede",
     "country": "Deutschland",
     "data": {
-        "baseurl": "http://webopac.kdvz.de/meschede"
+        "baseurl": "https://webopac.citkomm.de/meschede"
     },
     "geo": [
         51.3511245,

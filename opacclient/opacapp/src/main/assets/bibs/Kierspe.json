@@ -4,7 +4,7 @@
     "city": "Kierspe",
     "country": "Deutschland",
     "data": {
-        "baseurl": "http://webopac.kdvz.de/kierspe"
+        "baseurl": "https://webopac.citkomm.de/kierspe"
     },
     "geo": [
         51.1287174,

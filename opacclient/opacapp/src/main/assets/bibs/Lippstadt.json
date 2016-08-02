@@ -4,7 +4,7 @@
     "city": "Lippstadt",
     "country": "Deutschland",
     "data": {
-        "baseurl": "http://webopac.kdvz.de/lippstadt"
+        "baseurl": "https://webopac.citkomm.de/lippstadt"
     },
     "geo": [
         51.6736297,
