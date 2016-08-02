@@ -6,6 +6,6 @@ import retrofit2.http.Body;
 import retrofit2.http.POST;
 
 public interface WebService {
-    @POST("reports")
+    @POST("reports/")
     Call<Report> sendReport(@Body Report report);
 }
