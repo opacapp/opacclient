@@ -5,14 +5,15 @@
     "country": "Deutschland",
     "data": {
         "accounttable": {
-            "author": 1,
+            "author": 0,
             "barcode": -1,
-            "homebranch": 0,
-            "lendingbranch": 0,
-            "prolongurl": 5,
-            "returndate": 4,
-            "status": -1,
-            "title": 2
+            "homebranch": 5,
+            "lendingbranch": 5,
+            "prolongurl": 7,
+            "returndate": 3,
+            "status": 4,
+            "title": 1,
+            "format": 2
         },
         "baseurl": "https://wwwopac.rz-kiru.de/ditzingen",
         "copiestable": {
@@ -25,12 +26,13 @@
             "status": 1
         },
         "reservationtable": {
-            "author": 1,
-            "availability": 4,
-            "branch": 0,
+            "author": 0,
+            "availability": 3,
+            "branch": 4,
             "cancelurl": 5,
             "expirationdate": -1,
-            "title": 2
+            "title": 1,
+            "format": 2
         }
     },
     "geo": [
