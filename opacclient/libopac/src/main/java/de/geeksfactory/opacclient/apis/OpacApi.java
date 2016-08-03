@@ -37,6 +37,7 @@ import de.geeksfactory.opacclient.objects.DetailledItem;
 import de.geeksfactory.opacclient.objects.Filter;
 import de.geeksfactory.opacclient.objects.Library;
 import de.geeksfactory.opacclient.objects.SearchRequestResult;
+import de.geeksfactory.opacclient.reporting.ReportHandler;
 import de.geeksfactory.opacclient.searchfields.SearchField;
 import de.geeksfactory.opacclient.searchfields.SearchQuery;
 
@@ -408,6 +409,18 @@ public interface OpacApi {
      * @param language the language to use
      */
     public void setLanguage(String language);
+
+    /**
+     * Sets the report handler to use.
+     *
+     * If an error occurs or other unexpected things happen (such as needing to use a fallback
+     * behaviour that should normally not need to be used) the API might generate a {@link
+     * de.geeksfactory.opacclient.reporting.Report} containing further debugging information. You
+     * can optionally handle these reports (e.g. to send them to the developer) using this methods.
+     *
+     * @param reportHandler the report handler to use
+     */
+    void setReportHandler(ReportHandler reportHandler);
 
     /**
      * A general exception containing a human-readable error message

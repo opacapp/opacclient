@@ -23,6 +23,7 @@ import de.geeksfactory.opacclient.apis.BiBer1992;
 import de.geeksfactory.opacclient.apis.Bibliotheca;
 import de.geeksfactory.opacclient.apis.Heidi;
 import de.geeksfactory.opacclient.apis.IOpac;
+import de.geeksfactory.opacclient.apis.Littera;
 import de.geeksfactory.opacclient.apis.OpacApi;
 import de.geeksfactory.opacclient.apis.Open;
 import de.geeksfactory.opacclient.apis.PicaLBS;
@@ -33,7 +34,6 @@ import de.geeksfactory.opacclient.apis.SRU;
 import de.geeksfactory.opacclient.apis.TestApi;
 import de.geeksfactory.opacclient.apis.TouchPoint;
 import de.geeksfactory.opacclient.apis.VuFind;
-import de.geeksfactory.opacclient.apis.Littera;
 import de.geeksfactory.opacclient.apis.WebOpacNet;
 import de.geeksfactory.opacclient.apis.WinBiap;
 import de.geeksfactory.opacclient.apis.Zones;
@@ -41,6 +41,7 @@ import de.geeksfactory.opacclient.i18n.DummyStringProvider;
 import de.geeksfactory.opacclient.i18n.StringProvider;
 import de.geeksfactory.opacclient.networking.HttpClientFactory;
 import de.geeksfactory.opacclient.objects.Library;
+import de.geeksfactory.opacclient.reporting.ReportHandler;
 
 /**
  * This class is used to simplify obtaining {@link OpacApi} instances.
@@ -64,7 +65,12 @@ public class OpacApiFactory {
      * @return a new {@link OpacApi} instance
      */
     public static OpacApi create(Library lib, String userAgent) {
-        return create(lib, new DummyStringProvider(), new HttpClientFactory(userAgent), null);
+        return create(lib, new DummyStringProvider(), new HttpClientFactory(userAgent), null, null);
+    }
+
+    public static OpacApi create(Library lib, StringProvider sp, HttpClientFactory hcf,
+            String lang) {
+        return create(lib, sp, hcf, lang, null);
     }
 
     /**
@@ -77,7 +83,7 @@ public class OpacApiFactory {
      * @return a new {@link OpacApi} instance
      */
     public static OpacApi create(Library lib, StringProvider sp, HttpClientFactory hcf,
-            String lang) {
+            String lang, ReportHandler reportHandler) {
         OpacApi newApiInstance;
         if (lib.getApi().equals("bibliotheca")) {
             newApiInstance = new Bibliotheca();
@@ -128,6 +134,7 @@ public class OpacApiFactory {
         }
         newApiInstance.init(lib, hcf);
         newApiInstance.setStringProvider(sp);
+        newApiInstance.setReportHandler(reportHandler);
         if (lang != null) newApiInstance.setLanguage(lang);
         return newApiInstance;
     }

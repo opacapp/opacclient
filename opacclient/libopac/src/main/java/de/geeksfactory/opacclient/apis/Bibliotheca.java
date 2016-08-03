@@ -28,8 +28,10 @@ import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.utils.URLEncodedUtils;
 import org.apache.http.message.BasicNameValuePair;
+import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.jsoup.Jsoup;
@@ -40,6 +42,7 @@ import org.jsoup.nodes.TextNode;
 import org.jsoup.select.Elements;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -72,6 +75,8 @@ import de.geeksfactory.opacclient.objects.SearchRequestResult;
 import de.geeksfactory.opacclient.objects.SearchResult;
 import de.geeksfactory.opacclient.objects.SearchResult.MediaType;
 import de.geeksfactory.opacclient.objects.Volume;
+import de.geeksfactory.opacclient.reporting.Report;
+import de.geeksfactory.opacclient.reporting.ReportHandler;
 import de.geeksfactory.opacclient.searchfields.DropdownSearchField;
 import de.geeksfactory.opacclient.searchfields.SearchField;
 import de.geeksfactory.opacclient.searchfields.SearchField.Meaning;
@@ -996,12 +1001,55 @@ public class Bibliotheca extends BaseApi {
         }
         logged_in_as = acc;
         logged_in = System.currentTimeMillis();
-        return parse_account(acc, doc, data);
+        return parse_account(acc, doc, data, reportHandler,
+                getHeadersFile("/bibliotheca/headers_lent.json"),
+                getHeadersFile("/bibliotheca/headers_reservations.json"));
     }
 
-    public static AccountData parse_account(Account acc, Document doc, JSONObject data)
+    private JSONObject getHeadersFile(String filename) {
+        InputStream is = getClass().getResourceAsStream(filename);
+        if (is == null) return null;
+        try {
+            return new JSONObject(convertStreamToString(is));
+        } catch (IOException | JSONException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    public static AccountData parse_account(Account acc, Document doc, JSONObject data,
+            ReportHandler reportHandler, JSONObject headers_lent, JSONObject headers_reservations)
             throws JSONException, NotReachableException {
-        JSONObject copymap = data.getJSONObject("accounttable");
+        Map<String, Integer> copymap = new HashMap<>();
+        Elements headerCells = doc.select(".kontozeile_center table").get(0)
+                                  .select("tr.exemplarmenubar").get(0).children();
+        JSONArray headersList = new JSONArray();
+        JSONArray unknownHeaders = new JSONArray();
+        int i = 0;
+        for (Element headerCell : headerCells) {
+            String header = headerCell.text();
+            headersList.put(header);
+            if (headers_lent.has(header)) {
+                copymap.put(headers_lent.getString(header), i);
+            } else {
+                unknownHeaders.put(header);
+            }
+            i++;
+        }
+
+        if (unknownHeaders.length() > 0) {
+            // send report
+            JSONObject reportData = new JSONObject();
+            reportData.put("headers", headersList);
+            reportData.put("unknown_headers", unknownHeaders);
+            Report report = new Report(acc.getLibrary(), "bibliotheca", "unknown header - lent",
+                    DateTime.now(), reportData);
+            reportHandler.sendReport(report);
+
+            // fallback to JSON
+            JSONObject accounttable = data.getJSONObject("accounttable");
+            copymap = jsonToMap(accounttable);
+        }
 
         List<LentItem> media = new ArrayList<>();
 
@@ -1015,102 +1063,108 @@ public class Bibliotheca extends BaseApi {
         DateTimeFormatter fmt = DateTimeFormat.forPattern("dd.MM.yyyy").withLocale(Locale.GERMAN);
         DateTimeFormatter fmt2 = DateTimeFormat.forPattern("d/M/yyyy").withLocale(Locale.GERMAN);
 
-        for (int i = 0; i < exemplartrs.size(); i++) {
-            Element tr = exemplartrs.get(i);
+        for (Element tr : exemplartrs) {
             LentItem item = new LentItem();
 
-            Iterator<?> keys = copymap.keys();
-            while (keys.hasNext()) {
-                String key = (String) keys.next();
-                int index;
-                try {
-                    index = copymap.has(key) ? copymap.getInt(key) : -1;
-                } catch (JSONException e1) {
-                    index = -1;
-                }
-                if (index >= 0) {
-                    if (key.equals("prolongurl")) {
-                        if (tr.child(index).children().size() > 0) {
-                            item.setProlongData(tr.child(index).child(0).attr("href"));
-                            item.setRenewable(
-                                    !tr.child(index).child(0).attr("href").contains("vermsg"));
-                        }
-                    } else if (key.equals("returndate")) {
-                        try {
-                            item.setDeadline(fmt.parseLocalDate(tr.child(index).text()));
-                        } catch (IllegalArgumentException e1) {
-                            try {
-                                item.setDeadline(fmt2.parseLocalDate(tr.child(index).text()));
-                            } catch (IllegalArgumentException e2) {
-                                e2.printStackTrace();
-                            }
-                        }
-                    } else {
-                        item.set(key, tr.child(index).text());
+            for (Entry<String, Integer> entry : copymap.entrySet()) {
+                String key = entry.getKey();
+                int index = entry.getValue();
+                if (key.equals("prolongurl")) {
+                    if (tr.child(index).children().size() > 0) {
+                        item.setProlongData(tr.child(index).child(0).attr("href"));
+                        item.setRenewable(
+                                !tr.child(index).child(0).attr("href").contains("vermsg"));
                     }
+                } else if (key.equals("returndate")) {
+                    try {
+                        item.setDeadline(fmt.parseLocalDate(tr.child(index).text()));
+                    } catch (IllegalArgumentException e1) {
+                        try {
+                            item.setDeadline(fmt2.parseLocalDate(tr.child(index).text()));
+                        } catch (IllegalArgumentException e2) {
+                            e2.printStackTrace();
+                        }
+                    }
+                } else {
+                    item.set(key, tr.child(index).text());
                 }
             }
 
             media.add(item);
         }
-        assert (doc.select(".kontozeile_center table").get(0).select("tr")
-                   .size() > 0);
-        assert (exemplartrs.size() == media.size());
 
-        copymap = data.getJSONObject("reservationtable");
+        copymap = new HashMap<>();
+        headerCells = doc.select(".kontozeile_center table").get(1)
+                         .select("tr.exemplarmenubar").get(0).children();
+        headersList = new JSONArray();
+        unknownHeaders = new JSONArray();
+        i = 0;
+        for (Element headerCell : headerCells) {
+            String header = headerCell.text();
+            headersList.put(header);
+            if (headers_reservations.has(header)) {
+                copymap.put(headers_reservations.getString(header), i);
+            } else {
+                unknownHeaders.put(header);
+            }
+            i++;
+        }
+
+        if (unknownHeaders.length() > 0) {
+            // send report
+            JSONObject reportData = new JSONObject();
+            reportData.put("headers", headersList);
+            reportData.put("unknown_headers", unknownHeaders);
+            Report report =
+                    new Report(acc.getLibrary(), "bibliotheca", "unknown header - reservations",
+                            DateTime.now(), reportData);
+            reportHandler.sendReport(report);
+
+            // fallback to JSON
+            JSONObject reservationtable = data.getJSONObject("reservationtable");
+            copymap = jsonToMap(reservationtable);
+        }
 
         List<ReservedItem> reservations = new ArrayList<>();
         exemplartrs = doc.select(".kontozeile_center table").get(1)
                          .select("tr.tabKonto");
-        for (int i = 0; i < exemplartrs.size(); i++) {
-            Element tr = exemplartrs.get(i);
+        for (Element tr : exemplartrs) {
             ReservedItem item = new ReservedItem();
 
-            Iterator<?> keys = copymap.keys();
-            while (keys.hasNext()) {
-                String key = (String) keys.next();
-                int index;
-                try {
-                    index = copymap.has(key) ? copymap.getInt(key) : -1;
-                } catch (JSONException e1) {
-                    index = -1;
-                }
-                if (index >= 0) {
-                    if (key.equals("cancelurl")) {
-                        if (tr.child(index).children().size() > 0) {
-                            item.setCancelData(tr.child(index).child(0).attr("href"));
-                        }
-                    } else if (key.equals("availability")) {
-                        try {
-                            item.setReadyDate(fmt.parseLocalDate(tr.child(index).text()));
-                        } catch (IllegalArgumentException e1) {
-                            try {
-                                item.setReadyDate(fmt2.parseLocalDate(tr.child(index).text()));
-                            } catch (IllegalArgumentException e2) {
-                                e2.printStackTrace();
-                            }
-                        }
-                    } else if (key.equals("expirationdate")) {
-                        try {
-                            item.setExpirationDate(fmt.parseLocalDate(tr.child(index).text()));
-                        } catch (IllegalArgumentException e1) {
-                            try {
-                                item.setExpirationDate(fmt2.parseLocalDate(tr.child(index).text()));
-                            } catch (IllegalArgumentException e2) {
-                                item.setStatus(tr.child(index).text());
-                            }
-                        }
-                    } else {
-                        item.set(key, tr.child(index).text());
+            for (Entry<String, Integer> entry : copymap.entrySet()) {
+                String key = entry.getKey();
+                int index = entry.getValue();
+                if (key.equals("cancelurl")) {
+                    if (tr.child(index).children().size() > 0) {
+                        item.setCancelData(tr.child(index).child(0).attr("href"));
                     }
+                } else if (key.equals("availability")) {
+                    try {
+                        item.setReadyDate(fmt.parseLocalDate(tr.child(index).text()));
+                    } catch (IllegalArgumentException e1) {
+                        try {
+                            item.setReadyDate(fmt2.parseLocalDate(tr.child(index).text()));
+                        } catch (IllegalArgumentException e2) {
+                            e2.printStackTrace();
+                        }
+                    }
+                } else if (key.equals("expirationdate")) {
+                    try {
+                        item.setExpirationDate(fmt.parseLocalDate(tr.child(index).text()));
+                    } catch (IllegalArgumentException e1) {
+                        try {
+                            item.setExpirationDate(fmt2.parseLocalDate(tr.child(index).text()));
+                        } catch (IllegalArgumentException e2) {
+                            item.setStatus(tr.child(index).text());
+                        }
+                    }
+                } else {
+                    item.set(key, tr.child(index).text());
                 }
             }
 
             reservations.add(item);
         }
-        assert (doc.select(".kontozeile_center table").get(1).select("tr")
-                   .size() > 0);
-        assert (exemplartrs.size() == reservations.size());
 
         AccountData res = new AccountData(acc.getId());
 
@@ -1138,6 +1192,21 @@ public class Bibliotheca extends BaseApi {
         res.setLent(media);
         res.setReservations(reservations);
         return res;
+    }
+
+    private static Map<String, Integer> jsonToMap(JSONObject json) {
+        Map<String, Integer> map = new HashMap<>();
+        Iterator keys = json.keys();
+        while (keys.hasNext()) {
+            String key = (String) keys.next();
+            try {
+                int value = json.getInt(key);
+                if (value >= 0) map.put(key, value);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+        return map;
     }
 
     @Override
