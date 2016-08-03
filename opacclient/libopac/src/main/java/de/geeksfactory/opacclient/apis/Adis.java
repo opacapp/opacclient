@@ -436,17 +436,19 @@ public class Adis extends BaseApi implements OpacApi {
 
         int nr = 1;
 
-        String selector_row, selector_link, selector_img, selector_num;
+        String selector_row, selector_link, selector_img, selector_num, selector_text;
         if (doc.select("table.rTable_table tbody").size() > 0) {
             selector_row = "table.rTable_table tbody tr";
             selector_link = ".rTable_td_text a";
+            selector_text = ".rList_name";
             selector_img = ".rTable_td_img img, .rTable_td_text img";
             selector_num = "tr td:first-child";
         } else {
-            // Berlin
+            // New version, e.g. Berlin
             selector_row = ".rList li.rList_li_even, .rList li.rList_li_odd";
             selector_link = ".rList_titel a";
-            selector_img = ".rlist_icon img, .rList_titel img";
+            selector_text = ".rList_name";
+            selector_img = ".rlist_icon img, .rList_titel img, .rList_medium .icon, .rList_availability .icon, .rList_img img";
             selector_num = ".rList_num";
         }
         for (Element tr : doc.select(selector_row)) {
@@ -454,7 +456,17 @@ public class Adis extends BaseApi implements OpacApi {
 
             Element innerele = tr.select(selector_link).first();
             innerele.select("img").remove();
-            res.setInnerhtml(innerele.html());
+            String descr = innerele.html();
+
+            for (Element n : tr.select(selector_text)) {
+                String t = n.text().replace("\u00a0", " ").trim();
+                if (t.length() > 0) {
+                    descr += "<br />" + t.trim();
+                }
+            }
+
+            res.setInnerhtml(descr);
+
             try {
                 res.setNr(Integer.parseInt(tr.select(selector_num).text().trim()));
             } catch (NumberFormatException e) {
@@ -468,6 +480,7 @@ public class Adis extends BaseApi implements OpacApi {
 
             for (Element img : tr.select(selector_img)) {
                 String ttext = img.attr("title");
+                String src = img.attr("abs:src");
                 if (types.containsKey(ttext)) {
                     res.setType(types.get(ttext));
                 } else if (ttext.contains("+")
@@ -1458,6 +1471,7 @@ public class Adis extends BaseApi implements OpacApi {
                     && !"submit".equals(input.attr("type"))
                     && !"".equals(input.attr("name"))) {
                 if (input.attr("id").equals("L#AUSW_1")
+                        || input.attr("fld").equals("L#AUSW_1")
                         || input.attr("id").equals("IDENT_1")
                         || input.attr("id").equals("LMATNR_1")) {
                     input.attr("value", account.getName());

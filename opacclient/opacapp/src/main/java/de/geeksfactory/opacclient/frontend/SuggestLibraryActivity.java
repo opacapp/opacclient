@@ -38,7 +38,9 @@ import okhttp3.Request;
 public class SuggestLibraryActivity extends AppCompatActivity {
 
     private static final String LOG_TAG = "Opac";
-    private static final String GEOCODE_API = "https://maps.googleapis.com/maps/api/geocode/json";
+    private static final String GEOCODE_API = "https://maps.googleapis.com/maps/api/place/autocomplete/json";
+    private static final String DETAIL_API = "https://maps.googleapis.com/maps/api/place/details/json?placeid=";
+    private static final String API_KEY = "AIzaSyDau_9TkGF8hVqLlcHhq6yDUUN9c3rqehU";
     private AutoCompleteTextView etCity;
     private EditText etName;
     private EditText etComment;
@@ -180,8 +182,9 @@ public class SuggestLibraryActivity extends AppCompatActivity {
         String jsonResults;
         try {
             Request request = new Request.Builder().url(
-                    GEOCODE_API + "?sensor=false" + "&language=de" + "&region=de" + "&address=" +
-                            URLEncoder.encode(input, "utf8")).build();
+                    GEOCODE_API + "?input=" + URLEncoder.encode(input, "utf8") + "&types=(cities)" +
+                            "&language=" + getResources().getConfiguration().locale.toLanguageTag() +
+                            "&key=" + API_KEY).build();
             jsonResults = client.newCall(request).execute().body().string();
         } catch (IOException e) {
             Log.e(LOG_TAG, "Error connecting to Places API", e);
@@ -191,35 +194,54 @@ public class SuggestLibraryActivity extends AppCompatActivity {
         try {
             // Create a JSON object hierarchy from the results
             JSONObject jsonObj = new JSONObject(jsonResults);
-            JSONArray resultsJsonArray = jsonObj.getJSONArray("results");
+            JSONArray resultsJsonArray = jsonObj.getJSONArray("predictions");
 
             // Extract data from the results
             resultList = new ArrayList<>();
             for (int i = 0; i < resultsJsonArray.length(); i++) {
                 JSONObject result = resultsJsonArray.getJSONObject(i);
-                if (contains(result.getJSONArray("types"), "locality")) {
-                    JSONArray addressComponents = result
-                            .getJSONArray("address_components");
-                    City city = new City();
-                    for (int j = 0; j < addressComponents.length(); j++) {
-                        JSONObject component = addressComponents
-                                .getJSONObject(j);
-                        if (contains(component.getJSONArray("types"),
-                                "locality")) {
-                            city.name = component.getString("long_name");
-                        } else if (contains(component.getJSONArray("types"),
-                                "administrative_area_level_1")) {
-                            city.state = component.getString("long_name");
-                        } else if (contains(component.getJSONArray("types"),
-                                "country")) {
-                            city.country = component.getString("long_name");
+                String placeid = result.getString("place_id");
+                String jsonDetailedResults;
+                try {
+                    Request request = new Request.Builder().url(
+                        DETAIL_API + URLEncoder.encode(placeid, "utf8") +
+                                "&language=" + getResources().getConfiguration().locale.toLanguageTag() +
+                                "&key=" + API_KEY).build();
+                    jsonDetailedResults = client.newCall(request).execute().body().string();
+                } catch (IOException e) {
+                        Log.e(LOG_TAG, "Error connecting to Places API", e);
+                        return null;
+                }
+
+                try {
+                    JSONObject jsonDetailObj = new JSONObject(jsonDetailedResults);
+                    JSONObject detailResult = jsonDetailObj.getJSONObject("result");
+                    if (contains(detailResult.getJSONArray("types"), "locality")) {
+                        JSONArray addressComponents = detailResult
+                                .getJSONArray("address_components");
+                        City city = new City();
+                        for (int j = 0; j < addressComponents.length(); j++) {
+                            JSONObject component = addressComponents
+                                    .getJSONObject(j);
+                            if (contains(component.getJSONArray("types"),
+                                    "locality")) {
+                                city.name = component.getString("long_name");
+                            } else if (contains(component.getJSONArray("types"),
+                                    "administrative_area_level_1")) {
+                                city.state = component.getString("long_name");
+                            } else if (contains(component.getJSONArray("types"),
+                                    "country")) {
+                                city.country = component.getString("long_name");
+                            }
                         }
+                        city.lat = detailResult.getJSONObject("geometry")
+                                         .getJSONObject("location").getDouble("lat");
+                        city.lon = detailResult.getJSONObject("geometry")
+                                         .getJSONObject("location").getDouble("lng");
+                        resultList.add(city);
                     }
-                    city.lat = result.getJSONObject("geometry")
-                                     .getJSONObject("location").getDouble("lat");
-                    city.lon = result.getJSONObject("geometry")
-                                     .getJSONObject("location").getDouble("lng");
-                    resultList.add(city);
+                } catch (JSONException e) {
+                    Log.e(LOG_TAG, "Cannot process JSON results", e);
                 }
             }
         } catch (JSONException e) {

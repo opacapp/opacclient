@@ -356,7 +356,7 @@ public class SISIS extends BaseApi implements OpacApi {
         }
     }
 
-    protected SearchRequestResult parse_search(String html, int page)
+    public SearchRequestResult parse_search(String html, int page)
             throws OpacErrorException, SingleResultFound {
         Document doc = Jsoup.parse(html);
         doc.setBaseUri(opac_url + "/searchfoo");
@@ -1326,9 +1326,9 @@ public class SISIS extends BaseApi implements OpacApi {
         return true;
     }
 
-    protected void parse_medialist(List<LentItem> media, Document doc, int offset) {
+    public static void parse_medialist(List<LentItem> media, Document doc, int offset, JSONObject data) {
         Elements copytrs = doc.select(".data tr");
-        doc.setBaseUri(opac_url);
+        doc.setBaseUri(data.optString("baseurl"));
 
         DateTimeFormatter fmt = DateTimeFormat.forPattern("dd.MM.yyyy").withLocale(Locale.GERMAN);
 
@@ -1341,7 +1341,8 @@ public class SISIS extends BaseApi implements OpacApi {
             Element tr = copytrs.get(i);
             LentItem item = new LentItem();
 
-            if (tr.text().contains("keine Daten")) {
+            if (tr.text().contains("keine Daten") || (trs == 2 && tr.children().size() == 1)) {
+                // Dresden: Konto entält keine &lt;Ausleihen&gt;. [sic!]
                 return;
             }
 
@@ -1447,7 +1448,7 @@ public class SISIS extends BaseApi implements OpacApi {
         List<LentItem> medien = new ArrayList<>();
         Document doc = Jsoup.parse(html);
         doc.setBaseUri(opac_url);
-        parse_medialist(medien, doc, 1);
+        parse_medialist(medien, doc, 1, data);
         if (doc.select(".box-right").size() > 0) {
             for (Element link : doc.select(".box-right").first().select("a")) {
                 String href = link.attr("abs:href");
@@ -1459,7 +1460,7 @@ public class SISIS extends BaseApi implements OpacApi {
                         && !"1".equals(hrefq.get("anzPos"))) {
                     html = httpGet(href, ENCODING);
                     parse_medialist(medien, Jsoup.parse(html),
-                            Integer.parseInt(hrefq.get("anzPos")));
+                            Integer.parseInt(hrefq.get("anzPos")), data);
                 }
             }
         }

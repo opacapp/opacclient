@@ -1,0 +1,16 @@
+{
+  "account_supported": true,
+  "api": "winbiap",
+  "city": "Pfaffenhofen (Ilm)",
+  "country": "Deutschland",
+  "data": {
+    "baseurl": "https://webopac.winbiap.de/pfaffenhofen"
+  },
+  "geo": [
+    48.53252149999999,
+    11.4977392
+  ],
+  "information": "http://kreisbuecherei-paf.de",
+  "state": "Bayern",
+  "title": "Kreisb\u00fccherei"
+}

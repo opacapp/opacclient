@@ -62,6 +62,7 @@ import de.geeksfactory.opacclient.networking.SSLSecurityException;
 import de.geeksfactory.opacclient.objects.CoverHolder;
 import de.geeksfactory.opacclient.objects.Library;
 import de.geeksfactory.opacclient.objects.SearchRequestResult;
+import de.geeksfactory.opacclient.reporting.ReportHandler;
 import de.geeksfactory.opacclient.searchfields.MeaningDetector;
 import de.geeksfactory.opacclient.searchfields.MeaningDetectorImpl;
 import de.geeksfactory.opacclient.searchfields.SearchField;
@@ -78,6 +79,7 @@ public abstract class BaseApi implements OpacApi {
     protected Set<String> supportedLanguages;
     protected boolean initialised;
     protected boolean httpLoggingEnabled = true;
+    protected ReportHandler reportHandler;
 
     /**
      * Keywords to do a free search. Some APIs do support this, some don't. If supported, it must at
@@ -683,5 +685,9 @@ public abstract class BaseApi implements OpacApi {
 
     public void setHttpLoggingEnabled(boolean httpLoggingEnabled) {
         this.httpLoggingEnabled = httpLoggingEnabled;
+    }
+
+    public void setReportHandler(ReportHandler reportHandler) {
+        this.reportHandler = reportHandler;
     }
 }

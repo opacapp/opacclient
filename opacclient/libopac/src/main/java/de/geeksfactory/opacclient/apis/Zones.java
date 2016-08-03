@@ -80,6 +80,7 @@ public class Zones extends BaseApi {
         defaulttypes.put("Buch/Druckschrift", MediaType.BOOK);
         defaulttypes.put("Buch Erwachsene", MediaType.BOOK);
         defaulttypes.put("Buch Kinder/Jugendliche", MediaType.BOOK);
+        defaulttypes.put("Buch Kinder/Jugend", MediaType.BOOK);
         defaulttypes.put("Kinder-Buch", MediaType.BOOK);
         defaulttypes.put("DVD", MediaType.DVD);
         defaulttypes.put("Kinder-DVD", MediaType.DVD);
@@ -89,11 +90,16 @@ public class Zones extends BaseApi {
         defaulttypes.put("CD-ROM", MediaType.CD_SOFTWARE);
         defaulttypes.put("Kinder-CD", MediaType.CD_SOFTWARE);
         defaulttypes.put("Noten", MediaType.SCORE_MUSIC);
+        defaulttypes.put("Note", MediaType.SCORE_MUSIC);
         defaulttypes.put("Zeitschrift, Heft", MediaType.MAGAZINE);
+        defaulttypes.put("Zeitschrift", MediaType.MAGAZINE);
         defaulttypes.put("E-Book", MediaType.EBOOK);
         defaulttypes.put("CDROM", MediaType.CD_SOFTWARE);
         defaulttypes.put("E-Audio", MediaType.MP3);
         defaulttypes.put("CD", MediaType.CD);
+        defaulttypes.put("eBook", MediaType.EBOOK);
+        defaulttypes.put("ePaper", MediaType.EBOOK);
+        defaulttypes.put("Plan, Karte", MediaType.MAP);
 
         // Zones 1.8.1 (.gif file names)
         defaulttypes.put("book", MediaType.BOOK);

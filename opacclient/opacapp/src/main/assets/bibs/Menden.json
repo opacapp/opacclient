@@ -4,7 +4,7 @@
     "city": "Menden (Sauerland)",
     "country": "Deutschland",
     "data": {
-        "baseurl": "http://webopac.kdvz.de/menden"
+        "baseurl": "https://webopac.citkomm.de/menden"
     },
     "geo": [
         51.43805,

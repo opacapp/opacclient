@@ -257,8 +257,6 @@ Czy chcesz zachować dane o koncie mimo to?</string>
   <string name="do_not_ask_again">Nie pokazuj ponownie</string>
   <string name="reservation_fee_continue">Kontynuuj</string>
   <string name="notification_repeat">Powtórz powiadomienie</string>
-  <string name="update_info_title">Informacje o aktualizacji</string>
-  <string name="update_info_text">Z tą aktualizacją kompletnie przebudowaliśmy funkcję przypomnień tak aby była bardziej inteligentna i można był bardziej na niej polegać. Mimo to, było by na miło gdybyś przez pierwsze tygodnie zwracał na nią szczególną uwagę i dał nam znać jeśli coś poszło nie tak. Z góry dziękujemy!</string>
   <string name="accountdata_export_header">Dane kont %2$s z %1$s</string>
   <string name="accountdata_title">Tytuł</string>
   <string name="accountdata_author">Autor</string>
