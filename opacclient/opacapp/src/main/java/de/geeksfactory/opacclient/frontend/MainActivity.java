@@ -487,19 +487,20 @@ public class MainActivity extends OpacActivity
         if (!getApplicationContext().getPackageName().startsWith("de.geeksfactory.opacclient")) {
             return;  // Never show e.g. in plus edition
         }
+
         SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(this);
         Calendar cal = Calendar.getInstance();
-        cal.set(2016, 5, 15, 0, 0, 0);
+        cal.set(2016, 9, 15, 0, 0, 0);
         if ((new Date()).after(cal.getTime())) {
             return;
         }
         if (!sp.getBoolean(SyncAccountAlarmListener.PREF_SYNC_SERVICE, false)) {
             return;
         }
-        if (!sp.contains("seen_update_dialog_4.5.0")) {
+        if (!sp.contains("seen_update_dialog_4.5.10")) {
             DialogFragment newFragment = new UpdateInfoDialogFragment();
             newFragment.show(getSupportFragmentManager(), "updateinfo");
-            sp.edit().putBoolean("seen_update_dialog_4.5.0", true).commit();
+            sp.edit().putBoolean("seen_update_dialog_4.5.10", true).commit();
         }
     }
 

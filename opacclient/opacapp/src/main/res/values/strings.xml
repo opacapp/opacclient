@@ -264,8 +264,8 @@
     <string name="do_not_ask_again">Do not show again</string>
     <string name="reservation_fee_continue">Continue</string>
     <string name="notification_repeat">Repeat notifications</string>
-    <string name="update_info_title">Update information</string>
-    <string name="update_info_text">With this update, we have completely re-built the reminder feature to make it more intelligent and reliable. However, in the first weeks we\'d love if you would keep an extra eye on it and send us an email if something goes wrong. Thank you in advance!</string>
+    <string name="update_info_title">Privacy notice</string>
+    <string name="update_info_text">With this update, the app starts to automatically report diagnosis information to our server in case of some errors. In one of the next updates, the app will start to periodically fetch information about the libraries from our server. This helps us keep to respond to changes by the libraries quicker and with less effort. We will continue to NEVER transmit or store any personal data to our servers.</string>
     <string name="accountdata_export_header">Account data of %1$s at %2$s</string>
     <string name="accountdata_title">Title</string>
     <string name="accountdata_author">Author</string>

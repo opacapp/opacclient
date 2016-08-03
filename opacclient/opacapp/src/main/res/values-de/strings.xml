@@ -267,8 +267,8 @@
     <string name="do_not_ask_again">Nicht noch einmal anzeigen</string>
     <string name="reservation_fee_continue">Weiter</string>
     <string name="notification_repeat">Benachrichtigungen wiederholen</string>
-	<string name="update_info_title">Update-Hinweis</string>
-    <string name="update_info_text">Mit diesem Update haben wir die Erinnerungsfunktion komplett neu gebaut um sie zuverlässiger und intelligenter zu gestalten. Trotzdem möchten wir Sie bitten, die Funktion in den nächsten Wochen genauer zu beobachten und uns eventuelle Fehler per E-Mail zu melden. Vielen Dank!</string>
+    <string name="update_info_title">Datenschutzhinweis</string>
+    <string name="update_info_text">Mit diesem Update beginnen wir, in seltenen Fehlersituationen technische Details automatisch an unseren Server zu schicken. In einem der nächsten Updates wird die App beginnen, regelmäßig Bibliotheksdaten von unserem Server abrufen. Diese Änderung erlaubt uns, die App schneller auf Änderungen der Bibliotheken anzupassen. Wir werden weiterhin KEINE persönlichen Daten an unsere Server übertragen oder dort speichern.</string>
     <string name="accountdata_export_header">Kontodaten von %1$s am %2$s</string>
     <string name="accountdata_title">Titel</string>
     <string name="accountdata_author">Autor</string>
