@@ -1,0 +1,497 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <title>Brand - smartBib</title>
+    <link href="/opac2/themes/bootstrap/css/bootstrap.min.css" media="all" rel="stylesheet"
+          type="text/css">
+    <link href="/opac2/themes/bootstrap/css/bootstrap-responsive.min.css" media="all"
+          rel="stylesheet" type="text/css">
+    <link href="/opac2/themes/bootstrap/css/font-awesome.css" media="all" rel="stylesheet"
+          type="text/css">
+    <link href="/opac2/themes/bootstrap/css/font-awesome-ie7.min.css" media="all" rel="stylesheet"
+          type="text/css">
+    <link href="/opac2/themes/bootstrap/css/slider.css" media="all" rel="stylesheet"
+          type="text/css">
+    <link href="/opac2/themes/bootstrap/css/screen.css" media="all" rel="stylesheet"
+          type="text/css">
+    <link href="/opac2/themes/muenster/css/print.css" media="print" rel="stylesheet"
+          type="text/css">
+    <link href="/opac2/themes/smartbib/css/styles.css" media="screen, projection" rel="stylesheet"
+          type="text/css">
+    <link href="/opac2/themes/muenster/css/muenster.css" media="all" rel="stylesheet"
+          type="text/css">
+    <link href="/opac2/themes/muenster/css/muenster.local.css" media="all" rel="stylesheet"
+          type="text/css">
+    <link href="/opac2/themes/muenster/css/bootstrap-select.min.css" media="all" rel="stylesheet"
+          type="text/css">
+    <link href="/opac2/themes/root/images/vufind-favicon.ico" rel="shortcut icon"
+          type="image/x-icon">
+    <link href="/opac2/Search/OpenSearch?method=describe" rel="search"
+          type="application/opensearchdescription+xml" title="Bibliothekskatalogsuche">
+    <link rel="stylesheet" type="text/css" href="http://fonts.googleapis.com/css?family=Droid+Sans">
+    <script type="text/javascript">
+    //<!--
+    path = '/opac2';
+    //-->
+
+    </script>
+    <script type="text/javascript" src="/opac2/themes/bootstrap/js/core/jquery.min.js"></script>
+    <script type="text/javascript" src="/opac2/themes/bootstrap/js/core/bootstrap.js"></script>
+    <script type="text/javascript" src="/opac2/themes/muenster/js/common.js"></script>
+    <script type="text/javascript" src="/opac2/themes/muenster/js/lightbox.js"></script>
+    <script type="text/javascript" src="/opac2/themes/bootstrap/js/rc4.js"></script>
+    <script type="text/javascript"
+            src="/opac2/themes/muenster/js/cookies/cookieconsent.js"></script>
+    <script type="text/javascript" src="/opac2/themes/muenster/js/bootstrap-select.min.js"></script>
+    <script type="text/javascript" src="/opac2/themes/smartbib/js/record.js"></script>
+    <script type="text/javascript" src="/opac2/themes/bootstrap/js/check_save_statuses.js"></script>
+    <script type="text/javascript">
+    //<!--
+    vufindString = {bulk_email_success: "Ihre Auswahl wurde per E-Mail verschickt",bulk_save_success: "Ihre Auswahl wurde erfolgreich gespeichert",close: "schließen",loading: "wird geladen...",sms_success: "Nachricht gesendet"};
+    //-->
+
+    </script>
+</head>
+<body>
+<div class="header transparent">
+    <div class="header transparent">
+        <h1 class="pad pull-left"><a id="logo" href="/opac2/"></a></h1>
+        <div class="pull-right text-right headerlang">
+            <img src="/opac2/themes/muenster/images/Stadt.png" class="pull-right city-logo"/>
+            <div class="control-group">
+                <div class="logoutOptions hide">
+                    <a href="/opac2/MyResearch/Home" class="modal-link"
+                       title="Ihr Konto">Ihr Konto</a>
+                    <span class="divider">&nbsp;/&nbsp;</span>
+                    <a href="/opac2/MyResearch/Logout" class="modal-link"
+                       title="Abmelden">Abmelden</a>
+                </div>
+                <div id="loginOptions">
+                    <!-- bug 941 -->
+                    <a href="/opac2/MyResearch/CheckedOut">Zugang zu Ihrem Konto</a>
+                    <!--
+                            <a href="/opac2/MyResearch/Home" class="modal-link" title="Zugang zu Ihrem Konto">Zugang zu Ihrem Konto</a>
+                          -->
+                </div>
+            </div>
+
+            <form class="form-horizontal" method="post" name="langForm" action="" id="langForm"
+                  class="pull-right">
+                <input type="hidden" id="langForm_mylang" value="de" name="mylang"/>
+                <a href="#"
+                   onclick="document.getElementById('langForm_mylang').value = 'en'; document.langForm.submit()">
+                    <span class="en-flag">&nbsp;</span>
+                </a>
+                <a href="#"
+                   onclick="document.getElementById('langForm_mylang').value = 'de'; document.langForm.submit()">
+                    <span class="de-flag">&nbsp;</span>
+                </a>
+            </form>
+        </div>
+    </div>
+</div>
+<div class="container">
+    <div id="header" class="clearfix noprint">
+
+    </div>
+    <div class="searchbox noprint">
+        <div class="navbar">
+
+
+            <form class="form-inline navbar-form block" method="get" action="/opac2/Search/Results"
+                  name="searchForm" id="searchForm" autocomplete="off">
+                <input class="span6 search-query" id="searchForm_lookfor" type="text" name="lookfor"
+                       value=""/>
+                <select id="searchForm_type" name="type" data-native-menu="false"
+                        class="selectpicker very big" data-style="btn-primary btn-search">
+                    <option value="AllFields">überall</option>
+                    <option value="Title">Titel</option>
+                    <option value="Author">Verfasser</option>
+                    <option value="Subject">Schlagwort</option>
+                    <option value="CallNumber">Signatur</option>
+                    <option value="ISN">ISBN/ISSN</option>
+                </select>
+                <button type="submit" class="btn bright" id="findbutton">
+                    suchen <span class="muenster-arrow-right-dark">&nbsp;</span>
+                </button>
+                <div class="clearfix"></div>
+                <a href="/opac2/Search/Advanced" class="advanced_search">Profisuche</a>
+
+                <input type="hidden" name="limit" value="20"/><input type="hidden" name="sort"
+                                                                     value="relevance"/></form>
+            <script type="text/javascript">$("#searchForm_lookfor").focus()</script>
+        </div>
+        <script>
+    $(document).ready(function() {
+        var searchTip = 'Verfasser,\x20Titel,\x20ISBN,\x20Verlag\x20oder\x20Schlagwort';
+        $('#searchForm_lookfor').focusin(function() {
+            if ($(this).attr('value') == searchTip) {
+                $(this).attr('value', '');
+            }
+        });
+        $('#searchForm_lookfor').focusout(function() {
+            if ($(this).attr('value') == '') {
+                $(this).attr('value', searchTip);
+            }
+        });
+        $('#findbutton').click(function() {
+            if ($('#searchForm_lookfor').attr('value') == searchTip) {
+                $('#searchForm_lookfor').attr('value', '');
+            }
+        });
+        $('.selectpicker').selectpicker();
+    });
+
+        </script>
+    </div>
+    <div class="main row-fluid">
+
+        <div class="span9 pull-right">
+            <div class="title details breadcrumbs">
+                <ul class="breadcrumbs">
+                    <li>
+                        <a href="/opac2/Search/Results?lookfor=brand+eins&amp;type=AllFields">Trefferliste</a>
+                        <span class="divider">&gt;</span></li>
+                    <li class="active"><a href="/opac2/Record/0163711">Brand</a></li>
+                </ul>
+            </div>
+            <div class="title details next pull-right">
+                <ul class="breadcrumbs">
+                    <li>
+                        <a href="/opac2/Record/0900944"
+                           title="Next Search Result">Nächster &raquo;</a>
+                    </li>
+                </ul>
+            </div>
+
+            <div class="title details count pull-right">
+                <ul class="breadcrumbs">
+                    <li>1 von 255</li>
+                </ul>
+            </div>
+
+            <div class="title details prev pull-right">
+                <ul class="breadcrumbs">
+                    <li class="disabled"><a href="#">&laquo; Voriger</a></li>
+                </ul>
+            </div>
+            <div class="view item">
+                <div class="record recordId sourceVuFind" id="record">
+                    <input type="hidden" value="0163711" class="hiddenId" id="record_id"/>
+                    <input type="hidden" value="VuFind" class="hiddenSource"/>
+                    <div class="mainviewleft">
+                        <div class="text-center">
+                            <a href="/opac2/Cover/Show?isn=3701708029&amp;size=large"> <img
+                                    alt="Cover" class="recordcover"
+                                    src="/opac2/Cover/Show?isn=3701708029&amp;size=medium"
+                                    style="height: 150px; important;"/>
+                            </a>
+
+                        </div>
+
+
+                        <h3 property="name">Brand : Roman </h3>
+
+                        <p class="ok">Verfügbar</p>
+
+
+                    </div>
+                    <div class="mainviewright">
+
+                        <div class="abstract">
+                            <p>Landschaft als Sperrbezirk, fratzenartig verfremdet. Darin eingebettet das Schicksal von Hader, der, seit ihm in früher Kindheit ein Bottich siedender Lauge über d. Nacken gegossen wurde, nur noch "Echsenbalg" gerufen wird und Zielscheibe d. Spotts lippischer Dorfbewohner ist - ein Schicksal, das sc...</p>
+
+                            <p>
+                                <a href='/opac2/Record/0163711/Description#tabnav'>Ausführliche Beschreibung</a>
+                            </p>
+                        </div>
+
+                        <div class="savedLists hide alert alert-info" id="savedLists">
+                            <strong>Gespeichert in:</strong>
+                        </div>
+
+                        <table class="table" summary="Bibliographische Detailangaben">
+
+
+                            <tr>
+                                <th>1. Verfasser:</th>
+                                <td property="author"><b><a
+                                        href="/opac2/Author/Home?author=Corleis%2C+Gisela">Corleis, Gisela</a></b>
+                                </td>
+                            </tr>
+
+
+                            <tr>
+                                <th>Veröffentlicht:</th>
+                                <td>
+                                                <span property="publisher" typeof="Organization">
+                                                            <span property="location">Salzburg:</span>
+                                                                                <span property="name">Residenz-Verl., </span>
+                                        </span>
+                                    <span property="publicationDate">1993</span>
+                                    <br/>
+                                </td>
+                            </tr>
+
+
+                            <tr>
+                                <th>Themenkreis:</th>
+                                <td>
+                                    Gegenwartsprosa<br/>
+                                </td>
+                            </tr>
+
+
+                            <tr>
+                                <th>Umfangsangaben:</th>
+                                <td>
+                                    301 S.<br/>
+                                </td>
+                            </tr>
+
+
+                        </table>
+
+                        <div class="detaillabels">
+
+
+                            <div class="iconwithtext">
+
+                                <div src="/opac2/" .$path.
+                                "themes/muenster/images/Sprite-Opac.png" class="label-info light buch" >
+                            </div>
+                            <span class="iconlabel">Buch</span>
+                        </div>
+
+
+                        <a href="/opac2/Record/0163711/Save" class="save-record modal-link ntd"
+                           id="0163711" title="Zu den (meinen) Favoriten (hinzufügen)">
+                            <div class="addfavico"></div>
+                        </a>
+                    </div>
+                </div>
+                <div class="clearfix"></div>
+            </div>
+        </div>
+        <div class="view item second">
+            <a name="tabnav"></a>
+            <ul class="recordTabs nav nav-tabs">
+                <li class="active">
+                    <a id="Holdings" href="/opac2/Record/0163711/Holdings#tabnav">Exemplare</a>
+                </li>
+                <li>
+                    <a id="Description"
+                       href="/opac2/Record/0163711/Description#tabnav">Beschreibung</a>
+                </li>
+                <li>
+                    <a id="Details" href="/opac2/Record/0163711/Details#tabnav">Internformat</a>
+                </li>
+            </ul>
+
+            <div class="tab-container">
+
+
+                <table class="table table-striped" style="margin-bottom: 0">
+                    <tr>
+                        <th>Bücherei</th>
+                        <th>Bereich</th>
+                        <th>Standort</th>
+                        <th style="width: 100px;">Standort 2</th>
+                        <th style="width: 200px;">Status</th>
+                        <th>Vorbestellungen</th>
+                    </tr>
+                    <tr vocab="http://schema.org/" typeof="Offer">
+                        <th>Magazinbestand</th>
+                        <td>Roman</td>
+                        <td>CORL</td>
+                        <td>Romane A-Z</td>
+                        <td>
+                            <span class="text-success">Verfügbar<link property="availability"
+                                                                      href="http://schema.org/InStock"/></span>
+                            <meta property="seller" content="Magazinbestand"/>
+                            <meta property="serialNumber" content="00000"/>
+                            <link property="businessFunction"
+                                  href="http://purl.org/goodrelations/v1#LeaseOut"/>
+                            <link property="itemOffered" href="#record"/>
+                        </td>
+                        <td>0</td>
+                    </tr>
+                </table>
+
+
+            </div>
+
+            <span class="Z3988"
+                  title="ctx_ver=Z39.88-2004&amp;ctx_enc=info%3Aofi%2Fenc%3AUTF-8&amp;rfr_id=info%3Asid%2Fvufind.svn.sourceforge.net%3Agenerator&amp;rft.title=Brand+%3A+Roman&amp;rft.date=1993&amp;rft_val_fmt=info%3Aofi%2Ffmt%3Akev%3Amtx%3Adc&amp;rft.creator=Corleis%2C+Gisela&amp;rft.pub=Residenz-Verl.&amp;rft.format=Buch&amp;rft.language=ohne+Angabe"></span>
+        </div>
+        <div class="footer noprint">
+
+            <div class="span3 offset1">
+                <ul>
+                    <li><a
+                            href="/opac2/Search/Advanced"
+                            title="Profisuche">Profisuche</a></li>
+                    <li><a
+                            href="/opac2/Alphabrowse/Home"
+                            title="Alphabetisch suchen">Alphabetisch suchen</a></li>
+                    <li><a
+                            href="/opac2/Search/History"
+                            title="Mein Suchverlauf">Mein Suchverlauf</a></li>
+                    <li><a
+                            href="/opac2/Help/Home?topic=search" class="help-link"
+                            title="Suchtipps">Suchtipps</a></li>
+                </ul>
+            </div>
+            <div class="span3">
+                <ul>
+                    <li><a
+                            href="http://www.stadt-muenster.de/mobilopac/" target="_blank"
+                            title="mobile Version">mobile Version</a></li>
+                    <li><a
+                            href="http://www.stadt-muenster.de/buecherei" target="_blank"
+                            title="Homepage der Stadtbücherei">Homepage der Stadtbücherei</a></li>
+                    <li><a
+                            href="https://www.stadt-muenster.de/formulare/42_digiauskunft"
+                            target="_blank"
+                            title="Frage an die Stadtbücherei">Frage an die Stadtbücherei</a></li>
+                    <li><a
+                            href="/opac2/Impressum/Home"
+                            title="Impressum">Impressum</a></li>
+                </ul>
+            </div>
+            <div class="span3">
+                <ul>
+                    <li><a
+                            href="https://www.stadt-muenster.de/opac2/Search/Results?filter[]=sta2:Neu30"
+                            target="_blank" title="Neue Medien">Neue Medien</a></li>
+                    <li><a
+                            href="https://www.stadt-muenster.de/formulare/42_medienwunsch"
+                            target="_blank" title="Medien vorschlagen">Medien vorschlagen</a></li>
+                    <li><a
+                            href="http://www.stadt-muenster.de/buecherei/ausleihe/fernleihe.html"
+                            target="_blank" title="Fernleihe">Fernleihe</a></li>
+                </ul>
+            </div>
+            <div class="span3">
+                <ul>
+                    <li><a
+                            href="http://www.muensterload.de" target="_blank"
+                            title="muensterload.de">muensterload.de</a></li>
+                    <li><a
+                            href="http://www.edmond-nrw.de/" target="_blank"
+                            title="EDMOND NRW">EDMOND NRW</a></li>
+                    <li><a
+                            href="http://www.digibib-nrw.de/Digibib?LOCATION=447" target="_blank"
+                            title="DigiBib">DigiBib</a></li>
+                </ul>
+            </div>
+            <!-- DBS Zaehlpixel -->
+            <!--  <img src="https://dbspixel.hbz-nrw.de/count?id=AA447&page=20" width="1" height="1"> -->
+            <!-- Piwik -->
+            <script type="text/javascript">
+var pkBaseURL = (("https:" == document.location.protocol) ? "https://piwik.citeq.de/" : "http://piwik.citeq.de/");
+document.write(unescape("%3Cscript src='" + pkBaseURL + "piwik.js' type='text/javascript'%3E%3C/script%3E"));
+
+            </script>
+            <script type="text/javascript">
+try {
+var piwikTracker = Piwik.getTracker(pkBaseURL + "piwik.php", 82);
+piwikTracker.trackPageView();
+piwikTracker.enableLinkTracking();
+} catch( err ) {}
+
+            </script>
+            <noscript><p><img src="http://piwik.citeq.de/piwik.php?idsite=82" style="border:0"
+                              alt="" width="1" height="1"/></p></noscript>
+            <!-- End Piwik Tracking Code -->
+            <div class="clearfix"></div>
+
+            <br clear="all">
+            <div class="smartbib-footer">Powered by VuFind and <a
+                    href="https://www.subkom.de/smartbib/" target="_new"
+                    title="smartBib Discovery System">smartBib</a> from <a
+                    href="https://www.subkom.de/" target="_new">subkom Software GmbH</a></div>
+        </div>
+    </div>
+
+    <div class="sidebar span3 switch-margins well well-small noprint pull-right">
+        <div class="title">
+            Ähnliche Einträge
+        </div>
+        <ul class="nav nav-list similar">
+            <li>
+                <a href="/opac2/Record/0530125">
+                    <img alt="Cover" class="recordcover"
+                         src="/opac2/Cover/Show?isn=340415729X&amp;size=small"
+                         style="height: 110px; important;"/>
+                        <span>
+
+
+                                Die Tarotspielerin : historischer Roman
+            </span>
+                </a>
+            </li>
+            <li>
+                <a href="/opac2/Record/0428807">
+                    <img alt="Cover" class="recordcover"
+                         src="/opac2/Cover/Show?isn=3804414710&amp;size=small"
+                         style="height: 110px; important;"/>
+                        <span>
+
+
+                                Wie interpretiere ich Novellen und Romane? : Anleitung
+            </span>
+                </a>
+            </li>
+            <li>
+                <a href="/opac2/Record/0567966">
+                    <img alt="Cover" class="recordcover"
+                         src="/opac2/Cover/Show?isn=3404159640&amp;size=small"
+                         style="height: 110px; important;"/>
+                        <span>
+
+
+                                Das Geheimnis der Tarotspielerin : historischer Roman
+            </span>
+                </a>
+            </li>
+            <li>
+                <a href="/opac2/Record/0519377">
+                    <img alt="Cover" class="recordcover"
+                         src="/opac2/Cover/Show?isn=3804418414&amp;size=small"
+                         style="height: 110px; important;"/>
+                        <span>
+
+
+                                Kriminalität, Gewalt und Drogen : Lektürevorschläge für den Unterricht
+            </span>
+                </a>
+            </li>
+            <li>
+                <a href="/opac2/Record/0497958">
+                    <img alt="Cover" class="recordcover"
+                         src="/opac2/Cover/Show?isn=3589222689&amp;size=small"
+                         style="height: 110px; important;"/>
+                        <span>
+
+
+                                Besser in Deutsch - Oberstufe : literarische Texte interpretieren
+            </span>
+                </a>
+            </li>
+        </ul>
+    </div>
+</div>
+</div>
+<!-- MODAL IN CASE WE NEED ONE -->
+<div id="modal" class="modal hide fade">
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+        <h3></h3>
+    </div>
+    <div class="modal-body">wird geladen......</div>
+</div>
+</body>
+</html>

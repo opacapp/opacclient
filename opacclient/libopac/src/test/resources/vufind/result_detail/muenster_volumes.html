@@ -1,0 +1,491 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <title>Journale: brand eins</title>
+    <link href="/opac2/themes/bootstrap/css/bootstrap.min.css" media="all" rel="stylesheet"
+          type="text/css">
+    <link href="/opac2/themes/bootstrap/css/bootstrap-responsive.min.css" media="all"
+          rel="stylesheet" type="text/css">
+    <link href="/opac2/themes/bootstrap/css/font-awesome.css" media="all" rel="stylesheet"
+          type="text/css">
+    <link href="/opac2/themes/bootstrap/css/font-awesome-ie7.min.css" media="all" rel="stylesheet"
+          type="text/css">
+    <link href="/opac2/themes/bootstrap/css/slider.css" media="all" rel="stylesheet"
+          type="text/css">
+    <link href="/opac2/themes/bootstrap/css/screen.css" media="all" rel="stylesheet"
+          type="text/css">
+    <link href="/opac2/themes/muenster/css/print.css" media="print" rel="stylesheet"
+          type="text/css">
+    <link href="/opac2/themes/smartbib/css/styles.css" media="screen, projection" rel="stylesheet"
+          type="text/css">
+    <link href="/opac2/themes/muenster/css/muenster.css" media="all" rel="stylesheet"
+          type="text/css">
+    <link href="/opac2/themes/muenster/css/muenster.local.css" media="all" rel="stylesheet"
+          type="text/css">
+    <link href="/opac2/themes/muenster/css/bootstrap-select.min.css" media="all" rel="stylesheet"
+          type="text/css">
+    <link href="/opac2/themes/root/images/vufind-favicon.ico" rel="shortcut icon"
+          type="image/x-icon">
+    <link href="/opac2/Search/OpenSearch?method=describe" rel="search"
+          type="application/opensearchdescription+xml" title="Bibliothekskatalogsuche">
+    <link rel="stylesheet" type="text/css" href="http://fonts.googleapis.com/css?family=Droid+Sans">
+    <script type="text/javascript">
+    //<!--
+    path = '/opac2';
+    //-->
+
+    </script>
+    <script type="text/javascript" src="/opac2/themes/bootstrap/js/core/jquery.min.js"></script>
+    <script type="text/javascript" src="/opac2/themes/bootstrap/js/core/bootstrap.js"></script>
+    <script type="text/javascript" src="/opac2/themes/muenster/js/common.js"></script>
+    <script type="text/javascript" src="/opac2/themes/muenster/js/lightbox.js"></script>
+    <script type="text/javascript" src="/opac2/themes/bootstrap/js/rc4.js"></script>
+    <script type="text/javascript"
+            src="/opac2/themes/muenster/js/cookies/cookieconsent.js"></script>
+    <script type="text/javascript" src="/opac2/themes/muenster/js/bootstrap-select.min.js"></script>
+    <script type="text/javascript" src="/opac2/themes/smartbib/js/record.js"></script>
+    <script type="text/javascript" src="/opac2/themes/bootstrap/js/check_save_statuses.js"></script>
+    <script type="text/javascript">
+    //<!--
+    vufindString = {bulk_email_success: "Ihre Auswahl wurde per E-Mail verschickt",bulk_save_success: "Ihre Auswahl wurde erfolgreich gespeichert",close: "schließen",loading: "wird geladen...",sms_success: "Nachricht gesendet"};
+    //-->
+
+    </script>
+</head>
+<body>
+<div class="header transparent">
+    <div class="header transparent">
+        <h1 class="pad pull-left"><a id="logo" href="/opac2/"></a></h1>
+        <div class="pull-right text-right headerlang">
+            <img src="/opac2/themes/muenster/images/Stadt.png" class="pull-right city-logo"/>
+            <div class="control-group">
+                <div class="logoutOptions hide">
+                    <a href="/opac2/MyResearch/Home" class="modal-link"
+                       title="Ihr Konto">Ihr Konto</a>
+                    <span class="divider">&nbsp;/&nbsp;</span>
+                    <a href="/opac2/MyResearch/Logout" class="modal-link"
+                       title="Abmelden">Abmelden</a>
+                </div>
+                <div id="loginOptions">
+                    <!-- bug 941 -->
+                    <a href="/opac2/MyResearch/CheckedOut">Zugang zu Ihrem Konto</a>
+                    <!--
+                            <a href="/opac2/MyResearch/Home" class="modal-link" title="Zugang zu Ihrem Konto">Zugang zu Ihrem Konto</a>
+                          -->
+                </div>
+            </div>
+
+            <form class="form-horizontal" method="post" name="langForm" action="" id="langForm"
+                  class="pull-right">
+                <input type="hidden" id="langForm_mylang" value="de" name="mylang"/>
+                <a href="#"
+                   onclick="document.getElementById('langForm_mylang').value = 'en'; document.langForm.submit()">
+                    <span class="en-flag">&nbsp;</span>
+                </a>
+                <a href="#"
+                   onclick="document.getElementById('langForm_mylang').value = 'de'; document.langForm.submit()">
+                    <span class="de-flag">&nbsp;</span>
+                </a>
+            </form>
+        </div>
+    </div>
+</div>
+<div class="container">
+    <div id="header" class="clearfix noprint">
+
+    </div>
+    <div class="searchbox noprint">
+        <div class="navbar">
+
+
+            <form class="form-inline navbar-form block" method="get" action="/opac2/Search/Results"
+                  name="searchForm" id="searchForm" autocomplete="off">
+                <input class="span6 search-query" id="searchForm_lookfor" type="text" name="lookfor"
+                       value=""/>
+                <select id="searchForm_type" name="type" data-native-menu="false"
+                        class="selectpicker very big" data-style="btn-primary btn-search">
+                    <option value="AllFields">überall</option>
+                    <option value="Title">Titel</option>
+                    <option value="Author">Verfasser</option>
+                    <option value="Subject">Schlagwort</option>
+                    <option value="CallNumber">Signatur</option>
+                    <option value="ISN">ISBN/ISSN</option>
+                </select>
+                <button type="submit" class="btn bright" id="findbutton">
+                    suchen <span class="muenster-arrow-right-dark">&nbsp;</span>
+                </button>
+                <div class="clearfix"></div>
+                <a href="/opac2/Search/Advanced" class="advanced_search">Profisuche</a>
+
+                <input type="hidden" name="limit" value="20"/><input type="hidden" name="sort"
+                                                                     value="relevance"/></form>
+            <script type="text/javascript">$("#searchForm_lookfor").focus()</script>
+        </div>
+        <script>
+    $(document).ready(function() {
+        var searchTip = 'Verfasser,\x20Titel,\x20ISBN,\x20Verlag\x20oder\x20Schlagwort';
+        $('#searchForm_lookfor').focusin(function() {
+            if ($(this).attr('value') == searchTip) {
+                $(this).attr('value', '');
+            }
+        });
+        $('#searchForm_lookfor').focusout(function() {
+            if ($(this).attr('value') == '') {
+                $(this).attr('value', searchTip);
+            }
+        });
+        $('#findbutton').click(function() {
+            if ($('#searchForm_lookfor').attr('value') == searchTip) {
+                $('#searchForm_lookfor').attr('value', '');
+            }
+        });
+        $('.selectpicker').selectpicker();
+    });
+
+        </script>
+    </div>
+    <div class="main row-fluid">
+
+        <div class="span9 pull-right">
+            <div class="title details breadcrumbs">
+                <ul class="breadcrumbs">
+                    <li>
+                        <a href="/opac2/Search/Results?lookfor=brand+eins&amp;type=AllFields">Trefferliste</a>
+                        <span class="divider">&gt;</span></li>
+                    <li class="active"><a href="/opac2/Record/0900944">brand eins</a></li>
+                </ul>
+            </div>
+            <div class="title details next pull-right">
+                <ul class="breadcrumbs">
+                    <li>
+                        <a href="/opac2/Record/0943483"
+                           title="Next Search Result">Nächster &raquo;</a>
+                    </li>
+                </ul>
+            </div>
+
+            <div class="title details count pull-right">
+                <ul class="breadcrumbs">
+                    <li>2 von 255</li>
+                </ul>
+            </div>
+
+            <div class="title details prev pull-right">
+                <ul class="breadcrumbs">
+                    <li>
+                        <a href="/opac2/Record/0163711"
+                           title="Previous Search Result">&laquo; Voriger</a>
+                    </li>
+                </ul>
+            </div>
+            <div class="view item">
+                <div class="record recordId sourceVuFind" id="record">
+                    <input type="hidden" value="0900944" class="hiddenId" id="record_id"/>
+                    <input type="hidden" value="VuFind" class="hiddenSource"/>
+                    <div class="mainviewleft">
+                        <div class="text-center">
+                            <img src="/opac2/Cover/Unavailable" class="recordcover"
+                                 alt="Kein Bild verfügbar"/>
+
+
+                        </div>
+
+
+                        <h3 property="name">brand eins : 2014 ; Wirtschaftsmagazin </h3>
+
+                        <p class="ok">Mehrbändig</p>
+
+
+                    </div>
+                    <div class="mainviewright">
+
+                        <div class="abstract">
+                        </div>
+
+                        <div class="savedLists hide alert alert-info" id="savedLists">
+                            <strong>Gespeichert in:</strong>
+                        </div>
+
+                        <table class="table" summary="Bibliographische Detailangaben">
+
+
+                            <tr>
+                                <th>Veröffentlicht:</th>
+                                <td>
+                                                <span property="publisher" typeof="Organization">
+                                                            <span property="location">Hamburg:</span>
+                                                                                <span property="name">brand eins Verlag, </span>
+                                        </span>
+                                    <br/>
+                                </td>
+                            </tr>
+
+
+                            <tr>
+                                <th>Systematik:</th>
+                                <td>
+
+
+                                    <a href="/opac2/Search/Results?type=AllFields&filter[]=callnumber-first-code%3AHAB 9">HAB 9</a> ,
+                                </td>
+                            </tr>
+
+
+                        </table>
+
+                        <div class="detaillabels">
+
+
+                            <div class="iconwithtext">
+
+                                <div src="/opac2/" .$path.
+                                "themes/muenster/images/Sprite-Opac.png" class="label-info light zeitschriftzeitung" >
+                            </div>
+                            <span class="iconlabel">Zeitschrift</span>
+                        </div>
+
+
+                        <a href="/opac2/Record/0900944/Save" class="save-record modal-link ntd"
+                           id="0900944" title="Zu den (meinen) Favoriten (hinzufügen)">
+                            <div class="addfavico"></div>
+                        </a>
+                    </div>
+                </div>
+                <div class="clearfix"></div>
+            </div>
+        </div>
+        <div class="view item second">
+            <a name="tabnav"></a>
+            <ul class="recordTabs nav nav-tabs">
+                <li class="active">
+                    <a id="Volumes" href="/opac2/Record/0900944/Volumes#tabnav">Journale</a>
+                </li>
+                <li>
+                    <a id="Description"
+                       href="/opac2/Record/0900944/Description#tabnav">Beschreibung</a>
+                </li>
+                <li>
+                    <a id="Details" href="/opac2/Record/0900944/Details#tabnav">Internformat</a>
+                </li>
+            </ul>
+
+            <div class="tab-container">
+
+                <table class="table table-striped">
+                    <tr>
+                        <th>Titel</th>
+                    </tr>
+                    <tr>
+                        <td>
+                            <a href="/opac2/Record/0913538" class="title">2014; Heft 4
+                            </a>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <a href="/opac2/Record/0924298" class="title">2014; Heft 7
+                            </a>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <a href="/opac2/Record/0926605" class="title">2014; Heft 8
+                            </a>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <a href="/opac2/Record/0930963" class="title">2014; Heft 9
+                            </a>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <a href="/opac2/Record/0934325" class="title">2014; Heft 10
+                            </a>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <a href="/opac2/Record/0936698" class="title">2014; Heft 11
+                            </a>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <a href="/opac2/Record/0940219" class="title">2014; Heft 12
+                            </a>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+
+            <span class="Z3988"
+                  title="ctx_ver=Z39.88-2004&amp;ctx_enc=info%3Aofi%2Fenc%3AUTF-8&amp;rfr_id=info%3Asid%2Fvufind.svn.sourceforge.net%3Agenerator&amp;rft.title=brand+eins+%3A+2014+%3B+Wirtschaftsmagazin&amp;rft.date=&amp;rft_val_fmt=info%3Aofi%2Ffmt%3Akev%3Amtx%3Adc&amp;rft.creator=&amp;rft.pub=brand+eins+Verlag&amp;rft.format=Zeitschrift+%2F+Zeitung&amp;rft.language=ohne+Angabe"></span>
+        </div>
+        <div class="footer noprint">
+
+            <div class="span3 offset1">
+                <ul>
+                    <li><a
+                            href="/opac2/Search/Advanced"
+                            title="Profisuche">Profisuche</a></li>
+                    <li><a
+                            href="/opac2/Alphabrowse/Home"
+                            title="Alphabetisch suchen">Alphabetisch suchen</a></li>
+                    <li><a
+                            href="/opac2/Search/History"
+                            title="Mein Suchverlauf">Mein Suchverlauf</a></li>
+                    <li><a
+                            href="/opac2/Help/Home?topic=search" class="help-link"
+                            title="Suchtipps">Suchtipps</a></li>
+                </ul>
+            </div>
+            <div class="span3">
+                <ul>
+                    <li><a
+                            href="http://www.stadt-muenster.de/mobilopac/" target="_blank"
+                            title="mobile Version">mobile Version</a></li>
+                    <li><a
+                            href="http://www.stadt-muenster.de/buecherei" target="_blank"
+                            title="Homepage der Stadtbücherei">Homepage der Stadtbücherei</a></li>
+                    <li><a
+                            href="https://www.stadt-muenster.de/formulare/42_digiauskunft"
+                            target="_blank"
+                            title="Frage an die Stadtbücherei">Frage an die Stadtbücherei</a></li>
+                    <li><a
+                            href="/opac2/Impressum/Home"
+                            title="Impressum">Impressum</a></li>
+                </ul>
+            </div>
+            <div class="span3">
+                <ul>
+                    <li><a
+                            href="https://www.stadt-muenster.de/opac2/Search/Results?filter[]=sta2:Neu30"
+                            target="_blank" title="Neue Medien">Neue Medien</a></li>
+                    <li><a
+                            href="https://www.stadt-muenster.de/formulare/42_medienwunsch"
+                            target="_blank" title="Medien vorschlagen">Medien vorschlagen</a></li>
+                    <li><a
+                            href="http://www.stadt-muenster.de/buecherei/ausleihe/fernleihe.html"
+                            target="_blank" title="Fernleihe">Fernleihe</a></li>
+                </ul>
+            </div>
+            <div class="span3">
+                <ul>
+                    <li><a
+                            href="http://www.muensterload.de" target="_blank"
+                            title="muensterload.de">muensterload.de</a></li>
+                    <li><a
+                            href="http://www.edmond-nrw.de/" target="_blank"
+                            title="EDMOND NRW">EDMOND NRW</a></li>
+                    <li><a
+                            href="http://www.digibib-nrw.de/Digibib?LOCATION=447" target="_blank"
+                            title="DigiBib">DigiBib</a></li>
+                </ul>
+            </div>
+            <!-- DBS Zaehlpixel -->
+            <!--  <img src="https://dbspixel.hbz-nrw.de/count?id=AA447&page=20" width="1" height="1"> -->
+            <!-- Piwik -->
+            <script type="text/javascript">
+var pkBaseURL = (("https:" == document.location.protocol) ? "https://piwik.citeq.de/" : "http://piwik.citeq.de/");
+document.write(unescape("%3Cscript src='" + pkBaseURL + "piwik.js' type='text/javascript'%3E%3C/script%3E"));
+
+            </script>
+            <script type="text/javascript">
+try {
+var piwikTracker = Piwik.getTracker(pkBaseURL + "piwik.php", 82);
+piwikTracker.trackPageView();
+piwikTracker.enableLinkTracking();
+} catch( err ) {}
+
+            </script>
+            <noscript><p><img src="http://piwik.citeq.de/piwik.php?idsite=82" style="border:0"
+                              alt="" width="1" height="1"/></p></noscript>
+            <!-- End Piwik Tracking Code -->
+            <div class="clearfix"></div>
+
+            <br clear="all">
+            <div class="smartbib-footer">Powered by VuFind and <a
+                    href="https://www.subkom.de/smartbib/" target="_new"
+                    title="smartBib Discovery System">smartBib</a> from <a
+                    href="https://www.subkom.de/" target="_new">subkom Software GmbH</a></div>
+        </div>
+    </div>
+
+    <div class="sidebar span3 switch-margins well well-small noprint pull-right">
+        <div class="title">
+            Ähnliche Einträge
+        </div>
+        <ul class="nav nav-list similar">
+            <li>
+                <a href="/opac2/Record/0943483">
+                    <img src="/opac2/Cover/Unavailable" class="recordcover"
+                         alt="Kein Bild verfügbar"/>
+                        <span>
+
+
+                                brand eins : 2015 ; Wirtschaftsmagazin
+            </span>
+                </a>
+            </li>
+            <li>
+                <a href="/opac2/Record/0975801">
+                    <img src="/opac2/Cover/Unavailable" class="recordcover"
+                         alt="Kein Bild verfügbar"/>
+                        <span>
+
+
+                                brand eins : 2016 ; Wirtschaftsmagazin
+            </span>
+                </a>
+            </li>
+            <li>
+                <a href="/opac2/Record/0900942">
+                    <img src="/opac2/Cover/Unavailable" class="recordcover"
+                         alt="Kein Bild verfügbar"/>
+                        <span>
+
+
+                                Capital : 2014 ; das Wirtschaftsmagazin
+            </span>
+                </a>
+            </li>
+            <li>
+                <a href="/opac2/Record/0920915">
+                    <img src="/opac2/Cover/Unavailable" class="recordcover"
+                         alt="Kein Bild verfügbar"/>
+                        <span>
+
+
+                                Bilanz : Das deutsche Wirtschaftsmagazin ; Beilage zu &quot;Die Welt&quot;
+            </span>
+                </a>
+            </li>
+            <li>
+                <a href="/opac2/Record/0902136">
+                    <img src="/opac2/Cover/Unavailable" class="recordcover"
+                         alt="Kein Bild verfügbar"/>
+                        <span>
+
+
+                                Impulse : 2014 ; das Magazin für Unternehmer
+            </span>
+                </a>
+            </li>
+        </ul>
+    </div>
+</div>
+</div>
+<!-- MODAL IN CASE WE NEED ONE -->
+<div id="modal" class="modal hide fade">
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+        <h3></h3>
+    </div>
+    <div class="modal-body">wird geladen......</div>
+</div>
+</body>
+</html>
