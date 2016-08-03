@@ -3,14 +3,14 @@ apply plugin: 'jacoco'
 
 android {
     compileSdkVersion 24
-    buildToolsVersion '24.0.0'
+    buildToolsVersion '24.0.1'
 
     defaultConfig {
         applicationId "de.geeksfactory.opacclient"
         minSdkVersion 8
         targetSdkVersion 24
-        versionCode 152
-        versionName "4.5.9"
+        versionCode 153
+        versionName "4.5.10"
         vectorDrawables.useSupportLibrary = true
     }
 
