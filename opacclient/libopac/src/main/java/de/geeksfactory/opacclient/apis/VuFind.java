@@ -298,7 +298,7 @@ public class VuFind extends BaseApi {
 
         Elements title = doc.select(".record h1, .record [itemprop=name], .record [property=name]");
         if (title.size() > 0) {
-            res.setTitle(title.text());
+            res.setTitle(title.first().text());
         }
         for (Element img : doc.select(".record img, #cover img")) {
             String src = img.absUrl("src");
