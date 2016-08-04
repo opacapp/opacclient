@@ -183,7 +183,7 @@ public class SuggestLibraryActivity extends AppCompatActivity {
         try {
             Request request = new Request.Builder().url(
                     GEOCODE_API + "?input=" + URLEncoder.encode(input, "utf8") + "&types=(cities)" +
-                            "&language=" + getResources().getConfiguration().locale.toLanguageTag() +
+                            "&language=" + getResources().getConfiguration().locale.getLanguage() +
                             "&key=" + API_KEY).build();
             jsonResults = client.newCall(request).execute().body().string();
         } catch (IOException e) {
