@@ -38,8 +38,10 @@ import okhttp3.Request;
 public class SuggestLibraryActivity extends AppCompatActivity {
 
     private static final String LOG_TAG = "Opac";
-    private static final String GEOCODE_API = "https://maps.googleapis.com/maps/api/place/autocomplete/json";
-    private static final String DETAIL_API = "https://maps.googleapis.com/maps/api/place/details/json?placeid=";
+    private static final String GEOCODE_API =
+            "https://maps.googleapis.com/maps/api/place/autocomplete/json";
+    private static final String DETAIL_API =
+            "https://maps.googleapis.com/maps/api/place/details/json?placeid=";
     private static final String API_KEY = "AIzaSyDau_9TkGF8hVqLlcHhq6yDUUN9c3rqehU";
     private AutoCompleteTextView etCity;
     private EditText etName;
@@ -204,13 +206,13 @@ public class SuggestLibraryActivity extends AppCompatActivity {
                 String jsonDetailedResults;
                 try {
                     Request request = new Request.Builder().url(
-                        DETAIL_API + URLEncoder.encode(placeid, "utf8") +
-                                "&language=" + getResources().getConfiguration().locale.toLanguageTag() +
-                                "&key=" + API_KEY).build();
+                            DETAIL_API + URLEncoder.encode(placeid, "utf8") + "&language=" +
+                                    getResources().getConfiguration().locale.getLanguage() +
+                                    "&key=" + API_KEY).build();
                     jsonDetailedResults = client.newCall(request).execute().body().string();
                 } catch (IOException e) {
-                        Log.e(LOG_TAG, "Error connecting to Places API", e);
-                        return null;
+                    Log.e(LOG_TAG, "Error connecting to Places API", e);
+                    return null;
                 }
 
                 try {
@@ -235,9 +237,9 @@ public class SuggestLibraryActivity extends AppCompatActivity {
                             }
                         }
                         city.lat = detailResult.getJSONObject("geometry")
-                                         .getJSONObject("location").getDouble("lat");
+                                               .getJSONObject("location").getDouble("lat");
                         city.lon = detailResult.getJSONObject("geometry")
-                                         .getJSONObject("location").getDouble("lng");
+                                               .getJSONObject("location").getDouble("lng");
                         resultList.add(city);
                     }
                 } catch (JSONException e) {
