@@ -1030,7 +1030,7 @@ public class Bibliotheca extends BaseApi {
             String header = headerCell.text();
             headersList.put(header);
             if (headers_lent.has(header)) {
-                copymap.put(headers_lent.getString(header), i);
+                if (!headers_lent.isNull(header)) copymap.put(headers_lent.getString(header), i);
             } else {
                 unknownHeaders.put(header);
             }
