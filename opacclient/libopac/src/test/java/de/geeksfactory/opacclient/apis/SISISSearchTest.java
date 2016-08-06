@@ -47,11 +47,12 @@ public class SISISSearchTest extends BaseHtmlTest {
         String html1 = readResource("/sisis/result_detail/" + file.replace(".html", "_1.html"));
         String html2 = readResource("/sisis/result_detail/" + file.replace(".html", "_2.html"));
         String html3 = readResource("/sisis/result_detail/" + file.replace(".html", "_3.html"));
+        String coverJs = readResource("/sisis/result_detail/" + file.replace(".html", ".js"));
         if (html1 == null || html2 == null || html3 == null) {
             return; // we may not have all files for all libraries
         }
-        DetailledItem result =
-                SISIS.parseDetail(html1, html2, html3, new JSONObject(), new DummyStringProvider());
+        DetailledItem result = SISIS.parseDetail(html1, html2, html3, coverJs, new JSONObject(),
+                new DummyStringProvider());
         for (Copy copy : result.getCopies()) {
             assertContainsData(copy.getStatus());
             assertNullOrNotEmpty(copy.getBarcode());
@@ -71,6 +72,7 @@ public class SISISSearchTest extends BaseHtmlTest {
 
         if (file.equals("berlin_htw.html")) {
             assertTrue(result.getDetails().contains(new Detail("Signatur:", "15/2322")));
+            assertNotNull(result.getCover());
         }
     }
 

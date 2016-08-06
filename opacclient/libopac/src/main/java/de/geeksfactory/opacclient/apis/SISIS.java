@@ -695,16 +695,24 @@ public class SISIS extends BaseApi implements OpacApi {
                 opac_url
                         + "/singleHit.do?methodToCall=activateTab&tab=showAvailabilityActive",
                 ENCODING);
-        DetailledItem result = parseDetail(html, html2, html3, data, stringProvider);
+
+        String coverJs = null;
+        Pattern coverPattern = Pattern.compile("\\$\\.ajax\\(\\{[\\n\\s]*url: '(jsp/result/cover" +
+                ".jsp\\?[^']+')");
+        Matcher coverMatcher = coverPattern.matcher(html);
+        if (coverMatcher.find()) coverJs = httpGet(coverMatcher.group(1), ENCODING);
+
+        DetailledItem result = parseDetail(html, html2, html3, coverJs, data, stringProvider);
         try {
-            downloadCover(result);
+            if (!result.getCover().contains("amazon")) downloadCover(result);
         } catch (Exception e) {
 
         }
         return result;
     }
 
-    static DetailledItem parseDetail(String html, String html2, String html3, JSONObject data,
+    static DetailledItem parseDetail(String html, String html2, String html3, String coverJs,
+            JSONObject data,
             StringProvider stringProvider)
             throws IOException {
         Document doc = Jsoup.parse(html);
@@ -754,7 +762,13 @@ public class SISIS extends BaseApi implements OpacApi {
             // TODO: Multiple options - handle this case!
         }
 
-        if (doc.select(".data td img").size() == 1) {
+        if (coverJs != null) {
+            Pattern srcPattern = Pattern.compile("<img .* src=\"([^\"]+)\">");
+            Matcher matcher = srcPattern.matcher(coverJs);
+            if (matcher.find()) {
+                result.setCover(matcher.group(1));
+            }
+        } else if (doc.select(".data td img").size() == 1) {
             result.setCover(doc.select(".data td img").first().attr("abs:src"));
         }
 
