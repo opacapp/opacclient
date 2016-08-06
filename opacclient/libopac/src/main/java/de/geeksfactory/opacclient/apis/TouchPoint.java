@@ -760,7 +760,7 @@ public class TouchPoint extends BaseApi implements OpacApi {
                         + reservationParameter, ENCODING);
                 Document reservationDoc = Jsoup.parse(reservationHtml);
                 reservationDoc.setBaseUri(opac_url);
-                if (reservationDoc.select("a").size() == 1) {
+                if (reservationDoc.select("a[href*=requestItem.do]").size() == 1) {
                     result.setReservable(true);
                     result.setReservation_info(reservationDoc.select("a")
                                                              .first().attr("abs:href"));
