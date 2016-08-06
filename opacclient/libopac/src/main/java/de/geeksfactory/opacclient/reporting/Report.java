@@ -16,6 +16,8 @@ public class Report {
     private final String type;
     private final DateTime date;
     private final JSONObject data;
+    private String app;
+    private int version;
 
     public Report(String library, String api, String type, DateTime date, JSONObject data) {
         this.library = library;
@@ -58,5 +60,21 @@ public class Report {
         } catch (JSONException e) {
             return null;
         }
+    }
+
+    public String getApp() {
+        return app;
+    }
+
+    public void setApp(String app) {
+        this.app = app;
+    }
+
+    public int getVersion() {
+        return version;
+    }
+
+    public void setVersion(int version) {
+        this.version = version;
     }
 }
