@@ -700,7 +700,9 @@ public class SISIS extends BaseApi implements OpacApi {
         Pattern coverPattern = Pattern.compile("\\$\\.ajax\\(\\{[\\n\\s]*url: '(jsp/result/cover" +
                 ".jsp\\?[^']+')");
         Matcher coverMatcher = coverPattern.matcher(html);
-        if (coverMatcher.find()) coverJs = httpGet(coverMatcher.group(1), ENCODING);
+        if (coverMatcher.find()) {
+            coverJs = httpGet(opac_url + "/" + coverMatcher.group(1), ENCODING);
+        }
 
         DetailledItem result = parseDetail(html, html2, html3, coverJs, data, stringProvider);
         try {
