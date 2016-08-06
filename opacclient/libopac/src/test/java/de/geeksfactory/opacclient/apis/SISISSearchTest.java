@@ -70,7 +70,7 @@ public class SISISSearchTest extends BaseHtmlTest {
         assertEquals(result.getTitle(), getDetailTitle(file));
 
         if (file.equals("berlin_htw.html")) {
-            assertTrue(result.getDetails().contains(new Detail("Signatur", "15/2322")));
+            assertTrue(result.getDetails().contains(new Detail("Signatur:", "15/2322")));
         }
     }
 

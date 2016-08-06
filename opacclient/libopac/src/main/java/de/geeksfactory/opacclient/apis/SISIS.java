@@ -1,23 +1,20 @@
 /**
  * Copyright (C) 2013 by Raphael Michel under the MIT license:
  *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
- * of this software and associated documentation files (the "Software"), 
- * to deal in the Software without restriction, including without limitation 
- * the rights to use, copy, modify, merge, publish, distribute, sublicense, 
- * and/or sell copies of the Software, and to permit persons to whom the Software 
- * is furnished to do so, subject to the following conditions:
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
+ * associated documentation files (the "Software"), to deal in the Software without restriction,
+ * including without limitation the rights to use, copy, modify, merge, publish, distribute,
+ * sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
  *
- * The above copyright notice and this permission notice shall be included in 
- * all copies or substantial portions of the Software.
+ * The above copyright notice and this permission notice shall be included in all copies or
+ * substantial portions of the Software.
  *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR 
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, 
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. 
- * IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, 
- * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, 
- * ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER 
- * DEALINGS IN THE SOFTWARE.
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT
+ * NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+ * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
+ * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 package de.geeksfactory.opacclient.apis;
 
@@ -343,7 +340,8 @@ public class SISIS extends BaseApi implements OpacApi {
     public class SingleResultFound extends Exception {
     }
 
-    protected SearchRequestResult parse_search_wrapped(String html, int page) throws IOException, OpacErrorException {
+    protected SearchRequestResult parse_search_wrapped(String html, int page)
+            throws IOException, OpacErrorException {
         try {
             return parse_search(html, page);
         } catch (SingleResultFound e) {
@@ -779,14 +777,21 @@ public class SISIS extends BaseApi implements OpacApi {
         Element detailtrs = doc2.select(".box-container .data td").first();
         for (Node node : detailtrs.childNodes()) {
             if (node instanceof Element) {
-                if (((Element) node).tagName().equals("strong")) {
-                    title = ((Element) node).text().trim();
-                    text = "";
+                Element element = (Element) node;
+                if (element.tagName().equals("strong")) {
+                    if (element.hasClass("c2")) {
+                        if (!title.equals("")) {
+                            result.addDetail(new Detail(title, text.trim()));
+                        }
+                        title = element.text().trim();
+                        text = "";
+                    } else {
+                        text = text + element.text();
+                    }
                 } else {
-                    if (((Element) node).tagName().equals("a")
-                            && (((Element) node).text().trim()
-                                                .contains("hier klicken") || title
-                            .equals("Link:"))) {
+                    if (element.tagName().equals("a") &&
+                            (element.text().trim().contains("hier klicken") ||
+                                    title.equals("Link:"))) {
                         text = text + node.attr("href");
                         takeover = true;
                         break;
@@ -807,8 +812,7 @@ public class SISIS extends BaseApi implements OpacApi {
                 if (node instanceof Element) {
                     if (((Element) node).tagName().equals("strong")) {
                         if (!text.equals("") && !title.equals("")) {
-                            result.addDetail(new Detail(title.trim(), text
-                                    .trim()));
+                            result.addDetail(new Detail(title.trim(), text.trim()));
                             if (title.equals("Titel:")) {
                                 result.setTitle(text.trim());
                             }
@@ -1332,7 +1336,8 @@ public class SISIS extends BaseApi implements OpacApi {
         return true;
     }
 
-    public static void parse_medialist(List<LentItem> media, Document doc, int offset, JSONObject data) {
+    public static void parse_medialist(List<LentItem> media, Document doc, int offset,
+            JSONObject data) {
         Elements copytrs = doc.select(".data tr");
         doc.setBaseUri(data.optString("baseurl"));
 
