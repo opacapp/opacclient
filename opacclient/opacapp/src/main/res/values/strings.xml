@@ -234,6 +234,7 @@
     <string name="location">Location</string>
     <string name="department">Department</string>
     <string name="reservations">Reservations</string>
+    <string name="barcode">Barcode</string>
     <string name="clear_search">clear form</string>
     <string name="title">Title</string>
     <string name="author">Author</string>
