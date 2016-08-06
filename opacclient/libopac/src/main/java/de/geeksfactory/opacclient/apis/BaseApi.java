@@ -521,7 +521,7 @@ public abstract class BaseApi implements OpacApi {
      *
      * @param item CoverHolder to download the cover for
      */
-    public void downloadCover(CoverHolder item) {
+    protected void downloadCover(CoverHolder item) {
         if (item.getCover() == null) {
             return;
         }

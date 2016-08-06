@@ -162,7 +162,7 @@ public class SISIS extends BaseApi implements OpacApi {
     protected int resultcount = 10;
     protected long logged_in;
     protected Account logged_in_as;
-    protected String ENCODING = "UTF-8";
+    protected static final String ENCODING = "UTF-8";
 
     public List<SearchField> parseSearchFields() throws IOException,
             JSONException {
@@ -675,7 +675,7 @@ public class SISIS extends BaseApi implements OpacApi {
         String html = httpGet(opac_url + "/start.do?" + startparams
                 + "searchType=1&Query=0%3D%22" + id + "%22" + hbp, ENCODING);
 
-        return parse_result(html);
+        return loadDetail(html);
     }
 
     @Override
@@ -686,24 +686,35 @@ public class SISIS extends BaseApi implements OpacApi {
                         + "/singleHit.do?tab=showExemplarActive&methodToCall=showHit&curPos="
                         + (nr + 1) + "&identifier=" + identifier, ENCODING);
 
-        return parse_result(html);
+        return loadDetail(html);
     }
 
-    protected DetailledItem parse_result(String html) throws IOException {
-        Document doc = Jsoup.parse(html);
-        doc.setBaseUri(opac_url);
-
+    protected DetailledItem loadDetail(String html) throws IOException {
         String html2 = httpGet(opac_url
                         + "/singleHit.do?methodToCall=activateTab&tab=showTitleActive",
                 ENCODING);
-
-        Document doc2 = Jsoup.parse(html2);
-        doc2.setBaseUri(opac_url);
-
         String html3 = httpGet(
                 opac_url
                         + "/singleHit.do?methodToCall=activateTab&tab=showAvailabilityActive",
                 ENCODING);
+        DetailledItem result = parseDetail(html, html2, html3, data, stringProvider);
+        try {
+            downloadCover(result);
+        } catch (Exception e) {
+
+        }
+        return result;
+    }
+
+    static DetailledItem parseDetail(String html, String html2, String html3, JSONObject data,
+            StringProvider stringProvider)
+            throws IOException {
+        Document doc = Jsoup.parse(html);
+        String opac_url = data.optString("baseurl", "");
+        doc.setBaseUri(opac_url);
+
+        Document doc2 = Jsoup.parse(html2);
+        doc2.setBaseUri(opac_url);
 
         Document doc3 = Jsoup.parse(html3);
         doc3.setBaseUri(opac_url);
@@ -747,11 +758,6 @@ public class SISIS extends BaseApi implements OpacApi {
 
         if (doc.select(".data td img").size() == 1) {
             result.setCover(doc.select(".data td img").first().attr("abs:src"));
-            try {
-                downloadCover(result);
-            } catch (Exception e) {
-
-            }
         }
 
         if (doc.select(".aw_teaser_title").size() == 1) {

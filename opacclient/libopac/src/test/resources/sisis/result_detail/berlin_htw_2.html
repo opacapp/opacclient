@@ -1,0 +1,745 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!-- START jsp/common/metaHeader.jsp -->
+
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xml:lang="de"
+      lang="de"
+>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <meta http-equiv="pragma" content="no-cache"/>
+    <meta http-equiv="expires" content="0"/>
+    <meta http-equiv="cache-control" content="no-cache"/>
+    <link rel="stylesheet" href="/InfoGuideClient/jsp/common/infoguide.css" type="text/css"/>
+    <link rel="shortcut icon" href="/InfoGuideClient/images/OCLC.ico"/>
+
+    <!--[if IE 7]>
+    <style type="text/css">
+        #tab-content{margin-top:5px;}
+        select {height:auto;}
+        #searchfield input#f1 {width:10em;}
+    </style>
+    <![endif]-->
+
+    <title>
+
+        webOPAC der HTW
+
+    </title>
+</head>
+<!-- END of jsp/common/metaHeader.jsp -->
+<!-- START jsp/result/HitLayout.jsp -->
+
+
+<body>
+<div id="pageContainer">
+
+
+    <!-- START jsp/common/header.jsp -->
+
+
+    <div id="branding">
+  <span id="logo">
+
+ <img src="/InfoGuideClient/images/Bibliothek_SMint_rgb.png"
+      alt="Logo der HTW Berlin mit Schriftzug ‚Bibliothek"
+      title="Logo der HTW Berlin mit Schriftzug ‚Bibliothek" style="max-height: 64px; width: auto;“ />
+
+
+  </span>
+  <div class=" info">
+    <div id="timer" class="textrot">&nbsp;</div>
+    </div>
+</div>
+
+
+<!-- START jsp/common/timer.jsp -->
+
+
+<script type="text/javascript" language="javascript">
+
+var timeout=(8 * 60 * 1000)  + new Date().getTime();
+timeout-=2000;
+
+var mesg="Diese Sitzung läuft in %VAR% Sek. ab!";
+var toFront=false;
+
+if(mesg.length <= 0 || mesg.indexOf("???") >= 0)
+	mesg="Diese Sitzung läuft in %VAR% Sek. ab!";
+ticker();
+
+function ticker()
+{
+  var timeoutID;
+  var s;
+  var t=timeout - new Date().getTime();
+  t=(t<0)?0:Math.round(t/1000);
+  s=""+ ((t>60)?"":t.toFixed(0));
+ 	if(t <= 60)
+ 	{
+ 		if(toFront == false)
+ 		{
+ 			toFront=true;
+ 			window.focus();
+ 		}
+ 		var msg = mesg.replace("%VAR%", s);
+    document.getElementById("timer").innerHTML = msg;
+ 	}
+  if(t == 0)
+  {
+    window.clearTimeout(timeoutID);
+    window.location.replace("/InfoGuideClient/jsp/common/timeout.jsp");
+  }
+  else
+    timeoutID = window.setTimeout("ticker()",(t>60) ? 6000 : 1000);
+}
+
+</script>
+
+
+<!-- END of jsp/common/timer.jsp -->
+<!-- END of jsp/common/header.jsp -->
+
+
+<div id="mainnav">
+
+
+    <!-- START jsp/navigation/mainNavi.jsp -->
+
+
+    <!-- Actual Tiles Context 755 -->
+
+    <ul>
+
+
+        <li id="current">
+            <div id="active">Suche</div>
+            <ul>
+
+
+                <li>
+                    <a href="/InfoGuideClient/search.do?methodToCall=switchSearchPage&amp;SearchType=1"
+                       title="Einfache Suche">Einfache Suche</a>
+                </li>
+
+
+                <li>
+                    <a href="/InfoGuideClient/search.do?methodToCall=switchSearchPage&amp;SearchType=2"
+                       title="neue Suche">neue Suche</a>
+                </li>
+
+
+                <li>
+                    <a href="/InfoGuideClient/searchHistory.do?methodToCall=showHistory"
+                       title="Suchhistorie">Suchhistorie</a>
+                </li>
+
+
+                <li>
+                    <a href="/InfoGuideClient/hitList.do?methodToCall=backToPrimaryHitList"
+                       title="Suchergebnis">Suchergebnis</a>
+                </li>
+
+
+                <li id="current2">Detailanzeige</li>
+
+
+            </ul>
+        </li>
+
+
+        <li><a href="/InfoGuideClient/memorizelist.do?methodToCall=show"
+               title="Merkliste">Merkliste</a></li>
+
+
+        <li><a href="/InfoGuideClient/userAccount.do?methodToCall=show&amp;type=1"
+               title="Konto">Konto</a></li>
+
+
+        <li><a href="/InfoGuideClient/stackOrder.do?methodToCall=start"
+               title="Interne Fernleihe">Interne Fernleihe</a></li>
+
+
+    </ul>
+    <!-- END of jsp/navigation/mainNavi.jsp -->
+
+
+    <!-- START jsp/navigation/loginnavi.jsp -->
+
+    <div id="login">
+
+
+        <a href="/InfoGuideClient/loginpage.do?methodToCall=showLogin" title="Anmelden">Anmelden</a>
+
+
+    </div>
+    <!-- END of jsp/navigation/loginnavi.jsp -->
+</div>
+<br class="cleaner"/>
+
+
+<!-- START jsp/navigation/bgnavi.jsp -->
+<script language="javascript" type="text/javascript"
+        src="/InfoGuideClient/help/help.js">
+</script>
+
+<div id="bgmainnav">
+    <div id="nav2">
+        <ul>
+
+
+            <li>
+                <a href="/InfoGuideClient/acqrequest.do?methodToCall=show"
+                   title=" Anschaffungswunsch">Anschaffungswunsch</a>
+            </li>
+
+
+            <li>
+                <a href="#" onclick="return openHelp('/InfoGuideClient');"
+                   title="Hilfe">
+                    Hilfe</a>
+            </li>
+
+
+            <li><a href="/InfoGuideClient/actual.do?methodToCall=show"
+                   title="Aktuelles">Aktuelles</a></li>
+
+
+        </ul>
+    </div>
+</div>
+<!-- END of jsp/navigation/bgnavi.jsp -->
+
+<br class="cleaner"/>
+
+
+<!-- START jsp/result/searchinfo.jsp -->
+<div id="info1">
+
+
+    <strong class="c1">Ihre Suchanfrage</strong>
+    Freie Suche = test
+
+
+</div>
+<!-- END of jsp/result/searchinfo.jsp -->
+
+
+<br class="cleaner"/>
+<div id="main">
+    <div id="SOWrap">
+        <div id="middle">
+            <div class="box">
+
+
+                <!-- START jsp/result/hit.jsp -->
+
+
+                <div class="box-header">
+
+                    <div class="box-right">
+                        |&#171;
+                        &lt;
+                        <a href="/InfoGuideClient/singleHit.do?methodToCall=showHit&amp;identifier=-1_S_IG.546.26841&amp;curPos=2&amp;tab=showTitleActive">&gt;</a>
+                        <a href="/InfoGuideClient/singleHit.do?methodToCall=showHit&amp;identifier=-1_S_IG.546.26841&amp;curPos=2543&amp;tab=showTitleActive">&#187;|</a>
+
+                    </div>
+
+
+                    <h2>Bibliothekskatalog (1/2543)</h2>
+
+
+                </div>
+                <div class="box-container">
+
+
+                    <!-- START jsp/result/teaser.jsp -->
+                    <table class="data" style="width:100%">
+
+
+                        <tr>
+                            <td>
+
+
+                                <div style="float:right;">
+
+
+                                    <a href="https://sisis.rz.htw-berlin.de/inh2015/12468886.pdf"
+                                       title='Inhaltsverzeichnis anzeigen' target="_blank"><img
+                                            src="/InfoGuideClient/images/linkbutton-inhaltsverzeichnis-de.gif"
+                                            border="0"/></a><br/>
+
+
+                                    <a href="http://deposit.d-nb.de/cgi-bin/dokserv?id=5326674&prov=M&dok_var=1&dok_ext=htm"
+                                       title='Beschreibung anzeigen' target="_blank"><img
+                                            src="/InfoGuideClient/images/linkbutton-beschreibung-de.gif"
+                                            border="0"/></a><br/>
+
+                                </div>
+
+
+                                <strong class="c2">Signatur:</strong>
+                                <strong>15/2322</strong><br/>
+
+
+                                <strong class="c2">Regalaufstellung:</strong>
+                                <strong>ST 530 T765</strong><br/>
+
+
+                                <strong class="c2">Standort:</strong>
+                                94 (2)<br/>
+
+
+                                <strong>Agile business intelligence</strong><br/>
+
+
+                                <br/>
+
+
+                                <strong class="c2">Titel:</strong>
+
+                                Agile business intelligence
+
+                                <br/>
+
+
+                                <strong class="c2">Zusatz:</strong>
+
+                                Theorie und Praxis
+
+                                <br/>
+
+
+                                <strong class="c2">Auflage:</strong>
+                                1. Auflage<br/>
+
+
+                                <strong class="c2">Jahr:</strong>
+
+                                2016
+
+                                <br/>
+
+
+                                <strong class="c2">ISBN:</strong>
+
+                                978-3-86490-312-0
+                                ,
+
+
+                                978-3-86491-873-5
+                                ,
+
+
+                                978-3-86491-874-2
+                                ,
+
+
+                                978-3-86491-875-9
+
+                                <br/>
+
+
+                                <!-- START jsp/result/ncipitemstatus.jsp -->
+
+
+                                <p>&nbsp;</p>
+
+
+                                <a href="/InfoGuideClient/memorizeHitList.do?methodToCall=addToMemorizeList&amp;curPos=1&amp;forward=singlehit&amp;identifier=-1_S_IG.546.26841"
+                                   title="in die Merkliste">in die Merkliste</a>
+
+
+                            </td>
+
+                            <td>
+                                <div id="cover">
+
+
+                                    <script language="javascript" type="text/javascript"
+                                            src="/InfoGuideClient/jsp/common/jquery.js">
+                                    </script>
+                                    <script type="text/javascript">
+    <!--
+      $.ajax({
+        url: 'jsp/result/cover.jsp?localImg=&isbns=[978-3-86490-312-0, 978-3-86491-873-5, 978-3-86491-874-2, 978-3-86491-875-9]&asins=[]&size=medium&pos=-1_1',
+        dataType: 'script'
+      });
+    //-->
+
+                                    </script>
+
+
+                                    <div id="-1_1" class="cover"/>
+                                    &nbsp;
+                                </div>
+
+
+                </div>
+                </td>
+
+                </tr>
+                </table>
+
+                <!-- END of jsp/result/teaser.jsp -->
+
+
+            </div>
+            <script language="javascript" type="text/javascript">
+ setHelp("trefferliste", "");
+
+            </script>
+
+            <!-- END of jsp/result/hit.jsp -->
+        </div>
+        <br/>
+
+
+        <!-- START jsp/result/singleHitTabNavi.jsp -->
+        <div id="tab">
+            <ul>
+
+
+                <li id="tabExemplare">
+                    <div id="labelExemplare">
+
+
+                        <a href="/InfoGuideClient/singleHit.do?methodToCall=activateTab&amp;tab=showExemplarActive"
+                           title="Exemplare">
+                            Exemplare
+                        </a>
+
+                    </div>
+                </li>
+
+                <li id="tabAvailability">
+                    <div id="labelAvailability">
+
+
+                        <a href="/InfoGuideClient/singleHit.do?methodToCall=activateTab&amp;tab=showAvailabilityActive"
+                           title="Wie komme ich an das Medium?">
+                            Wie komme ich an das Medium?
+                        </a>
+
+                    </div>
+                </li>
+                <li id="tabTitle">
+                    <div id="labelTitle">
+
+
+                        <a href="/InfoGuideClient/singleHit.do?methodToCall=activateTab&amp;tab=showTitleActive"
+                           title="mehr zum Titel">
+                            mehr zum Titel
+                        </a>
+
+                    </div>
+                </li>
+
+
+            </ul>
+        </div>
+        <!-- END of jsp/result/singleHitTabNavi.jsp -->
+
+        <div class="cleaner"></div>
+
+
+        <!-- START jsp/result/titleinfo.jsp -->
+
+        <script language="javascript" type="text/javascript">
+  m_id=document.getElementById("labelTitle");
+  if(m_id != null)
+  {
+    m_id.innerHTML='mehr zum Titel';
+    m_id.id="active1";
+
+    m_id=document.getElementById("tabTitle");
+    m_id.id="current1";
+  }
+
+        </script>
+
+        <div id="tab-content">
+            <table class="data" style="width:100%">
+                <tr>
+                    <td>
+                        <strong class="c2">Sprache: </strong>ger<br/>
+
+                        <strong class="c2">Titel: </strong>Agile business intelligence<br/>
+
+                        <strong class="c2">Hrsg./Bearb.: </strong><a
+                            href='/InfoGuideClient/search.do?methodToCall=quickSearch&amp;Kateg=100&amp;Content=Trahasch%2C+Stephan'>Trahasch, Stephan ¬[Herausgeber]</a><br/>
+
+                        <strong class="c2">Hrsg./Bearb.: </strong><a
+                            href='/InfoGuideClient/search.do?methodToCall=quickSearch&amp;Kateg=100&amp;Content=Zimmer%2C+Michael'>Zimmer, Michael ¬[Herausgeber]</a><br/>
+
+                        <strong class="c2">Zusatz: </strong>Theorie und Praxis<br/>
+
+                        <strong class="c2">Verf.Vorlag: </strong>Stephan Trahasch, Michael Zimmer (Hrsg.)<br/>
+
+                        <strong class="c2">Ort/Verlag/ISBN: </strong>Heidelberg<br/>
+
+                        <strong class="c2">Verlag: </strong>dpunkt.verlag<br/>
+
+                        <strong class="c2">Ort/Verlag/ISBN: </strong>[Troisdorf]<br/>
+
+                        <strong class="c2">Verlag: </strong>tdwi Europe<br/>
+
+                        <strong class="c2">EDVurl: </strong><a
+                            href="http://www.dpunkt.de/leseproben/5207/1_Geleitwort.pdf"
+                            title="http://www.dpunkt.de/leseproben/5207/1_Geleitwort.pdf"
+                            target="_blank">http://www.dpunkt.de/leseproben/5207/1_Geleitwort.pdf</a><br/>
+
+                        <strong class="c2">EDVurl: </strong><a
+                            href="http://www.dpunkt.de/leseproben/5207/2_Vorwort.pdf"
+                            title="http://www.dpunkt.de/leseproben/5207/2_Vorwort.pdf"
+                            target="_blank">http://www.dpunkt.de/leseproben/5207/2_Vorwort.pdf</a><br/>
+
+                        <strong class="c2">Umfangsangabe: </strong>xvi, 284 Seiten<br/>
+
+                        <strong class="c2">Ill_Angabe: </strong>Illustrationen, Diagramme<br/>
+
+                        <strong class="c2">Schlagwort: </strong><a
+                            href='/InfoGuideClient/search.do?methodToCall=quickSearch&amp;Kateg=902&amp;Content=Business+Intelligence'>Business Intelligence</a> /
+                        <a href='/InfoGuideClient/search.do?methodToCall=quickSearch&amp;Kateg=902&amp;Content=Agile+Softwareentwicklung'>Agile Softwareentwicklung</a> /
+                        <a href='/InfoGuideClient/search.do?methodToCall=quickSearch&amp;Kateg=902&amp;Content=Scrum+%3CVorgehensmodell%3E'>Scrum &lt;Vorgehensmodell&gt;</a><br/>
+
+                        <strong class="c2">Schlagw2: </strong>Agile Softwareentwicklung / Projektmanagement / Scrum &lt;Vorgehensmodell&gt;<br/>
+
+                        <strong class="c2">Notation: </strong>SR 870<br/>
+
+                        <strong class="c2">Notation: </strong>ST 530<br/>
+
+                        <strong class="c2">Notation: </strong>QP 345<br/>
+
+                        <strong class="c2">Notation: </strong>ST 230<br/>
+
+                        <strong class="c2">Notation: </strong>QP 360<br/>
+
+                        <strong class="c2">DDC: </strong>004<br/>
+
+                        <strong class="c2">Stichwort: </strong>Hardback<br/>
+
+                        <strong class="c2">Stichwort: </strong>Sewn<br/>
+
+                        <strong class="c2">Stichwort: </strong>Agile<br/>
+
+                        <strong class="c2">Stichwort: </strong>Business Intelligence<br/>
+
+                        <strong class="c2">Stichwort: </strong>Fallstudie<br/>
+
+                        <strong class="c2">Stichwort: </strong>1632: Hardcover, Softcover / Informatik, EDV/Informatik<br/>
+
+
+                    </td>
+                </tr>
+            </table>
+        </div>
+        <!-- END of jsp/result/titleinfo.jsp -->
+
+    </div>
+</div>
+<!-- SOWrap -->
+
+<div id="right">
+
+
+    <!-- START jsp/result/rechtsoben.jsp -->
+
+
+    <div class="box3">
+        <div class="box3-header">
+            <div class="box3-img"><img src="images/box3-right.gif" width="8" height="8" alt=""/>
+            </div>
+            <h2>weitere Optionen</h2>
+        </div>
+        <div class="box3-content">
+            <p><strong>Suchanfrage</strong><br/>
+                <a href="/InfoGuideClient/search.do?methodToCall=start"
+                   title="Suchanfrage &auml;ndern">&auml;ndern</a>
+            </p>
+
+
+            <p><strong>Ausgabe</strong><br/>
+
+                <a href="/InfoGuideClient/hitOutput.do?methodToCall=show&amp;caller=singlehit"
+                   title="Treffer ausgeben">Treffer ausgeben</a>
+
+
+            </p>
+
+
+            <p><strong>Datenbank-Auswahl</strong><br/>
+                Auswahl<br/>
+
+                <a href="/InfoGuideClient/search.do?methodToCall=submit&amp;methodToCallParameter=databaseSelection"
+                   title="Datenbank-Auswahl automat. erweitern">&auml;ndern</a>
+            </p>
+
+
+        </div> <!-- box3-content -->
+    </div><!-- box3 -->
+
+    <!-- END of jsp/result/rechtsoben.jsp -->
+
+    <br class="space"/>
+    <!-- filler /jsp/common/empty.jsp -->
+    <br class="space"/>
+
+
+    <!-- START jsp/common/news.jsp -->
+
+
+    <!-- START jsp/news+info/de_755_1.jsp -->
+    <div class="box3">
+        <div class="box3-header">
+            <div class="box3-img"><img src="images/box3-right.gif" width="8" height="8" alt=""/>
+            </div>
+            <h2>Standort</h2>
+        </div>
+        <p>
+        <div class="box3-content">
+            <table cellspacing="2" cellpadding="0">
+                <tr>
+                    <th style="vertical-align: top; text-align: left">Kürzel</th>
+                    <th style="vertical-align: top; text-align: left;">Standort</th>
+                </tr>
+                <tr>
+                    <td style="vertical-align: top; text-align: left">60</td>
+                    <td class="last" style="vertical-align: top; text-align: left;">Mediathek</td>
+                </tr>
+                <tr>
+                    <th style="vertical-align: top; text-align: left"></th>
+                    <th style="vertical-align: top; text-align: left;"> Zentralbibliothek Campus Treskowallee</th>
+                </tr>
+                <tr>
+                    <td style="vertical-align: top; text-align: left">82</td>
+                    <td class="last"
+                        style="vertical-align: top; text-align: left;">Lesesaal 1, Zeitschriftenmagazin
+                    </td>
+                </tr>
+                <tr>
+                    <td style="vertical-align: top; text-align: left">83</td>
+                    <td class="last"
+                        style="vertical-align: top; text-align: left;">Gebäude B, Zeitschriftenmagazin
+                    </td>
+                </tr>
+                <tr>
+                    <td style="vertical-align: top; text-align: left">90</td>
+                    <td class="last" style="vertical-align: top; text-align: left;">Ausleihe</td>
+                </tr>
+                <tr>
+                    <td style="vertical-align: top; text-align: left">91</td>
+                    <td class="last" style="vertical-align: top; text-align: left;">Lesesaal 2</td>
+                </tr>
+                <tr>
+                    <td style="vertical-align: top; text-align: left">92</td>
+                    <td class="last" style="vertical-align: top; text-align: left;">Lesesaal 1</td>
+                </tr>
+                <tr>
+                    <th style="vertical-align: top; text-align: left"></th>
+                    <th style="vertical-align: top; text-align: left;"> Bibliothek Campus Wilhelminenhof</th>
+                </tr>
+                <tr>
+                    <td style="vertical-align: top; text-align: left">94, 97, 98, 99</td>
+                    <td class="last"
+                        style="vertical-align: top; text-align: left;">Bibliothek Wilhelminenhof
+                    </td>
+                </tr>
+            </table>
+        </div>
+        </p>
+    </div>
+    <!-- END of jsp/news+info/de_755_1.jsp -->
+    <br class="space"/>
+
+
+    <!-- START jsp/news+info/de_755_3.jsp -->
+    <div class="box3">
+        <div class="box3-header">
+            <div class="box3-img"><img src="images/box3-right.gif" width="8" height="8" alt=""/>
+            </div>
+            <h2>Interne Bestellung</h2>
+        </div>
+        <p>
+        <div class="box3-content">
+            Vorgehensweise: <br>
+
+            1. Im Reiter <font color="#0082D1">Suche eingrenzen</font><br>
+            den Campus auswählen<br>
+            2. Als Benutzer anmelden <br>
+            3. Recherche durchführen <br>
+            4. In der Trefferliste auf den Hinweis <font
+                color="#0082D1">bestellbar </font>achten<br>
+            5. In der Einzeltrefferanzeige in den Reiter <font
+                color="#0082D1">Wie komme ich an das Medium?</font> wechseln<br>
+            6. Bestellung durch Klicken auf <font
+                color="#0082D1">vormerken/bestellen</font> abschicken<br>
+            7. Fertig!
+        </div>
+        </p>
+    </div>
+    <!-- END of jsp/news+info/de_755_3.jsp -->
+    <br class="space"/>
+
+
+    <!-- START jsp/news+info/de_755_2.jsp -->
+    <div class="box3">
+        <div class="box3-header">
+            <div class="box3-img"><img src="images/box3-right.gif" width="8" height="8" alt=""/>
+            </div>
+            <h2>Externe Fernleihe</h2>
+        </div>
+        <p>
+        <div class="box3-content">
+            Vorgehensweise: <br>
+            1. Als Benutzer anmelden <br>
+            2. Im Reiter <font
+                color="#0082D1">Datenbank-Auswahl</font> die gewünschten Kataloge auswählen und Recherche starten
+            <br>
+            3. In der Einzeltrefferanzeige in den Reiter <font
+                color="#0082D1">Wie komme ich an das Medium?</font> wechseln <br>
+            4. Auf den Button <font
+                color="#0082D1">vormerken/bestellen</font> klicken und die Fernleihmaske ergänzen<br>
+            5. Bestellung abschicken <br>
+            6. Fertig!
+        </div>
+        </p>
+    </div>
+    <!-- END of jsp/news+info/de_755_2.jsp -->
+    <br class="space"/>
+
+
+    <!-- END of jsp/common/news.jsp -->
+</div>
+
+
+<!-- right -->
+<br class="cleaner"/>
+</div>
+
+
+<!-- START jsp/common/footer.jsp -->
+
+<div id="footer">
+
+
+    &nbsp;
+
+
+    <div id="copyright">
+        Copyright &copy; 2015.&nbsp;Alle Rechte vorbehalten.
+        <img src="/InfoGuideClient/images/OCLC.jpg" alt="OCLC" title="OCLC" width="54" height="19"/>
+    </div>
+    <div class="cleaner"></div>
+
+</div>
+<!-- END of jsp/common/footer.jsp -->
+
+</div>
+</body>
+<!-- END of jsp/result/HitLayout.jsp -->
+<!-- START jsp/common/metaFooter.jsp -->
+</html>
+<!-- END of jsp/common/metaFooter.jsp -->
