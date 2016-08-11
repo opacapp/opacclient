@@ -1032,7 +1032,8 @@ public class Zones extends BaseApi {
                     resLink = td.select("a").attr("href");
                 } else if (section.contains("Kontostand")) {
                     res.setPendingFees(td.nextElementSibling().text().trim());
-                } else if (section.matches("Ausweis g.ltig bis")) {
+                } else if (section.matches("Ausweis g.ltig bis")
+                        || section.matches("Ausweis\u00a0g.ltig\u00a0bis")) {
                     res.setValidUntil(td.nextElementSibling().text().trim());
                 }
             }
