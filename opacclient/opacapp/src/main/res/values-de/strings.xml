@@ -284,6 +284,8 @@
     <string name="accountdata_reserved_branch">Zweigstelle</string>
     <string name="toggle_notice">Tippe oben auf den Pfeil, um zwischen mehreren Konten zu wechseln.</string>
     <string name="toggle_notice_button">Alles klar</string>
+    <string name="starred_removed">Aus Favoriten entfernt</string>
+    <string name="starred_removed_undo">Rückgängig</string>
     <string name="print">Drucken</string>
     <string name="print_wait">Bitte warten, bis die Details geladen wurden!</string>
 </resources>
