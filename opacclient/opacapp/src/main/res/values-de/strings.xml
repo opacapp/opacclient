@@ -288,4 +288,10 @@
     <string name="starred_removed_undo">Rückgängig</string>
     <string name="print">Drucken</string>
     <string name="print_wait">Bitte warten, bis die Details geladen wurden!</string>
+    <string name="preference_category_library_config">Bibliotheksdaten</string>
+    <string name="preference_update_library_config">Konfiguration für Bibliotheken aktualisieren</string>
+    <string name="updating_library_config">Aktualisiere Konfiguration für Bibliotheken</string>
+    <string name="library_config_update_success">Konfiguration für %d Bibliotheken aktualisiert.</string>
+    <string name="library_config_update_failure">Konnte Konfiguration nicht aktualisieren.</string>
+    <string name="library_config_last_update">Zuletzt aktualisiert %s</string>
 </resources>

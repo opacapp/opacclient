@@ -68,6 +68,7 @@ import de.geeksfactory.opacclient.storage.AccountDataSource;
 import de.geeksfactory.opacclient.storage.StarContentProvider;
 import de.geeksfactory.opacclient.utils.DebugTools;
 import de.geeksfactory.opacclient.utils.ErrorReporter;
+import de.geeksfactory.opacclient.utils.Utils;
 import de.geeksfactory.opacclient.webservice.WebserviceReportHandler;
 
 @ReportsCrashes(mailTo = "info@opacapp.de",
@@ -243,20 +244,8 @@ public class OpacClient extends Application {
     }
 
     public Library getLibrary(String ident) throws IOException, JSONException {
-        String line;
-
-        StringBuilder builder = new StringBuilder();
-        InputStream fis = getAssets().open(
-                ASSETS_BIBSDIR + "/" + ident + ".json");
-
-        BufferedReader reader = new BufferedReader(new InputStreamReader(fis,
-                "utf-8"));
-        while ((line = reader.readLine()) != null) {
-            builder.append(line);
-        }
-
-        fis.close();
-        String json = builder.toString();
+        String json = Utils.readStreamToString(
+                getAssets().open(ASSETS_BIBSDIR + "/" + ident + ".json"));
         return Library.fromJSON(ident, new JSONObject(json));
     }
 

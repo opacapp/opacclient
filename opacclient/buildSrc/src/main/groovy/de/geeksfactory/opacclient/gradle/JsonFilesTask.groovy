@@ -15,12 +15,13 @@ import java.security.KeyStore
 class JsonFilesTask extends DefaultTask {
     private static final String API_URL = "https://info.opacapp.net/androidconfigs/?format=json"
     private static final String BIBS_DIR = "opacapp/src/main/assets/bibs"
+    private static final String ASSETS_DIR = "opacapp/src/main/assets"
 
     @TaskAction
     def downloadFiles() {
         HttpsURLConnection conn = (HttpsURLConnection) API_URL.toURL().openConnection()
         conn.setSSLSocketFactory(createSSLSocketFactory())
-        String response = conn.getInputStream().getText()
+        String response = conn.inputStream.getText()
         JSONArray data = new JSONArray(response)
         GFileUtils.cleanDirectory(new File(BIBS_DIR))
         for (int i = 0; i < data.length(); i++) {
@@ -30,6 +31,10 @@ class JsonFilesTask extends DefaultTask {
             File file = new File(BIBS_DIR, id + ".json")
             file.write(library.toString())
         }
+
+        String lastUpdate = conn.headerFields.get("X-Page-Generated").get(0)
+        File file = new File(ASSETS_DIR, "last_library_config_update.txt")
+        file.write(lastUpdate)
     }
 
     private SSLSocketFactory createSSLSocketFactory() {

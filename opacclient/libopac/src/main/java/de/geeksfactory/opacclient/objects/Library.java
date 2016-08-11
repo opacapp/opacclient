@@ -21,6 +21,7 @@
  */
 package de.geeksfactory.opacclient.objects;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -94,6 +95,26 @@ public class Library implements Comparable<Library> {
             lib.setTitle(null);
 
         return lib;
+    }
+
+    public JSONObject toJSON() throws JSONException {
+        JSONObject json = new JSONObject();
+        json.put("api", api);
+        json.put("city", city);
+        json.put("title", title);
+        json.put("country", country);
+        json.put("state", state);
+        json.put("data", data);
+        json.put("account_supported", account_supported);
+        json.put("nfc_supported", nfcSupported);
+        json.put("information", information);
+        if (displayName != null) json.put("displayname", displayName);
+        json.put("replacedby", replacedby);
+        JSONArray geoJson = new JSONArray();
+        geoJson.put(geo[0]);
+        geoJson.put(geo[1]);
+        json.put("geo", geoJson);
+        return json;
     }
 
     /**
@@ -376,5 +397,4 @@ public class Library implements Comparable<Library> {
             return false;
         return true;
     }
-
 }

@@ -4,7 +4,10 @@ import android.content.Context;
 
 import org.json.JSONException;
 
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 
 import de.geeksfactory.opacclient.OpacClient;
 import de.geeksfactory.opacclient.R;
@@ -41,5 +44,23 @@ public class Utils {
             e.printStackTrace();
             return null;
         }
+    }
+
+    /**
+     * Reads an {@link InputStream} to a String using UTF-8 encoding and closes it.
+     *
+     * @param is the InputStream to read
+     * @return the content read from the InputStream
+     * @throws IOException
+     */
+    public static String readStreamToString(InputStream is) throws IOException {
+        String line;
+        StringBuilder builder = new StringBuilder();
+        BufferedReader reader = new BufferedReader(new InputStreamReader(is, "utf-8"));
+        while ((line = reader.readLine()) != null) {
+            builder.append(line);
+        }
+        is.close();
+        return builder.toString();
     }
 }
