@@ -466,7 +466,8 @@ public class Open extends BaseApi implements OpacApi {
         Document doc = searchResultDoc;
 
         Elements pageLinks =
-                doc.select("span[id$=DataPager1]").first().select("a[id*=LinkButtonPageN");
+                doc.select("span[id$=DataPager1]").first()
+                   .select("a[id*=LinkButtonPageN], span[id*=LabelPageN]");
         int from = Integer.valueOf(pageLinks.first().text());
         int to = Integer.valueOf(pageLinks.last().text());
         Element linkToClick;
@@ -481,6 +482,11 @@ public class Open extends BaseApi implements OpacApi {
         } else {
             linkToClick = pageLinks.get(page - from);
             willBeCorrectPage = true;
+        }
+
+        if (linkToClick.tagName().equals("span")) {
+            // we are trying to get the page we are already on
+            return parse_search(searchResultDoc, page);
         }
 
         Pattern pattern = Pattern.compile("javascript:__doPostBack\\('([^,]*)','([^\\)]*)'\\)");

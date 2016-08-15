@@ -59,11 +59,15 @@ It contains several libraries:
 
 Authors
 -------
-* Raphael Michel <mail@raphaelmichel.de>
-* Johan von Forstner
+* [Raphael Michel](https://github.com/raphaelm) <mail@raphaelmichel.de>
+* [Johan von Forstner](https://github.com/johan12345)
 
 Many thanks go to our contributors, including:
 
-* Rüdiger Wurth
-* Simon Legner
-
+* [Rüdiger Wurth](https://github.com/ruediger-w)
+* [Simon Legner](https://github.com/simon04)
+* [YKassim](https://github.com/YKassim)
+* [AdamLazarus](https://github.com/AdamLazarus)
+* [Sulekha Alse](https://github.com/YSulekha)
+* [Caroline Ho](https://github.com/carolineh101)
+* [Ceasar Jimenez](https://github.com/ceasarj)

@@ -811,33 +811,9 @@ public class Zones extends BaseApi {
 
         AccountData res = new AccountData(acc.getId());
 
-        String lentLink = null;
-        String resLink = null;
-        int lent_cnt = -1;
-        int res_cnt = -1;
-        for (Element td : login
-                .select(".AccountSummaryCounterNameCell, .AccountSummaryCounterNameCellStripe, " +
-                        ".CAccountDetailFieldNameCellStripe, .CAccountDetailFieldNameCell")) {
-            String section = td.text().trim();
-            if (section.contains("Entliehene Medien")) {
-                lentLink = td.select("a").attr("href");
-                lent_cnt = Integer.parseInt(td.nextElementSibling().text().trim());
-            } else if (section.contains("Vormerkungen")) {
-                resLink = td.select("a").attr("href");
-                res_cnt = Integer.parseInt(td.nextElementSibling().text().trim());
-            } else if (section.contains("Kontostand")) {
-                res.setPendingFees(td.nextElementSibling().text().trim());
-            } else if (section.matches("Ausweis g.ltig bis")) {
-                res.setValidUntil(td.nextElementSibling().text().trim());
-            }
-        }
-        for (Element a : login.select("a.AccountMenuLink")) {
-            if (a.text().contains("Ausleihen")) {
-                lentLink = a.attr("href");
-            } else if (a.text().contains("Vormerkungen")) {
-                resLink = a.attr("href");
-            }
-        }
+        AccountLinks accountLinks = new AccountLinks(login, res);
+        String lentLink = accountLinks.getLentLink();
+        String resLink = accountLinks.getResLink();
         if (lentLink == null) {
             return null;
         }
@@ -860,9 +836,10 @@ public class Zones extends BaseApi {
         }
 
         List<ReservedItem> reservedItems = new ArrayList<>();
-        String resHtml = httpGet(opac_url + "/" + resLink,
-                getDefaultEncoding());
+        String resUrl = opac_url + "/" + resLink;
+        String resHtml = httpGet(resUrl, getDefaultEncoding());
         Document resDoc = Jsoup.parse(resHtml);
+        resDoc.setBaseUri(resUrl);
         loadResList(resDoc, reservedItems);
         res.setReservations(reservedItems);
 
@@ -880,12 +857,12 @@ public class Zones extends BaseApi {
         }
     }
 
-    private void loadResList(Document lentDoc, List<ReservedItem> items) throws IOException {
-        items.addAll(parseResList(lentDoc));
-        String nextPageUrl = findNextPageUrl(lentDoc);
+    private void loadResList(Document resDoc, List<ReservedItem> items) throws IOException {
+        items.addAll(parseResList(resDoc));
+        String nextPageUrl = findNextPageUrl(resDoc);
         if (nextPageUrl != null) {
             Document doc = Jsoup.parse(httpGet(nextPageUrl, getDefaultEncoding()));
-            doc.setBaseUri(lentDoc.baseUri());
+            doc.setBaseUri(resDoc.baseUri());
             loadResList(doc, items);
         }
     }
@@ -967,8 +944,9 @@ public class Zones extends BaseApi {
             if (table.select(".button[Title~=Zum]").size() == 1) {
                 Matcher matcher1 = id_pat.matcher(table.select(".button[Title~=Zum]").attr("href"));
                 if (matcher1.matches()) item.setProlongData(matcher1.group(1));
-            } else if (table.select(".CannotRenewLink").size() == 1){
-                Matcher matcher = cannotrenew_pat.matcher(table.select(".CannotRenewLink").attr("href").trim());
+            } else if (table.select(".CannotRenewLink").size() == 1) {
+                Matcher matcher = cannotrenew_pat
+                        .matcher(table.select(".CannotRenewLink").attr("href").trim());
                 if (matcher.matches()) {
                     item.setProlongData("cannotrenew|" + matcher.group(1));
                 }
@@ -1036,4 +1014,44 @@ public class Zones extends BaseApi {
         return null;
     }
 
+    protected static class AccountLinks {
+        private String lentLink;
+        private String resLink;
+
+        public AccountLinks(Document doc, AccountData res) {
+            lentLink = null;
+            resLink = null;
+            for (Element td : doc
+                    .select(".AccountSummaryCounterNameCell, " +
+                            ".AccountSummaryCounterNameCellStripe, " +
+                            ".CAccountDetailFieldNameCellStripe, .CAccountDetailFieldNameCell")) {
+                String section = td.text().trim();
+                if (section.contains("Entliehene Medien")) {
+                    lentLink = td.select("a").attr("href");
+                } else if (section.contains("Vormerkungen")) {
+                    resLink = td.select("a").attr("href");
+                } else if (section.contains("Kontostand")) {
+                    res.setPendingFees(td.nextElementSibling().text().trim());
+                } else if (section.matches("Ausweis g.ltig bis")
+                        || section.matches("Ausweis\u00a0g.ltig\u00a0bis")) {
+                    res.setValidUntil(td.nextElementSibling().text().trim());
+                }
+            }
+            for (Element a : doc.select("a.AccountMenuLink")) {
+                if (a.text().contains("Ausleihen")) {
+                    lentLink = a.attr("href");
+                } else if (a.text().contains("Vormerkungen")) {
+                    resLink = a.attr("href");
+                }
+            }
+        }
+
+        public String getLentLink() {
+            return lentLink;
+        }
+
+        public String getResLink() {
+            return resLink;
+        }
+    }
 }

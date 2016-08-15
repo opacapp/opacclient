@@ -2,6 +2,7 @@ package de.geeksfactory.opacclient.frontend;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -11,6 +12,9 @@ import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.print.PrintAttributes;
+import android.print.PrintDocumentAdapter;
+import android.print.PrintManager;
 import android.support.design.widget.AppBarLayout;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
@@ -27,6 +31,8 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.view.animation.AnimationUtils;
+import android.webkit.WebView;
+import android.webkit.WebViewClient;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.CheckBox;
@@ -65,6 +71,7 @@ import de.geeksfactory.opacclient.ui.WhitenessUtils;
 import de.geeksfactory.opacclient.utils.BitmapUtils;
 import de.geeksfactory.opacclient.utils.CompatibilityUtils;
 import de.geeksfactory.opacclient.utils.ErrorReporter;
+import de.geeksfactory.opacclient.utils.PrintUtils;
 import su.j2e.rvjoiner.JoinableAdapter;
 import su.j2e.rvjoiner.JoinableLayout;
 import su.j2e.rvjoiner.RvJoiner;
@@ -181,13 +188,13 @@ public class SearchResultDetailFragment extends Fragment
                 R.layout.error_connectivity, errorView);
 
         connError.findViewById(R.id.btRetry)
-                 .setOnClickListener(new OnClickListener() {
-                     @Override
-                     public void onClick(View v) {
-                         errorView.removeAllViews();
-                         reload();
-                     }
-                 });
+                .setOnClickListener(new OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        errorView.removeAllViews();
+                        reload();
+                    }
+                });
 
         progressBar.startAnimation(AnimationUtils.loadAnimation(getActivity(),
                 android.R.anim.fade_out));
@@ -220,7 +227,6 @@ public class SearchResultDetailFragment extends Fragment
     public void onAttach(Activity activity) {
         super.onAttach(activity);
         app = (OpacClient) activity.getApplication();
-
         // Activities containing this fragment must implement its callbacks.
         if (!(activity instanceof Callbacks)) {
             throw new IllegalStateException(
@@ -252,7 +258,7 @@ public class SearchResultDetailFragment extends Fragment
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
-            Bundle savedInstanceState) {
+                             Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_searchresult_detail,
                 container, false);
         view = rootView;
@@ -389,7 +395,6 @@ public class SearchResultDetailFragment extends Fragment
             addSubhead(joiner, R.string.volumes);
             joiner.add(new JoinableAdapter(new VolumesAdapter(item.getVolumes(), getActivity())));
         }
-
         rvDetails.setAdapter(joiner.getAdapter());
 
         if (id == null || id.equals("")) {
@@ -464,29 +469,29 @@ public class SearchResultDetailFragment extends Fragment
         }
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         builder.setMessage(getString(R.string.opac_error) + " " + s)
-               .setCancelable(false)
-               .setNegativeButton(R.string.close,
-                       new DialogInterface.OnClickListener() {
-                           @Override
-                           public void onClick(DialogInterface dialog, int id) {
-                               dialog.cancel();
-                               if (finish) {
-                                   callbacks.removeFragment();
-                               }
-                           }
-                       })
-               .setPositiveButton(R.string.prefs,
-                       new DialogInterface.OnClickListener() {
-                           @Override
-                           public void onClick(DialogInterface dialog, int id) {
-                               Intent intent = new Intent(getActivity(),
-                                       AccountEditActivity.class);
-                               intent.putExtra(
-                                       AccountEditActivity.EXTRA_ACCOUNT_ID,
-                                       app.getAccount().getId());
-                               startActivity(intent);
-                           }
-                       });
+                .setCancelable(false)
+                .setNegativeButton(R.string.close,
+                        new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int id) {
+                                dialog.cancel();
+                                if (finish) {
+                                    callbacks.removeFragment();
+                                }
+                            }
+                        })
+                .setPositiveButton(R.string.prefs,
+                        new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int id) {
+                                Intent intent = new Intent(getActivity(),
+                                        AccountEditActivity.class);
+                                intent.putExtra(
+                                        AccountEditActivity.EXTRA_ACCOUNT_ID,
+                                        app.getAccount().getId());
+                                startActivity(intent);
+                            }
+                        });
         AlertDialog alert = builder.create();
         alert.show();
     }
@@ -522,6 +527,8 @@ public class SearchResultDetailFragment extends Fragment
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         inflater.inflate(R.menu.search_result_details_activity, menu);
         refreshMenu(menu);
+        menu.findItem(R.id.action_print).setVisible(
+                Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT);
         super.onCreateOptionsMenu(menu, inflater);
     }
 
@@ -728,9 +735,38 @@ public class SearchResultDetailFragment extends Fragment
                 }
             }
             return true;
+        } else if (item.getItemId() == R.id.action_print) {
+            if (getItem() == null) {
+                Toast toast = Toast.makeText(getActivity(),
+                        getString(R.string.print_wait), Toast.LENGTH_SHORT);
+                toast.show();
+            } else {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+                    print();
+                }
+            }
+
+            return true;
         } else {
             return super.onOptionsItemSelected(item);
         }
+    }
+
+    private void print() {
+        WebView webView = new WebView(getActivity());
+        webView.setWebViewClient(new WebViewClient() {
+            @Override
+            public void onPageFinished(WebView webView, String url) {
+                PrintManager printManager = (PrintManager) getActivity()
+                        .getSystemService(Context.PRINT_SERVICE);
+                PrintDocumentAdapter printAdapter = webView.createPrintDocumentAdapter();
+                String jobName = getItem().getTitle();
+                printManager.print(jobName, printAdapter,
+                        new PrintAttributes.Builder().build());
+            }
+        });
+        String templateDetailles = PrintUtils.printDetails(getItem(), getContext());
+        webView.loadDataWithBaseURL(null, templateDetailles, "text/HTML", "UTF-8", null);
     }
 
     public DetailledItem getItem() {
@@ -743,26 +779,26 @@ public class SearchResultDetailFragment extends Fragment
         }
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         builder.setMessage(R.string.status_nouser)
-               .setCancelable(false)
-               .setNegativeButton(R.string.close,
-                       new DialogInterface.OnClickListener() {
-                           @Override
-                           public void onClick(DialogInterface dialog, int id) {
-                               dialog.cancel();
-                           }
-                       })
-               .setPositiveButton(R.string.accounts_edit,
-                       new DialogInterface.OnClickListener() {
-                           @Override
-                           public void onClick(DialogInterface dialog, int id) {
-                               Intent intent = new Intent(getActivity(),
-                                       AccountEditActivity.class);
-                               intent.putExtra(
-                                       AccountEditActivity.EXTRA_ACCOUNT_ID,
-                                       app.getAccount().getId());
-                               startActivity(intent);
-                           }
-                       });
+                .setCancelable(false)
+                .setNegativeButton(R.string.close,
+                        new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int id) {
+                                dialog.cancel();
+                            }
+                        })
+                .setPositiveButton(R.string.accounts_edit,
+                        new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int id) {
+                                Intent intent = new Intent(getActivity(),
+                                        AccountEditActivity.class);
+                                intent.putExtra(
+                                        AccountEditActivity.EXTRA_ACCOUNT_ID,
+                                        app.getAccount().getId());
+                                startActivity(intent);
+                            }
+                        });
         AlertDialog alert = builder.create();
         alert.show();
     }
@@ -779,24 +815,24 @@ public class SearchResultDetailFragment extends Fragment
                 AlertDialog.Builder builder = new AlertDialog.Builder(
                         getActivity());
                 builder.setMessage(getString(R.string.opac_error_email))
-                       .setCancelable(false)
-                       .setNegativeButton(R.string.close,
-                               new DialogInterface.OnClickListener() {
-                                   @Override
-                                   public void onClick(DialogInterface dialog,
-                                           int id) {
-                                       dialog.cancel();
-                                   }
-                               })
-                       .setPositiveButton(R.string.prefs,
-                               new DialogInterface.OnClickListener() {
-                                   @Override
-                                   public void onClick(DialogInterface dialog,
-                                           int id) {
-                                       dialog.dismiss();
-                                       app.toPrefs(getActivity());
-                                   }
-                               });
+                        .setCancelable(false)
+                        .setNegativeButton(R.string.close,
+                                new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog,
+                                                        int id) {
+                                        dialog.cancel();
+                                    }
+                                })
+                        .setPositiveButton(R.string.prefs,
+                                new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog,
+                                                        int id) {
+                                        dialog.dismiss();
+                                        app.toPrefs(getActivity());
+                                    }
+                                });
                 AlertDialog alert = builder.create();
                 alert.show();
                 return;
@@ -828,9 +864,9 @@ public class SearchResultDetailFragment extends Fragment
             lv.setOnItemClickListener(new OnItemClickListener() {
                 @Override
                 public void onItemClick(AdapterView<?> parent, View view,
-                        int position, long id) {
+                                        int position, long id) {
                     if (accounts.get(position).getId() != app.getAccount()
-                                                             .getId() || account_switched) {
+                            .getId() || account_switched) {
 
                         if (SearchResultDetailFragment.this.id == null
                                 || SearchResultDetailFragment.this.id
@@ -839,7 +875,7 @@ public class SearchResultDetailFragment extends Fragment
                                 .equals("")) {
                             Toast.makeText(getActivity(),
                                     R.string.accchange_sorry, Toast.LENGTH_LONG)
-                                 .show();
+                                    .show();
                         } else {
                             app.setAccount(accounts.get(position).getId());
                             Intent intent = new Intent(getActivity(),
@@ -858,15 +894,15 @@ public class SearchResultDetailFragment extends Fragment
                 }
             });
             builder.setTitle(R.string.account_select)
-                   .setView(view)
-                   .setNegativeButton(R.string.cancel,
-                           new DialogInterface.OnClickListener() {
-                               @Override
-                               public void onClick(DialogInterface dialog,
-                                       int id) {
-                                   adialog.cancel();
-                               }
-                           });
+                    .setView(view)
+                    .setNegativeButton(R.string.cancel,
+                            new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog,
+                                                    int id) {
+                                    adialog.cancel();
+                                }
+                            });
             adialog = builder.create();
             adialog.show();
         } else {
@@ -885,26 +921,26 @@ public class SearchResultDetailFragment extends Fragment
             View content = getLayoutInflater(null).inflate(R.layout.dialog_reservation_fees, null);
             final CheckBox check = (CheckBox) content.findViewById(R.id.check_box1);
             builder.setView(content)
-                   .setCancelable(false)
-                   .setNegativeButton(R.string.cancel,
-                           new DialogInterface.OnClickListener() {
-                               @Override
-                               public void onClick(
-                                       DialogInterface dialog, int id) {
-                                   dialog.cancel();
-                               }
-                           })
-                   .setPositiveButton(R.string.reservation_fee_continue,
-                           new DialogInterface.OnClickListener() {
-                               @Override
-                               public void onClick(
-                                       DialogInterface dialog, int id) {
-                                   if (check.isChecked()) {
-                                       sp.edit().putBoolean("reservation_fee_warning_ignore", true).apply();
-                                   }
-                                   reservationPerform();
-                               }
-                           });
+                    .setCancelable(false)
+                    .setNegativeButton(R.string.cancel,
+                            new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(
+                                        DialogInterface dialog, int id) {
+                                    dialog.cancel();
+                                }
+                            })
+                    .setPositiveButton(R.string.reservation_fee_continue,
+                            new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(
+                                        DialogInterface dialog, int id) {
+                                    if (check.isChecked()) {
+                                        sp.edit().putBoolean("reservation_fee_warning_ignore", true).apply();
+                                    }
+                                    reservationPerform();
+                                }
+                            });
             AlertDialog alert = builder.create();
             alert.show();
         }
@@ -922,27 +958,27 @@ public class SearchResultDetailFragment extends Fragment
                     AlertDialog.Builder builder = new AlertDialog.Builder(
                             getActivity());
                     builder.setMessage(result.getMessage())
-                           .setCancelable(false)
-                           .setNegativeButton(R.string.close,
-                                   new DialogInterface.OnClickListener() {
-                                       @Override
-                                       public void onClick(
-                                               DialogInterface dialog, int id) {
-                                           dialog.cancel();
-                                       }
-                                   })
-                           .setPositiveButton(R.string.account,
-                                   new DialogInterface.OnClickListener() {
-                                       @Override
-                                       public void onClick(
-                                               DialogInterface dialog, int id) {
-                                           Intent intent = new Intent(
-                                                   getActivity(), app.getMainActivity());
-                                           intent.putExtra(MainActivity.EXTRA_FRAGMENT, "account");
-                                           getActivity().startActivity(intent);
-                                           getActivity().finish();
-                                       }
-                                   });
+                            .setCancelable(false)
+                            .setNegativeButton(R.string.close,
+                                    new DialogInterface.OnClickListener() {
+                                        @Override
+                                        public void onClick(
+                                                DialogInterface dialog, int id) {
+                                            dialog.cancel();
+                                        }
+                                    })
+                            .setPositiveButton(R.string.account,
+                                    new DialogInterface.OnClickListener() {
+                                        @Override
+                                        public void onClick(
+                                                DialogInterface dialog, int id) {
+                                            Intent intent = new Intent(
+                                                    getActivity(), app.getMainActivity());
+                                            intent.putExtra(MainActivity.EXTRA_FRAGMENT, "account");
+                                            getActivity().startActivity(intent);
+                                            getActivity().finish();
+                                        }
+                                    });
                     AlertDialog alert = builder.create();
                     alert.show();
                 } else {
@@ -969,7 +1005,7 @@ public class SearchResultDetailFragment extends Fragment
 
             @Override
             public StepTask<?> newTask(MultiStepResultHelper helper, int useraction,
-                    String selection, DetailledItem item) {
+                                       String selection, DetailledItem item) {
                 return new ResTask(helper, useraction, selection, item);
             }
         });
@@ -996,22 +1032,22 @@ public class SearchResultDetailFragment extends Fragment
             lv.setOnItemClickListener(new OnItemClickListener() {
                 @Override
                 public void onItemClick(AdapterView<?> parent, View view,
-                        int position, long id) {
+                                        int position, long id) {
                     app.setAccount(accounts.get(position).getId());
                     bookingDo();
                     adialog.dismiss();
                 }
             });
             builder.setTitle(R.string.account_select)
-                   .setView(view)
-                   .setNegativeButton(R.string.cancel,
-                           new DialogInterface.OnClickListener() {
-                               @Override
-                               public void onClick(DialogInterface dialog,
-                                       int id) {
-                                   adialog.cancel();
-                               }
-                           });
+                    .setView(view)
+                    .setNegativeButton(R.string.cancel,
+                            new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog,
+                                                    int id) {
+                                    adialog.cancel();
+                                }
+                            });
             adialog = builder.create();
             adialog.show();
         } else {
@@ -1054,7 +1090,7 @@ public class SearchResultDetailFragment extends Fragment
 
             @Override
             public StepTask<?> newTask(MultiStepResultHelper helper, int useraction,
-                    String selection, DetailledItem item) {
+                                       String selection, DetailledItem item) {
                 return new BookingTask(helper, useraction, selection, item);
             }
         });
@@ -1178,7 +1214,7 @@ public class SearchResultDetailFragment extends Fragment
         private DetailledItem item;
 
         public ResTask(MultiStepResultHelper helper, int useraction, String selection,
-                DetailledItem item) {
+                       DetailledItem item) {
             super(helper, useraction, selection);
             this.item = item;
         }
@@ -1206,15 +1242,15 @@ public class SearchResultDetailFragment extends Fragment
                 AlertDialog.Builder builder = new AlertDialog.Builder(
                         getActivity());
                 builder.setMessage(R.string.error)
-                       .setCancelable(true)
-                       .setNegativeButton(R.string.close,
-                               new DialogInterface.OnClickListener() {
-                                   @Override
-                                   public void onClick(DialogInterface dialog,
-                                           int id) {
-                                       dialog.cancel();
-                                   }
-                               });
+                        .setCancelable(true)
+                        .setNegativeButton(R.string.close,
+                                new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog,
+                                                        int id) {
+                                        dialog.cancel();
+                                    }
+                                });
                 AlertDialog alert = builder.create();
                 alert.show();
                 return;
@@ -1229,7 +1265,7 @@ public class SearchResultDetailFragment extends Fragment
         private DetailledItem item;
 
         public BookingTask(MultiStepResultHelper helper, int useraction, String selection,
-                DetailledItem item) {
+                           DetailledItem item) {
             super(helper, useraction, selection);
             this.item = item;
         }
@@ -1257,15 +1293,15 @@ public class SearchResultDetailFragment extends Fragment
                 AlertDialog.Builder builder = new AlertDialog.Builder(
                         getActivity());
                 builder.setMessage(R.string.error)
-                       .setCancelable(true)
-                       .setNegativeButton(R.string.close,
-                               new DialogInterface.OnClickListener() {
-                                   @Override
-                                   public void onClick(DialogInterface dialog,
-                                           int id) {
-                                       dialog.cancel();
-                                   }
-                               });
+                        .setCancelable(true)
+                        .setNegativeButton(R.string.close,
+                                new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog,
+                                                        int id) {
+                                        dialog.cancel();
+                                    }
+                                });
                 AlertDialog alert = builder.create();
                 alert.show();
                 return;

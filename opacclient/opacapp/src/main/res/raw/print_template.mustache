@@ -1,0 +1,99 @@
+<!doctype html>
+<head>
+    <title>{{item.title}}</title>
+</head>
+<body>
+<h1>{{item.title}}</h1>
+<h2>{{strings.details_head}}</h2>
+    
+    <!-- one row for every detail -->
+    <table>
+        {{#item.details}}
+	        <tr>
+	            <th>{{desc}}</th>
+	            <td>{{content}}</td>
+	        </tr>
+        {{/item.details}}
+    </table>
+
+    <!-- Only show heading if there are copies -->
+{{^item.copies.isEmpty}}
+    <h2>{{strings.copies_head}}</h2>
+    <!-- one table for every copy, show all the rows that have data -->
+    {{#item.copies}}
+		    <table>
+		    	{{#barcode}}
+			        <tr>
+                        <th>{{strings.barcode}}</th>
+			            <td>{{barcode}}</td>
+			        </tr>
+			    {{/barcode}}
+
+			    {{#department}}
+			        <tr>
+                        <th>{{strings.department}}</th>
+			            <td>{{department}}</td>
+			        </tr>
+			    {{/department}}
+
+			    {{#branch}}
+			        <tr>
+                        <th>{{strings.branch}}</th>
+			            <td>{{branch}}</td>
+			        </tr>
+			    {{/branch}}
+
+			    {{#status}}
+			        <tr>
+                        <th>{{strings.status}}</th>
+			            <td>{{status}}</td>
+			        </tr>
+			    {{/status}}
+
+			    {{#location}}
+			        <tr>
+                        <th>{{strings.location}}</th>
+			            <td>{{location}}</td>
+			        </tr>
+			    {{/location}}
+
+			    {{#returnDate}}
+			        <tr>
+                        <th>{{strings.return_date}}</th>
+			            <td>{{returnDate}}</td>
+			        </tr>
+			    {{/returnDate}}
+
+			    {{#reservations}}
+			        <tr>
+                        <th>{{strings.reservations}}</th>
+			            <td>{{reservations}}</td>
+			        </tr>
+			    {{/reservations}}
+
+			    {{#shelfmark}}
+			        <tr>
+			            <th>Shelf Mark</th>
+			            <td>{{shelfmark}}</td>
+			        </tr>
+			    {{/shelfmark}}
+
+			    {{#url}}
+			        <tr>
+                        <th>{{strings.url}}</th>
+			            <td>{{url}}</td>
+			        </tr>
+			    {{/url}}
+		    </table>
+    {{/item.copies}}
+{{/item.copies.isEmpty}}
+    <!-- Only show heading if there are volumes -->
+{{^item.volumes.isEmpty}}
+    <h2>{{strings.volumes}}</h2>
+	    <ul>
+            {{#item.volumes}}
+	        	<li>{{title}}</li>
+            {{/item.volumes}}
+	    </ul>
+{{/item.volumes.isEmpty}}
+</body>

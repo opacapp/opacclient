@@ -1,7 +1,8 @@
 package de.geeksfactory.opacclient.networking;
 
 import android.content.Context;
-import android.os.AsyncTask;import android.util.Log;
+import android.os.AsyncTask;
+import android.util.Log;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -31,6 +32,10 @@ public class CoverDownloadTask extends AsyncTask<Void, Integer, CoverHolder> {
                         "bS65EnPqXiaIJ26Eg/6HVW8+327fHg9kVpBw5xylc6eu3jeBTwh28bewIJh807RZ" +
                         "vIgxo8aNRxw7ZlNXbt04RvT+lXQjL57KciT/nRuY5iW8YzJPQjx5xKVCeCoNurTE" +
                         "0+QukBNZAsu3ECbKnhIBBnwaMWFBVx6rWr2KdUIBADs=");
+        rejectImages.add(
+                "R0lGODlhOwBLAIABALy8vf///yH+EUNyZWF0ZWQgd2l0aCBHSU1QACH5BAEKAAEA" +
+                        "LAAAAAA7AEsAAAJHjI+py+0Po5y02ouz3rz7D4biSJbmiabqyrbuC8fyTNf2jef6z" +
+                        "vf+DwwKh8Si8YhMKpfMpvMJjUqn1Kr1is1qt9yu9wsO6woAOw==");
     }
 
     protected CoverHolder item;

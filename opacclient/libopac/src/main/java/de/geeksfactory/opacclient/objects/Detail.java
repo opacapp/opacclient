@@ -112,4 +112,25 @@ public class Detail {
     public String toString() {
         return "Detail [desc=" + desc + ", content=" + content + "]";
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Detail detail = (Detail) o;
+
+        if (html != detail.html) return false;
+        if (!desc.equals(detail.desc)) return false;
+        return content.equals(detail.content);
+
+    }
+
+    @Override
+    public int hashCode() {
+        int result = desc.hashCode();
+        result = 31 * result + content.hashCode();
+        result = 31 * result + (html ? 1 : 0);
+        return result;
+    }
 }

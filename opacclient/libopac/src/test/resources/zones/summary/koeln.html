@@ -1,0 +1,3441 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+        "http://www.w3.org/TR/html4/loose.dtd">
+<html lang="de">
+<head>
+
+
+    <title> - Mein Konto - &lt;b&gt;Übersicht&lt;/b&gt;</title>
+
+
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta http-equiv="Expires" content="-1">
+    <meta http-equiv="Pragma" content="no-cache">
+
+
+    <meta http-equiv="Content-Style-Type" content="text/css">
+    <meta http-equiv="Content-Script-Type" content="text/JavaScript">
+    <meta name="description" content="">
+
+
+    <meta name="robots" content="noindex,nofollow">
+
+
+    <meta http-equiv="imagetoolbar" content="no">
+
+    <meta name="ZonesObjClass" content="CWWWSSBrwrAccountObject">
+    <meta name="ZonesObjName" content="Obj_64281470840650">
+    <meta name="ZonesTemplate" content="SSAccount">
+    <meta name="ZonesTemplateFileName" content="templates\Portal3\SSAccount.html">
+    <meta name="ZonesRef"
+          content="Obj_64281470840650?Style=Portal3&amp;SubStyle=&amp;Lang=GER&amp;ResponseEncoding=utf-8">
+
+
+    <link href="-%20Mein%20Konto%20-%20%C3%9Cbersicht-Dateien/btnStyles.css" rel="stylesheet"
+          type="text/css">
+
+
+    <style type="text/css">
+        .clickable {
+        cursor:pointer;
+        cursor:hand;
+        }
+        #leftMenuContainer {
+        float:left;
+        width: 100px;
+        }
+        .SelectItem {
+        background-color: green;
+        }
+        .printListLink:link, .printListLink:visited {
+        color: white;
+        font-size: 0.92em;
+        }
+        body {
+        width:100%;
+        margin:0px;
+        padding:0px;
+        }
+        #contentContainer {
+        width: 1200px;
+        margin-left: auto;
+        margin-right: auto;
+        }
+        #toolBar {
+        height : 50px;
+        background-color: white;
+        }
+        .enlargeCoverLink:link, .enlargeCoverLink:visited {
+        font-size : 0.7em;
+        color: black;
+        display:block;
+        text-align:center;
+        width: 100%;
+        }
+        .IndexHeadingCell {
+        padding-top:10px;
+        padding-bottom: 10px;
+        padding-left: 5px;
+        padding-right: 5px;
+        font-size: larger;
+        background-color: #F4F4F4;
+        }
+        .IndexHeadingCellStripe {
+        padding-top:10px;
+        padding-left: 5px;
+        padding-right: 5px;
+        padding-bottom: 10px;
+        font-size : larger;
+        background-color: #FFFFFF;
+        }
+        .button {
+        text-decoration:none;
+        font-weight : bold;
+        color : black;
+        }
+        .button:link {
+        text-decoration:none;
+        font-weight : bold;
+        color : black;
+        }
+        .button:Hover {
+        text-decoration:none;
+        font-weight : bold;
+        color : black;
+        }
+        .button:Visited {
+        text-decoration:none;
+        font-weight : bold;
+        color : black;
+        }
+        .button_blue {
+        text-decoration:none;
+        font-weight : bold;
+        color : #8c9fad;
+        }
+        .button_blue:link {
+        text-decoration:none;
+        font-weight : bold;
+        color : #8c9fad;
+        }
+        .button_blue:Hover {
+        text-decoration:none;
+        font-weight : bold;
+        color : #8c9fad;
+        }
+        .button_blue:Visited {
+        text-decoration:none;
+        font-weight : bold;
+        color : #8c9fad;
+        }
+
+
+        .hi {
+        background-color :#D7EAFA;
+        text-decoration: none;
+        font-weight: normal;
+        padding-left: 2px;
+        padding-right: 2px;
+        }
+        .PayImage {
+        padding-left: 5px;
+        }
+        .CannotRenewLink {
+        color: #bd5200;
+        }
+        .searchLimits {
+        border-style: solid;
+        border-width: 2px;
+        border-color: #BBCCD9;
+        padding-left : 3px;
+        padding-right : 3px;
+        }
+        .limitBoxLabel {
+        float:left;
+        width:100px;
+        margin-right: 10px;
+        text-align: right;
+        font-size : smaller;
+        font-weight : bold;
+        color : #6C8490;
+        }
+        .limitBoxContent {
+        float:left;
+        width:200px;
+        height:auto;
+        }
+        .yearInput {
+        width: 4em;
+        }
+        .limitToggle {
+        float:right;
+        }
+        .dateLimitCell {
+        width: 230px;
+        font-size: smaller;
+        }
+        .limitCell {
+        width: 180px;
+        font-size: smaller;
+        }
+        .limitCell4 {
+        width: 85px;
+        font-size: smaller;
+        }
+        .limitCellSplitter {
+        border-style: solid;
+        border-top-width: 0px;
+        border-bottom-width: 0px;
+        border-left-width: 0px;
+        border-right-width: 2px;
+        border-color: #BBCCD9;
+        }
+        .limitSepLine {
+        border-style: solid;
+        border-top-width: 0px;
+        border-bottom-width: 1px;
+        border-left-width: 0px;
+        border-right-width: 0px;
+        border-color: #BBCCD9;
+        width:600px;
+        }
+        .limitSepLineThick {
+        clear : both;
+        border-style: solid;
+        border-top-width: 0px;
+        border-bottom-width: 2px;
+        border-left-width: 0px;
+        border-right-width: 0px;
+        border-color: #BBCCD9;
+        width:713px;
+        }
+        .limitCheckBox {
+        width: 150px;
+        float: left;
+        }
+        #searchLimitsTitle {
+        color : #6D6D6D;
+        font-size: inherit;
+        }
+        .SearchFieldsTable {
+        width: 100%;
+        }
+
+        .SearchFormRowSep {
+        background-color: #6c96b3;
+        height : 2px;
+        }
+        .SearchFieldsTableCell {
+        background-color :#a5cbe6;
+        padding-right:5px;
+        padding-top : 5px;
+        padding-bottom : 5px;
+        border-top-width: 0px;
+        border-bottom-width: 1px;
+        border-left-width: 0px;
+        border-right-width: 0px;
+        border-color: black;
+        vertical-align: top;
+        }
+        .SearchFormIndexSelect {
+        margin-left:10px;
+        margin-top: 1px;
+        margin-bottom: 1px;
+        }
+        .SearchFormField {
+        margin-left:10px;
+        margin-top: 1px;
+        margin-bottom: 1px;
+        }
+        .pageNavLink, .pageNavLink:link, .pageNavLink:visited {
+        color: white;
+        font-size:smaller;
+        }
+        .SearchResultsPageNavCell {
+        color: white;
+        white-space:nowrap;
+        }
+
+        .SearchResultsPrintListCell {
+        white-space:nowrap;
+        }
+
+        .SearchResultsEmailListCell {
+        white-space:nowrap;
+        }
+
+        .ExportResultsCell {
+        white-space:nowrap;
+        }
+
+        .browseList {
+        width: 100%;
+        }
+        .SearchHistoryItemContainer {
+
+        background-color :#fafafc;
+        width: 100%;
+        }
+        .leftNavButton {
+        display: block;
+        float: left;
+        width: 114px;
+        height: 50px;
+        border-right : 1px;
+        border-left : 0px;
+        border-top : 0px;
+        border-bottom: 0px;
+        padding-right : 3px;
+        padding-left : 3px;
+        border-color : #EDEEEE;
+        border-style : solid;
+        cursor : hand;
+        cursor : pointer;
+        text-decoration : none;
+        font-family : Arial;
+        font-weight : bold;
+        color : #6D6D6D;
+        }
+        .leftNavButton:hover {
+        display: block;
+        float: left;
+        width: 114px;
+        height: 50px;
+        border-right : 1px;
+        border-left : 0px;
+        border-top : 0px;
+        border-bottom: 0px;
+        padding-right : 3px;
+        padding-left : 3px;
+        border-color : #EDEEEE;
+        border-style : solid;
+        background-color : #deeaf6;
+        cursor : hand;
+        cursor : pointer;
+        text-decoration : none;
+        font-family : Arial;
+        font-weight : bold;
+        color : #6D6D6D;
+        }
+        .rightNavButton {
+        display: block;
+        float: right;
+        width: 114px;
+        height: 50px;
+        border-left : 1px;
+        border-right : 0px;
+        border-top : 0px;
+        border-bottom: 0px;
+        padding-right : 3px;
+        padding-left : 3px;
+        border-color : #EDEEEE;
+        border-style : solid;
+        cursor : hand;
+        cursor : pointer;
+        text-decoration : none;
+        font-family : Arial;
+        font-weight : bold;
+        color : #6D6D6D;
+        }
+        .rightNavButton:hover {
+        display: block;
+        float: right;
+        width: 114px;
+        height: 50px;
+        border-left : 1px;
+        border-right : 0px;
+        border-top : 0px;
+        border-bottom: 0px;
+        padding-right : 3px;
+        padding-left : 3px;
+        border-color : black;
+        border-style : solid;
+        background-color : #deeaf6;
+        cursor : hand;
+        cursor : pointer;
+        font-family : Arial;
+        font-weight : bold;
+        color : #6D6D6D;
+        }
+        .FacetBox {
+        border-style: solid;
+        border-color: #dfedf8;
+        border-width: 1px;
+        padding: 2px;
+        }
+        .FacetItem {
+        display: block;
+        color: #292424;
+        font-family: Arial;
+        font-size: smaller;
+        padding-left:10px;
+        }
+        .FacetLink {
+        color: #292424;
+        font-family: Arial;
+        }
+        .FacetLinkA:link, .FacetLinkA:visited {
+        padding-left:5px;
+        padding-right:5px;
+        margin-top:1px;
+        margin-bottom:1px;
+
+        color:#3e65a2;
+        font-family: Arial;
+        text-decoration:none;
+        display:block;
+        font-size:0.84em;
+        }
+        .FacetLinkA:hover {
+        padding-left:5px;
+        padding-right:5px;
+        margin-bottom:1px;
+        color: black;
+        background-color:#dfedf8;
+        font-family: Arial;
+        text-decoration:none;
+        display:block;
+        font-size:0.84em;
+        }
+        .darkLink, .darkLink:link, .darkLink:visited {
+        color: black;
+        }
+        .FacetCount {
+
+        color: #7c7c7c
+        }
+        .FacetHeader {
+        display: block;
+
+
+        color: white;
+        background-color: #7c7c7c;
+        font-family: Arial;
+        overflow: hidden;
+        padding: 5px;
+        }
+
+        .FacetsList {
+        overflow: hidden;
+        }
+        .arrow_down {
+        border-style:solid;
+        border-bottom-width: 2px;
+        border-left-width: 0px;
+        border-right-width: 0px;
+        border-top-width:0px;
+        border-color:white;
+        }
+        .FacetBoxHeader {
+        margin-top : 103px;
+        margin-bottom : 5px;
+        color:#202020;
+        font-family:Helvetica,Arial,sans-serif;
+        font-size:0.90em;
+        font-weight:bold;
+        font-variant:small-caps;
+        }
+        .searchStatementBox {
+        background-color : #f1f8fe;
+        border-style: solid;
+        border-width: 2px;
+        border-color: #c8e2f4;
+        width: 742px;
+        min-height: 40px;
+        }
+        .searchStatementLabel {
+        color:#9fb4c2;
+        font-family : Arial;
+        width: 100px;
+        }
+        .searchStatementCell {
+        font-family : Arial;
+        }
+        .searchStatementModifyCell {
+
+        width: 100px;
+
+        text-align: right;
+        padding-right:10px;
+        }
+        .banner {
+        background-color : #559DCF;
+        height : 30px;
+        }
+        .currentFunction {
+        background-color : #deeaf6;
+        }
+        .SearchResultsHeader {
+        background-color : #3E65A2;
+        border-style: solid;
+        border-width: 2px;
+        border-color: #3E65A2;
+        width: 742px;
+        min-height: 20px;
+        }
+        .SearchResultsTrailer {
+        background-color : #3E65A2;
+        border-style: solid;
+        border-width: 2px;
+
+        border-color: #3E65A2;
+        width: 742px;
+        min-height: 20px;
+        }
+        .QuickSearchHeader {
+        background-color : #3E65A2;
+        border-style: solid;
+        border-width: 2px;
+        border-color: #c8e2f4;
+        width: 715px;
+        min-height: 40px;
+        padding-top:10px;
+        }
+        .QuickSearchHeaderCollectionButton {
+        float:left;
+        display:block;
+        vertical-align: top;
+        }
+        .QuickSearchHeaderCollectionLabel {
+        padding-left:5px;
+        float:left;
+        width: 30px;
+        display:block;
+        font-size:smaller;
+        vertical-align: top;
+        }
+        .QuickSearchHeaderCollectionLabel {
+        font-family : Arial;
+        float:left;
+        width: 80px;
+        display:block;
+        }
+        #RevenuEtJournaux.QuickSearchHeaderCollectionLabel {
+        font-family : Arial;
+        float:left;
+        width: 200px;
+        display:block;
+        }
+        #leftMenuContainer {
+        width : 182px;
+        padding-right : 0px;
+        padding-left : 0px;
+        }
+        #mainContent {
+        float : left;
+
+
+        width : 747px;
+        height : 100%;
+        border-left : 1px;
+        border-right : 0px;
+        border-top : 0px;
+        border-bottom: 0px;
+        padding-right : 3px;
+        padding-left : 3px;
+        border-color : #EDEEEE;
+        border-style : solid;
+        }
+        .floatClear {
+        width: 0px;
+        height: 0px;
+        clear : both;
+        }
+        .seperator {
+        width: 0px;
+        height: 10px;
+        clear : both;
+        }
+        .title {
+        float : left;
+        }
+        .titleText {
+        font-weight : bold;
+        color : #5A5A5A;
+        padding : 0px;
+        margin : 0px;
+        }
+        .titleLink {
+        font-size: smaller;
+        font-weight: bold;
+        display : block;
+        padding-left: 16px;
+        color : #9C9C9C;
+        float:right;
+        }
+        .titleLink:visited {
+        font-size: smaller;
+        font-weight: bold;
+        display : block;
+        padding-left: 16px;
+        color : #9C9C9C;
+        float:right;
+        }
+        .SummaryPosInSetCell {
+
+        background-color : #F4F4F4;
+        width : 20px;
+        text-align: center;
+        font-weight: bold;
+        font-size: smaller;
+        }
+        .EMediaSummaryPosInSetCell {
+        background-color : #B9DAC1;
+        width : 20px;
+        text-align: right;
+        font-weight: bold;
+        font-size: smaller;
+        }
+        .DetailPosInSetCell {
+
+        background-color : #f4f4f4;
+        width : 20px;
+        text-align: right;
+        font-weight: bold;
+        font-size: smaller;
+        }
+        .SummaryPosInSetCellStripe {
+
+        background-color : #FFFFFF;
+        width : 20px;
+        text-align: center;
+        font-weight: bold;
+        font-size: smaller;
+        }
+        .EMediaSummaryPosInSetCellStripe {
+        background-color : #DCEDE0;
+        width : 20px;
+        text-align: right;
+        font-weight: bold;
+        font-size: smaller;
+        }
+        .DetailPosInSetCellStripe {
+
+        background-color : #f4f4f4;
+        width : 20px;
+        text-align: right;
+        font-weight: bold;
+        font-size: smaller;
+        }
+        .SummaryImageCell {
+        background-color: #F4F4F4;
+        width: 80px;
+        }
+        .SummaryImageCellStripe {
+        background-color: #FFFFFF;
+        width: 80px;
+        }
+        .EMediaSummaryImageCell {
+        background-color: #B9DAC1;
+        width: 80px;
+        overflow: hidden;
+        }
+        .EMediaSummaryImageCellStripe {
+        background-color: #DCEDE0;
+        width: 80px;
+        overflow: hidden;
+        }
+        .DetailImageCell {
+        background-color: #F4F4F4;
+        width:100px;
+        }
+        .DetailImageCellStripe {
+        background-color: #F6F6F6;
+        }
+        .SummaryDataCell {
+        background-color: #F4F4F4;
+        }
+        .SummaryDataCellStripe {
+        background-color: #FFFFFF;
+        }
+        .EMediaSummaryDataCell {
+        background-color: #B9DAC1;
+        }
+        .EMediaSummaryDataCellStripe {
+        background-color: #DCEDE0;
+        }
+        .DetailDataCell {
+        background-color: #F4F4F4;
+        }
+        .DetailDataCellStripe {
+        background-color: #FFFFFF;
+        }
+        .SummaryMaterialTypeField {
+        text-align: center;
+        font-size : smaller;
+        font-weight: bold;
+        }
+        .SummaryFieldLegend {
+        font-size : Smaller;
+        text-align : right;
+        width: 40px;
+        }
+        .SummaryFieldLegendSep {
+        font-size : Smaller;
+        text-align : right;
+        }
+        .SummaryFieldData {
+        color: #292424;
+        }
+        .SummaryFieldLink {
+        font-weight: bold;
+        color: #3E65A2;
+        text-decoration: underline;
+        }
+        .SummaryFieldLink:link {
+        font-weight: bold;
+        text-decoration: underline;
+        color: #3E65A2;
+        }
+        .SummaryFieldLink:visited {
+        font-weight: bold;
+        color: #3E65A2;
+        text-decoration: underline;
+        }
+        .SummaryActionBox {
+        width:137px;
+
+        padding-bottom: 12px;
+        background-color:white;
+        border-color: #a8bbce;
+        border-style:solid;
+        border-width: 2px;
+        }
+        .EMediaSummaryActionBox {
+        width:137px;
+        height:85px;
+        background-color:white;
+        border-color: #a8bbce;
+        border-style:solid;
+        border-width: 2px;
+        }
+        .SummaryActionLink {
+        padding-top:8px;
+        margin-left: 10px;
+        font-size:0.80em;
+        color:black;
+        display: block;
+        text-align: left;
+        }
+        .SummaryActionLink:link, .SummaryActionLink:visited {
+        padding-top:8px;
+        margin-left: 10px;
+        font-size:0.80em;
+        color:black;
+        display: block;
+        text-align: left;
+        }
+        .SummaryActionLink:hover {
+        padding-top:8px;
+        margin-left: 10px;
+        font-size:0.80em;
+        color:black;
+        display: block;
+        text-align: left;
+        }
+        .DetailedActionBox {
+
+
+        background-color:white;
+        border-color: #a8bbce;
+        border-style:solid;
+        border-width: 2px;
+        }
+        .searchHits {
+        margin-top : 5px;
+        margin-bottom : 5px;
+        font-family : Arial;
+        font-size : larger;
+        font-weight : bold;
+        }
+        .SearchResultsHeaderSortCell {
+        padding-left: 10px;
+        padding-top: 5px;
+        }
+
+        .SearchResultsTrailerSortCell {
+        padding-left: 10px;
+        padding-top: 5px;
+        }
+        .SearchResultsPageField {
+        width : 1.5em;
+        }
+        .SearchExampleListBox {
+        width: 715px;
+        min-height : 200px;
+        background-color: #fafafc;
+        border-color: #e1e8ee;
+        border-style: solid;
+        border-width: 2px;
+        }
+        .SearchExampleListHeader {
+        color : #a1a1a3;
+        font-weight: bold;
+        padding-top:10px;
+        padding-left: 10px;
+        }
+        .SearchExampleList {
+        color : #a1a1a3;
+        padding-top:10px;
+        padding-left: 30px;
+        list-style-type:none;
+        }
+        .MyZonePageLeftMenuItem {
+        }
+        .MyZonePageLeftMenuList{
+        list-style-type: none;
+        }
+        .MyZoneHeaderLink {
+        color: #cf8032;
+        text-decoration: underline;
+        font-size : smaller;
+        }
+        .MyZoneHeaderSectionSep {
+        margin-left: 5px;
+        margin-right: 5px;
+        font-size : smaller;
+        }
+        .MyZoneHeaderSection {
+        font-size: smaller;
+        color: #5d5d5d;
+        }
+        .MyZonetitleText {
+        font-size: 1.30em;
+        color: #565656;
+        }
+        .LoginHelpCell {
+        vertical-align : bottom;
+        padding-left: 5px;
+        }
+        .LoginForgotPinCell {
+        vertical-align : bottom;
+        padding-left: 5px;
+        }
+        .AccountSummaryHeaderCell {
+        background-color: #ECECEC;
+        padding-left : 10px;
+        font-weight : bold;
+        }
+        .AccountDetailsHeaderCell {
+        background-color: #ECECEC;
+        padding-left : 10px;
+        font-weight : bold;
+        }
+        .AccountSummaryCounterNameCell {
+        width : 200px;
+        padding-left: 20px;
+        }
+        .AccountDetailFieldNameCell {
+        text-align: right;
+        width : 65px;
+        padding-left: 20px;
+        padding-right: 5px;
+        }
+        .AccountDetailFieldNameCellStripe {
+        text-align: right;
+        width: 65px;
+        padding-left: 20px;
+        padding-right: 5px;
+        background-color: #f8f8f8;
+        }
+
+        .CAccountDetailFieldNameCell {
+        text-align: right;
+        width : 95px;
+        padding-left: 20px;
+        padding-right: 5px;
+        }
+        .CAccountDetailFieldNameCellStripe {
+        text-align: right;
+        width: 95px;
+        padding-left: 20px;
+        padding-right: 5px;
+        background-color: #f8f8f8;
+        }
+        .AccountSummaryCounterValueCell {
+        width: 200px;
+        }
+        .AccountDetails {
+        margin-top : 20px;
+        width:745px;
+        }
+        .AccountDetailFieldValueCell {
+        width: 400px;
+        }
+        .AccountDetailFieldValueCellStripe {
+        width: 400px;
+        background-color: #f8f8f8;
+        }
+        .AccountSummaryActionCell {
+        }
+        .AccountDetailFieldActionCell {
+        }
+        .AccountDetailFieldActionCellStripe {
+        background-color: #f8f8f8;
+        }
+        .AccountSummaryCounterNameCellStripe {
+        width: 200px;
+        padding-left: 20px;
+        background-color: #f8f8f8;
+        }
+        .AccountSummaryCounterValueCellStripe {
+        width: 200px;
+        background-color: #f8f8f8;
+        }
+        .AccountSummaryActionCellStripe {
+        background-color: #f8f8f8;
+        }
+        .AccountSummaryCounterLink {
+        color : #ce8435;
+        text-decoration : underline;
+        }
+        .AccountSummaryActionLink {
+        color : #ce8435;
+        text-decoration : underline;
+        font-size : smaller;
+        padding-top:5px;
+        padding-bottom:5px;
+        padding-left:5px;
+        display: block;
+        }
+        .AccountTrapErrorContainer {
+        padding-left:10px;
+        }
+        .AccountTrapWarningContainer {
+        padding-left:10px;
+        }
+        .BoldTitle {
+        font-size: 1.1em;
+        font-weight: bold;
+        color: #3E65A2;
+        }
+        .BoldTitle A {
+        font-size: 1.1em;
+        font-weight: bold;
+        color: #3E65A2;
+        }
+
+        .AccountMenuLink, .AccountMenuLink:link, .AccountMenuLink:visited {
+
+        }
+        .AccountMenuLink:hover, .AccountMenuLinkSelected, .AccountMenuLinkSelected:link {
+        background-color:#eaf3f9;
+        color: #727272;
+        }
+
+        .LoansHistoryBrowseHitNumber {
+        width : 20px;
+        }
+        .LoansHistoryBrowseHitNumberStripe {
+        background-color: #f8f8f8;
+        width : 20px;
+        }
+        .LoansBrowseHitNumber {
+        width : 100px;
+        }
+        .LoansBrowseHitNumberStripe {
+        background-color: #f8f8f8;
+        width : 100px;
+        }
+        .LoansBrowseItemDetailsCell {
+        }
+        .LoansBrowseItemDetailsCellStripe {
+        background-color: #f8f8f8;
+        }
+        .LoansBrowseItemDetailsCellSelected {
+        background-color: #93F887;
+        }
+        .LoansBrowseItemDetailsCellStripeSelected {
+        background-color: #93F887;
+        }
+        .LoanBrowseFieldNameCell {
+        font-size : smaller;
+        width : 120px;
+        }
+        .LoansBrowseItemPictureCell {
+        width: 100px;
+        }
+        .LoansBrowseItemPictureCellStripe {
+        background-color: #f8f8f8;
+        width: 100px;
+        }
+        .SearchExample {
+        background: url(/portal3/img/icon/bullet.gif) left center no-repeat;
+        padding-left: 15px;
+        margin-bottom: 5px;
+        }
+        .MessageBrowseHitNumberCell {
+        width : 40px;
+        }
+        .MessageBrowseHitNumberCellStripe {
+        width : 40px;
+        background-color: #f8f8f8;
+        }
+        .MessageBrowseItemDetailsCell {
+        }
+        .MessageBrowseItemDetailsCellStripe {
+        background-color: #f8f8f8;
+        }
+        .MessageBrowseItemDetailsCellSelected {
+        background-color: #F8ABAB;
+        }
+        .MessageBrowseItemDetailsCellStripeSelected {
+        background-color: #F8ABAB;
+        }
+        .MessageBrowseItemDetailsCellDisabled {
+        background-color: #DBDBDB;
+        color: white;
+        }
+        .MessageBrowseItemDetailsCellStripeDisabled {
+        background-color: #DBDBDB;
+        color: white;
+        }
+        .MessageBrowseBodyContainer {
+        width: 600px;
+        overflow: hidden;
+        }
+        .MessageBrowseFieldNameCell {
+        width: 75px;
+        text-align : right;
+        vertical-align: top;
+        font-size: smaller;
+        padding-right: 5px;
+        }
+        .MessageBrowseFieldDataCell {
+        }
+        .MessageBrowseBodyContainer pre {
+        white-space: pre-wrap;
+        word-wrap: break-word;
+        }
+
+        .ReservationBrowseFieldNameCell {
+        width: 75px;
+        text-align : right;
+        vertical-align: middle;
+        font-size: smaller;
+        padding-right: 5px;
+        }
+
+        .ReservationBrowseFieldDataCell {
+        vertical-align: middle;
+        }
+
+        .ResvRank {
+        margin-right: 7px;
+        padding-top: 8px;
+        float: left;
+        display: table-cell;
+        vertical-align: middle;
+        }
+
+        .ChangePinLabelCell {
+        font-size:smaller;
+        width: 400px;
+        }
+        .ChangePinFieldCell {
+        font-size:smaller;
+        width: 250px;
+        }
+        .SerialIssueDetail_hidden {
+        height:1px;
+        margin-top:-1px;
+        overflow:hidden;
+        position:relative;
+        visibility:hidden;
+        }
+        .ElectreLinks {
+        font-size:0.80em;
+        color:black;
+        display: block;
+        text-align: left;
+        }
+        .ElectreLinks:link, a.ElectreLinks:visited {
+        font-size:0.80em;
+        color:black;
+        display: block;
+        text-align: left;
+        }
+        ElectreLinks:hover {
+        font-size:0.80em;
+        color:black;
+        display: block;
+        text-align: left;
+        }
+        .SyndeticsLinks {
+        font-size:0.80em;
+        color:black;
+        display: block;
+        text-align: left;
+        }
+        .SyndeticsLinks:link, a.SyndeticsLinks:visited {
+        font-size:0.80em;
+        color:black;
+        display: block;
+        text-align: left;
+        }
+        SyndeticsLinks:hover {
+        font-size:0.80em;
+        color:black;
+        display: block;
+        text-align: left;
+        }
+        .CantookLinks {
+        font-size:0.80em;
+        color:black;
+        display: block;
+        text-align: left;
+        }
+        .CantookLinks:link, a.CantookLinks:visited {
+        font-size:0.80em;
+        color:black;
+        display: block;
+        text-align: left;
+        }
+        CantookLinks:hover {
+        font-size:0.80em;
+        color:black;
+        display: block;
+        text-align: left;
+        }
+
+        .flipbook-text {
+        font-size:0.80em;
+        color:black;
+        display: block;
+        text-align: left;
+        }
+        .flipbook-text:link, a.flipbook-text:visited {
+        font-size:0.80em;
+        color:black;
+        display: block;
+        text-align: left;
+        }
+        .flipbook-text:hover {
+        font-size:0.80em;
+        color:black;
+        display: block;
+        text-align: left;
+        }
+
+        .SerialIssueHeader {
+        margin-bottom: 10px;
+        border-bottom:1px;
+        border-top:1px;
+        border-left:0px;
+        border-right:0px;
+        border-style:solid;
+        background-color:#bcddf0;
+        }
+
+        .tagcloudbox {
+        text-align:left;
+        height:150px;
+        background-color:white;
+        border-color: #a8bbce;
+        border-style:solid;
+        border-width: 2px;
+        }
+
+        .tg5 {
+        display: inline;
+        padding-right: 2px;
+        font-size : 1.1em;
+        }
+        .tg4 {
+        display: inline;
+        padding-right: 2px;
+        font-size : 1.0em;
+        }
+        .tg3 {
+        display: inline;
+        padding-right: 2px;
+        font-size : 0.95em;
+        }
+        .tg2 {
+        cursor: hand;
+        display: inline;
+        padding-right: 2px;
+        font-size : 0.9em;
+        }
+        .tg1 {
+        cursor: hand;
+        display: inline;
+        padding-right: 2px;
+        font-size : 0.8em;
+        }
+        .tg0 {
+        cursor: hand;
+        display: inline;
+        padding-right: 2px;
+        font-size : 0.7em;
+        }
+        .tgc {
+        list-style-image: none;
+        }
+        #tagcloud_content {
+        margin-top:8px;
+        margin-left:8px;
+        }
+        #tagcloud_header {
+        text-align: center;
+        font-weight: bold;
+        background-color:#a8bbce;
+        }
+
+
+        #TotalFines {
+        margin-top: 15px;
+        }
+
+        .TotalFinesHeader {
+        width: 125px;
+        }
+
+        .TotalFinesCell {
+        width: 125px;
+        }
+
+        .navigation_icon { border:0; position:relative;top: 3px; }
+        .SyndeticsContent {
+        padding: 20px 10px 10px 10px;
+        }
+        .SyndeticsHeaderRow {
+        min-height: 15px;
+        background-color: #3e64a2;
+        margin-top: 10px;
+        }
+        .SyndeticsChapterRow {
+        background-color: #f4f4f4;
+        width: 125px;
+        }
+        .SyndeticsChapterRowStripe {
+        background-color: #ffffff;
+        width: 125px;
+        }
+        .SyndeticsTitleRow {
+        background-color: #f4f4f4;
+        }
+        .SyndeticsTitleRowStripe {
+        background-color: #ffffff;
+        }
+        .SyndeticsPageRow {
+        background-color: #f4f4f4;
+        width: 100px;
+        }
+        .SyndeticsPageRowStripe {
+        background-color: #ffffff;
+        width: 100px;
+        }
+        .limitBlock {
+        position: relative;
+        }
+        .hiddenBlock_display {
+        display:block;
+        border-top: solid 1px #A5CBE6;
+        }
+        .hiddenBlock_hidden {
+        display:none;
+        }
+        .limitToggle {
+        position: absolute;
+        top:5px;
+        right:-16px;
+        }
+        .limitChoice {
+        float:left;
+        padding:5px;
+        margin-right:10px;
+        width:165px;
+        }
+        .limitChoice input {
+        float:left;
+        vertical-align: top;
+        }
+        .limitChoice label {
+        margin-left:20px;
+        display: block;
+        }
+
+
+    </style>
+
+
+    <script type="text/javascript"
+            src="-%20Mein%20Konto%20-%20%C3%9Cbersicht-Dateien/jquery-1.js"></script>
+
+
+    <link type="text/css" href="-%20Mein%20Konto%20-%20%C3%9Cbersicht-Dateien/jquery-ui-1.css"
+          rel="stylesheet">
+    <link type="text/css" href="-%20Mein%20Konto%20-%20%C3%9Cbersicht-Dateien/jquery-ui-1_002.css"
+          rel="stylesheet">
+    <link type="text/css" href="-%20Mein%20Konto%20-%20%C3%9Cbersicht-Dateien/jquery-ui-1_003.css"
+          rel="stylesheet">
+    <script type="text/javascript"
+            src="-%20Mein%20Konto%20-%20%C3%9Cbersicht-Dateien/jquery-ui-1.js"></script>
+    <link media="screen" rel="stylesheet"
+          href="-%20Mein%20Konto%20-%20%C3%9Cbersicht-Dateien/colorbox.css">
+    <script src="-%20Mein%20Konto%20-%20%C3%9Cbersicht-Dateien/jquery.js"></script>
+
+    <script type="text/javascript">
+function writeCookie(cookieName, cookieValue)
+{
+document.cookie = cookieName + '=' + cookieValue + ';';
+}
+function readCookie(cookieName) 
+{
+var cookies = document.cookie.split('; ');
+for(var i=0; i < cookies.length; i++)
+{
+var cookie = cookies[i].split('=');
+if(cookie[0] == cookieName)
+return cookie[1];
+}
+return null;
+}
+
+var printOptions = "";
+var printExtent = "";
+var documentManager = {
+addStartup : function ( f )
+{
+$( f );
+}
+}
+function OpenPrintFrame() {
+$('PrintLDLG').show();
+}
+function windowWidth()
+            {
+                var myWidth = 0;
+                if( typeof( window.innerWidth ) == 'number' ) {
+                    //Non-IE
+                    myWidth = window.innerWidth;
+                } 
+                else if
+                    ( document.documentElement && ( document.documentElement.clientWidth || document.documentElement.clientHeight ) ) 
+                {
+                    myWidth = document.documentElement.clientWidth;
+                }
+                else if( document.body && ( document.body.clientWidth || document.body.clientHeight ) ) 
+                {
+                    myWidth = document.body.clientWidth;
+                }
+                return myWidth;
+            }
+            var Printing = true;
+function OfflinePrintList(limit)
+{
+DoPrintList('OfflinePrint',limit);
+}
+function PrintList(limit)
+{
+DoPrintList('Print',limit);
+}
+            
+function DoPrintList(method,limit)
+{
+Printing = true;
+
+if(typeof(limit) != "undefined" && limit != "")
+{
+printOptions+="&Options.MaxItem=" + limit;
+}
+var dialogURL = "Obj_64281470840650?Style=Portal3&SubStyle=&Lang=GER&ResponseEncoding=utf-8";
+dialogURL += "&Style=Portal2&SubStyle=ForPortal3&Method=" + method + "&PrintOnly=1" + printOptions + printExtent;
+var e = document.getElementById('PrintLDLG');
+var dlg_width = 470;
+e.style.width = dlg_width + "px";
+e.style.left = ((windowWidth() -dlg_width) /2) + "px";  
+               
+if (printOptions != null && printOptions != "" && printOptions.indexOf("Options.Export=1") < 0)
+{
+e.style.height = "300px";
+}
+else
+{
+e.style.height = "100px";
+}
+e.style.display  = "block";
+e.src = dialogURL;
+                
+                
+                    printOptions = "&Options.Choose=1&Options.Type=Notepad";
+                    
+                 
+}
+function OfflineSendList(limit)
+{
+DoSendList('OfflinePrint',limit);
+}
+function SendList(limit)
+{
+DoSendList('Print',limit);
+}
+function DoSendList(method,limit) 
+{
+if(typeof(limit) != "undefined" && limit != "")
+{
+printOptions+="&Options.MaxItem=" + limit;
+}
+
+var options =  "" 
+if(options != "")
+{
+printOptions+= "&" + options;
+}
+Printing = false;
+var dialogURL = "Obj_64281470840650?Style=Portal3&SubStyle=&Lang=GER&ResponseEncoding=utf-8";
+dialogURL += "&Style=Portal2&SubStyle=ForPortal3&Method=" + method + "&EmailOnly=1" + printOptions;
+var e = document.getElementById('PrintLDLG');
+var dlg_width = 470;
+e.style.width = dlg_width + "px";
+e.style.left = ((windowWidth() -dlg_width) /2) + "px";  
+if (printOptions != "" )
+{
+e.style.height = "300px";
+}
+else
+{
+e.style.height = "100px";
+}
+e.style.display  = "block";
+e.src = dialogURL;  
+}
+function PreviewList( url )
+{
+var e = document.getElementById('PrintLDLG');
+e.style.display  = "block";
+                
+                if (printOptions != null && printOptions.indexOf("Options.Export=1") >= 0)
+                {
+    e.style.height = "100px";
+                }
+                else
+                {
+    e.style.height = "300px";
+                }
+                
+if
+(Printing)
+{
+e.src = url + "&SubStyle=ForPortal3&PrintOnly=true";
+}
+else
+{
+e.src = url + "&SubStyle=ForPortal3&EmailOnly=true";
+}
+}
+function PrintClose ()
+{
+
+printOptions = "";
+printExtent = "";
+
+var e = document.getElementById('PrintLDLG');
+e.style.height = "100px";
+e.style.display  = "none";
+e.src = "/blank.html";  
+}
+
+function Print()
+{
+if (window.print)
+{
+window.print();
+}
+}
+
+
+
+  
+
+
+jQuery.fn.ZonesIdleTimeout  = function(options){ 
+var defaults = {
+
+inactivity: 120000, //in milliseconds
+
+noconfirm: 20000, //in milliseconds
+redirect_url: "APS_ACCOUNT?Style=Portal3&SubStyle=&Lang=GER&ResponseEncoding=utf-8&Method=ZonesLogout&ResetFn=LibraryZone",
+logout_url: "APS_ZONES?fn=endsession&Style=Portal3&SubStyle=&Lang=GER&ResponseEncoding=utf-8"
+}
+var opts = $.extend(defaults, options);
+var liveTimeout, sessionTimeout, timer, refModal,timeLeft;
+var counting = false;
+var modal = "<div id='modal_pop'></div>";
+var modal_created = false;
+var clearTimeouts = function(){
+clearTimeout(liveTimeout);
+clearTimeout(timer);
+}
+var start_timeout = function(){
+if (modal_created) refModal.dialog("close");
+else clearTimeouts();
+timeLeft = opts.noconfirm / 1000; //in seconds
+liveTimeout = setTimeout(showOrCreateDialog, opts.inactivity);
+  
+}
+var dialogReady = function(){
+$("#modal_pop span").html(timeLeft);
+if(!modal_created){
+modal_created = true;
+refModal = $(".ui-dialog #modal_pop");
+}
+countDown();
+}
+var showOrCreateDialog = function(){
+if (modal_created){
+refModal.dialog("open");
+dialogReady();
+}
+else{
+$(modal).load("APS_TIMEOUT?Style=Portal3&SubStyle=&Lang=GER&ResponseEncoding=utf-8&BrowseAsHloc=",dialogReady).dialog({
+modal: true,
+width: "750px",
+close: clearTimeouts
+});
+}
+}
+var redirect = function(){
+  if(opts.logout_url){
+$.get(opts.logout_url);
+  }
+  window.location.href = opts.redirect_url;
+}
+var keepCounting = function(){
+$("#modal_pop span").html(timeLeft);
+if (timeLeft  > 0){
+timeLeft--;
+return true;
+}
+return false;
+}
+var countDown = function(){
+if (keepCounting())
+{
+timer = setTimeout(countDown, 1000);
+}else{
+clearTimeout(timer);
+redirect();
+}
+}
+//returns the instance of the the plugin
+return this.each(function() {
+obj = $(this);
+start_timeout();
+ 
+$(document).bind('click', start_timeout);
+$(document).bind('keydown', start_timeout);
+$(document).bind('mousemove', start_timeout);
+});
+}
+function Help( sUrl, sData ) {
+                var e = document.getElementById('HelpFrame');
+                e.src = sUrl+"?"+sData;
+                $('#HelpDLG').dialog('open');
+}
+            
+            function PopupUrl( url ) {
+var e = document.getElementById('PopupFrame');
+e.src = url;  
+$('#PopupDLG').dialog('open');
+}
+function PopupUrl2(url , oheight, width, title)
+{
+var popup = $('#PopupDLG');
+popup.dialog("option","title",title);
+if (navigator.userAgent.indexOf("Mozilla/5.0") > 0)
+popup.dialog("option","width",width);
+else
+popup.dialog("option","width",width+"px");
+$("iframe",popup).css({width:"99%",height: oheight+ "px",overflow:"auto"});
+PopupUrl(url);
+}
+function SummaryBookcoverLoaded(id)
+{
+if( $('#'+id).width() > 1)
+{
+$('#Bookcover_' + id).show();
+}
+}
+    $( function () {
+    
+     //$('#buttonAdSearch').html("Suche");
+     //$('#buttonQuickSearch').html("Suche");
+    
+     //$('#buttonAdSearchClr').html("<font color='black'>Eingabe löschen</font>");
+//$('#buttonQuickSearchClr').html("<font color='black'>Eingabe löschen</font>");
+     // $('.button').corner();
+    
+     //$( 'body').css("background","aliceBlue");
+     //$( '#stuff').hide();
+//$('#buttonAdSearch').css("background","orange");
+var zonesTimeoutEnabled = true;
+
+
+
+zonesTimeoutEnabled = false;
+
+
+
+if(zonesTimeoutEnabled) $(document).ZonesIdleTimeout();
+$('.FacetHeader').click( function () {
+$(this).toggleClass('arrow_down').next().slideToggle('fast');
+var img = $('img',this);
+var src = img.attr("src");
+if ($(this).hasClass('arrow_down'))
+{
+img.attr("src","/Portal3/GBQ/Interface/fleche_bas_noir.gif");
+}
+else
+{
+img.attr("src","/Portal3/GBQ/Interface/fleche_top_noir.gif");
+}
+});
+$('#HelpDLG').dialog( 
+{ 
+width: "750px",
+                              
+resizable: false,
+autoOpen: false
+}
+);
+                
+                $('#PopupDLG').dialog( 
+{ 
+width: "750px",
+resizable: false,
+autoOpen: false
+}
+);
+
+$('.limitToggle').toggle(
+function() {
+
+$(this).prev('.hiddenBlock_hidden').removeClass('hiddenBlock_hidden').addClass('hiddenBlock_display');
+$(this).attr('src','/Portal3/GBQ/Interface/fleche_top_noir.gif');
+var newAlt = $(this).attr('data-close');
+$(this).attr('alt',newAlt);
+$(this).attr('title',newAlt);
+}, function() {
+
+$(this).prev('.hiddenBlock_display').removeClass('hiddenBlock_display').addClass('hiddenBlock_hidden');
+$(this).attr('src','/Portal3/GBQ/Interface/fleche_bas_noir.gif');
+var newAlt = $(this).attr('data-open');
+$(this).attr('alt',newAlt);
+$(this).attr('title',newAlt);
+}
+);
+
+
+$('.SerialIssue').toggle( 
+function() { 
+
+$(this).next().removeClass('SerialIssueDetail_hidden').addClass('SerialIssueDetail');
+var img = $('img',this);
+img.attr("src","/Portal3/GBQ/Interface/fleche_top_noir2.gif");
+}, function () { 
+
+$(this).next().removeClass('SerialIssueDetail').addClass('SerialIssueDetail_hidden');
+var img = $('img',this);
+img.attr("src","/Portal3/GBQ/Interface/fleche_bas_noir2.gif");
+}
+);
+
+$('#LanguageComboBox').change(function() {
+var sOption = $("#LanguageComboBox option:selected");
+var url = "Obj_64281470840650?Style=Portal3&SubStyle=&Lang=GER&ResponseEncoding=utf-8&Lang=" + sOption.val();
+document.location.href = url;
+
+});
+
+
+
+  
+
+
+     });  
+function fnOpenMediaRef(strURL, strTitle, strMode) {
+                strMode = strMode.toLowerCase();
+                
+                if (strMode == "popup") {
+                    PopupUrl(strUrl);
+                } 
+                else if (strMode == "option") {
+                    window.location= ( unescape (strURL) + "&Lang=GER" );
+                }
+                else if (strMode == "replace") {
+                    window.location = unescape (strURL);
+                }
+                else { // either new, include, embed, default
+                    var width = 1024;
+                    if (screen.width - 50 < width) {
+                        width = screen.width - 50;
+                    }
+                    var height = 768;
+                    if (screen.height -100 < height) {
+                        height = screen.height -100;
+                    }
+                    window.open ( unescape ( strURL ), '_blank', 'scrollbars=yes,resizable=yes,width='+width+ ',height='+height );
+                }
+                
+                try{event.returnValue = false;}
+                catch(er){}
+            }
+            
+            function gotoUrl(url)
+            {
+                //alert(url);
+                var t = url;
+                var isComplete = false;
+                if (t.indexOf("http:")==0)
+                {
+                   isComplete = true;
+                }
+                if (t.indexOf("https:")==0)
+                {
+                   isComplete = true;
+                }
+                if (t.indexOf("javascript:")==0)
+                {
+                   isComplete = true;
+                }
+                if (t.indexOf("jscript:")==0)
+                {
+                   isComplete = true;
+                }
+                  
+                if
+                    (!isComplete)
+                {
+                    var temp = "";
+                    temp +=t;
+                    t = temp;
+                    //alert("doctored url is "+t);
+                }
+                window.location.href= t;
+            }
+function OnLoadActions()
+{
+correctPNG();
+
+}
+function PortfolioBookCoverLoaded(id, isbn, upc)
+{
+if(typeof(id) != "undefined")
+{
+var syndObj = $('#SyndeticsBookCover_'+id);
+if(syndObj.length > 0)
+{
+if ( $(syndObj).width() <= 3)
+{
+var queryUrl = "APS_SYNDETICS_XML_PROXY" + "?section=mc";
+if(typeof(isbn) != "undefined") {
+queryUrl = queryUrl + "&isbn="+isbn;
+}
+if(typeof(upc) != "undefined") {
+queryUrl = queryUrl + "&osi=" + upc;
+}
+$.getJSON(queryUrl, function(data) {
+if(data.result == true) {
+$('.BookCover_'+id).each(function() {
+if($(this).attr("src") != data.url) {
+    var newUrl = data.url;
+if(window.location.protocol == 'https:') {
+newUrl = newUrl.replace('http:', 'https:');
+}
+$(this).attr("src",newUrl);
+$(this).show();
+}
+});
+}
+});
+}
+}
+}
+var bcoverObj = $('#BookCover_'+id);
+if(bcoverObj.length > 0) {
+$(bcoverObj).show();
+}
+}
+$(document).ready(function() {
+$(".FacetsList").each(
+function() {
+if($(this).hasClass("FacetsSortMeAsc"))
+{
+$(".FacetLinkA",this).sort(
+function(a,b) {
+return(a.innerHTML > b.innerHTML) ? 1 : -1;
+}
+).appendTo( $(this) );
+}
+else if($(this).hasClass("FacetsSortMeDesc"))
+{
+$(".FacetLinkA",this).sort(
+function(a,b) {
+return(a.innerHTML < b.innerHTML) ? 1 : -1;
+}
+).appendTo( $(this) );
+}
+}
+);
+});
+
+    </script>
+
+
+    <script type="text/javascript"
+            src="-%20Mein%20Konto%20-%20%C3%9Cbersicht-Dateien/jquery_002.js"></script>
+
+    <script>
+			function ChangePin() 
+			{
+				$('#ChangePinForm').show();	
+				$('#ChangePinLink').hide();
+
+			}
+			function cancelChangePin() {
+				$('#changePinResult').html("");
+				$('#ChangePinForm').hide().each( function () {
+					this.reset();
+				});
+                    $('#InvalidNewPin').each( function () {
+                         $(this).hide();
+                    });
+				$('#ChangePinLink').show();
+				
+			}
+               
+               function RenewSubscription()
+               {
+                    $('#RenewSubsContent').show();
+                    $('#ShowRenewSubsLink').hide();
+                    $('#HideRenewSubsLink').show();
+               }
+               
+               function cancelRenewSubs() {
+                    $('#RenewSubsContent').hide();
+                    $('#ShowRenewSubsLink').show();
+                    $('#HideRenewSubsLink').hide();
+               }
+               
+			function ChangeContactDetails() {
+				$('#ChangeContactForm').show();	
+				$('#ChangeContactLink').hide();			
+			}
+
+			function cancelChangeContact() {
+				
+				$('#changeContactResult').html("");
+				$('#ChangeContactForm').hide().each( function () {
+					
+					//this.reset();
+				});
+				$('#ChangeContactLink').show();
+				
+			}
+
+			function ChangeReports() {
+				$('#ChangeReportForm').show();	
+				$('#ChangeReportLink').hide();			
+			}
+
+			function cancelChangeReport() {
+				
+				$('#changeReportResult').html("");
+				$('#ChangeReportForm').hide().each( function () {
+					
+					//this.reset();
+				});
+				$('#ChangeReportLink').show();
+				
+			}
+
+			var changePinOptions = {
+					    target:     '#changePinResult', 
+					    url:        'Obj_64281470840650', 
+					    success:    function() { 
+					         
+						},
+						beforeSubmit:  function (){
+							//alert('Before submit');	
+						}
+			};
+				
+
+			var changeContactOptions = {
+					    target:     '#changeContactResult', 
+					    url:        'Obj_64281470840650', 
+					    success:    function() { 
+					        $('#contactAddress').html($('#NewAddress').html());
+					        
+						},
+						beforeSubmit:  function (){
+								
+						}
+			};
+            
+			var changeReportOptions = {
+				
+				url:        'Obj_64281470840650', 
+				success:    function() {
+					var yesStr = 'Ja';
+					var noStr = 'Nein';
+					var mailinglist = $($('#ReportMailingList')[0]).is(':checked') ? true : false;
+					var reminders = $($('#ReportReminders')[0]).is(':checked') ? true : false;
+					var dueitemsinfo = $($('#ReportDueItemsInfo')[0]).is(':checked') ? true : false;
+					if (mailinglist) {
+						$('#MailingListValue').html(yesStr);
+					} else {
+						$('#MailingListValue').html(noStr);
+					}
+					if (reminders) {
+						$('#RemindersValue').html(yesStr);
+					} else {
+						$('#RemindersValue').html(noStr);
+					}
+					if (dueitemsinfo) {
+						$('#DueItemsInfoValue').html(yesStr);
+					} else {
+						$('#DueItemsInfoValue').html(noStr);
+					}
+				},
+				beforeSubmit:  function (){
+				}
+			};
+            
+            var changeLoanHistoryOptions = {
+                
+                url:        'Obj_64281470840650', 
+                success:    function() { 
+                    $('#changeLoanHistoryResult').html("Erledigt");
+                    
+                },
+                beforeSubmit:  function (){
+                        
+                }
+			};
+
+			
+			$( function () {
+				 
+				// pass options to ajaxForm 
+				
+				$('#ChangePinForm').ajaxForm(changePinOptions);
+				$('#ChangeContactForm').ajaxForm(changeContactOptions);
+				$('#ChangeReportForm').ajaxForm(changeReportOptions);
+				$('#ChangeLoanHistoryForm').ajaxForm(changeLoanHistoryOptions);
+                
+				$('#ChangePinForm').submit(function() { 
+				    // submit the form 
+				    $(this).ajaxSubmit(changePinOptions); 
+				    // return false to prevent normal browser submit and page navigation 
+				    return false; 
+				});	 
+				
+				$('#ChangeContactForm').submit(function() { 
+				    // submit the form 
+				    $(this).ajaxSubmit(changeContactOptions); 
+				    // return false to prevent normal browser submit and page navigation 
+				    return false; 
+				});
+                
+				$('#ChangeReportForm').submit(function() { 
+				    // submit the form
+				    $(this).ajaxSubmit(changeReportOptions); 
+				    // return false to prevent normal browser submit and page navigation 
+				    return false; 
+				});
+                
+                $('#ChangeLoanHistoryForm').submit(function() { 
+				    // submit the form 
+				    $(this).ajaxSubmit(changeLoanHistoryOptions); 
+				    // return false to prevent normal browser submit and page navigation 
+				    return false; 
+				});
+				
+				$('#lostCardDLG').dialog( 
+					{ 
+						width: "400px",
+						autoOpen: false
+					}
+					
+				);
+				
+				$('#renewSubDLG').dialog( 
+					{ 
+						width: "400px",
+						autoOpen: false
+					}	
+				);
+			});
+			
+			function submitChangePin()
+			{
+                    $('#InvalidNewPin').each( function () {
+                         $(this).hide();
+                    });
+                    var newPinInput = document.getElementById('changeNEWPIN');
+                    if(newPinInput == null) {
+                         return;
+                    }
+                    
+                    var newPinValue = newPinInput.value;
+                    var re = new RegExp('[^0-9]','m');
+                    var tpin = re.exec(newPinValue);
+                    
+                    if((tpin != null)||(newPinValue.length != 4)) { 
+                         $('#InvalidNewPin').each( function () {
+                              $(this).show();
+                         });
+                    }
+                    else {
+                         $('#ChangePinForm').each( function () { 
+                              $('#changePinResult').html("Aktualisierung");
+                              $(this).ajaxSubmit(changePinOptions);
+                         });
+                    }
+			}
+
+			function submitChangeContact()
+			{
+                    if(CheckContactData())
+                    {
+                         $('#ChangeContactForm').each( function () { 
+                         
+                              
+                              $('#changeContactResult').html("Aktualisierung");
+                              $(this).ajaxSubmit(changeContactOptions);
+                          }
+                              
+                         );
+                    }                    
+			}
+		
+			function submitChangeReport()
+			{
+				$('#ChangeReportForm').each( function() {
+					
+					$('#changeReportResult').html("Aktualisierung");
+					$(this).ajaxSubmit(changeReportOptions);
+				});
+			}
+		
+			function LostCard() {
+				$('#lostCardDLG').dialog( 'open' );	
+			}
+			function RenewSubscriptionAdvice() {
+				$('#renewSubDLG').dialog( 'open' );		
+			}
+               
+               function CheckContactData()
+               {
+                    var ce  = document.getElementById("ConfirmError");
+                    ce.style.display = "none";
+                    var peErr = document.getElementById("ProvideEmailError");
+                    peErr.style.display = "none";
+               
+                    var d1 = document.getElementById("Email");
+                    var d2 = document.getElementById("ConfirmEmail");
+                    var cm = document.getElementById("ContactMethod");
+                    
+                    if(cm != null)
+                    {
+                        if(cm.value == "2")
+                        {
+                            if(d1.value == "")
+                            {
+                                peErr.style.display = "";
+                                d1.focus();
+                                return false;
+                            }
+                        }
+                    }
+                    
+                    if (d2 == null) {
+                         return false;
+                    }
+                    
+                    if (d1.value != d2.value)
+                    {
+                         ce.style.display = "";
+                         d1.focus();
+                         return false;
+                    }
+                    
+                    return true;
+               }
+
+			
+			
+			
+            
+            function ChangeLoanHistory()
+            {
+                $('#ChangeLoanHistoryForm').show();
+                $('#HideChangeLoanHistoryLink').show();
+                $('#ChangeLoanHistoryLink').hide();
+            }
+            
+            function cancelChangeLoanHistorySetting()
+            {
+                $('#ChangeLoanHistoryForm').hide();
+                $('#ChangeLoanHistoryLink').show();
+                $('#HideChangeLoanHistoryLink').hide();
+            }
+            
+            function submitChangeLoanHistorySetting()
+            {
+                $('#ChangeLoanHistoryForm').each( function () { 
+                    $('#changeLoanHistoryResult').html("Aktualisierung");
+                    $(this).ajaxSubmit(changeLoanHistoryOptions);
+                    
+                });
+            } 
+			
+
+    </script>
+
+
+    <link href="-%20Mein%20Konto%20-%20%C3%9Cbersicht-Dateien/Iris09.css" rel="stylesheet"
+          type="text/css">
+    <!--[if lte IE 6]>
+    <link href="/Portal3/CSS/Biblio/Iris09-IE6.css" rel="stylesheet" type="text/css"/><![endif]-->
+    <!--[if IE 7]>
+    <link href="/Portal3/CSS/Biblio/Iris09-IE7.css" rel="stylesheet" type="text/css"/><![endif]-->
+
+    <script type="text/javascript" language="javascript">
+var reso=screen.width
+	if(reso < 900) {
+document.write ('<link href="/Portal3/CSS/Biblio/Iris09-800.css" rel="stylesheet" type="text/css" />');
+	}
+
+    </script>
+
+
+    <script type="text/javascript" language="JavaScript"
+            src="-%20Mein%20Konto%20-%20%C3%9Cbersicht-Dateien/Iris.js"></script>
+
+
+    <style type="text/css">
+
+        #Entete {
+        border-bottom:26px solid #cc0000;
+        }
+
+        #PdP div.pdp1 {
+        border-bottom:1px solid #cc0000;
+        background-image:none;
+        }
+
+        #PdP div.pdp1 div.pdpbox {
+        background-color: #cc0000;
+        width:600px;
+        text-align:center;
+        margin: 0 auto;
+        }
+
+        .SearchResultsHeader {
+        background-color: #cc0000;
+        border:2px solid #cc0000;
+        }
+
+        .SearchResultsTrailer {
+        background-color: #cc0000;
+        border:2px solid #cc0000;
+        }
+
+        .FacetHeader {
+        background-color: d3d3d3;
+        }
+
+
+        .SummaryPosInSetCell {
+        background-color : d3d3d3;
+        }
+
+        .SummaryImageCell {
+        background-color: d3d3d3;
+        }
+
+        .SummaryDataCell {
+        background-color: d3d3d3;
+        }
+
+        .DetailPosInSetCell {
+        background-color : d3d3d3;
+        }
+
+        .DetailImageCell {
+        background-color: d3d3d3;
+        }
+
+        .DetailDataCell {
+        background-color: d3d3d3;
+        }
+
+        .LoansBrowseHitNumberStripe {
+        background-color: d3d3d3;
+        }
+
+        .LoansBrowseItemDetailsCellStripe {
+        background-color: d3d3d3;
+        }
+
+        .MessageBrowseHitNumberCellStripe {
+        background-color: d3d3d3;
+        }
+
+        .MessageBrowseItemDetailsCellStripe {
+        background-color: d3d3d3;
+        }
+
+        .IndexHeadingCell {
+        background-color: d3d3d3;
+        }
+
+
+        .SummaryPosInSetCellStripe {
+        background-color : f5f5f5;
+        }
+
+        .SummaryImageCellStripe {
+        background-color: f5f5f5;
+        }
+
+        .SummaryDataCellStripe {
+        background-color: f5f5f5;
+        }
+
+        .DetailPosInSetCellStripe {
+        background-color : f5f5f5;
+        }
+
+        .DetailImageCellStripe {
+        background-color: f5f5f5;
+        }
+
+        .DetailDataCellStripe {
+        background-color: f5f5f5;
+        }
+
+        .LoansBrowseHitNumber {
+        background-color: f5f5f5;
+        }
+
+        .LoansBrowseItemDetailsCell {
+        background-color: f5f5f5;
+        }
+
+        .MessageBrowseHitNumberCell {
+        background-color: f5f5f5;
+        }
+
+        .MessageBrowseItemDetailsCell {
+        background-color: f5f5f5;
+        }
+
+        .IndexHeadingCellStripe {
+        background-color: f5f5f5;
+        }
+
+
+        .Exemple {
+        background-color: d3d3d3;
+        border:2px solid cc0000;
+        }
+
+        #ExpertSearch fieldset {
+        background-color: d3d3d3;
+        }
+
+        .CoordinatedErrorBox {
+        background-color: d3d3d3;
+        border:2px solid cc0000;
+        }
+
+
+        .SearchFormRowSep {
+        background-color: #cc0000;
+        }
+
+
+        .Limite {
+        border:2px solid cc0000;
+        }
+
+        .TabRechAv td.TdSeparateur2 {
+        border-bottom:2px solid cc0000;
+        }
+
+        .SearchFieldsTableCell {
+        background-color: cc0000;
+        }
+
+        .TabRechAv td.TdSeparateur {
+        border-bottom:1px solid cc0000;
+        }
+
+        .hiddenBlock_display {
+        border-color: cc0000;
+        }
+
+
+        .searchStatementBox {
+        background-color: d3d3d3;
+        border:2px solid a9a9a9;
+        }
+
+        .searchStatementLabel {
+        color: a9a9a9;
+        }
+
+
+        #ZoneMenu li.Encours {
+        background-color: d3d3d3;
+        }
+
+        #ZoneMenu li a:hover {
+        background-color: d3d3d3;
+        }
+
+        .FacetLinkA:hover {
+        background-color: d3d3d3;
+        }
+
+        .AccountMenuLink:hover, .AccountMenuLinkSelected, .AccountMenuLinkSelected:link {
+        background-color: d3d3d3;
+        }
+
+
+        .SummaryActionBox {
+        border:2px solid #cc0000;
+        }
+
+        .DetailedActionBox {
+        border:2px solid #cc0000;
+        }
+
+        .tagcloudbox {
+        border-color: #cc0000;
+        }
+
+        #tagcloud_header {
+        background-color: #cc0000;
+        }
+
+
+        a:link, a:visited {
+        color: cc0000;
+        }
+
+        .SummaryActionLink:link, .SummaryActionLink:visited {
+        color: cc0000;
+        }
+
+        .ElectreLinks:link, a.ElectreLinks:visited {
+        color: cc0000;
+        }
+
+
+        .SummaryFieldLink:link {
+        color: cc0000;
+        }
+
+        .FacetLinkA:link, .FacetLinkA:visited {
+        color: cc0000;
+        }
+
+        .darkLink {
+        color: 000000;
+        }
+
+        .darkLink:link, .darkLink:visited {
+        color: cc0000;
+        }
+
+        #ColCentre #Aide a:link,#ColCentre #Aide a:visited {
+        color: cc0000;
+        }
+
+
+        .SerialIssueHeader {
+        background-color: cc0000;
+        }
+
+
+        #ZoneMenuEntete a:link, #ZoneMenuEntete a:visited{
+        color: 000000;
+        }
+
+        #ZoneMenuEntete a:hover {
+        color: 000000;
+        }
+
+
+        #PdP a:link, #PdP a:visited {
+        color: 000000;
+        }
+
+    </style>
+
+
+    <style type="text/css">
+        #ZoneMenu li a:link, #ZoneMenu li a:visited {
+        display:block;
+        height:90px;
+        padding:15px 3px 10px 10px;
+        color:#525252;
+        text-decoration:none;
+        }
+
+    </style>
+
+
+    <link href="-%20Mein%20Konto%20-%20%C3%9Cbersicht-Dateien/kozones.css" rel="stylesheet"
+          type="text/css">
+
+
+    <script src="-%20Mein%20Konto%20-%20%C3%9Cbersicht-Dateien/connector.js"
+            type="text/javascript"></script>
+    <link href="-%20Mein%20Konto%20-%20%C3%9Cbersicht-Dateien/connector_LB.css" rel="stylesheet"
+          type="text/css">
+</head>
+
+<body class="Iris" onload="OnLoadActions();">
+<div style="display: none;" id="cboxOverlay"></div>
+<div class="" id="colorbox" style="padding-bottom: 42px; padding-right: 42px; display: none;">
+    <div style="" id="cboxWrapper">
+        <div style="">
+            <div style="float: left;" id="cboxTopLeft"></div>
+            <div style="float: left;" id="cboxTopCenter"></div>
+            <div style="float: left;" id="cboxTopRight"></div>
+        </div>
+        <div style="clear: left;">
+            <div style="float: left;" id="cboxMiddleLeft"></div>
+            <div style="float: left;" id="cboxContent">
+                <div class="" style="width: 0px; height: 0px; overflow: hidden;"
+                     id="cboxLoadedContent"></div>
+                <div class="" style="" id="cboxLoadingOverlay"></div>
+                <div class="" style="" id="cboxLoadingGraphic"></div>
+                <div class="" style="" id="cboxTitle"></div>
+                <div class="" style="" id="cboxCurrent"></div>
+                <div class="" style="" id="cboxNext"></div>
+                <div class="" style="" id="cboxPrevious"></div>
+                <div class="" style="" id="cboxSlideshow"></div>
+                <div class="" style="" id="cboxClose"></div>
+            </div>
+            <div style="float: left;" id="cboxMiddleRight"></div>
+        </div>
+        <div style="clear: left;">
+            <div style="float: left;" id="cboxBottomLeft"></div>
+            <div style="float: left;" id="cboxBottomCenter"></div>
+            <div style="float: left;" id="cboxBottomRight"></div>
+        </div>
+    </div>
+    <div style="position: absolute; width: 9999px; visibility: hidden; display: none;"></div>
+</div>
+
+<div id="Global" class="LargeD">
+
+    <div class="Invisible">
+        <a href="#Contenu1"
+           title="Link, um direkt zur angegebenen Seite zu gelangen">Gehe direkt zum Seiteninhalt</a>
+    </div>
+
+    <a name="haut"></a>
+
+
+    <div id="Entete" style="background-image:url(/smedia/img/header_stadt_koeln.png)">
+
+
+        <a href="https://katalog.stbib-koeln.de/alswww2.dll/APS_ZONES?fn=QuickSearch&amp;Lang=GER&amp;Style=Portal3"
+           target="_self" title="Stadtbibliothek Koeln"><img
+                src="-%20Mein%20Konto%20-%20%C3%9Cbersicht-Dateien/Bildmarke_schwarzer_Hintergrund_weie_Schrift.jpg"
+                class="logo" alt="Stadtbibliothek Köln" border="0" height="66" width="161"></a>
+
+
+        <div id="ZoneMenuEntete">
+
+
+        </div>
+        <div id="IdRubrique"><img src="-%20Mein%20Konto%20-%20%C3%9Cbersicht-Dateien/blank.gif"
+                                  alt="Zones2" height="55" width="398"></div>
+
+    </div>
+
+
+    <div id="ZoneMenu">
+        <ul>
+
+
+            <li style="height:90px;">
+                <a href="https://katalog.stbib-koeln.de/alswww2.dll/APS_ZONES?fn=QuickSearch&amp;Style=Portal3&amp;SubStyle=&amp;Lang=GER&amp;ResponseEncoding=utf-8"
+                   class="MenuQuickSearch" id="fnQuickSearch" title="Schnellsuche"
+                   style="text-align:center;margin:0px; padding:0px;">
+
+
+                    <div>
+                        Schnellsuche
+                    </div>
+                </a>
+            </li>
+
+
+            <li style="height:90px;">
+                <a href="https://katalog.stbib-koeln.de/alswww2.dll/APS_ZONES?fn=AdvancedSearch&amp;Style=Portal3&amp;SubStyle=&amp;Lang=GER&amp;ResponseEncoding=utf-8"
+                   class="MenuAdvancedSearch" id="fnAdvancedSearch" title="Erweiterte Suche"
+                   style="text-align:center;margin:0px; padding:0px;">
+
+
+                    <div>
+                        Erweiterte Suche
+                    </div>
+                </a>
+            </li>
+
+
+            <li style="height:90px;">
+                <a href="https://katalog.stbib-koeln.de/alswww2.dll/APS_ZONES?fn=ViewNotepad&amp;Style=Portal3&amp;SubStyle=&amp;Lang=GER&amp;ResponseEncoding=utf-8"
+                   class="MenuNotepad" id="fnNotepad" title="Merkliste"
+                   style="text-align:center;margin:0px; padding:0px;">
+
+
+                    <div>
+                        Merkliste
+                    </div>
+                </a>
+            </li>
+
+
+            <li style="height:90px;">
+                <a href="https://katalog.stbib-koeln.de/alswww2.dll/APS_OPAC?Style=Portal3&amp;SubStyle=&amp;Lang=GER&amp;ResponseEncoding=utf-8&amp;Method=QueryWithLimits&amp;SearchType=QuickSearch&amp;DB=SearchServer&amp;TargetSearchType=QuickSearch&amp;q.PageSize=10&amp;q.Query=%23%23LAST%2860%29&amp;Style=Portal3&amp;SubStyle=&amp;Lang=GER&amp;ResponseEncoding=utf-8"
+                   class="MenufnNovelties" id="fnfnNovelties" title="Neuerwerbungen "
+                   style="text-align:center;margin:0px; padding:0px;">
+
+
+                    <div>
+                        Neuerwer- bungen
+                    </div>
+                </a>
+            </li>
+
+
+            <li style="height:90px;">
+                <a href="https://katalog.stbib-koeln.de/alswww2.dll/APS_ZONES?fn=EResources&amp;Style=Portal3&amp;SubStyle=&amp;Lang=GER&amp;ResponseEncoding=utf-8"
+                   class="MenuEResources" id="fnEResources" title="Links und Kontakt"
+                   style="text-align:center;margin:0px; padding:0px;">
+
+
+                    <div>
+                        Links und Kontakt
+                    </div>
+                </a>
+            </li>
+
+
+            <li style="height:90px;">&nbsp;</li>
+
+
+            <li style="height:90px; float:right; ">
+                <div>
+                    <a href="https://katalog.stbib-koeln.de/alswww2.dll/APS_ZONES?fn=MyZone&amp;Style=Portal3&amp;SubStyle=&amp;Lang=GER&amp;ResponseEncoding=utf-8"
+                       title="Mein Konto"
+                       style="text-align:center;margin:0px; padding:0px;height:auto;">
+
+
+                        <div>
+                            Mein Konto
+                        </div>
+                    </a>
+                    <div style="height:8px;">&nbsp;</div>
+
+                    <a style="text-align:center;color:red; font-decoration: underline; margin:0px; padding:0px;height:auto;"
+                       title="Logout"
+                       href="https://katalog.stbib-koeln.de/alswww2.dll/APS_ZONES?fn=endSession&amp;q=QuickSearch&amp;Style=Portal3&amp;SubStyle=&amp;Lang=GER&amp;ResponseEncoding=utf-8">Logout</a>
+
+                </div>
+
+            </li>
+
+
+        </ul>
+    </div>
+
+
+    <div id="Contenu">
+
+
+        <!-- MODULE CONSULTEZ SI PAGE ACCUEIL -->
+
+        <table border="0">
+            <tbody>
+            <tr>
+
+
+                <td valign="top">
+                    <div id="leftMenuContainer">
+
+                        <ul id="navigation" class="MyZonePageLeftMenuList">
+                            <li class="MyZonePageLeftMenuItem">
+                                <a class=" AccountMenuLinkSelected "
+                                   href="https://katalog.stbib-koeln.de/alswww2.dll/APS_ZONES?fn=MyZone&amp;Style=Portal3&amp;SubStyle=&amp;Lang=GER&amp;ResponseEncoding=utf-8"
+                                   title="Zur Übersicht wechseln">
+                                    Übersicht
+                                </a>
+                            </li>
+
+                            <li class="MyZonePageLeftMenuItem">
+                                <a class=" AccountMenuLink "
+                                   href="https://katalog.stbib-koeln.de/alswww2.dll/APS_ZONES?fn=MyLoans&amp;Style=Portal3&amp;SubStyle=&amp;Lang=GER&amp;ResponseEncoding=utf-8"
+                                   title="Zu Ausleihe und Verlängerung wechseln">
+                                    Ausleihen und Verlängerungen
+                                </a>
+                            </li>
+
+
+                            <li class="MyZonePageLeftMenuItem">
+                                <a class=" AccountMenuLink "
+                                   href="https://katalog.stbib-koeln.de/alswww2.dll/APS_ZONES?fn=MyReservations&amp;PageSize=10&amp;Style=Portal3&amp;SubStyle=&amp;Lang=GER&amp;ResponseEncoding=utf-8"
+                                   title="Zu den Vormerkungen wechseln">
+                                    Vormerkungen
+                                </a>
+                            </li>
+
+
+                            <li class="MyZonePageLeftMenuItem">
+                                <a class=" AccountMenuLink "
+                                   href="https://katalog.stbib-koeln.de/alswww2.dll/APS_ZONES?fn=MyAccountHistoryExpanded&amp;Style=Portal3&amp;SubStyle=&amp;Lang=GER&amp;ResponseEncoding=utf-8"
+                                   title="Zum Konto wechseln">
+                                    Kontostand
+                                </a>
+                            </li>
+
+
+                        </ul>
+                        &nbsp;
+                        &nbsp;
+
+                    </div>
+                </td>
+
+
+                <td valign="top" width="100%">
+                    <div id="ColCentre" style="">
+                        <a name="Contenu1" title="Gehe direkt zum Seiteninhalt"></a>
+
+
+                        <div id="titleContainer2">
+                            <div id="Aide">
+
+                                <a title="Hilfe"
+                                   href="javascript:Help('/OPACHelp/HelpGER.aspx','helpcontext=Toolbar,MyZoneHome')">
+                                    <img src="-%20Mein%20Konto%20-%20%C3%9Cbersicht-Dateien/gr_question.gif"
+                                         alt="Hilfe" height="17" width="15">
+                                    Hilfe
+                                </a>
+                                &nbsp;&nbsp;&nbsp;
+
+
+                            </div>
+
+
+                            <div id="fildariane">
+
+
+                                <a href="https://katalog.stbib-koeln.de/alswww2.dll/APS_ZONES?fn=MyZone&amp;Style=Portal3&amp;SubStyle=&amp;Lang=GER&amp;ResponseEncoding=utf-8"
+                                   class="MyZoneHeaderLink" title="Mein Konto">Mein Konto</a>
+
+
+                                <span class="MyZoneHeaderSectionSep">&gt;</span>
+                                <span class="MyZoneHeaderSection"><b>Übersicht</b></span>
+
+                            </div>
+
+
+                        </div>
+
+                        <div class="floatClear"></div>
+                        <div id="pageContent">
+
+
+                            <div class="title"><h2 class="MyZonetitleText">
+
+                                Max Mustermann
+
+                            </h2>
+                            </div>
+
+                            <div style="clear:both;">
+
+
+                                <table style="width:100%;" cellpadding="0" cellspacing="0">
+                                    <thead>
+                                    <tr>
+                                        <td colspan="3" class="AccountSummaryHeaderCell">
+                                            <b>Übersicht</b></td>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+
+
+                                    <tr>
+                                        <td class="AccountSummaryCounterNameCellStripe">
+
+                                            <a class="AccountSummaryCounterLink"
+                                               href="https://katalog.stbib-koeln.de/alswww2.dll/Obj_64281470840650?Style=Portal3&amp;SubStyle=&amp;Lang=GER&amp;ResponseEncoding=utf-8?Method=ShowLoans"
+                                               title="Entliehene Medien ansehen">Entliehene Medien</a>
+
+                                        </td>
+                                        <td class="AccountSummaryCounterValueCellStripe">20</td>
+                                        <td class="AccountSummaryActionCellStripe"></td>
+                                    </tr>
+
+
+                                    <tr>
+                                        <td class="AccountSummaryCounterNameCell">
+
+                                            <a class="AccountSummaryCounterLink"
+                                               href="https://katalog.stbib-koeln.de/alswww2.dll/Obj_64281470840650?Style=Portal3&amp;SubStyle=&amp;Lang=GER&amp;ResponseEncoding=utf-8?Method=ShowReservations"
+                                               title="Vormerkungen ansehen">Vormerkungen</a>
+
+                                        </td>
+                                        <td class="AccountSummaryCounterValueCell">8</td>
+                                        <td class="AccountSummaryActionCell"></td>
+                                    </tr>
+
+
+                                    <tr>
+                                        <td class="AccountSummaryCounterNameCellStripe">
+
+                                            <a class="AccountSummaryCounterLink"
+                                               href="https://katalog.stbib-koeln.de/alswww2.dll/Obj_64281470840650?Style=Portal3&amp;SubStyle=&amp;Lang=GER&amp;ResponseEncoding=utf-8&amp;Method=ShowExpandedAccount"
+                                               title="Kontostand ansehen">Kontostand</a>
+
+                                        </td>
+                                        <td class="AccountSummaryCounterValueCellStripe">€ 0,00</td>
+                                        <td class="AccountSummaryActionCellStripe">
+
+                                            <div style="clear:both;"></div>
+
+                                        </td>
+                                    </tr>
+
+
+                                    </tbody>
+                                </table>
+
+
+                                <div class="AccountDetails">
+
+                                    <table style="width:100%;" cellpadding="0" cellspacing="0">
+                                        <thead>
+                                        <tr>
+                                            <td colspan="3" class="AccountDetailsHeaderCell">
+                                                <b>Informationen</b></td>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+
+
+                                        <tr>
+                                            <td class="CAccountDetailFieldNameCellStripe"
+                                                valign="top">
+                                                Name
+                                            </td>
+                                            <td class="AccountDetailFieldValueCellStripe"
+                                                valign="top">
+                                                Max Mustermann
+                                            </td>
+                                            <td class="AccountDetailFieldActionCellStripe"
+                                                valign="top"></td>
+                                        </tr>
+
+
+                                        <tr>
+                                            <td class="CAccountDetailFieldNameCell" valign="top">
+                                                &nbsp;
+                                            </td>
+                                            <td class="AccountDetailFieldValueCell"
+                                                valign="top">&nbsp;</td>
+                                            <td class="AccountDetailFieldActionCell"
+                                                valign="top"></td>
+                                        </tr>
+
+
+                                        <tr>
+                                            <td class="CAccountDetailFieldNameCellStripe"
+                                                valign="top">
+                                                Ausweis&nbsp;gültig&nbsp;bis
+                                            </td>
+                                            <td class="AccountDetailFieldValueCellStripe"
+                                                valign="top">
+                                                22/04/2017
+
+
+                                                <div id="RenewSubsContent" style="display:none">
+
+                                                </div>
+
+                                            </td>
+                                            <td class="AccountDetailFieldActionCellStripe"
+                                                valign="top">
+
+                                            </td>
+                                        </tr>
+
+
+                                        <tr>
+                                            <td class="CAccountDetailFieldNameCell" valign="top">
+                                                Ausweisnummer
+                                            </td>
+                                            <td class="AccountDetailFieldValueCell"
+                                                valign="top">AXX XXX XXX X
+
+
+                                                <form id="ChangePinForm" method="POST"
+                                                      action="Obj_64281470840650"
+                                                      style="display:none;">
+                                                    <input name="Style" value="Portal3"
+                                                           type="hidden">
+                                                    <input name="SubStyle" value="" type="hidden">
+                                                    <input name="Lang" value="GER" type="hidden">
+                                                    <input name="ResponseEncoding" value="utf-8"
+                                                           type="hidden">
+
+
+                                                    <table>
+                                                        <input name="BRWR" value="AXX XXX XXX X"
+                                                               type="hidden">
+                                                        <input name="Method" value="InlineChangePin"
+                                                               type="hidden">
+
+                                                        <tbody>
+                                                        <tr>
+                                                            <td class="ChangePinLabelCell">
+                                                                <label for="changePIN">Ihre Geheimnummer oder<br>Ihr vorläufiger Zugangscode</label>
+                                                            </td>
+                                                            <td class="ChangePinFieldCell">
+                                                                <input id="changePIN" name="PIN"
+                                                                       value="" type="password">
+                                                            </td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td class="ChangePinLabelCell">
+                                                                <label for="changeNEWPIN">Ihre neue Geheimnummer (PIN)</label>
+                                                            </td>
+                                                            <td class="ChangePinFieldCell">
+                                                                <input id="changeNEWPIN"
+                                                                       name="NEWPIN" value=""
+                                                                       maxlength="4" size="4"
+                                                                       patter="[0-9]{4}"
+                                                                       type="password">
+                                                            </td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td class="ChangePinLabelCell">
+                                                                <label for="changeCONFIRMPIN">Bestätigen Sie bitte Ihre neue Geheimnummer (PIN)</label>
+                                                            </td>
+                                                            <td class="ChangePinFieldCell">
+                                                                <input id="changeCONFIRMPIN"
+                                                                       name="CONFIRMPIN" value=""
+                                                                       maxlength="4" size="4"
+                                                                       patter="[0-9]{4}"
+                                                                       type="password">
+                                                            </td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td colspan="2"><p
+                                                                    style="font-weight:bold">Die neue Geheimnummer (PIN) darf nur aus vier Ziffern bestehen</p>
+                                                            </td>
+                                                        </tr>
+
+                                                        <tr>
+                                                            <td class="ChangePinLabelCell">&nbsp;</td>
+                                                            <td class="ChangePinFieldCell"
+                                                                align="right">
+                                                                <table>
+                                                                    <tbody>
+                                                                    <tr>
+                                                                        <td>
+
+
+                                                                            <a id="buttonChangePinSumbit"
+                                                                               title="PIN ändern"
+                                                                               target="" tabindex=""
+                                                                               class="button"
+                                                                               href="javascript:submitChangePin()"><span>PIN ändern</span></a>
+
+
+                                                                        </td>
+                                                                        <td>
+
+
+                                                                            <a id="buttonChangePinCancel"
+                                                                               title="Zum Abbrechen anklicken"
+                                                                               target="" tabindex=""
+                                                                               class="button"
+                                                                               href="javascript:cancelChangePin()"><span>Abbrechen</span></a>
+
+
+                                                                        </td>
+                                                                    </tr>
+                                                                    </tbody>
+                                                                </table>
+                                                            </td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td class="ChangePinLabelCell">&nbsp;</td>
+                                                            <td class="ChangePinFieldCell">
+                                                                <div id="InvalidNewPin"
+                                                                     style="display:none;color:red;">
+                                                                    <b color="red">Ungültige Geheimnummer. Diese muss aus 4 Ziffern bestehen.</b>
+                                                                </div>
+                                                            </td>
+                                                        </tr>
+                                                        </tbody>
+                                                    </table>
+                                                    <br>
+                                                    <table style="width:100%;">
+                                                        <tbody>
+                                                        <tr>
+                                                        </tr>
+
+                                                        </tbody>
+                                                    </table>
+                                                    <div id="changePinResult"></div>
+                                                </form>
+
+
+                                            </td>
+                                            <td class="AccountDetailFieldActionCell" valign="top">
+
+                                                <a id="ChangePinLink"
+                                                   class="AccountSummaryActionLink"
+                                                   href="javascript:ChangePin()"
+                                                   title="Ändern Sie Ihre Geheimnummer (PIN)">Ändern Sie Ihre Geheimnummer (PIN)</a>
+
+                                            </td>
+                                        </tr>
+
+
+                                        <tr>
+                                            <td class="CAccountDetailFieldNameCellStripe"
+                                                valign="top">
+                                                Adresse
+                                            </td>
+                                            <td class="AccountDetailFieldValueCellStripe"
+                                                valign="top">
+                                                <div id="contactAddress">
+
+
+                                                    Musterstr. 1<br>
+
+
+                                                    Köln<br>
+
+
+                                                    12345
+
+                                                    <br>
+
+
+                                                    Telefon (Zuhause) : 12345 <br>
+
+
+                                                    Telefon (tagsüber) <span hardcoded="1"></span> :
+                                                    <br>
+
+
+                                                    Telefon (Handy) <span hardcoded="1"></span> :
+                                                    <br>
+
+                                                    <!--
+
+
+
+                                                        Fax :  <br>
+
+                                                  -->
+
+
+                                                    E-Mail : max.mustermann@example.com <br>
+
+                                                </div>
+                                            </td>
+                                            <td class="AccountDetailFieldActionCellStripe"
+                                                valign="top"><a id="ChangeContactLink"
+                                                                class="AccountSummaryActionLink"
+                                                                href="javascript:ChangeContactDetails()"
+                                                                title="Kontaktangaben ändern">Kontaktangaben ändern</a>
+                                            </td>
+                                        </tr>
+
+
+                                        <tr>
+                                            <td colspan="2">
+                                                <br>
+
+
+                                                <form id="ChangeContactForm" method="POST"
+                                                      action="Obj_64281470840650"
+                                                      style="display:none;">
+                                                    <input name="Method" value="ChangeContact"
+                                                           type="hidden">
+                                                    <input name="Subscriber" value="AXX XXX XXX X"
+                                                           type="hidden">
+                                                    <input name="Style" value="Portal3"
+                                                           type="hidden">
+                                                    <input name="SubStyle" value="" type="hidden">
+                                                    <input name="Lang" value="GER" type="hidden">
+                                                    <input name="ResponseEncoding" value="utf-8"
+                                                           type="hidden">
+
+
+                                                    Bitte tragen Sie ihre neuen Angaben unten ein.
+
+
+                                                    <table>
+                                                        <tbody>
+                                                        <tr>
+                                                            <td style="white-space: nowrap; font-size:smaller">
+                                                                <label for="Email">Ihre neue E-Mail-Adresse</label>
+                                                            </td>
+                                                            <td class="ChangePinFieldCell"><input
+                                                                    name="Email" id="Email"
+                                                                    value="max.mustermann@example.com"
+                                                                    maxlength="50" size="30"
+                                                                    type="text"></td>
+                                                        </tr>
+
+
+                                                        <tr>
+                                                            <td style="white-space: nowrap; font-size:smaller">
+                                                                <label for="ConfirmEmail">Neue E-Mail-Adresse bestätigen</label>
+                                                            </td>
+                                                            <td class="ChangePinFieldCell"><input
+                                                                    name="ConfirmEmail"
+                                                                    id="ConfirmEmail"
+                                                                    value="max.mustermann@example.com"
+                                                                    maxlength="50" size="30"
+                                                                    type="text"></td>
+                                                        </tr>
+
+
+                                                        <tr>
+                                                            <td style="white-space: nowrap; font-size:smaller"></td>
+                                                            <td class="ChangePinFieldCell">
+                                                                <span id="ConfirmError"
+                                                                      style="display:none; font-style:bold; color:red; ">Keine Übereinstimmung bei Bestätigung der E-Mail-Adresse</span>
+                                                                <span id="ProvideEmailError"
+                                                                      style="display:none; font-style:bold; color:red;">Bitte geben Sie eine neue E-Mail-Adresse ein</span>
+                                                            </td>
+                                                        </tr>
+
+
+                                                        <tr>
+                                                            <td style="white-space: nowrap; font-size:smaller">
+                                                                <label for="TelephoneNumber">Ihre neue Telefon-Nummer (Zuhause) </label>
+                                                            </td>
+                                                            <td class="ChangePinFieldCell"><input
+                                                                    id="TelephoneNumber"
+                                                                    name="TelephoneNumber"
+                                                                    value="852388" maxlength="17"
+                                                                    size="30" type="text"></td>
+                                                        </tr>
+
+
+                                                        <tr>
+                                                            <td style="white-space: nowrap; font-size:smaller">
+                                                                <label for="TelephoneNumberWork">Ihre neue Telefon-Nummer (tagsüber)</label>
+                                                            </td>
+                                                            <td class="ChangePinFieldCell"><input
+                                                                    id="TelephoneNumberWork"
+                                                                    name="TelephoneNumberWork"
+                                                                    maxlength="17" size="30"
+                                                                    type="text"></td>
+                                                        </tr>
+
+
+                                                        <tr>
+                                                            <td style="white-space: nowrap; font-size:smaller">
+                                                                <label for="MobilePhone">Ihre neue Mobiltelefon-Nummer</label>
+                                                            </td>
+                                                            <td class="ChangePinFieldCell"><input
+                                                                    id="MobilePhone"
+                                                                    name="MobilePhone"
+                                                                    maxlength="17" size="30"
+                                                                    type="text"></td>
+                                                        </tr>
+
+
+                                                        <tr>
+                                                            <td class="ChangePinLabelCell">&nbsp;</td>
+                                                            <td class="ChangePinFieldCell"
+                                                                align="right">
+                                                                <table>
+                                                                    <tbody>
+                                                                    <tr>
+                                                                        <td>
+
+
+                                                                            <a id="buttonChangeContactSumbit"
+                                                                               title="Übernehmen"
+                                                                               target="" tabindex=""
+                                                                               class="button"
+                                                                               href="javascript:submitChangeContact()"><span>Übernehmen</span></a>
+
+
+                                                                        </td>
+                                                                        <td>
+
+
+                                                                            <a id="buttonChangeContactCancel"
+                                                                               title="Zum Abbrechen anklicken"
+                                                                               target="" tabindex=""
+                                                                               class="button"
+                                                                               href="javascript:cancelChangeContact()"><span>Abbrechen</span></a>
+
+
+                                                                        </td>
+                                                                    </tr>
+                                                                    </tbody>
+                                                                </table>
+                                                            </td>
+                                                        </tr>
+
+                                                        </tbody>
+                                                    </table>
+                                                    <div id="changeContactResult"></div>
+                                                </form>
+
+                                            </td>
+                                        </tr>
+
+                                        <!--
+
+
+
+
+                                                                <tr>
+                                                                    <td valign="top" class="CAccountDetailFieldNameCell">
+                                                                        Newsletter-Mail?
+                                                                    </td>
+                                                                    <td valign="top" class="AccountDetailFieldValueCell"><div id="MailingListValue">Nein</div></td>
+                                                                    <td valign="top" class="AccountDetailFieldActionCell"><a id="ChangeReportLink" class="AccountSummaryActionLink" href="javascript:ChangeReports()" title="Voreinstellungen Bericht ändern">Ändern</a></td>
+                                                                </tr>
+
+
+
+
+
+
+
+
+
+                                                                <tr>
+                                                                    <td valign="top" class="CAccountDetailFieldNameCellStripe">
+                                                                        Erinnerungen-Mail?
+                                                                    </td>
+                                                                    <td valign="top" class="AccountDetailFieldValueCellStripe"><div id="RemindersValue">Nein</div></td>
+                                                                    <td valign="top" class="AccountDetailFieldActionCellStripe">&nbsp;</td>
+                                                                </tr>
+
+
+
+
+
+
+
+
+
+                                                                <tr>
+                                                                    <td valign="top" class="CAccountDetailFieldNameCell">
+                                                                        Fällige Medien Mail?
+                                                                    </td>
+                                                                    <td valign="top" class="AccountDetailFieldValueCell"><div id="DueItemsInfoValue">Nein</div></td>
+                                                                    <td valign="top" class="AccountDetailFieldActionCell">&nbsp;</td>
+                                                                </tr>
+
+
+
+
+                                        -->
+                                        <tr>
+                                            <td colspan="2">
+                                                <br>
+
+
+                                                <form id="ChangeReportForm" method="POST"
+                                                      action="Obj_64281470840650"
+                                                      style="display:none;">
+                                                    <input name="Method" value="ChangeReport"
+                                                           type="hidden">
+                                                    <input name="Subscriber" value="AXX XXX XXX X"
+                                                           type="hidden">
+                                                    <input name="Style" value="Portal3"
+                                                           type="hidden">
+                                                    <input name="SubStyle" value="" type="hidden">
+                                                    <input name="Lang" value="GER" type="hidden">
+                                                    <input name="ResponseEncoding" value="utf-8"
+                                                           type="hidden">
+
+                                                    <table>
+
+
+                                                        <tbody>
+                                                        <tr>
+                                                            <td style="white-space: nowrap; font-size:smaller">
+                                                                <label for="MailingList">Newsletter-Mail?</label>
+                                                            </td>
+                                                            <td class="ChangePinFieldCell">
+                                                                <input name="MailingList"
+                                                                       id="ReportMailingList"
+                                                                       type="checkbox">
+                                                            </td>
+                                                        </tr>
+
+
+                                                        <tr>
+                                                            <td style="white-space: nowrap; font-size:smaller">
+                                                                <label for="Reminders">Erinnerungen-Mail?</label>
+                                                            </td>
+                                                            <td class="ChangePinFieldCell">
+                                                                <input name="Reminders"
+                                                                       id="ReportReminders"
+                                                                       type="checkbox">
+                                                            </td>
+                                                        </tr>
+
+
+                                                        <tr>
+                                                            <td style="white-space: nowrap; font-size:smaller">
+                                                                <label for="DueItemsInfo">Fällige Medien Mail?</label>
+                                                            </td>
+                                                            <td class="ChangePinFieldCell">
+                                                                <input name="DueItemsInfo"
+                                                                       id="ReportDueItemsInfo"
+                                                                       type="checkbox">
+                                                            </td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td class="ChangePinLabelCell">&nbsp;</td>
+                                                            <td class="ChangePinFieldCell"
+                                                                align="right">
+                                                                <table>
+                                                                    <tbody>
+                                                                    <tr>
+                                                                        <td>
+
+
+                                                                            <a id="buttonChangeReportSumbit"
+                                                                               title="Übernehmen"
+                                                                               target="" tabindex=""
+                                                                               class="button"
+                                                                               href="javascript:submitChangeReport()"><span>Übernehmen</span></a>
+
+
+                                                                        </td>
+                                                                        <td>
+
+
+                                                                            <a id="buttonChangeReportCancel"
+                                                                               title="Zum Abbrechen anklicken"
+                                                                               target="" tabindex=""
+                                                                               class="button"
+                                                                               href="javascript:cancelChangeReport()"><span>Abbrechen</span></a>
+
+
+                                                                        </td>
+                                                                    </tr>
+                                                                    </tbody>
+                                                                </table>
+                                                            </td>
+                                                        </tr>
+                                                        </tbody>
+                                                    </table>
+                                                    <div id="changeReportResult"></div>
+                                                </form>
+
+                                            </td>
+                                        </tr>
+
+
+                                        </tbody>
+                                    </table>
+
+                                </div>
+
+
+                            </div>
+
+                        </div>
+                    </div>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+
+    </div><!--FIN DIV COL CENTRE -->
+
+
+    <div id="PdP">
+
+
+        <div id="customFooter">
+            <a href="https://katalog.stbib-koeln.de/Mobile" target="_top">Mobile Ansicht</a>
+            <b> / </b>Klassische Ansicht<br>
+            <a href="http://www.stadt-koeln.de/basisdienste/impressum" target="_blank">Impressum</a>
+        </div>
+
+
+        <p class="pdp2">
+
+
+            <br>
+
+
+            <span>MondoIn</span>
+
+
+            <span>Zones.2.2.45.24</span>
+
+
+        </p></div>
+
+</div> <!-- FIN DIV PRINCIPAL -->
+
+
+<script type="text/javascript">
+        function resizePrintDLG(height,width)
+        {
+            var oPrintDLG = document.getElementById("PrintLDLG");
+            if(oPrintDLG != null)
+            {
+                oPrintDLG.height=height;
+                oPrintDLG.width=width;
+                oPrintDLG.style.width = width + "px";
+                oPrintDLG.style.height = height + "px";
+            }
+        }
+
+</script>
+
+<iframe title="PrintDLG" src="-%20Mein%20Konto%20-%20%C3%9Cbersicht-Dateien/blank_003.htm"
+        style="background:white; position:absolute; top:360px; left:100px; display:none; margin:0; padding:0"
+        id="PrintLDLG" scrolling="no" frameborder="0" height="400" width="470">
+</iframe>
+
+
+<script src="-%20Mein%20Konto%20-%20%C3%9Cbersicht-Dateien/widget.js" type="text/JavaScript">
+</script>
+<noscript>
+    This page contains enriched content visible when JavaScript is enabled or by
+    <a href="http://ltfl.librarything.com/forlibraries/noscript.php?id=1477-1644890287&accessibility=1">clicking here</a>.
+</noscript>
+
+
+<div aria-labelledby="ui-dialog-title-HelpDLG" role="dialog" tabindex="-1"
+     class="ui-dialog ui-widget ui-widget-content ui-corner-all  ui-draggable"
+     style="display: none; position: absolute; overflow: hidden; z-index: 1000; outline: 0px none;">
+    <div style="-moz-user-select: none;" unselectable="on"
+         class="ui-dialog-titlebar ui-widget-header ui-corner-all ui-helper-clearfix"><span
+            style="-moz-user-select: none;" unselectable="on" id="ui-dialog-title-HelpDLG"
+            class="ui-dialog-title">Hilfe</span><a style="-moz-user-select: none;" unselectable="on"
+                                                   role="button"
+                                                   class="ui-dialog-titlebar-close ui-corner-all"
+                                                   href="#"><span style="-moz-user-select: none;"
+                                                                  unselectable="on"
+                                                                  class="ui-icon ui-icon-closethick">close</span></a>
+    </div>
+    <div class="ui-dialog-content ui-widget-content" id="HelpDLG" style="padding-right: 0px;">
+        <iframe title="HelpDialog" id="HelpFrame"
+                src="-%20Mein%20Konto%20-%20%C3%9Cbersicht-Dateien/blank_003.htm"
+                style="margin-left:2px;width:730px;height:400px;overflow:auto;"
+                frameborder="0"></iframe>
+    </div>
+</div>
+<div aria-labelledby="ui-dialog-title-PopupDLG" role="dialog" tabindex="-1"
+     class="ui-dialog ui-widget ui-widget-content ui-corner-all  ui-draggable"
+     style="display: none; position: absolute; overflow: hidden; z-index: 1000; outline: 0px none;">
+    <div style="-moz-user-select: none;" unselectable="on"
+         class="ui-dialog-titlebar ui-widget-header ui-corner-all ui-helper-clearfix"><span
+            style="-moz-user-select: none;" unselectable="on" id="ui-dialog-title-PopupDLG"
+            class="ui-dialog-title">External Link</span><a style="-moz-user-select: none;"
+                                                           unselectable="on" role="button"
+                                                           class="ui-dialog-titlebar-close ui-corner-all"
+                                                           href="#"><span
+            style="-moz-user-select: none;" unselectable="on"
+            class="ui-icon ui-icon-closethick">close</span></a></div>
+    <div class="ui-dialog-content ui-widget-content" id="PopupDLG" style="padding-right: 0px;">
+        <iframe title="PopupDialog" id="PopupFrame"
+                src="-%20Mein%20Konto%20-%20%C3%9Cbersicht-Dateien/blank_003.htm"
+                style="margin-left:2px;width:730px;height:400px;overflow:auto;"
+                frameborder="0"></iframe>
+    </div>
+</div>
+<div aria-labelledby="ui-dialog-title-lostCardDLG" role="dialog" tabindex="-1"
+     class="ui-dialog ui-widget ui-widget-content ui-corner-all  ui-draggable ui-resizable"
+     style="display: none; position: absolute; overflow: hidden; z-index: 1000; outline: 0px none;">
+    <div style="-moz-user-select: none;" unselectable="on"
+         class="ui-dialog-titlebar ui-widget-header ui-corner-all ui-helper-clearfix"><span
+            style="-moz-user-select: none;" unselectable="on" id="ui-dialog-title-lostCardDLG"
+            class="ui-dialog-title">Wie Sie uns über den Ausweisverlust informieren können</span><a
+            style="-moz-user-select: none;" unselectable="on" role="button"
+            class="ui-dialog-titlebar-close ui-corner-all" href="#"><span
+            style="-moz-user-select: none;" unselectable="on"
+            class="ui-icon ui-icon-closethick">close</span></a></div>
+    <div class="redmond ui-dialog-content ui-widget-content" id="lostCardDLG" style="">
+        Bitte beantragen Sie einen neuen Ausweis. Das Bibliotheks-Personal wird Ihnen gerne helfen.
+    </div>
+    <div style="-moz-user-select: none;" unselectable="on"
+         class="ui-resizable-handle ui-resizable-n"></div>
+    <div style="-moz-user-select: none;" unselectable="on"
+         class="ui-resizable-handle ui-resizable-e"></div>
+    <div style="-moz-user-select: none;" unselectable="on"
+         class="ui-resizable-handle ui-resizable-s"></div>
+    <div style="-moz-user-select: none;" unselectable="on"
+         class="ui-resizable-handle ui-resizable-w"></div>
+    <div unselectable="on" style="z-index: 1001; -moz-user-select: none;"
+         class="ui-resizable-handle ui-resizable-se ui-icon ui-icon-gripsmall-diagonal-se ui-icon-grip-diagonal-se"></div>
+    <div unselectable="on" style="z-index: 1002; -moz-user-select: none;"
+         class="ui-resizable-handle ui-resizable-sw"></div>
+    <div unselectable="on" style="z-index: 1003; -moz-user-select: none;"
+         class="ui-resizable-handle ui-resizable-ne"></div>
+    <div unselectable="on" style="z-index: 1004; -moz-user-select: none;"
+         class="ui-resizable-handle ui-resizable-nw"></div>
+</div>
+<div aria-labelledby="ui-dialog-title-renewSubDLG" role="dialog" tabindex="-1"
+     class="ui-dialog ui-widget ui-widget-content ui-corner-all  ui-draggable ui-resizable"
+     style="display: none; position: absolute; overflow: hidden; z-index: 1000; outline: 0px none;">
+    <div style="-moz-user-select: none;" unselectable="on"
+         class="ui-dialog-titlebar ui-widget-header ui-corner-all ui-helper-clearfix"><span
+            style="-moz-user-select: none;" unselectable="on" id="ui-dialog-title-renewSubDLG"
+            class="ui-dialog-title">Verlängerung der Anmeldung</span><a
+            style="-moz-user-select: none;" unselectable="on" role="button"
+            class="ui-dialog-titlebar-close ui-corner-all" href="#"><span
+            style="-moz-user-select: none;" unselectable="on"
+            class="ui-icon ui-icon-closethick">close</span></a></div>
+    <div class="redmond ui-dialog-content ui-widget-content" id="renewSubDLG" style="">
+        Bitte gehen Sie zur Anmeldung oder zahlen Sie mit dem online-Zahlungssystem
+    </div>
+    <div style="-moz-user-select: none;" unselectable="on"
+         class="ui-resizable-handle ui-resizable-n"></div>
+    <div style="-moz-user-select: none;" unselectable="on"
+         class="ui-resizable-handle ui-resizable-e"></div>
+    <div style="-moz-user-select: none;" unselectable="on"
+         class="ui-resizable-handle ui-resizable-s"></div>
+    <div style="-moz-user-select: none;" unselectable="on"
+         class="ui-resizable-handle ui-resizable-w"></div>
+    <div unselectable="on" style="z-index: 1001; -moz-user-select: none;"
+         class="ui-resizable-handle ui-resizable-se ui-icon ui-icon-gripsmall-diagonal-se ui-icon-grip-diagonal-se"></div>
+    <div unselectable="on" style="z-index: 1002; -moz-user-select: none;"
+         class="ui-resizable-handle ui-resizable-sw"></div>
+    <div unselectable="on" style="z-index: 1003; -moz-user-select: none;"
+         class="ui-resizable-handle ui-resizable-ne"></div>
+    <div unselectable="on" style="z-index: 1004; -moz-user-select: none;"
+         class="ui-resizable-handle ui-resizable-nw"></div>
+</div>
+<div style="display: none;" id="LT_LB"></div>
+<div id="LT_LB_overlay"></div>
+</body>
+</html>

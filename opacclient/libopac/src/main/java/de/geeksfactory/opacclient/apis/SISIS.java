@@ -1,23 +1,20 @@
 /**
  * Copyright (C) 2013 by Raphael Michel under the MIT license:
  *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
- * of this software and associated documentation files (the "Software"), 
- * to deal in the Software without restriction, including without limitation 
- * the rights to use, copy, modify, merge, publish, distribute, sublicense, 
- * and/or sell copies of the Software, and to permit persons to whom the Software 
- * is furnished to do so, subject to the following conditions:
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
+ * associated documentation files (the "Software"), to deal in the Software without restriction,
+ * including without limitation the rights to use, copy, modify, merge, publish, distribute,
+ * sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
  *
- * The above copyright notice and this permission notice shall be included in 
- * all copies or substantial portions of the Software.
+ * The above copyright notice and this permission notice shall be included in all copies or
+ * substantial portions of the Software.
  *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR 
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, 
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. 
- * IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, 
- * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, 
- * ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER 
- * DEALINGS IN THE SOFTWARE.
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT
+ * NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+ * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
+ * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 package de.geeksfactory.opacclient.apis;
 
@@ -162,7 +159,7 @@ public class SISIS extends BaseApi implements OpacApi {
     protected int resultcount = 10;
     protected long logged_in;
     protected Account logged_in_as;
-    protected String ENCODING = "UTF-8";
+    protected static final String ENCODING = "UTF-8";
 
     public List<SearchField> parseSearchFields() throws IOException,
             JSONException {
@@ -343,7 +340,8 @@ public class SISIS extends BaseApi implements OpacApi {
     public class SingleResultFound extends Exception {
     }
 
-    protected SearchRequestResult parse_search_wrapped(String html, int page) throws IOException, OpacErrorException {
+    protected SearchRequestResult parse_search_wrapped(String html, int page)
+            throws IOException, OpacErrorException {
         try {
             return parse_search(html, page);
         } catch (SingleResultFound e) {
@@ -675,7 +673,7 @@ public class SISIS extends BaseApi implements OpacApi {
         String html = httpGet(opac_url + "/start.do?" + startparams
                 + "searchType=1&Query=0%3D%22" + id + "%22" + hbp, ENCODING);
 
-        return parse_result(html);
+        return loadDetail(html);
     }
 
     @Override
@@ -686,24 +684,45 @@ public class SISIS extends BaseApi implements OpacApi {
                         + "/singleHit.do?tab=showExemplarActive&methodToCall=showHit&curPos="
                         + (nr + 1) + "&identifier=" + identifier, ENCODING);
 
-        return parse_result(html);
+        return loadDetail(html);
     }
 
-    protected DetailledItem parse_result(String html) throws IOException {
-        Document doc = Jsoup.parse(html);
-        doc.setBaseUri(opac_url);
-
+    protected DetailledItem loadDetail(String html) throws IOException {
         String html2 = httpGet(opac_url
                         + "/singleHit.do?methodToCall=activateTab&tab=showTitleActive",
                 ENCODING);
-
-        Document doc2 = Jsoup.parse(html2);
-        doc2.setBaseUri(opac_url);
-
         String html3 = httpGet(
                 opac_url
                         + "/singleHit.do?methodToCall=activateTab&tab=showAvailabilityActive",
                 ENCODING);
+
+        String coverJs = null;
+        Pattern coverPattern = Pattern.compile("\\$\\.ajax\\(\\{[\\n\\s]*url: '(jsp/result/cover" +
+                ".jsp\\?[^']+')");
+        Matcher coverMatcher = coverPattern.matcher(html);
+        if (coverMatcher.find()) {
+            coverJs = httpGet(opac_url + "/" + coverMatcher.group(1), ENCODING);
+        }
+
+        DetailledItem result = parseDetail(html, html2, html3, coverJs, data, stringProvider);
+        try {
+            if (!result.getCover().contains("amazon")) downloadCover(result);
+        } catch (Exception e) {
+
+        }
+        return result;
+    }
+
+    static DetailledItem parseDetail(String html, String html2, String html3, String coverJs,
+            JSONObject data,
+            StringProvider stringProvider)
+            throws IOException {
+        Document doc = Jsoup.parse(html);
+        String opac_url = data.optString("baseurl", "");
+        doc.setBaseUri(opac_url);
+
+        Document doc2 = Jsoup.parse(html2);
+        doc2.setBaseUri(opac_url);
 
         Document doc3 = Jsoup.parse(html3);
         doc3.setBaseUri(opac_url);
@@ -745,13 +764,14 @@ public class SISIS extends BaseApi implements OpacApi {
             // TODO: Multiple options - handle this case!
         }
 
-        if (doc.select(".data td img").size() == 1) {
-            result.setCover(doc.select(".data td img").first().attr("abs:src"));
-            try {
-                downloadCover(result);
-            } catch (Exception e) {
-
+        if (coverJs != null) {
+            Pattern srcPattern = Pattern.compile("<img .* src=\"([^\"]+)\">");
+            Matcher matcher = srcPattern.matcher(coverJs);
+            if (matcher.find()) {
+                result.setCover(matcher.group(1));
             }
+        } else if (doc.select(".data td img").size() == 1) {
+            result.setCover(doc.select(".data td img").first().attr("abs:src"));
         }
 
         if (doc.select(".aw_teaser_title").size() == 1) {
@@ -773,14 +793,21 @@ public class SISIS extends BaseApi implements OpacApi {
         Element detailtrs = doc2.select(".box-container .data td").first();
         for (Node node : detailtrs.childNodes()) {
             if (node instanceof Element) {
-                if (((Element) node).tagName().equals("strong")) {
-                    title = ((Element) node).text().trim();
-                    text = "";
+                Element element = (Element) node;
+                if (element.tagName().equals("strong")) {
+                    if (element.hasClass("c2")) {
+                        if (!title.equals("")) {
+                            result.addDetail(new Detail(title, text.trim()));
+                        }
+                        title = element.text().trim();
+                        text = "";
+                    } else {
+                        text = text + element.text();
+                    }
                 } else {
-                    if (((Element) node).tagName().equals("a")
-                            && (((Element) node).text().trim()
-                                                .contains("hier klicken") || title
-                            .equals("Link:"))) {
+                    if (element.tagName().equals("a") &&
+                            (element.text().trim().contains("hier klicken") ||
+                                    title.equals("Link:"))) {
                         text = text + node.attr("href");
                         takeover = true;
                         break;
@@ -801,8 +828,7 @@ public class SISIS extends BaseApi implements OpacApi {
                 if (node instanceof Element) {
                     if (((Element) node).tagName().equals("strong")) {
                         if (!text.equals("") && !title.equals("")) {
-                            result.addDetail(new Detail(title.trim(), text
-                                    .trim()));
+                            result.addDetail(new Detail(title.trim(), text.trim()));
                             if (title.equals("Titel:")) {
                                 result.setTitle(text.trim());
                             }
@@ -1326,7 +1352,8 @@ public class SISIS extends BaseApi implements OpacApi {
         return true;
     }
 
-    public static void parse_medialist(List<LentItem> media, Document doc, int offset, JSONObject data) {
+    public static void parse_medialist(List<LentItem> media, Document doc, int offset,
+            JSONObject data) {
         Elements copytrs = doc.select(".data tr");
         doc.setBaseUri(data.optString("baseurl"));
 

@@ -250,7 +250,6 @@ public class Adis extends BaseApi implements OpacApi {
 
     @Override
     public void start() throws IOException {
-
         try {
             s_requestCount = -1;
             Document doc = htmlGet(opac_url + "?"
@@ -258,7 +257,8 @@ public class Adis extends BaseApi implements OpacApi {
 
             Pattern padSid = Pattern
                     .compile(".*;jsessionid=([0-9A-Fa-f]+)[^0-9A-Fa-f].*");
-            for (Element navitem : doc.select("#unav li a")) {
+            for (Element navitem : doc.select("#unav li a, .tree_ul li a")) {
+                // Düsseldorf uses a custom layout where the navbar is .tree_ul
                 if (navitem.attr("href").contains("service=")) {
                     s_service = getQueryParams(navitem.attr("href")).get(
                             "service").get(0);
