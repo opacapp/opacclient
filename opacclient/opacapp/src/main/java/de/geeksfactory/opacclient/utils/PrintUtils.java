@@ -2,9 +2,8 @@ package de.geeksfactory.opacclient.utils;
 
 import android.content.Context;
 
-import com.github.mustachejava.DefaultMustacheFactory;
-import com.github.mustachejava.Mustache;
-import com.github.mustachejava.MustacheFactory;
+import com.samskivert.mustache.Mustache;
+import com.samskivert.mustache.Template;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -20,14 +19,9 @@ public class PrintUtils {
 
         InputStream is = context.getResources().openRawResource(R.raw.print_template);
         BufferedReader r = new BufferedReader(new InputStreamReader(is));
-        MustacheFactory mf = new DefaultMustacheFactory();
-        Mustache mustache = mf.compile(r, "print_template.mustache");
+        Template tmpl = Mustache.compiler().compile(r);
         StringWriter sw = new StringWriter();
-        try {
-            mustache.execute(sw, new PrintData(detailledItem, context)).flush();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        tmpl.execute(new PrintData(detailledItem, context), sw);
         return sw.toString();
     }
 
