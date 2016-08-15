@@ -1020,6 +1020,10 @@ public class Bibliotheca extends BaseApi {
     public static AccountData parse_account(Account acc, Document doc, JSONObject data,
             ReportHandler reportHandler, JSONObject headers_lent, JSONObject headers_reservations)
             throws JSONException, NotReachableException {
+        if (doc.select(".kontozeile_center table").size() == 0) {
+            throw new NotReachableException();
+        }
+
         Map<String, Integer> copymap = new HashMap<>();
         Elements headerCells = doc.select(".kontozeile_center table").get(0)
                                   .select("tr.exemplarmenubar").get(0).children();
@@ -1052,10 +1056,6 @@ public class Bibliotheca extends BaseApi {
         }
 
         List<LentItem> media = new ArrayList<>();
-
-        if (doc.select(".kontozeile_center table").size() == 0) {
-            throw new NotReachableException();
-        }
 
         Elements exemplartrs = doc.select(".kontozeile_center table").get(0)
                                   .select("tr.tabKonto");
