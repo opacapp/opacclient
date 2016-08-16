@@ -102,10 +102,12 @@ public class Primo extends BaseApi {
         List<NameValuePair> params = new ArrayList<>();
 
         String tab = "";
-        if (data.has("searchtab"))
+        if (data.has("searchtab")) {
             tab = "&tab=" + data.optString("searchtab", "default_tab");
+        }
         String html =
-                httpGet(opac_url + "/action/search.do?mode=Advanced&ct=AdvancedSearch&vid=" + vid + tab,
+                httpGet(opac_url + "/action/search.do?mode=Advanced&ct=AdvancedSearch&vid=" + vid +
+                                tab,
                         getDefaultEncoding());
         Document doc = Jsoup.parse(html);
 
@@ -200,6 +202,8 @@ public class Primo extends BaseApi {
                 res.setStatus(SearchResult.Status.GREEN);
             } else if (resrow.select(".EXLResultStatusNotAvailable").size() > 0) {
                 res.setStatus(SearchResult.Status.RED);
+            } else if (resrow.select(".EXLResultStatusMaybeAvailable").size() > 0) {
+                res.setStatus(SearchResult.Status.YELLOW);
             }
             res.setPage(page);
 
@@ -373,8 +377,12 @@ public class Primo extends BaseApi {
                 int j = 0;
                 Copy copy = new Copy();
                 for (Element td : tr.children()) {
-                    if (copymap.containsKey(j)) {
-                        copy.set(copymap.get(j), td.text().trim(), fmt);
+                    String value = td.text().replace("\u00a0", " ").trim();
+                    if (copymap.containsKey(j) && !value.equals("")) {
+                        if (!copymap.get(j).equals("returndate") ||
+                                value.matches("\\d{2}\\.\\d{2}\\.\\d{4}")) {
+                            copy.set(copymap.get(j), value, fmt);
+                        }
                     }
                     j++;
                 }
