@@ -42,6 +42,8 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -69,6 +71,7 @@ import de.geeksfactory.opacclient.storage.StarContentProvider;
 import de.geeksfactory.opacclient.utils.DebugTools;
 import de.geeksfactory.opacclient.utils.ErrorReporter;
 import de.geeksfactory.opacclient.utils.Utils;
+import de.geeksfactory.opacclient.webservice.LibraryConfigUpdateService;
 import de.geeksfactory.opacclient.webservice.WebserviceReportHandler;
 
 @ReportsCrashes(mailTo = "info@opacapp.de",
@@ -244,8 +247,18 @@ public class OpacClient extends Application {
     }
 
     public Library getLibrary(String ident) throws IOException, JSONException {
-        String json = Utils.readStreamToString(
-                getAssets().open(ASSETS_BIBSDIR + "/" + ident + ".json"));
+        String filename = ident + ".json";
+        String json;
+
+        File filesDir = new File(getFilesDir(), LibraryConfigUpdateService.LIBRARIES_DIR);
+        filesDir.mkdirs();
+
+        File file = new File(filesDir, filename);
+        if (file.exists()) {
+            json = Utils.readStreamToString(new FileInputStream(file));
+        } else {
+            json = Utils.readStreamToString(getAssets().open(ASSETS_BIBSDIR + "/" + filename));
+        }
         return Library.fromJSON(ident, new JSONObject(json));
     }
 

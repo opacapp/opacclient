@@ -40,6 +40,7 @@ public class LibraryConfigUpdateService extends IntentService {
     public static final String ACTION_SUCCESS = NAME + "_success";
     public static final String ACTION_FAILURE = NAME + "_failure";
     public static final String EXTRA_UPDATE_COUNT = "update_count";
+    public static final String LIBRARIES_DIR = "libraries";
 
     public LibraryConfigUpdateService() {
         super(NAME);
@@ -49,7 +50,8 @@ public class LibraryConfigUpdateService extends IntentService {
     protected void onHandleIntent(Intent intent) {
         WebService service = WebServiceManager.getInstance();
         PreferenceDataSource prefs = new PreferenceDataSource(this);
-        File filesDir = this.getFilesDir();
+        File filesDir = new File(getFilesDir(), LIBRARIES_DIR);
+        filesDir.mkdirs();
         try {
             int count = updateConfig(service, prefs, filesDir);
             Intent broadcast = new Intent(ACTION_SUCCESS).putExtra(EXTRA_UPDATE_COUNT, count);
