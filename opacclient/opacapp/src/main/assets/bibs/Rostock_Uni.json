@@ -4,7 +4,8 @@
     "city": "Rostock",
     "country": "Deutschland",
     "data": {
-        "baseurl": "https://katalog.ub.uni-rostock.de/",
+        "account_system": "lbs",
+        "baseurl": "https://opac.lbs-rostock.gbv.de",
         "db": "1"
     },
     "geo": [
