@@ -21,7 +21,7 @@ class JsonFilesTask extends DefaultTask {
     def downloadFiles() {
         HttpsURLConnection conn = (HttpsURLConnection) API_URL.toURL().openConnection()
         conn.setSSLSocketFactory(createSSLSocketFactory())
-        String response = conn.inputStream.getText()
+        String response = conn.inputStream.getText("UTF-8")
         JSONArray data = new JSONArray(response)
         GFileUtils.cleanDirectory(new File(BIBS_DIR))
         for (int i = 0; i < data.length(); i++) {
@@ -29,12 +29,12 @@ class JsonFilesTask extends DefaultTask {
             String id = library.getString("_id")
             library.remove("_id")
             File file = new File(BIBS_DIR, id + ".json")
-            file.write(library.toString())
+            file.write(library.toString(), "UTF-8")
         }
 
         String lastUpdate = conn.headerFields.get("X-Page-Generated").get(0)
         File file = new File(ASSETS_DIR, "last_library_config_update.txt")
-        file.write(lastUpdate)
+        file.write(lastUpdate, "UTF-8")
     }
 
     private SSLSocketFactory createSSLSocketFactory() {
