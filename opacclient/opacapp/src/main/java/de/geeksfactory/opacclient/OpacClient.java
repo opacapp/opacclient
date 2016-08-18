@@ -46,7 +46,6 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -301,23 +300,12 @@ public class OpacClient extends Application {
         String json;
 
         for (int i = 0; i < num; i++) {
-            builder = new StringBuilder();
-            fis = assets.open(ASSETS_BIBSDIR + "/" + files[i]);
-
-            reader = new BufferedReader(new InputStreamReader(fis, "utf-8"));
-            while ((line = reader.readLine()) != null) {
-                builder.append(line);
-            }
-
-            fis.close();
-            json = builder.toString();
             try {
-                Library lib = Library.fromJSON(files[i].replace(".json", ""),
-                        new JSONObject(json));
+                Library lib =
+                        getLibrary(files[i].substring(0, files[i].length() - ".json".length()));
                 if (!lib.getApi().equals("test") || BuildConfig.DEBUG) libs.add(lib);
             } catch (JSONException e) {
-                Log.w("JSON library files", "Failed parsing library "
-                        + files[i]);
+                Log.w("JSON library files", "Failed parsing library " + files[i]);
                 e.printStackTrace();
             }
             if (callback != null && i % 100 == 0 && i > 0) {

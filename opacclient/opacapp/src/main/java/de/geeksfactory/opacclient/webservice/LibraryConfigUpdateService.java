@@ -30,6 +30,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.List;
 
+import de.geeksfactory.opacclient.OpacClient;
 import de.geeksfactory.opacclient.objects.Library;
 import de.geeksfactory.opacclient.storage.PreferenceDataSource;
 import de.geeksfactory.opacclient.utils.ErrorReporter;
@@ -56,6 +57,7 @@ public class LibraryConfigUpdateService extends IntentService {
             int count = updateConfig(service, prefs, filesDir);
             Intent broadcast = new Intent(ACTION_SUCCESS).putExtra(EXTRA_UPDATE_COUNT, count);
             LocalBroadcastManager.getInstance(this).sendBroadcast(broadcast);
+            ((OpacClient) getApplication()).resetCache();
         } catch (IOException | JSONException e) {
             ErrorReporter.handleException(e);
             Intent broadcast = new Intent(ACTION_FAILURE);
