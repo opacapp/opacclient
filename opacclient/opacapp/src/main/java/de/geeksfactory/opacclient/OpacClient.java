@@ -30,6 +30,7 @@ import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.util.Log;
 
@@ -44,6 +45,7 @@ import org.json.JSONObject;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -249,16 +251,36 @@ public class OpacClient extends Application {
         String filename = ident + ".json";
         String json;
 
-        File filesDir = new File(getFilesDir(), LibraryConfigUpdateService.LIBRARIES_DIR);
-        filesDir.mkdirs();
+        File filesDir = getLibrariesDir();
 
-        File file = new File(filesDir, filename);
-        if (file.exists()) {
-            json = Utils.readStreamToString(new FileInputStream(file));
+        if (fileExists(filesDir, filename)) {
+            json = Utils.readStreamToString(openFile(filesDir, filename));
         } else {
             json = Utils.readStreamToString(getAssets().open(ASSETS_BIBSDIR + "/" + filename));
         }
         return Library.fromJSON(ident, new JSONObject(json));
+    }
+
+    InputStream openFile(File filesDir, String filename) throws FileNotFoundException {
+        File file = new File(filesDir, filename);
+        return new FileInputStream(file);
+    }
+
+    boolean fileExists(File filesDir, String filename) {
+        File file = new File(filesDir, filename);
+        return file.exists();
+    }
+
+    @NonNull
+    protected File getFile(File filesDir, String filename) {
+        return new File(filesDir, filename);
+    }
+
+    @NonNull
+    protected File getLibrariesDir() {
+        File filesDir = new File(getFilesDir(), LibraryConfigUpdateService.LIBRARIES_DIR);
+        filesDir.mkdirs();
+        return filesDir;
     }
 
     public Library getLibrary() {

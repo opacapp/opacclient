@@ -24,6 +24,7 @@ import android.support.v4.content.LocalBroadcastManager;
 
 import org.joda.time.DateTime;
 import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.File;
 import java.io.FileWriter;
@@ -54,7 +55,7 @@ public class LibraryConfigUpdateService extends IntentService {
         File filesDir = new File(getFilesDir(), LIBRARIES_DIR);
         filesDir.mkdirs();
         try {
-            int count = updateConfig(service, prefs, filesDir);
+            int count = updateConfig(service, prefs, new FileOutput(filesDir));
             Intent broadcast = new Intent(ACTION_SUCCESS).putExtra(EXTRA_UPDATE_COUNT, count);
             LocalBroadcastManager.getInstance(this).sendBroadcast(broadcast);
             ((OpacClient) getApplication()).resetCache();
@@ -65,27 +66,40 @@ public class LibraryConfigUpdateService extends IntentService {
         }
     }
 
-    private static int updateConfig(WebService service, PreferenceDataSource prefs, File filesDir)
+    static int updateConfig(WebService service, PreferenceDataSource prefs, FileOutput output)
             throws IOException, JSONException {
         Response<List<Library>>
                 response = service.getLibraryConfigs(prefs.getLastLibraryConfigUpdate()).execute();
         List<Library> updatedLibraries = response.body();
 
         for (Library lib : updatedLibraries) {
-            File file = new File(filesDir, lib.getIdent() + ".json");
-            String json = lib.toJSON().toString();
-            FileWriter writer = null;
-            try {
-                writer = new FileWriter(file);
-                writer.write(json);
-            } finally {
-                if (writer != null) writer.close();
-            }
+            String filename = lib.getIdent() + ".json";
+            JSONObject json = lib.toJSON();
+            output.writeFile(filename, json.toString());
         }
 
         DateTime lastUpdate = new DateTime(response.headers().get("X-Page-Generated"));
         prefs.setLastLibraryConfigUpdate(lastUpdate);
 
         return updatedLibraries.size();
+    }
+
+    static class FileOutput {
+        private final File dir;
+
+        public FileOutput(File dir) {
+            this.dir = dir;
+        }
+
+        public void writeFile(String filename, String data) throws IOException {
+            File file = new File(dir, filename);
+            FileWriter writer = null;
+            try {
+                writer = new FileWriter(file);
+                writer.write(data);
+            } finally {
+                if (writer != null) writer.close();
+            }
+        }
     }
 }
