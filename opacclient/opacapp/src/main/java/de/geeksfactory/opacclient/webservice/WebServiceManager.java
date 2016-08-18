@@ -54,6 +54,7 @@ public class WebServiceManager {
                     String name = reader.nextName();
                     JsonReader.Token token = reader.peek();
                     if (token == JsonReader.Token.NULL) {
+                        reader.nextNull();
                         object.put(name, null);
                     } else if (token == JsonReader.Token.BEGIN_ARRAY) {
                         object.put(name, new JSONArrayAdapter().fromJson(reader));
@@ -120,6 +121,7 @@ public class WebServiceManager {
                     } else if (token == JsonReader.Token.BOOLEAN) {
                         array.put(reader.nextBoolean());
                     } else if (token == JsonReader.Token.NULL) {
+                        reader.nextNull();
                         array.put(null);
                     } else if (token == JsonReader.Token.STRING) {
                         array.put(reader.nextString());

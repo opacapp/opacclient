@@ -84,7 +84,7 @@ public class Library implements Comparable<Library> {
         if (input.has("replacedby"))
             lib.setReplacedBy(input.getString("replacedby"));
 
-        if (input.has("geo")) {
+        if (input.has("geo") && !input.isNull("geo")) {
             double[] geo = new double[2];
             geo[0] = input.getJSONArray("geo").getDouble(0);
             geo[1] = input.getJSONArray("geo").getDouble(1);
@@ -110,10 +110,14 @@ public class Library implements Comparable<Library> {
         json.put("information", information);
         if (displayName != null) json.put("displayname", displayName);
         json.put("replacedby", replacedby);
-        JSONArray geoJson = new JSONArray();
-        geoJson.put(geo[0]);
-        geoJson.put(geo[1]);
-        json.put("geo", geoJson);
+        if (geo != null) {
+            JSONArray geoJson = new JSONArray();
+            geoJson.put(geo[0]);
+            geoJson.put(geo[1]);
+            json.put("geo", geoJson);
+        } else {
+            json.put("geo", (Object) null);
+        }
         return json;
     }
 
