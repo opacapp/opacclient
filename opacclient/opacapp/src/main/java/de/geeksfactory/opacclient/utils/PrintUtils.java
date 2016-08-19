@@ -6,7 +6,6 @@ import com.samskivert.mustache.Mustache;
 import com.samskivert.mustache.Template;
 
 import java.io.BufferedReader;
-import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.StringWriter;
@@ -44,6 +43,8 @@ public class PrintUtils {
             public String status;
             public String location;
             public String return_date;
+            public String reservations;
+            public String shelfmark;
             public String url;
 
             public Strings(Context context) {
@@ -56,6 +57,8 @@ public class PrintUtils {
                 this.status = context.getString(R.string.status);
                 this.location = context.getString(R.string.location);
                 this.return_date = context.getString(R.string.return_date);
+                this.reservations = context.getString(R.string.reservations);
+                this.shelfmark = context.getString(R.string.shelfmark);
                 this.url = context.getString(R.string.url);
             }
         }
