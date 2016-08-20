@@ -370,6 +370,8 @@ public class Primo extends BaseApi {
 
             DateTimeFormatter fmt =
                     DateTimeFormat.forPattern("dd.MM.yyyy").withLocale(Locale.GERMAN);
+            DateTimeFormatter fmt2 =
+                    DateTimeFormat.forPattern("dd/MM/yyyy").withLocale(Locale.GERMAN);
 
             for (Element tr : doc2
                     .select(".EXLLocationTable tr:not(.EXLLocationTitlesRow):not(" +
@@ -379,9 +381,14 @@ public class Primo extends BaseApi {
                 for (Element td : tr.children()) {
                     String value = td.text().replace("\u00a0", " ").trim();
                     if (copymap.containsKey(j) && !value.equals("")) {
-                        if (!copymap.get(j).equals("returndate") ||
-                                value.matches("\\d{2}\\.\\d{2}\\.\\d{4}")) {
+                        try {
                             copy.set(copymap.get(j), value, fmt);
+                        } catch (IllegalArgumentException e) {
+                            try {
+                                copy.set(copymap.get(j), value, fmt2);
+                            } catch (IllegalArgumentException e2) {
+                                e2.printStackTrace();
+                            }
                         }
                     }
                     j++;
