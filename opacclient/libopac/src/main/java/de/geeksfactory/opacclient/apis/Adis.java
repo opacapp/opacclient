@@ -501,16 +501,7 @@ public class Adis extends BaseApi implements OpacApi {
             nr++;
         }
 
-        s_pageform = new ArrayList<>();
-        for (Element input : doc.select("input, select")) {
-            if (!"image".equals(input.attr("type"))
-                    && !"submit".equals(input.attr("type"))
-                    && !"checkbox".equals(input.attr("type"))
-                    && !"".equals(input.attr("name"))) {
-                s_pageform.add(new BasicNameValuePair(input.attr("name"), input
-                        .attr("value")));
-            }
-        }
+        updatePageform(doc);
         s_lastpage = page;
 
         return new SearchRequestResult(results, total_result_count, page);
@@ -610,6 +601,24 @@ public class Adis extends BaseApi implements OpacApi {
             doc = htmlPost(opac_url + ";jsessionid=" + s_sid, form);
             // Yep, two times.
         }
+
+        // Reset
+        updatePageform(doc);
+        nvpairs = s_pageform;
+        nvpairs.add(new BasicNameValuePair("$Toolbar_1.x", "1"));
+        nvpairs.add(new BasicNameValuePair("$Toolbar_1.y", "1"));
+        parse_search_wrapped(htmlPost(opac_url + ";jsessionid=" + s_sid, nvpairs), 1);
+        nvpairs = s_pageform;
+        nvpairs.add(new BasicNameValuePair("$Toolbar_3.x", "1"));
+        nvpairs.add(new BasicNameValuePair("$Toolbar_3.y", "1"));
+        parse_search_wrapped(htmlPost(opac_url + ";jsessionid=" + s_sid, nvpairs), 1);
+
+        return parseResult(id, doc);
+    }
+
+    DetailledItem parseResult(String id, Document doc)
+            throws IOException, OpacErrorException {
+        List<NameValuePair> nvpairs;
         DetailledItem res = new DetailledItem();
 
         if (doc.select("#R001 img").size() == 1) {
@@ -698,29 +707,8 @@ public class Adis extends BaseApi implements OpacApi {
             res.addCopy(copy);
         }
 
-        // Reset
-        s_pageform = new ArrayList<>();
-        for (Element input : doc.select("input, select")) {
-            if (!"image".equals(input.attr("type"))
-                    && !"submit".equals(input.attr("type"))
-                    && !"checkbox".equals(input.attr("type"))
-                    && !"".equals(input.attr("name"))) {
-                s_pageform.add(new BasicNameValuePair(input.attr("name"), input
-                        .attr("value")));
-            }
-        }
-        nvpairs = s_pageform;
-        nvpairs.add(new BasicNameValuePair("$Toolbar_1.x", "1"));
-        nvpairs.add(new BasicNameValuePair("$Toolbar_1.y", "1"));
-        parse_search_wrapped(htmlPost(opac_url + ";jsessionid=" + s_sid, nvpairs), 1);
-        nvpairs = s_pageform;
-        nvpairs.add(new BasicNameValuePair("$Toolbar_3.x", "1"));
-        nvpairs.add(new BasicNameValuePair("$Toolbar_3.y", "1"));
-        parse_search_wrapped(htmlPost(opac_url + ";jsessionid=" + s_sid, nvpairs), 1);
-
         res.setId(""); // null would be overridden by the UI, because there _is_
         // an id,< we just can not use it.
-
         return res;
     }
 
@@ -831,11 +819,11 @@ public class Adis extends BaseApi implements OpacApi {
                 for (Element opt : doc.select("select[name=select$0] option")) {
                     if (opt.text().trim().length() > 0) {
                         Map<String, String> selopt = new HashMap<>();
-                        selopt.put("key", opt.val());
+                        selopt.put("value", opt.text());
                         if (selection != null) {
-                            selopt.put("value", opt.text() + "_SEP_" + selection);
+                            selopt.put("key", opt.val() + "_SEP_" + selection);
                         } else {
-                            selopt.put("value", opt.text());
+                            selopt.put("key", opt.val());
                         }
                         sel.add(selopt);
                     }
@@ -961,16 +949,7 @@ public class Adis extends BaseApi implements OpacApi {
         }
 
         // Reset
-        s_pageform = new ArrayList<>();
-        for (Element input : doc.select("input, select")) {
-            if (!"image".equals(input.attr("type"))
-                    && !"submit".equals(input.attr("type"))
-                    && !"checkbox".equals(input.attr("type"))
-                    && !"".equals(input.attr("name"))) {
-                s_pageform.add(new BasicNameValuePair(input.attr("name"), input
-                        .attr("value")));
-            }
-        }
+        updatePageform(doc);
         try {
             nvpairs = s_pageform;
             nvpairs.add(new BasicNameValuePair("$Toolbar_1.x", "1"));
@@ -988,6 +967,19 @@ public class Adis extends BaseApi implements OpacApi {
         }
 
         return res;
+    }
+
+    void updatePageform(Document doc) {
+        s_pageform = new ArrayList<>();
+        for (Element input : doc.select("input, select")) {
+            if (!"image".equals(input.attr("type"))
+                    && !"submit".equals(input.attr("type"))
+                    && !"checkbox".equals(input.attr("type"))
+                    && !"".equals(input.attr("name"))) {
+                s_pageform.add(new BasicNameValuePair(input.attr("name"), input
+                        .attr("value")));
+            }
+        }
     }
 
     @Override
