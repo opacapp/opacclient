@@ -944,7 +944,8 @@ public class Adis extends BaseApi implements OpacApi {
                             .attr("value")));
                 }
             }
-            form.add(new BasicNameValuePair("textButton$0", "Abbrechen"));
+            Element button = doc.select("input[value=Abbrechen], input[value=Zurück]").first();
+            form.add(new BasicNameValuePair(button.attr("name"), button.attr("value")));
             doc = htmlPost(opac_url + ";jsessionid=" + s_sid, form);
         }
 
