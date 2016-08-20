@@ -842,9 +842,10 @@ public class Adis extends BaseApi implements OpacApi {
                 }
                 if (doc.select("#FSET01 select[name=select$0]").size() > 0 && selection != null) {
                     if (selection.contains("_SEP_")) {
-                        doc.select("#AUSGAB_1").attr("value", selection.split("_SEP_")[0]);
+                        doc.select("#FSET01 select[name=select$0]")
+                           .attr("value", selection.split("_SEP_")[0]);
                     } else {
-                        doc.select("#AUSGAB_1").attr("value", selection);
+                        doc.select("#FSET01 select[name=select$0]").attr("value", selection);
                     }
                 }
                 if (doc.select("#BENJN_1").size() > 0) {
@@ -886,6 +887,24 @@ public class Adis extends BaseApi implements OpacApi {
                             "Reservation abschicken"));
                     res = new ReservationResult(MultiStepResult.Status.OK);
                     doc = htmlPost(opac_url + ";jsessionid=" + s_sid, form);
+
+                    if (doc.select("input[name=textButton]").attr("value")
+                           .contains("kostenpflichtig bestellen")) {
+                        // Munich
+                        form = new ArrayList<>();
+                        for (Element input : doc.select("input, select")) {
+                            if (!"image".equals(input.attr("type"))
+                                    && !"submit".equals(input.attr("type"))
+                                    && !"checkbox".equals(input.attr("type"))
+                                    && !"".equals(input.attr("name"))) {
+                                form.add(new BasicNameValuePair(input.attr("name"),
+                                        input.attr("value")));
+                            }
+                        }
+                        form.add(new BasicNameValuePair("textButton",
+                                doc.select("input[name=textButton]").first().attr("value")));
+                        doc = htmlPost(opac_url + ";jsessionid=" + s_sid, form);
+                    }
 
                     if (doc.select(".message h1").size() > 0) {
                         String msg = doc.select(".message h1").text().trim();
