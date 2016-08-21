@@ -118,7 +118,7 @@ public class LibraryConfigUpdateService extends IntentService {
         }
     }
 
-    public static void clear(Context context) {
+    public static void clearConfigurationUpdates(Context context) {
         File filesDir = new File(context.getFilesDir(), LIBRARIES_DIR);
         filesDir.mkdirs();
         File[] files = filesDir.listFiles();

@@ -184,12 +184,33 @@ public class MainPreferenceFragment extends PreferenceFragmentCompat {
                             return false;
                         }
                     });
-            DateTime lastUpdate = new PreferenceDataSource(context).getLastLibraryConfigUpdate();
-            CharSequence lastUpdateStr =
-                    DateUtils.getRelativeTimeSpanString(context, lastUpdate.getMillis(), true);
-            updateLibraryConfig
-                    .setSummary(getString(R.string.library_config_last_update, lastUpdateStr));
+            refreshLastConfigUpdate(updateLibraryConfig);
         }
+
+        final Preference resetLibraryConfig = findPreference("reset_library_config");
+        if (resetLibraryConfig != null) {
+            resetLibraryConfig.setOnPreferenceClickListener(
+                    new Preference.OnPreferenceClickListener() {
+                        @Override
+                        public boolean onPreferenceClick(Preference preference) {
+                            LibraryConfigUpdateService.clearConfigurationUpdates(getContext());
+                            if (getView() != null) {
+                                Snackbar.make(getView(), R.string.library_config_reset,
+                                        Snackbar.LENGTH_SHORT).show();
+                                refreshLastConfigUpdate(updateLibraryConfig);
+                            }
+                            return false;
+                        }
+                    });
+        }
+    }
+
+    private void refreshLastConfigUpdate(Preference updateLibraryConfig) {
+        DateTime lastUpdate = new PreferenceDataSource(context).getLastLibraryConfigUpdate();
+        CharSequence lastUpdateStr =
+                DateUtils.getRelativeTimeSpanString(context, lastUpdate.getMillis(), true);
+        updateLibraryConfig
+                .setSummary(getString(R.string.library_config_last_update, lastUpdateStr));
     }
 
     private void showDialog(DialogFragment newFragment) {
@@ -242,12 +263,7 @@ public class MainPreferenceFragment extends PreferenceFragmentCompat {
                                 text,
                                 Snackbar.LENGTH_SHORT).show();
 
-                        DateTime lastUpdate =
-                                new PreferenceDataSource(context).getLastLibraryConfigUpdate();
-                        CharSequence lastUpdateStr = DateUtils
-                                .getRelativeTimeSpanString(context, lastUpdate.getMillis(), true);
-                        updateLibraryConfig.setSummary(
-                                getString(R.string.library_config_last_update, lastUpdateStr));
+                        refreshLastConfigUpdate(updateLibraryConfig);
                         break;
                     case LibraryConfigUpdateService.ACTION_FAILURE:
                         Snackbar.make(getView(), R.string.library_config_update_failure,

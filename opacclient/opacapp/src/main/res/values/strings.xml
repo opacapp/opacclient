@@ -287,9 +287,12 @@
     <string name="print_wait">Please wait for details to load</string>
     <string name="preference_category_library_config">Library data</string>
     <string name="preference_update_library_config">Update library configuration</string>
+    <string name="preference_reset_library_config">Reset library configuration</string>
+    <string name="preference_reset_library_config_desc">to state from last app update</string>
     <string name="updating_library_config">Updating library configuration</string>
     <string name="library_config_no_updates">No updated library configuration found.</string>
     <string name="library_config_update_success">Updated configuration for %d libraries.</string>
     <string name="library_config_update_failure">Could not update library configuration.</string>
     <string name="library_config_last_update">Last updated %s</string>
+    <string name="library_config_reset">Restored configuration state from last app update.</string>
 </resources>

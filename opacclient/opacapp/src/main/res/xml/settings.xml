@@ -52,6 +52,10 @@
         <Preference
             android:key="update_library_config"
             android:title="@string/preference_update_library_config"/>
+        <Preference
+            android:key="reset_library_config"
+            android:title="@string/preference_reset_library_config"
+            android:summary="@string/preference_reset_library_config_desc"/>
     </PreferenceCategory>
     <PreferenceCategory android:title="@string/developer_settings">
         <CheckBoxPreference
