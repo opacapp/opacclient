@@ -35,7 +35,9 @@ import java.util.List;
 import de.geeksfactory.opacclient.BuildConfig;
 import de.geeksfactory.opacclient.OpacClient;
 import de.geeksfactory.opacclient.objects.Library;
+import de.geeksfactory.opacclient.storage.JsonSearchFieldDataSource;
 import de.geeksfactory.opacclient.storage.PreferenceDataSource;
+import de.geeksfactory.opacclient.storage.SearchFieldDataSource;
 import de.geeksfactory.opacclient.utils.ErrorReporter;
 import retrofit2.Response;
 
@@ -57,7 +59,8 @@ public class LibraryConfigUpdateService extends IntentService {
         File filesDir = new File(getFilesDir(), LIBRARIES_DIR);
         filesDir.mkdirs();
         try {
-            int count = updateConfig(service, prefs, new FileOutput(filesDir));
+            int count = updateConfig(service, prefs, new FileOutput(filesDir),
+                    new JsonSearchFieldDataSource(this));
             Intent broadcast = new Intent(ACTION_SUCCESS).putExtra(EXTRA_UPDATE_COUNT, count);
             LocalBroadcastManager.getInstance(this).sendBroadcast(broadcast);
             ((OpacClient) getApplication()).resetCache();
@@ -68,7 +71,8 @@ public class LibraryConfigUpdateService extends IntentService {
         }
     }
 
-    static int updateConfig(WebService service, PreferenceDataSource prefs, FileOutput output)
+    static int updateConfig(WebService service, PreferenceDataSource prefs, FileOutput output,
+            SearchFieldDataSource searchFields)
             throws IOException, JSONException {
         if (prefs.getLastLibraryConfigUpdateVersion() != BuildConfig.VERSION_CODE) {
             output.clearFiles();
@@ -83,6 +87,11 @@ public class LibraryConfigUpdateService extends IntentService {
             String filename = lib.getIdent() + ".json";
             JSONObject json = lib.toJSON();
             output.writeFile(filename, json.toString());
+
+            if (searchFields.hasSearchFields(lib.getIdent())) {
+                // clear cached search fields when configuration was updated
+                searchFields.clearSearchFields(lib.getIdent());
+            }
         }
 
         DateTime lastUpdate = new DateTime(response.headers().get("X-Page-Generated"));
