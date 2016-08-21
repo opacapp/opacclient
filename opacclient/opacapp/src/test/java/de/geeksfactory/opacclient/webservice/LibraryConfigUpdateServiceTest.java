@@ -9,6 +9,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import de.geeksfactory.opacclient.BuildConfig;
 import de.geeksfactory.opacclient.objects.Library;
 import de.geeksfactory.opacclient.storage.PreferenceDataSource;
 import retrofit2.mock.Calls;
@@ -34,6 +35,7 @@ public class LibraryConfigUpdateServiceTest {
         prefs = mock(PreferenceDataSource.class);
         output = mock(LibraryConfigUpdateService.FileOutput.class);
         when(prefs.getLastLibraryConfigUpdate()).thenReturn(LAST_UPDATE);
+        when(prefs.getLastLibraryConfigUpdateVersion()).thenReturn(BuildConfig.VERSION_CODE);
         library = new Library();
         library.setIdent(IDENT);
     }
@@ -46,6 +48,7 @@ public class LibraryConfigUpdateServiceTest {
         LibraryConfigUpdateService.updateConfig(service, prefs, output);
         verifyNoMoreInteractions(output);
         verify(prefs).setLastLibraryConfigUpdate(any(DateTime.class));
+        verify(prefs).setLastLibraryConfigUpdateVersion(BuildConfig.VERSION_CODE);
     }
 
     @Test
@@ -57,5 +60,16 @@ public class LibraryConfigUpdateServiceTest {
         LibraryConfigUpdateService.updateConfig(service, prefs, output);
         verify(output).writeFile(IDENT + ".json", library.toJSON().toString());
         verifyNoMoreInteractions(output);
+    }
+
+    @Test
+    public void shouldClearWhenLastUpdateFromOldVersion() throws IOException, JSONException {
+        when(prefs.getLastLibraryConfigUpdateVersion()).thenReturn(BuildConfig.VERSION_CODE - 1);
+
+        List<Library> libraries = new ArrayList<>();
+        when(service.getLibraryConfigs(LAST_UPDATE)).thenReturn(Calls.response(libraries));
+
+        LibraryConfigUpdateService.updateConfig(service, prefs, output);
+        verify(output).clearFiles();
     }
 }

@@ -19,6 +19,7 @@
 package de.geeksfactory.opacclient.webservice;
 
 import android.app.IntentService;
+import android.content.Context;
 import android.content.Intent;
 import android.support.v4.content.LocalBroadcastManager;
 
@@ -31,6 +32,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.List;
 
+import de.geeksfactory.opacclient.BuildConfig;
 import de.geeksfactory.opacclient.OpacClient;
 import de.geeksfactory.opacclient.objects.Library;
 import de.geeksfactory.opacclient.storage.PreferenceDataSource;
@@ -68,6 +70,11 @@ public class LibraryConfigUpdateService extends IntentService {
 
     static int updateConfig(WebService service, PreferenceDataSource prefs, FileOutput output)
             throws IOException, JSONException {
+        if (prefs.getLastLibraryConfigUpdateVersion() != BuildConfig.VERSION_CODE) {
+            output.clearFiles();
+            prefs.clearLastLibraryConfigUpdate();
+        }
+
         Response<List<Library>>
                 response = service.getLibraryConfigs(prefs.getLastLibraryConfigUpdate()).execute();
         List<Library> updatedLibraries = response.body();
@@ -80,6 +87,7 @@ public class LibraryConfigUpdateService extends IntentService {
 
         DateTime lastUpdate = new DateTime(response.headers().get("X-Page-Generated"));
         prefs.setLastLibraryConfigUpdate(lastUpdate);
+        prefs.setLastLibraryConfigUpdateVersion(BuildConfig.VERSION_CODE);
 
         return updatedLibraries.size();
     }
@@ -101,5 +109,24 @@ public class LibraryConfigUpdateService extends IntentService {
                 if (writer != null) writer.close();
             }
         }
+
+        public void clearFiles() {
+            File[] files = dir.listFiles();
+            for (File file : files) {
+                file.delete();
+            }
+        }
+    }
+
+    public static void clear(Context context) {
+        File filesDir = new File(context.getFilesDir(), LIBRARIES_DIR);
+        filesDir.mkdirs();
+        File[] files = filesDir.listFiles();
+        for (File file : files) {
+            file.delete();
+        }
+
+        PreferenceDataSource prefs = new PreferenceDataSource(context);
+        prefs.clearLastLibraryConfigUpdate();
     }
 }

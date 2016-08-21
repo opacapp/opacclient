@@ -68,6 +68,7 @@ import de.geeksfactory.opacclient.reminder.SyncAccountAlarmListener;
 import de.geeksfactory.opacclient.searchfields.SearchField;
 import de.geeksfactory.opacclient.searchfields.SearchQuery;
 import de.geeksfactory.opacclient.storage.AccountDataSource;
+import de.geeksfactory.opacclient.storage.PreferenceDataSource;
 import de.geeksfactory.opacclient.storage.StarContentProvider;
 import de.geeksfactory.opacclient.utils.DebugTools;
 import de.geeksfactory.opacclient.utils.ErrorReporter;
@@ -252,13 +253,21 @@ public class OpacClient extends Application {
         String json;
 
         File filesDir = getLibrariesDir();
+        PreferenceDataSource prefs = getPreferenceDataSource();
 
-        if (fileExists(filesDir, filename)) {
+        if (fileExists(filesDir, filename)
+                && prefs.getLastLibraryConfigUpdateVersion() == BuildConfig.VERSION_CODE) {
+            // only use files if they were downloaded using the current app version
             json = Utils.readStreamToString(openFile(filesDir, filename));
         } else {
             json = Utils.readStreamToString(getAssets().open(ASSETS_BIBSDIR + "/" + filename));
         }
         return Library.fromJSON(ident, new JSONObject(json));
+    }
+
+    @NonNull
+    PreferenceDataSource getPreferenceDataSource() {
+        return new PreferenceDataSource(this);
     }
 
     InputStream openFile(File filesDir, String filename) throws FileNotFoundException {

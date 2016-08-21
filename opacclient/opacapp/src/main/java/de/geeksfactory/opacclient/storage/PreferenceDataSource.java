@@ -27,6 +27,7 @@ import org.joda.time.DateTime;
 import java.io.IOException;
 import java.io.InputStream;
 
+import de.geeksfactory.opacclient.BuildConfig;
 import de.geeksfactory.opacclient.utils.Utils;
 
 /**
@@ -35,6 +36,8 @@ import de.geeksfactory.opacclient.utils.Utils;
 public class PreferenceDataSource {
 
     private static final String LAST_LIBRARY_CONFIG_UPDATE = "last_library_config_update";
+    private static final String LAST_LIBRARY_CONFIG_UPDATE_VERSION =
+            "last_library_config_update_version";
     protected SharedPreferences sp;
     protected Context context;
 
@@ -47,7 +50,8 @@ public class PreferenceDataSource {
 
     public DateTime getLastLibraryConfigUpdate() {
         String lastUpdate = sp.getString(LAST_LIBRARY_CONFIG_UPDATE, null);
-        if (lastUpdate == null) {
+        if (lastUpdate == null || getLastLibraryConfigUpdateVersion() != BuildConfig.VERSION_CODE) {
+            // last update only makes sense if done using the current app version
             try {
                 InputStream is = context.getAssets().open(LAST_LIBRARY_CONFIG_UPDATE_FILE);
                 return new DateTime(Utils.readStreamToString(is));
@@ -60,5 +64,20 @@ public class PreferenceDataSource {
 
     public void setLastLibraryConfigUpdate(DateTime lastUpdate) {
         sp.edit().putString(LAST_LIBRARY_CONFIG_UPDATE, lastUpdate.toString()).apply();
+    }
+
+    public void clearLastLibraryConfigUpdate() {
+        sp.edit()
+          .remove(LAST_LIBRARY_CONFIG_UPDATE)
+          .remove(LAST_LIBRARY_CONFIG_UPDATE_VERSION)
+          .apply();
+    }
+
+    public int getLastLibraryConfigUpdateVersion() {
+        return sp.getInt(LAST_LIBRARY_CONFIG_UPDATE_VERSION, 0);
+    }
+
+    public void setLastLibraryConfigUpdateVersion(int lastUpdateVersion) {
+        sp.edit().putInt(LAST_LIBRARY_CONFIG_UPDATE_VERSION, lastUpdateVersion).apply();
     }
 }
