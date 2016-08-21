@@ -288,6 +288,7 @@
     <string name="preference_category_library_config">Library data</string>
     <string name="preference_update_library_config">Update library configuration</string>
     <string name="updating_library_config">Updating library configuration</string>
+    <string name="library_config_no_updates">No updated library configuration found.</string>
     <string name="library_config_update_success">Updated configuration for %d libraries.</string>
     <string name="library_config_update_failure">Could not update library configuration.</string>
     <string name="library_config_last_update">Last updated %s</string>

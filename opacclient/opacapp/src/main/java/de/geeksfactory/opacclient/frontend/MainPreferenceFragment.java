@@ -26,6 +26,10 @@ import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.design.widget.Snackbar;
+import android.support.v4.app.DialogFragment;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.preference.CheckBoxPreference;
 import android.support.v7.preference.ListPreference;
@@ -34,7 +38,6 @@ import android.support.v7.preference.PreferenceCategory;
 import android.support.v7.preference.PreferenceFragmentCompat;
 import android.support.v7.preference.PreferenceManager;
 import android.text.format.DateUtils;
-import android.widget.Toast;
 
 import org.joda.time.DateTime;
 
@@ -50,6 +53,7 @@ import de.geeksfactory.opacclient.webservice.LibraryConfigUpdateService;
 
 public class MainPreferenceFragment extends PreferenceFragmentCompat {
 
+    public static final String TAG_DIALOG = "dialog";
     protected Activity context;
 
     @SuppressWarnings("SameReturnValue") // Plus Edition compatibility
@@ -171,11 +175,11 @@ public class MainPreferenceFragment extends PreferenceFragmentCompat {
                                     receiver, successFilter);
                             LocalBroadcastManager.getInstance(context).registerReceiver(
                                     receiver, failureFilter);
-
                             Intent i = new Intent(context, LibraryConfigUpdateService.class);
                             context.startService(i);
-                            Toast.makeText(context, R.string.updating_library_config,
-                                    Toast.LENGTH_SHORT).show();
+                            DialogFragment newFragment = ProgressDialogFragment
+                                    .getInstance(R.string.updating_library_config);
+                            showDialog(newFragment);
                             updateLibraryConfig.setEnabled(false);
                             return false;
                         }
@@ -186,6 +190,26 @@ public class MainPreferenceFragment extends PreferenceFragmentCompat {
             updateLibraryConfig
                     .setSummary(getString(R.string.library_config_last_update, lastUpdateStr));
         }
+    }
+
+    private void showDialog(DialogFragment newFragment) {
+        FragmentTransaction ft = getFragmentManager().beginTransaction();
+        Fragment prev = getFragmentManager().findFragmentByTag(TAG_DIALOG);
+        if (prev != null) {
+            ft.remove(prev);
+        }
+        ft.addToBackStack(null);
+        newFragment.show(ft, TAG_DIALOG);
+    }
+
+    private void removeDialogs() {
+        FragmentTransaction ft = getFragmentManager().beginTransaction();
+        Fragment prev = getFragmentManager().findFragmentByTag(TAG_DIALOG);
+        if (prev != null) {
+            ft.remove(prev);
+        }
+        ft.addToBackStack(null);
+        ft.commit();
     }
 
     private class LibraryConfigServiceReceiver extends BroadcastReceiver {
@@ -200,26 +224,36 @@ public class MainPreferenceFragment extends PreferenceFragmentCompat {
             if (!MainPreferenceFragment.this.isAdded()) return;
 
             updateLibraryConfig.setEnabled(true);
+            removeDialogs();
 
-            switch (intent.getAction()) {
-                case LibraryConfigUpdateService.ACTION_SUCCESS:
-                    int count =
-                            intent.getIntExtra(LibraryConfigUpdateService.EXTRA_UPDATE_COUNT, 0);
-                    Toast.makeText(context,
-                            getString(R.string.library_config_update_success, count),
-                            Toast.LENGTH_SHORT).show();
+            if (getView() != null) {
+                switch (intent.getAction()) {
+                    case LibraryConfigUpdateService.ACTION_SUCCESS:
+                        int count =
+                                intent.getIntExtra(LibraryConfigUpdateService.EXTRA_UPDATE_COUNT,
+                                        0);
+                        String text;
+                        if (count > 0) {
+                            text = getString(R.string.library_config_update_success, count);
+                        } else {
+                            text = getString(R.string.library_config_no_updates);
+                        }
+                        Snackbar.make(getView(),
+                                text,
+                                Snackbar.LENGTH_SHORT).show();
 
-                    DateTime lastUpdate =
-                            new PreferenceDataSource(context).getLastLibraryConfigUpdate();
-                    CharSequence lastUpdateStr = DateUtils
-                            .getRelativeTimeSpanString(context, lastUpdate.getMillis(), true);
-                    updateLibraryConfig.setSummary(
-                            getString(R.string.library_config_last_update, lastUpdateStr));
-                    break;
-                case LibraryConfigUpdateService.ACTION_FAILURE:
-                    Toast.makeText(context, R.string.library_config_update_failure,
-                            Toast.LENGTH_SHORT).show();
-                    break;
+                        DateTime lastUpdate =
+                                new PreferenceDataSource(context).getLastLibraryConfigUpdate();
+                        CharSequence lastUpdateStr = DateUtils
+                                .getRelativeTimeSpanString(context, lastUpdate.getMillis(), true);
+                        updateLibraryConfig.setSummary(
+                                getString(R.string.library_config_last_update, lastUpdateStr));
+                        break;
+                    case LibraryConfigUpdateService.ACTION_FAILURE:
+                        Snackbar.make(getView(), R.string.library_config_update_failure,
+                                Snackbar.LENGTH_SHORT).show();
+                        break;
+                }
             }
             LocalBroadcastManager.getInstance(context).unregisterReceiver(this);
         }
