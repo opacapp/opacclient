@@ -1,0 +1,17 @@
+{
+  "account_supported": true,
+  "api": "sisis",
+  "city": "Pirna",
+  "country": "Deutschland",
+  "data": {
+    "baseurl": "https://bibliothekskatalog.pirna.de/webOPACClient",
+    "startparams": "Login=opac00"
+  },
+  "geo": [
+    50.9625175,
+    13.9419169
+  ],
+  "information": "https://www.pirna.de/Stadtbibliothek.483/",
+  "state": "Sachsen",
+  "title": "Stadtbibliothek"
+}

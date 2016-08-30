@@ -1,0 +1,683 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="de" lang="de">
+<!-- solution for: conditional-comments block downloads  -->
+<!--[if IE]><![endif]-->
+<head>
+    <style type="text/css">
+        @import url(css/aDISStandard.css);
+    </style>
+    <script src="js/aDISMain.js" type="text/javascript"></script>
+    <script src="js/fckeditor/fckeditor.js" type="text/javascript"></script>
+    <title> MSB-Katalog </title>
+    <script type="text/javascript">
+	var text = '';
+	window.defaultStatus=text;
+
+    </script>
+    <!--
+    (c) Software: aDIS/BMS und aDIS/Archiv by |a|S|tec| GmbH Berlin und Muenchen - www.astec.de
+    HTML-/CSS-Anpassungen: ena Webstudio - www.ena-webstudio.com
+    HTML-/CSS-Framework basiert grob auf Contao (c) Leo Feyer www.contao.org
+    Projekt: Stadtbibliothek Muenchen, OPAC03
+    Letztes Update: 11.05.2015
+    //-->
+
+    <meta http-equiv="x-ua-compatible" content="ie=edge"/>
+    <meta http-equiv="cache-control" content="no-cache"/>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8"/>
+    <meta http-equiv="content-style-type" content="text/css"/>
+    <meta http-equiv="content-script-type" content="text/javascript"/>
+    <meta http-equiv="content-language" content="de"/>
+    <meta name="language" content="de"/>
+    <link rel="shortcut icon" type="image/x-icon" href="/aDISWeb_stbm/images/favicon.ico"/>
+
+    <script type="text/javascript" src="/aDISWeb_stbm/js/cookies.js"></script>
+    <script type="text/javascript" src="/aDISWeb_stbm/js/efa_fontsize.js"></script>
+
+    <link rel="stylesheet" href="/aDISWeb_stbm/css/framework.css" type="text/css" media="screen"/>
+    <!--[if lte IE 7]>
+    <link rel="stylesheet" href="/aDISWeb_stbm/css/framework_iefixes.css" type="text/css"
+          media="screen"/><![endif]-->
+
+    <link rel="stylesheet" href="/aDISWeb_stbm/css/layout.css" type="text/css" media="screen"/>
+    <!--[if lt IE 7]>
+    <link rel="stylesheet" href="/aDISWeb_stbm/css/ieonly.css" type="text/css"
+          media="screen"/><![endif]-->
+    <!--[if IE 7]>
+    <link rel="stylesheet" href="/aDISWeb_stbm/css/ieonly7.css" type="text/css"
+          media="screen"/><![endif]-->
+    <!--[if gte IE 8]>
+    <link rel="stylesheet" href="/aDISWeb_stbm/css/ieonly8.css" type="text/css"
+          media="screen"/><![endif]-->
+    <link rel="stylesheet" type="text/css" href="/aDISWeb_stbm/css/print.css" media="print"/>
+    <!-- Mobildarstellung -->
+    <meta name="viewport" content="width=device-width; initial-scale=1.0"/>
+    <link rel="stylesheet" href="/aDISWeb_stbm/css/media.css" type="text/css"/>
+    <!--[if lt IE 9]>
+    <script type="text/javascript" src="/aDISWeb_stbm/js/css3-mediaqueries.js"></script>
+    <![endif]-->
+</head>
+
+<body id="top" class="zweier">
+<script type="text/javascript"><!--
+
+
+
+
+function EventTarget() {
+	this.handlers = [];
+	}
+EventTarget.prototype = {
+	constructor : EventTarget,
+	addhandler: function (type, handler) {
+		if (typeof this.handlers[type] == "undefined")
+			this.handlers[type] = [];
+		this.handlers[type].push(handler);
+		},
+	fire : function (event) {
+		if (this.handlers[event.type] instanceof Array) {
+			var handlers = this.handlers[event.type];
+			for (var i = 0; i < handlers.length; i++)
+				handlers[i](event);
+			}
+		}
+	};
+var eventHandler = new EventTarget();
+
+function setupHandlers()  {
+	document.onmousedown = docOnEvent;
+	document.onkeydown = docOnEvent;
+	document.onkeypress = docOnEvent;
+	document.onhelp = cancelF1;
+
+	initFormElements();
+	initIframes();
+	initScrollPos();
+	}
+function getDimensions()  {
+	document.forms[0].scrDim.value = screen.width + ";" + screen.height;
+	if (window.innerWidth)
+		document.forms[0].winDim.value = window.innerWidth + ";" + window.innerHeight;
+	else
+		document.forms[0].winDim.value = document.body.offsetWidth + ";" + document.body.offsetHeight;
+	node = document.getElementById("img_content");
+	if (node != undefined)
+		document.forms[0].imgDim.value = node.offsetWidth + ";" + node.offsetHeight;
+	}
+
+
+
+
+window.onload = function (e)
+{
+
+if (!e) var e = window.event;
+document.forms[0].scriptEnabled.value=true;
+if (self.specialOnLoad != undefined)
+	specialOnLoad(e);
+setupHandlers();
+getDimensions();
+
+
+
+}
+
+// -->
+</script>
+
+<div class="aDISMaske">
+    <form method="post" name="Form0"
+          action="/aDISWeb/app;jsessionid=CECF34F9EBDF45203531522D97221A7C"
+          onsubmit="return formOnSubmit();">
+        <input type="hidden" name="service"
+               value="direct/1/POOLSTPM@@@@@@@@_44008900_3106C800/$Form.form"/>
+        <input type="hidden" name="sp" value="S0"/>
+        <input type="hidden" name="Form0"
+               value="focus,keyCode,stz,source,selected,requestCount,scriptEnabled,scrollPos,scrDim,winDim,imgDim,$Toolbar,$Textfield,$Textfield$0,select,select$0,$Textfield$1,$FormConditional,textButton,$FormConditional$0,select$1,$FormConditional$1,textButton$0,$FormConditional$2,textButton$1,$Toolbar$0"/>
+        <input type="hidden" name="focus" value=""/>
+        <input type="hidden" name="keyCode" value="0"/>
+        <input type="hidden" name="stz" value=""/>
+        <input type="hidden" name="source" value=""/>
+        <input type="hidden" name="selected" value=""/>
+        <input type="hidden" name="requestCount" value="7"/>
+        <input type="hidden" name="scriptEnabled" value="T"/>
+        <input type="hidden" name="scrollPos" value="0"/>
+        <input type="hidden" name="scrDim" value=""/>
+        <input type="hidden" name="winDim" value=""/>
+        <input type="hidden" name="imgDim" value=""/>
+        <input type="hidden" name="$FormConditional" value="T"/>
+        <input type="hidden" name="$FormConditional$0" value="F"/>
+        <input type="hidden" name="$FormConditional$1" value="T"/>
+        <input type="hidden" name="$FormConditional$2" value="T"/>
+
+
+        <script type="text/javascript">
+  // <![CDATA[
+    if (efa_fontSize) efa_fontSize.efaInit();
+  // ]]>
+
+        </script>
+
+        <div id="wrapper">
+            <div id="wrapper_inside">
+
+                <div id="header" role="banner">
+                    <div class="inside">
+
+                        <ul id="sprunglinks">
+                            <li><a class="sprung" href="#main">Zum Hauptinhalt</a></li>
+                            <li><a class="sprung" href="#hnav">Zur Navigation - 1. Ebene</a></li>
+                            <li><a class="sprung" href="#left">Zur Navigation - Unterebenen</a></li>
+                        </ul>
+
+                        <p id="logo">
+                            <a href="/aDISWeb/app;jsessionid=CECF34F9EBDF45203531522D97221A7C?service=direct/1/POOLSTPM@@@@@@@@_44008900_3106C800/$InternalLink.directlink&amp;sp=S%24%24GFNV_1&amp;sp=SStartseite+Bibliothek%3DCW00&amp;requestCount=7"
+                               fld="$$GFNV_1" title="Zur Startseite Bibliothek">
+
+
+                                <img src="/aDISWeb_stbm/images/logo.png" width="281" height="40"
+                                     alt="Logo der Stadtbibliothek M&uuml;nchen"/>
+
+                            </a> <span class="outside">.</span>
+                        </p>
+                        <p id="logo2"><img src="/aDISWeb_stbm/images/logo2.png" width="323"
+                                           height="56" alt="Online-Katalog"/></p>
+
+                        <script type="text/javascript">
+          // <![CDATA[
+            if (efa_fontSize) document.write(efa_fontSize.allLinks);
+          // ]]>
+
+                        </script>
+
+                    </div>
+                </div>
+
+                <div id="container">
+                    <div id="container_inside">
+
+                        <h1 class="invisible">Navigation - 1. Ebene</h1>
+                        <div class="mod_navigation block" id="hnav" role="navigation">
+                            <div class="tree_div">
+                                <ul class="tree_ul">
+                                    <li class="tree_leaf_li">
+                                        <a href="/aDISWeb/app;jsessionid=CECF34F9EBDF45203531522D97221A7C?service=direct/1/POOLSTPM@@@@@@@@_44008900_3106C800/$Tree.treeNodes&amp;sp=SS0&amp;requestCount=7"
+                                           class="tree_leaf_a"><span>Bibliothek</span></a><span
+                                            class="outside">.</span></li>
+                                    <li class="tree_leaf_li">
+                                        <a href="/aDISWeb/app;jsessionid=CECF34F9EBDF45203531522D97221A7C?service=direct/1/POOLSTPM@@@@@@@@_44008900_3106C800/$Tree.treeNodes&amp;sp=SAD&amp;requestCount=7"
+                                           class="tree_leaf_a"><span>Literaturarchiv</span></a><span
+                                            class="outside">.</span></li>
+                                    <li class="tree_leaf_li">
+                                        <a href="http://www.muenchner-stadtbibliothek.de"
+                                           class="tree_leaf_a"><span>MSB online</span></a><span
+                                            class="outside">.</span></li>
+                                    <li class="tree_leaf_li">
+                                        <a href="/aDISWeb/app;jsessionid=CECF34F9EBDF45203531522D97221A7C?service=direct/1/POOLSTPM@@@@@@@@_44008900_3106C800/$Tree.treeNodes&amp;sp=SKV&amp;requestCount=7"
+                                           class="tree_leaf_a"><span>Kontakt</span></a><span
+                                            class="outside">.</span></li>
+                                </ul>
+                            </div>
+
+                        </div>
+
+                        <div class="block" id="topleiste">
+                            <!--aDIS Drucksschalter-->
+
+
+                            <p class="block" id="breadcrumb">Sie sind hier:
+                                <a href="/aDISWeb/app;jsessionid=CECF34F9EBDF45203531522D97221A7C?service=direct/1/POOLSTPM@@@@@@@@_44008900_3106C800/$InternalLink$0.directlink&amp;sp=S%24%24GFNV_1&amp;sp=SStartseite+Bibliothek%3DCW00&amp;requestCount=7"
+                                   fld="$$GFNV_1" title="">
+
+
+                                    Startseite Bibliothek
+
+                                </a> <span class="outside">.</span>
+                                &gt;
+<span class="navicl">
+
+
+
+
+<a href="/aDISWeb/app;jsessionid=CECF34F9EBDF45203531522D97221A7C?service=direct/1/POOLSTPM@@@@@@@@_44008900_3106C800/navpath.intlink.directlink&amp;sp=S%24%24GFNV_1&amp;sp=SS1AK&amp;requestCount=7"
+   fld="$$GFNV_1" title="Schnellsuche im Online-Katalog">
+    Schnellsuche im Online-Katalog
+
+</a>	<span class="outside">.</span>
+
+
+
+
+
+
+ >
+
+
+
+
+
+<a href="/aDISWeb/app;jsessionid=CECF34F9EBDF45203531522D97221A7C?service=direct/1/POOLSTPM@@@@@@@@_44008900_3106C800/navpath.intlink.directlink&amp;sp=S%24%24GFNV_2&amp;sp=SA%2FAK&amp;requestCount=7"
+   fld="$$GFNV_2" title="Trefferliste">
+    Trefferliste
+
+</a>	<span class="outside">.</span>
+
+
+
+
+</span> &gt;
+
+<span class="txtinsert">
+Bestellung vorbereiten
+</span>
+                            </p>
+                        </div>
+
+                        <div id="left">
+                            <div class="inside">
+
+                                <div class="block" id="navbox">
+                                    <div id="R20">
+<span class="bnzeig">
+Mustermann, Max: Sie sind angemeldet
+</span>
+
+
+<span class="mmzeig">
+
+</span>
+                                    </div>
+
+                                </div>
+
+                                <h1 class="invisible">Navigation - Unterebenen</h1>
+                                <div class="mod_navigation block" id="unav" role="navigation">
+                                    <div class="tree_div">
+                                        <ul class="tree_ul">
+                                            <li class="tree_leaf_li">
+                                                <span class="tree_disabled">Anmelden / Login</span>
+                                                <span class="outside">.</span></li>
+                                            <li class="tree_leaf_li">
+                                                <a href="/aDISWeb/app;jsessionid=CECF34F9EBDF45203531522D97221A7C?service=direct/1/POOLSTPM@@@@@@@@_44008900_3106C800/$Tree$0.treeNodes&amp;sp=SL2&amp;requestCount=7"
+                                                   class="tree_leaf_a"><span>Abmelden / Logout</span></a><span
+                                                    class="outside">.</span></li>
+                                            <li class="tree_leaf_li">
+                                                <a href="/aDISWeb/app;jsessionid=CECF34F9EBDF45203531522D97221A7C?service=direct/1/POOLSTPM@@@@@@@@_44008900_3106C800/$Tree$0.treeNodes&amp;sp=SBK&amp;requestCount=7"
+                                                   class="tree_leaf_a"><span>Benutzerkonto</span></a><span
+                                                    class="outside">.</span></li>
+                                            <li class="tree_leaf_li_sel">
+                                                <strong><span
+                                                        class="tree_strong">Einfache Suche</span></strong>
+                                            </li>
+                                            <li class="tree_leaf_li">
+                                                <a href="/aDISWeb/app;jsessionid=CECF34F9EBDF45203531522D97221A7C?service=direct/1/POOLSTPM@@@@@@@@_44008900_3106C800/$Tree$0.treeNodes&amp;sp=SS6&amp;requestCount=7"
+                                                   class="tree_leaf_a"><span>Erweiterte Suche</span></a><span
+                                                    class="outside">.</span></li>
+                                            <li class="tree_leaf_li">
+                                                <a href="/aDISWeb/app;jsessionid=CECF34F9EBDF45203531522D97221A7C?service=direct/1/POOLSTPM@@@@@@@@_44008900_3106C800/$Tree$0.treeNodes&amp;sp=SWI&amp;requestCount=7"
+                                                   class="tree_leaf_a"><span>Medienlisten</span></a><span
+                                                    class="outside">.</span></li>
+                                            <li class="tree_leaf_li">
+                                                <a href="/aDISWeb/app;jsessionid=CECF34F9EBDF45203531522D97221A7C?service=direct/1/POOLSTPM@@@@@@@@_44008900_3106C800/$Tree$0.treeNodes&amp;sp=SAP&amp;requestCount=7"
+                                                   class="tree_leaf_a"><span>Meine Suchprofile</span></a><span
+                                                    class="outside">.</span></li>
+                                            <li class="tree_leaf_li">
+                                                <a href="http://www.munzinger.de/search/login?portalid=52372"
+                                                   target="&quot;_blank&quot;"
+                                                   class="tree_leaf_a"><span>Munzinger</span></a><span
+                                                    class="outside">.</span></li>
+                                            <li class="tree_leaf_li">
+                                                <a href="http://www.muenchner-stadtbibliothek.de/footer/impressum/"
+                                                   target="&quot;_blank&quot;"
+                                                   class="tree_leaf_a"><span>Impressum</span></a><span
+                                                    class="outside">.</span></li>
+                                            <li class="tree_leaf_li">
+                                                <a href="http://www.muenchner-stadtbibliothek.de/footer/datenschutz/"
+                                                   target="&quot;_blank&quot;"
+                                                   class="tree_leaf_a"><span>Datenschutz</span></a><span
+                                                    class="outside">.</span></li>
+                                        </ul>
+                                    </div>
+
+                                </div>
+
+                                <div class="clear"></div>
+
+                            </div>
+                        </div>
+                        <div id="main" role="main">
+                            <div class="inside">
+                                <div class="block">
+
+                                    <h1><span class="invisible">Aktuelle Seite: </span>
+
+<span class="txtinsert">
+Bestellung vorbereiten
+</span>
+                                    </h1>
+                                    <div class="toolbar_div">
+                                        <ul class="toolbar_ul">
+                                            <li class="toolbar_li">
+                                                <input type="image"
+                                                       src="/aDISWeb/images/POOLSTPM@@@@@@@@/gif/POOLSTPM@@@@@@@@_44006900_23D52500.gif;jsessionid=CECF34F9EBDF45203531522D97221A7C"
+                                                       alt="Zur&#252;ck zur vorherigen Seite"
+                                                       id="Toolbar_0" name="$Toolbar_0"
+                                                       title="Zur&#252;ck zur vorherigen Seite"
+                                                       onmouseover="self.status='Zur&#252;ck zur vorherigen Seite';return true;"
+                                                       onmouseout="self.status='';"
+                                                       class="toolbar_img"/><label
+                                                    for="Toolbar_0"><span
+                                                    class="toolbar_txt">Zur&#252;ck</span></label>
+                                            </li>
+                                            <li class="toolbar_li">
+                                                <input type="image"
+                                                       src="/aDISWeb/images/POOLSTPM@@@@@@@@/gif/POOLSTPM@@@@@@@@_44005F00_23D7C800.gif;jsessionid=CECF34F9EBDF45203531522D97221A7C"
+                                                       alt="Beenden der Recherche" id="Toolbar_1"
+                                                       name="$Toolbar_1"
+                                                       title="Beenden der Recherche"
+                                                       onmouseover="self.status='Beenden der Recherche';return true;"
+                                                       onmouseout="self.status='';"
+                                                       class="toolbar_img"/><label
+                                                    for="Toolbar_1"><span
+                                                    class="toolbar_txt">Beenden</span></label></li>
+                                            <li class="toolbar_li">
+                                                <input type="image"
+                                                       src="/aDISWeb/images/POOLSTPM@@@@@@@@/gif/POOLSTPM@@@@@@@@_44005900_23D52500.gif;jsessionid=CECF34F9EBDF45203531522D97221A7C"
+                                                       alt="Hilfe zur Suchmaske" id="Toolbar_3"
+                                                       name="$Toolbar_3" title="Hilfe zur Suchmaske"
+                                                       onmouseover="self.status='Hilfe zur Suchmaske';return true;"
+                                                       onmouseout="self.status='';"
+                                                       class="toolbar_img"/><label
+                                                    for="Toolbar_3"><span
+                                                    class="toolbar_txt">Hilfe</span></label></li>
+                                        </ul>
+                                        <div style="clear:both"></div>
+                                    </div>
+                                    <div class="fsgrp">
+
+
+                                        <div id="R03">
+                                            <div id="OPACLI" style="  margin-left:2%; width:99%; "
+                                                 class="aDISListe">
+                                                <div class="html_div"
+                                                     style="width:99%; height:100%;">
+                                                    <p>Für die Direktbestellung bitte Ausweisnummer und Passwort eintragen. Ausgabeort und Benachrichtigungsoption wählen. Die E-Mail-Benachrichtigung ist entgeltfrei, die Benachrichtigung mit Brief kostet 0,70 EUR.</p>
+                                                    <p>
+                                                        <strong>Titel: Harry Potter and the philosopher's stone</strong>
+                                                    </p></div>
+                                            </div>
+                                        </div>
+
+
+                                        <fieldset id="FSET01" class="grp">
+                                            <legend class="leg">Angaben für die Direktbestellung</legend>
+                                            <div id="F28">
+                                                <label for="L#NAME_1"><span class="fbz-text"
+                                                                            style="position:absolute;  left:1.7%; width:21.2%;overflow:hidden; max-width:21.2%;">Name</span>
+                                                </label>
+                                                <input type="text" name="$Textfield" fld="L#NAME_1"
+                                                       value="Mustermann, Max" disabled="disabled"
+                                                       id="L#NAME_1"
+                                                       style="position:absolute;  left:24.9%; width:72.3%;"/>
+                                            </div>
+                                            <br/><span style="line-height:12px;">&nbsp;</span><br/>
+                                            <div id="F32">
+                                                <label for="L#AUSW_1"><span class="fbz-text"
+                                                                            style="position:absolute;  left:1.7%; width:21.2%;overflow:hidden; max-width:21.2%;">Ausweisnummer</span>
+                                                </label>
+                                                <input type="text" name="$Textfield$0"
+                                                       fld="L#AUSW_1" value="XXXXXXXXXX"
+                                                       disabled="disabled" id="L#AUSW_1"
+                                                       style="position:absolute;  left:24.9%; width:72.3%;"/>
+                                            </div>
+                                            <br/><span style="line-height:12px;">&nbsp;</span><br/>
+                                            <div id="F14">
+                                                <label for="AUSGAB_1"><span class="fbz-text"
+                                                                            style="position:absolute;  left:1.7%; width:21.2%;overflow:hidden; max-width:21.2%;">Ausgabeort</span>
+                                                </label>
+                                                <select name="select" id="AUSGAB_1"
+                                                        style="position:absolute;  left:24.9%; width:72.3%;">
+                                                    <option value=""></option>
+                                                    <option value="Allach-Untermenzing">Allach-Untermenzing</option>
+                                                    <option value="Berg am Laim">Berg am Laim</option>
+                                                    <option value="Bogenhausen">Bogenhausen</option>
+                                                    <option value="Fahrbibliothek 2">Fahrbibliothek 2</option>
+                                                    <option value="Fahrbibliothek 3">Fahrbibliothek 3</option>
+                                                    <option value="Fahrbibliothek 4">Fahrbibliothek 4</option>
+                                                    <option value="Fahrbibliothek 5">Fahrbibliothek 5</option>
+                                                    <option value="Fahrbibliothek 6">Fahrbibliothek 6</option>
+                                                    <option value="F&#252;rstenried">F&#252;rstenried</option>
+                                                    <option value="Giesing">Giesing</option>
+                                                    <option value="Hadern">Hadern</option>
+                                                    <option value="Hasenbergl">Hasenbergl</option>
+                                                    <option value="Isarvorstadt">Isarvorstadt</option>
+                                                    <option value="Laim">Laim</option>
+                                                    <option value="Maxvorstadt">Maxvorstadt</option>
+                                                    <option value="Milbertshofen">Milbertshofen</option>
+                                                    <option value="Moosach">Moosach</option>
+                                                    <option value="Neuaubing">Neuaubing</option>
+                                                    <option value="Neuhausen">Neuhausen</option>
+                                                    <option value="Neuperlach">Neuperlach</option>
+                                                    <option value="Pasing">Pasing</option>
+                                                    <option value="Ramersdorf">Ramersdorf</option>
+                                                    <option value="Schwabing">Schwabing</option>
+                                                    <option value="Sendling">Sendling</option>
+                                                    <option value="Soziale Bibliotheksdienste / Mobiler Mediendienst">Soziale Bibliotheksdienste / Mobiler Mediendienst</option>
+                                                    <option value="Waldtrudering">Waldtrudering</option>
+                                                    <option value="Westend">Westend</option>
+                                                    <option value="Zentralbibliothek Am Gasteig">Zentralbibliothek Am Gasteig</option>
+                                                    <option value="Zentralbibliothek Am Gasteig / Kinder- und Jugendbibliothek">Zentralbibliothek Am Gasteig / Kinder- und Jugendbibliothek</option>
+                                                    <option value="Zentralbibliothek Am Gasteig / Lesesaal">Zentralbibliothek Am Gasteig / Lesesaal</option>
+                                                </select>
+                                            </div>
+                                            <br/><span style="line-height:12px;">&nbsp;</span><br/>
+                                            <div id="F33">
+
+<span style="position:absolute;  left:1.7%; width:66.4%;">
+Benachrichting per Brief - kostenpflichtig
+</span>
+
+                                                <select name="select$0"
+                                                        style="position:absolute;  left:70.3%; width:27.0%;">
+                                                    <option value=""></option>
+                                                    <option value="Ja">Ja</option>
+                                                    <option value="Nein">Nein</option>
+                                                </select>
+                                            </div>
+                                            <br/><span style="line-height:12px;">&nbsp;</span><br/>
+                                            <div id="F30">
+
+<span style="position:absolute;  left:1.7%; width:66.4%;">
+Vormerkung nur bis zum (TT.MM.JJJJ)
+</span>
+
+                                                <input type="text" name="$Textfield$1" fld="VVORB_1"
+                                                       onkeypress="checkNumeric(event,this);"
+                                                       style="position:absolute;  left:70.3%; width:27.0%;"/>
+                                            </div>
+                                            <br/><span style="line-height:12px;">&nbsp;</span><br/>
+                                            <div id="F12">
+
+<span class="zellgx" style="position:absolute;  left:1.7%; width:96.2%;">
+
+</span>
+                                            </div>
+                                            <br/><span style="line-height:12px;">&nbsp;</span><br/>
+                                            <div id="F24">
+                                                <p>
+<span style="position:absolute;  left:1.6%; width:47.5%; align=right;">
+Aufnahme einer Vormerkung
+</span>
+                                                </p>
+
+
+                                                <input type="submit" name="textButton"
+                                                       value="Weiter zur Bestellung"
+                                                       class="buttong_l" fld="$$GFBO_3"
+                                                       style="position:absolute;  left:51.8%; "/>
+
+
+                                            </div>
+                                            <br/><span style="line-height:12px;">&nbsp;</span><br/>
+                                            <div id="F25">
+                                                <p>
+<span style="position:absolute;  left:1.6%; width:47.5%; align=right;">
+
+</span>
+                                                </p>
+
+                                            </div>
+                                            <br/><span style="line-height:12px;">&nbsp;</span><br/>
+                                            <br class="klar"/></fieldset>
+
+
+                                        <fieldset id="OPACGP" class="grp">
+                                            <legend class="leg">Sie können sich Informationen zu einer Bibliothek anzeigen lassen</legend>
+                                            <div id="F18">
+                                                <label for="AUSGAZ_1"><span class="fbz-text"
+                                                                            style="position:absolute;  left:1.6%; width:11.8%;overflow:hidden; max-width:11.8%;">Bibliothek</span>
+                                                </label>
+                                                <select name="select$1" id="AUSGAZ_1"
+                                                        style="position:absolute;  left:21.7%; width:77.0%;">
+                                                    <option value=""></option>
+                                                    <option value="Allach-Untermenzing">Allach-Untermenzing</option>
+                                                    <option value="Berg am Laim">Berg am Laim</option>
+                                                    <option value="Bogenhausen">Bogenhausen</option>
+                                                    <option value="Fahrbibliothek 2">Fahrbibliothek 2</option>
+                                                    <option value="Fahrbibliothek 3">Fahrbibliothek 3</option>
+                                                    <option value="Fahrbibliothek 4">Fahrbibliothek 4</option>
+                                                    <option value="Fahrbibliothek 5">Fahrbibliothek 5</option>
+                                                    <option value="Fahrbibliothek 6">Fahrbibliothek 6</option>
+                                                    <option value="F&#252;rstenried">F&#252;rstenried</option>
+                                                    <option value="Giesing">Giesing</option>
+                                                    <option value="Hadern">Hadern</option>
+                                                    <option value="Hasenbergl">Hasenbergl</option>
+                                                    <option value="Isarvorstadt">Isarvorstadt</option>
+                                                    <option value="Laim">Laim</option>
+                                                    <option value="Maxvorstadt">Maxvorstadt</option>
+                                                    <option value="Milbertshofen">Milbertshofen</option>
+                                                    <option value="Moosach">Moosach</option>
+                                                    <option value="Neuaubing">Neuaubing</option>
+                                                    <option value="Neuhausen">Neuhausen</option>
+                                                    <option value="Neuperlach">Neuperlach</option>
+                                                    <option value="Pasing">Pasing</option>
+                                                    <option value="Ramersdorf">Ramersdorf</option>
+                                                    <option value="Schwabing">Schwabing</option>
+                                                    <option value="Sendling">Sendling</option>
+                                                    <option value="Soziale Bibliotheksdienste / Mobiler Mediendienst">Soziale Bibliotheksdienste / Mobiler Mediendienst</option>
+                                                    <option value="Waldtrudering">Waldtrudering</option>
+                                                    <option value="Westend">Westend</option>
+                                                    <option value="Zentralbibliothek Am Gasteig">Zentralbibliothek Am Gasteig</option>
+                                                    <option value="Zentralbibliothek Am Gasteig / Kinder- und Jugendbibliothek">Zentralbibliothek Am Gasteig / Kinder- und Jugendbibliothek</option>
+                                                    <option value="Zentralbibliothek Am Gasteig / Lesesaal">Zentralbibliothek Am Gasteig / Lesesaal</option>
+                                                </select>
+                                            </div>
+                                            <br/><span style="line-height:12px;">&nbsp;</span><br/>
+                                            <div id="F16">
+
+
+                                                <input type="submit" name="textButton$0"
+                                                       value="Informationen anzeigen"
+                                                       class="buttong_l" fld="$$GFBO_7"
+                                                       style="position:absolute;  left:1.6%; "/>
+
+
+                                            </div>
+                                            <br/><span style="line-height:12px;">&nbsp;</span><br/>
+                                            <br class="klar"/></fieldset>
+
+
+                                        <div id="R05" class="links">
+
+                                            <input type="submit" name="textButton$1"
+                                                   value="Zur&#252;ck" class="buttong"
+                                                   fld="$$GFBO_5"/>
+
+
+                                        </div>
+                                        <br class="klar"/>
+
+
+                                    </div>
+                                    <div class="clear"></div>
+                                    <br></br>
+                                    <div class="toolbar_div">
+                                        <ul class="toolbar_ul">
+                                            <li class="toolbar_li">
+                                                <input type="image"
+                                                       src="/aDISWeb/images/POOLSTPM@@@@@@@@/gif/POOLSTPM@@@@@@@@_44006900_23D52500.gif;jsessionid=CECF34F9EBDF45203531522D97221A7C"
+                                                       alt="Zur&#252;ck zur vorherigen Seite"
+                                                       id="Toolbar$0_0" name="$Toolbar$0_0"
+                                                       title="Zur&#252;ck zur vorherigen Seite"
+                                                       onmouseover="self.status='Zur&#252;ck zur vorherigen Seite';return true;"
+                                                       onmouseout="self.status='';"
+                                                       class="toolbar_img"/><label
+                                                    for="Toolbar$0_0"><span
+                                                    class="toolbar_txt">Zur&#252;ck</span></label>
+                                            </li>
+                                            <li class="toolbar_li">
+                                                <input type="image"
+                                                       src="/aDISWeb/images/POOLSTPM@@@@@@@@/gif/POOLSTPM@@@@@@@@_44005F00_23D7C800.gif;jsessionid=CECF34F9EBDF45203531522D97221A7C"
+                                                       alt="Beenden der Recherche" id="Toolbar$0_1"
+                                                       name="$Toolbar$0_1"
+                                                       title="Beenden der Recherche"
+                                                       onmouseover="self.status='Beenden der Recherche';return true;"
+                                                       onmouseout="self.status='';"
+                                                       class="toolbar_img"/><label
+                                                    for="Toolbar$0_1"><span
+                                                    class="toolbar_txt">Beenden</span></label></li>
+                                            <li class="toolbar_li">
+                                                <input type="image"
+                                                       src="/aDISWeb/images/POOLSTPM@@@@@@@@/gif/POOLSTPM@@@@@@@@_44005900_23D52500.gif;jsessionid=CECF34F9EBDF45203531522D97221A7C"
+                                                       alt="Hilfe zur Suchmaske" id="Toolbar$0_3"
+                                                       name="$Toolbar$0_3"
+                                                       title="Hilfe zur Suchmaske"
+                                                       onmouseover="self.status='Hilfe zur Suchmaske';return true;"
+                                                       onmouseout="self.status='';"
+                                                       class="toolbar_img"/><label
+                                                    for="Toolbar$0_3"><span
+                                                    class="toolbar_txt">Hilfe</span></label></li>
+                                        </ul>
+                                        <div style="clear:both"></div>
+                                    </div>
+                                    <div class="clear"></div>
+
+                                </div>
+                            </div>
+                            <div id="clear"></div>
+
+                        </div>
+
+                    </div>
+                </div>
+
+                <div id="footer">
+                    <div class="inside">
+
+                        <p id="foot1">
+                            &copy; M&uuml;nchner Stadtbibliothek
+                        </p>
+
+                        <p class="block" id="goingup">
+                            <a href="#wrapper" class="sprung">nach oben</a>
+                        </p>
+                        <div class="clear"></div>
+
+                        <p id="credits">
+                            <a href="http://www.astec.de">Barrierefreie Bibliothekssoftware - OPAC von |a|S|tec| GmbH</a> |
+                            <a href="http://www.ena-webstudio.com">ena Webdesign - Berlin</a>
+                        </p>
+
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <script src="/aDISWeb_stbm/js/yaml-focusfix.js" type="text/javascript"></script>
+
+    </form>
+</div>
+</body>
+</html>

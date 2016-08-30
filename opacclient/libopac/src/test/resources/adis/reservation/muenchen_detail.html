@@ -1,0 +1,920 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="de" lang="de">
+<!-- solution for: conditional-comments block downloads  -->
+<!--[if IE]><![endif]-->
+<head>
+    <style type="text/css">
+        @import url(css/aDISStandard.css);
+    </style>
+    <script src="js/aDISMain.js" type="text/javascript"></script>
+    <script src="js/fckeditor/fckeditor.js" type="text/javascript"></script>
+    <title> MSB-Katalog </title>
+    <script type="text/javascript">
+	var text = '';
+	window.defaultStatus=text;
+
+    </script>
+    <!--
+    (c) Software: aDIS/BMS und aDIS/Archiv by |a|S|tec| GmbH Berlin und Muenchen - www.astec.de
+    HTML-/CSS-Anpassungen: ena Webstudio - www.ena-webstudio.com
+    HTML-/CSS-Framework basiert grob auf Contao (c) Leo Feyer www.contao.org
+    Projekt: Stadtbibliothek Muenchen, OPAC02
+    Letztes Update: 07.03.2013
+    //-->
+
+    <meta http-equiv="x-ua-compatible" content="ie=edge"/>
+    <meta http-equiv="cache-control" content="no-cache"/>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8"/>
+    <meta http-equiv="content-style-type" content="text/css"/>
+    <meta http-equiv="content-script-type" content="text/javascript"/>
+    <meta http-equiv="content-language" content="de"/>
+    <meta name="language" content="de"/>
+    <link rel="shortcut icon" type="image/x-icon" href="/aDISWeb_stbm/images/favicon.ico"/>
+
+    <script type="text/javascript" src="/aDISWeb_stbm/js/cookies.js"></script>
+    <script type="text/javascript" src="/aDISWeb_stbm/js/efa_fontsize.js"></script>
+
+    <link rel="stylesheet" href="/aDISWeb_stbm/css/framework.css" type="text/css" media="screen"/>
+    <!--[if lte IE 7]>
+    <link rel="stylesheet" href="/aDISWeb_stbm/css/framework_iefixes.css" type="text/css"
+          media="screen"/><![endif]-->
+
+    <link rel="stylesheet" href="/aDISWeb_stbm/css/layout.css" type="text/css" media="screen"/>
+    <!--[if lt IE 7]>
+    <link rel="stylesheet" href="/aDISWeb_stbm/css/ieonly.css" type="text/css"
+          media="screen"/><![endif]-->
+    <!--[if IE 7]>
+    <link rel="stylesheet" href="/aDISWeb_stbm/css/ieonly7.css" type="text/css"
+          media="screen"/><![endif]-->
+    <!--[if gte IE 8]>
+    <link rel="stylesheet" href="/aDISWeb_stbm/css/ieonly8.css" type="text/css"
+          media="screen"/><![endif]-->
+    <link rel="stylesheet" type="text/css" href="/aDISWeb_stbm/css/print.css" media="print"/>
+    <!-- Mobildarstellung -->
+    <meta name="viewport" content="width=device-width; initial-scale=1.0"/>
+    <link rel="stylesheet" href="/aDISWeb_stbm/css/media.css" type="text/css"/>
+    <!--[if lt IE 9]>
+    <script type="text/javascript" src="/aDISWeb_stbm/js/css3-mediaqueries.js"></script>
+    <![endif]-->
+</head>
+
+<body id="top" class="dreier">
+<script type="text/javascript"><!--
+
+
+
+
+function EventTarget() {
+	this.handlers = [];
+	}
+EventTarget.prototype = {
+	constructor : EventTarget,
+	addhandler: function (type, handler) {
+		if (typeof this.handlers[type] == "undefined")
+			this.handlers[type] = [];
+		this.handlers[type].push(handler);
+		},
+	fire : function (event) {
+		if (this.handlers[event.type] instanceof Array) {
+			var handlers = this.handlers[event.type];
+			for (var i = 0; i < handlers.length; i++)
+				handlers[i](event);
+			}
+		}
+	};
+var eventHandler = new EventTarget();
+
+function setupHandlers()  {
+	document.onmousedown = docOnEvent;		
+	document.onkeydown = docOnEvent;	
+	document.onkeypress = docOnEvent;
+	document.onhelp = cancelF1;
+	
+	initFormElements();
+	initIframes();
+	initScrollPos();
+	}
+function getDimensions()  {
+	document.forms[0].scrDim.value = screen.width + ";" + screen.height;
+	if (window.innerWidth)
+		document.forms[0].winDim.value = window.innerWidth + ";" + window.innerHeight;
+	else
+		document.forms[0].winDim.value = document.body.offsetWidth + ";" + document.body.offsetHeight;
+	node = document.getElementById("img_content");
+	if (node != undefined)
+		document.forms[0].imgDim.value = node.offsetWidth + ";" + node.offsetHeight;
+	}
+
+
+
+
+window.onload = function (e)
+{
+
+if (!e) var e = window.event;
+document.forms[0].scriptEnabled.value=true;
+if (self.specialOnLoad != undefined)
+	specialOnLoad(e);
+setupHandlers();
+getDimensions();
+
+
+
+}
+
+// -->
+</script>
+
+<div class="aDISMaske">
+    <form method="post" name="Form0"
+          action="/aDISWeb/app;jsessionid=CECF34F9EBDF45203531522D97221A7C"
+          onsubmit="return formOnSubmit();">
+        <input type="hidden" name="service"
+               value="direct/1/POOLSTPM@@@@@@@@_4400A700_312D0380/$Form.form"/>
+        <input type="hidden" name="sp" value="S0"/>
+        <input type="hidden" name="Form0"
+               value="focus,keyCode,stz,source,selected,requestCount,scriptEnabled,scrollPos,scrDim,winDim,imgDim,$FormConditional,textButton,$FormConditional$0,textButton$0,$FormConditional$1,$FormConditional$2,textButton$1,$FormConditional$3,$FormConditional$4,textButton$2,$Toolbar,$Toolbar$0"/>
+        <input type="hidden" name="focus" value=""/>
+        <input type="hidden" name="keyCode" value="0"/>
+        <input type="hidden" name="stz" value=""/>
+        <input type="hidden" name="source" value=""/>
+        <input type="hidden" name="selected" value=""/>
+        <input type="hidden" name="requestCount" value="10"/>
+        <input type="hidden" name="scriptEnabled" value="T"/>
+        <input type="hidden" name="scrollPos" value="0"/>
+        <input type="hidden" name="scrDim" value=""/>
+        <input type="hidden" name="winDim" value=""/>
+        <input type="hidden" name="imgDim" value=""/>
+        <input type="hidden" name="$FormConditional" value="T"/>
+        <input type="hidden" name="$FormConditional$0" value="T"/>
+        <input type="hidden" name="$FormConditional$1" value="F"/>
+        <input type="hidden" name="$FormConditional$2" value="T"/>
+        <input type="hidden" name="$FormConditional$3" value="F"/>
+        <input type="hidden" name="$FormConditional$4" value="T"/>
+
+
+        <script type="text/javascript">
+  // <![CDATA[
+    if (efa_fontSize) efa_fontSize.efaInit();
+  // ]]>
+
+        </script>
+
+        <div id="wrapper">
+            <div id="wrapper_inside">
+
+                <div id="header" role="banner">
+                    <div class="inside">
+
+                        <ul id="sprunglinks">
+                            <li><a class="sprung" href="#main">Zum Hauptinhalt</a></li>
+                            <li><a class="sprung" href="#hnav">Zur Navigation - 1. Ebene</a></li>
+                            <li><a class="sprung" href="#left">Zur Navigation - Unterebenen</a></li>
+                            <li><a class="sprung" href="#right">Zu den weiteren Bedienelementen</a>
+                            </li>
+                        </ul>
+
+                        <p id="logo"><a href="http://www.muenchner-stadtbibliothek.de/"
+                                        title="Zur Startseite Bibliothek"><img
+                                src="/aDISWeb_stbm/images/logo.png" width="281" height="40"
+                                alt="Logo der Stadtbibliothek M&uuml;nchen"/></a></p>
+                        <p id="logo2"><img src="/aDISWeb_stbm/images/logo2.png" width="323"
+                                           height="56" alt="Online-Katalog"/></p>
+
+                        <script type="text/javascript">
+          // <![CDATA[
+          if (efa_fontSize) document.write(efa_fontSize.allLinks);
+          // ]]>
+
+                        </script>
+
+                    </div>
+                </div>
+
+                <div id="container">
+                    <div id="container_inside">
+
+                        <h1 class="invisible">Navigation - 1. Ebene</h1>
+                        <div class="mod_navigation block" id="hnav" role="navigation">
+                            <div class="tree_div">
+                                <ul class="tree_ul">
+                                    <li class="tree_leaf_li">
+                                        <a href="/aDISWeb/app;jsessionid=CECF34F9EBDF45203531522D97221A7C?service=direct/1/POOLSTPM@@@@@@@@_4400A700_312D0380/$Tree.treeNodes&amp;sp=SS0&amp;requestCount=10"
+                                           class="tree_leaf_a"><span>Bibliothek</span></a><span
+                                            class="outside">.</span></li>
+                                    <li class="tree_leaf_li">
+                                        <a href="/aDISWeb/app;jsessionid=CECF34F9EBDF45203531522D97221A7C?service=direct/1/POOLSTPM@@@@@@@@_4400A700_312D0380/$Tree.treeNodes&amp;sp=SAD&amp;requestCount=10"
+                                           class="tree_leaf_a"><span>Literaturarchiv</span></a><span
+                                            class="outside">.</span></li>
+                                    <li class="tree_leaf_li">
+                                        <a href="http://www.muenchner-stadtbibliothek.de"
+                                           class="tree_leaf_a"><span>MSB online</span></a><span
+                                            class="outside">.</span></li>
+                                    <li class="tree_leaf_li">
+                                        <a href="/aDISWeb/app;jsessionid=CECF34F9EBDF45203531522D97221A7C?service=direct/1/POOLSTPM@@@@@@@@_4400A700_312D0380/$Tree.treeNodes&amp;sp=SKV&amp;requestCount=10"
+                                           class="tree_leaf_a"><span>Kontakt</span></a><span
+                                            class="outside">.</span></li>
+                                </ul>
+                            </div>
+
+                        </div>
+
+                        <div class="block" id="topleiste">
+                            <p id="druckversion">
+
+
+                                <input type="submit" name="textButton" value="Druckversion"
+                                       fld="$$GFBO_88"/>
+
+
+                            </p>
+
+
+                            <p class="block" id="breadcrumb">
+                                Sie sind hier:
+                                <a href="/aDISWeb/app;jsessionid=CECF34F9EBDF45203531522D97221A7C?service=direct/1/POOLSTPM@@@@@@@@_4400A700_312D0380/$InternalLink.directlink&amp;sp=S%24%24GFNV_1&amp;sp=SStartseite+Bibliothek%3DCW00&amp;requestCount=10"
+                                   fld="$$GFNV_1" title="">
+
+
+                                    Startseite Bibliothek
+
+                                </a> <span class="outside">.</span>
+                                &gt; <span class="navicl">
+
+
+
+
+<a href="/aDISWeb/app;jsessionid=CECF34F9EBDF45203531522D97221A7C?service=direct/1/POOLSTPM@@@@@@@@_4400A700_312D0380/navpath.intlink.directlink&amp;sp=S%24%24GFNV_1&amp;sp=SS1AK&amp;requestCount=10"
+   fld="$$GFNV_1" title="Schnellsuche im Online-Katalog">
+    Schnellsuche im Online-Katalog
+
+</a>	<span class="outside">.</span>
+
+
+
+
+
+
+ > 
+
+
+
+
+
+<a href="/aDISWeb/app;jsessionid=CECF34F9EBDF45203531522D97221A7C?service=direct/1/POOLSTPM@@@@@@@@_4400A700_312D0380/navpath.intlink.directlink&amp;sp=S%24%24GFNV_2&amp;sp=SA%2FAK&amp;requestCount=10"
+   fld="$$GFNV_2" title="Trefferliste">
+    Trefferliste
+
+</a>	<span class="outside">.</span>
+
+
+
+
+</span> &gt;
+
+<span class="txtinsert">
+Vollanzeige Katalog
+</span>
+                            </p>
+                        </div>
+
+                        <div id="left">
+                            <div class="inside">
+
+                                <div class="block" id="navbox">
+                                    <div id="R20">
+<span class="bnzeig">
+Mustermann, Max: Sie sind angemeldet
+</span>
+
+
+<span class="mmzeig">
+
+</span>
+                                    </div>
+
+                                </div>
+
+                                <h1 class="invisible">Navigation - Unterebenen</h1>
+                                <div class="mod_navigation block" id="unav" role="navigation">
+                                    <div class="tree_div">
+                                        <ul class="tree_ul">
+                                            <li class="tree_leaf_li">
+                                                <span class="tree_disabled">Anmelden / Login</span>
+                                                <span class="outside">.</span></li>
+                                            <li class="tree_leaf_li">
+                                                <a href="/aDISWeb/app;jsessionid=CECF34F9EBDF45203531522D97221A7C?service=direct/1/POOLSTPM@@@@@@@@_4400A700_312D0380/$Tree$0.treeNodes&amp;sp=SL2&amp;requestCount=10"
+                                                   class="tree_leaf_a"><span>Abmelden / Logout</span></a><span
+                                                    class="outside">.</span></li>
+                                            <li class="tree_leaf_li">
+                                                <a href="/aDISWeb/app;jsessionid=CECF34F9EBDF45203531522D97221A7C?service=direct/1/POOLSTPM@@@@@@@@_4400A700_312D0380/$Tree$0.treeNodes&amp;sp=SBK&amp;requestCount=10"
+                                                   class="tree_leaf_a"><span>Benutzerkonto</span></a><span
+                                                    class="outside">.</span></li>
+                                            <li class="tree_leaf_li_sel">
+                                                <strong><span
+                                                        class="tree_strong">Einfache Suche</span></strong>
+                                            </li>
+                                            <li class="tree_leaf_li">
+                                                <a href="/aDISWeb/app;jsessionid=CECF34F9EBDF45203531522D97221A7C?service=direct/1/POOLSTPM@@@@@@@@_4400A700_312D0380/$Tree$0.treeNodes&amp;sp=SS6&amp;requestCount=10"
+                                                   class="tree_leaf_a"><span>Erweiterte Suche</span></a><span
+                                                    class="outside">.</span></li>
+                                            <li class="tree_leaf_li">
+                                                <a href="/aDISWeb/app;jsessionid=CECF34F9EBDF45203531522D97221A7C?service=direct/1/POOLSTPM@@@@@@@@_4400A700_312D0380/$Tree$0.treeNodes&amp;sp=SWI&amp;requestCount=10"
+                                                   class="tree_leaf_a"><span>Medienlisten</span></a><span
+                                                    class="outside">.</span></li>
+                                            <li class="tree_leaf_li">
+                                                <a href="/aDISWeb/app;jsessionid=CECF34F9EBDF45203531522D97221A7C?service=direct/1/POOLSTPM@@@@@@@@_4400A700_312D0380/$Tree$0.treeNodes&amp;sp=SAP&amp;requestCount=10"
+                                                   class="tree_leaf_a"><span>Meine Suchprofile</span></a><span
+                                                    class="outside">.</span></li>
+                                            <li class="tree_leaf_li">
+                                                <a href="http://www.munzinger.de/search/login?portalid=52372"
+                                                   target="&quot;_blank&quot;"
+                                                   class="tree_leaf_a"><span>Munzinger</span></a><span
+                                                    class="outside">.</span></li>
+                                            <li class="tree_leaf_li">
+                                                <a href="http://www.muenchner-stadtbibliothek.de/footer/impressum/"
+                                                   target="&quot;_blank&quot;"
+                                                   class="tree_leaf_a"><span>Impressum</span></a><span
+                                                    class="outside">.</span></li>
+                                            <li class="tree_leaf_li">
+                                                <a href="http://www.muenchner-stadtbibliothek.de/footer/datenschutz/"
+                                                   target="&quot;_blank&quot;"
+                                                   class="tree_leaf_a"><span>Datenschutz</span></a><span
+                                                    class="outside">.</span></li>
+                                        </ul>
+                                    </div>
+
+                                </div>
+
+                                <div class="clear"></div>
+
+                            </div>
+                        </div>
+                        <div id="right">
+                            <div class="inside">
+
+                                <h1 class="invisible">Weitere Bedienelemente</h1>
+                                <p class="invisible"><a href="#main">Zum Hauptinhalt</a></p>
+
+                                <div class="block">
+
+
+                                    <div id="R03"><p>
+<span style="   width:89%;">
+Gesucht wurde mit: "Freie Suche = harry potter;  Kunden-Tags = harry potter". Treffer: 14 von 286
+</span>
+                                    </p>
+                                    </div>
+                                    <div id="R04">
+                                        <p>
+
+
+                                            <input type="submit" name="textButton$0"
+                                                   value="Bestellen/Vormerken" class="wichtig"
+                                                   fld="$$GFBO_8"/>
+
+
+                                        </p>
+                                        <h3>Darstellung &#228;ndern:</h3>
+                                        <p>
+
+
+                                            <input type="submit" name="textButton$1"
+                                                   value="Zitierformat" class="buttong"
+                                                   fld="$$GFBO_7"/>
+
+
+                                        </p>
+                                    </div>
+                                    <div id="R30">
+                                        <div class="html_div" style="width:100%; height:100%;">
+                                            <div class="aDISListe">
+                                                <div ID=R001 style="margin-top:10px;"
+                                                     class="clearfix">
+                                                    <div style=" width:97%; float:left; overflow:hidden;">
+                                                        <img src='/aDISWeb_stbm/images/0Sterne.gif'
+                                                             border='0' alt='Null Sterne'
+                                                             title='ohne Bewertung'/><br/> ohne Bewertung
+                                                    </div>
+                                                </div>
+                                                <div ID=R002 style="margin-top:10px;"
+                                                     class="clearfix">
+                                                    <div style=" width:97%; float:left; overflow:hidden;">
+                                                        <div class="aktion"><a
+                                                                href="/aDISWeb/app;jsessionid=CECF34F9EBDF45203531522D97221A7C?service=direct/1/POOLSTPM@@@@@@@@_4400A700_312D0380/ZLA2_SPALTR_1&sp=S*AZISTRZ%3D%2527AB%2527&requestCount=10">Medium bewerten</a>
+                                                        </div>
+                                                    </div>
+                                                    <div ID=R003 style="margin-top:10px;"
+                                                         class="clearfix">
+                                                        <div style=" width:97%; float:left; overflow:hidden;"></div>
+                                                    </div>
+                                                </div>
+                                                <div ID=R004 style="margin-top:10px;"
+                                                     class="clearfix">
+                                                    <div style=" width:97%; float:left; overflow:hidden;">
+                                                        <div class="aktion"><a
+                                                                href="/aDISWeb/app;jsessionid=CECF34F9EBDF45203531522D97221A7C?service=direct/1/POOLSTPM@@@@@@@@_4400A700_312D0380/ZLA2_SPALTR_1&sp=S*AZISTRZ%3D%2527AN%2527&requestCount=10">Medium kommentieren</a>
+                                                        </div>
+                                                    </div>
+                                                    <div ID=R005 style="margin-top:10px;"
+                                                         class="clearfix">
+                                                        <div style=" width:97%; float:left; overflow:hidden;"></div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div id="R12">
+                                        <p><br/><span style="line-height:12px;">&nbsp;</span><br/>
+
+                                        </p>
+                                    </div>
+
+                                    <div id="R10">
+                                        <h2 class="invisible">Wichtige Aktionen:</h2>
+                                        <p><br/><span style="line-height:12px;">&nbsp;</span><br/>
+
+
+                                            <input type="submit" name="textButton$2"
+                                                   value="Bestellen/Vormerken" class="wichtig"
+                                                   fld="$$GFBO_10"/>
+
+
+                                        </p>
+                                    </div>
+
+
+                                </div>
+
+                                <div class="block">
+
+
+                                </div>
+
+                            </div>
+                        </div>
+                        <div id="main" role="main">
+                            <div class="inside">
+                                <div class="block">
+
+                                    <h1><span class="outside">Aktuelle Seite: </span>
+<span class="txtinsert">
+Vollanzeige Katalog
+</span>
+                                    </h1>
+                                    <div class="toolbar_div">
+                                        <ul class="toolbar_ul">
+                                            <li class="toolbar_li">
+                                                <input type="image"
+                                                       src="/aDISWeb/images/POOLSTPM@@@@@@@@/gif/POOLSTPM@@@@@@@@_44006900_23D52500.gif;jsessionid=CECF34F9EBDF45203531522D97221A7C"
+                                                       alt="Zur&#252;ck zur vorherigen Seite"
+                                                       id="Toolbar_0" name="$Toolbar_0"
+                                                       title="Zur&#252;ck zur vorherigen Seite"
+                                                       onmouseover="self.status='Zur&#252;ck zur vorherigen Seite';return true;"
+                                                       onmouseout="self.status='';"
+                                                       class="toolbar_img"/><label
+                                                    for="Toolbar_0"><span
+                                                    class="toolbar_txt">Zur&#252;ck</span></label>
+                                            </li>
+                                            <li class="toolbar_li">
+                                                <input type="image"
+                                                       src="/aDISWeb/images/POOLSTPM@@@@@@@@/gif/POOLSTPM@@@@@@@@_44006400_23D52500.gif;jsessionid=CECF34F9EBDF45203531522D97221A7C"
+                                                       alt="Zur&#252;ck zur Trefferliste"
+                                                       id="Toolbar_1" name="$Toolbar_1"
+                                                       title="Zur&#252;ck zur Trefferliste"
+                                                       onmouseover="self.status='Zur&#252;ck zur Trefferliste';return true;"
+                                                       onmouseout="self.status='';"
+                                                       class="toolbar_img"/><label
+                                                    for="Toolbar_1"><span
+                                                    class="toolbar_txt">Trefferliste</span></label>
+                                            </li>
+                                            <li class="toolbar_li">
+                                                <input type="image"
+                                                       src="/aDISWeb/images/POOLSTPM@@@@@@@@/gif/POOLSTPM@@@@@@@@_44006300_23D7C800.gif;jsessionid=CECF34F9EBDF45203531522D97221A7C"
+                                                       alt="Zur&#252;ck zur Suche" id="Toolbar_2"
+                                                       name="$Toolbar_2"
+                                                       title="Zur&#252;ck zur Suche"
+                                                       onmouseover="self.status='Zur&#252;ck zur Suche';return true;"
+                                                       onmouseout="self.status='';"
+                                                       class="toolbar_img"/><label
+                                                    for="Toolbar_2"><span
+                                                    class="toolbar_txt">Neue Suche</span></label>
+                                            </li>
+                                            <li class="toolbar_li">
+                                                <input type="image"
+                                                       src="/aDISWeb/images/POOLSTPM@@@@@@@@/gif/POOLSTPM@@@@@@@@_44005B00_295D1000.gif;jsessionid=CECF34F9EBDF45203531522D97221A7C"
+                                                       alt="An den Anfang bl&#228;ttern"
+                                                       id="Toolbar_3" name="$Toolbar_3"
+                                                       title="An den Anfang bl&#228;ttern"
+                                                       onmouseover="self.status='An den Anfang bl&#228;ttern';return true;"
+                                                       onmouseout="self.status='';"
+                                                       class="toolbar_img"/><label
+                                                    for="Toolbar_3"><span
+                                                    class="toolbar_txt">Anfang</span></label></li>
+                                            <li class="toolbar_li">
+                                                <input type="image"
+                                                       src="/aDISWeb/images/POOLSTPM@@@@@@@@/gif/POOLSTPM@@@@@@@@_44005E00_295D1000.gif;jsessionid=CECF34F9EBDF45203531522D97221A7C"
+                                                       alt="R&#252;ckw&#228;rts bl&#228;ttern"
+                                                       id="Toolbar_4" name="$Toolbar_4"
+                                                       title="R&#252;ckw&#228;rts bl&#228;ttern"
+                                                       onmouseover="self.status='R&#252;ckw&#228;rts bl&#228;ttern';return true;"
+                                                       onmouseout="self.status='';"
+                                                       class="toolbar_img"/><label
+                                                    for="Toolbar_4"><span
+                                                    class="toolbar_txt">R&#252;ckw&#228;rts</span></label>
+                                            </li>
+                                            <li class="toolbar_li">
+                                                <input type="image"
+                                                       src="/aDISWeb/images/POOLSTPM@@@@@@@@/gif/POOLSTPM@@@@@@@@_44006000_295D1000.gif;jsessionid=CECF34F9EBDF45203531522D97221A7C"
+                                                       alt="Vorw&#228;rts bl&#228;ttern"
+                                                       id="Toolbar_5" name="$Toolbar_5"
+                                                       title="Vorw&#228;rts bl&#228;ttern"
+                                                       onmouseover="self.status='Vorw&#228;rts bl&#228;ttern';return true;"
+                                                       onmouseout="self.status='';"
+                                                       class="toolbar_img"/><label
+                                                    for="Toolbar_5"><span
+                                                    class="toolbar_txt">Vorw&#228;rts</span></label>
+                                            </li>
+                                            <li class="toolbar_li">
+                                                <input type="image"
+                                                       src="/aDISWeb/images/POOLSTPM@@@@@@@@/gif/POOLSTPM@@@@@@@@_44005C00_295D1000.gif;jsessionid=CECF34F9EBDF45203531522D97221A7C"
+                                                       alt="Ans Ende bl&#228;ttern" id="Toolbar_6"
+                                                       name="$Toolbar_6"
+                                                       title="Ans Ende bl&#228;ttern"
+                                                       onmouseover="self.status='Ans Ende bl&#228;ttern';return true;"
+                                                       onmouseout="self.status='';"
+                                                       class="toolbar_img"/><label
+                                                    for="Toolbar_6"><span
+                                                    class="toolbar_txt">Ende</span></label></li>
+                                            <li class="toolbar_li">
+                                                <input type="image"
+                                                       src="/aDISWeb/images/POOLSTPM@@@@@@@@/gif/POOLSTPM@@@@@@@@_44005F00_23D7C800.gif;jsessionid=CECF34F9EBDF45203531522D97221A7C"
+                                                       alt="Beenden der Recherche" id="Toolbar_8"
+                                                       name="$Toolbar_8"
+                                                       title="Beenden der Recherche"
+                                                       onmouseover="self.status='Beenden der Recherche';return true;"
+                                                       onmouseout="self.status='';"
+                                                       class="toolbar_img"/><label
+                                                    for="Toolbar_8"><span
+                                                    class="toolbar_txt">Beenden</span></label></li>
+                                            <li class="toolbar_li">
+                                                <input type="image"
+                                                       src="/aDISWeb/images/POOLSTPM@@@@@@@@/gif/POOLSTPM@@@@@@@@_44005900_23D52500.gif;jsessionid=CECF34F9EBDF45203531522D97221A7C"
+                                                       alt="Hilfe zur Vollanzeige" id="Toolbar_9"
+                                                       name="$Toolbar_9"
+                                                       title="Hilfe zur Vollanzeige"
+                                                       onmouseover="self.status='Hilfe zur Vollanzeige';return true;"
+                                                       onmouseout="self.status='';"
+                                                       class="toolbar_img"/><label
+                                                    for="Toolbar_9"><span
+                                                    class="toolbar_txt">Hilfe</span></label></li>
+                                        </ul>
+                                        <div style="clear:both"></div>
+                                    </div>
+                                    <div class="fsgrp">
+                                        <div id="R06">
+                                            <div class="aDISListe">
+                                                <div class="html_div"
+                                                     style="width:100%; height:100%;">
+                                                    <div class="aDISListe">
+                                                        <table class="gi"
+                                                               summary="Auflistung der Kategorien des ausgew�hlten Treffers"
+                                                               width="100%">
+                                                            <colgroup>
+                                                                <col align="left" valign=top
+                                                                     width="25%"/>
+                                                                <col align="left" valign=top
+                                                                     width="75%"/>
+                                                            </colgroup>
+                                                            <thead>
+                                                            <tr>
+                                                                <th colspan="2"
+                                                                    class="thseite">Katalogangaben
+                                                                </th>
+                                                            </tr>
+                                                            </thead>
+                                                            <tbody>
+                                                            <tr>
+                                                                <th scope="row"
+                                                                    class="spaltelinks">Medienart
+                                                                </th>
+                                                                <td class="spalterechts"><img
+                                                                        class='icon' height='16'
+                                                                        width='16'
+                                                                        src='/aDISWeb/icons/buch_rot_a.gif'
+                                                                        alt='Buch'
+                                                                        title='Buch'/> [Buch]
+                                                                </td>
+                                                            </tr>
+                                                            <tr>
+                                                                <th scope="row"
+                                                                    class="spaltelinks">Datensatznummer
+                                                                </th>
+                                                                <td class="spalterechts">04037183</td>
+                                                            </tr>
+                                                            <tr>
+                                                                <th scope="row"
+                                                                    class="spaltelinks">Autor
+                                                                </td>
+                                                                <td class="spalterechts"><a
+                                                                        href="/aDISWeb/app;jsessionid=CECF34F9EBDF45203531522D97221A7C?service=direct/1/POOLSTPM@@@@@@@@_4400A700_312D0380/ZLA2_HTMLGL_1&sp=SPE00109552&requestCount=10">Rowling, Joanne K. </a>
+                                                                </td>
+                                                            </tr>
+                                                            <tr>
+                                                                <th scope="row"
+                                                                    class="spaltelinks">Titel
+                                                                </th>
+                                                                <td class="spalterechts">Harry Potter and the philosopher&#039;s stone / J. K. Rowling</td>
+                                                            </tr>
+                                                            <tr>
+                                                                <th scope="row"
+                                                                    class="spaltelinks">erschienen
+                                                                </th>
+                                                                <td class="spalterechts">London : Bloomsbury, 2014</td>
+                                                            </tr>
+                                                            <tr>
+                                                                <th scope="row"
+                                                                    class="spaltelinks">Umfang / Seiten
+                                                                </th>
+                                                                <td class="spalterechts">331 S.</td>
+                                                            </tr>
+                                                            <tr>
+                                                                <th scope="row"
+                                                                    class="spaltelinks">Fußnoten
+                                                                </th>
+                                                                <td class="spalterechts">ab 11
+                                                                    <br/>Dt. Ausg. u.d.T.: Harry Potter und der Stein der Weisen
+                                                                </td>
+                                                            </tr>
+                                                            <tr>
+                                                                <th scope="row"
+                                                                    class="spaltelinks">Sprache
+                                                                </th>
+                                                                <td class="spalterechts">Englisch</td>
+                                                            </tr>
+                                                            <tr>
+                                                                <th scope="row"
+                                                                    class="spaltelinks">ISBN
+                                                                </th>
+                                                                <td class="spalterechts">978-1-4088-5565-2</td>
+                                                            </tr>
+                                                            <tr>
+                                                                <th scope="row"
+                                                                    class="spaltelinks">Interessenskreis
+                                                                </td>
+                                                                <td class="spalterechts">Kinder / Englisch</td>
+                                                            </tr>
+                                                            <tr>
+                                                                <th scope="row"
+                                                                    class="spaltelinks">Systematik
+                                                                </th>
+                                                                <td class="spalterechts"><a
+                                                                        href="/aDISWeb/app;jsessionid=CECF34F9EBDF45203531522D97221A7C?service=direct/1/POOLSTPM@@@@@@@@_4400A700_312D0380/ZLA2_HTMLGL_1&sp=SSY00120942&requestCount=10">eu : Erzählungen, Romane für 9 - 12jährige, englisch</a>
+                                                                </td>
+                                                            </tr>
+                                                            <tr>
+                                                                <th scope="row"
+                                                                    class="spaltelinks">Vormerkungen
+                                                                </td>
+                                                                <td class="spalterechts">1</td>
+                                                            </tr>
+                                                            </tbody>
+                                                        </table>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+
+                                        <div id="R07">
+                                            <div id="OPACLI" class="txtmsk">
+                                                <div class="html_div"
+                                                     style="width:100%; height:100%;"><h2
+                                                        class='spalteueber'>Exemplarangaben</h2>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div id="R08">
+                                            <div class="rTable_div">
+                                                <table class="rTable_table" colCase="[, , , ]"
+                                                       colDisable="[true, true, true, true, true]"
+                                                       width="100%">
+                                                    <colgroup>
+                                                        <col width="23%"></col>
+                                                        <col width="20%"></col>
+                                                        <col width="22%"></col>
+                                                        <col width="22%"></col>
+                                                        <col width="22"></col>
+                                                    </colgroup>
+                                                    <thead class="rTable_thead">
+                                                    <tr>
+                                                        <th scope="col"
+                                                            class="rTable_th">Bibliothek
+                                                        </th>
+                                                        <th scope="col" class="rTable_th">Standort
+                                                        </th>
+                                                        <th scope="col" class="rTable_th">Signatur
+                                                        </th>
+                                                        <th scope="col"
+                                                            class="rTable_th">Leihfrist
+                                                        </th>
+                                                        <th scope="col"
+                                                            class="rTable_th">Verfügbarkeit
+                                                        </th>
+                                                    </tr>
+                                                    </thead>
+                                                    <tbody>
+
+                                                    <tr class="rTable_tr_even">
+
+                                                        <td class="rTable_td_text">
+
+                                                            Zentralbibliothek Am Gasteig / Kinder- und Jugendbibliothek
+
+                                                        </td>
+
+                                                        <td class="rTable_td_text">
+
+                                                            EG Englisch
+
+                                                        </td>
+
+                                                        <td class="rTable_td_text">
+
+                                                            u ROW
+
+                                                        </td>
+
+                                                        <td class="rTable_td_text">
+
+                                                            28-Tage Ausleihe
+
+                                                        </td>
+
+                                                        <td class="rTable_td_text">
+
+                                                            ausgeliehen - Fällig am: 8.8.2016
+
+                                                        </td>
+
+                                                    </tr>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+
+
+                                        </div>
+
+
+                                    </div>
+                                    <div class="clear"></div>
+                                    <br></br>
+                                    <div class="toolbar_div">
+                                        <ul class="toolbar_ul">
+                                            <li class="toolbar_li">
+                                                <input type="image"
+                                                       src="/aDISWeb/images/POOLSTPM@@@@@@@@/gif/POOLSTPM@@@@@@@@_44006900_23D52500.gif;jsessionid=CECF34F9EBDF45203531522D97221A7C"
+                                                       alt="Zur&#252;ck zur vorherigen Seite"
+                                                       id="Toolbar$0_0" name="$Toolbar$0_0"
+                                                       title="Zur&#252;ck zur vorherigen Seite"
+                                                       onmouseover="self.status='Zur&#252;ck zur vorherigen Seite';return true;"
+                                                       onmouseout="self.status='';"
+                                                       class="toolbar_img"/><label
+                                                    for="Toolbar$0_0"><span
+                                                    class="toolbar_txt">Zur&#252;ck</span></label>
+                                            </li>
+                                            <li class="toolbar_li">
+                                                <input type="image"
+                                                       src="/aDISWeb/images/POOLSTPM@@@@@@@@/gif/POOLSTPM@@@@@@@@_44006400_23D52500.gif;jsessionid=CECF34F9EBDF45203531522D97221A7C"
+                                                       alt="Zur&#252;ck zur Trefferliste"
+                                                       id="Toolbar$0_1" name="$Toolbar$0_1"
+                                                       title="Zur&#252;ck zur Trefferliste"
+                                                       onmouseover="self.status='Zur&#252;ck zur Trefferliste';return true;"
+                                                       onmouseout="self.status='';"
+                                                       class="toolbar_img"/><label
+                                                    for="Toolbar$0_1"><span
+                                                    class="toolbar_txt">Trefferliste</span></label>
+                                            </li>
+                                            <li class="toolbar_li">
+                                                <input type="image"
+                                                       src="/aDISWeb/images/POOLSTPM@@@@@@@@/gif/POOLSTPM@@@@@@@@_44006300_23D7C800.gif;jsessionid=CECF34F9EBDF45203531522D97221A7C"
+                                                       alt="Zur&#252;ck zur Suche" id="Toolbar$0_2"
+                                                       name="$Toolbar$0_2"
+                                                       title="Zur&#252;ck zur Suche"
+                                                       onmouseover="self.status='Zur&#252;ck zur Suche';return true;"
+                                                       onmouseout="self.status='';"
+                                                       class="toolbar_img"/><label
+                                                    for="Toolbar$0_2"><span
+                                                    class="toolbar_txt">Neue Suche</span></label>
+                                            </li>
+                                            <li class="toolbar_li">
+                                                <input type="image"
+                                                       src="/aDISWeb/images/POOLSTPM@@@@@@@@/gif/POOLSTPM@@@@@@@@_44005B00_295D1000.gif;jsessionid=CECF34F9EBDF45203531522D97221A7C"
+                                                       alt="An den Anfang bl&#228;ttern"
+                                                       id="Toolbar$0_3" name="$Toolbar$0_3"
+                                                       title="An den Anfang bl&#228;ttern"
+                                                       onmouseover="self.status='An den Anfang bl&#228;ttern';return true;"
+                                                       onmouseout="self.status='';"
+                                                       class="toolbar_img"/><label
+                                                    for="Toolbar$0_3"><span
+                                                    class="toolbar_txt">Anfang</span></label></li>
+                                            <li class="toolbar_li">
+                                                <input type="image"
+                                                       src="/aDISWeb/images/POOLSTPM@@@@@@@@/gif/POOLSTPM@@@@@@@@_44005E00_295D1000.gif;jsessionid=CECF34F9EBDF45203531522D97221A7C"
+                                                       alt="R&#252;ckw&#228;rts bl&#228;ttern"
+                                                       id="Toolbar$0_4" name="$Toolbar$0_4"
+                                                       title="R&#252;ckw&#228;rts bl&#228;ttern"
+                                                       onmouseover="self.status='R&#252;ckw&#228;rts bl&#228;ttern';return true;"
+                                                       onmouseout="self.status='';"
+                                                       class="toolbar_img"/><label
+                                                    for="Toolbar$0_4"><span
+                                                    class="toolbar_txt">R&#252;ckw&#228;rts</span></label>
+                                            </li>
+                                            <li class="toolbar_li">
+                                                <input type="image"
+                                                       src="/aDISWeb/images/POOLSTPM@@@@@@@@/gif/POOLSTPM@@@@@@@@_44006000_295D1000.gif;jsessionid=CECF34F9EBDF45203531522D97221A7C"
+                                                       alt="Vorw&#228;rts bl&#228;ttern"
+                                                       id="Toolbar$0_5" name="$Toolbar$0_5"
+                                                       title="Vorw&#228;rts bl&#228;ttern"
+                                                       onmouseover="self.status='Vorw&#228;rts bl&#228;ttern';return true;"
+                                                       onmouseout="self.status='';"
+                                                       class="toolbar_img"/><label
+                                                    for="Toolbar$0_5"><span
+                                                    class="toolbar_txt">Vorw&#228;rts</span></label>
+                                            </li>
+                                            <li class="toolbar_li">
+                                                <input type="image"
+                                                       src="/aDISWeb/images/POOLSTPM@@@@@@@@/gif/POOLSTPM@@@@@@@@_44005C00_295D1000.gif;jsessionid=CECF34F9EBDF45203531522D97221A7C"
+                                                       alt="Ans Ende bl&#228;ttern" id="Toolbar$0_6"
+                                                       name="$Toolbar$0_6"
+                                                       title="Ans Ende bl&#228;ttern"
+                                                       onmouseover="self.status='Ans Ende bl&#228;ttern';return true;"
+                                                       onmouseout="self.status='';"
+                                                       class="toolbar_img"/><label
+                                                    for="Toolbar$0_6"><span
+                                                    class="toolbar_txt">Ende</span></label></li>
+                                            <li class="toolbar_li">
+                                                <input type="image"
+                                                       src="/aDISWeb/images/POOLSTPM@@@@@@@@/gif/POOLSTPM@@@@@@@@_44005F00_23D7C800.gif;jsessionid=CECF34F9EBDF45203531522D97221A7C"
+                                                       alt="Beenden der Recherche" id="Toolbar$0_8"
+                                                       name="$Toolbar$0_8"
+                                                       title="Beenden der Recherche"
+                                                       onmouseover="self.status='Beenden der Recherche';return true;"
+                                                       onmouseout="self.status='';"
+                                                       class="toolbar_img"/><label
+                                                    for="Toolbar$0_8"><span
+                                                    class="toolbar_txt">Beenden</span></label></li>
+                                            <li class="toolbar_li">
+                                                <input type="image"
+                                                       src="/aDISWeb/images/POOLSTPM@@@@@@@@/gif/POOLSTPM@@@@@@@@_44005900_23D52500.gif;jsessionid=CECF34F9EBDF45203531522D97221A7C"
+                                                       alt="Hilfe zur Vollanzeige" id="Toolbar$0_9"
+                                                       name="$Toolbar$0_9"
+                                                       title="Hilfe zur Vollanzeige"
+                                                       onmouseover="self.status='Hilfe zur Vollanzeige';return true;"
+                                                       onmouseout="self.status='';"
+                                                       class="toolbar_img"/><label
+                                                    for="Toolbar$0_9"><span
+                                                    class="toolbar_txt">Hilfe</span></label></li>
+                                        </ul>
+                                        <div style="clear:both"></div>
+                                    </div>
+                                    <div class="clear"></div>
+
+                                </div>
+                            </div>
+                            <div id="clear"></div>
+
+                        </div>
+
+                    </div>
+                </div>
+
+                <div id="footer">
+                    <div class="inside">
+
+                        <p id="foot1">
+                            &copy; M&uuml;nchner Stadtbibliothek
+                        </p>
+
+                        <p class="block" id="goingup">
+                            <a href="#wrapper" class="sprung">nach oben</a>
+                        </p>
+                        <div class="clear"></div>
+
+                        <p id="credits">
+                            <a href="http://www.astec.de">Barrierefreie Bibliothekssoftware - OPAC von |a|S|tec| GmbH</a> |
+                            <a href="http://www.ena-webstudio.com">ena Webdesign - Berlin</a>
+                        </p>
+
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <script src="/aDISWeb_stbm/js/yaml-focusfix.js" type="text/javascript"></script>
+    </form>
+</div>
+</body>
+</html>

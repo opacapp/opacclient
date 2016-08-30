@@ -501,16 +501,7 @@ public class Adis extends BaseApi implements OpacApi {
             nr++;
         }
 
-        s_pageform = new ArrayList<>();
-        for (Element input : doc.select("input, select")) {
-            if (!"image".equals(input.attr("type"))
-                    && !"submit".equals(input.attr("type"))
-                    && !"checkbox".equals(input.attr("type"))
-                    && !"".equals(input.attr("name"))) {
-                s_pageform.add(new BasicNameValuePair(input.attr("name"), input
-                        .attr("value")));
-            }
-        }
+        updatePageform(doc);
         s_lastpage = page;
 
         return new SearchRequestResult(results, total_result_count, page);
@@ -610,6 +601,24 @@ public class Adis extends BaseApi implements OpacApi {
             doc = htmlPost(opac_url + ";jsessionid=" + s_sid, form);
             // Yep, two times.
         }
+
+        // Reset
+        updatePageform(doc);
+        nvpairs = s_pageform;
+        nvpairs.add(new BasicNameValuePair("$Toolbar_1.x", "1"));
+        nvpairs.add(new BasicNameValuePair("$Toolbar_1.y", "1"));
+        parse_search_wrapped(htmlPost(opac_url + ";jsessionid=" + s_sid, nvpairs), 1);
+        nvpairs = s_pageform;
+        nvpairs.add(new BasicNameValuePair("$Toolbar_3.x", "1"));
+        nvpairs.add(new BasicNameValuePair("$Toolbar_3.y", "1"));
+        parse_search_wrapped(htmlPost(opac_url + ";jsessionid=" + s_sid, nvpairs), 1);
+
+        return parseResult(id, doc);
+    }
+
+    DetailledItem parseResult(String id, Document doc)
+            throws IOException, OpacErrorException {
+        List<NameValuePair> nvpairs;
         DetailledItem res = new DetailledItem();
 
         if (doc.select("#R001 img").size() == 1) {
@@ -698,29 +707,8 @@ public class Adis extends BaseApi implements OpacApi {
             res.addCopy(copy);
         }
 
-        // Reset
-        s_pageform = new ArrayList<>();
-        for (Element input : doc.select("input, select")) {
-            if (!"image".equals(input.attr("type"))
-                    && !"submit".equals(input.attr("type"))
-                    && !"checkbox".equals(input.attr("type"))
-                    && !"".equals(input.attr("name"))) {
-                s_pageform.add(new BasicNameValuePair(input.attr("name"), input
-                        .attr("value")));
-            }
-        }
-        nvpairs = s_pageform;
-        nvpairs.add(new BasicNameValuePair("$Toolbar_1.x", "1"));
-        nvpairs.add(new BasicNameValuePair("$Toolbar_1.y", "1"));
-        parse_search_wrapped(htmlPost(opac_url + ";jsessionid=" + s_sid, nvpairs), 1);
-        nvpairs = s_pageform;
-        nvpairs.add(new BasicNameValuePair("$Toolbar_3.x", "1"));
-        nvpairs.add(new BasicNameValuePair("$Toolbar_3.y", "1"));
-        parse_search_wrapped(htmlPost(opac_url + ";jsessionid=" + s_sid, nvpairs), 1);
-
         res.setId(""); // null would be overridden by the UI, because there _is_
         // an id,< we just can not use it.
-
         return res;
     }
 
@@ -831,11 +819,11 @@ public class Adis extends BaseApi implements OpacApi {
                 for (Element opt : doc.select("select[name=select$0] option")) {
                     if (opt.text().trim().length() > 0) {
                         Map<String, String> selopt = new HashMap<>();
-                        selopt.put("key", opt.val());
+                        selopt.put("value", opt.text());
                         if (selection != null) {
-                            selopt.put("value", opt.text() + "_SEP_" + selection);
+                            selopt.put("key", opt.val() + "_SEP_" + selection);
                         } else {
-                            selopt.put("value", opt.text());
+                            selopt.put("key", opt.val());
                         }
                         sel.add(selopt);
                     }
@@ -854,9 +842,10 @@ public class Adis extends BaseApi implements OpacApi {
                 }
                 if (doc.select("#FSET01 select[name=select$0]").size() > 0 && selection != null) {
                     if (selection.contains("_SEP_")) {
-                        doc.select("#AUSGAB_1").attr("value", selection.split("_SEP_")[0]);
+                        doc.select("#FSET01 select[name=select$0]")
+                           .attr("value", selection.split("_SEP_")[0]);
                     } else {
-                        doc.select("#AUSGAB_1").attr("value", selection);
+                        doc.select("#FSET01 select[name=select$0]").attr("value", selection);
                     }
                 }
                 if (doc.select("#BENJN_1").size() > 0) {
@@ -898,6 +887,24 @@ public class Adis extends BaseApi implements OpacApi {
                             "Reservation abschicken"));
                     res = new ReservationResult(MultiStepResult.Status.OK);
                     doc = htmlPost(opac_url + ";jsessionid=" + s_sid, form);
+
+                    if (doc.select("input[name=textButton]").attr("value")
+                           .contains("kostenpflichtig bestellen")) {
+                        // Munich
+                        form = new ArrayList<>();
+                        for (Element input : doc.select("input, select")) {
+                            if (!"image".equals(input.attr("type"))
+                                    && !"submit".equals(input.attr("type"))
+                                    && !"checkbox".equals(input.attr("type"))
+                                    && !"".equals(input.attr("name"))) {
+                                form.add(new BasicNameValuePair(input.attr("name"),
+                                        input.attr("value")));
+                            }
+                        }
+                        form.add(new BasicNameValuePair("textButton",
+                                doc.select("input[name=textButton]").first().attr("value")));
+                        doc = htmlPost(opac_url + ";jsessionid=" + s_sid, form);
+                    }
 
                     if (doc.select(".message h1").size() > 0) {
                         String msg = doc.select(".message h1").text().trim();
@@ -956,21 +963,13 @@ public class Adis extends BaseApi implements OpacApi {
                             .attr("value")));
                 }
             }
-            form.add(new BasicNameValuePair("textButton$0", "Abbrechen"));
+            Element button = doc.select("input[value=Abbrechen], input[value=Zurück]").first();
+            form.add(new BasicNameValuePair(button.attr("name"), button.attr("value")));
             doc = htmlPost(opac_url + ";jsessionid=" + s_sid, form);
         }
 
         // Reset
-        s_pageform = new ArrayList<>();
-        for (Element input : doc.select("input, select")) {
-            if (!"image".equals(input.attr("type"))
-                    && !"submit".equals(input.attr("type"))
-                    && !"checkbox".equals(input.attr("type"))
-                    && !"".equals(input.attr("name"))) {
-                s_pageform.add(new BasicNameValuePair(input.attr("name"), input
-                        .attr("value")));
-            }
-        }
+        updatePageform(doc);
         try {
             nvpairs = s_pageform;
             nvpairs.add(new BasicNameValuePair("$Toolbar_1.x", "1"));
@@ -988,6 +987,19 @@ public class Adis extends BaseApi implements OpacApi {
         }
 
         return res;
+    }
+
+    void updatePageform(Document doc) {
+        s_pageform = new ArrayList<>();
+        for (Element input : doc.select("input, select")) {
+            if (!"image".equals(input.attr("type"))
+                    && !"submit".equals(input.attr("type"))
+                    && !"checkbox".equals(input.attr("type"))
+                    && !"".equals(input.attr("name"))) {
+                s_pageform.add(new BasicNameValuePair(input.attr("name"), input
+                        .attr("value")));
+            }
+        }
     }
 
     @Override

@@ -226,6 +226,7 @@ public class Copy {
                 break;
             case "url":
                 setUrl(value);
+                break;
             default:
                 throw new IllegalArgumentException("key unknown");
         }

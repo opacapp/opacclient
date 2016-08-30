@@ -4,7 +4,7 @@
     "city": "Trier",
     "country": "Deutschland",
     "data": {
-        "baseurl": "http://primo.kobv.de/primo_library/libweb",
+        "baseurl": "http://primo.uni-trier.de/primo_library/libweb",
         "db": "TRI_UB_I",
         "languages": [
             "en",

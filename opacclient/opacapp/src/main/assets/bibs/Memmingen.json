@@ -4,7 +4,8 @@
     "city": "Memmingen",
     "country": "Deutschland",
     "data": {
-        "baseurl": "https://bibliothek.memmingen.de"
+        "baseurl": "https://bibliothek.memmingen.de",
+		"customssl": true
     },
     "geo": [
         47.9837999,

@@ -14,6 +14,7 @@ dependencies {
     compile 'joda-time:joda-time:2.8.2'
     testCompile "junit:junit:4.12"
     testCompile 'org.hamcrest:hamcrest-library:1.3'
+    testCompile 'org.mockito:mockito-core:1.10.19'
 }
 task copyTestResources(type: Copy) {
     from "${projectDir}/src/test/resources"
@@ -45,7 +46,7 @@ ext {
     siteUrl = 'https://github.com/opacapp/opacclient'
     gitUrl = 'https://github.com/opacapp/opacclient.git'
 
-    libraryVersion = '4.5.10'
+    libraryVersion = '4.5.13'
 
     developerId = 'opacapp'
     developerName = 'Web Opac App'
