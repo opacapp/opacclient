@@ -583,6 +583,9 @@ public class SISIS extends BaseApi implements OpacApi {
                             description.append("<br />");
                         }
                         description.append(part[2]);
+                    } else if (k == 1 && !yearfound) {
+                        description.append("<br />");
+                        description.append(part[2]);
                     } else if (k > 1 && k < 4 && !sigfound
                             && part[0].equals("text")
                             && part[2].matches("^[A-Za-z0-9,\\- ]+$")) {
