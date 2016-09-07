@@ -46,7 +46,8 @@ public class LibraryConfigUpdateServiceTest {
     @Test
     public void shouldSetLastUpdate() throws IOException, JSONException {
         List<Library> libraries = new ArrayList<>();
-        when(service.getLibraryConfigs(LAST_UPDATE)).thenReturn(Calls.response(libraries));
+        when(service.getLibraryConfigs(LAST_UPDATE, BuildConfig.VERSION_CODE))
+                .thenReturn(Calls.response(libraries));
 
         LibraryConfigUpdateService.updateConfig(service, prefs, output, searchFields);
         verifyNoMoreInteractions(output);
@@ -58,7 +59,8 @@ public class LibraryConfigUpdateServiceTest {
     public void shouldUpdateLibrary() throws IOException, JSONException {
         List<Library> libraries = new ArrayList<>();
         libraries.add(library);
-        when(service.getLibraryConfigs(LAST_UPDATE)).thenReturn(Calls.response(libraries));
+        when(service.getLibraryConfigs(LAST_UPDATE, BuildConfig.VERSION_CODE))
+                .thenReturn(Calls.response(libraries));
 
         LibraryConfigUpdateService.updateConfig(service, prefs, output, searchFields);
         verify(output).writeFile(IDENT + ".json", library.toJSON().toString());
@@ -70,7 +72,8 @@ public class LibraryConfigUpdateServiceTest {
         when(prefs.getLastLibraryConfigUpdateVersion()).thenReturn(BuildConfig.VERSION_CODE - 1);
 
         List<Library> libraries = new ArrayList<>();
-        when(service.getLibraryConfigs(LAST_UPDATE)).thenReturn(Calls.response(libraries));
+        when(service.getLibraryConfigs(LAST_UPDATE, BuildConfig.VERSION_CODE))
+                .thenReturn(Calls.response(libraries));
 
         LibraryConfigUpdateService.updateConfig(service, prefs, output, searchFields);
         verify(output).clearFiles();
@@ -80,7 +83,8 @@ public class LibraryConfigUpdateServiceTest {
     public void shouldClearSearchFields() throws IOException, JSONException {
         List<Library> libraries = new ArrayList<>();
         libraries.add(library);
-        when(service.getLibraryConfigs(LAST_UPDATE)).thenReturn(Calls.response(libraries));
+        when(service.getLibraryConfigs(LAST_UPDATE, BuildConfig.VERSION_CODE))
+                .thenReturn(Calls.response(libraries));
         when(searchFields.hasSearchFields(IDENT)).thenReturn(true);
 
         LibraryConfigUpdateService.updateConfig(service, prefs, output, searchFields);
