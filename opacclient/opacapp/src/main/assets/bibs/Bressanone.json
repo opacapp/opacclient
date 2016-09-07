@@ -2,7 +2,7 @@
   "account_supported": false,
   "api": "open",
   "city": "Bressanone",
-  "country": "Trentino-Alto Adige",
+  "country": "Italia",
   "data": {
     "baseurl": "http://biblio.bz.it/brixen",
     "urls": {
@@ -15,6 +15,6 @@
     11.6572436
   ],
   "information": "http://www.brixen.it/de/leben-in-brixen/stadtbibliothek.html",
-  "state": "Italia",
+  "state": "Trentino-Alto Adige",
   "title": "Biblioteca Civica"
 }
