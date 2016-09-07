@@ -41,6 +41,12 @@ You can also download only the files that were modified since a specific point i
 https://info.opacapp.net/androidconfigs/?modified_since=2016-08-01T16:30Z
 ```
 
+or only the files that are compatible with a specific app version (specified using its version code):
+
+```
+https://info.opacapp.net/androidconfigs/?app_version=157
+```
+
 Rules for using the API
 -----------------------
 
