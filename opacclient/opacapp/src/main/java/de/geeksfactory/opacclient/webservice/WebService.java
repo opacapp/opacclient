@@ -17,5 +17,6 @@ public interface WebService {
     Call<Report> sendReport(@Body Report report);
 
     @GET("androidconfigs/")
-    Call<List<Library>> getLibraryConfigs(@Query("modified_since") DateTime modifiedSince);
+    Call<List<Library>> getLibraryConfigs(@Query("modified_since") DateTime modifiedSince,
+            @Query("app_version") int appVersion);
 }
