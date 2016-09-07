@@ -88,18 +88,16 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/account_label"/>
+                <android.support.design.widget.TextInputEditText
+                        android:id="@+id/etLabel"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="8dp"
+                        android:ems="10"
+                        android:hint="@string/account_label"
+                        android:singleLine="true"/>
+                <requestFocus/>
 
-                <EditText
-                    android:id="@+id/etLabel"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="8dp"
-                    android:ems="10"
-                    android:hint="@string/default_account_name"
-                    android:singleLine="true">
-
-                    <requestFocus/>
-                </EditText>
 
                 <TextView
                     android:id="@+id/tvNameLabel"
@@ -110,14 +108,15 @@
                     android:id="@+id/llBarcode"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent">
-                    <EditText
+                    <android.support.design.widget.TextInputEditText
                         android:id="@+id/etName"
                         android:layout_width="0dp"
-                        android:layout_weight="1"
                         android:layout_height="wrap_content"
+                        android:layout_weight="1"
                         android:ems="10"
+                        android:hint="@string/account_nr"
                         android:inputType="textNoSuggestions"
-                        android:singleLine="true" />
+                        android:singleLine="true"/>
                     <ImageView
                         android:id="@+id/ivBarcode"
                         android:layout_width="wrap_content"
@@ -133,11 +132,12 @@
                     android:layout_height="wrap_content"
                     android:text="@string/account_password"/>
 
-                <EditText
+                <android.support.design.widget.TextInputEditText
                     android:id="@+id/etPassword"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:ems="10"
+                    android:hint="@string/account_password"
                     android:inputType="textPassword"
                     android:imeOptions="actionDone"
                     android:singleLine="true"/>
