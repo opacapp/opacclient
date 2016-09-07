@@ -2,7 +2,6 @@ package de.geeksfactory.opacclient.frontend;
 
 import android.app.Activity;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.CustomListFragment;
@@ -30,6 +29,7 @@ import java.util.Map;
 
 import de.geeksfactory.opacclient.OpacClient;
 import de.geeksfactory.opacclient.R;
+import de.geeksfactory.opacclient.apis.OpacApi;
 import de.geeksfactory.opacclient.apis.OpacApi.OpacErrorException;
 import de.geeksfactory.opacclient.frontend.ResultsAdapterEndless.OnLoadMoreListener;
 import de.geeksfactory.opacclient.networking.NotReachableException;
@@ -440,9 +440,16 @@ public class SearchResultListFragment extends CustomListFragment {
 
         @Override
         protected SearchRequestResult doInBackground(Void... voids) {
+            OpacApi api;
+            try {
+                api = app.getApi();
+            } catch (OpacClient.LibraryRemovedException e) {
+                exception = e;
+                return null;
+            }
             if (volumeQuery != null) {
                 try {
-                    return app.getApi().volumeSearch(volumeQuery);
+                    return api.volumeSearch(volumeQuery);
                 } catch (IOException | OpacErrorException e) {
                     exception = e;
                     e.printStackTrace();
@@ -453,7 +460,7 @@ public class SearchResultListFragment extends CustomListFragment {
             } else if (query != null) {
                 try {
                     // Load cover images, if search worked and covers available
-                    return app.getApi().search(query);
+                    return api.search(query);
                 } catch (IOException | OpacErrorException e) {
                     exception = e;
                     e.printStackTrace();
@@ -471,6 +478,11 @@ public class SearchResultListFragment extends CustomListFragment {
 
                 if (exception instanceof OpacErrorException) {
                     showConnectivityError(exception.getMessage());
+                } else if (exception instanceof OpacClient.LibraryRemovedException) {
+                    if (getActivity() != null) {
+                        showConnectivityError(getResources().getString(
+                                R.string.library_removed_error));
+                    }
                 } else if (exception instanceof SSLSecurityException) {
                     if (getActivity() != null) {
                         showConnectivityError(getResources().getString(
@@ -513,10 +525,8 @@ public class SearchResultListFragment extends CustomListFragment {
                                 getString(R.string.no_fields_found));
                     }
                     return fields;
-                } catch (JSONException | IOException e) {
-                    exception = e;
-                    e.printStackTrace();
-                } catch (OpacErrorException e) {
+                } catch (JSONException | IOException | OpacErrorException | OpacClient
+                        .LibraryRemovedException e) {
                     exception = e;
                     e.printStackTrace();
                 }

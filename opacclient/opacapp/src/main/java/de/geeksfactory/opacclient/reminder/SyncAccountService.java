@@ -123,6 +123,8 @@ public class SyncAccountService extends WakefulIntentService {
                 e.printStackTrace();
                 failed = true;
                 continue;
+            } catch (OpacClient.LibraryRemovedException e) {
+                continue;
             }
 
             account.setPasswordKnownValid(true);

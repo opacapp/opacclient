@@ -539,8 +539,14 @@ public class SearchResultDetailFragment extends Fragment
             } else {
                 menu.findItem(R.id.action_reservation).setVisible(false);
             }
-            if (item.isBookable() && app.getApi() instanceof EbookServiceApi) {
-                if (((EbookServiceApi) app.getApi()).isEbook(item)) {
+            OpacApi api;
+            try {
+                api = app.getApi();
+            } catch (OpacClient.LibraryRemovedException e) {
+                return;
+            }
+            if (item.isBookable() && api instanceof EbookServiceApi) {
+                if (((EbookServiceApi) api).isEbook(item)) {
                     menu.findItem(R.id.action_lendebook).setVisible(true);
                 } else {
                     menu.findItem(R.id.action_lendebook).setVisible(false);
@@ -620,6 +626,12 @@ public class SearchResultDetailFragment extends Fragment
                 builder.setItems(items, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int di) {
+                        OpacApi api = null;
+                        try {
+                            api = app.getApi();
+                        } catch (OpacClient.LibraryRemovedException e) {
+                            return;
+                        }
                         if (di == 0) {
                             // Share link
                             Intent intent = new Intent(
@@ -638,7 +650,7 @@ public class SearchResultDetailFragment extends Fragment
                             } catch (UnsupportedEncodingException e) {
                             }
 
-                            String shareUrl = app.getApi().getShareUrl(id, t);
+                            String shareUrl = api.getShareUrl(id, t);
                             if (shareUrl != null) {
                                 intent.putExtra(Intent.EXTRA_TEXT, shareUrl);
                                 startActivity(Intent.createChooser(intent,
@@ -678,7 +690,7 @@ public class SearchResultDetailFragment extends Fragment
                                         + detail.getContent() + "\n\n";
                             }
 
-                            String shareUrl = app.getApi().getShareUrl(id, t);
+                            String shareUrl = api.getShareUrl(id, t);
                             if (shareUrl != null) {
                                 text += shareUrl;
                             }
@@ -807,11 +819,17 @@ public class SearchResultDetailFragment extends Fragment
         if (invalidated) {
             new RestoreSessionTask(false).execute();
         }
-        if (app.getApi() instanceof EbookServiceApi) {
+        OpacApi api = null;
+        try {
+            api = app.getApi();
+        } catch (OpacClient.LibraryRemovedException e) {
+            return;
+        }
+        if (api instanceof EbookServiceApi) {
             SharedPreferences sp = PreferenceManager
                     .getDefaultSharedPreferences(getActivity());
             if (sp.getString("email", "").equals("")
-                    && ((EbookServiceApi) app.getApi()).isEbook(item)) {
+                    && ((EbookServiceApi) api).isEbook(item)) {
                 AlertDialog.Builder builder = new AlertDialog.Builder(
                         getActivity());
                 builder.setMessage(getString(R.string.opac_error_email))
@@ -846,7 +864,7 @@ public class SearchResultDetailFragment extends Fragment
             dialog_no_credentials();
         } else if (accounts.size() > 1
                 && !getActivity().getIntent().getBooleanExtra("reservation", false)
-                && (app.getApi().getSupportFlags() & OpacApi.SUPPORT_FLAG_CHANGE_ACCOUNT) != 0
+                && (api.getSupportFlags() & OpacApi.SUPPORT_FLAG_CHANGE_ACCOUNT) != 0
                 && !(SearchResultDetailFragment.this.id == null
                 || SearchResultDetailFragment.this.id.equals("null") ||
                 SearchResultDetailFragment.this.id
@@ -912,8 +930,14 @@ public class SearchResultDetailFragment extends Fragment
 
     public void reservationDo() {
         final SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(getActivity());
+        OpacApi api;
+        try {
+            api = app.getApi();
+        } catch (OpacClient.LibraryRemovedException e) {
+            return;
+        }
         if (sp.getBoolean("reservation_fee_warning_ignore", false) ||
-                (app.getApi().getSupportFlags() & OpacApi.SUPPORT_FLAG_WARN_RESERVATION_FEES) > 0) {
+                (api.getSupportFlags() & OpacApi.SUPPORT_FLAG_WARN_RESERVATION_FEES) > 0) {
             reservationPerform();
         } else {
             AlertDialog.Builder builder = new AlertDialog.Builder(
@@ -1275,7 +1299,7 @@ public class SearchResultDetailFragment extends Fragment
             try {
                 return ((EbookServiceApi) app.getApi()).booking(
                         item, app.getAccount(), useraction, selection);
-            } catch (IOException e) {
+            } catch (IOException | OpacClient.LibraryRemovedException e) {
                 publishProgress(e, "ioerror");
             } catch (Exception e) {
                 ErrorReporter.handleException(e);

@@ -295,4 +295,5 @@
     <string name="library_config_update_failure">Could not update library configuration.</string>
     <string name="library_config_last_update">Last updated %s</string>
     <string name="library_config_reset">Restored configuration state from last app update.</string>
+    <string name="library_removed_error">Unfortunately, the library you are using was removed from the app. The reason for this could be that the library switched to a new software system that the app is not compatible with or that the library contacted us and explicitly stated that they want to be removed from the app. You can contact us at info@opacapp.net to find out more.</string>
 </resources>

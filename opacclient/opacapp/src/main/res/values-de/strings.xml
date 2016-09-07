@@ -298,4 +298,5 @@
     <string name="library_config_update_failure">Konnte Konfiguration nicht aktualisieren.</string>
     <string name="library_config_last_update">Zuletzt aktualisiert %s</string>
     <string name="library_config_reset">Konfiguration vom letzten App-Update wiederhergestellt.</string>
+    <string name="library_removed_error">Ihre Bibliothek wurde leider aus der App entfernt. Gründe dafür könnten sein, dass die Bibliothek zu einer anderen Software gewechselt hat, mit der die App nicht kompatibel ist, oder, dass die Bibliothek uns direkt kontaktiert hat und explizit darum gebeten hat, aus der App entfernt zu werden. Für weitere Informationen können Sie uns unter info@opacapp.net kontaktieren.</string>
 </resources>

@@ -43,6 +43,7 @@ public class Library implements Comparable<Library> {
     private String country;
     private String state;
     private String replacedby;
+    private boolean active = true;
 
     private String information;
     private double[] geo;
@@ -91,6 +92,10 @@ public class Library implements Comparable<Library> {
             lib.setGeo(geo);
         }
 
+        if (input.has("_active")) {
+            lib.setActive(input.getBoolean("_active"));
+        }
+
         if (lib.getTitle().equals(""))
             lib.setTitle(null);
 
@@ -118,6 +123,7 @@ public class Library implements Comparable<Library> {
         } else {
             json.put("geo", (Object) null);
         }
+        json.put("_active", active);
         return json;
     }
 
@@ -353,6 +359,22 @@ public class Library implements Comparable<Library> {
      */
     public void setGeo_distance(float geo_distance) {
         this.geo_distance = geo_distance;
+    }
+
+    /**
+     * Get if this library's configuration is "active". Defaults to true. When a library needs to be
+     * removed from the app, this is set to false.
+     */
+    public boolean isActive() {
+        return active;
+    }
+
+    /**
+     * Set if this library's configuration is "active". Defaults to true. When a library needs to be
+     * removed from the app, set thi to false.
+     */
+    public void setActive(boolean active) {
+        this.active = active;
     }
 
     @Override

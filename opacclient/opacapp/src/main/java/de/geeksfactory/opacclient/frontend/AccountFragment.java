@@ -199,8 +199,14 @@ public class AccountFragment extends Fragment implements
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         inflater.inflate(R.menu.activity_account, menu);
+        OpacApi api;
+        try {
+            api = app.getApi();
+        } catch (OpacClient.LibraryRemovedException e) {
+            return;
+        }
         if (app.getAccount() != null && (
-                app.getApi().getSupportFlags() & OpacApi.SUPPORT_FLAG_ACCOUNT_PROLONG_ALL) != 0) {
+                api.getSupportFlags() & OpacApi.SUPPORT_FLAG_ACCOUNT_PROLONG_ALL) != 0) {
             menu.findItem(R.id.action_prolong_all).setVisible(true);
         } else {
             menu.findItem(R.id.action_prolong_all).setVisible(false);
@@ -331,6 +337,9 @@ public class AccountFragment extends Fragment implements
             api = app.getApi();
         } catch (NullPointerException e) {
             e.printStackTrace();
+            return;
+        } catch (OpacClient.LibraryRemovedException e) {
+            show_connectivity_error(e);
             return;
         }
         if (api != null && !app.getLibrary().isAccountSupported()) {
@@ -530,8 +539,14 @@ public class AccountFragment extends Fragment implements
             return;
         }
         final SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(getActivity());
+        OpacApi api;
+        try {
+            api = app.getApi();
+        } catch (OpacClient.LibraryRemovedException e) {
+            return;
+        }
         if (sp.getBoolean("prolong_fee_warning_ignore", false) ||
-                (app.getApi().getSupportFlags() & OpacApi.SUPPORT_FLAG_WARN_PROLONG_FEES) > 0) {
+                (api.getSupportFlags() & OpacApi.SUPPORT_FLAG_WARN_PROLONG_FEES) > 0) {
             prolongPerform(a);
         } else {
             AlertDialog.Builder builder = new AlertDialog.Builder(
@@ -646,12 +661,16 @@ public class AccountFragment extends Fragment implements
     }
 
     protected void download(final String a) {
-        if (app.getApi() instanceof EbookServiceApi) {
-            dialog = AppCompatProgressDialog.show(getActivity(), "",
-                    getString(R.string.doing_download), true);
-            dialog.show();
-            dt = new DownloadTask(a);
-            dt.execute();
+        try {
+            if (app.getApi() instanceof EbookServiceApi) {
+                dialog = AppCompatProgressDialog.show(getActivity(), "",
+                        getString(R.string.doing_download), true);
+                dialog.show();
+                dt = new DownloadTask(a);
+                dt.execute();
+            }
+        } catch (OpacClient.LibraryRemovedException ignored) {
+
         }
     }
 
@@ -687,15 +706,18 @@ public class AccountFragment extends Fragment implements
             View connError = getActivity().getLayoutInflater().inflate(
                     R.layout.error_connectivity, errorView);
 
+            TextView tvErrBody = (TextView) connError.findViewById(R.id.tvErrBody);
+            Button btnRetry = (Button) connError.findViewById(R.id.btRetry);
+            btnRetry.setVisibility(View.VISIBLE);
             if (e != null && e instanceof SSLSecurityException) {
-                ((TextView) connError.findViewById(R.id.tvErrBody))
-                        .setText(R.string.connection_error_detail_security);
+                tvErrBody.setText(R.string.connection_error_detail_security);
             } else if (e != null && e instanceof NotReachableException) {
-                ((TextView) connError.findViewById(R.id.tvErrBody))
-                        .setText(R.string.connection_error_detail_nre);
+                tvErrBody.setText(R.string.connection_error_detail_nre);
+            } else if (e != null && e instanceof OpacClient.LibraryRemovedException) {
+                tvErrBody.setText(R.string.library_removed_error);
+                btnRetry.setVisibility(View.GONE);
             }
-            connError.findViewById(R.id.btRetry)
-                     .setOnClickListener(new OnClickListener() {
+            btnRetry.setOnClickListener(new OnClickListener() {
                          @Override
                          public void onClick(View v) {
                              refresh();
@@ -887,6 +909,13 @@ public class AccountFragment extends Fragment implements
                                 getResources().getColor(R.color.account_downloadable));
                     }
 
+                    OpacApi api = null;
+                    try {
+                        api = app.getApi();
+                    } catch (OpacClient.LibraryRemovedException ignored) {
+
+                    }
+
                     if (item.getProlongData() != null) {
                         holder.ivProlong.setTag(item.getProlongData());
                         holder.ivProlong.setOnClickListener(new OnClickListener() {
@@ -898,7 +927,7 @@ public class AccountFragment extends Fragment implements
                         holder.ivProlong.setVisibility(View.VISIBLE);
                         holder.ivProlong.setAlpha(item.isRenewable() ? 255 : 100);
                     } else if (item.getDownloadData() != null &&
-                            app.getApi() instanceof EbookServiceApi) {
+                            api != null && api instanceof EbookServiceApi) {
                         holder.ivDownload.setTag(item.getDownloadData());
                         holder.ivDownload.setOnClickListener(new OnClickListener() {
                             @Override
@@ -1621,7 +1650,7 @@ public class AccountFragment extends Fragment implements
                 if (data == null) {
                     return null;
                 }
-            } catch (IOException | OpacErrorException e) {
+            } catch (IOException | OpacErrorException | OpacClient.LibraryRemovedException e) {
                 exception = e;
                 return null;
             } catch (Exception e) {
@@ -1720,13 +1749,17 @@ public class AccountFragment extends Fragment implements
 
         @Override
         protected String doInBackground(Void... voids) {
-            return ((EbookServiceApi) app.getApi()).downloadItem(account, itemId);
+            try {
+                return ((EbookServiceApi) app.getApi()).downloadItem(account, itemId);
+            } catch (OpacClient.LibraryRemovedException e) {
+                return null;
+            }
         }
 
         @Override
         protected void onPostExecute(final String result) {
             dialog.dismiss();
-            if (getActivity() == null) {
+            if (getActivity() == null || result == null) {
                 return;
             }
             if (result.contains("acsm")) {

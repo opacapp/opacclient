@@ -198,14 +198,15 @@ public class OpacClient extends Application {
         return (networkInfo != null && networkInfo.isConnected());
     }
 
-    public OpacApi getNewApi(Library lib) {
+    public OpacApi getNewApi(Library lib) throws LibraryRemovedException {
+        if (!lib.isActive()) throw new LibraryRemovedException();
         currentLang = getResources().getConfiguration().locale.getLanguage();
         return OpacApiFactory
                 .create(lib, new AndroidStringProvider(), new AndroidHttpClientFactory(),
                         currentLang, new WebserviceReportHandler());
     }
 
-    private OpacApi initApi(Library lib) {
+    private OpacApi initApi(Library lib) throws LibraryRemovedException {
         api = getNewApi(lib);
         return api;
     }
@@ -216,7 +217,7 @@ public class OpacClient extends Application {
         library = null;
     }
 
-    public OpacApi getApi() {
+    public OpacApi getApi() throws LibraryRemovedException {
         if (account != null && api != null) {
             if (sp.getLong(PREF_SELECTED_ACCOUNT, 0) == account.getId()
                     && getResources().getConfiguration().locale.getLanguage()
@@ -334,7 +335,9 @@ public class OpacClient extends Application {
             try {
                 Library lib =
                         getLibrary(files[i].substring(0, files[i].length() - ".json".length()));
-                if (!lib.getApi().equals("test") || BuildConfig.DEBUG) libs.add(lib);
+                if ((!lib.getApi().equals("test") || BuildConfig.DEBUG) && lib.isActive()) {
+                    libs.add(lib);
+                }
             } catch (JSONException e) {
                 Log.w("JSON library files", "Failed parsing library " + files[i]);
                 e.printStackTrace();
@@ -407,4 +410,6 @@ public class OpacClient extends Application {
         public void publishProgress(double progress);
     }
 
+    public static class LibraryRemovedException extends Exception {
+    }
 }
