@@ -69,10 +69,13 @@ public class LibraryConfigUpdateService extends IntentService {
             Intent broadcast = new Intent(ACTION_SUCCESS).putExtra(EXTRA_UPDATE_COUNT, count);
             LocalBroadcastManager.getInstance(this).sendBroadcast(broadcast);
             ((OpacClient) getApplication()).resetCache();
-        } catch (IOException | JSONException e) {
-            ErrorReporter.handleException(e);
+        } catch (IOException e) {
             Intent broadcast = new Intent(ACTION_FAILURE);
             LocalBroadcastManager.getInstance(this).sendBroadcast(broadcast);
+        } catch (JSONException e) {
+            Intent broadcast = new Intent(ACTION_FAILURE);
+            LocalBroadcastManager.getInstance(this).sendBroadcast(broadcast);
+            ErrorReporter.handleException(e);
         }
     }
 
