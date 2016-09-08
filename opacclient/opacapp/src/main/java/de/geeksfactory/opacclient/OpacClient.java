@@ -342,8 +342,8 @@ public class OpacClient extends Application {
                 Log.w("JSON library files", "Failed parsing library " + files[i]);
                 e.printStackTrace();
             }
-            if (callback != null && i % 100 == 0 && i > 0) {
-                // reporting progress for every 100 loaded files should be enough
+            if (callback != null && i % 10 == 0 && i > 0) {
+                // reporting progress for every 10 loaded files should be enough
                 callback.publishProgress(((double) i) / num);
             }
         }
