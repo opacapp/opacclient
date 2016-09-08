@@ -1103,7 +1103,9 @@ public class Bibliotheca extends BaseApi {
             String header = headerCell.text();
             headersList.put(header);
             if (headers_reservations.has(header)) {
-                copymap.put(headers_reservations.getString(header), i);
+                if (!headers_reservations.isNull(header)) {
+                    copymap.put(headers_reservations.getString(header), i);
+                }
             } else {
                 unknownHeaders.put(header);
             }
