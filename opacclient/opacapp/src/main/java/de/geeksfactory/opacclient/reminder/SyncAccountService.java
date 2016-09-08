@@ -44,7 +44,6 @@ import de.geeksfactory.opacclient.objects.Library;
 import de.geeksfactory.opacclient.storage.AccountDataSource;
 import de.geeksfactory.opacclient.storage.JsonSearchFieldDataSource;
 import de.geeksfactory.opacclient.storage.PreferenceDataSource;
-import de.geeksfactory.opacclient.utils.ErrorReporter;
 import de.geeksfactory.opacclient.webservice.LibraryConfigUpdateService;
 import de.geeksfactory.opacclient.webservice.WebService;
 import de.geeksfactory.opacclient.webservice.WebServiceManager;
@@ -116,7 +115,7 @@ public class SyncAccountService extends WakefulIntentService {
             Log.d(NAME, "updated config for " + String.valueOf(count) + " libraries");
             ((OpacClient) getApplication()).resetCache();
         } catch (IOException | JSONException e) {
-            ErrorReporter.handleException(e);
+
         }
     }
 
