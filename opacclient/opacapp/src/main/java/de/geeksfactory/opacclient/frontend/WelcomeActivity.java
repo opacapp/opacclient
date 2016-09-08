@@ -35,7 +35,6 @@ import java.io.IOException;
 import de.geeksfactory.opacclient.OpacClient;
 import de.geeksfactory.opacclient.R;
 import de.geeksfactory.opacclient.utils.ErrorReporter;
-import de.geeksfactory.opacclient.webservice.LibraryConfigUpdateService;
 
 public class WelcomeActivity extends AppCompatActivity {
     protected OpacClient app;
@@ -60,10 +59,6 @@ public class WelcomeActivity extends AppCompatActivity {
                 add();
             }
         });
-
-        // update library config on first start
-        Intent i = new Intent(this, LibraryConfigUpdateService.class);
-        startService(i);
     }
 
     @Override
