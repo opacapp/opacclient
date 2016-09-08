@@ -22,6 +22,7 @@ import android.app.IntentService;
 import android.content.Context;
 import android.content.Intent;
 import android.support.v4.content.LocalBroadcastManager;
+import android.util.Log;
 
 import org.joda.time.DateTime;
 import org.json.JSONException;
@@ -61,6 +62,10 @@ public class LibraryConfigUpdateService extends IntentService {
         try {
             int count = updateConfig(service, prefs, new FileOutput(filesDir),
                     new JsonSearchFieldDataSource(this));
+            if (BuildConfig.DEBUG) {
+                Log.d("LibraryConfigUpdate",
+                        "updated config for " + String.valueOf(count) + " libraries");
+            }
             Intent broadcast = new Intent(ACTION_SUCCESS).putExtra(EXTRA_UPDATE_COUNT, count);
             LocalBroadcastManager.getInstance(this).sendBroadcast(broadcast);
             ((OpacClient) getApplication()).resetCache();
