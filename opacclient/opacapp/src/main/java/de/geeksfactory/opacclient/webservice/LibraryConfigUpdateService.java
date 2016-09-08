@@ -71,7 +71,8 @@ public class LibraryConfigUpdateService extends IntentService {
         }
     }
 
-    static int updateConfig(WebService service, PreferenceDataSource prefs, FileOutput output,
+    public static int updateConfig(WebService service, PreferenceDataSource prefs,
+            FileOutput output,
             SearchFieldDataSource searchFields)
             throws IOException, JSONException {
         if (prefs.getLastLibraryConfigUpdateVersion() != BuildConfig.VERSION_CODE) {
@@ -102,7 +103,7 @@ public class LibraryConfigUpdateService extends IntentService {
         return updatedLibraries.size();
     }
 
-    static class FileOutput {
+    public static class FileOutput {
         private final File dir;
 
         public FileOutput(File dir) {

@@ -31,6 +31,7 @@ import com.commonsware.cwac.wakeful.WakefulIntentService;
 
 import org.json.JSONException;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.List;
 
@@ -41,6 +42,12 @@ import de.geeksfactory.opacclient.objects.Account;
 import de.geeksfactory.opacclient.objects.AccountData;
 import de.geeksfactory.opacclient.objects.Library;
 import de.geeksfactory.opacclient.storage.AccountDataSource;
+import de.geeksfactory.opacclient.storage.JsonSearchFieldDataSource;
+import de.geeksfactory.opacclient.storage.PreferenceDataSource;
+import de.geeksfactory.opacclient.utils.ErrorReporter;
+import de.geeksfactory.opacclient.webservice.LibraryConfigUpdateService;
+import de.geeksfactory.opacclient.webservice.WebService;
+import de.geeksfactory.opacclient.webservice.WebServiceManager;
 
 public class SyncAccountService extends WakefulIntentService {
 
@@ -53,6 +60,8 @@ public class SyncAccountService extends WakefulIntentService {
     @Override
     protected void doWakefulWork(Intent intent) {
         if (BuildConfig.DEBUG) Log.i(NAME, "SyncAccountService started");
+
+        updateLibraryConfig();
 
         SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(this);
 
@@ -92,6 +101,22 @@ public class SyncAccountService extends WakefulIntentService {
             WakefulIntentService.cancelAlarms(this);
             WakefulIntentService
                     .scheduleAlarms(SyncAccountAlarmListener.withOnePeriodBeforeStart(), this);
+        }
+    }
+
+    private void updateLibraryConfig() {
+        WebService service = WebServiceManager.getInstance();
+        PreferenceDataSource prefs = new PreferenceDataSource(this);
+        File filesDir = new File(getFilesDir(), LibraryConfigUpdateService.LIBRARIES_DIR);
+        filesDir.mkdirs();
+        try {
+            int count = LibraryConfigUpdateService.updateConfig(service, prefs,
+                    new LibraryConfigUpdateService.FileOutput(filesDir),
+                    new JsonSearchFieldDataSource(this));
+            Log.d(NAME, "updated config for " + String.valueOf(count) + " libraries");
+            ((OpacClient) getApplication()).resetCache();
+        } catch (IOException | JSONException e) {
+            ErrorReporter.handleException(e);
         }
     }
 
