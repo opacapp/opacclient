@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:orientation="vertical"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content">
+
+    <TextView
+        android:id="@+id/tvError"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/error_bg"
+        android:gravity="center"
+        android:padding="5dp"
+        android:textColor="@color/error_fg"
+        android:textStyle="bold"
+        android:visibility="gone"/>
+
+    <TextView
+        android:id="@+id/tvWarning"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/warning"
+        android:gravity="center"
+        android:padding="5dp"
+        android:textColor="@color/warning_fg"
+        android:textStyle="bold"
+        android:visibility="gone"/>
+</LinearLayout>
