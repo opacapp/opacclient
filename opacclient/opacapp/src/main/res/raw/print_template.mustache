@@ -27,12 +27,13 @@
             text-align: top;
             padding: 7px;
         }
-        #by{
+        footer{
             position: absolute;
             font-size: x-small;
             color: #a6a6a6;
             bottom: 0;
-            right: 10px;
+            text-align: right;
+            width: 100%;
         }
     </style>
 </head>
@@ -124,9 +125,7 @@
 			    {{/url}}
 		    </table>
         </div>
-        <div id="by">
-            <p>printed from Web Opac App (opacapp.net)</p>
-        </div>
+
     {{/item.copies}}
 {{/item.copies.isEmpty}}
 
@@ -138,11 +137,9 @@
 	        	<li>{{title}}</li>
             {{/item.volumes}}
 	    </ul>
-    <div id="by">
-        <p>printed from Web Opac App (opacapp.net)</p>
-    </div>
+
 {{/item.volumes.isEmpty}}
-<div id="by">
-    <p>printed from Web Opac App (opacapp.net)</p>
-</div>
+<footer>
+    printed from Web Opac App (opacapp.net)
+</footer>
 </body>
