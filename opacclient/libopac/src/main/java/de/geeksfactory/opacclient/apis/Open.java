@@ -334,8 +334,6 @@ public class Open extends BaseApi implements OpacApi {
             String subtitle = catalogueContent.select("span[id$=LblSubTitleValue]").text();
             String author = catalogueContent.select("span[id$=LblAuthorValue]").text();
             String year = catalogueContent.select("span[id$=LblProductionYearValue]").text();
-            String publisher = catalogueContent
-                    .select("span[id$=LblManufacturerValue], span[id$=LblPublisherValue]").text();
             String series = catalogueContent.select("span[id$=LblSeriesValue]").text();
 
             // Some libraries, such as Bern, have labels but no <span id="..Value"> tags
@@ -364,7 +362,6 @@ public class Open extends BaseApi implements OpacApi {
             if (!subtitle.equals("")) text.append("<br/>").append(subtitle);
             if (!author.equals("")) text.append("<br/>").append(author);
             if (!year.equals("")) text.append("<br/>").append(year);
-            if (!publisher.equals("")) text.append("<br/>").append(publisher);
             if (!series.equals("")) text.append("<br/>").append(series);
 
             result.setInnerhtml(text.toString());
