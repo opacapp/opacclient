@@ -6,10 +6,6 @@
             page-break-inside: avoid;
         }
 
-        #break{
-            page-break-before: always;
-        }
-
         .multiCol{
             float: left;
             width: 45%;
@@ -56,7 +52,7 @@
 
     <!-- Only show heading if there are copies -->
 {{^item.copies.isEmpty}}
-    <h2 id="break">{{strings.copies_head}}</h2>
+    <h2>{{strings.copies_head}}</h2>
     <!-- one table for every copy, show all the rows that have data -->
     {{#item.copies}}
 		<div>
