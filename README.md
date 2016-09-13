@@ -71,3 +71,4 @@ Many thanks go to our contributors, including:
 * [Sulekha Alse](https://github.com/YSulekha)
 * [Caroline Ho](https://github.com/carolineh101)
 * [Ceasar Jimenez](https://github.com/ceasarj)
+* [Nico Puhlmann](https://github.com/NPuhlmann)
