@@ -1,0 +1,16 @@
+{
+  "account_supported": true,
+  "api": "winbiap",
+  "city": "Feldkirchen-Westerham",
+  "country": "Deutschland",
+  "data": {
+    "baseurl": "https://cloudopac.winbiap.de/feldkirchen-westerham"
+  },
+  "geo": [
+    47.9140623,
+    11.8638687
+  ],
+  "information": "http://gemeindebuecherei-feldkirchen.de/",
+  "state": "Bayern",
+  "title": "Gemeindeb\u00fccherei"
+}

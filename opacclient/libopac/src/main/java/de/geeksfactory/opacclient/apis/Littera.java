@@ -339,10 +339,30 @@ public class Littera extends SearchOnlyApi {
         field.addDropdownValue("", "");
         final String url = opac_url + "/search/adv_ac?crit=" + id;
         final String json = httpGet(url, getDefaultEncoding());
-        final JSONArray array = new JSONArray(json);
-        for (int i = 0; i < array.length(); i++) {
-            final JSONObject obj = array.getJSONObject(i);
-            field.addDropdownValue(obj.getString("value"), obj.getString("label"));
+        try {
+            final JSONArray array = new JSONArray(json);
+            for (int i = 0; i < array.length(); i++) {
+                final JSONObject obj = array.getJSONObject(i);
+                field.addDropdownValue(obj.getString("value"), obj.getString("label"));
+            }
+        } catch (JSONException e) {
+            if (json.startsWith("[")) {
+                throw e;
+            } else {
+                // This is probably a different format
+                final String[] lines = json.split("\n");
+                for (int i = 0; i < lines.length; i++) {
+                    String line = lines[i].trim();
+                    if (!line.equals("")) {
+                        if (line.contains("|")) {
+                            String[] parts = line.split("\\|");
+                            field.addDropdownValue(parts[0], parts[1]);
+                        } else {
+                            field.addDropdownValue(line, line);
+                        }
+                    }
+                }
+            }
         }
     }
 

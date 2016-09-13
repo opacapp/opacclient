@@ -1,0 +1,41 @@
+{
+  "account_supported": true,
+  "api": "biber1992",
+  "city": "Geesthacht",
+  "country": "Deutschland",
+  "data": {
+    "accounttable": {
+      "author": 8,
+      "barcode": 4,
+      "homebranch": -1,
+      "lendingbranch": -1,
+      "prolongurl": 1,
+      "returndate": 3,
+      "status": 6,
+      "title": 8
+    },
+    "baseurl": "https://opac.geesthacht-schwarzenbek.de",
+    "copiestable": {
+      "barcode": 2,
+      "branch": 0,
+      "department": 1,
+      "location": 1,
+      "reservations": -1,
+      "returndate": -1,
+      "status": 3
+    },
+    "opacdir": "opax1",
+    "searchtable": [
+      2,
+      3,
+      4
+    ]
+  },
+  "geo": [
+    53.4379562,
+    10.3611665
+  ],
+  "information": "http://www.geesthacht.de/Leben_und_Kultur_in_Geesthacht/Kultur_Bildung/Stadtb%C3%BCcherei/Kontakt/",
+  "state": "Schleswig-Holstein",
+  "title": "Stadtb\u00fcchereien Geesthacht und Schwarzenbek"
+}

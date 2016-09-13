@@ -1,0 +1,16 @@
+{
+    "account_supported": true,
+    "api": "iopac",
+    "city": "Ergolding",
+    "country": "Deutschland",
+    "data": {
+        "baseurl": "http://217.7.224.180"
+    },
+    "geo": [
+        48.56459419999999,
+        12.1660056
+    ],
+    "information": "http://www.ergolding.de/buecherei",
+    "state": "Bayern",
+    "title": "B\u00fccherei"
+}

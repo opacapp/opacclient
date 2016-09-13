@@ -334,16 +334,34 @@ public class Open extends BaseApi implements OpacApi {
             String subtitle = catalogueContent.select("span[id$=LblSubTitleValue]").text();
             String author = catalogueContent.select("span[id$=LblAuthorValue]").text();
             String year = catalogueContent.select("span[id$=LblProductionYearValue]").text();
-            String publisher = catalogueContent
-                    .select("span[id$=LblManufacturerValue], span[id$=LblPublisherValue]").text();
             String series = catalogueContent.select("span[id$=LblSeriesValue]").text();
+
+            // Some libraries, such as Bern, have labels but no <span id="..Value"> tags
+            int j = 0;
+            for (Element div : catalogueContent.children()) {
+                if (subtitle.equals("") && div.select("span").size() == 0 && j > 0 && j < 3) {
+                    subtitle = div.text().trim();
+                }
+                if (author.equals("") && div.select("span[id$=LblAuthor]").size() == 1) {
+                    author = div.text().trim();
+                    if (author.contains(":")) {
+                        author = author.split(":")[1];
+                    }
+                }
+                if (year.equals("") && div.select("span[id$=LblProductionYear]").size() == 1) {
+                    year = div.text().trim();
+                    if (year.contains(":")) {
+                        year = year.split(":")[1];
+                    }
+                }
+                j++;
+            }
 
             StringBuilder text = new StringBuilder();
             text.append("<b>").append(title).append("</b>");
             if (!subtitle.equals("")) text.append("<br/>").append(subtitle);
             if (!author.equals("")) text.append("<br/>").append(author);
             if (!year.equals("")) text.append("<br/>").append(year);
-            if (!publisher.equals("")) text.append("<br/>").append(publisher);
             if (!series.equals("")) text.append("<br/>").append(series);
 
             result.setInnerhtml(text.toString());
@@ -537,6 +555,13 @@ public class Open extends BaseApi implements OpacApi {
         // Title and Subtitle
         item.setTitle(doc.select("span[id$=LblShortDescriptionValue]").text());
         String subtitle = doc.select("span[id$=LblSubTitleValue]").text();
+        if (subtitle.equals("")) {
+            // Subtitle detection for Bern
+            Element next = doc.select("span[id$=LblShortDescriptionValue]").first().parent().nextElementSibling();
+            if (next.select("span").size() == 0) {
+                subtitle = next.text().trim();
+            }
+        }
         if (!subtitle.equals("")) {
             item.addDetail(new Detail(stringProvider.getString(StringProvider.SUBTITLE), subtitle));
         }
@@ -562,7 +587,19 @@ public class Open extends BaseApi implements OpacApi {
                 "div[id$=CatalogueDetailView] .spacingBottomSmall:has(span+a)";
         for (Element detail : doc.select(DETAIL_SELECTOR)) {
             String name = detail.select("span").get(0).text().replace(": ", "");
-            String value = detail.select("span, a").get(1).text();
+            String value = "";
+            if (detail.select("a").size() > 1) {
+                int i = 0;
+                for (Element a : detail.select("a")) {
+                    if (i != 0) {
+                        value += ", ";
+                    }
+                    value += a.text().trim();
+                    i++;
+                }
+            } else {
+                value = detail.select("span, a").get(1).text();
+            }
             item.addDetail(new Detail(name, value));
         }
 
