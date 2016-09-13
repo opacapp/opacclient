@@ -1316,7 +1316,13 @@ public class Adis extends BaseApi implements OpacApi {
                     e.printStackTrace();
                 }
                 item.setHomeBranch(tr.child(2).text().trim());
-                item.setProlongData(tr.select("input[type=checkbox]").attr("name") + "|" + alink);
+                if (tr.select("input[type=checkbox]").hasAttr("disabled")) {
+                    item.setRenewable(false);
+                } else {
+                    item.setProlongData(
+                            tr.select("input[type=checkbox]").attr("name") + "|" + alink);
+                }
+
                 // item.setRenewable(tr.child(4).text().matches(".*nicht verl.+ngerbar.*"));
                 lent.add(item);
             }
