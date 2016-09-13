@@ -1,0 +1,16 @@
+{
+    "account_supported": true,
+    "api": "winbiap",
+    "city": "Hersbruck",
+    "country": "Deutschland",
+    "data": {
+        "baseurl": "https://cloudopac.winbiap.de/hersbruck"
+    },
+    "geo": [
+        49.50777120000001,
+        11.430538
+    ],
+    "information": "http://hersbruck.de/stadt-und-gaeste/kultur-und-freizeit/stadtbuecherei/",
+    "state": "Bayern",
+    "title": "Stadtbibliothek"
+}
