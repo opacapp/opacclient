@@ -877,7 +877,9 @@ public class SearchResultDetailFragment extends Fragment
                                     R.string.accchange_sorry, Toast.LENGTH_LONG)
                                     .show();
                         } else {
-                            app.setAccount(accounts.get(position).getId());
+                            if (app.getAccount().getId() != accounts.get(position).getId()) {
+                                app.setAccount(accounts.get(position).getId());
+                            }
                             Intent intent = new Intent(getActivity(),
                                     SearchResultDetailActivity.class);
                             intent.putExtra(
@@ -1033,7 +1035,9 @@ public class SearchResultDetailFragment extends Fragment
                 @Override
                 public void onItemClick(AdapterView<?> parent, View view,
                                         int position, long id) {
-                    app.setAccount(accounts.get(position).getId());
+                    if (app.getAccount().getId() != accounts.get(position).getId()) {
+                        app.setAccount(accounts.get(position).getId());
+                    }
                     bookingDo();
                     adialog.dismiss();
                 }
