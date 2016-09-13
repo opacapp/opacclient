@@ -328,7 +328,7 @@ public class Adis extends BaseApi implements OpacApi {
                     doc.select("input#" + query.getKey()).val(query.getValue());
                 } else {
                     if (doc.select("select#SUCH01_1").size() == 0 &&
-                            doc.select("input[fld=FELD01_" + dropdownTextCount + "]").size() == 0) {
+                            doc.select("input[fld=FELD01_" + dropdownTextCount + "]").size() > 0) {
                         // Hack needed for Nürnberg
                         doc.select("input[fld=FELD01_" + dropdownTextCount + "]").first()
                            .previousElementSibling().val(query.getKey());
