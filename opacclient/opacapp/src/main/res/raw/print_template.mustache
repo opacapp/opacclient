@@ -1,6 +1,41 @@
 <!doctype html>
 <head>
     <title>{{item.title}}</title>
+    <style>
+        .noPageBreak{
+            page-break-inside: avoid;
+        }
+
+        #break{
+            page-break-before: always;
+        }
+
+        .multiCol{
+            float: left;
+            width: 45%;
+            margin: 10px;
+        }
+        tr:nth-child(odd){
+            background-color: #f2f2f2;
+        }
+        th{
+            text-align: right;
+            color: #737373;
+            padding: 7px;
+        }
+        td{
+            text-align: top;
+            padding: 7px;
+        }
+        footer{
+            position: absolute;
+            font-size: x-small;
+            color: #a6a6a6;
+            bottom: 0;
+            text-align: right;
+            width: 100%;
+        }
+    </style>
 </head>
 <body>
 <h1>{{item.title}}</h1>
@@ -16,12 +51,16 @@
         {{/item.details}}
     </table>
 
+
+
+
     <!-- Only show heading if there are copies -->
 {{^item.copies.isEmpty}}
-    <h2>{{strings.copies_head}}</h2>
+    <h2 id="break">{{strings.copies_head}}</h2>
     <!-- one table for every copy, show all the rows that have data -->
     {{#item.copies}}
-		    <table>
+		<div>
+		        <table class="multiCol noPageBreak">
 		    	{{#barcode}}
 			        <tr>
                         <th>{{strings.barcode}}</th>
@@ -85,8 +124,11 @@
 			        </tr>
 			    {{/url}}
 		    </table>
+        </div>
+
     {{/item.copies}}
 {{/item.copies.isEmpty}}
+
     <!-- Only show heading if there are volumes -->
 {{^item.volumes.isEmpty}}
     <h2>{{strings.volumes}}</h2>
@@ -95,5 +137,9 @@
 	        	<li>{{title}}</li>
             {{/item.volumes}}
 	    </ul>
+
 {{/item.volumes.isEmpty}}
+<footer>
+    printed from Web Opac App (opacapp.net)
+</footer>
 </body>
