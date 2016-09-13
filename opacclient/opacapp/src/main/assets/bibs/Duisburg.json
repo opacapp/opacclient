@@ -11,7 +11,7 @@
             "lendingbranch": -1,
             "prolongurl": 4,
             "returndate": 3,
-            "status": 5,
+            "status": 6,
             "title": 8
         },
         "baseurl": "http://opac.stadtbibliothek.duisburg.de",
