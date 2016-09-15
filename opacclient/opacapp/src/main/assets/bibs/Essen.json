@@ -14,7 +14,7 @@
             "status": 9,
             "title": 8
         },
-        "baseurl": "http://katalog.stadtbibliothek-essen.de",
+        "baseurl": "http://katalog.stadtbibliothek.essen.de",
         "copiestable": {
             "barcode": 2,
             "branch": 0,
