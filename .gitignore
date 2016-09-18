@@ -52,3 +52,4 @@ opacclient/libs/
 *.bak
 opacclient/tmp/
 
+opacclient/opacapp/src/main/assets/bibs/*.json
