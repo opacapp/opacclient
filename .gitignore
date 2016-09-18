@@ -53,3 +53,4 @@ opacclient/libs/
 opacclient/tmp/
 
 opacclient/opacapp/src/main/assets/bibs/*.json
+opacclient/opacapp/src/main/assets/last_library_config_update.txt

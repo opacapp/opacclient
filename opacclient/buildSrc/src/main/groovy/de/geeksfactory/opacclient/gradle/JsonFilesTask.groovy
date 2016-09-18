@@ -23,6 +23,7 @@ class JsonFilesTask extends DefaultTask {
         conn.setSSLSocketFactory(createSSLSocketFactory())
         String response = conn.inputStream.getText("UTF-8")
         JSONArray data = new JSONArray(response)
+        GFileUtils.mkdirs(new File(BIBS_DIR))
         GFileUtils.cleanDirectory(new File(BIBS_DIR))
         for (int i = 0; i < data.length(); i++) {
             JSONObject library = data.get(i);
