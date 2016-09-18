@@ -29,6 +29,7 @@ import android.util.Log;
 
 import com.commonsware.cwac.wakeful.WakefulIntentService;
 
+import org.acra.ACRA;
 import org.json.JSONException;
 
 import java.io.File;
@@ -114,6 +115,8 @@ public class SyncAccountService extends WakefulIntentService {
                     new JsonSearchFieldDataSource(this));
             Log.d(NAME, "updated config for " + String.valueOf(count) + " libraries");
             ((OpacClient) getApplication()).resetCache();
+            ACRA.getErrorReporter().putCustomData("data_version",
+                    prefs.getLastLibraryConfigUpdate().toString());
         } catch (IOException | JSONException e) {
 
         }

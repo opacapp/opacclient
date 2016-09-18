@@ -41,6 +41,7 @@ import android.widget.SectionIndexer;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import org.acra.ACRA;
 import org.json.JSONException;
 
 import java.io.File;
@@ -807,6 +808,8 @@ public class LibraryListActivity extends AppCompatActivity
                 Log.d("LibraryListActivity",
                         "updated config for " + String.valueOf(count) + " libraries");
                 ((OpacClient) getApplication()).resetCache();
+                ACRA.getErrorReporter().putCustomData("data_version",
+                        prefs.getLastLibraryConfigUpdate().toString());
             } catch (IOException | JSONException e) {
                 e.printStackTrace();
                 // fail silently (e.g. when no Internet connection available)
