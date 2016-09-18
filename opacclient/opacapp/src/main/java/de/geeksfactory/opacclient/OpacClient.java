@@ -377,6 +377,9 @@ public class OpacClient extends Application {
                 ACRA.getErrorReporter().putCustomData("library",
                         getLibrary().getIdent());
             }
+            ACRA.getErrorReporter().putCustomData("data_version",
+                    (new PreferenceDataSource(getApplicationContext())).getLastLibraryConfigUpdate()
+                                                                       .toString());
         }
         DebugTools.init(this);
 

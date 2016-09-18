@@ -24,6 +24,7 @@ import android.content.Intent;
 import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 
+import org.acra.ACRA;
 import org.joda.time.DateTime;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -107,6 +108,9 @@ public class LibraryConfigUpdateService extends IntentService {
         DateTime lastUpdate = new DateTime(response.headers().get("X-Page-Generated"));
         prefs.setLastLibraryConfigUpdate(lastUpdate);
         prefs.setLastLibraryConfigUpdateVersion(BuildConfig.VERSION_CODE);
+        
+        ACRA.getErrorReporter().putCustomData("data_version",
+                prefs.getLastLibraryConfigUpdate().toString());
 
         return updatedLibraries.size();
     }
