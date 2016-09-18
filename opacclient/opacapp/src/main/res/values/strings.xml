@@ -287,14 +287,14 @@
     <string name="print">Print</string>
     <string name="print_wait">Please wait for details to load</string>
     <string name="preference_category_library_config">Library data</string>
-    <string name="preference_update_library_config">Update library configuration</string>
-    <string name="preference_reset_library_config">Reset library configuration</string>
+    <string name="preference_update_library_config">Update library data</string>
+    <string name="preference_reset_library_config">Reset library data</string>
     <string name="preference_reset_library_config_desc">to state from last app update</string>
-    <string name="updating_library_config">Updating library configuration</string>
-    <string name="library_config_no_updates">No updated library configuration found.</string>
-    <string name="library_config_update_success">Updated configuration for %d libraries.</string>
-    <string name="library_config_update_failure">Could not update library configuration.</string>
+    <string name="updating_library_config">Updating library data</string>
+    <string name="library_config_no_updates">No updated library data found.</string>
+    <string name="library_config_update_success">Updated data for %d libraries.</string>
+    <string name="library_config_update_failure">Could not update library data.</string>
     <string name="library_config_last_update">Last updated %s</string>
-    <string name="library_config_reset">Restored configuration state from last app update.</string>
+    <string name="library_config_reset">Restored library data from last app update.</string>
     <string name="library_removed_error">Unfortunately, the library you are using was removed from the app. The reason for this could be that the library switched to a new software system that the app is not compatible with or that the library contacted us and explicitly stated that they want to be removed from the app. You can contact us at info@opacapp.net to find out more.</string>
 </resources>
