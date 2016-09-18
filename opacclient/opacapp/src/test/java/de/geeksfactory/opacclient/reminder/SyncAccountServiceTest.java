@@ -79,7 +79,8 @@ public class SyncAccountServiceTest {
 
     @Test
     public void exceptionShouldNotAffectOtherAccounts()
-            throws IOException, JSONException, OpacApi.OpacErrorException {
+            throws IOException, JSONException, OpacApi.OpacErrorException,
+            OpacClient.LibraryRemovedException {
         setUpAccountsAndTwoApis();
 
         when(api1.account(any(Account.class))).thenThrow(new OpacApi.OpacErrorException("error"));
@@ -90,7 +91,8 @@ public class SyncAccountServiceTest {
 
     @Test
     public void nullShouldNotAffectOtherAccounts()
-            throws IOException, JSONException, OpacApi.OpacErrorException {
+            throws IOException, JSONException, OpacApi.OpacErrorException,
+            OpacClient.LibraryRemovedException {
         setUpAccountsAndTwoApis();
 
         when(api1.account(any(Account.class))).thenReturn(null);
@@ -110,7 +112,8 @@ public class SyncAccountServiceTest {
         verify(helper).generateAlarms();
     }
 
-    private void setUpAccountsAndTwoApis() throws IOException, JSONException {
+    private void setUpAccountsAndTwoApis()
+            throws IOException, JSONException, OpacClient.LibraryRemovedException {
         when(data.getAccountsWithPassword()).thenReturn(accounts);
         when(app.getLibrary(anyString())).thenReturn(library);
         when(app.getNewApi(library)).thenReturn(api1, api2);

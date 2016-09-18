@@ -29,6 +29,10 @@ data from them is available as a separate library called `libopac`. It can also 
 projects because it does not depend on Android APIs. More information about the library can be found in 
 [its own README file](https://github.com/opacapp/opacclient/blob/master/opacclient/libopac/README.md).
 
+Library configuration files
+---------------------------
+The JSON configuration files for each library previously located in the `opacclient/opacapp/src/main/assets/bibs` directory were recently removed from the repository and can be downloaded from our server. For more information about this, see [here](https://github.com/opacapp/opacclient/blob/master/opacclient/opacapp/LIBRARY_DATA.md).
+
 Contributing
 ------------
 We'd like to invite you to contribute to our project, e.g. by improving the user interface or adding support

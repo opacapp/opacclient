@@ -15,6 +15,7 @@ import android.view.View;
 
 import java.io.IOException;
 
+import de.geeksfactory.opacclient.OpacClient;
 import de.geeksfactory.opacclient.R;
 import de.geeksfactory.opacclient.apis.OpacApi;
 import de.geeksfactory.opacclient.apis.OpacApi.OpacErrorException;
@@ -125,11 +126,19 @@ public class SearchResultListActivity extends OpacActivity implements
     public void onItemSelected(SearchResult result, View coverView, int touchX, int touchY) {
         if (result.getChildQuery() != null) {
             app.startSearch(this, result.getChildQuery());
-        } else if ((app.getApi().getSupportFlags() & OpacApi.SUPPORT_FLAG_ENDLESS_SCROLLING) == 0
-                && result.getPage() != listFragment.getLastLoadedPage()) {
-            new ReloadOldPageTask(result, coverView).execute();
         } else {
-            showDetail(result, coverView, touchX, touchY);
+            OpacApi api;
+            try {
+                api = app.getApi();
+            } catch (OpacClient.LibraryRemovedException e) {
+                return;
+            }
+            if ((api.getSupportFlags() & OpacApi.SUPPORT_FLAG_ENDLESS_SCROLLING) == 0
+                    && result.getPage() != listFragment.getLastLoadedPage()) {
+                new ReloadOldPageTask(result, coverView).execute();
+            } else {
+                showDetail(result, coverView, touchX, touchY);
+            }
         }
     }
 

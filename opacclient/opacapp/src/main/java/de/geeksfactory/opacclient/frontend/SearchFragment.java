@@ -21,6 +21,7 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
 import android.view.ViewTreeObserver.OnGlobalLayoutListener;
+import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -39,6 +40,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import de.geeksfactory.opacclient.BuildConfig;
 import de.geeksfactory.opacclient.OpacClient;
 import de.geeksfactory.opacclient.R;
 import de.geeksfactory.opacclient.apis.OpacApi.OpacErrorException;
@@ -405,15 +407,13 @@ public class SearchFragment extends Fragment implements AccountSelectedListener 
         errorView.removeAllViews();
         progress(false);
 
-        SearchFieldDataSource dataSource = new JsonSearchFieldDataSource(app);
-        int versionCode = 0;
-        try {
-            versionCode = app.getPackageManager().getPackageInfo(
-                    app.getPackageName(), 0).versionCode;
-        } catch (NameNotFoundException e) {
-            // should not happen
-            e.printStackTrace();
+        if (!app.getLibrary().isActive()) {
+            showConnectivityError(getString(R.string.library_removed_error), false);
+            return;
         }
+
+        SearchFieldDataSource dataSource = new JsonSearchFieldDataSource(app);
+        int versionCode = BuildConfig.VERSION_CODE;
         String language = getActivity().getResources().getConfiguration().locale
                 .getLanguage();
         if (dataSource.hasSearchFields(app.getLibrary().getIdent())
@@ -441,24 +441,29 @@ public class SearchFragment extends Fragment implements AccountSelectedListener 
     }
 
     public void showConnectivityError() {
-        showConnectivityError(null);
+        showConnectivityError(null, true);
     }
 
-    public void showConnectivityError(String description) {
+    public void showConnectivityError(String description, boolean retry) {
         if (getView() == null || getActivity() == null) {
             return;
         }
         errorView.removeAllViews();
         View connError = getActivity().getLayoutInflater().inflate(
                 R.layout.error_connectivity, errorView);
-        connError.findViewById(R.id.btRetry)
-                 .setOnClickListener(new OnClickListener() {
-                     @Override
-                     public void onClick(View v) {
-                         errorView.removeAllViews();
-                         executeNewLoadSearchFieldsTask();
-                     }
-                 });
+        Button btnRetry = (Button) connError.findViewById(R.id.btRetry);
+        if (retry) {
+            btnRetry.setVisibility(View.VISIBLE);
+            btnRetry.setOnClickListener(new OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    errorView.removeAllViews();
+                    executeNewLoadSearchFieldsTask();
+                }
+            });
+        } else {
+            btnRetry.setVisibility(View.GONE);
+        }
 
         if (description != null) {
             ((TextView) connError.findViewById(R.id.tvErrBody))
@@ -768,7 +773,8 @@ public class SearchFragment extends Fragment implements AccountSelectedListener 
 
                 saveFields(fields);
                 return fields;
-            } catch (OpacErrorException | IOException | JSONException e) {
+            } catch (OpacErrorException | IOException | JSONException | OpacClient
+                    .LibraryRemovedException e) {
                 exception = e;
                 e.printStackTrace();
             }
@@ -788,10 +794,11 @@ public class SearchFragment extends Fragment implements AccountSelectedListener 
             } else {
                 if (exception != null
                         && exception instanceof OpacErrorException) {
-                    showConnectivityError(exception.getMessage());
+                    showConnectivityError(exception.getMessage(), true);
                 } else if (exception != null
                         && exception instanceof SSLSecurityException) {
-                    showConnectivityError(getString(R.string.connection_error_detail_security));
+                    showConnectivityError(getString(R.string.connection_error_detail_security),
+                            true);
                 } else {
                     showConnectivityError();
                 }

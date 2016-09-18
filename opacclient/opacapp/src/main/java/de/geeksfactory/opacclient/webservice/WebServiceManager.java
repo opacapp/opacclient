@@ -19,6 +19,7 @@ import java.lang.reflect.Type;
 import java.util.Iterator;
 import java.util.Set;
 
+import de.geeksfactory.opacclient.objects.Library;
 import de.geeksfactory.opacclient.utils.DebugTools;
 import okhttp3.OkHttpClient;
 import retrofit2.Retrofit;
@@ -33,6 +34,7 @@ public class WebServiceManager {
             Moshi moshi = new Moshi.Builder()
                     .add(new JSONAdapterFactory())
                     .add(new DateTimeAdapter())
+                    .add(new LibraryAdapter())
                     .build();
             Retrofit retrofit = new Retrofit.Builder()
                     .client(DebugTools.prepareHttpClient(new OkHttpClient.Builder()).build())
@@ -42,6 +44,30 @@ public class WebServiceManager {
             service = retrofit.create(WebService.class);
         }
         return service;
+    }
+
+    private static class LibraryAdapter {
+
+        @FromJson
+        public Library fromJson(JsonReader reader) throws IOException {
+            JSONObject json = new JSONObjectAdapter().fromJson(reader);
+            try {
+                return Library.fromJSON(json.getString("_id"), json);
+            } catch (JSONException e) {
+                throw new IOException(e);
+            }
+        }
+
+        @ToJson
+        public void toJson(JsonWriter writer, Library value) throws IOException {
+            try {
+                JSONObject json = value.toJSON();
+                json.put("_id", value.getIdent());
+                new JSONObjectAdapter().toJson(writer, json);
+            } catch (JSONException e) {
+                throw new IOException(e);
+            }
+        }
     }
 
     private static class JSONObjectAdapter extends JsonAdapter<JSONObject> {
@@ -54,6 +80,7 @@ public class WebServiceManager {
                     String name = reader.nextName();
                     JsonReader.Token token = reader.peek();
                     if (token == JsonReader.Token.NULL) {
+                        reader.nextNull();
                         object.put(name, null);
                     } else if (token == JsonReader.Token.BEGIN_ARRAY) {
                         object.put(name, new JSONArrayAdapter().fromJson(reader));
@@ -120,6 +147,7 @@ public class WebServiceManager {
                     } else if (token == JsonReader.Token.BOOLEAN) {
                         array.put(reader.nextBoolean());
                     } else if (token == JsonReader.Token.NULL) {
+                        reader.nextNull();
                         array.put(null);
                     } else if (token == JsonReader.Token.STRING) {
                         array.put(reader.nextString());
