@@ -172,7 +172,18 @@ public class Bibliotheca extends BaseApi {
                     .select(".suchfeld_inhalt_input input[type=text], " +
                             ".suchfeld_inhalt_input select");
             if (inputs.size() == 1) {
-                fields.add(createSearchField(name, hint, inputs.get(0)));
+                SearchField field = createSearchField(name, hint, inputs.get(0));
+                if (field instanceof TextSearchField && fieldElem.select("input[type=radio]").size() > 0) {
+                    TextSearchField tf = (TextSearchField) field;
+                    if (fieldElem.select("input[type=radio]").get(0).attr("value").equals("stich")) {
+                        tf.setFreeSearch(true);
+                        if (fieldElem.select("label[for=stichtit_sich]").size() > 0) {
+                            tf.setHint(fieldElem.select("label[for=stichtit_sich]").text().trim());
+                        }
+                    }
+                }
+
+                fields.add(field);
             } else if (inputs.size() == 2
                     && inputs.select("input[type=text]").size() == 2) {
                 // Two text fields, e.g. year from/to or two keywords
