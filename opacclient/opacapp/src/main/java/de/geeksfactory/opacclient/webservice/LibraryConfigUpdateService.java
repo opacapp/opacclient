@@ -63,8 +63,10 @@ public class LibraryConfigUpdateService extends IntentService {
         try {
             int count = updateConfig(service, prefs, new FileOutput(filesDir),
                     new JsonSearchFieldDataSource(this));
-            ACRA.getErrorReporter().putCustomData("data_version",
-                    prefs.getLastLibraryConfigUpdate().toString());
+            if (!BuildConfig.DEBUG) {
+                ACRA.getErrorReporter().putCustomData("data_version",
+                        prefs.getLastLibraryConfigUpdate().toString());
+            }
             if (BuildConfig.DEBUG) {
                 Log.d("LibraryConfigUpdate",
                         "updated config for " + String.valueOf(count) + " libraries");

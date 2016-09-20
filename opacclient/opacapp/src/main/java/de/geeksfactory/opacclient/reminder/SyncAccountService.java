@@ -115,8 +115,10 @@ public class SyncAccountService extends WakefulIntentService {
                     new JsonSearchFieldDataSource(this));
             Log.d(NAME, "updated config for " + String.valueOf(count) + " libraries");
             ((OpacClient) getApplication()).resetCache();
-            ACRA.getErrorReporter().putCustomData("data_version",
-                    prefs.getLastLibraryConfigUpdate().toString());
+            if (!BuildConfig.DEBUG) {
+                ACRA.getErrorReporter().putCustomData("data_version",
+                        prefs.getLastLibraryConfigUpdate().toString());
+            }
         } catch (IOException | JSONException e) {
 
         }

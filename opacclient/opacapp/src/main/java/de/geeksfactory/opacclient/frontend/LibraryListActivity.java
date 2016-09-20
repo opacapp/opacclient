@@ -56,6 +56,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Set;
 
+import de.geeksfactory.opacclient.BuildConfig;
 import de.geeksfactory.opacclient.OpacClient;
 import de.geeksfactory.opacclient.R;
 import de.geeksfactory.opacclient.objects.Account;
@@ -808,8 +809,10 @@ public class LibraryListActivity extends AppCompatActivity
                 Log.d("LibraryListActivity",
                         "updated config for " + String.valueOf(count) + " libraries");
                 ((OpacClient) getApplication()).resetCache();
-                ACRA.getErrorReporter().putCustomData("data_version",
-                        prefs.getLastLibraryConfigUpdate().toString());
+                if (!BuildConfig.DEBUG) {
+                    ACRA.getErrorReporter().putCustomData("data_version",
+                            prefs.getLastLibraryConfigUpdate().toString());
+                }
             } catch (IOException | JSONException e) {
                 e.printStackTrace();
                 // fail silently (e.g. when no Internet connection available)
