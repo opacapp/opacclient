@@ -42,17 +42,19 @@ import org.acra.annotation.ReportsCrashes;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Set;
 
 import de.geeksfactory.opacclient.apis.OpacApi;
 import de.geeksfactory.opacclient.frontend.AccountListActivity;
@@ -321,31 +323,31 @@ public class OpacClient extends Application {
             throws IOException {
         AssetManager assets = getAssets();
         String[] files = assets.list(ASSETS_BIBSDIR);
-        int num = files.length;
+        String[] additionalFiles = getLibrariesDir().list();
+        Set<String> allFiles = new HashSet<>();
+        Collections.addAll(allFiles, files);
+        Collections.addAll(allFiles, additionalFiles);
+        int num = allFiles.size();
 
         List<Library> libs = new ArrayList<>();
 
-        StringBuilder builder;
-        BufferedReader reader;
-        InputStream fis;
-        String line;
-        String json;
-
-        for (int i = 0; i < num; i++) {
+        int i = 0;
+        for (String file : allFiles) {
             try {
                 Library lib =
-                        getLibrary(files[i].substring(0, files[i].length() - ".json".length()));
+                        getLibrary(file.substring(0, file.length() - ".json".length()));
                 if ((!lib.getApi().equals("test") || BuildConfig.DEBUG) && lib.isActive()) {
                     libs.add(lib);
                 }
             } catch (JSONException e) {
-                Log.w("JSON library files", "Failed parsing library " + files[i]);
+                Log.w("JSON library files", "Failed parsing library " + file);
                 e.printStackTrace();
             }
             if (callback != null && i % 10 == 0 && i > 0) {
                 // reporting progress for every 10 loaded files should be enough
                 callback.publishProgress(((double) i) / num);
             }
+            i++;
         }
 
         return libs;
