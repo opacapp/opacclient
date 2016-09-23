@@ -124,4 +124,9 @@ task jacocoTestReport(type: JacocoReport, dependsOn: 'testDebugUnitTest') {
 }
 
 task downloadJson(type: JsonFilesTask)
-assembleRelease.dependsOn downloadJson
+
+tasks.whenTaskAdded { task ->
+    if (task.name == 'assembleRelease') {
+        task.dependsOn downloadJson
+    }
+}
