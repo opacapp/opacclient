@@ -1142,7 +1142,7 @@ public class TouchPoint extends BaseApi implements OpacApi {
                     for (Element link : tr.select("a")) {
                         String href = link.attr("abs:href");
                         Map<String, String> hrefq = getQueryParamsFirst(href);
-                        if (hrefq.get("methodToCall").equals("renewal")) {
+                        if ("renewal".equals(hrefq.get("methodToCall"))) {
                             item.setProlongData(href.split("\\?")[1]);
                             item.setRenewable(true);
                             break;
