@@ -64,7 +64,8 @@ public interface EbookServiceApi {
      * Download the item identified by item_id. Returns an URL where the item can be downloaded
      * from.
      */
-    public String downloadItem(Account account, String item_id);
+    public DownloadResult downloadItem(Account account, String item_id) throws IOException,
+            OpacErrorException;
 
     /**
      * The result of a {@link EbookServiceApi#booking(DetailledItem, Account, int, String)} call.
@@ -80,6 +81,36 @@ public interface EbookServiceApi {
 
         public BookingResult(Status status, String message) {
             super(status, message);
+        }
+    }
+
+
+    /**
+     * The result of a {@link EbookServiceApi#downloadItem(Account, String)} call
+     */
+    public class DownloadResult extends OpacApi.MultiStepResult {
+        protected String url;
+
+        public DownloadResult(Status status) {
+            super(status);
+        }
+
+        public DownloadResult(Status status, String message) {
+            super(status, message);
+        }
+
+        public static DownloadResult successFromUrl(String url) {
+            DownloadResult dr = new DownloadResult(Status.OK);
+            dr.setUrl(url);
+            return dr;
+        }
+
+        public String getUrl() {
+            return url;
+        }
+
+        public void setUrl(String url) {
+            this.url = url;
         }
     }
 }
