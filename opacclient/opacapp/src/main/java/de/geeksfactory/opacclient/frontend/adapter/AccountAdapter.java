@@ -2,18 +2,26 @@ package de.geeksfactory.opacclient.frontend.adapter;
 
 import android.content.Context;
 import android.content.res.TypedArray;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.text.Html;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.model.stream.BaseGlideUrlLoader;
 
 import java.util.List;
 
 import de.geeksfactory.opacclient.R;
 import de.geeksfactory.opacclient.apis.OpacApi;
+import de.geeksfactory.opacclient.frontend.ResultsAdapter;
+import de.geeksfactory.opacclient.i18n.AndroidStringProvider;
 import de.geeksfactory.opacclient.objects.AccountItem;
+import de.geeksfactory.opacclient.utils.ISBNTools;
 
 public abstract class AccountAdapter<I extends AccountItem, VH extends AccountAdapter.ViewHolder<I>>
         extends RecyclerView.Adapter<VH> {
@@ -57,7 +65,11 @@ public abstract class AccountAdapter<I extends AccountItem, VH extends AccountAd
         protected ImageButton ivDownload;
         protected ImageButton ivCancel;
         protected ImageButton ivBooking;
+        protected ImageView ivCover;
+        protected ImageView ivMediaType;
+
         protected int textColorPrimary;
+        private AndroidStringProvider sp;
 
         public ViewHolder(View itemView) {
             super(itemView);
@@ -69,11 +81,14 @@ public abstract class AccountAdapter<I extends AccountItem, VH extends AccountAd
             ivDownload = (ImageButton) itemView.findViewById(R.id.ivDownload);
             ivCancel = (ImageButton) itemView.findViewById(R.id.ivCancel);
             ivBooking = (ImageButton) itemView.findViewById(R.id.ivBooking);
+            ivCover = (ImageView) itemView.findViewById(R.id.ivCover);
+            ivMediaType = (ImageView) itemView.findViewById(R.id.ivMediaType);
 
             TypedArray a =
                     context.obtainStyledAttributes(new int[]{android.R.attr.textColorPrimary});
             textColorPrimary = a.getColor(0, 0);
             a.recycle();
+            sp = new AndroidStringProvider();
         }
 
         public void setItem(I item) {
@@ -84,6 +99,26 @@ public abstract class AccountAdapter<I extends AccountItem, VH extends AccountAd
                 tvTitleAndAuthor.setText(item.getTitle());
             } else {
                 setTextOrHide(item.getAuthor(), tvTitleAndAuthor);
+            }
+
+            if (item.getCover() != null) {
+                ivCover.setVisibility(View.VISIBLE);
+                ivMediaType.setVisibility(View.GONE);
+
+                Glide.with(context).using(new ISBNToolsUrlLoader(context))
+                     .load(item.getCover())
+                     .placeholder(ContextCompat.getDrawable(context, R.drawable.ic_loading))
+                     .crossFade()
+                     .into(ivCover);
+            } else {
+                ivCover.setVisibility(View.GONE);
+                ivMediaType.setVisibility(View.VISIBLE);
+                Glide.clear(ivCover);
+            }
+            if (item.getMediaType() != null) {
+                ivMediaType.setImageResource(ResultsAdapter.getResourceByMediaType(item.getMediaType
+                        ()));
+                ivMediaType.setContentDescription(sp.getMediaTypeName(item.getMediaType()));
             }
         }
     }
@@ -101,6 +136,18 @@ public abstract class AccountAdapter<I extends AccountItem, VH extends AccountAd
             tv.setText(value);
         } else {
             tv.setVisibility(View.GONE);
+        }
+    }
+
+
+    private static class ISBNToolsUrlLoader extends BaseGlideUrlLoader<String> {
+        public ISBNToolsUrlLoader(Context context) {
+            super(context);
+        }
+
+        @Override
+        protected String getUrl(String url, int width, int height) {
+            return ISBNTools.getBestSizeCoverUrl(url, width, height);
         }
     }
 }
