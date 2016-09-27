@@ -7,7 +7,9 @@
 			"author": "J. K. Rowling",
 			"status": "V",
             "renewable": "Y",
-            "prolongurl": "a"
+            "prolongurl": "a",
+            "mediatype": "DVD",
+            "cover": "https://images-na.ssl-images-amazon.com/images/I/91kKJKNniQL._SL1500_.jpg"
 		},
 		{
 			"barcode": "12346",
@@ -16,7 +18,9 @@
 			"author": "Christopher Paolini",
 			"status": "V",
             "renewable": "Y",
-            "prolongurl": "b"
+            "prolongurl": "b",
+            "mediatype": "BOOK",
+            "cover": "https://images-na.ssl-images-amazon.com/images/I/51Nd4TIlRAL.jpg"
 		},
 		{
 			"barcode": "12347",
@@ -25,7 +29,9 @@
 			"author": "J. R. R. Tolkien",
 			"status": "V",
             "renewable": "Y",
-            "prolongurl": "c"
+            "prolongurl": "c",
+            "mediatype": "BLURAY",
+            "cover": "https://images-na.ssl-images-amazon.com/images/I/91CsDwD5jxL._SL1500_.jpg"
 		}
 	],
 	"reservations": [
@@ -34,7 +40,9 @@
 			"author": "J. K. Rowling",
 			"status": "Bereit",
             "availability": "2016-09-27",
-            "cancelurl": "a"
+            "cancelurl": "a",
+            "mediatype": "BOOK",
+            "cover": "https://images-na.ssl-images-amazon.com/images/I/81p9va2cq3L.jpg"
 		}
 	]
 }     

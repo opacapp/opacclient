@@ -34,6 +34,7 @@ import de.geeksfactory.opacclient.objects.AccountData;
 import de.geeksfactory.opacclient.objects.AccountItem;
 import de.geeksfactory.opacclient.objects.LentItem;
 import de.geeksfactory.opacclient.objects.ReservedItem;
+import de.geeksfactory.opacclient.objects.SearchResult;
 import de.geeksfactory.opacclient.reminder.Alarm;
 
 public class AccountDataSource {
@@ -249,6 +250,9 @@ public class AccountDataSource {
         item.setFormat(cursor.getString(4));
         item.setId(cursor.getString(5));
         item.setStatus(cursor.getString(6));
+        String mediatype = cursor.getString(cursor.getColumnIndex("mediatype"));
+        item.setMediaType(mediatype != null ? SearchResult.MediaType.valueOf(mediatype) : null);
+        item.setCover(cursor.getString(cursor.getColumnIndex("cover")));
     }
 
     private ContentValues lentItemToContentValues(LentItem item, long accountId) {
@@ -284,6 +288,8 @@ public class AccountDataSource {
         putOrNull(cv, "format", item.getFormat());
         putOrNull(cv, "itemid", item.getId());
         putOrNull(cv, "status", item.getStatus());
+        putOrNull(cv, "cover", item.getCover());
+        putOrNull(cv, "mediatype", item.getMediaType().toString());
     }
 
     private void putOrNull(ContentValues cv, String key, LocalDate value) {
