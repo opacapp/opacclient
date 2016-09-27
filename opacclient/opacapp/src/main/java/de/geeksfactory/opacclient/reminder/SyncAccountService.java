@@ -29,8 +29,10 @@ import android.util.Log;
 
 import com.commonsware.cwac.wakeful.WakefulIntentService;
 
+import org.acra.ACRA;
 import org.json.JSONException;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.List;
 
@@ -41,6 +43,11 @@ import de.geeksfactory.opacclient.objects.Account;
 import de.geeksfactory.opacclient.objects.AccountData;
 import de.geeksfactory.opacclient.objects.Library;
 import de.geeksfactory.opacclient.storage.AccountDataSource;
+import de.geeksfactory.opacclient.storage.JsonSearchFieldDataSource;
+import de.geeksfactory.opacclient.storage.PreferenceDataSource;
+import de.geeksfactory.opacclient.webservice.LibraryConfigUpdateService;
+import de.geeksfactory.opacclient.webservice.WebService;
+import de.geeksfactory.opacclient.webservice.WebServiceManager;
 
 public class SyncAccountService extends WakefulIntentService {
 
@@ -53,6 +60,8 @@ public class SyncAccountService extends WakefulIntentService {
     @Override
     protected void doWakefulWork(Intent intent) {
         if (BuildConfig.DEBUG) Log.i(NAME, "SyncAccountService started");
+
+        updateLibraryConfig();
 
         SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(this);
 
@@ -95,6 +104,26 @@ public class SyncAccountService extends WakefulIntentService {
         }
     }
 
+    private void updateLibraryConfig() {
+        WebService service = WebServiceManager.getInstance();
+        PreferenceDataSource prefs = new PreferenceDataSource(this);
+        File filesDir = new File(getFilesDir(), LibraryConfigUpdateService.LIBRARIES_DIR);
+        filesDir.mkdirs();
+        try {
+            int count = LibraryConfigUpdateService.updateConfig(service, prefs,
+                    new LibraryConfigUpdateService.FileOutput(filesDir),
+                    new JsonSearchFieldDataSource(this));
+            Log.d(NAME, "updated config for " + String.valueOf(count) + " libraries");
+            ((OpacClient) getApplication()).resetCache();
+            if (!BuildConfig.DEBUG) {
+                ACRA.getErrorReporter().putCustomData("data_version",
+                        prefs.getLastLibraryConfigUpdate().toString());
+            }
+        } catch (IOException | JSONException e) {
+
+        }
+    }
+
     boolean syncAccounts(OpacClient app, AccountDataSource data, SharedPreferences sp,
             ReminderHelper helper) {
         boolean failed = false;
@@ -122,6 +151,8 @@ public class SyncAccountService extends WakefulIntentService {
             } catch (JSONException | IOException | OpacApi.OpacErrorException e) {
                 e.printStackTrace();
                 failed = true;
+                continue;
+            } catch (OpacClient.LibraryRemovedException e) {
                 continue;
             }
 

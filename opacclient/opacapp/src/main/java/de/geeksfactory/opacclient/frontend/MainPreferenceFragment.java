@@ -1,37 +1,45 @@
 /**
  * Copyright (C) 2013 by Raphael Michel under the MIT license:
  *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
- * of this software and associated documentation files (the "Software"), 
- * to deal in the Software without restriction, including without limitation 
- * the rights to use, copy, modify, merge, publish, distribute, sublicense, 
- * and/or sell copies of the Software, and to permit persons to whom the Software 
- * is furnished to do so, subject to the following conditions:
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
+ * associated documentation files (the "Software"), to deal in the Software without restriction,
+ * including without limitation the rights to use, copy, modify, merge, publish, distribute,
+ * sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
  *
- * The above copyright notice and this permission notice shall be included in 
- * all copies or substantial portions of the Software.
+ * The above copyright notice and this permission notice shall be included in all copies or
+ * substantial portions of the Software.
  *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR 
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, 
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. 
- * IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, 
- * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, 
- * ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER 
- * DEALINGS IN THE SOFTWARE.
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT
+ * NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+ * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
+ * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 package de.geeksfactory.opacclient.frontend;
 
 import android.app.Activity;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.design.widget.Snackbar;
+import android.support.v4.app.DialogFragment;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.preference.CheckBoxPreference;
 import android.support.v7.preference.ListPreference;
 import android.support.v7.preference.Preference;
 import android.support.v7.preference.PreferenceCategory;
 import android.support.v7.preference.PreferenceFragmentCompat;
 import android.support.v7.preference.PreferenceManager;
+import android.text.format.DateUtils;
+
+import org.joda.time.DateTime;
 
 import de.geeksfactory.opacclient.OpacClient;
 import de.geeksfactory.opacclient.R;
@@ -39,10 +47,13 @@ import de.geeksfactory.opacclient.reminder.ReminderHelper;
 import de.geeksfactory.opacclient.reminder.SyncAccountService;
 import de.geeksfactory.opacclient.storage.AccountDataSource;
 import de.geeksfactory.opacclient.storage.JsonSearchFieldDataSource;
+import de.geeksfactory.opacclient.storage.PreferenceDataSource;
 import de.geeksfactory.opacclient.storage.SearchFieldDataSource;
+import de.geeksfactory.opacclient.webservice.LibraryConfigUpdateService;
 
 public class MainPreferenceFragment extends PreferenceFragmentCompat {
 
+    public static final String TAG_DIALOG = "dialog";
     protected Activity context;
 
     @SuppressWarnings("SameReturnValue") // Plus Edition compatibility
@@ -100,7 +111,8 @@ public class MainPreferenceFragment extends PreferenceFragmentCompat {
                 public boolean onPreferenceChange(Preference preference, Object newValue) {
                     SharedPreferences prefs = PreferenceManager
                             .getDefaultSharedPreferences(getActivity());
-                    //int oldWarning = Integer.parseInt(prefs.getString("notification_warning", "3"));
+                    //int oldWarning = Integer.parseInt(prefs.getString("notification_warning",
+                    // "3"));
 
                     int newWarning = Integer.parseInt((String) newValue);
                     new ReminderHelper((OpacClient) getActivity().getApplication())
@@ -143,6 +155,123 @@ public class MainPreferenceFragment extends PreferenceFragmentCompat {
                     return false;
                 }
             });
+        }
+
+        final Preference updateLibraryConfig = findPreference("update_library_config");
+        if (updateLibraryConfig != null) {
+            updateLibraryConfig.setOnPreferenceClickListener(
+                    new Preference.OnPreferenceClickListener() {
+                        @Override
+                        public boolean onPreferenceClick(Preference preference) {
+                            IntentFilter successFilter = new IntentFilter(
+                                    LibraryConfigUpdateService.ACTION_SUCCESS);
+                            IntentFilter failureFilter = new IntentFilter(
+                                    LibraryConfigUpdateService.ACTION_FAILURE);
+
+                            BroadcastReceiver receiver =
+                                    new LibraryConfigServiceReceiver(updateLibraryConfig);
+
+                            LocalBroadcastManager.getInstance(context).registerReceiver(
+                                    receiver, successFilter);
+                            LocalBroadcastManager.getInstance(context).registerReceiver(
+                                    receiver, failureFilter);
+                            Intent i = new Intent(context, LibraryConfigUpdateService.class);
+                            context.startService(i);
+                            DialogFragment newFragment = ProgressDialogFragment
+                                    .getInstance(R.string.updating_library_config);
+                            showDialog(newFragment);
+                            updateLibraryConfig.setEnabled(false);
+                            return false;
+                        }
+                    });
+            refreshLastConfigUpdate(updateLibraryConfig);
+        }
+
+        final Preference resetLibraryConfig = findPreference("reset_library_config");
+        if (resetLibraryConfig != null) {
+            resetLibraryConfig.setOnPreferenceClickListener(
+                    new Preference.OnPreferenceClickListener() {
+                        @Override
+                        public boolean onPreferenceClick(Preference preference) {
+                            LibraryConfigUpdateService.clearConfigurationUpdates(getContext());
+                            if (getView() != null) {
+                                Snackbar.make(getView(), R.string.library_config_reset,
+                                        Snackbar.LENGTH_SHORT).show();
+                                refreshLastConfigUpdate(updateLibraryConfig);
+                            }
+                            return false;
+                        }
+                    });
+        }
+    }
+
+    private void refreshLastConfigUpdate(Preference updateLibraryConfig) {
+        DateTime lastUpdate = new PreferenceDataSource(context).getLastLibraryConfigUpdate();
+        CharSequence lastUpdateStr =
+                DateUtils.getRelativeTimeSpanString(context, lastUpdate.getMillis(), true);
+        updateLibraryConfig
+                .setSummary(getString(R.string.library_config_last_update, lastUpdateStr));
+    }
+
+    private void showDialog(DialogFragment newFragment) {
+        FragmentTransaction ft = getFragmentManager().beginTransaction();
+        Fragment prev = getFragmentManager().findFragmentByTag(TAG_DIALOG);
+        if (prev != null) {
+            ft.remove(prev);
+        }
+        ft.addToBackStack(null);
+        newFragment.show(ft, TAG_DIALOG);
+    }
+
+    private void removeDialogs() {
+        FragmentTransaction ft = getFragmentManager().beginTransaction();
+        Fragment prev = getFragmentManager().findFragmentByTag(TAG_DIALOG);
+        if (prev != null) {
+            ft.remove(prev);
+        }
+        ft.addToBackStack(null);
+        ft.commit();
+    }
+
+    private class LibraryConfigServiceReceiver extends BroadcastReceiver {
+        private final Preference updateLibraryConfig;
+
+        public LibraryConfigServiceReceiver(Preference updateLibraryConfig) {
+            this.updateLibraryConfig = updateLibraryConfig;
+        }
+
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            if (!MainPreferenceFragment.this.isAdded()) return;
+
+            updateLibraryConfig.setEnabled(true);
+            removeDialogs();
+
+            if (getView() != null) {
+                switch (intent.getAction()) {
+                    case LibraryConfigUpdateService.ACTION_SUCCESS:
+                        int count =
+                                intent.getIntExtra(LibraryConfigUpdateService.EXTRA_UPDATE_COUNT,
+                                        0);
+                        String text;
+                        if (count > 0) {
+                            text = getString(R.string.library_config_update_success, count);
+                        } else {
+                            text = getString(R.string.library_config_no_updates);
+                        }
+                        Snackbar.make(getView(),
+                                text,
+                                Snackbar.LENGTH_SHORT).show();
+
+                        refreshLastConfigUpdate(updateLibraryConfig);
+                        break;
+                    case LibraryConfigUpdateService.ACTION_FAILURE:
+                        Snackbar.make(getView(), R.string.library_config_update_failure,
+                                Snackbar.LENGTH_SHORT).show();
+                        break;
+                }
+            }
+            LocalBroadcastManager.getInstance(context).unregisterReceiver(this);
         }
     }
 }

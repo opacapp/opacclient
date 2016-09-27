@@ -237,8 +237,13 @@ public class StarredFragment extends Fragment implements
         for (Starred item : items) {
             text.append(item.getTitle());
             text.append("\n");
-            String shareUrl = app.getApi().getShareUrl(item.getMNr(),
-                    item.getTitle());
+            String shareUrl;
+            try {
+                shareUrl = app.getApi().getShareUrl(item.getMNr(),
+                        item.getTitle());
+            } catch (OpacClient.LibraryRemovedException e) {
+                return;
+            }
             if (shareUrl != null) {
                 text.append(shareUrl);
                 text.append("\n");

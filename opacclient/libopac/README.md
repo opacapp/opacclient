@@ -15,7 +15,7 @@ The following resources should help you to get started on using libopac:
 * [Basic sample project using Maven](https://github.com/opacapp/libopac-sample-mvn) 
 * [Basic sample project using Gradle](https://github.com/opacapp/libopac-sample-gradle) 
 * [Javadoc](https://en.opacapp.net/doc/) (not always up-to-date)
-* [JSON configuration files](https://github.com/opacapp/opacclient/tree/master/opacclient/opacapp/src/main/assets/bibs) for more than 1000 public and university libraries
+* [JSON configuration files](https://github.com/opacapp/opacclient/blob/master/opacclient/opacapp/LIBRARY_DATA.md) for more than 1000 public and university libraries
 
 If you have any questions, you can write us an email at [info@opacapp.net](mailto:info@opacapp.net).
 

@@ -24,7 +24,7 @@ public class TouchPointAccountTest extends BaseHtmlTest {
     }
 
     private static final String[] FILES =
-            new String[]{"chemnitz.html", "munchenbsb.html", "winterthur.html"};
+            new String[]{"chemnitz.html", "munchenbsb.html", "winterthur.html", "munchenbsb2.html"};
 
     @Parameterized.Parameters(name = "{0}")
     public static Collection<String[]> files() {
@@ -44,6 +44,7 @@ public class TouchPointAccountTest extends BaseHtmlTest {
         for (LentItem item : media) {
             assertNotNull(item.getTitle());
             assertNotNull(item.getDeadline());
+            if (item.getStatus().contains("ist möglich")) assertNotNull(item.getProlongData());
         }
     }
 

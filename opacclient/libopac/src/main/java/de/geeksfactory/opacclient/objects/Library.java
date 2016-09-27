@@ -21,6 +21,7 @@
  */
 package de.geeksfactory.opacclient.objects;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -42,6 +43,7 @@ public class Library implements Comparable<Library> {
     private String country;
     private String state;
     private String replacedby;
+    private boolean active = true;
 
     private String information;
     private double[] geo;
@@ -83,17 +85,46 @@ public class Library implements Comparable<Library> {
         if (input.has("replacedby"))
             lib.setReplacedBy(input.getString("replacedby"));
 
-        if (input.has("geo")) {
+        if (input.has("geo") && !input.isNull("geo")) {
             double[] geo = new double[2];
             geo[0] = input.getJSONArray("geo").getDouble(0);
             geo[1] = input.getJSONArray("geo").getDouble(1);
             lib.setGeo(geo);
         }
 
+        if (input.has("_active")) {
+            lib.setActive(input.getBoolean("_active"));
+        }
+
         if (lib.getTitle().equals(""))
             lib.setTitle(null);
 
         return lib;
+    }
+
+    public JSONObject toJSON() throws JSONException {
+        JSONObject json = new JSONObject();
+        json.put("api", api);
+        json.put("city", city);
+        json.put("title", title);
+        json.put("country", country);
+        json.put("state", state);
+        json.put("data", data);
+        json.put("account_supported", account_supported);
+        json.put("nfc_supported", nfcSupported);
+        json.put("information", information);
+        if (displayName != null) json.put("displayname", displayName);
+        json.put("replacedby", replacedby);
+        if (geo != null) {
+            JSONArray geoJson = new JSONArray();
+            geoJson.put(geo[0]);
+            geoJson.put(geo[1]);
+            json.put("geo", geoJson);
+        } else {
+            json.put("geo", (Object) null);
+        }
+        json.put("_active", active);
+        return json;
     }
 
     /**
@@ -330,6 +361,22 @@ public class Library implements Comparable<Library> {
         this.geo_distance = geo_distance;
     }
 
+    /**
+     * Get if this library's configuration is "active". Defaults to true. When a library needs to be
+     * removed from the app, this is set to false.
+     */
+    public boolean isActive() {
+        return active;
+    }
+
+    /**
+     * Set if this library's configuration is "active". Defaults to true. When a library needs to be
+     * removed from the app, set thi to false.
+     */
+    public void setActive(boolean active) {
+        this.active = active;
+    }
+
     @Override
     public int compareTo(Library arg0) {
         Collator deCollator = Collator.getInstance(Locale.GERMAN);
@@ -376,5 +423,4 @@ public class Library implements Comparable<Library> {
             return false;
         return true;
     }
-
 }

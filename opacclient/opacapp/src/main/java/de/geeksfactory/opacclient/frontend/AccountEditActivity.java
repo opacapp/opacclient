@@ -366,6 +366,8 @@ public class AccountEditActivity extends AppCompatActivity {
                 return e;
             } catch (OpacErrorException e) {
                 return e;
+            } catch (OpacClient.LibraryRemovedException e) {
+                return e;
             }
             return null;
         }

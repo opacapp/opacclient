@@ -22,6 +22,7 @@ import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -40,6 +41,10 @@ import android.widget.SectionIndexer;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import org.acra.ACRA;
+import org.json.JSONException;
+
+import java.io.File;
 import java.io.IOException;
 import java.text.Collator;
 import java.util.ArrayList;
@@ -51,13 +56,19 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Set;
 
+import de.geeksfactory.opacclient.BuildConfig;
 import de.geeksfactory.opacclient.OpacClient;
 import de.geeksfactory.opacclient.R;
 import de.geeksfactory.opacclient.objects.Account;
 import de.geeksfactory.opacclient.objects.Library;
 import de.geeksfactory.opacclient.storage.AccountDataSource;
+import de.geeksfactory.opacclient.storage.JsonSearchFieldDataSource;
+import de.geeksfactory.opacclient.storage.PreferenceDataSource;
 import de.geeksfactory.opacclient.ui.AppCompatProgressDialog;
 import de.geeksfactory.opacclient.utils.ErrorReporter;
+import de.geeksfactory.opacclient.webservice.LibraryConfigUpdateService;
+import de.geeksfactory.opacclient.webservice.WebService;
+import de.geeksfactory.opacclient.webservice.WebServiceManager;
 
 public class LibraryListActivity extends AppCompatActivity
         implements ActivityCompat.OnRequestPermissionsResultCallback {
@@ -760,27 +771,53 @@ public class LibraryListActivity extends AppCompatActivity
 
     protected class LoadLibrariesTask extends
             AsyncTask<OpacClient, Double, List<Library>> {
-        private long startTime;
-        private int progressUpdateCount = 0;
+        private boolean first = true;
+
+        @Override
+        protected void onPreExecute() {
+            dialog = new AppCompatProgressDialog(LibraryListActivity.this);
+            dialog.setIndeterminate(false);
+            dialog.setCancelable(false);
+            dialog.setMessage(getString(R.string.updating_libraries));
+            dialog.setProgressStyle(AppCompatProgressDialog.STYLE_HORIZONTAL);
+            dialog.setMax(100);
+            dialog.setProgress(0);
+            dialog.setProgressNumberFormat(null);
+            dialog.show();
+        }
 
         @Override
         protected void onProgressUpdate(Double... progress) {
-            if (progressUpdateCount == 0) {
-                startTime = System.currentTimeMillis();
-            } else if (progressUpdateCount == 1) {
-                double timeElapsed = System.currentTimeMillis() - startTime;
-                double expectedTime = timeElapsed / progress[0];
-                if (expectedTime > 300 && !LibraryListActivity.this.isFinishing()) {
-                    dialog = AppCompatProgressDialog.show(LibraryListActivity.this, "",
-                            getString(R.string.loading_libraries), true, false);
-                    dialog.show();
-                }
+            dialog.setProgress((int) (progress[0] * 100));
+            if (first) {
+                dialog.setMessage(getString(R.string.loading_libraries));
+            } else {
+                first = false;
             }
-            progressUpdateCount++;
         }
 
         @Override
         protected List<Library> doInBackground(OpacClient... arg0) {
+            WebService service = WebServiceManager.getInstance();
+            PreferenceDataSource prefs = new PreferenceDataSource(LibraryListActivity.this);
+            File filesDir = new File(getFilesDir(), LibraryConfigUpdateService.LIBRARIES_DIR);
+            filesDir.mkdirs();
+            try {
+                int count = LibraryConfigUpdateService.updateConfig(service, prefs,
+                        new LibraryConfigUpdateService.FileOutput(filesDir),
+                        new JsonSearchFieldDataSource(LibraryListActivity.this));
+                Log.d("LibraryListActivity",
+                        "updated config for " + String.valueOf(count) + " libraries");
+                ((OpacClient) getApplication()).resetCache();
+                if (!BuildConfig.DEBUG) {
+                    ACRA.getErrorReporter().putCustomData("data_version",
+                            prefs.getLastLibraryConfigUpdate().toString());
+                }
+            } catch (IOException | JSONException e) {
+                e.printStackTrace();
+                // fail silently (e.g. when no Internet connection available)
+            }
+
             OpacClient app = arg0[0];
             try {
                 return app.getLibraries(new OpacClient.ProgressCallback() {
