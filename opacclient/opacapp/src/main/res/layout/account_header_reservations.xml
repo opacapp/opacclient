@@ -4,10 +4,8 @@
           android:layout_width="match_parent"
           android:layout_height="wrap_content"
           android:layout_marginBottom="10dp"
-          android:layout_marginTop="8dp"
-          android:layout_marginLeft="72dp"
+          android:layout_marginTop="16dp"
+          android:layout_marginLeft="16dp"
           android:layout_marginRight="16dp"
-          android:layout_marginStart="72dp"
-          android:layout_marginEnd="16dp"
           android:text="@string/reservations_head"
           android:textAppearance="@style/TextAppearance.Opacapp.Subhead"/>
