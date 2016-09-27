@@ -88,6 +88,7 @@ import de.geeksfactory.opacclient.objects.ReservedItem;
 import de.geeksfactory.opacclient.reminder.ReminderHelper;
 import de.geeksfactory.opacclient.reminder.SyncAccountAlarmListener;
 import de.geeksfactory.opacclient.storage.AccountDataSource;
+import de.geeksfactory.opacclient.ui.AccountDividerItemDecoration;
 import de.geeksfactory.opacclient.ui.AppCompatProgressDialog;
 import de.geeksfactory.opacclient.utils.ErrorReporter;
 import su.j2e.rvjoiner.JoinableAdapter;
@@ -95,7 +96,7 @@ import su.j2e.rvjoiner.JoinableLayout;
 import su.j2e.rvjoiner.RvJoiner;
 
 public class AccountFragment extends Fragment implements
-        AccountSelectedListener {
+        AccountSelectedListener, LentAdapter.Callback, ReservationsAdapter.Callback {
 
     public static final long MAX_CACHE_AGE = (1000 * 3600 * 2);
     protected AlertDialog adialog;
@@ -165,9 +166,9 @@ public class AccountFragment extends Fragment implements
         tvErrHeadA = (TextView) view.findViewById(R.id.tvErrHeadA);
         tvErrBodyA = (TextView) view.findViewById(R.id.tvErrBodyA);
 
-        lentAdapter = new LentAdapter();
+        lentAdapter = new LentAdapter(this);
         displayLentItems();
-        resAdapter = new ReservationsAdapter();
+        resAdapter = new ReservationsAdapter(this);
         displayReservedItems();
 
         if (view.findViewById(R.id.rlAccHeader) != null) {
@@ -175,10 +176,12 @@ public class AccountFragment extends Fragment implements
             RecyclerView rvLent = (RecyclerView) view.findViewById(R.id.rvLent);
             rvLent.setLayoutManager(new LinearLayoutManager(getActivity()));
             rvLent.setAdapter(lentAdapter);
+            rvLent.addItemDecoration(new AccountDividerItemDecoration(getContext()));
 
             RecyclerView rvReservations = (RecyclerView) view.findViewById(R.id.rvReservations);
             rvReservations.setLayoutManager(new LinearLayoutManager(getActivity()));
             rvReservations.setAdapter(resAdapter);
+            rvReservations.addItemDecoration(new AccountDividerItemDecoration(getContext()));
 
             findHeaderViews(view);
             findErrorWarningViews(view);
@@ -189,6 +192,7 @@ public class AccountFragment extends Fragment implements
             // phone
             RecyclerView rv = (RecyclerView) view.findViewById(R.id.rvAccountData);
             rv.setLayoutManager(new LinearLayoutManager(getActivity()));
+            rv.addItemDecoration(new AccountDividerItemDecoration(getContext()));
             RvJoiner joiner = new RvJoiner();
 
             joiner.add(new JoinableLayout(R.layout.account_header, new JoinableLayout.Callback() {
@@ -502,7 +506,7 @@ public class AccountFragment extends Fragment implements
         lt.execute();
     }
 
-    protected void cancel(final String a) {
+    public void cancel(final String a) {
         long age = System.currentTimeMillis() - refreshtime;
         if (refreshing || fromcache || age > MAX_CACHE_AGE) {
             Toast.makeText(getActivity(), R.string.account_no_concurrent,
@@ -599,7 +603,7 @@ public class AccountFragment extends Fragment implements
         alert.show();
     }
 
-    protected void prolong(final String a) {
+    public void prolong(final String a) {
         long age = System.currentTimeMillis() - refreshtime;
         if (refreshing || age > MAX_CACHE_AGE) {
             Toast.makeText(getActivity(), R.string.account_no_concurrent,
@@ -732,7 +736,7 @@ public class AccountFragment extends Fragment implements
 
     }
 
-    protected void download(final String a) {
+    public void download(final String a) {
         MultiStepResultHelper<String> msrhDownload = new MultiStepResultHelper<>(
                 getActivity(), a, R.string.doing_download);
         msrhDownload.setCallback(new Callback<String>() {
