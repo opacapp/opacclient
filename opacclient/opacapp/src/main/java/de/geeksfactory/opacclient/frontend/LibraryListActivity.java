@@ -67,6 +67,7 @@ import de.geeksfactory.opacclient.storage.PreferenceDataSource;
 import de.geeksfactory.opacclient.ui.AppCompatProgressDialog;
 import de.geeksfactory.opacclient.utils.ErrorReporter;
 import de.geeksfactory.opacclient.webservice.LibraryConfigUpdateService;
+import de.geeksfactory.opacclient.webservice.UpdateHandler;
 import de.geeksfactory.opacclient.webservice.WebService;
 import de.geeksfactory.opacclient.webservice.WebServiceManager;
 
@@ -803,7 +804,8 @@ public class LibraryListActivity extends AppCompatActivity
             File filesDir = new File(getFilesDir(), LibraryConfigUpdateService.LIBRARIES_DIR);
             filesDir.mkdirs();
             try {
-                int count = LibraryConfigUpdateService.updateConfig(service, prefs,
+                int count = ((OpacClient) getApplication()).getUpdateHandler().updateConfig(
+                        service, prefs,
                         new LibraryConfigUpdateService.FileOutput(filesDir),
                         new JsonSearchFieldDataSource(LibraryListActivity.this));
                 Log.d("LibraryListActivity",

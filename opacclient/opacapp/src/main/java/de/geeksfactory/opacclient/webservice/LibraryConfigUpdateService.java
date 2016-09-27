@@ -25,23 +25,17 @@ import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 
 import org.acra.ACRA;
-import org.joda.time.DateTime;
 import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.List;
 
 import de.geeksfactory.opacclient.BuildConfig;
 import de.geeksfactory.opacclient.OpacClient;
-import de.geeksfactory.opacclient.objects.Library;
 import de.geeksfactory.opacclient.storage.JsonSearchFieldDataSource;
 import de.geeksfactory.opacclient.storage.PreferenceDataSource;
-import de.geeksfactory.opacclient.storage.SearchFieldDataSource;
 import de.geeksfactory.opacclient.utils.ErrorReporter;
-import retrofit2.Response;
 
 public class LibraryConfigUpdateService extends IntentService {
     private static final String NAME = "LibraryConfigUpdateService";
@@ -61,8 +55,8 @@ public class LibraryConfigUpdateService extends IntentService {
         File filesDir = new File(getFilesDir(), LIBRARIES_DIR);
         filesDir.mkdirs();
         try {
-            int count = updateConfig(service, prefs, new FileOutput(filesDir),
-                    new JsonSearchFieldDataSource(this));
+            int count = ((OpacClient) getApplication()).getUpdateHandler().updateConfig(
+                    service, prefs, new FileOutput(filesDir), new JsonSearchFieldDataSource(this));
             if (!BuildConfig.DEBUG) {
                 ACRA.getErrorReporter().putCustomData("data_version",
                         prefs.getLastLibraryConfigUpdate().toString());
@@ -82,38 +76,6 @@ public class LibraryConfigUpdateService extends IntentService {
             LocalBroadcastManager.getInstance(this).sendBroadcast(broadcast);
             ErrorReporter.handleException(e);
         }
-    }
-
-    public static int updateConfig(WebService service, PreferenceDataSource prefs,
-            FileOutput output,
-            SearchFieldDataSource searchFields)
-            throws IOException, JSONException {
-        if (prefs.getLastLibraryConfigUpdateVersion() != BuildConfig.VERSION_CODE) {
-            output.clearFiles();
-            prefs.clearLastLibraryConfigUpdate();
-        }
-
-        Response<List<Library>>
-                response = service.getLibraryConfigs(prefs.getLastLibraryConfigUpdate(),
-                BuildConfig.VERSION_CODE, BuildConfig.PLUS_DATA ? 1 : 0).execute();
-        List<Library> updatedLibraries = response.body();
-
-        for (Library lib : updatedLibraries) {
-            String filename = lib.getIdent() + ".json";
-            JSONObject json = lib.toJSON();
-            output.writeFile(filename, json.toString());
-
-            if (searchFields.hasSearchFields(lib.getIdent())) {
-                // clear cached search fields when configuration was updated
-                searchFields.clearSearchFields(lib.getIdent());
-            }
-        }
-
-        DateTime lastUpdate = new DateTime(response.headers().get("X-Page-Generated"));
-        prefs.setLastLibraryConfigUpdate(lastUpdate);
-        prefs.setLastLibraryConfigUpdateVersion(BuildConfig.VERSION_CODE);
-
-        return updatedLibraries.size();
     }
 
     public static class FileOutput {

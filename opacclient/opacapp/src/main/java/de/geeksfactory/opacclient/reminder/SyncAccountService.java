@@ -46,6 +46,7 @@ import de.geeksfactory.opacclient.storage.AccountDataSource;
 import de.geeksfactory.opacclient.storage.JsonSearchFieldDataSource;
 import de.geeksfactory.opacclient.storage.PreferenceDataSource;
 import de.geeksfactory.opacclient.webservice.LibraryConfigUpdateService;
+import de.geeksfactory.opacclient.webservice.UpdateHandler;
 import de.geeksfactory.opacclient.webservice.WebService;
 import de.geeksfactory.opacclient.webservice.WebServiceManager;
 
@@ -110,7 +111,8 @@ public class SyncAccountService extends WakefulIntentService {
         File filesDir = new File(getFilesDir(), LibraryConfigUpdateService.LIBRARIES_DIR);
         filesDir.mkdirs();
         try {
-            int count = LibraryConfigUpdateService.updateConfig(service, prefs,
+            int count = ((OpacClient) getApplication()).getUpdateHandler().updateConfig(
+                    service, prefs,
                     new LibraryConfigUpdateService.FileOutput(filesDir),
                     new JsonSearchFieldDataSource(this));
             Log.d(NAME, "updated config for " + String.valueOf(count) + " libraries");
