@@ -114,7 +114,7 @@ public class LentItem extends AccountItem {
 
     /**
      * @return Internal identifier which will be supplied to your {@link
-     * de.geeksfactory.opacclient.apis.EbookServiceApi#downloadItem(Account, String)} implementation
+     * de.geeksfactory.opacclient.apis.EbookServiceApi#downloadItem(Account, String, int, String)} implementation
      * for download. Button for download will only be displayed if this is set.
      */
     public String getDownloadData() {
@@ -122,9 +122,9 @@ public class LentItem extends AccountItem {
     }
 
     /**
-     * Set internal identifier which will be supplied to your {@link de.geeksfactory.opacclient
-     * .apis.EbookServiceApi#downloadItem(Account,
-     * String)} implementation for download. Button for download will only be displayed if this is
+     * Set internal identifier which will be supplied to your
+     * {@link de.geeksfactory.opacclient.apis.EbookServiceApi#downloadItem(Account, String, int, String)}
+     * implementation for download. Button for download will only be displayed if this is
      * set.
      */
     public void setDownloadData(String downloadData) {
