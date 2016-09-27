@@ -95,7 +95,7 @@ public class LibraryConfigUpdateService extends IntentService {
 
         Response<List<Library>>
                 response = service.getLibraryConfigs(prefs.getLastLibraryConfigUpdate(),
-                BuildConfig.VERSION_CODE).execute();
+                BuildConfig.VERSION_CODE, BuildConfig.PLUS_DATA ? 1 : 0).execute();
         List<Library> updatedLibraries = response.body();
 
         for (Library lib : updatedLibraries) {

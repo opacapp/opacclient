@@ -18,5 +18,5 @@ public interface WebService {
 
     @GET("androidconfigs/")
     Call<List<Library>> getLibraryConfigs(@Query("modified_since") DateTime modifiedSince,
-            @Query("app_version") int appVersion);
+            @Query("app_version") int appVersion, @Query("plus_app") Integer plusApp);
 }
