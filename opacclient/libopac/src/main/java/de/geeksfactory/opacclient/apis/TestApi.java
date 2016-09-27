@@ -153,7 +153,12 @@ public class TestApi extends BaseApi {
     @Override
     public ProlongResult prolong(String media, Account account, int useraction,
             String selection) throws IOException {
-        return null;
+        try {
+            Thread.sleep(500);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        return new ProlongResult(MultiStepResult.Status.OK);
     }
 
     @Override
@@ -165,7 +170,12 @@ public class TestApi extends BaseApi {
     @Override
     public CancelResult cancel(String media, Account account, int useraction,
             String selection) throws IOException, OpacErrorException {
-        return null;
+        try {
+            Thread.sleep(500);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        return new CancelResult(MultiStepResult.Status.OK);
     }
 
     @Override
