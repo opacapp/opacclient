@@ -65,8 +65,8 @@ public class ISBNTools {
         Pattern vlbRegex = Pattern.compile("^https?://(?:www.)?vlb\\.de/GetBlob\\.aspx\\?" +
                 ".*strIsbn=([0-9X]*)");
         Pattern amazonRegex = Pattern.compile(
-                "^(https?://(:?images(?:-[^\\.]*)?\\.|[^\\.]*\\.images-)amazon\\" +
-                        ".com/images/[PI]/[^\\.]*\\.(?:\\d\\d\\.)?)[^.]*\\.jpg");
+                "^(https?://(:?images(?:-[^\\.]*)?\\.|[^\\.]*\\.(?:ssl-)?images-)amazon" +
+                        ".com/images/[PI]/[^\\.]*\\.?(?:\\d\\d\\.)?)[^.]*\\.jpg");
 
         Matcher vlbMatcher = vlbRegex.matcher(url);
         Matcher amazonMatcher = amazonRegex.matcher(url);
@@ -88,6 +88,7 @@ public class ISBNTools {
         } else if (amazonMatcher.find()) {
             // Amazon Covers, according to http://aaugh.com/imageabuse.html
             String base = amazonMatcher.group(1);
+            if (!base.endsWith(".")) base = base + ".";
             return base + "SL" + max + ".jpg";
         } else {
             return url;
