@@ -41,11 +41,13 @@ public class WinBiapAccountTest extends BaseHtmlTest {
     public void testParseMediaList() throws OpacApi.OpacErrorException {
         String html = readResource("/winbiap/medialist/" + file);
         if (html == null) return; // we may not have all files for all libraries
-        List<LentItem> media = WinBiap.parseMediaList(Jsoup.parse(html));
+        List<LentItem> media = WinBiap.parseMediaList(Jsoup.parse(html), new JSONObject());
         assertTrue(media.size() > 0);
         for (LentItem item : media) {
             assertNotNull(item.getTitle());
             assertNotNull(item.getDeadline());
+            assertNotNull(item.getMediaType());
+            assertContainsData(item.getCover());
         }
     }
 
@@ -56,6 +58,10 @@ public class WinBiapAccountTest extends BaseHtmlTest {
         List<ReservedItem> media =
                 WinBiap.parseResList(Jsoup.parse(html), new DummyStringProvider(),
                         new JSONObject());
+        for (ReservedItem item : media) {
+            assertNotNull(item.getMediaType());
+            assertContainsData(item.getCover());
+        }
         assertTrue(media.size() > 0);
     }
 }

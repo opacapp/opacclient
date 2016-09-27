@@ -104,11 +104,13 @@ public class WinBiap extends BaseApi implements OpacApi {
         defaulttypes.put("sb_buch", SearchResult.MediaType.BOOK);
         defaulttypes.put("sl_buch", SearchResult.MediaType.BOOK);
         defaulttypes.put("kj_buch", SearchResult.MediaType.BOOK);
+        defaulttypes.put("buch", SearchResult.MediaType.BOOK);
         defaulttypes.put("hoerbuch", SearchResult.MediaType.AUDIOBOOK);
         defaulttypes.put("musik", SearchResult.MediaType.CD_MUSIC);
         defaulttypes.put("cdrom", SearchResult.MediaType.CD_SOFTWARE);
         defaulttypes.put("dvd", SearchResult.MediaType.DVD);
         defaulttypes.put("online", SearchResult.MediaType.EBOOK);
+        defaulttypes.put("konsole", SearchResult.MediaType.GAME_CONSOLE);
     }
 
     protected String opac_url = "";
@@ -685,19 +687,21 @@ public class WinBiap extends BaseApi implements OpacApi {
             if (!fees.equals("ausgeglichen")) adata.setPendingFees(fees);
         }
 
-        Document lentPage = Jsoup.parse(
-                httpGet(opac_url + "/user/borrow.aspx", getDefaultEncoding()));
-        adata.setLent(parseMediaList(lentPage));
+        String lentUrl = opac_url + "/user/borrow.aspx";
+        Document lentPage = Jsoup.parse(httpGet(lentUrl, getDefaultEncoding()));
+        lentPage.setBaseUri(lentUrl);
+        adata.setLent(parseMediaList(lentPage, data));
 
-        Document reservationsPage = Jsoup.parse(
-                httpGet(opac_url + "/user/reservations.aspx", getDefaultEncoding()));
+        String resUrl = opac_url + "/user/reservations.aspx";
+        Document reservationsPage = Jsoup.parse(httpGet(resUrl, getDefaultEncoding()));
+        reservationsPage.setBaseUri(resUrl);
         adata.setReservations(parseResList(reservationsPage, stringProvider, data));
 
 
         return adata;
     }
 
-    static List<LentItem> parseMediaList(Document doc) {
+    static List<LentItem> parseMediaList(Document doc, JSONObject data) {
         List<LentItem> lent = new ArrayList<>();
 
         DateTimeFormatter fmt = DateTimeFormat.forPattern("dd.MM.yyyy").withLocale(Locale.GERMAN);
@@ -719,10 +723,18 @@ public class WinBiap extends BaseApi implements OpacApi {
             Element detailsTr = winBiap43 ? tr.nextElementSibling() : tr;
 
             // the second column contains an img tag with the cover
-            if (tr.select(".cover, img[id*=ImageCover]").size() > 0) {
+            if (detailsTr.select(".cover, img[id*=ImageCover]").size() > 0) {
                 // find media ID using cover URL
-                Map<String, String> params = getQueryParamsFirst(tr.select(".cover").attr("src"));
+                Element cover = detailsTr.select(".cover, img[id*=ImageCover]").first();
+                String src = cover.attr("abs:data-src");
+                if (src.equals("")) src = cover.attr("abs:src");
+                Map<String, String> params = getQueryParamsFirst(src);
                 if (params.containsKey("catid")) item.setId(params.get("catid"));
+
+                // find media type
+                SearchResult.MediaType mt = getMediaType(cover, data);
+                item.setMediaType(mt);
+                item.setCover(src);
             }
 
             item.setAuthor(nullIfEmpty(tr.select("[id$=LabelAutor]").text()));
@@ -786,15 +798,21 @@ public class WinBiap extends BaseApi implements OpacApi {
             Element detailsTr = winBiap43 ? tr.nextElementSibling() : tr;
 
             // the second column contains an img tag with the cover
-            if (tr.select(".cover").size() > 0) {
+            if (detailsTr.select(".cover, img[id*=ImageCover]").size() > 0) {
                 // find media ID using cover URL
-                Map<String, String> params = getQueryParamsFirst(tr.select(".cover").attr("src"));
+                Element cover = detailsTr.select(".cover, img[id*=ImageCover]").first();
+                String src = cover.attr("abs:data-src");
+                if (src.equals("")) src = cover.attr("abs:src");
+                Map<String, String> params = getQueryParamsFirst(src);
                 if (params.containsKey("catid")) item.setId(params.get("catid"));
+
                 // find media type
-                SearchResult.MediaType mt = getMediaType(tr.select(".cover").first(), data);
+                SearchResult.MediaType mt = getMediaType(cover, data);
                 if (mt != null) {
                     item.setFormat(stringProvider.getMediaTypeName(mt));
+                    item.setMediaType(mt);
                 }
+                item.setCover(src);
             }
 
             item.setStatus(nullIfEmpty(winBiap43 ? detailsTr.select("[id$=labelStatus], [id*=labelStatus_]").text() :
