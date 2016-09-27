@@ -46,7 +46,7 @@ public class LibraryConfigUpdateServiceTest {
     @Test
     public void shouldSetLastUpdate() throws IOException, JSONException {
         List<Library> libraries = new ArrayList<>();
-        when(service.getLibraryConfigs(LAST_UPDATE, BuildConfig.VERSION_CODE, 0))
+        when(service.getLibraryConfigs(LAST_UPDATE, BuildConfig.VERSION_CODE, 0, null))
                 .thenReturn(Calls.response(libraries));
 
         new UpdateHandler().updateConfig(service, prefs, output, searchFields);
@@ -59,7 +59,7 @@ public class LibraryConfigUpdateServiceTest {
     public void shouldUpdateLibrary() throws IOException, JSONException {
         List<Library> libraries = new ArrayList<>();
         libraries.add(library);
-        when(service.getLibraryConfigs(LAST_UPDATE, BuildConfig.VERSION_CODE, 0))
+        when(service.getLibraryConfigs(LAST_UPDATE, BuildConfig.VERSION_CODE, 0, null))
                 .thenReturn(Calls.response(libraries));
 
         new UpdateHandler().updateConfig(service, prefs, output, searchFields);
@@ -72,7 +72,7 @@ public class LibraryConfigUpdateServiceTest {
         when(prefs.getLastLibraryConfigUpdateVersion()).thenReturn(BuildConfig.VERSION_CODE - 1);
 
         List<Library> libraries = new ArrayList<>();
-        when(service.getLibraryConfigs(LAST_UPDATE, BuildConfig.VERSION_CODE, 0))
+        when(service.getLibraryConfigs(LAST_UPDATE, BuildConfig.VERSION_CODE, 0, null))
                 .thenReturn(Calls.response(libraries));
 
         new UpdateHandler().updateConfig(service, prefs, output, searchFields);
@@ -83,7 +83,7 @@ public class LibraryConfigUpdateServiceTest {
     public void shouldClearSearchFields() throws IOException, JSONException {
         List<Library> libraries = new ArrayList<>();
         libraries.add(library);
-        when(service.getLibraryConfigs(LAST_UPDATE, BuildConfig.VERSION_CODE, 0))
+        when(service.getLibraryConfigs(LAST_UPDATE, BuildConfig.VERSION_CODE, 0, null))
                 .thenReturn(Calls.response(libraries));
         when(searchFields.hasSearchFields(IDENT)).thenReturn(true);
 
