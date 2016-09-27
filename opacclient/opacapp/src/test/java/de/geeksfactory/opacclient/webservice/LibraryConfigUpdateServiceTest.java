@@ -49,7 +49,7 @@ public class LibraryConfigUpdateServiceTest {
         when(service.getLibraryConfigs(LAST_UPDATE, BuildConfig.VERSION_CODE, 0))
                 .thenReturn(Calls.response(libraries));
 
-        LibraryConfigUpdateService.updateConfig(service, prefs, output, searchFields);
+        new UpdateHandler().updateConfig(service, prefs, output, searchFields);
         verifyNoMoreInteractions(output);
         verify(prefs).setLastLibraryConfigUpdate(any(DateTime.class));
         verify(prefs).setLastLibraryConfigUpdateVersion(BuildConfig.VERSION_CODE);
@@ -62,7 +62,7 @@ public class LibraryConfigUpdateServiceTest {
         when(service.getLibraryConfigs(LAST_UPDATE, BuildConfig.VERSION_CODE, 0))
                 .thenReturn(Calls.response(libraries));
 
-        LibraryConfigUpdateService.updateConfig(service, prefs, output, searchFields);
+        new UpdateHandler().updateConfig(service, prefs, output, searchFields);
         verify(output).writeFile(IDENT + ".json", library.toJSON().toString());
         verifyNoMoreInteractions(output);
     }
@@ -75,7 +75,7 @@ public class LibraryConfigUpdateServiceTest {
         when(service.getLibraryConfigs(LAST_UPDATE, BuildConfig.VERSION_CODE, 0))
                 .thenReturn(Calls.response(libraries));
 
-        LibraryConfigUpdateService.updateConfig(service, prefs, output, searchFields);
+        new UpdateHandler().updateConfig(service, prefs, output, searchFields);
         verify(output).clearFiles();
     }
 
@@ -87,7 +87,7 @@ public class LibraryConfigUpdateServiceTest {
                 .thenReturn(Calls.response(libraries));
         when(searchFields.hasSearchFields(IDENT)).thenReturn(true);
 
-        LibraryConfigUpdateService.updateConfig(service, prefs, output, searchFields);
+        new UpdateHandler().updateConfig(service, prefs, output, searchFields);
         verify(searchFields).clearSearchFields(IDENT);
     }
 }

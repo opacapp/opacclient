@@ -76,6 +76,7 @@ import de.geeksfactory.opacclient.utils.DebugTools;
 import de.geeksfactory.opacclient.utils.ErrorReporter;
 import de.geeksfactory.opacclient.utils.Utils;
 import de.geeksfactory.opacclient.webservice.LibraryConfigUpdateService;
+import de.geeksfactory.opacclient.webservice.UpdateHandler;
 import de.geeksfactory.opacclient.webservice.WebserviceReportHandler;
 
 @ReportsCrashes(mailTo = "info@opacapp.de",
@@ -416,5 +417,9 @@ public class OpacClient extends Application {
     }
 
     public static class LibraryRemovedException extends Exception {
+    }
+
+    public UpdateHandler getUpdateHandler() {
+        return new UpdateHandler();
     }
 }
