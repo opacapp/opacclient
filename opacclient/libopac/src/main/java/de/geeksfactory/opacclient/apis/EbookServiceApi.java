@@ -64,8 +64,8 @@ public interface EbookServiceApi {
      * Download the item identified by item_id. Returns an URL where the item can be downloaded
      * from.
      */
-    public DownloadResult downloadItem(Account account, String item_id) throws IOException,
-            OpacErrorException;
+    public DownloadResult downloadItem(Account account, String item_id,
+            int useraction, String selection) throws IOException, OpacErrorException;
 
     /**
      * The result of a {@link EbookServiceApi#booking(DetailledItem, Account, int, String)} call.

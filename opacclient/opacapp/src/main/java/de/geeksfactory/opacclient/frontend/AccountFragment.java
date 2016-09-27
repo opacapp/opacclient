@@ -660,9 +660,9 @@ public class AccountFragment extends Fragment implements
     }
 
     protected void download(final String a) {
-        MultiStepResultHelper<String> msrhCancel = new MultiStepResultHelper<>(
+        MultiStepResultHelper<String> msrhDownload = new MultiStepResultHelper<>(
                 getActivity(), a, R.string.doing_download);
-        msrhCancel.setCallback(new Callback<String>() {
+        msrhDownload.setCallback(new Callback<String>() {
             @Override
             public void onSuccess(MultiStepResult res) {
                 final EbookServiceApi.DownloadResult result = (EbookServiceApi.DownloadResult) res;
@@ -780,11 +780,11 @@ public class AccountFragment extends Fragment implements
             @Override
             public StepTask<?> newTask(MultiStepResultHelper helper,
                     int useraction, String selection, String argument) {
-                return ct = new CancelTask(helper, useraction, selection,
+                return dt = new DownloadTask(helper, useraction, selection,
                         argument);
             }
         });
-        msrhCancel.start();
+        msrhDownload.start();
     }
 
     public void setRefreshing(boolean refreshing) {
@@ -1858,7 +1858,7 @@ public class AccountFragment extends Fragment implements
         @Override
         protected EbookServiceApi.DownloadResult doInBackground(Void... voids) {
             try {
-                return ((EbookServiceApi) app.getApi()).downloadItem(account, itemId);
+                return ((EbookServiceApi) app.getApi()).downloadItem(account, itemId, useraction, selection);
             } catch (java.net.UnknownHostException | NoHttpResponseException
                     | java.net.SocketException e) {
                 e.printStackTrace();
