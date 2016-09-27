@@ -109,7 +109,6 @@ public class AccountFragment extends Fragment implements
         AccountSelectedListener {
 
     public static final long MAX_CACHE_AGE = (1000 * 3600 * 2);
-    protected AppCompatProgressDialog dialog;
     protected AlertDialog adialog;
     protected OpacClient app;
     protected View view;
@@ -661,17 +660,131 @@ public class AccountFragment extends Fragment implements
     }
 
     protected void download(final String a) {
-        try {
-            if (app.getApi() instanceof EbookServiceApi) {
-                dialog = AppCompatProgressDialog.show(getActivity(), "",
-                        getString(R.string.doing_download), true);
-                dialog.show();
-                dt = new DownloadTask(a);
-                dt.execute();
+        MultiStepResultHelper<String> msrhCancel = new MultiStepResultHelper<>(
+                getActivity(), a, R.string.doing_download);
+        msrhCancel.setCallback(new Callback<String>() {
+            @Override
+            public void onSuccess(MultiStepResult res) {
+                final EbookServiceApi.DownloadResult result = (EbookServiceApi.DownloadResult) res;
+                if (result.getUrl() != null) {
+                    if (result.getUrl().contains("acsm")) {
+                        String[] download_clients = new String[]{
+                                "com.android.aldiko", "com.aldiko.android",
+                                "com.bluefirereader",
+                                "com.mantano.reader.android.lite",
+                                "com.datalogics.dlreader",
+                                "com.mantano.reader.android.normal",
+                                "com.mantano.reader.android", "com.neosoar"};
+                        boolean found = false;
+                        PackageManager pm = getActivity().getPackageManager();
+                        for (String id : download_clients) {
+                            try {
+                                pm.getPackageInfo(id, 0);
+                                found = true;
+                            } catch (NameNotFoundException e) {
+                            }
+                        }
+                        final SharedPreferences sp = PreferenceManager
+                                .getDefaultSharedPreferences(getActivity());
+                        if (!found && !sp.contains("reader_needed_ignore")) {
+                            AlertDialog.Builder builder = new AlertDialog.Builder(
+                                    getActivity());
+                            builder.setMessage(R.string.reader_needed)
+                                   .setCancelable(true)
+                                   .setNegativeButton(R.string.cancel,
+                                           new DialogInterface.OnClickListener() {
+                                               @Override
+                                               public void onClick(
+                                                       DialogInterface dialog, int id) {
+                                                   dialog.cancel();
+                                               }
+                                           })
+                                   .setNeutralButton(R.string.reader_needed_ignore,
+                                           new DialogInterface.OnClickListener() {
+                                               @Override
+                                               public void onClick(
+                                                       DialogInterface dialog, int id) {
+                                                   Intent i = new Intent(
+                                                           Intent.ACTION_VIEW);
+                                                   i.setData(Uri.parse(result.getUrl()));
+                                                   sp.edit()
+                                                     .putBoolean("reader_needed_ignore", true)
+                                                     .commit();
+                                                   startActivity(i);
+                                               }
+                                           })
+                                   .setPositiveButton(R.string.download,
+                                           new DialogInterface.OnClickListener() {
+                                               @Override
+                                               public void onClick(
+                                                       DialogInterface dialog, int id) {
+                                                   dialog.cancel();
+                                                   Intent i = new Intent(
+                                                           Intent.ACTION_VIEW,
+                                                           Uri.parse(
+                                                                   "market://details?id=de" +
+                                                                           ".bluefirereader"));
+                                                   startActivity(i);
+                                               }
+                                           });
+                            AlertDialog alert = builder.create();
+                            alert.show();
+                            return;
+                        }
+                    }
+                    Intent i = new Intent(Intent.ACTION_VIEW);
+                    i.setData(Uri.parse(result.getUrl()));
+                    startActivity(i);
+                }
             }
-        } catch (OpacClient.LibraryRemovedException ignored) {
 
-        }
+            @Override
+            public void onError(MultiStepResult result) {
+                AlertDialog.Builder builder = new AlertDialog.Builder(
+                        getActivity());
+                builder.setMessage(result.getMessage())
+                       .setCancelable(true)
+                       .setNegativeButton(
+                               R.string.close,
+                               new DialogInterface.OnClickListener() {
+                                   @Override
+                                   public void onClick(
+                                           DialogInterface d,
+                                           int id) {
+                                       d.cancel();
+                                   }
+                               })
+                       .setOnCancelListener(
+                               new DialogInterface.OnCancelListener() {
+                                   @Override
+                                   public void onCancel(
+                                           DialogInterface d) {
+                                       if (d != null) {
+                                           d.cancel();
+                                       }
+                                   }
+                               });
+                AlertDialog alert = builder.create();
+                alert.show();
+            }
+
+            @Override
+            public void onUnhandledResult(
+                    MultiStepResult result) {
+            }
+
+            @Override
+            public void onUserCancel() {
+            }
+
+            @Override
+            public StepTask<?> newTask(MultiStepResultHelper helper,
+                    int useraction, String selection, String argument) {
+                return ct = new CancelTask(helper, useraction, selection,
+                        argument);
+            }
+        });
+        msrhCancel.start();
     }
 
     public void setRefreshing(boolean refreshing) {
@@ -1550,12 +1663,6 @@ public class AccountFragment extends Fragment implements
     @Override
     public void onStop() {
         super.onStop();
-        if (dialog != null) {
-            if (dialog.isShowing()) {
-                dialog.cancel();
-            }
-        }
-
         try {
             if (lt != null) {
                 if (!lt.isCancelled()) {
@@ -1739,98 +1846,37 @@ public class AccountFragment extends Fragment implements
         }
     }
 
-    public class DownloadTask extends AsyncTask<Void, Void, String> {
-
+    public class DownloadTask extends StepTask<EbookServiceApi.DownloadResult> {
         private String itemId;
 
-        public DownloadTask(String itemId) {
+        public DownloadTask(MultiStepResultHelper helper, int useraction, String selection,
+                String itemId) {
+            super(helper, useraction, selection);
             this.itemId = itemId;
         }
 
         @Override
-        protected String doInBackground(Void... voids) {
+        protected EbookServiceApi.DownloadResult doInBackground(Void... voids) {
             try {
                 return ((EbookServiceApi) app.getApi()).downloadItem(account, itemId);
-            } catch (OpacClient.LibraryRemovedException e) {
-                return null;
+            } catch (java.net.UnknownHostException | NoHttpResponseException
+                    | java.net.SocketException e) {
+                e.printStackTrace();
+            } catch (Exception e) {
+                ErrorReporter.handleException(e);
             }
+            return null;
         }
 
         @Override
-        protected void onPostExecute(final String result) {
-            dialog.dismiss();
+        protected void onPostExecute(EbookServiceApi.DownloadResult result) {
+            if (getActivity() == null) {
+                return;
+            }
             if (getActivity() == null || result == null) {
                 return;
             }
-            if (result.contains("acsm")) {
-                String[] download_clients = new String[]{
-                        "com.android.aldiko", "com.aldiko.android",
-                        "com.bluefirereader",
-                        "com.mantano.reader.android.lite",
-                        "com.datalogics.dlreader",
-                        "com.mantano.reader.android.normal",
-                        "com.mantano.reader.android", "com.neosoar"};
-                boolean found = false;
-                PackageManager pm = getActivity().getPackageManager();
-                for (String id : download_clients) {
-                    try {
-                        pm.getPackageInfo(id, 0);
-                        found = true;
-                    } catch (NameNotFoundException e) {
-                    }
-                }
-                final SharedPreferences sp = PreferenceManager
-                        .getDefaultSharedPreferences(getActivity());
-                if (!found && !sp.contains("reader_needed_ignore")) {
-                    AlertDialog.Builder builder = new AlertDialog.Builder(
-                            getActivity());
-                    builder.setMessage(R.string.reader_needed)
-                           .setCancelable(true)
-                           .setNegativeButton(R.string.cancel,
-                                   new DialogInterface.OnClickListener() {
-                                       @Override
-                                       public void onClick(
-                                               DialogInterface dialog, int id) {
-                                           dialog.cancel();
-                                       }
-                                   })
-                           .setNeutralButton(R.string.reader_needed_ignore,
-                                   new DialogInterface.OnClickListener() {
-                                       @Override
-                                       public void onClick(
-                                               DialogInterface dialog, int id) {
-                                           Intent i = new Intent(
-                                                   Intent.ACTION_VIEW);
-                                           i.setData(Uri.parse(result));
-                                           sp.edit()
-                                             .putBoolean(
-                                                     "reader_needed_ignore",
-                                                     true).commit();
-                                           startActivity(i);
-                                       }
-                                   })
-                           .setPositiveButton(R.string.download,
-                                   new DialogInterface.OnClickListener() {
-                                       @Override
-                                       public void onClick(
-                                               DialogInterface dialog, int id) {
-                                           dialog.cancel();
-                                           Intent i = new Intent(
-                                                   Intent.ACTION_VIEW,
-                                                   Uri.parse(
-                                                           "market://details?id=de" +
-                                                                   ".bluefirereader"));
-                                           startActivity(i);
-                                       }
-                                   });
-                    AlertDialog alert = builder.create();
-                    alert.show();
-                    return;
-                }
-            }
-            Intent i = new Intent(Intent.ACTION_VIEW);
-            i.setData(Uri.parse(result));
-            startActivity(i);
+            super.onPostExecute(result);
         }
     }
 
