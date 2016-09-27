@@ -1,6 +1,8 @@
 package de.geeksfactory.opacclient.frontend.adapter;
 
 import android.text.Html;
+import android.text.SpannableStringBuilder;
+import android.text.style.ForegroundColorSpan;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,28 +15,44 @@ import de.geeksfactory.opacclient.objects.ReservedItem;
 
 public class ReservationsAdapter
         extends AccountAdapter<ReservedItem, ReservationsAdapter.ViewHolder> {
+
+    public interface Callback {
+        void cancel(String prolongData);
+
+        void bookingStart(String downloadData);
+    }
+
+    private Callback callback;
+
+    public ReservationsAdapter(Callback callback) {
+        this.callback = callback;
+    }
+
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext())
-                                  .inflate(R.layout.listitem_account_reservation, parent, false);
+                                  .inflate(R.layout.listitem_account_item, parent, false);
         return new ViewHolder(view);
     }
 
-    public static class ViewHolder extends AccountAdapter.ViewHolder<ReservedItem> {
+    public class ViewHolder extends AccountAdapter.ViewHolder<ReservedItem> {
         public ViewHolder(View itemView) {
             super(itemView);
         }
 
         @Override
-        public void setItem(ReservedItem item) {
+        public void setItem(final ReservedItem item) {
             super.setItem(item);
             DateTimeFormatter fmt = DateTimeFormat.shortDate();
 
-            StringBuilder status = new StringBuilder();
-            if (item.getStatus() != null) status.append(item.getStatus());
-            boolean needsBraces = item.getStatus() != null &&
-                    (item.getReadyDate() != null || item.getExpirationDate() != null);
-            if (needsBraces) status.append(" (");
+            SpannableStringBuilder status = new SpannableStringBuilder();
+            if (item.getStatus() != null) {
+                status.append(Html.fromHtml(item.getStatus()),
+                        new ForegroundColorSpan(textColorPrimary), 0);
+                if (item.getReadyDate() != null || item.getExpirationDate() != null) {
+                    status.append(" – ");
+                }
+            }
             if (item.getReadyDate() != null) {
                 status.append(context.getString(R.string.reservation_expire_until)).append(" ")
                       .append(fmt.print(item.getReadyDate()));
@@ -43,11 +61,35 @@ public class ReservationsAdapter
                 if (item.getReadyDate() != null) status.append(", ");
                 status.append(fmt.print(item.getExpirationDate()));
             }
-            if (needsBraces) status.append(")");
             if (status.length() > 0) {
-                tvStatus.setText(Html.fromHtml(status.toString()));
+                tvStatus.setText(status);
             } else {
                 tvStatus.setVisibility(View.GONE);
+            }
+
+            ivProlong.setVisibility(View.GONE);
+            ivDownload.setVisibility(View.GONE);
+            if (item.getBookingData() != null) {
+                ivBooking.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View arg0) {
+                        callback.bookingStart(item.getBookingData());
+                    }
+                });
+                ivBooking.setVisibility(View.VISIBLE);
+                ivCancel.setVisibility(View.GONE);
+            } else if (item.getCancelData() != null) {
+                ivCancel.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View arg0) {
+                        callback.cancel(item.getCancelData());
+                    }
+                });
+                ivCancel.setVisibility(View.VISIBLE);
+                ivBooking.setVisibility(View.GONE);
+            } else {
+                ivCancel.setVisibility(View.INVISIBLE);
+                ivBooking.setVisibility(View.GONE);
             }
         }
     }
