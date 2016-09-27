@@ -2,7 +2,9 @@ package de.geeksfactory.opacclient.objects;
 
 import org.joda.time.LocalDate;
 
-public class ReservedItem extends AccountItem {
+import java.io.Serializable;
+
+public class ReservedItem extends AccountItem implements Serializable {
     private LocalDate readyDate;
     private LocalDate expirationDate;
     private String branch;

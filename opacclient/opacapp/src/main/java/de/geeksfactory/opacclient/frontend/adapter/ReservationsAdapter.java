@@ -20,6 +20,8 @@ public class ReservationsAdapter
         void cancel(String prolongData);
 
         void bookingStart(String downloadData);
+
+        void onClick(ReservedItem item);
     }
 
     private Callback callback;
@@ -91,6 +93,13 @@ public class ReservationsAdapter
                 ivCancel.setVisibility(View.INVISIBLE);
                 ivBooking.setVisibility(View.GONE);
             }
+
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    callback.onClick(item);
+                }
+            });
         }
     }
 }

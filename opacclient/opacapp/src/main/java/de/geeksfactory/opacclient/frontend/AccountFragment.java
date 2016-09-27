@@ -81,6 +81,7 @@ import de.geeksfactory.opacclient.networking.NotReachableException;
 import de.geeksfactory.opacclient.networking.SSLSecurityException;
 import de.geeksfactory.opacclient.objects.Account;
 import de.geeksfactory.opacclient.objects.AccountData;
+import de.geeksfactory.opacclient.objects.AccountItem;
 import de.geeksfactory.opacclient.objects.DetailledItem;
 import de.geeksfactory.opacclient.objects.LentItem;
 import de.geeksfactory.opacclient.objects.Library;
@@ -89,7 +90,6 @@ import de.geeksfactory.opacclient.reminder.ReminderHelper;
 import de.geeksfactory.opacclient.reminder.SyncAccountAlarmListener;
 import de.geeksfactory.opacclient.storage.AccountDataSource;
 import de.geeksfactory.opacclient.ui.AccountDividerItemDecoration;
-import de.geeksfactory.opacclient.ui.AppCompatProgressDialog;
 import de.geeksfactory.opacclient.utils.ErrorReporter;
 import su.j2e.rvjoiner.JoinableAdapter;
 import su.j2e.rvjoiner.JoinableLayout;
@@ -99,6 +99,7 @@ public class AccountFragment extends Fragment implements
         AccountSelectedListener, LentAdapter.Callback, ReservationsAdapter.Callback {
 
     public static final long MAX_CACHE_AGE = (1000 * 3600 * 2);
+    private static final int REQUEST_DETAIL = 1;
     protected AlertDialog adialog;
     protected OpacClient app;
     protected View view;
@@ -1653,6 +1654,46 @@ public class AccountFragment extends Fragment implements
             }
 
             super.onPostExecute(res);
+        }
+    }
+
+
+    @Override
+    public void onClick(LentItem item) {
+        showDetailActivity(item);
+    }
+
+    @Override
+    public void onClick(ReservedItem item) {
+        showDetailActivity(item);
+    }
+
+    private void showDetailActivity(AccountItem item) {
+        Intent intent = new Intent(getContext(), AccountItemDetailActivity.class);
+        intent.putExtra(AccountItemDetailActivity.EXTRA_ITEM, item);
+        startActivityForResult(intent, REQUEST_DETAIL);
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent intent) {
+        super.onActivityResult(requestCode, resultCode, intent);
+        if (requestCode == REQUEST_DETAIL && intent != null &&
+                intent.hasExtra(AccountItemDetailActivity.EXTRA_DATA)) {
+            String data = intent.getStringExtra(AccountItemDetailActivity.EXTRA_DATA);
+            switch (resultCode) {
+                case AccountItemDetailActivity.RESULT_PROLONG:
+                    prolong(data);
+                    break;
+                case AccountItemDetailActivity.RESULT_DOWNLOAD:
+                    download(data);
+                    break;
+                case AccountItemDetailActivity.RESULT_CANCEL:
+                    cancel(data);
+                    break;
+                case AccountItemDetailActivity.RESULT_BOOKING:
+                    bookingStart(data);
+                    break;
+            }
         }
     }
 }

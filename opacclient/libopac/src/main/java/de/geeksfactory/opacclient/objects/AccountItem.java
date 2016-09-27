@@ -1,6 +1,8 @@
 package de.geeksfactory.opacclient.objects;
 
-public abstract class AccountItem {
+import java.io.Serializable;
+
+public abstract class AccountItem implements Serializable {
     private long account;
     private String title;
     private String author;

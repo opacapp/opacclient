@@ -22,6 +22,7 @@
 package de.geeksfactory.opacclient.frontend;
 
 import android.content.Context;
+import android.support.annotation.DrawableRes;
 import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -47,6 +48,7 @@ public class ResultsAdapter extends ArrayAdapter<SearchResult> {
         this.objects = objects;
     }
 
+    @DrawableRes
     public static int getResourceByMediaType(MediaType type) {
         switch (type) {
             case NONE:

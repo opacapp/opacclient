@@ -26,6 +26,8 @@ public class LentAdapter extends AccountAdapter<LentItem, LentAdapter.ViewHolder
         void prolong(String prolongData);
 
         void download(String downloadData);
+
+        void onClick(LentItem item);
     }
 
     private Callback callback;
@@ -114,6 +116,13 @@ public class LentAdapter extends AccountAdapter<LentItem, LentAdapter.ViewHolder
                 ivProlong.setVisibility(View.INVISIBLE);
                 ivDownload.setVisibility(View.GONE);
             }
+
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    callback.onClick(item);
+                }
+            });
         }
     }
 }

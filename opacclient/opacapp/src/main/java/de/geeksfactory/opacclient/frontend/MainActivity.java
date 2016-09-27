@@ -328,6 +328,7 @@ public class MainActivity extends OpacActivity
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent idata) {
         super.onActivityResult(requestCode, resultCode, idata);
+        fragment.onActivityResult(requestCode, resultCode, idata);
 
         //TODO: Rewrite this for the new SearchField implementation
         // Barcode

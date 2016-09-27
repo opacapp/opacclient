@@ -1,0 +1,172 @@
+package de.geeksfactory.opacclient.frontend;
+
+import android.content.Context;
+import android.content.Intent;
+import android.databinding.DataBindingUtil;
+import android.os.Bundle;
+import android.support.annotation.Nullable;
+import android.support.v7.app.AppCompatActivity;
+import android.text.Html;
+import android.view.Menu;
+import android.view.MenuItem;
+import android.view.View;
+
+import de.geeksfactory.opacclient.OpacClient;
+import de.geeksfactory.opacclient.R;
+import de.geeksfactory.opacclient.apis.EbookServiceApi;
+import de.geeksfactory.opacclient.apis.OpacApi;
+import de.geeksfactory.opacclient.databinding.AccountItemDetailActivityBinding;
+import de.geeksfactory.opacclient.objects.AccountItem;
+import de.geeksfactory.opacclient.objects.LentItem;
+import de.geeksfactory.opacclient.objects.ReservedItem;
+import de.geeksfactory.opacclient.objects.SearchResult;
+
+public class AccountItemDetailActivity extends AppCompatActivity {
+    public static final String EXTRA_ITEM = "item";
+    public static final int RESULT_PROLONG = 1;
+    public static final int RESULT_DOWNLOAD = 2;
+    public static final int RESULT_CANCEL = 3;
+    public static final int RESULT_BOOKING = 4;
+    public static final String EXTRA_DATA = "data";
+    private AccountItemDetailActivityBinding binding;
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        binding = DataBindingUtil.setContentView(this, R.layout.activity_accountitem_detail);
+
+        setSupportActionBar(binding.toolbar);
+
+        binding.setItem((AccountItem) getIntent().getSerializableExtra(EXTRA_ITEM));
+        binding.btnDetails.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(AccountItemDetailActivity.this,
+                        SearchResultDetailActivity.class);
+                intent.putExtra(SearchResultDetailFragment.ARG_ITEM_ID,
+                        binding.getItem().getId());
+                startActivity(intent);
+            }
+        });
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.activity_account_item_detail, menu);
+
+        MenuItem prolong = menu.findItem(R.id.action_prolong);
+        MenuItem download = menu.findItem(R.id.action_download);
+        MenuItem cancel = menu.findItem(R.id.action_cancel);
+        MenuItem booking = menu.findItem(R.id.action_booking);
+
+        OpacClient app = (OpacClient) getApplication();
+        OpacApi api = null;
+        try {
+            api = app.getApi();
+        } catch (OpacClient.LibraryRemovedException e) {
+            e.printStackTrace();
+        }
+
+        if (binding.getItem() instanceof LentItem) {
+            final LentItem item = (LentItem) binding.getItem();
+            cancel.setVisible(false);
+            booking.setVisible(false);
+            if (item.getProlongData() != null) {
+                prolong.setVisible(true);
+                //ViewCompat.setAlpha(prolong, item.isRenewable() ? 1f : 0.4f);
+                download.setVisible(false);
+            } else if (item.getDownloadData() != null &&
+                    api != null && api instanceof EbookServiceApi) {
+                prolong.setVisible(false);
+                download.setVisible(true);
+            } else {
+                prolong.setVisible(false);
+                download.setVisible(false);
+            }
+        } else if (binding.getItem() instanceof ReservedItem) {
+            final ReservedItem item = (ReservedItem) binding.getItem();
+            prolong.setVisible(false);
+            download.setVisible(false);
+            if (item.getBookingData() != null) {
+                booking.setVisible(true);
+                cancel.setVisible(false);
+            } else if (item.getCancelData() != null) {
+                cancel.setVisible(true);
+                booking.setVisible(false);
+            } else {
+                cancel.setVisible(false);
+                booking.setVisible(false);
+            }
+        }
+
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        Intent intent = new Intent();
+        int resultCode;
+        switch (item.getItemId()) {
+            case R.id.action_prolong:
+                resultCode = RESULT_PROLONG;
+                intent.putExtra(EXTRA_DATA, ((LentItem) binding.getItem()).getProlongData());
+                break;
+            case R.id.action_download:
+                resultCode = RESULT_DOWNLOAD;
+                intent.putExtra(EXTRA_DATA, ((LentItem) binding.getItem()).getDownloadData());
+                break;
+            case R.id.action_cancel:
+                resultCode = RESULT_CANCEL;
+                intent.putExtra(EXTRA_DATA, ((ReservedItem) binding.getItem()).getCancelData());
+                break;
+            case R.id.action_booking:
+                resultCode = RESULT_BOOKING;
+                intent.putExtra(EXTRA_DATA, ((ReservedItem) binding.getItem()).getBookingData());
+                break;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+        setResult(resultCode, intent);
+        finish();
+        return true;
+    }
+
+    public static CharSequence getBranch(AccountItem item, String format) {
+        if (item instanceof LentItem) {
+            LentItem lentItem = (LentItem) item;
+            if (lentItem.getLendingBranch() != null && lentItem.getHomeBranch() != null) {
+                return fromHtml(String.format(format, lentItem.getLendingBranch(),
+                        lentItem.getHomeBranch()));
+            } else if (lentItem.getLendingBranch() != null) {
+                return fromHtml(lentItem.getLendingBranch());
+            } else if (lentItem.getHomeBranch() != null) {
+                return fromHtml(lentItem.getHomeBranch());
+            } else {
+                return null;
+            }
+        } else {
+            return fromHtml(((ReservedItem) item).getBranch());
+        }
+    }
+
+    private static CharSequence fromHtml(@Nullable String text) {
+        return text != null ? Html.fromHtml(text) : null;
+    }
+
+    public static String getMediaTypeName(SearchResult.MediaType mediaType, Context context) {
+        int id = context.getResources().getIdentifier("mediatype_"
+                        + mediaType.toString().toLowerCase(), "string",
+                context.getPackageName());
+        return context.getResources().getString(id);
+    }
+
+    public static CharSequence getFormat(AccountItem item, Context context) {
+        if (item.getFormat() != null) {
+            return Html.fromHtml(item.getFormat());
+        } else if (item.getMediaType() != null) {
+            return getMediaTypeName(item.getMediaType(), context);
+        } else {
+            return null;
+        }
+    }
+}
