@@ -5,23 +5,36 @@
 			"returndate": "2016-05-05",
 			"title": "Harry Potter",
 			"author": "J. K. Rowling",
-			"status": "V"
+			"status": "V",
+            "renewable": "Y",
+            "prolongurl": "a"
 		},
 		{
 			"barcode": "12346",
 			"returndate": "2016-05-05",
 			"title": "Eragon",
 			"author": "Christopher Paolini",
-			"status": "V"
+			"status": "V",
+            "renewable": "Y",
+            "prolongurl": "b"
 		},
 		{
 			"barcode": "12347",
 			"returndate": "2016-05-09",
 			"title": "Herr der Ringe",
 			"author": "J. R. R. Tolkien",
-			"status": "V"
+			"status": "V",
+            "renewable": "Y",
+            "prolongurl": "c"
 		}
 	],
 	"reservations": [
+        {
+			"title": "Harry Potter",
+			"author": "J. K. Rowling",
+			"status": "Bereit",
+            "availability": "2016-09-27",
+            "cancelurl": "a"
+		}
 	]
 }     
