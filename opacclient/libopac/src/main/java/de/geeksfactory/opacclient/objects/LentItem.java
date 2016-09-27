@@ -2,7 +2,9 @@ package de.geeksfactory.opacclient.objects;
 
 import org.joda.time.LocalDate;
 
-public class LentItem extends AccountItem {
+import java.io.Serializable;
+
+public class LentItem extends AccountItem implements Serializable {
     private String barcode;
     private LocalDate deadline;
     private String homeBranch;

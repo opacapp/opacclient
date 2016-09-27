@@ -153,6 +153,9 @@
         <activity
             android:name="de.geeksfactory.opacclient.frontend.SnoozeDatePickerActivity"
             android:theme="@style/Theme.Opacapp.Transparent"/>
+        <activity
+            android:name="de.geeksfactory.opacclient.frontend.AccountItemDetailActivity"
+            android:theme="@style/Theme.Opacapp.Dialog"/>
 
         <service
             android:name="de.geeksfactory.opacclient.reminder.SyncAccountService"

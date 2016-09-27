@@ -10,4 +10,5 @@
         <item>3</item>
         <item>7</item>
     </string-array>
+    <string name="lendingbranch_homebranch">%1$s / %2$s</string>
 </resources>
