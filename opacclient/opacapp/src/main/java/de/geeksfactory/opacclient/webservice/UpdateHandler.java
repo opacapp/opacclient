@@ -27,7 +27,7 @@ public class UpdateHandler {
 
         Response<List<Library>>
                 response = service.getLibraryConfigs(prefs.getLastLibraryConfigUpdate(),
-                BuildConfig.VERSION_CODE, 0).execute();
+                BuildConfig.VERSION_CODE, 0, null).execute();
         List<Library> updatedLibraries = response.body();
 
         for (Library lib : updatedLibraries) {
