@@ -151,8 +151,6 @@ public class AccountFragment extends Fragment implements
 
         setHasOptionsMenu(true);
 
-        accountSelected(app.getAccount());
-
         final Handler handler = new Handler();
         // schedule alarm here and post runnable as soon as scheduled
         handler.post(new Runnable() {
