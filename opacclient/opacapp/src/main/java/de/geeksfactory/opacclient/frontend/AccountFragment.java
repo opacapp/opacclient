@@ -30,6 +30,8 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.preference.PreferenceManager;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AlertDialog;
@@ -75,6 +77,7 @@ import de.geeksfactory.opacclient.apis.OpacApi.ReservationResult;
 import de.geeksfactory.opacclient.frontend.MultiStepResultHelper.Callback;
 import de.geeksfactory.opacclient.frontend.MultiStepResultHelper.StepTask;
 import de.geeksfactory.opacclient.frontend.OpacActivity.AccountSelectedListener;
+import de.geeksfactory.opacclient.frontend.adapter.AccountAdapter;
 import de.geeksfactory.opacclient.frontend.adapter.LentAdapter;
 import de.geeksfactory.opacclient.frontend.adapter.ReservationsAdapter;
 import de.geeksfactory.opacclient.networking.NotReachableException;
@@ -1659,19 +1662,23 @@ public class AccountFragment extends Fragment implements
 
 
     @Override
-    public void onClick(LentItem item) {
-        showDetailActivity(item);
+    public void onClick(LentItem item, LentAdapter.ViewHolder view) {
+        showDetailActivity(item, view);
     }
 
     @Override
-    public void onClick(ReservedItem item) {
-        showDetailActivity(item);
+    public void onClick(ReservedItem item, ReservationsAdapter.ViewHolder view) {
+        showDetailActivity(item, view);
     }
 
-    private void showDetailActivity(AccountItem item) {
+    private void showDetailActivity(AccountItem item, AccountAdapter.ViewHolder view) {
         Intent intent = new Intent(getContext(), AccountItemDetailActivity.class);
         intent.putExtra(AccountItemDetailActivity.EXTRA_ITEM, item);
-        startActivityForResult(intent, REQUEST_DETAIL);
+        ActivityOptionsCompat options = ActivityOptionsCompat
+                .makeSceneTransitionAnimation(getActivity(), view.itemView,
+                        getString(R.string.transition_background));
+        ActivityCompat
+                .startActivityForResult(getActivity(), intent, REQUEST_DETAIL, options.toBundle());
     }
 
     @Override

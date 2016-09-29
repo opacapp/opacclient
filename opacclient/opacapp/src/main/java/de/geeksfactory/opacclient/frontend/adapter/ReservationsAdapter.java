@@ -21,7 +21,7 @@ public class ReservationsAdapter
 
         void bookingStart(String downloadData);
 
-        void onClick(ReservedItem item);
+        void onClick(ReservedItem item, ViewHolder view);
     }
 
     private Callback callback;
@@ -97,7 +97,7 @@ public class ReservationsAdapter
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    callback.onClick(item);
+                    callback.onClick(item, ViewHolder.this);
                 }
             });
         }

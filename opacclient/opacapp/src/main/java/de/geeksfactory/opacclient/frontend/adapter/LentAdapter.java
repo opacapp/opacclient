@@ -27,7 +27,7 @@ public class LentAdapter extends AccountAdapter<LentItem, LentAdapter.ViewHolder
 
         void download(String downloadData);
 
-        void onClick(LentItem item);
+        void onClick(LentItem item, ViewHolder view);
     }
 
     private Callback callback;
@@ -120,7 +120,7 @@ public class LentAdapter extends AccountAdapter<LentItem, LentAdapter.ViewHolder
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    callback.onClick(item);
+                    callback.onClick(item, ViewHolder.this);
                 }
             });
         }

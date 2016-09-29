@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <item name="dialog_width" type="dimen">@dimen/dialog_width_major</item>
+</resources>

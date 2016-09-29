@@ -33,24 +33,31 @@
         <item name="windowNoTitle">true</item>
     </style>
 
-    <style name="Theme.Opacapp.Base.Dialog" parent="Theme.AppCompat.Light.Dialog.Alert">
+    <style name="Theme.Opacapp.Base.Transparent" parent="Theme.AppCompat.Light.NoActionBar">
         <item name="colorPrimary">@color/primary_red</item>
         <item name="colorPrimaryDark">@color/primary_red_dark</item>
         <item name="colorAccent">@color/accent_red</item>
         <item name="preferenceTheme">@style/MaterialPreferenceThemeOverlay</item>
 
-        <!-- no action bar -->
-        <item name="windowActionBar">false</item>
-        <item name="windowNoTitle">true</item>
-    </style>
-
-    <style name="Theme.Opacapp.Base.Transparent" parent="Theme.AppCompat.Light.NoActionBar">
         <item name="android:windowIsTranslucent">true</item>
         <item name="android:windowBackground">@android:color/transparent</item>
         <item name="android:windowContentOverlay">@null</item>
         <item name="android:windowNoTitle">true</item>
         <item name="android:windowIsFloating">true</item>
         <item name="android:backgroundDimEnabled">false</item>
+    </style>
+
+    <style name="Theme.Opacapp.Base.AccountDetail" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="colorPrimary">@color/primary_red</item>
+        <item name="colorPrimaryDark">@color/primary_red_dark</item>
+        <item name="colorAccent">@color/accent_red</item>
+        <item name="preferenceTheme">@style/MaterialPreferenceThemeOverlay</item>
+
+        <item name="android:windowIsTranslucent">true</item>
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:windowContentOverlay">@null</item>
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:backgroundDimEnabled">true</item>
     </style>
 
     <style name="TextAppearance.Opacapp.Base.Subhead" parent="android:TextAppearance">
@@ -78,9 +85,9 @@
 
     <style name="Theme.Opacapp.Floating" parent="Theme.Opacapp.Base.Floating"/>
 
-    <style name="Theme.Opacapp.Dialog" parent="Theme.Opacapp.Base.Dialog"/>
-
     <style name="Theme.Opacapp.Transparent" parent="Theme.Opacapp.Base.Transparent" />
+
+    <style name="Theme.Opacapp.AccountDetail" parent="Theme.Opacapp.Base.AccountDetail"/>
 
     <style name="TextAppearance.Opacapp.Subhead" parent="TextAppearance.Opacapp.Base.Subhead">
         <item name="android:textStyle">bold</item>
