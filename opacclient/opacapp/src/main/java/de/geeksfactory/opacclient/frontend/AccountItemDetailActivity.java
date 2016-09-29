@@ -3,10 +3,13 @@ package de.geeksfactory.opacclient.frontend;
 import android.content.Context;
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Html;
+import android.transition.ChangeBounds;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -33,7 +36,8 @@ public class AccountItemDetailActivity extends AppCompatActivity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        binding = DataBindingUtil.setContentView(this, R.layout.activity_accountitem_detail);
+        setContentView(R.layout.activity_accountitem_detail);
+        binding = DataBindingUtil.bind(findViewById(R.id.content));
 
         setSupportActionBar(binding.toolbar);
 
@@ -46,6 +50,19 @@ public class AccountItemDetailActivity extends AppCompatActivity {
                 intent.putExtra(SearchResultDetailFragment.ARG_ITEM_ID,
                         binding.getItem().getId());
                 startActivity(intent);
+            }
+        });
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            getWindow().setSharedElementEnterTransition(new ChangeBounds());
+        }
+
+        View outside = findViewById(R.id.outside);
+        // finish when clicking outside dialog
+        outside.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                ActivityCompat.finishAfterTransition(AccountItemDetailActivity.this);
             }
         });
     }
@@ -127,7 +144,7 @@ public class AccountItemDetailActivity extends AppCompatActivity {
                 return super.onOptionsItemSelected(item);
         }
         setResult(resultCode, intent);
-        finish();
+        supportFinishAfterTransition();
         return true;
     }
 

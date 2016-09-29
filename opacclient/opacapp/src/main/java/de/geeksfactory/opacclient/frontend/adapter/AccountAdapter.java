@@ -58,7 +58,7 @@ public abstract class AccountAdapter<I extends AccountItem, VH extends AccountAd
 
     public static class ViewHolder<I extends AccountItem> extends RecyclerView.ViewHolder {
         protected Context context;
-        protected TextView tvTitleAndAuthor;
+        public TextView tvTitleAndAuthor;
         protected TextView tvStatus;
         protected View vStatusColor;
         protected ImageButton ivProlong;

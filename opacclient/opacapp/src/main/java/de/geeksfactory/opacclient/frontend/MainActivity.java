@@ -231,6 +231,10 @@ public class MainActivity extends OpacActivity
         }
 
         showUpdateInfoDialog();
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            getWindow().setExitTransition(null);
+        }
     }
 
     private void showAccountSelectDialog(final List<Account> accounts) {
