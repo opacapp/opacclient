@@ -24,11 +24,10 @@ package de.geeksfactory.opacclient.frontend;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 import android.view.View;
-import android.view.View.OnClickListener;
-import android.widget.Button;
+
+import com.heinrichreimersoftware.materialintro.app.IntroActivity;
+import com.heinrichreimersoftware.materialintro.slide.SimpleSlide;
 
 import java.io.IOException;
 
@@ -36,41 +35,49 @@ import de.geeksfactory.opacclient.OpacClient;
 import de.geeksfactory.opacclient.R;
 import de.geeksfactory.opacclient.utils.ErrorReporter;
 
-public class WelcomeActivity extends AppCompatActivity {
+public class WelcomeActivity extends IntroActivity {
     protected OpacClient app;
-
-    @SuppressWarnings("SameReturnValue") // Plus Edition compatibility
-    public static int getLayoutResource() {
-        return R.layout.activity_welcome;
-    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         app = (OpacClient) getApplication();
-        setContentView(getLayoutResource());
 
-        setSupportActionBar((Toolbar) findViewById(R.id.toolbar));
-
-        Button btAddAccount = (Button) findViewById(R.id.btAddAccount);
-        btAddAccount.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View arg0) {
-                add();
-            }
-        });
+        addSlide(new SimpleSlide.Builder()
+                .title(R.string.intro_title_0)
+                .description(R.string.intro_description_0)
+                .background(R.color.intro_library_bg)
+                .backgroundDark(R.color.intro_library_bg_dark)
+                .layout(R.layout.intro_library)
+                .build());
+        addSlide(new SimpleSlide.Builder()
+                .title(R.string.intro_title_1)
+                .description(R.string.intro_description_1)
+                .background(R.color.intro_notifications_bg)
+                .backgroundDark(R.color.intro_notifications_bg_dark)
+                .layout(R.layout.intro_notifications)
+                .build());
+        addSlide(new SimpleSlide.Builder()
+                .title(R.string.intro_title_2)
+                .description(R.string.intro_description_2)
+                .background(R.color.intro_world_bg)
+                .backgroundDark(R.color.intro_world_bg_dark)
+                .layout(R.layout.intro_world)
+                .buttonCtaLabel(R.string.select_library)
+                .buttonCtaClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        finish();
+                    }
+                })
+                .build());
+        setButtonNextFunction(BUTTON_NEXT_FUNCTION_NEXT);
     }
 
     @Override
     public void onBackPressed() {
         System.exit(0);
         super.onBackPressed();
-    }
-
-    public void add() {
-        Intent i = new Intent(this, LibraryListActivity.class);
-        i.putExtra("welcome", true);
-        startActivity(i);
     }
 
     public class InitTask extends AsyncTask<Void, Void, Void> {

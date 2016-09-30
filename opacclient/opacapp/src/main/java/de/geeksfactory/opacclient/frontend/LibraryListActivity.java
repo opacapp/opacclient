@@ -67,7 +67,6 @@ import de.geeksfactory.opacclient.storage.PreferenceDataSource;
 import de.geeksfactory.opacclient.ui.AppCompatProgressDialog;
 import de.geeksfactory.opacclient.utils.ErrorReporter;
 import de.geeksfactory.opacclient.webservice.LibraryConfigUpdateService;
-import de.geeksfactory.opacclient.webservice.UpdateHandler;
 import de.geeksfactory.opacclient.webservice.WebService;
 import de.geeksfactory.opacclient.webservice.WebServiceManager;
 
@@ -79,6 +78,7 @@ public class LibraryListActivity extends AppCompatActivity
     public static final int LEVEL_CITY = 2;
     public static final int LEVEL_LIBRARY = 3;
     private static final int REQUEST_LOCATION_PERMISSION = 0;
+    public static final String EXTRA_WELCOME = "welcome";
 
     protected List<Library> libraries;
     protected LibraryListFragment fragment;
@@ -104,6 +104,7 @@ public class LibraryListActivity extends AppCompatActivity
     @Override
     protected void onResume() {
         visible = true;
+        new LoadLibrariesTask().execute((OpacClient) getApplication());
         super.onResume();
     }
 
@@ -113,14 +114,14 @@ public class LibraryListActivity extends AppCompatActivity
         setContentView(R.layout.activity_library_list);
         setSupportActionBar((Toolbar) findViewById(R.id.toolbar));
 
-        if (!getIntent().hasExtra("welcome")) {
+        if (getIntent().hasExtra(EXTRA_WELCOME)) {
+            getSupportActionBar().setHomeButtonEnabled(false);
+            startActivity(new Intent(this, WelcomeActivity.class));
+        } else {
             getSupportActionBar().setHomeButtonEnabled(true);
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        } else {
-            getSupportActionBar().setHomeButtonEnabled(false);
         }
 
-        new LoadLibrariesTask().execute((OpacClient) getApplication());
         final LinearLayout llLocate = (LinearLayout) findViewById(R.id.llLocate);
         tvLocateString = (TextView) findViewById(R.id.tvLocateString);
         ivLocationIcon = (ImageView) findViewById(R.id.ivLocationIcon);

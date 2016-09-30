@@ -304,4 +304,10 @@
     <string name="account_with_credentials">mit Zugangsdaten (Suche und Konto)</string>
     <string name="please_enter_password">Bitte geben Sie Ihr Passwort ein.</string>
     <string name="please_enter_username">Bitte geben Sie Ihre Ausweisnummer ein.</string>
+    <string name="intro_title_0">Willkommen in der Web Opac App!</string>
+    <string name="intro_description_0">Wischen Sie nach links für weitere Informationen.</string>
+    <string name="intro_title_1">Benachrichtigungen</string>
+    <string name="intro_description_1">Sie können in den Einstellungen der App Benachrichtigungen aktivieren, um an ablaufende Entleihungen erinnert zu werden.</string>
+    <string name="intro_title_2">1000+ Bibliotheken</string>
+    <string name="intro_description_2">Diese App unterstützt mehr als 1.000 Bibliotheken im deutschsprachigen Raum und auf der ganzen Welt. Wählen Sie Ihre Bibliothek aus oder schlagen Sie sie vor, falls sie noch nicht auf der Liste ist!</string>
 </resources>

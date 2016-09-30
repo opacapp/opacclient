@@ -301,4 +301,10 @@
     <string name="account_with_credentials">with credentials (search and account)</string>
     <string name="please_enter_password">Please enter your password.</string>
     <string name="please_enter_username">Please enter your membership ID.</string>
+    <string name="intro_title_0">Welcome to Web Opac App!</string>
+    <string name="intro_description_0">Swipe left for more information.</string>
+    <string name="intro_title_1">Notifications</string>
+    <string name="intro_description_1">You can enable notifications in the app settings to receive a reminder when your lent books are due.</string>
+    <string name="intro_title_2">1000+ libraries</string>
+    <string name="intro_description_2">This app supports more than 1,000 libraries from all around the world. Select yours or suggest it if it\'s not yet on the list!</string>
 </resources>

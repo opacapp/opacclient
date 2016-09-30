@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.heinrichreimersoftware.materialintro.view.parallax.ParallaxFrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_margin="@dimen/mi_baseline"
+    android:layout_gravity="center"
+    app:maxWidth="450dp"
+    app:maxHeight="450dp">
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:adjustViewBounds="true"
+        android:gravity="center"
+        android:scaleType="fitCenter"
+        app:layout_parallaxFactor="0"
+        app:srcCompat="@drawable/intro_notifications_layer_1"
+        tools:ignore="ContentDescription"/>
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:adjustViewBounds="true"
+        android:gravity="center"
+        android:scaleType="fitCenter"
+        app:layout_parallaxFactor="0.2"
+        app:srcCompat="@drawable/intro_notifications_layer_2"
+        tools:ignore="ContentDescription"/>
+</com.heinrichreimersoftware.materialintro.view.parallax.ParallaxFrameLayout>
