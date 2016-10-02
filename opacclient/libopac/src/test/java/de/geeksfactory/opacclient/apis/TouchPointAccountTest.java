@@ -50,7 +50,7 @@ public class TouchPointAccountTest extends BaseHtmlTest {
 
     @Test
     public void testParseResList() throws OpacApi.OpacErrorException {
-        String html = readResource("/pica_lbs/reslist/" + file);
+        String html = readResource("/touchpoint/reslist/" + file);
         if (html == null) return; // we may not have all files for all libraries
         List<ReservedItem> media = TouchPoint.parse_reslist(Jsoup.parse(html));
         assertTrue(media.size() > 0);
