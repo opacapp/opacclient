@@ -9,11 +9,11 @@
 
     <android.support.v7.widget.Toolbar
         android:id="@+id/toolbar"
-        android:layout_height="wrap_content"
         android:layout_width="match_parent"
-        android:minHeight="?attr/actionBarSize"
+        android:layout_height="wrap_content"
         android:background="?attr/colorPrimary"
         android:elevation="4dp"
+        android:minHeight="?attr/actionBarSize"
         android:theme="@style/ThemeOverlay.Opacapp.ActionBar"
         app:popupTheme="@style/ThemeOverlay.AppCompat.Light"/>
 
@@ -23,9 +23,9 @@
         android:foreground="@drawable/toolbar_shadow">
 
         <ProgressBar
+            android:id="@+id/progressBar"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/progressBar"
             android:layout_gravity="center"
             android:visibility="gone"/>
 
@@ -44,7 +44,8 @@
                     android:id="@+id/tvLibraryLabel"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/account_city"/>
+                    android:text="@string/account_city"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Body2"/>
 
                 <TextView
                     android:id="@+id/tvCity"
@@ -52,7 +53,10 @@
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="8dp"
                     android:layout_marginLeft="16dp"
-                    android:ems="10"/>
+                    android:layout_marginTop="4dp"
+                    android:ems="10"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+                    tools:text="Beispielstadt ·  Beispielbibliothek"/>
 
                 <RelativeLayout
                     android:id="@+id/rlReplaced"
@@ -61,8 +65,9 @@
                     android:layout_marginBottom="8dp"
                     android:layout_marginTop="8dp"
                     android:background="@color/note_replacedby"
-                    android:padding="4dp"
-                    android:visibility="gone">
+                    android:padding="16dp"
+                    android:visibility="gone"
+                    tools:visibility="visible">
 
                     <ImageView
                         android:id="@+id/ivReplacedStore"
@@ -86,29 +91,57 @@
 
                 <android.support.design.widget.TextInputLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="8dp">
 
                     <android.support.design.widget.TextInputEditText
-                            android:id="@+id/etLabel"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginBottom="8dp"
-                            android:ems="10"
-                            android:hint="@string/account_label"
-                            android:singleLine="true"/>
+                        android:id="@+id/etLabel"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:ems="10"
+                        android:hint="@string/account_label"
+                        android:singleLine="true">
+
+                        <requestFocus/>
+                    </android.support.design.widget.TextInputEditText>
+
                 </android.support.design.widget.TextInputLayout>
 
-                <requestFocus/>
+                <RadioGroup
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:id="@+id/rgType"
+                    android:layout_marginBottom="8dp">
 
+                    <RadioButton
+                        android:text="@string/account_with_credentials"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/rbWithCredentials"
+                        android:layout_weight="1"
+                        android:checked="true"/>
+
+                    <RadioButton
+                        android:text="@string/account_anonymous"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/rbAnonymous"
+                        android:layout_weight="1"/>
+
+                </RadioGroup>
 
                 <LinearLayout
                     android:id="@+id/llBarcode"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent">
+                    android:layout_height="match_parent"
+                    android:layout_marginBottom="8dp">
+
                     <android.support.design.widget.TextInputLayout
                         android:layout_width="0dp"
+                        android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:layout_height="wrap_content">
+                        android:id="@+id/tilUsername">
+
                         <android.support.design.widget.TextInputEditText
                             android:id="@+id/etName"
                             android:layout_width="match_parent"
@@ -118,27 +151,31 @@
                             android:inputType="textNoSuggestions"
                             android:singleLine="true"/>
                     </android.support.design.widget.TextInputLayout>
-                        <ImageView
-                            android:id="@+id/ivBarcode"
-                            android:layout_width="wrap_content"
-                            android:layout_height="match_parent"
-                            android:contentDescription="@string/barcodes"
-                            app:srcCompat="@drawable/ic_barcode"
-                            tools:ignore="MissingPrefix"
-                            tools:src="@drawable/ic_barcode"/>
+
+                    <ImageView
+                        android:id="@+id/ivBarcode"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:contentDescription="@string/barcodes"
+                        app:srcCompat="@drawable/ic_barcode"
+                        tools:ignore="MissingPrefix"
+                        tools:src="@drawable/ic_barcode"/>
 
                 </LinearLayout>
+
                 <android.support.design.widget.TextInputLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
+                    android:layout_height="wrap_content"
+                    android:id="@+id/tilPassword">
+
                     <android.support.design.widget.TextInputEditText
                         android:id="@+id/etPassword"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:ems="10"
                         android:hint="@string/account_password"
-                        android:inputType="textPassword"
                         android:imeOptions="actionDone"
+                        android:inputType="textPassword"
                         android:singleLine="true"/>
                 </android.support.design.widget.TextInputLayout>
 
@@ -150,7 +187,8 @@
                     android:background="@color/warning"
                     android:padding="16dp"
                     android:text="@string/no_ssl"
-                    android:visibility="gone"/>
+                    android:visibility="gone"
+                    tools:visibility="visible"/>
             </LinearLayout>
 
         </ScrollView>
