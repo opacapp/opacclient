@@ -27,6 +27,7 @@ public abstract class AccountAdapter<I extends AccountItem, VH extends AccountAd
         extends RecyclerView.Adapter<VH> {
     protected List<I> items;
     protected OpacApi api;
+    private boolean coversHidden;
 
     public AccountAdapter() {
         super();
@@ -35,6 +36,7 @@ public abstract class AccountAdapter<I extends AccountItem, VH extends AccountAd
     @Override
     public void onBindViewHolder(VH holder, int position) {
         holder.setItem(items.get(position));
+        holder.setCoversHidden(coversHidden);
     }
 
     @Override
@@ -51,6 +53,12 @@ public abstract class AccountAdapter<I extends AccountItem, VH extends AccountAd
         notifyDataSetChanged();
     }
 
+    public void setCoversHidden(boolean coversHidden) {
+        if (this.coversHidden != coversHidden) {
+            this.coversHidden = coversHidden;
+            notifyDataSetChanged();
+        }
+    }
 
     public void setApi(OpacApi api) {
         this.api = api;
@@ -70,6 +78,7 @@ public abstract class AccountAdapter<I extends AccountItem, VH extends AccountAd
 
         protected int textColorPrimary;
         private AndroidStringProvider sp;
+        private boolean coversHidden;
 
         public ViewHolder(View itemView) {
             super(itemView);
@@ -101,25 +110,35 @@ public abstract class AccountAdapter<I extends AccountItem, VH extends AccountAd
                 setTextOrHide(item.getAuthor(), tvTitleAndAuthor);
             }
 
-            if (item.getCover() != null) {
-                ivCover.setVisibility(View.VISIBLE);
+            if (coversHidden) {
                 ivMediaType.setVisibility(View.GONE);
-
-                Glide.with(context).using(new ISBNToolsUrlLoader(context))
-                     .load(item.getCover())
-                     .placeholder(ContextCompat.getDrawable(context, R.drawable.ic_loading))
-                     .crossFade()
-                     .into(ivCover);
-            } else {
                 ivCover.setVisibility(View.GONE);
-                ivMediaType.setVisibility(View.VISIBLE);
-                Glide.clear(ivCover);
+            } else {
+                if (item.getCover() != null) {
+                    ivCover.setVisibility(View.VISIBLE);
+                    ivMediaType.setVisibility(View.GONE);
+
+                    Glide.with(context).using(new ISBNToolsUrlLoader(context))
+                         .load(item.getCover())
+                         .placeholder(ContextCompat.getDrawable(context, R.drawable.ic_loading))
+                         .crossFade()
+                         .into(ivCover);
+                } else {
+                    ivCover.setVisibility(View.GONE);
+                    ivMediaType.setVisibility(View.VISIBLE);
+                    Glide.clear(ivCover);
+                }
+                if (item.getMediaType() != null) {
+                    ivMediaType.setImageResource(
+                            ResultsAdapter.getResourceByMediaType(item.getMediaType
+                                    ()));
+                    ivMediaType.setContentDescription(sp.getMediaTypeName(item.getMediaType()));
+                }
             }
-            if (item.getMediaType() != null) {
-                ivMediaType.setImageResource(ResultsAdapter.getResourceByMediaType(item.getMediaType
-                        ()));
-                ivMediaType.setContentDescription(sp.getMediaTypeName(item.getMediaType()));
-            }
+        }
+
+        public void setCoversHidden(boolean coversHidden) {
+            this.coversHidden = coversHidden;
         }
     }
 

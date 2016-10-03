@@ -1071,15 +1071,11 @@ public class AccountFragment extends Fragment implements
 
         SharedPreferences sp = PreferenceManager
                 .getDefaultSharedPreferences(app.getApplicationContext());
-        final int tolerance = Integer.parseInt(sp.getString("notification_warning", "3"));
         displayHeader();
 
         /*
             Lent items
          */
-
-        //llLent.removeAllViews();
-
         final boolean notification_on =
                 sp.getBoolean(SyncAccountAlarmListener.PREF_SYNC_SERVICE, false);
         boolean notification_problems = false;
@@ -1089,8 +1085,7 @@ public class AccountFragment extends Fragment implements
         displayLentItems();
         if (result.getLent().size() == 0) {
             TextView t1 = new TextView(getActivity());
-            t1.setText(R.string.entl_none);
-            //llLent.addView(t1);
+            t1.setText(R.string.entl_none); // TODO:
         } else {
             for (final LentItem item : result.getLent()) {
                 try {
@@ -1113,16 +1108,23 @@ public class AccountFragment extends Fragment implements
         /*
             Reservations
          */
-        //llRes.removeAllViews();
         displayResHeader();
         displayReservedItems();
         if (result.getReservations().size() == 0) {
             TextView t1 = new TextView(getActivity());
-            t1.setText(R.string.reservations_none);
-            //llRes.addView(t1);
-
+            t1.setText(R.string.reservations_none);// TODO:
         }
         displayAge();
+
+        boolean hideCovers = true;
+        for (LentItem item : result.getLent()) {
+            if (item.getMediaType() != null || item.getCover() != null) hideCovers = false;
+        }
+        for (ReservedItem item : result.getReservations()) {
+            if (item.getMediaType() != null || item.getCover() != null) hideCovers = false;
+        }
+        lentAdapter.setCoversHidden(hideCovers);
+        resAdapter.setCoversHidden(hideCovers);
     }
 
     public void bookingStart(String booking_info) {
