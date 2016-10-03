@@ -31,7 +31,7 @@
   <string name="no_warranty">Wszelkie informacji dostarczone bez gwarancji.</string>
   <string name="lent_head">Wypożyczone</string>
   <string name="reservations_head">Rezerwacje</string>
-  <string name="entl_none">Nic nie wypożyczone</string>
+  <string name="lent_none">Nic nie wypożyczone</string>
   <string name="reservations_none">Nic nie zarezerwowane</string>
   <string name="cancel_confirm">Czy na pewno chcesz anulować tę rezerwację?</string>
   <string name="prolong_confirm">Czy na pewno chcesz odnowić tę pozycję?</string>

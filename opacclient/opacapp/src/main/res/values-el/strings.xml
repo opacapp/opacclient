@@ -31,7 +31,7 @@
   <string name="no_warranty">Όλες οι πληροφορίες παρέχονται χωρίς ευθύνη.</string>
   <string name="lent_head">Δανεισμός</string>
   <string name="reservations_head">Κρατήσεις</string>
-  <string name="entl_none">Καμμια κρατηση</string>
+  <string name="lent_none">Καμμια κρατηση</string>
   <string name="reservations_none">Καμμια κρατηση</string>
   <string name="cancel_confirm">Θελετε πραγματικά να ακυρώσετε την κράτηση;</string>
   <string name="yes">Ναι</string>

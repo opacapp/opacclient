@@ -31,7 +31,7 @@
   <string name="no_warranty">Toda la información se facilita sin responsabilidad. </string>
   <string name="lent_head">Préstamos</string>
   <string name="reservations_head">Reservas</string>
-  <string name="entl_none">Nada prestado</string>
+  <string name="lent_none">Nada prestado</string>
   <string name="reservations_none">Nada reservado</string>
   <string name="cancel_confirm">¿Desea cancelar reservación?</string>
   <string name="yes">Sí</string>
