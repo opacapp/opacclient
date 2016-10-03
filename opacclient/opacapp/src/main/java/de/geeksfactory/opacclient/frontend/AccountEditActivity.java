@@ -65,6 +65,7 @@ import de.geeksfactory.opacclient.utils.ErrorReporter;
 public class AccountEditActivity extends AppCompatActivity {
 
     public static final String EXTRA_ACCOUNT_ID = "id";
+    public static final String EXTRA_EDITING = "editing";
 
     private Account account;
     private EditText etLabel;
@@ -183,8 +184,10 @@ public class AccountEditActivity extends AppCompatActivity {
                 refreshSslWarning();
             }
         });
-        if (account.getName() == null || account.getPassword() == null
-                || account.getName().equals("") || account.getPassword().equals("")) {
+        if ((account.getName() == null || account.getPassword() == null
+                || account.getName().equals("") || account.getPassword().equals(""))
+                &&
+                (getIntent().getBooleanExtra(EXTRA_EDITING, false) || !lib.isAccountSupported())) {
             ((RadioButton) findViewById(R.id.rbAnonymous)).setChecked(true);
         }
     }

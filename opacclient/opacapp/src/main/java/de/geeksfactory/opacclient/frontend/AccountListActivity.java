@@ -115,7 +115,8 @@ public class AccountListActivity extends AppCompatActivity {
                                     int position, long id) {
                 Intent i = new Intent(AccountListActivity.this,
                         AccountEditActivity.class);
-                i.putExtra("id", accounts.get(position).getId());
+                i.putExtra(AccountEditActivity.EXTRA_ACCOUNT_ID, accounts.get(position).getId());
+                i.putExtra(AccountEditActivity.EXTRA_EDITING, true);
                 ActivityOptionsCompat options = ActivityOptionsCompat.makeScaleUpAnimation(view,
                         view.getLeft(), view.getTop(), view.getWidth(), view.getHeight());
                 ActivityCompat.startActivityForResult(AccountListActivity.this, i,
