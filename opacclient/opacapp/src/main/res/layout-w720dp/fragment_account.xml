@@ -52,6 +52,8 @@
 
                     <include layout="@layout/account_header_lent"/>
 
+                    <include layout="@layout/listitem_account_empty_lent"/>
+
                     <android.support.v7.widget.RecyclerView
                         android:id="@+id/rvLent"
                         android:transitionGroup="true"
@@ -68,6 +70,8 @@
                     android:padding="5dp">
 
                     <include layout="@layout/account_header_reservations"/>
+
+                    <include layout="@layout/listitem_account_empty_reservations"/>
 
                     <android.support.v7.widget.RecyclerView
                         android:id="@+id/rvReservations"

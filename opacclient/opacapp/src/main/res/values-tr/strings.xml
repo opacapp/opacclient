@@ -31,7 +31,7 @@
   <string name="no_warranty">Sağlanan tüm bilgiler için sorumluluk kabul edilmemektedir.</string>
   <string name="lent_head">ÖDÜNÇ ALINANLAR</string>
   <string name="reservations_head">REZERVASYONLAR</string>
-  <string name="entl_none">Ödünç alınmış bir şey yok</string>
+  <string name="lent_none">Ödünç alınmış bir şey yok</string>
   <string name="reservations_none">Rezerve edilmiş bir şey yok</string>
   <string name="cancel_confirm">Rezervasyon iptal edilsin mi?</string>
   <string name="yes">Evet</string>

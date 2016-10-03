@@ -31,7 +31,7 @@
     <string name="no_warranty">Alle Angaben ohne Gewähr.</string>
     <string name="lent_head">Entliehen</string>
     <string name="reservations_head">Vorbestellungen</string>
-    <string name="entl_none">Keine Medien entliehen</string>
+    <string name="lent_none">Keine Medien entliehen</string>
     <string name="reservations_none">Keine Medien vorbestellt</string>
     <string name="cancel_confirm">Vorbestellung wirklich entfernen?</string>
     <string name="prolong_confirm">Medium wirklich verlängern?</string>

@@ -125,6 +125,10 @@ public class AccountFragment extends Fragment implements
     private long refreshtime;
     private boolean fromcache;
     private boolean supported = true;
+    private JoinableLayout lentEmpty;
+    private JoinableLayout reservationsEmpty;
+    private TextView tvLentEmpty;
+    private TextView tvReservationsEmpty;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -169,6 +173,8 @@ public class AccountFragment extends Fragment implements
         btPrefs = (Button) view.findViewById(R.id.btPrefs);
         tvErrHeadA = (TextView) view.findViewById(R.id.tvErrHeadA);
         tvErrBodyA = (TextView) view.findViewById(R.id.tvErrBodyA);
+        tvLentEmpty = (TextView) view.findViewById(R.id.emptyLent);
+        tvReservationsEmpty = (TextView) view.findViewById(R.id.emptyReservations);
 
         lentAdapter = new LentAdapter(this);
         displayLentItems();
@@ -220,6 +226,8 @@ public class AccountFragment extends Fragment implements
                             findLentHeader(view);
                         }
                     }));
+            lentEmpty = new JoinableLayout(R.layout.listitem_account_empty_lent);
+            joiner.add(lentEmpty);
             joiner.add(new JoinableAdapter(lentAdapter));
             joiner.add(new JoinableLayout(R.layout.account_header_reservations,
                     new JoinableLayout.Callback() {
@@ -229,6 +237,8 @@ public class AccountFragment extends Fragment implements
                         }
                     }));
             joiner.add(new JoinableAdapter(resAdapter));
+            reservationsEmpty = new JoinableLayout(R.layout.listitem_account_empty_reservations);
+            joiner.add(reservationsEmpty);
             joiner.add(new JoinableLayout(R.layout.account_footer, new JoinableLayout.Callback() {
                 @Override
                 public void onInflateComplete(View view, ViewGroup parent) {
@@ -350,7 +360,7 @@ public class AccountFragment extends Fragment implements
         }
 
         if (data.getLent().size() == 0) {
-            string.append(getResources().getString(R.string.entl_none));
+            string.append(getResources().getString(R.string.lent_none));
         }
 
         string.append(getResources().getString(R.string.reservations_head));
@@ -1083,18 +1093,20 @@ public class AccountFragment extends Fragment implements
         displayWarning();
         displayLentHeader();
         displayLentItems();
-        if (result.getLent().size() == 0) {
-            TextView t1 = new TextView(getActivity());
-            t1.setText(R.string.entl_none); // TODO:
+        if (lentEmpty != null) {
+            // phone
+            lentEmpty.setVisible(result.getLent().size() == 0);
         } else {
-            for (final LentItem item : result.getLent()) {
-                try {
-                    if (notification_on && item.getDeadline() == null && !item.isEbook()) {
-                        notification_problems = true;
-                    }
-                } catch (Exception e) {
+            // tablet
+            tvLentEmpty.setVisibility(result.getLent().size() == 0 ? View.VISIBLE : View.GONE);
+        }
+        for (final LentItem item : result.getLent()) {
+            try {
+                if (notification_on && item.getDeadline() == null && !item.isEbook()) {
                     notification_problems = true;
                 }
+            } catch (Exception e) {
+                notification_problems = true;
             }
         }
 
@@ -1110,9 +1122,13 @@ public class AccountFragment extends Fragment implements
          */
         displayResHeader();
         displayReservedItems();
-        if (result.getReservations().size() == 0) {
-            TextView t1 = new TextView(getActivity());
-            t1.setText(R.string.reservations_none);// TODO:
+        if (reservationsEmpty != null) {
+            // phone
+            reservationsEmpty.setVisible(result.getReservations().size() == 0);
+        } else {
+            // tablet
+            tvReservationsEmpty
+                    .setVisibility(result.getReservations().size() == 0 ? View.VISIBLE : View.GONE);
         }
         displayAge();
 

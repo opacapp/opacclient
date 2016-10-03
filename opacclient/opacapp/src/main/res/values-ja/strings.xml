@@ -31,7 +31,7 @@
   <string name="no_warranty">提供されるすべての情報に関して責任は負いかねます。</string>
   <string name="lent_head">貸出</string>
   <string name="reservations_head">予約</string>
-  <string name="entl_none">貸出なし</string>
+  <string name="lent_none">貸出なし</string>
   <string name="reservations_none">予約なし</string>
   <string name="cancel_confirm">この予約をキャンセルしてもよろしいですか?</string>
   <string name="prolong_confirm">このアイテムを延長してもよろしいですか?</string>
