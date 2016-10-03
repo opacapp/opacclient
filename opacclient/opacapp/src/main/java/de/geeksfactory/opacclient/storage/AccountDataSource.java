@@ -289,7 +289,8 @@ public class AccountDataSource {
         putOrNull(cv, "itemid", item.getId());
         putOrNull(cv, "status", item.getStatus());
         putOrNull(cv, "cover", item.getCover());
-        putOrNull(cv, "mediatype", item.getMediaType().toString());
+        putOrNull(cv, "mediatype",
+                item.getMediaType() != null ? item.getMediaType().toString() : null);
     }
 
     private void putOrNull(ContentValues cv, String key, LocalDate value) {
