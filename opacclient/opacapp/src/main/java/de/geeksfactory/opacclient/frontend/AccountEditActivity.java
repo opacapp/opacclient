@@ -27,6 +27,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -41,6 +42,8 @@ import android.view.animation.AnimationUtils;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.TextView;
 
 import org.json.JSONException;
@@ -62,12 +65,17 @@ import de.geeksfactory.opacclient.utils.ErrorReporter;
 public class AccountEditActivity extends AppCompatActivity {
 
     public static final String EXTRA_ACCOUNT_ID = "id";
+    public static final String EXTRA_EDITING = "editing";
 
     private Account account;
     private EditText etLabel;
     private EditText etName;
     private EditText etPassword;
-    private ImageView ivBarcode;
+    private View passwordContainer;
+    private View usernameContainer;
+    private TextInputLayout tilPassword;
+    private TextInputLayout tilUsername;
+    private RadioGroup rgType;
     private Library lib;
 
     @SuppressWarnings("SameReturnValue") // Plus Edition compatibility
@@ -95,10 +103,13 @@ public class AccountEditActivity extends AppCompatActivity {
         etLabel = (EditText) findViewById(R.id.etLabel);
         etName = (EditText) findViewById(R.id.etName);
         etPassword = (EditText) findViewById(R.id.etPassword);
+        usernameContainer = findViewById(R.id.llBarcode);
+        tilUsername = (TextInputLayout) findViewById(R.id.tilUsername);
+        passwordContainer = tilPassword = (TextInputLayout) findViewById(R.id.tilPassword);
+        rgType = (RadioGroup) findViewById(R.id.rgType);
 
         AccountDataSource data = new AccountDataSource(this);
-        account = data.getAccount(getIntent()
-                .getLongExtra(EXTRA_ACCOUNT_ID, -1));
+        account = data.getAccount(getIntent().getLongExtra(EXTRA_ACCOUNT_ID, -1));
 
         if (account == null) {
             finish();
@@ -149,22 +160,46 @@ public class AccountEditActivity extends AppCompatActivity {
             } else if (findViewById(R.id.rlReplaced) != null) {
                 findViewById(R.id.rlReplaced).setVisibility(View.GONE);
             }
-            try {
-                if (!lib.getData().getString("baseurl").contains("https")
-                        && findViewById(R.id.no_ssl) != null
-                        && lib.isAccountSupported()) {
-                    findViewById(R.id.no_ssl).setVisibility(View.VISIBLE);
-                } else if (findViewById(R.id.no_ssl) != null) {
-                    findViewById(R.id.no_ssl).setVisibility(View.GONE);
-                }
-            } catch (Exception e) {
-
-            }
+            refreshSslWarning();
         } catch (IOException e) {
             e.printStackTrace();
         } catch (JSONException e) {
             ErrorReporter.handleException(e);
             e.printStackTrace();
+        }
+
+        rgType.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(RadioGroup radioGroup, int i) {
+                switch (i) {
+                    case R.id.rbAnonymous:
+                        passwordContainer.setVisibility(View.GONE);
+                        usernameContainer.setVisibility(View.GONE);
+                        break;
+                    case R.id.rbWithCredentials:
+                        passwordContainer.setVisibility(View.VISIBLE);
+                        usernameContainer.setVisibility(View.VISIBLE);
+                        break;
+                }
+                refreshSslWarning();
+            }
+        });
+        if ((account.getName() == null || account.getPassword() == null
+                || account.getName().equals("") || account.getPassword().equals(""))
+                &&
+                (getIntent().getBooleanExtra(EXTRA_EDITING, false) || !lib.isAccountSupported())) {
+            ((RadioButton) findViewById(R.id.rbAnonymous)).setChecked(true);
+        }
+    }
+
+    public void refreshSslWarning() {
+        if (lib != null && !lib.getData().optString("baseurl", "").contains("https")
+                && findViewById(R.id.no_ssl) != null
+                && lib.isAccountSupported()
+                && rgType.getCheckedRadioButtonId() == R.id.rbWithCredentials) {
+            findViewById(R.id.no_ssl).setVisibility(View.VISIBLE);
+        } else if (findViewById(R.id.no_ssl) != null) {
+            findViewById(R.id.no_ssl).setVisibility(View.GONE);
         }
     }
 
@@ -174,16 +209,41 @@ public class AccountEditActivity extends AppCompatActivity {
         } else {
             account.setLabel(etLabel.getText().toString().trim());
         }
-        account.setName(etName.getText().toString().trim());
-        account.setPassword(etPassword.getText().toString().trim());
-        if (!lib.isAccountSupported() || etPassword.getText().toString().trim().equals("")) {
-            // Don't check user credentials if there are no credentials or if the library does not
-            // support account features
+        if (rgType.getCheckedRadioButtonId() == R.id.rbWithCredentials) {
+            if (etPassword.getText().toString().trim().equals("")
+                    || etName.getText().toString().trim().equals("")) {
+                if (etPassword.getText().toString().trim().equals("")) {
+                    tilPassword.setErrorEnabled(true);
+                    tilPassword.setError(getString(R.string.please_enter_password));
+                } else {
+                    tilPassword.setErrorEnabled(false);
+                    tilPassword.setError(null);
+                }
+                if (etName.getText().toString().trim().equals("")) {
+                    tilUsername.setErrorEnabled(true);
+                    tilUsername.setError(getString(R.string.please_enter_username));
+                } else {
+                    tilUsername.setErrorEnabled(false);
+                    tilUsername.setError("");
+                }
+                return;
+            }
+
+            account.setName(etName.getText().toString().trim());
+            account.setPassword(etPassword.getText().toString().trim());
+            if (!lib.isAccountSupported()) {
+                // Don't check user credentials if the library does not support account features
+                save();
+                close();
+                return;
+            }
+            new CheckAccountDataTask().execute(account);
+        } else {
+            account.setName("");
+            account.setPassword("");
             save();
             close();
-            return;
         }
-        new CheckAccountDataTask().execute(account);
     }
 
     private void delete() {
