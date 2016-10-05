@@ -68,13 +68,13 @@ public class AccountDatabase extends SQLiteOpenHelper {
                         "account integer," + "title text," + "author text," + "format text," +
                         "itemid text," + "status text," + "barcode text," + "deadline text," +
                         "homebranch text," + "lending_branch text," + "prolong_data text," +
-                        "renewable integer," + "download_data text," + "ebook integer" +
-                        "mediatype text," + "cover text," + ");");
+                        "renewable integer," + "download_data text," + "ebook integer," +
+                        "mediatype text," + "cover text" + ");");
         db.execSQL("create table " + "accountdata_reservations (" +
                 "id integer primary key autoincrement," + "account integer," + "title text," +
                 "author text," + "format text," + "itemid text," + "status text," + "ready text," +
                 "expiration text," + "branch text," + "cancel_data text," + "booking_data text," +
-                "mediatype text," + "cover text," + ");");
+                "mediatype text," + "cover text" + ");");
         db.execSQL("create table " + "alarms (" + "id integer primary key autoincrement," +
                 "deadline text," + "media text," + "alarm text," + "notified integer," +
                 "finished integer" + ");");
