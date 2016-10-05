@@ -7,9 +7,12 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.view.animation.FastOutLinearInInterpolator;
+import android.support.v4.view.animation.LinearOutSlowInInterpolator;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Html;
 import android.transition.ChangeBounds;
+import android.transition.Transition;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -54,7 +57,14 @@ public class AccountItemDetailActivity extends AppCompatActivity {
         });
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            getWindow().setSharedElementEnterTransition(new ChangeBounds());
+            Transition enter = new ChangeBounds()
+                    .setInterpolator(new LinearOutSlowInInterpolator())
+                    .setDuration(225);
+            getWindow().setSharedElementEnterTransition(enter);
+            Transition exit = new ChangeBounds()
+                    .setInterpolator(new FastOutLinearInInterpolator())
+                    .setDuration(195);
+            getWindow().setSharedElementReturnTransition(exit);
         }
 
         View outside = findViewById(R.id.outside);
