@@ -206,7 +206,7 @@
     <string name="prolong">Renew</string>
     <string name="reservation_cancel">Cancel reservation</string>
     <string name="reservation_book">Lend</string>
-    <string name="mediatype">Material type</string>
+    <string name="mediatype">Media type</string>
     <string name="status">Status</string>
     <string name="free_search">Free Search</string>
     <string name="no_fields_found">No search fields found</string>
