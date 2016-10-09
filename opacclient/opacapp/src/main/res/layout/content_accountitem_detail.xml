@@ -81,6 +81,7 @@
                         android:layout_toEndOf="@id/iconTitle"
                         android:layout_toRightOf="@id/iconTitle"
                         android:text="@{item.title}"
+                        android:textIsSelectable="true"
                         tools:text="Harry Potter und der Stein der Weisen - Ausgabe mit extra langem Titel"/>
                 </RelativeLayout>
 
@@ -110,6 +111,7 @@
                         android:layout_toEndOf="@id/iconAuthor"
                         android:layout_toRightOf="@id/iconAuthor"
                         android:text="@{item.author}"
+                        android:textIsSelectable="true"
                         tools:text="Joanne K. Rowling"/>
                 </RelativeLayout>
 
@@ -139,6 +141,7 @@
                         android:layout_toEndOf="@id/iconStatus"
                         android:layout_toRightOf="@id/iconStatus"
                         android:text="@{Html.fromHtml(item.status != null ? item.status : &quot;&quot;)}"
+                        android:textIsSelectable="true"
                         tools:text="Entliehen"/>
                 </RelativeLayout>
 
@@ -168,6 +171,7 @@
                         android:layout_toEndOf="@id/iconDeadline"
                         android:layout_toRightOf="@id/iconDeadline"
                         android:text="@{item instanceof LentItem &amp;&amp; ((LentItem) item).deadline != null ? DateTimeFormat.shortDate().print(((LentItem) item).deadline) : null}"
+                        android:textIsSelectable="true"
                         tools:text="01.01.2017"/>
                 </RelativeLayout>
 
@@ -197,6 +201,7 @@
                         android:layout_toEndOf="@id/iconReadyDate"
                         android:layout_toRightOf="@id/iconReadyDate"
                         android:text="@{item instanceof ReservedItem &amp;&amp; ((ReservedItem) item).readyDate != null ? DateTimeFormat.shortDate().print(((ReservedItem) item).readyDate) : null}"
+                        android:textIsSelectable="true"
                         tools:text="01.01.2017"/>
                 </RelativeLayout>
 
@@ -226,6 +231,7 @@
                         android:layout_toEndOf="@id/iconExpirationDate"
                         android:layout_toRightOf="@id/iconExpirationDate"
                         android:text="@{item instanceof ReservedItem &amp;&amp; ((ReservedItem) item).expirationDate != null ? DateTimeFormat.shortDate().print(((ReservedItem) item).expirationDate) : null}"
+                        android:textIsSelectable="true"
                         tools:text="01.01.2017"/>
                 </RelativeLayout>
 
@@ -255,6 +261,7 @@
                         android:layout_toEndOf="@id/iconBranch"
                         android:layout_toRightOf="@id/iconBranch"
                         android:text="@{AccountItemDetailActivity.getBranch(item, @string/lendingbranch_homebranch)}"
+                        android:textIsSelectable="true"
                         tools:text="Zentralbibliothek / Außenstelle"/>
                 </RelativeLayout>
 
@@ -285,6 +292,7 @@
                         android:layout_toEndOf="@id/iconFormat"
                         android:layout_toRightOf="@id/iconFormat"
                         android:text="@{AccountItemDetailActivity.getFormat(item, context)}"
+                        android:textIsSelectable="true"
                         tools:text="Buch"/>
                 </RelativeLayout>
 
@@ -314,6 +322,7 @@
                         android:layout_toEndOf="@id/iconBarcode"
                         android:layout_toRightOf="@id/iconBarcode"
                         android:text="@{item instanceof LentItem ? ((LentItem) item).barcode : &quot;&quot;}"
+                        android:textIsSelectable="true"
                         tools:text="12345"/>
 
                 </RelativeLayout>
