@@ -138,7 +138,7 @@
                         android:layout_below="@id/labelStatus"
                         android:layout_toEndOf="@id/iconStatus"
                         android:layout_toRightOf="@id/iconStatus"
-                        android:text="@{Html.fromHtml(item.status)}"
+                        android:text="@{Html.fromHtml(item.status != null ? item.status : &quot;&quot;)}"
                         tools:text="Entliehen"/>
                 </RelativeLayout>
 
@@ -313,7 +313,7 @@
                         android:layout_below="@id/labelBarcode"
                         android:layout_toEndOf="@id/iconBarcode"
                         android:layout_toRightOf="@id/iconBarcode"
-                        android:text="@{item instanceof LentItem ? ((LentItem) item).barcode : null}"
+                        android:text="@{item instanceof LentItem ? ((LentItem) item).barcode : &quot;&quot;}"
                         tools:text="12345"/>
 
                 </RelativeLayout>
