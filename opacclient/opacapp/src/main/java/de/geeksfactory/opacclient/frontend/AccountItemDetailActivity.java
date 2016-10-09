@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.view.animation.FastOutLinearInInterpolator;
@@ -16,6 +17,7 @@ import android.transition.Transition;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ScrollView;
 
 import de.geeksfactory.opacclient.OpacClient;
 import de.geeksfactory.opacclient.R;
@@ -61,6 +63,25 @@ public class AccountItemDetailActivity extends AppCompatActivity {
                     .setInterpolator(new LinearOutSlowInInterpolator())
                     .setDuration(225);
             getWindow().setSharedElementEnterTransition(enter);
+            enter.addListener(new Transition.TransitionListener() {
+                @Override
+                public void onTransitionStart(Transition transition) {
+                    ScrollView sv = (ScrollView) findViewById(R.id.scrollView);
+                    sv.scrollTo(0, 0);
+                }
+
+                @Override
+                public void onTransitionEnd(Transition transition) {}
+
+                @Override
+                public void onTransitionCancel(Transition transition) {}
+
+                @Override
+                public void onTransitionPause(Transition transition) {}
+
+                @Override
+                public void onTransitionResume(Transition transition) {}
+            });
             Transition exit = new ChangeBounds()
                     .setInterpolator(new FastOutLinearInInterpolator())
                     .setDuration(195);
