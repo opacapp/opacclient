@@ -31,7 +31,7 @@
   <string name="no_warranty">Non ci assumiamo nessuna responsabilità sulle informazioni riportate.</string>
   <string name="lent_head">Noleggiati</string>
   <string name="reservations_head">Prenotazioni</string>
-  <string name="entl_none">Nessun prestito</string>
+  <string name="lent_none">Nessun prestito</string>
   <string name="reservations_none">Nessuna prenotazione</string>
   <string name="cancel_confirm">Vuoi davvero cancellare la prenotazione?</string>
   <string name="prolong_confirm">Vuoi davvero rinnovare il prestito?</string>
