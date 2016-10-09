@@ -9,6 +9,9 @@ import android.view.View;
 
 import de.geeksfactory.opacclient.R;
 import de.geeksfactory.opacclient.frontend.adapter.AccountAdapter;
+import de.geeksfactory.opacclient.frontend.adapter.ReservationsAdapter;
+import su.j2e.rvjoiner.JoinableAdapter;
+import su.j2e.rvjoiner.RvJoiner;
 
 /*
  * Copyright (C) 2014 The Android Open Source Project
@@ -26,10 +29,14 @@ import de.geeksfactory.opacclient.frontend.adapter.AccountAdapter;
  * limitations under the License.
  */
 public class AccountDividerItemDecoration extends RecyclerView.ItemDecoration {
-    private Drawable mDivider;
+    private Drawable mDividerWithInset;
+    private Drawable mDividerWithoutInset;
+    private RvJoiner rvJoiner;
 
-    public AccountDividerItemDecoration(Context context) {
-        mDivider = context.getDrawable(R.drawable.list_divider_inset);
+    public AccountDividerItemDecoration(Context context, RvJoiner rvJoiner) {
+        mDividerWithInset = context.getDrawable(R.drawable.list_divider_inset);
+        mDividerWithoutInset = context.getDrawable(R.drawable.list_divider);
+        this.rvJoiner = rvJoiner;
     }
 
     @Override
@@ -40,14 +47,24 @@ public class AccountDividerItemDecoration extends RecyclerView.ItemDecoration {
         final int childCount = parent.getChildCount();
         for (int i = 0; i < childCount; i++) {
             final View child = parent.getChildAt(i);
+            final RecyclerView.ViewHolder vh = parent.getChildViewHolder(child);
+
             if (!isDecorated(child, parent)) continue;
+            if (!(vh instanceof AccountAdapter.ViewHolder)) continue;
+
 
             final RecyclerView.LayoutParams params = (RecyclerView.LayoutParams) child
                     .getLayoutParams();
             final int top = child.getBottom() + params.bottomMargin;
-            final int bottom = top + mDivider.getIntrinsicHeight();
-            mDivider.setBounds(left, top, right, bottom);
-            mDivider.draw(c);
+
+            final Drawable drawable = (
+                    ((AccountAdapter.ViewHolder) vh).isCoversHidden()
+                            ? mDividerWithoutInset
+                            : mDividerWithInset
+            );
+            final int bottom = top + drawable.getIntrinsicHeight();
+            drawable.setBounds(left, top, right, bottom);
+            drawable.draw(c);
         }
     }
 
@@ -55,19 +72,29 @@ public class AccountDividerItemDecoration extends RecyclerView.ItemDecoration {
     public void getItemOffsets(Rect outRect, View view, RecyclerView parent, RecyclerView
             .State state) {
         if (isDecorated(view, parent)) {
-            outRect.set(0, 0, 0, mDivider.getIntrinsicHeight());
+            outRect.set(0, 0, 0, mDividerWithInset.getIntrinsicHeight());
         }
     }
 
     private boolean isDecorated(View view, RecyclerView parent) {
         RecyclerView.ViewHolder vh = parent.getChildViewHolder(view);
-        View nextView = parent.getChildAt(parent.getChildAdapterPosition(view) + 1);
-        if (nextView != null) {
-            RecyclerView.ViewHolder vh2 = parent.getChildViewHolder(nextView);
-            return vh instanceof AccountAdapter.ViewHolder &&
-                    vh2 instanceof AccountAdapter.ViewHolder;
+
+        if (rvJoiner != null) {
+            if (vh instanceof AccountAdapter.ViewHolder) {
+                RvJoiner.PositionInfo pi =
+                        rvJoiner.getPositionInfo(parent.getChildAdapterPosition(view));
+                return (pi.joinable.getAdapter() instanceof AccountAdapter
+                        && pi.realPosition < pi.joinable.getAdapter().getItemCount() - 1);
+            }
+            return true;
         } else {
-            return false;
+            View nextView = parent.getChildAt(parent.getChildAdapterPosition(view) + 1);
+            if (nextView != null) {
+                RecyclerView.ViewHolder vh2 = parent.getChildViewHolder(nextView);
+                return vh instanceof AccountAdapter.ViewHolder &&
+                        vh2 instanceof AccountAdapter.ViewHolder;
+            }
         }
+        return false;
     }
 }

@@ -186,12 +186,12 @@ public class AccountFragment extends Fragment implements
             RecyclerView rvLent = (RecyclerView) view.findViewById(R.id.rvLent);
             rvLent.setLayoutManager(new LinearLayoutManager(getActivity()));
             rvLent.setAdapter(lentAdapter);
-            rvLent.addItemDecoration(new AccountDividerItemDecoration(getContext()));
+            rvLent.addItemDecoration(new AccountDividerItemDecoration(getContext(), null));
 
             RecyclerView rvReservations = (RecyclerView) view.findViewById(R.id.rvReservations);
             rvReservations.setLayoutManager(new LinearLayoutManager(getActivity()));
             rvReservations.setAdapter(resAdapter);
-            rvReservations.addItemDecoration(new AccountDividerItemDecoration(getContext()));
+            rvReservations.addItemDecoration(new AccountDividerItemDecoration(getContext(), null));
 
             findHeaderViews(view);
             findErrorWarningViews(view);
@@ -202,8 +202,8 @@ public class AccountFragment extends Fragment implements
             // phone
             RecyclerView rv = (RecyclerView) view.findViewById(R.id.rvAccountData);
             rv.setLayoutManager(new LinearLayoutManager(getActivity()));
-            rv.addItemDecoration(new AccountDividerItemDecoration(getContext()));
             RvJoiner joiner = new RvJoiner();
+            rv.addItemDecoration(new AccountDividerItemDecoration(getContext(), joiner));
 
             joiner.add(new JoinableLayout(R.layout.account_header, new JoinableLayout.Callback() {
                 @Override
