@@ -140,6 +140,10 @@ public abstract class AccountAdapter<I extends AccountItem, VH extends AccountAd
         public void setCoversHidden(boolean coversHidden) {
             this.coversHidden = coversHidden;
         }
+
+        public boolean isCoversHidden() {
+            return coversHidden;
+        }
     }
 
     protected static void setHtmlTextOrHide(String value, TextView tv) {
