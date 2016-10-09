@@ -143,16 +143,19 @@
   <plurals name="account_age_minutes">
     <item quantity="one">Dane są sprzed minuty.</item>
     <item quantity="few">Dane są sprzed %d minut.</item>
+    <item quantity="many">Dane są sprzed %d minut.</item>
     <item quantity="other">Dane są sprzed %d minut.</item>
   </plurals>
   <plurals name="account_age_hours">
     <item quantity="one">Dane są sprzed godziny.</item>
     <item quantity="few">Dane są sprzed %d godzin.</item>
+    <item quantity="many">Dane są sprzed %d godzin.</item>
     <item quantity="other">Dane są sprzed %d godzin.</item>
   </plurals>
   <plurals name="account_age_days">
     <item quantity="one">Dane są ze wczoraj.</item>
     <item quantity="few">Dane są sprzed %d dni.</item>
+    <item quantity="many">Dane są sprzed %d dni.</item>
     <item quantity="other">Dane są sprzed %d dni.</item>
   </plurals>
   <string name="search_advanced">Szukanie zaawansowane</string>
@@ -164,6 +167,7 @@
   <plurals name="result_number">
     <item quantity="one">Jeden wynik wyszukiwania</item>
     <item quantity="few">%d wyniki wyszukiwania</item>
+    <item quantity="many">%d wyniki wyszukiwania</item>
     <item quantity="other">%d wyników wyszukiwania</item>
   </plurals>
   <string name="export_starred">Eksport</string>
