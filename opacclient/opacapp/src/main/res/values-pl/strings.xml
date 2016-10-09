@@ -116,8 +116,6 @@
   <string name="accounts_edit">Edytuj konto</string>
   <string name="accounts_desc">Zarządzaj swoimi bibliotekami i numerami członkowskimi</string>
   <string name="account_label">Etykieta</string>
-  <string name="account_nr">Identyfikator biblioteczny/nazwa użytkownika (opcjonalne)</string>
-  <string name="account_password">Hasło (opcjonalne)</string>
   <string name="account_city">Biblioteka</string>
   <string name="account_delete_confirm">Na pewno usunąć konto?</string>
   <string name="account_select">Wybierz konto</string>
@@ -145,17 +143,17 @@
   <plurals name="account_age_minutes">
     <item quantity="one">Dane są sprzed minuty.</item>
     <item quantity="few">Dane są sprzed %d minut.</item>
-    <item quantity="many">Dane są sprzed %d minut.</item>
+    <item quantity="other">Dane są sprzed %d minut.</item>
   </plurals>
   <plurals name="account_age_hours">
     <item quantity="one">Dane są sprzed godziny.</item>
     <item quantity="few">Dane są sprzed %d godzin.</item>
-    <item quantity="many">Dane są sprzed %d godzin.</item>
+    <item quantity="other">Dane są sprzed %d godzin.</item>
   </plurals>
   <plurals name="account_age_days">
     <item quantity="one">Dane są ze wczoraj.</item>
     <item quantity="few">Dane są sprzed %d dni.</item>
-    <item quantity="many">Dane są sprzed %d dni.</item>
+    <item quantity="other">Dane są sprzed %d dni.</item>
   </plurals>
   <string name="search_advanced">Szukanie zaawansowane</string>
   <string name="search_free">Szukanie proste</string>
@@ -166,7 +164,7 @@
   <plurals name="result_number">
     <item quantity="one">Jeden wynik wyszukiwania</item>
     <item quantity="few">%d wyniki wyszukiwania</item>
-    <item quantity="many">%d wyniki wyszukiwania</item>
+    <item quantity="other">%d wyników wyszukiwania</item>
   </plurals>
   <string name="export_starred">Eksport</string>
   <string name="export_account">Udostępnij jako tekst</string>
@@ -233,7 +231,6 @@ Czy chcesz zachować dane o koncie mimo to?</string>
   <string name="other">Inne</string>
   <string name="source">Kod źróódłowy</string>
   <string name="loading">Wczytywanie</string>
-  <string name="loading_libraries">Wczytywanie listy bibliotek</string>
   <string name="shelfmark">Sygnatura</string>
   <string name="url">URL</string>
   <string name="return_date">Data zwrotu</string>

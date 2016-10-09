@@ -15,25 +15,26 @@
   <string name="osl">Licenze</string>
   <string name="thanks">Riconoscimenti</string>
   <string name="developer_settings">Impostazioni sviluppatore</string>
-  <string name="details_head">DETTAGLI</string>
-  <string name="copies_head">COPIA</string>
-  <string name="ret">Restituzione</string>
+  <string name="details_head">Dettagli</string>
+  <string name="copies_head">Copia</string>
+  <string name="ret">Data restituzione</string>
   <string name="res">Prenotato</string>
   <string name="tocollection">Alla raccolta</string>
   <string name="reserve">Prenotare</string>
   <string name="lendebook">Noleggio e-book</string>
   <string name="doing_res">Prenotazione in corso…</string>
-  <string name="opac_error_email">Per questa funzione inserisci il tuo indirizzo e-mail nelle impostazioni.</string>
+  <string name="opac_error_email">Inserisci il tuo indirizzo e-mail nelle impostazioni.</string>
   <string name="doing_booking">Richiesta prestito in corso…</string>
   <string name="status_nouser">Nelle Impostazioni non è stato inserito nessun dato personale relativo all\'account.</string>
   <string name="pending_fees">Importo da versare:</string>
   <string name="valid_until">Account valido fino al:</string>
   <string name="no_warranty">Non ci assumiamo nessuna responsabilità sulle informazioni riportate.</string>
-  <string name="lent_head">NOLEGGIATI</string>
-  <string name="reservations_head">PRENOTAZIONI</string>
-  <string name="entl_none">Nessun materiale preso in prestito</string>
-  <string name="reservations_none">Nessun materiale prenotato</string>
+  <string name="lent_head">Noleggiati</string>
+  <string name="reservations_head">Prenotazioni</string>
+  <string name="entl_none">Nessun prestito</string>
+  <string name="reservations_none">Nessuna prenotazione</string>
   <string name="cancel_confirm">Vuoi davvero cancellare la prenotazione?</string>
+  <string name="prolong_confirm">Vuoi davvero rinnovare il prestito?</string>
   <string name="yes">Sì</string>
   <string name="no">No</string>
   <string name="cancel">Annulla</string>
@@ -42,14 +43,14 @@
   <string name="doing_cancel">Cancellazione della prenotazione…</string>
   <string name="doing_prolong">Rinnovo del prestito in corso…</string>
   <string name="doing_download">Le informazioni vengono scaricate</string>
-  <string name="reader_needed">Per leggere l\'e-book è necessario un\'altra applicazione ad es. Bluefire Reader. Clicca su Ignora se hai già un\'app simile installata, questo avviso non apparirà nuovamente in seguito. Clicca invece su Download per installare Bluefire Reader tramite Play Store. </string>
+  <string name="reader_needed">Per leggere l\'e-book è necessario un\'altra applicazione ad es. \"Bluefire Reader\". Clicca su \"Ignora\" se hai già un\'app simile installata, questo avviso non apparirà nuovamente in seguito. Clicca invece su \"Download\" per installare Bluefire Reader tramite Play Store. </string>
   <string name="reader_needed_ignore">Ignora</string>
   <string name="doing_prolong_all">Tutti i prestiti rinnovabili vengono rinnovati…</string>
-  <string name="prolong_all_confirm">Vuoi davvero rinnovare il prestito di tutti i materiali (rinnovabili)? Alcune biblioteche possono richiedere costi aggiuntivi per questa operazione.</string>
+  <string name="prolong_all_confirm">Vuoi davvero rinnovare tutti i prestiti? Alcune biblioteche possono richiedere costi aggiuntivi per questa operazione.</string>
   <string name="opac_error">Avviso da Web Opac:</string>
   <string name="welcome">Benvenuta/o!</string>
   <string name="welcome_select">Per iniziare scegli una biblioteca.</string>
-  <string name="welcome_account">L\'applicazione può essere utilizzata nella sola modalità ricerca oppure possono essere abilitate funzioni aggiuntive riservate agli utenti registrati della biblioteca inserendo i dati personali del proprio account. È in seguito possibile aggiungere ulteriori account dal menù Impostazioni.</string>
+  <string name="welcome_account">L\'applicazione può essere utilizzata nella sola modalità ricerca oppure possono essere abilitate funzioni aggiuntive riservate agli utenti registrati della biblioteca inserendo i dati personali del proprio account. È possibile aggiungere ulteriori account successivamente.</string>
   <string name="select_library">Scegliere biblioteca</string>
   <string name="report">Invia segnalazione</string>
   <string name="report_sending">Invio segnalazione in corso…</string>
@@ -58,7 +59,8 @@
   <string name="notifications">Promemoria</string>
   <string name="notification_service">Prestiti in scadenza</string>
   <string name="notification_service_desc">Mostra un promemoria quando un prestito sta per scadere (non garantito)</string>
-  <string name="notification_service_wifionly">Utilizza solo Wi-Fi</string>
+  <string name="notification_service_wifionly">Utilizza solo in Wi-Fi</string>
+  <string name="notification_service_wifionly_desc">Quando lo smartphone è connesso ad una rete dati mobile nessuna informazione verrà scaricata. In questo caso non verranno ricevute neanche le notifiche!</string>
   <string-array name="warning">
     <item>Il giorno stesso</item>
     <item>Il giorno precedente</item>
@@ -83,15 +85,21 @@
   <string name="notification_warning_desc">Quanto tempo prima vuoi ricevere il promemoria?</string>
   <string name="notif_ticker">%s libri sono in scadenza!</string>
   <string name="notif_title">Libri in scadenza</string>
-  <string name="volumes">VOLUMI</string>
+  <string name="notif_ticker_expired">%s prestiti sono scaduti!</string>
+  <string name="notif_title_expired">Prestiti scaduti</string>
+  <string name="notif_plus_more">+%d ulteriori</string>
+  <string name="notif_snooze">Dopo</string>
+  <string name="notif_dont_remind_again">Elimina</string>
+  <string name="volumes">Volumi</string>
   <string name="volumesearch">Mostra volumi</string>
   <string name="star">Aggiungi ai preferiti</string>
   <string name="starred">È stato aggiunto ai preferiti</string>
-  <string name="star_wait">Attendere il caricamento dei dettagli!</string>
+  <string name="star_wait">Attendere il caricamento dei dettagli.</string>
+  <string name="star_unsupported">Non abbiamo informazioni a sufficienza per aggiungere questo oggetto alla tua lista.</string>
   <string name="starred_welcome">Questa è la lista dei preferiti. Clicca sulla stellina nella sezione Dettagli per aggiungere l\'oggetto ai preferiti. Verranno salvate liste diverse per biblioteche diverse.</string>
   <string name="share">Condividi</string>
   <string name="share_wait">Attendere il caricamento dei dettagli</string>
-  <string name="share_notsupported">Condivisione non consentita per questa biblioteca</string>
+  <string name="share_notsupported">Non disponibile per questa biblioteca</string>
   <string name="unsupported">Funzione non supportata</string>
   <string name="account_unsupported_api">Questa funzione non è ancora supportata per la tua biblioteca. Per renderla disponibile abbiamo bisogno dell\'aiuto degli utenti di questa biblioteca. Se hai voglia di aiutarci invia una e-mail all\'indirizzo info@opacapp.de</string>
   <string name="write_mail">Scrivere una e-mail</string>
@@ -100,6 +108,7 @@
   <string name="connection_error_detail">La connessione al server della biblioteca non è riuscita. Controlla che la tua connessione internet sia attiva. Se il problema persiste probabilmente il server della biblioteca ha un problema oppure l\'applicazione non è riuscita ad elaborare la risposta ricevuta.</string>
   <string name="connection_error_detail_nre">La connessione al server della biblioteca non è riuscita. Controlla che la tua connessione internet sia attiva. Se il problema persiste probabilmente il server della biblioteca ha un problema.</string>
   <string name="retry">Riprova</string>
+  <string name="connection_error_detail_security">La connessione sicura al server della biblioteca non è riuscita. Se il problema persiste potrebbe esserci qualcuno che intercetta la tua connessione. Contatta info@opacapp.de se il problema si presenta in reti Wi-Fi diverse. </string>
   <string name="default_account_name">Account anonimo</string>
   <string name="title_activity_account_list">Account</string>
   <string name="account_add">Aggiungi un account</string>
@@ -107,8 +116,8 @@
   <string name="accounts_edit">Modifica account</string>
   <string name="accounts_desc">Gestisci le tue biblioteche e i tuoi account</string>
   <string name="account_label">Descrizione</string>
-  <string name="account_nr">Nome/ID iscrizione (facoltativo)</string>
-  <string name="account_password">Password (facoltativo)</string>
+  <string name="account_nr">Nome/ID iscrizione</string>
+  <string name="account_password">Password</string>
   <string name="account_city">Biblioteca</string>
   <string name="account_delete_confirm">Vuoi eliminare davvero questo account?</string>
   <string name="account_select">Scegliere account</string>
@@ -152,12 +161,14 @@
   <string name="barcode_gplay">Google Play</string>
   <string name="barcode_amazon">Amazon</string>
   <plurals name="result_number">
-    <item quantity="one">Un risultato ricerca</item>
-    <item quantity="other">%d risultati ricerca</item>
+    <item quantity="one">Un risultato</item>
+    <item quantity="other">%d risultati</item>
   </plurals>
   <string name="export_starred">Esporta</string>
+  <string name="export_account">Condividi come testo</string>
   <string name="geolocate">Cerca le biblioteche nelle mie vicinanze</string>
   <string name="geolocate_progress">Ricerca della tua posizione in corso…</string>
+  <string name="geolocate_not_available">Posizione non disponibile. Modifica le impostazioni per attivare la localizzazione.</string>
   <string name="alphabetic_list">Mostra lista completa</string>
   <string name="setting_nfc">Ricerca tramite tag NFC</string>
   <string name="setting_nfc_desc">Sperimentale. Disponibile solo per alcuni dispositivi e biblioteche.</string>
@@ -166,7 +177,7 @@
   <string name="replacedby">Per questa biblioteca è disponibile l\'applicazione ufficiale che offre funzionalità avanzate. Consigliamo pertanto di utilizzare quest\'ultima. Per installarla è sufficiente cliccare sull\'icona del Play Store a destra.</string>
   <string name="email_address">Indirizzo e-mail</string>
   <string name="email_address_description">Necessario per prenotare un e-book</string>
-  <string name="accchange_sorry">Non è stato possibile cambiare account, cerca di nuovo.</string>
+  <string name="accchange_sorry">Non è stato possibile cambiare account, riprova.</string>
   <string name="share_dialog_select">Condividi risultato</string>
   <string name="share_link">Condividi link</string>
   <string name="share_details">Esporta dettagli</string>
@@ -179,7 +190,7 @@
   <string name="title_activity_suggest_library">Suggerisci biblioteca</string>
   <string name="city">Città</string>
   <string name="library_name">Nome della biblioteca</string>
-  <string name="hint_library_name">es. \"Biblioteca comunale\", \"Biblioteca universitaria\", \"Ruprecht-Karls-Universität\", …</string>
+  <string name="hint_library_name">es. \"Biblioteca comunale\", \"Biblioteca universitaria\", \"Harvard University\", …</string>
   <string name="comment">Commento</string>
   <string name="send">Invia</string>
   <string name="select_mail_app">Seleziona applicazione per e-mail…</string>
@@ -187,7 +198,7 @@
   <string name="action_search">Cerca</string>
   <string name="expand">Mostra ricerca avanzata</string>
   <string name="collapse">Mostra ricerca semplificata</string>
-  <string name="interested_to_help">Vorrei contribuire al progetto.</string>
+  <string name="interested_to_help">Vorrei contribuire al progetto</string>
   <string name="library_suggestion">Suggerisci biblioteca</string>
   <string name="cover">Copertina</string>
   <string name="playstore">Play Store</string>
@@ -198,7 +209,7 @@
   <string name="mediatype">Tipo materiale</string>
   <string name="status">Stato</string>
   <string name="free_search">Ricerca</string>
-  <string name="no_fields_found">Nessun campo di ricerca trovato.</string>
+  <string name="no_fields_found">Nessun campo di ricerca trovato</string>
   <string name="no_search_cache">Errore. Prova ad eseguire una ricerca per risolvere il problema.</string>
   <string name="user_data_opac_message">Durante la verifica del tuo account la biblioteca ha inviato il seguente messaggio: \"%s\"\n\nVuoi salvare lo stesso i dati utente?</string>
   <string name="user_data_connection_error">Durante la verifica del tuo account è occorso un errore nella connessione al server della biblioteca. Vuoi salvare lo stesso i dati utente?</string>
@@ -206,6 +217,7 @@
   <string name="support_search">Ricerca</string>
   <string name="meta_clear_title">Vuota cache</string>
   <string name="meta_clear">Elimina i metadati salvati nella cache</string>
+  <string name="meta_run_check">Avvia sincronizzazione</string>
   <string name="version">Versione</string>
   <string name="website">Sito web</string>
   <string name="website_url">www.opacapp.net</string>
@@ -214,4 +226,83 @@
   <string name="rate">Valuta questa app</string>
   <string name="other">Altro</string>
   <string name="source">Codice sorgente</string>
+  <string name="loading">In caricamento...</string>
+  <string name="loading_libraries">Elaborazione dati biblioteca...</string>
+  <string name="updating_libraries">Caricamento lista aggiornata biblioteche...</string>
+  <string name="shelfmark">Collocazione</string>
+  <string name="url">URL</string>
+  <string name="return_date">Restituzione</string>
+  <string name="location">Posizione</string>
+  <string name="department">Dipartimento</string>
+  <string name="reservations">Prenotazioni</string>
+  <string name="barcode">Codice a barre</string>
+  <string name="clear_search">cancella formulario</string>
+  <string name="title">Titolo</string>
+  <string name="author">Autore</string>
+  <string name="title_and_author">Titolo e autore</string>
+  <string name="reservation_expire_until">fino</string>
+  <string name="go_to_details">Dettagli</string>
+  <string name="nfc_title">Ricerca NFC disponibile</string>
+  <string name="nfc_intro">Questa biblioteca supporta la ricerca tramite tag NFC. Mentre sei nella
+pagina principale dell\'app, puoi appoggiare il tuo dispositivo su un
+libro (o altro materiale) della biblioteca e l\'app mostrerà direttamente le
+informazioni a questo relative. Questo è possibile mediante la \"lettura\"
+di un piccolo adesivo con tecnologia NFC posto dietro al libro o all\'interno della
+copertina. Potrebbe quindi non funzionare a seconda di dove si appoggia il
+dispositivo o se sono presenti accessori come per es. una cover protettiva per lo
+smartphone, inoltre potrebbe non essere disponibile su tutto il catalogo della
+biblioteca.</string>
+  <string name="nfc_question">Vuoi attivare la ricerca NFC?</string>
+  <string name="no_thanks">No grazie</string>
+  <string name="nfc_activated">Ricerca NFC abilitata. Può essere modificato nelle impostazioni
+in qualsiasi momento.</string>
+  <string name="nfc_not_activated">Puoi attivare la ricerca NFC nelle impostazioni in qualsiasi momento.</string>
+  <string name="content_description_nfc_logo">Logo NFC</string>
+  <string name="reservation_fee_warning">Fai attenzione, alcune biblioteche
+potrebbero applicare dei costi aggiuntivi per le prenotazioni. Se hai un dubbio
+controlla le tariffe della biblioteca.</string>
+  <string name="prolong_fee_warning">Fai attenzione, alcune biblioteche
+potrebbero applicare dei costi aggiuntivi per rinnovare il prestito. Se hai un dubbio
+controlla le tariffe della biblioteca.</string>
+  <string name="do_not_ask_again">Non mostrarlo ancora</string>
+  <string name="reservation_fee_continue">Continua</string>
+  <string name="notification_repeat">Ripeti notifiche</string>
+  <string name="update_info_title">Informativa sulla privacy</string>
+  <string name="update_info_text">Con questo aggiornamento l\'applicazione invia dati di diagnostica al nostro server in caso si verifichino degli errori. Nei successivi aggiornamenti, l\'applicazione si collegherà periodicamente al nostro server per recuperare informazioni sulle biblioteche. Questo per consentirci di seguire le modifiche delle biblioteche velocemente e in modo e semplice. Continuiamo però a NON inviare o salvare alcun dato personale al nostro server. </string>
+  <string name="accountdata_title">Titolo</string>
+  <string name="accountdata_author">Autore</string>
+  <string name="accountdata_format">Tipo materiale</string>
+  <string name="accountdata_status">Stato</string>
+  <string name="accountdata_lent_barcode">Codice a barre</string>
+  <string name="accountdata_lent_deadline">Restituzione</string>
+  <string name="accountdata_reserved_ready_date">Data inizio prestito</string>
+  <string name="accountdata_reserved_expiration_date">Data scadenza</string>
+  <string name="accountdata_reserved_branch">Filiale</string>
+  <string name="toggle_notice">Clicca sulla freccia sopra per passare da un account ad un altro.</string>
+  <string name="toggle_notice_button">Accetto</string>
+  <string name="starred_removed">Rimosso dai preferiti</string>
+  <string name="starred_removed_undo">Indietro</string>
+  <string name="print">Stampa</string>
+  <string name="print_wait">Attendere il caricamento dei dettagli!</string>
+  <string name="preference_category_library_config">Dati biblioteca</string>
+  <string name="preference_update_library_config">Aggiornare dati biblioteca</string>
+  <string name="preference_reset_library_config">Ripristina dati biblioteca</string>
+  <string name="preference_reset_library_config_desc">dall\'ultimo aggiornamento dell\'applicazione</string>
+  <string name="updating_library_config">Aggiornare dati biblioteca</string>
+  <string name="library_config_no_updates">Nessun aggiornamento per i dati della biblioteca trovato.</string>
+  <string name="library_config_update_success">Dati aggiornati per %d biblioteche.</string>
+  <string name="library_config_update_failure">Impossibile aggiornare i dati della biblioteca.</string>
+  <string name="library_config_last_update">Ultimo aggiornamento %s</string>
+  <string name="library_config_reset">Ripristinati i dati della biblioteca dell\'ultimo aggiornamento.</string>
+  <string name="library_removed_error">Sfortunatamente la biblioteca non è più disponibile nell\'applicazione. Questo perché la biblioteca potrebbe utilizzare adesso sistema software non più compatibile con l\'applicazione oppure perché la biblioteca ci ha chiesto espressamente di essere rimossa. Puoi contattarci scrivendo a info@opacapp.net per informazioni.</string>
+  <string name="account_anonymous">anonimo (solo ricerca)</string>
+  <string name="account_with_credentials">con dati utente (ricerca e profilo)</string>
+  <string name="please_enter_password">Inserisci la tua password.</string>
+  <string name="please_enter_username">Inserisci il tuo ID iscrizione.</string>
+  <string name="intro_title_0">Benvenuto in Web Opac App!</string>
+  <string name="intro_description_0">Scorri a sinistra per ulteriori informazioni.</string>
+  <string name="intro_title_1">Notifiche</string>
+  <string name="intro_description_1">Puoi attivare le notifiche nelle impostazioni dell\'applicazione in modo da ricevere un avviso quando un prestito sta per scadere.</string>
+  <string name="intro_title_2">Oltre 1000 biblioteche</string>
+  <string name="intro_description_2">Questa App supporta oltre 1000 biblioteche di tutto il mondo. Seleziona la tua o invia un suggerimento se non è presente nella lista</string>
 </resources>
