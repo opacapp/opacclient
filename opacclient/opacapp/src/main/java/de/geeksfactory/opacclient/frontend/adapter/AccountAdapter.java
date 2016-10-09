@@ -35,8 +35,8 @@ public abstract class AccountAdapter<I extends AccountItem, VH extends AccountAd
 
     @Override
     public void onBindViewHolder(VH holder, int position) {
-        holder.setItem(items.get(position));
         holder.setCoversHidden(coversHidden);
+        holder.setItem(items.get(position));
     }
 
     @Override
