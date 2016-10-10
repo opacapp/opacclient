@@ -149,6 +149,9 @@ public class LentItem extends AccountItem implements Serializable {
 
     @Override
     public void set(String key, String value) {
+        if ("".equals(value)) {
+            value = null;
+        }
         switch (key) {
             case "barcode":
                 setBarcode(value);

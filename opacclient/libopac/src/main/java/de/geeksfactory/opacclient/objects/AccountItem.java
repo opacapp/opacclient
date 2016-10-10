@@ -159,6 +159,9 @@ public abstract class AccountItem implements Serializable {
      *              "Y"/"N".
      */
     public void set(String key, String value) {
+        if ("".equals(value)) {
+            value = null;
+        }
         switch (key) {
             case "title":
                 setTitle(value);

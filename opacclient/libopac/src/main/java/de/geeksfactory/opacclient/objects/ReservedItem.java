@@ -119,6 +119,9 @@ public class ReservedItem extends AccountItem implements Serializable {
 
     @Override
     public void set(String key, String value) {
+        if ("".equals(value)) {
+            value = null;
+        }
         switch (key) {
             case "availability":
                 setReadyDate(new LocalDate(value));
