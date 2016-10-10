@@ -90,7 +90,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:padding="16dp"
-                    android:visibility="@{item.author != null ? View.VISIBLE : View.GONE}">
+                    android:visibility="@{(item.author != null &amp;&amp; !item.author.equals(&quot;&quot;)) ? View.VISIBLE : View.GONE}">
 
                     <ImageView
                         android:id="@+id/iconAuthor"
