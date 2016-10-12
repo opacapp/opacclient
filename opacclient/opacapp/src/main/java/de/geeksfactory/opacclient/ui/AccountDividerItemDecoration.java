@@ -4,13 +4,12 @@ import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 
 import de.geeksfactory.opacclient.R;
 import de.geeksfactory.opacclient.frontend.adapter.AccountAdapter;
-import de.geeksfactory.opacclient.frontend.adapter.ReservationsAdapter;
-import su.j2e.rvjoiner.JoinableAdapter;
 import su.j2e.rvjoiner.RvJoiner;
 
 /*
@@ -34,8 +33,8 @@ public class AccountDividerItemDecoration extends RecyclerView.ItemDecoration {
     private RvJoiner rvJoiner;
 
     public AccountDividerItemDecoration(Context context, RvJoiner rvJoiner) {
-        mDividerWithInset = context.getDrawable(R.drawable.list_divider_inset);
-        mDividerWithoutInset = context.getDrawable(R.drawable.list_divider);
+        mDividerWithInset = ContextCompat.getDrawable(context, R.drawable.list_divider_inset);
+        mDividerWithoutInset = ContextCompat.getDrawable(context, R.drawable.list_divider);
         this.rvJoiner = rvJoiner;
     }
 
