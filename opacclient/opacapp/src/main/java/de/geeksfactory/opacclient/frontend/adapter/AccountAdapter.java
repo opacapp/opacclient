@@ -133,6 +133,8 @@ public abstract class AccountAdapter<I extends AccountItem, VH extends AccountAd
                             ResultsAdapter.getResourceByMediaType(item.getMediaType
                                     ()));
                     ivMediaType.setContentDescription(sp.getMediaTypeName(item.getMediaType()));
+                } else {
+                    ivMediaType.setVisibility(View.INVISIBLE);
                 }
             }
         }
