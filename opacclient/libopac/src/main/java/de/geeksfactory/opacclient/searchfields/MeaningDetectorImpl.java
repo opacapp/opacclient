@@ -135,6 +135,7 @@ public class MeaningDetectorImpl implements MeaningDetector {
 
     private SearchField processMeaning(SearchField field, String meaningName) {
         Meaning meaning = Meaning.valueOf(meaningName);
+        SearchField oldfield = field;
         if (field instanceof TextSearchField && meaning == Meaning.FREE) {
             ((TextSearchField) field).setFreeSearch(true);
             ((TextSearchField) field).setHint(field.getDisplayName());
@@ -148,6 +149,7 @@ public class MeaningDetectorImpl implements MeaningDetector {
                 || meaning == Meaning.KEYWORD || meaning == Meaning.PUBLISHER) {
             field.setAdvanced(true);
         }
+        field.setData(oldfield.getData());
         field.setMeaning(meaning);
         return field;
     }
