@@ -88,6 +88,7 @@ public class LibraryListActivity extends AppCompatActivity
     protected LibraryListFragment fragment3;
     protected LibraryListFragment fragment4;
     protected boolean visible;
+    protected boolean list_rendered = false;
 
     protected AppCompatProgressDialog dialog;
 
@@ -109,6 +110,8 @@ public class LibraryListActivity extends AppCompatActivity
         visible = true;
         if (loadLibrariesTask.getStatus() == AsyncTask.Status.PENDING) {
             loadLibrariesTask.execute((OpacClient) getApplication());
+        } else if (!list_rendered && libraries != null) {
+            showListCountries(false);
         }
         super.onResume();
     }
@@ -384,6 +387,7 @@ public class LibraryListActivity extends AppCompatActivity
                                            .replace(R.id.container, fragment).commit();
             }
         }
+        list_rendered = true;
     }
 
     public void showListStates(String country) {
