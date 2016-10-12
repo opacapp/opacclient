@@ -71,7 +71,10 @@ public class AccountItemDetailActivity extends AppCompatActivity {
                 }
 
                 @Override
-                public void onTransitionEnd(Transition transition) {}
+                public void onTransitionEnd(Transition transition) {
+                    ScrollView sv = (ScrollView) findViewById(R.id.scrollView);
+                    sv.scrollTo(0, 0);
+                }
 
                 @Override
                 public void onTransitionCancel(Transition transition) {}
