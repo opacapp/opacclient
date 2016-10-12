@@ -88,7 +88,6 @@ public class LibraryListActivity extends AppCompatActivity
     protected LibraryListFragment fragment3;
     protected LibraryListFragment fragment4;
     protected boolean visible;
-    protected boolean destroyed = false;
 
     protected AppCompatProgressDialog dialog;
 
@@ -112,12 +111,6 @@ public class LibraryListActivity extends AppCompatActivity
             loadLibrariesTask.execute((OpacClient) getApplication());
         }
         super.onResume();
-    }
-
-    @Override
-    protected void onDestroy() {
-        destroyed = true;
-        super.onDestroy();
     }
 
     @Override
@@ -866,7 +859,7 @@ public class LibraryListActivity extends AppCompatActivity
                 }
             }
             if (libraries == null) return;
-            if (destroyed) return;
+            if (!visible) return;
 
             // Get the intent, verify the action and get the query
             Intent intent = getIntent();
