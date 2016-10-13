@@ -49,8 +49,11 @@ public class ReservationsAdapter
 
             SpannableStringBuilder status = new SpannableStringBuilder();
             if (item.getStatus() != null) {
-                status.append(Html.fromHtml(item.getStatus()),
-                        new ForegroundColorSpan(textColorPrimary), 0);
+                int start = status.length();
+                status.append(Html.fromHtml(item.getStatus()));
+                // setSpan with a span argument is not supported before API 21
+                status.setSpan(new ForegroundColorSpan(textColorPrimary),
+                        start, start + Html.fromHtml(item.getStatus()).length(), 0);
                 if (item.getReadyDate() != null || item.getExpirationDate() != null) {
                     status.append(" – ");
                 }

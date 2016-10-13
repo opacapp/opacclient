@@ -58,8 +58,11 @@ public class LentAdapter extends AccountAdapter<LentItem, LentAdapter.ViewHolder
 
             SpannableStringBuilder builder = new SpannableStringBuilder();
             if (item.getDeadline() != null) {
-                builder.append(fmt.print(item.getDeadline()),
-                        new ForegroundColorSpan(textColorPrimary), 0);
+                int start = builder.length();
+                builder.append(fmt.print(item.getDeadline()));
+                // setSpan with a span argument is not supported before API 21
+                builder.setSpan(new ForegroundColorSpan(textColorPrimary),
+                        start, start + fmt.print(item.getDeadline()).length(), 0);
                 if (item.getStatus() != null) builder.append(" – ");
             }
             if (item.getStatus() != null) {

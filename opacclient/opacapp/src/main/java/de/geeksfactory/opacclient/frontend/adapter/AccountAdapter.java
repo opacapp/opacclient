@@ -2,6 +2,8 @@ package de.geeksfactory.opacclient.frontend.adapter;
 
 import android.content.Context;
 import android.content.res.TypedArray;
+import android.graphics.drawable.Drawable;
+import android.support.graphics.drawable.VectorDrawableCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.text.Html;
@@ -118,9 +120,10 @@ public abstract class AccountAdapter<I extends AccountItem, VH extends AccountAd
                     ivCover.setVisibility(View.VISIBLE);
                     ivMediaType.setVisibility(View.GONE);
 
+                    Drawable loading = VectorDrawableCompat.create(context.getResources(), R.drawable.ic_loading, null);
                     Glide.with(context).using(new ISBNToolsUrlLoader(context))
                          .load(item.getCover())
-                         .placeholder(ContextCompat.getDrawable(context, R.drawable.ic_loading))
+                         .placeholder(loading)
                          .crossFade()
                          .into(ivCover);
                 } else {
