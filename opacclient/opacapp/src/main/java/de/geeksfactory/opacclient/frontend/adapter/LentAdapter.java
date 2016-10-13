@@ -84,13 +84,13 @@ public class LentAdapter extends AccountAdapter<LentItem, LentAdapter.ViewHolder
                     vStatusColor.setBackgroundColor(
                             ContextCompat.getColor(context, R.color.account_downloadable));
                 } else {
-                    vStatusColor.setBackground(null);
+                    vStatusColor.setBackgroundResource(0);
                 }
             } else if (item.getDownloadData() != null) {
                 vStatusColor.setBackgroundColor(
                         ContextCompat.getColor(context, R.color.account_downloadable));
             } else {
-                vStatusColor.setBackground(null);
+                vStatusColor.setBackgroundResource(0);
             }
 
             ivCancel.setVisibility(View.GONE);

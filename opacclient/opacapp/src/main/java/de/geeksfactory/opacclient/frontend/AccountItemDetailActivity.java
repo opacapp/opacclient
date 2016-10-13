@@ -1,5 +1,6 @@
 package de.geeksfactory.opacclient.frontend;
 
+import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
@@ -39,6 +40,7 @@ public class AccountItemDetailActivity extends AppCompatActivity {
     private AccountItemDetailActivityBinding binding;
 
     @Override
+    @TargetApi(21)
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_accountitem_detail);

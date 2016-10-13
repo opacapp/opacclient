@@ -19,7 +19,6 @@ android {
     lintOptions {
         // disable 'AndroidLintRtlHardcoded' // Throws an "Unknown issue id" for me
         disable 'MissingTranslation'
-        disable 'NewApi'  // does not respect our annotations at release time :(
         disable 'UnusedAttribute'
         warning 'InvalidPackage'
     }

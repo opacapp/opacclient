@@ -32,7 +32,7 @@ import de.geeksfactory.opacclient.R;
  * to the end position. It takes into account the canceled position so that it will not blink out or
  * shift suddenly when the transition is interrupted.
  */
-@TargetApi(Build.VERSION_CODES.HONEYCOMB)
+@TargetApi(21)
 public class TranslationAnimationCreator {
 
     /**

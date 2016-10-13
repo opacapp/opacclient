@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- Source: https://gist.github.com/lapism/f75501edd8d32edf3eed -->
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
 
     <style name="MaterialPreferenceThemeOverlay" parent="@style/PreferenceThemeOverlay">
         <item name="preferenceFragmentStyle">@style/PreferenceFragment.Material</item>
@@ -59,14 +59,14 @@
 
     <style name="Preference_TextAppearanceMaterialBody2">
         <item name="android:textSize">14sp</item>
-        <item name="android:fontFamily">sans-serif</item>
+        <item name="android:fontFamily" tools:targetApi="16">sans-serif</item>
         <item name="android:textColor">?android:attr/textColorPrimary</item>
         <item name="android:textStyle">normal</item>
     </style>
 
     <style name="Preference_TextAppearanceMaterialSubhead">
         <item name="android:textSize">16sp</item>
-        <item name="android:fontFamily">sans-serif</item>
+        <item name="android:fontFamily" tools:targetApi="16">sans-serif</item>
         <item name="android:textColor">?android:attr/textColorPrimary</item>
         <item name="android:textStyle">normal</item>
     </style>
