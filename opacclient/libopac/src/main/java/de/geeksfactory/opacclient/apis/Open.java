@@ -368,7 +368,7 @@ public class Open extends BaseApi implements OpacApi {
 
             // ID
             Pattern idPattern = Pattern.compile("\\$mdv(\\d+)\\$");
-            Matcher matcher = idPattern.matcher(catalogueContent.html());
+            Matcher matcher = idPattern.matcher(element.html());
             if (matcher.find()) {
                 result.setId(matcher.group(1));
             }
