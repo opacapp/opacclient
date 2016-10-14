@@ -32,7 +32,6 @@ import org.jsoup.nodes.Element;
 import org.jsoup.nodes.FormElement;
 import org.jsoup.select.Elements;
 
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.URL;
@@ -474,65 +473,71 @@ public class Open extends BaseApi implements OpacApi {
     @Override
     public SearchRequestResult searchGetPage(int page)
             throws IOException, OpacErrorException, JSONException {
-        /*
-            When there are many pages of results, there will only be links to the next 4 and
-            previous 4 pages, so we will click links until it gets to the correct page.
-         */
 
         if (searchResultDoc == null) throw new NotReachableException();
 
         Document doc = searchResultDoc;
-
-        Elements pageLinks =
-                doc.select("span[id$=DataPager1]").first()
-                   .select("a[id*=LinkButtonPageN], span[id*=LabelPageN]");
-        int from = Integer.valueOf(pageLinks.first().text());
-        int to = Integer.valueOf(pageLinks.last().text());
-        Element linkToClick;
-        boolean willBeCorrectPage;
-
-        if (page < from) {
-            linkToClick = pageLinks.first();
-            willBeCorrectPage = false;
-        } else if (page > to) {
-            linkToClick = pageLinks.last();
-            willBeCorrectPage = false;
-        } else {
-            linkToClick = pageLinks.get(page - from);
-            willBeCorrectPage = true;
-        }
-
-        if (linkToClick.tagName().equals("span")) {
-            // we are trying to get the page we are already on
-            return parse_search(searchResultDoc, page);
-        }
-
-        Pattern pattern = Pattern.compile("javascript:__doPostBack\\('([^,]*)','([^\\)]*)'\\)");
-        Matcher matcher = pattern.matcher(linkToClick.attr("href"));
-        if (!matcher.find()) throw new OpacErrorException(StringProvider.INTERNAL_ERROR);
-
-        FormElement form = (FormElement) doc.select("form").first();
-        HttpEntity data = formData(form, null)
-                .addTextBody("__EVENTTARGET", matcher.group(1))
-                .addTextBody("__EVENTARGUMENT", matcher.group(2))
-                .build();
-
-        ByteArrayOutputStream stream = new ByteArrayOutputStream();
-        data.writeTo(stream);
-
-        String postUrl = form.attr("abs:action");
-
-        String html = httpPost(postUrl, data, "UTF-8");
-        if (willBeCorrectPage) {
-            // We clicked on the correct link
-            Document doc2 = Jsoup.parse(html);
-            doc2.setBaseUri(postUrl);
+        if (doc.select("span[id$=DataPager1]").size() == 0) {
+            /*
+                New style: Page buttons using normal links
+                We can go directly to the correct page
+            */
+            String href = doc.select("a[id*=LinkButtonPageN]").first().attr("href");
+            String url = href.replaceFirst("page=\\d+", "page=" + page);
+            Document doc2 = Jsoup.parse(httpGet(url, getDefaultEncoding()));
             return parse_search(doc2, page);
         } else {
-            // There was no correct link, so try to find one again
-            searchResultDoc = Jsoup.parse(html);
-            searchResultDoc.setBaseUri(postUrl);
-            return searchGetPage(page);
+            /*
+                Old style: Page buttons using Javascript
+                When there are many pages of results, there will only be links to the next 4 and
+                previous 4 pages, so we will click links until it gets to the correct page.
+            */
+            Elements pageLinks = doc.select("span[id$=DataPager1]").first()
+                                    .select("a[id*=LinkButtonPageN], span[id*=LabelPageN]");
+            int from = Integer.valueOf(pageLinks.first().text());
+            int to = Integer.valueOf(pageLinks.last().text());
+            Element linkToClick;
+            boolean willBeCorrectPage;
+
+            if (page < from) {
+                linkToClick = pageLinks.first();
+                willBeCorrectPage = false;
+            } else if (page > to) {
+                linkToClick = pageLinks.last();
+                willBeCorrectPage = false;
+            } else {
+                linkToClick = pageLinks.get(page - from);
+                willBeCorrectPage = true;
+            }
+
+            if (linkToClick.tagName().equals("span")) {
+                // we are trying to get the page we are already on
+                return parse_search(searchResultDoc, page);
+            }
+
+            Pattern pattern = Pattern.compile("javascript:__doPostBack\\('([^,]*)','([^\\)]*)'\\)");
+            Matcher matcher = pattern.matcher(linkToClick.attr("href"));
+            if (!matcher.find()) throw new OpacErrorException(StringProvider.INTERNAL_ERROR);
+
+            FormElement form = (FormElement) doc.select("form").first();
+            HttpEntity data = formData(form, null).addTextBody("__EVENTTARGET", matcher.group(1))
+                                                  .addTextBody("__EVENTARGUMENT", matcher.group(2))
+                                                  .build();
+
+            String postUrl = form.attr("abs:action");
+
+            String html = httpPost(postUrl, data, "UTF-8");
+            if (willBeCorrectPage) {
+                // We clicked on the correct link
+                Document doc2 = Jsoup.parse(html);
+                doc2.setBaseUri(postUrl);
+                return parse_search(doc2, page);
+            } else {
+                // There was no correct link, so try to find one again
+                searchResultDoc = Jsoup.parse(html);
+                searchResultDoc.setBaseUri(postUrl);
+                return searchGetPage(page);
+            }
         }
     }
 
