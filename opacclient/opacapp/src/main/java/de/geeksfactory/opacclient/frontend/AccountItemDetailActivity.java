@@ -157,10 +157,10 @@ public class AccountItemDetailActivity extends AppCompatActivity {
     }
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
+    public boolean onOptionsItemSelected(MenuItem menuItem) {
         Intent intent = new Intent();
         int resultCode;
-        int item_id = item.getItemId();
+        int item_id = menuItem.getItemId();
         if (item_id == R.id.action_prolong) {
             resultCode = RESULT_PROLONG;
             intent.putExtra(EXTRA_DATA, ((LentItem) item).getProlongData());
@@ -174,7 +174,7 @@ public class AccountItemDetailActivity extends AppCompatActivity {
             resultCode = RESULT_BOOKING;
             intent.putExtra(EXTRA_DATA, ((ReservedItem) item).getBookingData());
         } else {
-            return super.onOptionsItemSelected(item);
+            return super.onOptionsItemSelected(menuItem);
         }
         setResult(resultCode, intent);
         supportFinishAfterTransition();
