@@ -163,21 +163,28 @@
 
                 </LinearLayout>
 
-                <android.support.design.widget.TextInputLayout
+                <LinearLayout
+                    android:id="@+id/llPassword"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:id="@+id/tilPassword">
+                    android:orientation="vertical">
 
-                    <android.support.design.widget.TextInputEditText
-                        android:id="@+id/etPassword"
+                    <android.support.design.widget.TextInputLayout
+                        android:id="@+id/tilPassword"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:ems="10"
-                        android:hint="@string/account_password"
-                        android:imeOptions="actionDone"
-                        android:inputType="textPassword"
-                        android:singleLine="true"/>
-                </android.support.design.widget.TextInputLayout>
+                        android:layout_height="wrap_content">
+
+                        <android.support.design.widget.TextInputEditText
+                            android:id="@+id/etPassword"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:ems="10"
+                            android:hint="@string/account_password"
+                            android:imeOptions="actionDone"
+                            android:inputType="textPassword"
+                            android:singleLine="true"/>
+                    </android.support.design.widget.TextInputLayout>
+                </LinearLayout>
 
                 <TextView
                     android:id="@+id/no_ssl"

@@ -105,7 +105,8 @@ public class AccountEditActivity extends AppCompatActivity {
         etPassword = (EditText) findViewById(R.id.etPassword);
         usernameContainer = findViewById(R.id.llBarcode);
         tilUsername = (TextInputLayout) findViewById(R.id.tilUsername);
-        passwordContainer = tilPassword = (TextInputLayout) findViewById(R.id.tilPassword);
+        passwordContainer = findViewById(R.id.llPassword);
+        tilPassword = (TextInputLayout) findViewById(R.id.tilPassword);
         rgType = (RadioGroup) findViewById(R.id.rgType);
 
         AccountDataSource data = new AccountDataSource(this);
