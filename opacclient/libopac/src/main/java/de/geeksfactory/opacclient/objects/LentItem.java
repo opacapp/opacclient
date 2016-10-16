@@ -2,7 +2,9 @@ package de.geeksfactory.opacclient.objects;
 
 import org.joda.time.LocalDate;
 
-public class LentItem extends AccountItem {
+import java.io.Serializable;
+
+public class LentItem extends AccountItem implements Serializable {
     private String barcode;
     private LocalDate deadline;
     private String homeBranch;
@@ -114,7 +116,7 @@ public class LentItem extends AccountItem {
 
     /**
      * @return Internal identifier which will be supplied to your {@link
-     * de.geeksfactory.opacclient.apis.EbookServiceApi#downloadItem(Account, String)} implementation
+     * de.geeksfactory.opacclient.apis.EbookServiceApi#downloadItem(Account, String, int, String)} implementation
      * for download. Button for download will only be displayed if this is set.
      */
     public String getDownloadData() {
@@ -122,9 +124,9 @@ public class LentItem extends AccountItem {
     }
 
     /**
-     * Set internal identifier which will be supplied to your {@link de.geeksfactory.opacclient
-     * .apis.EbookServiceApi#downloadItem(Account,
-     * String)} implementation for download. Button for download will only be displayed if this is
+     * Set internal identifier which will be supplied to your
+     * {@link de.geeksfactory.opacclient.apis.EbookServiceApi#downloadItem(Account, String, int, String)}
+     * implementation for download. Button for download will only be displayed if this is
      * set.
      */
     public void setDownloadData(String downloadData) {
@@ -147,6 +149,9 @@ public class LentItem extends AccountItem {
 
     @Override
     public void set(String key, String value) {
+        if ("".equals(value)) {
+            value = null;
+        }
         switch (key) {
             case "barcode":
                 setBarcode(value);

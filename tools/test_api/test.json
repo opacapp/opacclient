@@ -5,23 +5,44 @@
 			"returndate": "2016-05-05",
 			"title": "Harry Potter",
 			"author": "J. K. Rowling",
-			"status": "V"
+			"status": "V",
+            "renewable": "Y",
+            "prolongurl": "a",
+            "mediatype": "DVD",
+            "cover": "https://images-na.ssl-images-amazon.com/images/I/91kKJKNniQL._SL1500_.jpg"
 		},
 		{
 			"barcode": "12346",
 			"returndate": "2016-05-05",
 			"title": "Eragon",
 			"author": "Christopher Paolini",
-			"status": "V"
+			"status": "V",
+            "renewable": "Y",
+            "prolongurl": "b",
+            "mediatype": "BOOK",
+            "cover": "https://images-na.ssl-images-amazon.com/images/I/51Nd4TIlRAL.jpg"
 		},
 		{
 			"barcode": "12347",
 			"returndate": "2016-05-09",
 			"title": "Herr der Ringe",
 			"author": "J. R. R. Tolkien",
-			"status": "V"
+			"status": "V",
+            "renewable": "Y",
+            "prolongurl": "c",
+            "mediatype": "BLURAY",
+            "cover": "https://images-na.ssl-images-amazon.com/images/I/91CsDwD5jxL._SL1500_.jpg"
 		}
 	],
 	"reservations": [
+        {
+			"title": "Harry Potter",
+			"author": "J. K. Rowling",
+			"status": "Bereit",
+            "availability": "2016-09-27",
+            "cancelurl": "a",
+            "mediatype": "BOOK",
+            "cover": "https://images-na.ssl-images-amazon.com/images/I/81p9va2cq3L.jpg"
+		}
 	]
 }     

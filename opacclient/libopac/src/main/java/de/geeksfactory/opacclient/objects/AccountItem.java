@@ -1,13 +1,17 @@
 package de.geeksfactory.opacclient.objects;
 
-public abstract class AccountItem {
+import java.io.Serializable;
+
+public abstract class AccountItem implements Serializable {
     private long account;
     private String title;
     private String author;
     private String format;
+    private SearchResult.MediaType mediaType;
     private String id;
     private String status;
     private Long dbId;
+    private String cover;
 
     /**
      * @return The ID of the account this item is associated with
@@ -61,9 +65,25 @@ public abstract class AccountItem {
 
     /**
      * Set item format. Optional.
+     * Use this if the OPAC shows a string representation of the item format. If you can recognize
+     * the media type, use {@link #setMediaType(SearchResult.MediaType)} instead.
      */
     public void setFormat(String format) {
         this.format = format;
+    }
+
+    /**
+     * @return The media type of this item. Optional.
+     */
+    public SearchResult.MediaType getMediaType() {
+        return mediaType;
+    }
+
+    /**
+     * Set the media type of this item. Optional.
+     */
+    public void setMediaType(SearchResult.MediaType mediaType) {
+        this.mediaType = mediaType;
     }
 
     /**
@@ -113,6 +133,20 @@ public abstract class AccountItem {
     }
 
     /**
+     * @return A cover URL for this item. Optional.
+     */
+    public String getCover() {
+        return cover;
+    }
+
+    /**
+     * Set a cover URL for this item. Optional.
+     */
+    public void setCover(String cover) {
+        this.cover = cover;
+    }
+
+    /**
      * Set property using the following keys: LentItem: barcode, returndate, homebranch,
      * lendingbranch, prolongurl, renewable, download
      *
@@ -125,6 +159,9 @@ public abstract class AccountItem {
      *              "Y"/"N".
      */
     public void set(String key, String value) {
+        if ("".equals(value)) {
+            value = null;
+        }
         switch (key) {
             case "title":
                 setTitle(value);
@@ -140,6 +177,12 @@ public abstract class AccountItem {
                 break;
             case "status":
                 setStatus(value);
+                break;
+            case "cover":
+                setCover(value);
+                break;
+            case "mediatype":
+                setMediaType(SearchResult.MediaType.valueOf(value));
                 break;
             default:
                 throw new IllegalArgumentException("unknown key: " + key);

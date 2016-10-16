@@ -60,8 +60,8 @@ public class BibliothecaAccountTest extends BaseHtmlTest {
                 new JSONObject(readResource("/bibliotheca/headers_reservations.json")));
         assertTrue(data.getLent().size() > 0);
         for (LentItem item : data.getLent()) {
-            assertNotNull(item.getTitle());
-            assertNotNull(item.getAuthor());
+            assertContainsData(item.getTitle());
+            assertNullOrNotEmpty(item.getAuthor());
             assertNotNull(item.getProlongData());
             assertNotNull(item.getDeadline());
         }
@@ -81,8 +81,8 @@ public class BibliothecaAccountTest extends BaseHtmlTest {
                 new JSONObject(readResource("/bibliotheca/headers_reservations.json")));
         assertTrue(data.getReservations().size() > 0);
         for (ReservedItem item : data.getReservations()) {
-            assertNotNull(item.getTitle());
-            assertNotNull(item.getAuthor());
+            assertContainsData(item.getTitle());
+            assertNullOrNotEmpty(item.getAuthor());
         }
     }
 }

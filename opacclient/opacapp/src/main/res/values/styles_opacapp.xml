@@ -4,7 +4,7 @@
 	http://jgilfelt.github.io/android-actionbarstylegenerator/#name=opacapp&compat=appcompat&theme=light_dark&actionbarstyle=solid&texture=0&hairline=0&neutralPressed=1&backColor=c00%2C100&secondaryColor=555555%2C100&tabColor=c00%2C100&tertiaryColor=303030%2C100&accentColor=f44%2C100&cabBackColor=002E3E%2C100&cabHighlightColor=f44%2C100
  -->
 
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
     <!-- Changes not specific to API level go here -->
     <style name="Theme.Opacapp.Base" parent="Theme.AppCompat.Light.DarkActionBar">
         <item name="colorPrimary">@color/primary_red</item>
@@ -34,12 +34,30 @@
     </style>
 
     <style name="Theme.Opacapp.Base.Transparent" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="colorPrimary">@color/primary_red</item>
+        <item name="colorPrimaryDark">@color/primary_red_dark</item>
+        <item name="colorAccent">@color/accent_red</item>
+        <item name="preferenceTheme">@style/MaterialPreferenceThemeOverlay</item>
+
         <item name="android:windowIsTranslucent">true</item>
         <item name="android:windowBackground">@android:color/transparent</item>
         <item name="android:windowContentOverlay">@null</item>
         <item name="android:windowNoTitle">true</item>
         <item name="android:windowIsFloating">true</item>
         <item name="android:backgroundDimEnabled">false</item>
+    </style>
+
+    <style name="Theme.Opacapp.Base.AccountDetail" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="colorPrimary">@color/primary_red</item>
+        <item name="colorPrimaryDark">@color/primary_red_dark</item>
+        <item name="colorAccent">@color/accent_red</item>
+        <item name="preferenceTheme">@style/MaterialPreferenceThemeOverlay</item>
+
+        <item name="android:windowIsTranslucent">true</item>
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:windowContentOverlay">@null</item>
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:backgroundDimEnabled">true</item>
     </style>
 
     <style name="TextAppearance.Opacapp.Base.Subhead" parent="android:TextAppearance">
@@ -69,8 +87,33 @@
 
     <style name="Theme.Opacapp.Transparent" parent="Theme.Opacapp.Base.Transparent" />
 
+    <style name="Theme.Opacapp.AccountDetail" parent="Theme.Opacapp.Base.AccountDetail"/>
+
     <style name="TextAppearance.Opacapp.Subhead" parent="TextAppearance.Opacapp.Base.Subhead">
         <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="detailLabel" parent="@android:style/TextAppearance">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textAppearance">@style/TextAppearance.AppCompat.Body1</item>
+        <item name="android:textColor">?android:attr/textColorSecondary</item>
+        <item name="android:textSize">16sp</item>
+    </style>
+
+    <style name="detailValue" parent="android:Widget.TextView">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textAppearance">@style/TextAppearance.AppCompat.Body1</item>
+        <item name="android:textSize">16sp</item>
+    </style>
+
+    <style name="detailIcon">
+        <item name="android:layout_width">24dp</item>
+        <item name="android:layout_height">24dp</item>
+        <item name="android:layout_marginRight">32dp</item>
+        <item name="android:layout_marginEnd" tools:targetApi="jelly_bean_mr1">32dp</item>
+        <item name="android:layout_marginTop">8dp</item>
     </style>
 
 </resources>

@@ -12,4 +12,7 @@
 
     <!-- Source: https://gist.github.com/lapism/f75501edd8d32edf3eed -->
     <dimen name="key_line">16dp</dimen>
+
+    <item name="dialog_width_major" type="dimen">60%</item>
+    <item name="dialog_width_minor" type="dimen">90%</item>
 </resources>

@@ -31,9 +31,10 @@
   <string name="no_warranty">提供されるすべての情報に関して責任は負いかねます。</string>
   <string name="lent_head">貸出</string>
   <string name="reservations_head">予約</string>
-  <string name="entl_none">貸出なし</string>
+  <string name="lent_none">貸出なし</string>
   <string name="reservations_none">予約なし</string>
-  <string name="cancel_confirm">予約をキャンセルしてもよろしいですか?</string>
+  <string name="cancel_confirm">この予約をキャンセルしてもよろしいですか?</string>
+  <string name="prolong_confirm">このアイテムを延長してもよろしいですか?</string>
   <string name="yes">はい</string>
   <string name="no">いいえ</string>
   <string name="cancel">キャンセル</string>
@@ -59,6 +60,7 @@
   <string name="notification_service">返却期限</string>
   <string name="notification_service_desc">蔵書の返却期限に通知します (保証なし)</string>
   <string name="notification_service_wifionly">WiFi接続のみでチェック</string>
+  <string name="notification_service_wifionly_desc">モバイルネットワークを使用している場合は情報をダウンロードしません. 長時間WiFiがない場所にいると一部の通知を受け取ることができないことがあります.</string>
   <string-array name="warning">
     <item>当日</item>
     <item>1 日前</item>
@@ -83,11 +85,17 @@
   <string name="notification_warning_desc">期限のどれくらい前に警告を表示しますか?</string>
   <string name="notif_ticker">%s 本の期限です!</string>
   <string name="notif_title">本の期限です</string>
+  <string name="notif_ticker_expired">%s 冊の期限が過ぎました!</string>
+  <string name="notif_title_expired">本の期限が過ぎました</string>
+  <string name="notif_plus_more">さらに +%d</string>
+  <string name="notif_snooze">後で</string>
+  <string name="notif_dont_remind_again">破棄</string>
   <string name="volumes">版</string>
   <string name="volumesearch">版を表示</string>
   <string name="star">お気に入りに保存</string>
   <string name="starred">アイテムがお気に入りリストに入りました。</string>
   <string name="star_wait">詳細がロードされるまでしばらくお待ちください。</string>
+  <string name="star_unsupported">このアイテムに関する、リストに追加するために必要な情報を取得できませんでした。</string>
   <string name="starred_welcome">これはあなたのお気に入りリストです。詳細ページのスターをクリックするとアイテムを追加することができます。リストは使用する図書館ごとに個別に保存されます。</string>
   <string name="share">共有</string>
   <string name="share_wait">詳細がロードされるまでしばらくお待ちください。</string>
@@ -108,12 +116,12 @@
   <string name="accounts_edit">アカウントを編集</string>
   <string name="accounts_desc">図書館と会員番号を管理します</string>
   <string name="account_label">名前</string>
-  <string name="account_nr">利用者番号/名 (オプション)</string>
-  <string name="account_password">パスワード (オプション)</string>
+  <string name="account_nr">利用者 ID/ユーザー名</string>
+  <string name="account_password">パスワード</string>
   <string name="account_city">図書館</string>
   <string name="account_delete_confirm">アカウントを削除してもよろしいですか?</string>
   <string name="account_select">アカウントを選択</string>
-  <string name="privacy">プライバシーポリシー</string>
+  <string name="privacy">プライバシー</string>
   <string name="nav_hl_library">図書館</string>
   <string name="nav_search">目録検索</string>
   <string name="nav_account">アカウント</string>
@@ -153,6 +161,7 @@
     <item quantity="other">%d の検索結果</item>
   </plurals>
   <string name="export_starred">エクスポート</string>
+  <string name="export_account">テキストとして共有</string>
   <string name="geolocate">近くの図書館を探す</string>
   <string name="geolocate_progress">位置の確定中…</string>
   <string name="geolocate_not_available">このデバイスで位置は利用できません。設定で有効にする必要がある場合があります。</string>
@@ -204,6 +213,7 @@
   <string name="support_search">検索のみ</string>
   <string name="meta_clear_title">キャッシュをクリア</string>
   <string name="meta_clear">キャッシュメタデータを削除</string>
+  <string name="meta_run_check">同期サービスを実行</string>
   <string name="version">バージョン</string>
   <string name="website">Web サイト</string>
   <string name="website_url">www.opacapp.net</string>
@@ -213,13 +223,15 @@
   <string name="other">その他</string>
   <string name="source">ソースコード</string>
   <string name="loading">ロード中…</string>
-  <string name="loading_libraries">図書館リストをロード中…</string>
+  <string name="loading_libraries">図書館データの処理中…</string>
+  <string name="updating_libraries">更新された図書館リストをロード中…</string>
   <string name="shelfmark">書架記号</string>
   <string name="url">URL</string>
   <string name="return_date">返却日</string>
   <string name="location">位置</string>
   <string name="department">部署</string>
   <string name="reservations">予約</string>
+  <string name="barcode">バーコード</string>
   <string name="clear_search">フォームをクリア</string>
   <string name="title">タイトル</string>
   <string name="author">作者</string>
@@ -242,6 +254,50 @@
   <string name="content_description_nfc_logo">NFC ロゴ</string>
   <string name="reservation_fee_warning">ご利用の図書館のルールに応じて、以下の点にご注意ください。
 予約に料金がかかる場合があります。不明な点がある場合は、図書館の料金を確認してください。</string>
+  <string name="prolong_fee_warning">ご利用の図書館のルールに応じて、以下の点にご注意ください。
+延長に料金がかかる場合があります。不明な点がある場合は、図書館の料金を確認してください。</string>
   <string name="do_not_ask_again">再度表示しない</string>
   <string name="reservation_fee_continue">続行</string>
+  <string name="notification_repeat">通知の繰り返し</string>
+  <string name="update_info_title">プライバシーポリシー</string>
+  <string name="update_info_text">このアップデートにより、エラーが発生した場合にアプリが自動的に私たちのサーバーに診断情報の報告を開始します。次のアップデートで、このアプリは定期的に私たちのサーバーから図書館に関する情報の取得を開始します。これにより、私たちがより少ない労力で図書館による変更に対応しつづけるのに役立ちます。私たちは、サーバーに個人データを送信したり、格納したりしません。</string>
+  <string name="accountdata_export_header">%1$s のアカウントデータ: %2$s</string>
+  <string name="accountdata_title">タイトル</string>
+  <string name="accountdata_author">作者</string>
+  <string name="accountdata_format">メディア種類</string>
+  <string name="accountdata_status">ステータス</string>
+  <string name="accountdata_lent_barcode">バーコード</string>
+  <string name="accountdata_lent_deadline">返却日</string>
+  <string name="accountdata_lent_home_branch">本館</string>
+  <string name="accountdata_lent_lending_branch">貸出分館</string>
+  <string name="accountdata_reserved_ready_date">用意できた日</string>
+  <string name="accountdata_reserved_expiration_date">返却期限</string>
+  <string name="accountdata_reserved_branch">分館</string>
+  <string name="toggle_notice">複数のアカウントを切り替えるには上記の矢印をタップします。</string>
+  <string name="toggle_notice_button">できた</string>
+  <string name="starred_removed">お気に入りから削除しました</string>
+  <string name="starred_removed_undo">元に戻す</string>
+  <string name="print">印刷</string>
+  <string name="print_wait">詳細がロードされるまでしばらくお待ちください</string>
+  <string name="preference_category_library_config">図書館データ</string>
+  <string name="preference_update_library_config">図書館データを更新</string>
+  <string name="preference_reset_library_config">図書館をリセット</string>
+  <string name="preference_reset_library_config_desc">最後のアプリのアップデートからの状態に</string>
+  <string name="updating_library_config">図書館データの更新中</string>
+  <string name="library_config_no_updates">更新された図書館データは見つかりません。</string>
+  <string name="library_config_update_success">%d 図書館のデータを更新しました。</string>
+  <string name="library_config_update_failure">図書館データを更新できませんでした。</string>
+  <string name="library_config_last_update">最終更新 %s</string>
+  <string name="library_config_reset">最後のアプリのアップデートから図書館データを復元しました。</string>
+  <string name="library_removed_error">残念ながら、あなたが使用している図書館がアプリから削除されました。この理由は、図書館がアプリと互換性のない新しいソフトウェアシステムに切り替えたか、図書館が私たちに連絡し、明示的に、アプリから削除したいと述べたことが考えられます。詳細は info@opacapp.net までご連絡ください。</string>
+  <string name="account_anonymous">匿名 (検索のみ)</string>
+  <string name="account_with_credentials">資格情報で (検索とアカウント)</string>
+  <string name="please_enter_password">パスワードを入力してください。</string>
+  <string name="please_enter_username">利用者 ID を入力してください。</string>
+  <string name="intro_title_0">Web Opac アプリにようこそ!</string>
+  <string name="intro_description_0">左にスワイプすると詳細情報を表示します。</string>
+  <string name="intro_title_1">通知</string>
+  <string name="intro_description_1">アプリの設定で通知を有効にして、借りた本の期限に通知を受け取ることができます。</string>
+  <string name="intro_title_2">1000 以上の図書館</string>
+  <string name="intro_description_2">このアプリは世界中から 1,000 以上の図書館をサポートしています。あなたがご利用の図書館を選択するか、リストにまだない場合はご提案ください!</string>
 </resources>

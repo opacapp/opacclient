@@ -58,10 +58,10 @@ import java.util.Set;
 
 import de.geeksfactory.opacclient.apis.OpacApi;
 import de.geeksfactory.opacclient.frontend.AccountListActivity;
+import de.geeksfactory.opacclient.frontend.LibraryListActivity;
 import de.geeksfactory.opacclient.frontend.MainActivity;
 import de.geeksfactory.opacclient.frontend.MainPreferenceActivity;
 import de.geeksfactory.opacclient.frontend.SearchResultListActivity;
-import de.geeksfactory.opacclient.frontend.WelcomeActivity;
 import de.geeksfactory.opacclient.i18n.AndroidStringProvider;
 import de.geeksfactory.opacclient.networking.AndroidHttpClientFactory;
 import de.geeksfactory.opacclient.objects.Account;
@@ -169,7 +169,8 @@ public class OpacClient extends Application {
     }
 
     public void addFirstAccount(Activity activity) {
-        Intent intent = new Intent(activity, WelcomeActivity.class);
+        Intent intent = new Intent(activity, LibraryListActivity.class);
+        intent.putExtra(LibraryListActivity.EXTRA_WELCOME, true);
         activity.startActivity(intent);
         activity.finish();
     }

@@ -1,6 +1,7 @@
 package de.geeksfactory.opacclient.frontend;
 
 import android.annotation.SuppressLint;
+import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -764,6 +765,7 @@ public class SearchResultDetailFragment extends Fragment
         }
     }
 
+    @TargetApi(Build.VERSION_CODES.KITKAT)
     private void print() {
         WebView webView = new WebView(getActivity());
         webView.setWebViewClient(new WebViewClient() {

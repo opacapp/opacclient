@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:id="@+id/rlAccHeader"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="false"
+                android:layout_alignParentTop="true"
+                android:background="@color/account_head_bg"
+                android:orientation="vertical"
+                android:padding="8dp"
+                android:transitionName="@string/transition_gray_box">
+
+    <TextView
+        android:id="@+id/tvAccLabel"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:ellipsize="end"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:textColor="@color/account_head_fg"/>
+
+    <TextView
+        android:id="@+id/tvAccCity"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="false"
+        android:layout_below="@id/tvAccLabel"
+        android:layout_marginBottom="4dp"
+        android:textColor="@color/account_head_fg"/>
+
+    <TextView
+        android:id="@+id/tvAccUser"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@id/tvAccCity"
+        android:layout_marginBottom="4dp"
+        android:textColor="@color/account_head_fg"
+        android:textIsSelectable="true"/>
+
+    <TextView
+        android:id="@+id/tvPendingFeesLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@id/tvAccUser"
+        android:layout_marginBottom="4dp"
+        android:text="@string/pending_fees"
+        android:textColor="@color/account_head_fg"/>
+
+    <TextView
+        android:id="@+id/tvPendingFees"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignEnd="@+id/tvAccUser"
+        android:layout_alignRight="@+id/tvAccUser"
+        android:layout_below="@id/tvAccUser"
+        android:layout_marginBottom="4dp"
+        android:layout_toEndOf="@id/tvPendingFeesLabel"
+        android:layout_toRightOf="@id/tvPendingFeesLabel"
+        android:ellipsize="end"
+        android:textColor="@color/account_head_fg"
+        android:textIsSelectable="true"
+        android:gravity="right"/>
+
+    <TextView
+        android:id="@+id/tvValidUntilLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@id/tvPendingFeesLabel"
+        android:layout_marginBottom="4dp"
+        android:text="@string/valid_until"
+        android:textColor="@color/account_head_fg"/>
+
+    <TextView
+        android:id="@+id/tvValidUntil"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_below="@id/tvPendingFees"
+        android:layout_marginBottom="4dp"
+        android:layout_toEndOf="@id/tvValidUntilLabel"
+        android:layout_toRightOf="@id/tvValidUntilLabel"
+        android:ellipsize="end"
+        android:textColor="@color/account_head_fg"
+        android:textIsSelectable="true"
+        android:singleLine="true"
+        android:gravity="right"/>
+</RelativeLayout>

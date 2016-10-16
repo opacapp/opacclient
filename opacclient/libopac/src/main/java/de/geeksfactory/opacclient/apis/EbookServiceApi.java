@@ -86,7 +86,7 @@ public interface EbookServiceApi {
 
 
     /**
-     * The result of a {@link EbookServiceApi#downloadItem(Account, String)} call
+     * The result of a {@link EbookServiceApi#downloadItem(Account, String, int, String)} call
      */
     public class DownloadResult extends OpacApi.MultiStepResult {
         protected String url;

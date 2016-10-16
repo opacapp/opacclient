@@ -612,26 +612,26 @@ public class TouchPoint extends BaseApi implements OpacApi {
     @Override
     public DetailledItem getResultById(String id, String homebranch)
             throws IOException {
+        String html = httpGet(getUrlForId(id), ENCODING);
+        return parse_result(html);
+    }
 
-        String html;
+    public String getUrlForId(String id) throws UnsupportedEncodingException {
         try {
             JSONObject json = new JSONObject(id);
-            html = httpGet(
-                    opac_url
-                            + "/perma.do?q="
-                            + URLEncoder.encode("0=\"" + json.getString("id")
-                                    + "\" IN [" + json.getString("db") + "]",
-                            "UTF-8"), ENCODING);
+            if (json.has("url")) {
+                return json.getString("url");
+            } else {
+                String param =
+                        json.optString("field", "0") + "=\"" + json.getString("id") + "\" IN [" +
+                                json.getString("db") + "]";
+                return opac_url + "/perma.do?q=" + URLEncoder.encode(param, "UTF-8");
+            }
         } catch (JSONException e) {
             // backwards compatibility
-            html = httpGet(
-                    opac_url
-                            + "/perma.do?q="
-                            + URLEncoder.encode("0=\"" + id + "\" IN [2]",
-                            "UTF-8"), ENCODING);
+            return opac_url + "/perma.do?q=" +
+                    URLEncoder.encode("0=\"" + id + "\" IN [2]", "UTF-8");
         }
-
-        return parse_result(html);
     }
 
     @Override
@@ -674,12 +674,24 @@ public class TouchPoint extends BaseApi implements OpacApi {
         }
 
         result.setTitle(doc.select("h1").first().text());
+
+        if (doc.select("#permalink-link").size() > 0) {
+            String href = doc.select("#permalink-link").first().attr("href");
+            JSONObject id = new JSONObject();
+            try {
+                id.put("url", href);
+                result.setId(id.toString());
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+
         for (Element tr : doc.select(".titleinfo tr")) {
             // Sometimes there is one th and one td, sometimes two tds
             String detailName = tr.select("th, td").first().text().trim();
             String detailValue = tr.select("td").last().text().trim();
             result.addDetail(new Detail(detailName, detailValue));
-            if (detailName.contains("ID in diesem Katalog")) {
+            if (detailName.contains("ID in diesem Katalog") && result.getId() == null) {
                 result.setId(detailValue);
             }
         }
@@ -1142,7 +1154,9 @@ public class TouchPoint extends BaseApi implements OpacApi {
                     for (Element link : tr.select("a")) {
                         String href = link.attr("abs:href");
                         Map<String, String> hrefq = getQueryParamsFirst(href);
-                        if ("renewal".equals(hrefq.get("methodToCall"))) {
+                        if (hrefq.containsKey("q")) {
+                            item.setId(extractIdFromQ(hrefq.get("q")));
+                        } else if ("renewal".equals(hrefq.get("methodToCall"))) {
                             item.setProlongData(href.split("\\?")[1]);
                             item.setRenewable(true);
                             break;
@@ -1159,9 +1173,29 @@ public class TouchPoint extends BaseApi implements OpacApi {
         return media;
     }
 
+    private static String extractIdFromQ(String q) {
+        Pattern pattern = Pattern.compile("(\\d+)=\"(?:\\\\\")?([^\\\\]+)(?:\\\\\")?\" IN \\[" +
+                "(\\d+)\\]");
+        Matcher matcher = pattern.matcher(q);
+        if (matcher.find()) {
+            JSONObject id = new JSONObject();
+            try {
+                id.put("field", matcher.group(1));
+                id.put("id", matcher.group(2));
+                id.put("db", matcher.group(3));
+                return id.toString();
+            } catch (JSONException e) {
+                e.printStackTrace();
+                return null;
+            }
+        } else {
+            return null;
+        }
+    }
+
     static List<ReservedItem> parse_reslist(Document doc) {
         List<ReservedItem> reservations = new ArrayList<>();
-        Elements copytrs = doc.select(".data tr");
+        Elements copytrs = doc.select(".data tr, #account-data .table tr");
         int trs = copytrs.size();
         if (trs <= 1) {
             return null;
@@ -1178,8 +1212,8 @@ public class TouchPoint extends BaseApi implements OpacApi {
             try {
                 String[] rowsplit2 = tr.child(2).html().split("<br[ /]*>");
                 String[] rowsplit3 = tr.child(3).html().split("<br[ /]*>");
-                if (rowsplit2.length > 1) item.setAuthor(rowsplit2[1].trim());
-                if (rowsplit3.length > 2) item.setBranch(rowsplit3[2].trim());
+                if (rowsplit2.length > 1) item.setAuthor(rowsplit2[1].replace("</a>", "").trim());
+                if (rowsplit3.length > 2) item.setBranch(rowsplit3[2].replace("</a>", "").trim());
                 if (rowsplit3.length > 2) {
                     item.setStatus(rowsplit3[0].trim() + " (" + rowsplit3[1].trim() + ")");
                 }
@@ -1188,7 +1222,9 @@ public class TouchPoint extends BaseApi implements OpacApi {
                     for (Element link : tr.select("a")) {
                         String href = link.attr("abs:href");
                         Map<String, String> hrefq = getQueryParamsFirst(href);
-                        if (hrefq.get("methodToCall").equals("cancel")) {
+                        if (hrefq.containsKey("q")) {
+                            item.setId(extractIdFromQ(hrefq.get("q")));
+                        } else if ("cancel".equals(hrefq.get("methodToCall"))) {
                             item.setCancelData(href.split("\\?")[1]);
                             break;
                         }
@@ -1248,18 +1284,7 @@ public class TouchPoint extends BaseApi implements OpacApi {
     @Override
     public String getShareUrl(String id, String title) {
         try {
-            try {
-                JSONObject json = new JSONObject(id);
-                return opac_url
-                        + "/perma.do?q="
-                        + URLEncoder.encode("0=\"" + json.getString("id")
-                                + "\" IN [" + json.getString("db") + "]",
-                        "UTF-8");
-            } catch (JSONException e) {
-                // backwards compatibility
-                return opac_url + "/perma.do?q="
-                        + URLEncoder.encode("0=\"" + id + "\" IN [2]", "UTF-8");
-            }
+            return getUrlForId(id);
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
             return null;

@@ -1,0 +1,344 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools">
+
+    <data class="AccountItemDetailActivityBinding">
+
+        <import type="de.geeksfactory.opacclient.objects.AccountItem"/>
+
+        <import type="de.geeksfactory.opacclient.objects.LentItem"/>
+
+        <import type="de.geeksfactory.opacclient.objects.ReservedItem"/>
+
+        <import type="android.view.View"/>
+
+        <import type="org.joda.time.format.DateTimeFormat"/>
+
+        <import type="de.geeksfactory.opacclient.frontend.AccountItemDetailActivity"/>
+
+        <import type="de.geeksfactory.opacclient.frontend.ResultsAdapter"/>
+
+        <import type="de.geeksfactory.opacclient.R"/>
+
+        <import type="android.text.Html"/>
+
+        <variable
+            name="item"
+            type="AccountItem"/>
+    </data>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:id="@+id/content">
+
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="?attr/colorPrimary"
+            android:elevation="4dp"
+            android:minHeight="?attr/actionBarSize"
+            android:theme="@style/ThemeOverlay.Opacapp.ActionBar"
+            app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
+            app:title="@{item.title}"/>
+
+        <ScrollView
+            android:id="@+id/scrollView"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="16dp"
+                    android:visibility="@{item.title != null ? View.VISIBLE : View.GONE}">
+
+                    <ImageView
+                        android:id="@+id/iconTitle"
+                        style="@style/detailIcon"
+                        android:contentDescription="@string/title"
+                        app:srcCompat="@drawable/ic_title_24dp"/>
+
+                    <TextView
+                        android:id="@+id/labelTitle"
+                        style="@style/detailLabel"
+                        android:layout_toEndOf="@id/iconTitle"
+                        android:layout_toRightOf="@id/iconTitle"
+                        android:text="@string/title"/>
+
+                    <TextView
+                        android:id="@+id/valueTitle"
+                        style="@style/detailValue"
+                        android:layout_below="@id/labelTitle"
+                        android:layout_toEndOf="@id/iconTitle"
+                        android:layout_toRightOf="@id/iconTitle"
+                        android:text="@{item.title}"
+                        android:textIsSelectable="true"
+                        tools:text="Harry Potter und der Stein der Weisen - Ausgabe mit extra langem Titel"/>
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="16dp"
+                    android:visibility="@{(item.author != null &amp;&amp; !item.author.equals(&quot;&quot;)) ? View.VISIBLE : View.GONE}">
+
+                    <ImageView
+                        android:id="@+id/iconAuthor"
+                        style="@style/detailIcon"
+                        android:contentDescription="@string/author"
+                        app:srcCompat="@drawable/ic_author_24dp"/>
+
+                    <TextView
+                        android:id="@+id/labelAuthor"
+                        style="@style/detailLabel"
+                        android:layout_toEndOf="@id/iconAuthor"
+                        android:layout_toRightOf="@id/iconAuthor"
+                        android:text="@string/author"/>
+
+                    <TextView
+                        android:id="@+id/valueAuthor"
+                        style="@style/detailValue"
+                        android:layout_below="@id/labelAuthor"
+                        android:layout_toEndOf="@id/iconAuthor"
+                        android:layout_toRightOf="@id/iconAuthor"
+                        android:text="@{item.author}"
+                        android:textIsSelectable="true"
+                        tools:text="Joanne K. Rowling"/>
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="16dp"
+                    android:visibility="@{item.status != null ? View.VISIBLE : View.GONE}">
+
+                    <ImageView
+                        android:id="@+id/iconStatus"
+                        style="@style/detailIcon"
+                        android:contentDescription="@string/status"
+                        app:srcCompat="@drawable/ic_status_24dp"/>
+
+                    <TextView
+                        android:id="@+id/labelStatus"
+                        style="@style/detailLabel"
+                        android:layout_toEndOf="@id/iconStatus"
+                        android:layout_toRightOf="@id/iconStatus"
+                        android:text="@string/status"/>
+
+                    <TextView
+                        android:id="@+id/valueStatus"
+                        style="@style/detailValue"
+                        android:layout_below="@id/labelStatus"
+                        android:layout_toEndOf="@id/iconStatus"
+                        android:layout_toRightOf="@id/iconStatus"
+                        android:text="@{Html.fromHtml(item.status != null ? item.status : &quot;&quot;)}"
+                        android:textIsSelectable="true"
+                        tools:text="Entliehen"/>
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="16dp"
+                    android:visibility="@{item instanceof LentItem &amp;&amp; ((LentItem) item).deadline != null ? View.VISIBLE : View.GONE}">
+
+                    <ImageView
+                        android:id="@+id/iconDeadline"
+                        style="@style/detailIcon"
+                        android:contentDescription="@string/return_date"
+                        app:srcCompat="@drawable/ic_return_date_24dp"/>
+
+                    <TextView
+                        android:id="@+id/labelDeadline"
+                        style="@style/detailLabel"
+                        android:layout_toEndOf="@id/iconDeadline"
+                        android:layout_toRightOf="@id/iconDeadline"
+                        android:text="@string/return_date"/>
+
+                    <TextView
+                        android:id="@+id/valueDeadline"
+                        style="@style/detailValue"
+                        android:layout_below="@id/labelDeadline"
+                        android:layout_toEndOf="@id/iconDeadline"
+                        android:layout_toRightOf="@id/iconDeadline"
+                        android:text="@{item instanceof LentItem &amp;&amp; ((LentItem) item).deadline != null ? DateTimeFormat.shortDate().print(((LentItem) item).deadline) : null}"
+                        android:textIsSelectable="true"
+                        tools:text="01.01.2017"/>
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="16dp"
+                    android:visibility="@{item instanceof ReservedItem &amp;&amp; ((ReservedItem) item).readyDate != null ? View.VISIBLE : View.GONE}">
+
+                    <ImageView
+                        android:id="@+id/iconReadyDate"
+                        style="@style/detailIcon"
+                        android:contentDescription="@string/accountdata_reserved_ready_date"
+                        app:srcCompat="@drawable/ic_date_24dp"/>
+
+                    <TextView
+                        android:id="@+id/labelReadyDate"
+                        style="@style/detailLabel"
+                        android:layout_toEndOf="@id/iconReadyDate"
+                        android:layout_toRightOf="@id/iconReadyDate"
+                        android:text="@string/accountdata_reserved_ready_date"/>
+
+                    <TextView
+                        android:id="@+id/valueReadyDate"
+                        style="@style/detailValue"
+                        android:layout_below="@id/labelReadyDate"
+                        android:layout_toEndOf="@id/iconReadyDate"
+                        android:layout_toRightOf="@id/iconReadyDate"
+                        android:text="@{item instanceof ReservedItem &amp;&amp; ((ReservedItem) item).readyDate != null ? DateTimeFormat.shortDate().print(((ReservedItem) item).readyDate) : null}"
+                        android:textIsSelectable="true"
+                        tools:text="01.01.2017"/>
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="16dp"
+                    android:visibility="@{item instanceof ReservedItem &amp;&amp; ((ReservedItem) item).expirationDate != null ? View.VISIBLE : View.GONE}">
+
+                    <ImageView
+                        android:id="@+id/iconExpirationDate"
+                        style="@style/detailIcon"
+                        android:contentDescription="@string/accountdata_reserved_expiration_date"
+                        app:srcCompat="@drawable/ic_date_24dp"/>
+
+                    <TextView
+                        android:id="@+id/labelExpirationDate"
+                        style="@style/detailLabel"
+                        android:layout_toEndOf="@id/iconExpirationDate"
+                        android:layout_toRightOf="@id/iconExpirationDate"
+                        android:text="@string/accountdata_reserved_expiration_date"/>
+
+                    <TextView
+                        android:id="@+id/valueExpirationDate"
+                        style="@style/detailValue"
+                        android:layout_below="@id/labelExpirationDate"
+                        android:layout_toEndOf="@id/iconExpirationDate"
+                        android:layout_toRightOf="@id/iconExpirationDate"
+                        android:text="@{item instanceof ReservedItem &amp;&amp; ((ReservedItem) item).expirationDate != null ? DateTimeFormat.shortDate().print(((ReservedItem) item).expirationDate) : null}"
+                        android:textIsSelectable="true"
+                        tools:text="01.01.2017"/>
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="16dp"
+                    android:visibility="@{item instanceof LentItem &amp;&amp; (((LentItem) item).homeBranch != null || ((LentItem) item).lendingBranch != null) || item instanceof ReservedItem &amp;&amp; ((ReservedItem) item).branch != null ? View.VISIBLE : View.GONE}">
+
+                    <ImageView
+                        android:id="@+id/iconBranch"
+                        style="@style/detailIcon"
+                        android:contentDescription="@string/branch"
+                        app:srcCompat="@drawable/ic_branch_24dp"/>
+
+                    <TextView
+                        android:id="@+id/labelBranch"
+                        style="@style/detailLabel"
+                        android:layout_toEndOf="@id/iconBranch"
+                        android:layout_toRightOf="@id/iconBranch"
+                        android:text="@string/branch"/>
+
+                    <TextView
+                        android:id="@+id/valueBranch"
+                        style="@style/detailValue"
+                        android:layout_below="@id/labelBranch"
+                        android:layout_toEndOf="@id/iconBranch"
+                        android:layout_toRightOf="@id/iconBranch"
+                        android:text="@{AccountItemDetailActivity.getBranch(item, @string/lendingbranch_homebranch)}"
+                        android:textIsSelectable="true"
+                        tools:text="Zentralbibliothek / Außenstelle"/>
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="16dp"
+                    android:visibility="@{item.format != null || item.mediaType != null ? View.VISIBLE : View.GONE}">
+
+                    <ImageView
+                        android:id="@+id/iconFormat"
+                        style="@style/detailIcon"
+                        android:contentDescription="@string/mediatype"
+                        app:imageResource="@{item.mediaType != null ? ResultsAdapter.getResourceByMediaType(item.mediaType) : R.drawable.ic_media_type_24dp}"
+                        tools:src="@drawable/ic_media_type_24dp"/>
+
+                    <TextView
+                        android:id="@+id/labelFormat"
+                        style="@style/detailLabel"
+                        android:layout_toEndOf="@id/iconFormat"
+                        android:layout_toRightOf="@id/iconFormat"
+                        android:text="@string/mediatype"/>
+
+                    <TextView
+                        android:id="@+id/valueFormat"
+                        style="@style/detailValue"
+                        android:layout_below="@id/labelFormat"
+                        android:layout_toEndOf="@id/iconFormat"
+                        android:layout_toRightOf="@id/iconFormat"
+                        android:text="@{AccountItemDetailActivity.getFormat(item, context)}"
+                        android:textIsSelectable="true"
+                        tools:text="Buch"/>
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="16dp"
+                    android:visibility="@{item instanceof LentItem &amp;&amp; ((LentItem) item).barcode != null ? View.VISIBLE : View.GONE}">
+
+                    <ImageView
+                        android:id="@+id/iconBarcode"
+                        style="@style/detailIcon"
+                        android:contentDescription="@string/barcode"
+                        app:srcCompat="@drawable/ic_barcode"/>
+
+                    <TextView
+                        android:id="@+id/labelBarcode"
+                        style="@style/detailLabel"
+                        android:layout_toEndOf="@id/iconBarcode"
+                        android:layout_toRightOf="@id/iconBarcode"
+                        android:text="@string/barcode"/>
+
+                    <TextView
+                        android:id="@+id/valueBarcode"
+                        style="@style/detailValue"
+                        android:layout_below="@id/labelBarcode"
+                        android:layout_toEndOf="@id/iconBarcode"
+                        android:layout_toRightOf="@id/iconBarcode"
+                        android:text="@{item instanceof LentItem ? ((LentItem) item).barcode : &quot;&quot;}"
+                        android:textIsSelectable="true"
+                        tools:text="12345"/>
+
+                </RelativeLayout>
+
+            </LinearLayout>
+        </ScrollView>
+
+        <Button
+            android:text="@string/go_to_details"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/btnDetails"
+            android:textColor="?attr/colorPrimary"
+            style="@style/Widget.AppCompat.Button.Borderless"
+            android:visibility="@{item.id != null ? View.VISIBLE : View.GONE}"/>
+    </LinearLayout>
+
+</layout>

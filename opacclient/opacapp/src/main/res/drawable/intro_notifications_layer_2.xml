@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+        android:width="200dp"
+        android:height="200dp"
+        android:viewportWidth="200"
+        android:viewportHeight="200">
+
+    <path
+        android:fillColor="#F5F5F5"
+        android:pathData="M60.3,79.9 L139.7,79.9 L139.7,109.3 L60.3,109.3 L60.3,79.9 Z"/>
+    <path
+        android:fillColor="#C82928"
+        android:pathData="M70.8,83.2 C74.3899,83.2,77.3,86.1101,77.3,89.7
+C77.3,93.2898,74.3899,96.2,70.8,96.2 C67.2102,96.2,64.3,93.2898,64.3,89.7
+C64.3,86.1101,67.2102,83.2,70.8,83.2 Z"/>
+    <path
+        android:fillColor="#202021"
+        android:fillAlpha="0.63"
+        android:strokeAlpha="0.63"
+        android:strokeWidth="1"
+        android:pathData="M83.3,83.2 L129.1,83.2 L129.1,88 L83.3,88 L83.3,83.2 Z"/>
+    <path
+        android:fillColor="#202021"
+        android:fillAlpha="0.63"
+        android:strokeAlpha="0.63"
+        android:strokeWidth="1"
+        android:pathData="M85.7,90.9 L129,90.9 L129,93.3 L85.7,93.3 L85.7,90.9 Z"/>
+    <path
+        android:fillColor="#202021"
+        android:fillAlpha="0.63"
+        android:strokeAlpha="0.63"
+        android:strokeWidth="1"
+        android:pathData="M85.6,94.7 L128.9,94.7 L128.9,97.1 L85.6,97.1 L85.6,94.7 Z"/>
+    <path
+        android:fillColor="#202021"
+        android:fillAlpha="0.63"
+        android:strokeAlpha="0.63"
+        android:strokeWidth="1"
+        android:pathData="M85.6,98.6 L128.9,98.6 L128.9,101 L85.6,101 L85.6,98.6 Z"/>
+    <path
+        android:fillColor="#202021"
+        android:fillAlpha="0.63"
+        android:strokeAlpha="0.63"
+        android:strokeWidth="1"
+        android:pathData="M85.6,102.4 L128.9,102.4 L128.9,104.8 L85.6,104.8 L85.6,102.4 Z"/>
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M67.2,89.5 C67.2,89.4,67.2,89.3,67.2,89.2 C67.3,89.1,67.3,89,67.4,88.9
+S67.6,88.8,67.7,88.7 C67.4,88.4,67.4,88.1,67.5,87.7
+C67.5,87.6,67.7,87.6,67.8,87.5 C68.6,87.2,69.3,86.9,70.1,86.6
+C70.4,86.5,70.8,86.3,71.1,86.2 C71.4,86.3,71.4,86.2,71.6,86.4
+C71.9,86.7,72.3,87.1,72.6,87.5 C73.1,88.1,73.7,88.7,74.2,89.2
+C74.3,89.3,74.3,89.4,74.4,89.5 C74.4,89.7,74.3,89.8,74.1,90
+C74.1,90.1,74.1,90.1,74.2,90.2 C74.2,90.4,74.2,90.6,74.1,90.7
+C73.9,90.8,73.8,90.9,73.7,91.1 C73.7,91.2,73.6,91.2,73.5,91.3
+C73.1,91.6,72.8,92,72.4,92.3 C72.1,92.5,71.8,92.8,71.5,93.1
+C71.4,93.1,71.3,93.2,71.2,93.2 C71.1,93.2,71,93.1,71,93.1
+C70.7,92.9,70.4,92.6,70.1,92.4 C69.6,92,69.1,91.5,68.6,91
+C68.5,90.9,68.3,90.7,68.1,90.6 C67.7,90.3,67.3,90,67.2,89.5 L67.2,89.5 Z"/>
+</vector>

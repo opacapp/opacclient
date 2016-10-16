@@ -17,6 +17,7 @@ package de.geeksfactory.opacclient.ui;
 
 import android.animation.Animator;
 import android.animation.TimeInterpolator;
+import android.annotation.TargetApi;
 import android.content.Context;
 import android.graphics.Rect;
 import android.transition.CircularPropagation;
@@ -39,6 +40,7 @@ import de.geeksfactory.opacclient.R;
  * TransitionValues, int, TransitionValues, int)}. <p>Views move away from the focal View or the
  * center of the Scene if no epicenter was provided.</p>
  */
+@TargetApi(21)
 public class VerticalExplodeTransition extends Visibility {
     private static final TimeInterpolator sDecelerate = new DecelerateInterpolator();
     private static final TimeInterpolator sAccelerate = new AccelerateInterpolator();

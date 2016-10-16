@@ -29,5 +29,11 @@
     <color name="cover_gradient_black">#80000000</color>
     <color name="md_amber_200">#FFE082</color>
     <color name="mb_primary_text">#737373</color>
+    <color name="intro_notifications_bg">#7CB342</color>
+    <color name="intro_notifications_bg_dark">#558B2F</color>
+    <color name="intro_world_bg">#2196F3</color>
+    <color name="intro_world_bg_dark">#1976D2</color>
+    <color name="intro_library_bg">#F44336</color>
+    <color name="intro_library_bg_dark">#D32F2F</color>
 
 </resources>

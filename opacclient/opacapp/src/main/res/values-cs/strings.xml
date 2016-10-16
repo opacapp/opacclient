@@ -29,7 +29,7 @@
   <string name="no_warranty">Všechny uvedené informace jsou bez záruky.</string>
   <string name="lent_head">Výpůjčka</string>
   <string name="reservations_head">Rezervace</string>
-  <string name="entl_none">Nemáte nic vypůjčeno</string>
+  <string name="lent_none">Nemáte nic vypůjčeno</string>
   <string name="reservations_none">Nemáte žádné rezervace</string>
   <string name="cancel_confirm">Opravdu chcete zrušit rezervaci?</string>
   <string name="yes">Ano</string>

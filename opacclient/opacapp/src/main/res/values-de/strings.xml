@@ -31,7 +31,7 @@
     <string name="no_warranty">Alle Angaben ohne Gewähr.</string>
     <string name="lent_head">Entliehen</string>
     <string name="reservations_head">Vorbestellungen</string>
-    <string name="entl_none">Keine Medien entliehen</string>
+    <string name="lent_none">Keine Medien entliehen</string>
     <string name="reservations_none">Keine Medien vorbestellt</string>
     <string name="cancel_confirm">Vorbestellung wirklich entfernen?</string>
     <string name="prolong_confirm">Medium wirklich verlängern?</string>
@@ -116,8 +116,8 @@
     <string name="accounts_edit">Konto bearbeiten</string>
     <string name="accounts_desc">Genutzte Bibliotheken und Mitgliedsnummern verwalten</string>
     <string name="account_label">Bezeichnung</string>
-    <string name="account_nr">Ausweisnummer/-name (optional)</string>
-    <string name="account_password">Passwort (optional)</string>
+    <string name="account_nr">Ausweisnummer/-name</string>
+    <string name="account_password">Passwort</string>
     <string name="account_city">Bibliothek</string>
     <string name="account_delete_confirm">Konto wirklich löschen?</string>
     <string name="account_select">Konto auswählen</string>
@@ -300,4 +300,14 @@
     <string name="library_config_last_update">Zuletzt aktualisiert %s</string>
     <string name="library_config_reset">Bibliotheksdaten vom letzten App-Update wiederhergestellt.</string>
     <string name="library_removed_error">Ihre Bibliothek wurde leider aus der App entfernt. Gründe dafür könnten sein, dass die Bibliothek zu einer anderen Software gewechselt hat, mit der die App nicht kompatibel ist, oder, dass die Bibliothek uns direkt kontaktiert hat und explizit darum gebeten hat, aus der App entfernt zu werden. Für weitere Informationen können Sie uns unter info@opacapp.net kontaktieren.</string>
+    <string name="account_anonymous">anonym (nur Suche)</string>
+    <string name="account_with_credentials">mit Zugangsdaten (Suche und Konto)</string>
+    <string name="please_enter_password">Bitte geben Sie Ihr Passwort ein.</string>
+    <string name="please_enter_username">Bitte geben Sie Ihre Ausweisnummer ein.</string>
+    <string name="intro_title_0">Willkommen in der Web Opac App!</string>
+    <string name="intro_description_0">Wischen Sie nach links für weitere Informationen.</string>
+    <string name="intro_title_1">Benachrichtigungen</string>
+    <string name="intro_description_1">Sie können in den Einstellungen der App Benachrichtigungen aktivieren, um an ablaufende Entleihungen erinnert zu werden.</string>
+    <string name="intro_title_2">1000+ Bibliotheken</string>
+    <string name="intro_description_2">Diese App unterstützt mehr als 1.000 Bibliotheken im deutschsprachigen Raum und auf der ganzen Welt. Wählen Sie Ihre Bibliothek aus oder schlagen Sie sie vor, falls sie noch nicht auf der Liste ist!</string>
 </resources>

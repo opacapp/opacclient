@@ -31,7 +31,7 @@
     <string name="no_warranty">All information is supplied without liability.</string>
     <string name="lent_head">Lent</string>
     <string name="reservations_head">Reservations</string>
-    <string name="entl_none">Nothing lent</string>
+    <string name="lent_none">Nothing lent</string>
     <string name="reservations_none">Nothing reserved</string>
     <string name="cancel_confirm">Do you really want to cancel this reservation?</string>
     <string name="prolong_confirm">Do you really want to renew this item?</string>
@@ -116,8 +116,8 @@
     <string name="accounts_edit">Change account</string>
     <string name="accounts_desc">Manage your libraries and membership numbers</string>
     <string name="account_label">Label</string>
-    <string name="account_nr">Membership ID/user name (optional)</string>
-    <string name="account_password">Password (optional)</string>
+    <string name="account_nr">Membership ID/user name</string>
+    <string name="account_password">Password</string>
     <string name="account_city">Library</string>
     <string name="account_delete_confirm">Really delete account?</string>
     <string name="account_select">Select Account</string>
@@ -206,7 +206,7 @@
     <string name="prolong">Renew</string>
     <string name="reservation_cancel">Cancel reservation</string>
     <string name="reservation_book">Lend</string>
-    <string name="mediatype">Material type</string>
+    <string name="mediatype">Media type</string>
     <string name="status">Status</string>
     <string name="free_search">Free Search</string>
     <string name="no_fields_found">No search fields found</string>
@@ -297,4 +297,14 @@
     <string name="library_config_last_update">Last updated %s</string>
     <string name="library_config_reset">Restored library data from last app update.</string>
     <string name="library_removed_error">Unfortunately, the library you are using was removed from the app. The reason for this could be that the library switched to a new software system that the app is not compatible with or that the library contacted us and explicitly stated that they want to be removed from the app. You can contact us at info@opacapp.net to find out more.</string>
+    <string name="account_anonymous">anonymous (search only)</string>
+    <string name="account_with_credentials">with credentials (search and account)</string>
+    <string name="please_enter_password">Please enter your password.</string>
+    <string name="please_enter_username">Please enter your membership ID.</string>
+    <string name="intro_title_0">Welcome to Web Opac App!</string>
+    <string name="intro_description_0">Swipe left for more information.</string>
+    <string name="intro_title_1">Notifications</string>
+    <string name="intro_description_1">You can enable notifications in the app settings to receive a reminder when your lent books are due.</string>
+    <string name="intro_title_2">1000+ libraries</string>
+    <string name="intro_description_2">This app supports more than 1,000 libraries from all around the world. Select yours or suggest it if it\'s not yet on the list!</string>
 </resources>

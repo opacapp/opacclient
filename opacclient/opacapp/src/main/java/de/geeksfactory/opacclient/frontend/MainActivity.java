@@ -1,6 +1,7 @@
 package de.geeksfactory.opacclient.frontend;
 
 import android.annotation.SuppressLint;
+import android.annotation.TargetApi;
 import android.app.PendingIntent;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -231,6 +232,10 @@ public class MainActivity extends OpacActivity
         }
 
         showUpdateInfoDialog();
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            getWindow().setExitTransition(null);
+        }
     }
 
     private void showAccountSelectDialog(final List<Account> accounts) {
@@ -328,6 +333,7 @@ public class MainActivity extends OpacActivity
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent idata) {
         super.onActivityResult(requestCode, resultCode, idata);
+        fragment.onActivityResult(requestCode, resultCode, idata);
 
         //TODO: Rewrite this for the new SearchField implementation
         // Barcode
@@ -390,8 +396,9 @@ public class MainActivity extends OpacActivity
         }
     }
 
+    @TargetApi(10)
     private void nfcHint() {
-        if (nfc_capable && !sp.getBoolean("nfc_search", false) &&
+        if (nfc_capable && !sp.getBoolean("nfc_search", false) && Build.VERSION.SDK_INT >= 10 &&
                 !sp.getBoolean("nfc_hint_shown", false) && app.getLibrary().isNfcSupported()) {
             new AlertDialog.Builder(this)
                     .setView(LayoutInflater.from(this).inflate(R.layout.dialog_nfc_hint, null))

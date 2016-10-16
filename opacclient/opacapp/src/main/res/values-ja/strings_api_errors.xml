@@ -40,9 +40,10 @@
   <string name="unsupported_in_library">この機能は、この図書館でサポートされていません。</string>
   <string name="reservation_warning">予約は手数料がかかる場合があります。</string>
   <plurals name="reservations_number">
-    <item quantity="other">%d 予約</item>
+    <item quantity="other">%d の予約</item>
   </plurals>
   <string name="reserved_at_date">予約 %s</string>
+  <string name="link">リンク</string>
   <string name="mediatype_none">なし</string>
   <string name="mediatype_book">本</string>
   <string name="mediatype_cd">CD</string>

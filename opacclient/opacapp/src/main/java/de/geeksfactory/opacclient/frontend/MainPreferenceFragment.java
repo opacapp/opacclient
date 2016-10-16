@@ -219,7 +219,7 @@ public class MainPreferenceFragment extends PreferenceFragmentCompat {
         if (prev != null) {
             ft.remove(prev);
         }
-        ft.addToBackStack(null);
+        ft.disallowAddToBackStack();
         newFragment.show(ft, TAG_DIALOG);
     }
 
@@ -229,7 +229,7 @@ public class MainPreferenceFragment extends PreferenceFragmentCompat {
         if (prev != null) {
             ft.remove(prev);
         }
-        ft.addToBackStack(null);
+        ft.disallowAddToBackStack();
         ft.commit();
     }
 

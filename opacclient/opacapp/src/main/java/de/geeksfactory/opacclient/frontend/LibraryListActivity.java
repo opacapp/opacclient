@@ -42,6 +42,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import org.acra.ACRA;
+import org.joda.time.DateTime;
+import org.joda.time.Duration;
 import org.json.JSONException;
 
 import java.io.File;
@@ -67,7 +69,6 @@ import de.geeksfactory.opacclient.storage.PreferenceDataSource;
 import de.geeksfactory.opacclient.ui.AppCompatProgressDialog;
 import de.geeksfactory.opacclient.utils.ErrorReporter;
 import de.geeksfactory.opacclient.webservice.LibraryConfigUpdateService;
-import de.geeksfactory.opacclient.webservice.UpdateHandler;
 import de.geeksfactory.opacclient.webservice.WebService;
 import de.geeksfactory.opacclient.webservice.WebServiceManager;
 
@@ -79,6 +80,7 @@ public class LibraryListActivity extends AppCompatActivity
     public static final int LEVEL_CITY = 2;
     public static final int LEVEL_LIBRARY = 3;
     private static final int REQUEST_LOCATION_PERMISSION = 0;
+    public static final String EXTRA_WELCOME = "welcome";
 
     protected List<Library> libraries;
     protected LibraryListFragment fragment;
@@ -86,6 +88,7 @@ public class LibraryListActivity extends AppCompatActivity
     protected LibraryListFragment fragment3;
     protected LibraryListFragment fragment4;
     protected boolean visible;
+    protected boolean list_rendered = false;
 
     protected AppCompatProgressDialog dialog;
 
@@ -94,6 +97,7 @@ public class LibraryListActivity extends AppCompatActivity
 
     protected TextView tvLocateString;
     protected ImageView ivLocationIcon;
+    protected LoadLibrariesTask loadLibrariesTask;
 
     @Override
     protected void onPause() {
@@ -104,6 +108,11 @@ public class LibraryListActivity extends AppCompatActivity
     @Override
     protected void onResume() {
         visible = true;
+        if (loadLibrariesTask.getStatus() == AsyncTask.Status.PENDING) {
+            loadLibrariesTask.execute((OpacClient) getApplication());
+        } else if (!list_rendered && libraries != null) {
+            showListCountries(false);
+        }
         super.onResume();
     }
 
@@ -113,17 +122,19 @@ public class LibraryListActivity extends AppCompatActivity
         setContentView(R.layout.activity_library_list);
         setSupportActionBar((Toolbar) findViewById(R.id.toolbar));
 
-        if (!getIntent().hasExtra("welcome")) {
+        if (getIntent().hasExtra(EXTRA_WELCOME)) {
+            getSupportActionBar().setHomeButtonEnabled(false);
+            startActivity(new Intent(this, WelcomeActivity.class));
+        } else {
             getSupportActionBar().setHomeButtonEnabled(true);
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        } else {
-            getSupportActionBar().setHomeButtonEnabled(false);
         }
 
-        new LoadLibrariesTask().execute((OpacClient) getApplication());
         final LinearLayout llLocate = (LinearLayout) findViewById(R.id.llLocate);
         tvLocateString = (TextView) findViewById(R.id.tvLocateString);
         ivLocationIcon = (ImageView) findViewById(R.id.ivLocationIcon);
+
+        loadLibrariesTask = new LoadLibrariesTask();
 
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) ==
                 PackageManager.PERMISSION_GRANTED) {
@@ -376,6 +387,7 @@ public class LibraryListActivity extends AppCompatActivity
                                            .replace(R.id.container, fragment).commit();
             }
         }
+        list_rendered = true;
     }
 
     public void showListStates(String country) {
@@ -801,23 +813,28 @@ public class LibraryListActivity extends AppCompatActivity
         protected List<Library> doInBackground(OpacClient... arg0) {
             WebService service = WebServiceManager.getInstance();
             PreferenceDataSource prefs = new PreferenceDataSource(LibraryListActivity.this);
-            File filesDir = new File(getFilesDir(), LibraryConfigUpdateService.LIBRARIES_DIR);
-            filesDir.mkdirs();
-            try {
-                int count = ((OpacClient) getApplication()).getUpdateHandler().updateConfig(
-                        service, prefs,
-                        new LibraryConfigUpdateService.FileOutput(filesDir),
-                        new JsonSearchFieldDataSource(LibraryListActivity.this));
-                Log.d("LibraryListActivity",
-                        "updated config for " + String.valueOf(count) + " libraries");
-                ((OpacClient) getApplication()).resetCache();
-                if (!BuildConfig.DEBUG) {
-                    ACRA.getErrorReporter().putCustomData("data_version",
-                            prefs.getLastLibraryConfigUpdate().toString());
+
+            if (prefs.getLastLibraryConfigUpdate() == null
+                    || prefs.getLastLibraryConfigUpdate()
+                            .isBefore(new DateTime().minus(new Duration(300 * 1000)))) {
+                File filesDir = new File(getFilesDir(), LibraryConfigUpdateService.LIBRARIES_DIR);
+                filesDir.mkdirs();
+                try {
+                    int count = ((OpacClient) getApplication()).getUpdateHandler().updateConfig(
+                            service, prefs,
+                            new LibraryConfigUpdateService.FileOutput(filesDir),
+                            new JsonSearchFieldDataSource(LibraryListActivity.this));
+                    Log.d("LibraryListActivity",
+                            "updated config for " + String.valueOf(count) + " libraries");
+                    ((OpacClient) getApplication()).resetCache();
+                    if (!BuildConfig.DEBUG) {
+                        ACRA.getErrorReporter().putCustomData("data_version",
+                                prefs.getLastLibraryConfigUpdate().toString());
+                    }
+                } catch (IOException | JSONException e) {
+                    e.printStackTrace();
+                    // fail silently (e.g. when no Internet connection available)
                 }
-            } catch (IOException | JSONException e) {
-                e.printStackTrace();
-                // fail silently (e.g. when no Internet connection available)
             }
 
             OpacClient app = arg0[0];

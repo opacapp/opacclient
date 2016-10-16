@@ -3,4 +3,5 @@
     <item name="popup_bg" type="drawable">@drawable/popup_background_compat</item>
     <item name="toolbar_shadow" type="drawable">@drawable/bottom_shadow</item>
     <item name="ripple_unmasked" type="drawable">@drawable/ripple</item>
+    <item name="dialog_width" type="dimen">@dimen/dialog_width_minor</item>
 </resources>

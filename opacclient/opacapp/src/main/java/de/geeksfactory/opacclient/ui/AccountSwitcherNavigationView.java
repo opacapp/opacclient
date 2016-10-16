@@ -28,6 +28,7 @@
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
+import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.os.Build;
@@ -85,6 +86,7 @@ public class AccountSwitcherNavigationView extends NavigationView {
         accountsList.setAdapter(accountsAdapter);
     }
 
+    @TargetApi(12)
     public void setAccountsVisible(boolean visible) {
         if (visible == accountsVisible) return;
 

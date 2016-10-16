@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.percent.PercentRelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/outside"
+    android:layout_height="match_parent"
+    android:layout_width="match_parent"
+    android:gravity="center">
+
+    <android.support.v7.widget.CardView
+        android:id="@+id/background"
+        app:layout_widthPercent="@dimen/dialog_width"
+        android:layout_height="wrap_content"
+        app:cardCornerRadius="0dp"
+        app:cardElevation="24dp"
+        android:layout_marginLeft="?attr/dialogPreferredPadding"
+        android:layout_marginRight="?attr/dialogPreferredPadding"
+        android:layout_marginTop="@dimen/abc_dialog_padding_top_material"
+        android:transitionName="@string/transition_background">
+
+        <include layout="@layout/content_accountitem_detail"/>
+    </android.support.v7.widget.CardView>
+</android.support.percent.PercentRelativeLayout>

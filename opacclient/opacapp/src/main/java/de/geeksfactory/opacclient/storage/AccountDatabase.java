@@ -36,16 +36,16 @@ public class AccountDatabase extends SQLiteOpenHelper {
     // CHANGE THIS
     public static final String[] COLUMNS_LENT = {"id", "account", "title", "author", "format",
             "itemid", "status", "barcode", "deadline", "homebranch", "lending_branch",
-            "prolong_data", "renewable", "download_data", "ebook"};
+            "prolong_data", "renewable", "download_data", "ebook", "mediatype", "cover"};
     public static final String[] COLUMNS_RESERVATIONS = {"id", "account", "title", "author",
             "format", "itemid", "status", "ready", "expiration", "branch", "cancel_data",
-            "booking_data"};
+            "booking_data", "mediatype", "cover"};
     public static final String TABLENAME_ACCOUNTS = "accounts";
     public static final String TABLENAME_LENT = "accountdata_lent";
     public static final String TABLENAME_RESERVATION = "accountdata_reservations";
     public static final String TABLENAME_ALARMS = "alarms";
     private static final String DATABASE_NAME = "accounts.db";
-    private static final int DATABASE_VERSION = 26; // REPLACE ONUPGRADE IF YOU
+    private static final int DATABASE_VERSION = 27; // REPLACE ONUPGRADE IF YOU
 
     private AccountDatabase(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -68,12 +68,13 @@ public class AccountDatabase extends SQLiteOpenHelper {
                         "account integer," + "title text," + "author text," + "format text," +
                         "itemid text," + "status text," + "barcode text," + "deadline text," +
                         "homebranch text," + "lending_branch text," + "prolong_data text," +
-                        "renewable integer," + "download_data text," + "ebook integer" + ");");
+                        "renewable integer," + "download_data text," + "ebook integer," +
+                        "mediatype text," + "cover text" + ");");
         db.execSQL("create table " + "accountdata_reservations (" +
                 "id integer primary key autoincrement," + "account integer," + "title text," +
                 "author text," + "format text," + "itemid text," + "status text," + "ready text," +
-                "expiration text," + "branch text," + "cancel_data text," + "booking_data text" +
-                ");");
+                "expiration text," + "branch text," + "cancel_data text," + "booking_data text," +
+                "mediatype text," + "cover text" + ");");
         db.execSQL("create table " + "alarms (" + "id integer primary key autoincrement," +
                 "deadline text," + "media text," + "alarm text," + "notified integer," +
                 "finished integer" + ");");
@@ -208,7 +209,12 @@ public class AccountDatabase extends SQLiteOpenHelper {
                 // it already exists, do nothing
             }
         }
-
+        if (oldVersion < 27) {
+            db.execSQL("alter table accountdata_lent add column mediatype text");
+            db.execSQL("alter table accountdata_lent add column cover text");
+            db.execSQL("alter table accountdata_reservations add column mediatype text");
+            db.execSQL("alter table accountdata_reservations add column cover text");
+        }
     }
 
 }
