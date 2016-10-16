@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.view.animation.FastOutLinearInInterpolator;
@@ -159,25 +158,21 @@ public class AccountItemDetailActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         Intent intent = new Intent();
         int resultCode;
-        switch (item.getItemId()) {
-            case R.id.action_prolong:
-                resultCode = RESULT_PROLONG;
-                intent.putExtra(EXTRA_DATA, ((LentItem) binding.getItem()).getProlongData());
-                break;
-            case R.id.action_download:
-                resultCode = RESULT_DOWNLOAD;
-                intent.putExtra(EXTRA_DATA, ((LentItem) binding.getItem()).getDownloadData());
-                break;
-            case R.id.action_cancel:
-                resultCode = RESULT_CANCEL;
-                intent.putExtra(EXTRA_DATA, ((ReservedItem) binding.getItem()).getCancelData());
-                break;
-            case R.id.action_booking:
-                resultCode = RESULT_BOOKING;
-                intent.putExtra(EXTRA_DATA, ((ReservedItem) binding.getItem()).getBookingData());
-                break;
-            default:
-                return super.onOptionsItemSelected(item);
+        int item_id = item.getItemId();
+        if (item_id == R.id.action_prolong) {
+            resultCode = RESULT_PROLONG;
+            intent.putExtra(EXTRA_DATA, ((LentItem) binding.getItem()).getProlongData());
+        } else if (item_id == R.id.action_download) {
+            resultCode = RESULT_DOWNLOAD;
+            intent.putExtra(EXTRA_DATA, ((LentItem) binding.getItem()).getDownloadData());
+        } else if (item_id == R.id.action_cancel) {
+            resultCode = RESULT_CANCEL;
+            intent.putExtra(EXTRA_DATA, ((ReservedItem) binding.getItem()).getCancelData());
+        } else if (item_id == R.id.action_booking) {
+            resultCode = RESULT_BOOKING;
+            intent.putExtra(EXTRA_DATA, ((ReservedItem) binding.getItem()).getBookingData());
+        } else {
+            return super.onOptionsItemSelected(item);
         }
         setResult(resultCode, intent);
         supportFinishAfterTransition();
