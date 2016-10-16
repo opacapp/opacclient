@@ -37,6 +37,7 @@ public class AccountItemDetailActivity extends AppCompatActivity {
     public static final int RESULT_BOOKING = 4;
     public static final String EXTRA_DATA = "data";
     private AccountItemDetailActivityBinding binding;
+    private AccountItem item = null;
 
     @Override
     @TargetApi(21)
@@ -47,14 +48,15 @@ public class AccountItemDetailActivity extends AppCompatActivity {
 
         setSupportActionBar(binding.toolbar);
 
-        binding.setItem((AccountItem) getIntent().getSerializableExtra(EXTRA_ITEM));
+        item = (AccountItem) getIntent().getSerializableExtra(EXTRA_ITEM);
+        binding.setItem(item);
         binding.btnDetails.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(AccountItemDetailActivity.this,
                         SearchResultDetailActivity.class);
                 intent.putExtra(SearchResultDetailFragment.ARG_ITEM_ID,
-                        binding.getItem().getId());
+                        item.getId());
                 startActivity(intent);
             }
         });
@@ -119,15 +121,15 @@ public class AccountItemDetailActivity extends AppCompatActivity {
             e.printStackTrace();
         }
 
-        if (binding.getItem() instanceof LentItem) {
-            final LentItem item = (LentItem) binding.getItem();
+        if (item instanceof LentItem) {
+            final LentItem i = (LentItem) item;
             cancel.setVisible(false);
             booking.setVisible(false);
-            if (item.getProlongData() != null) {
+            if (i.getProlongData() != null) {
                 prolong.setVisible(true);
                 //ViewCompat.setAlpha(prolong, item.isRenewable() ? 1f : 0.4f);
                 download.setVisible(false);
-            } else if (item.getDownloadData() != null &&
+            } else if (i.getDownloadData() != null &&
                     api != null && api instanceof EbookServiceApi) {
                 prolong.setVisible(false);
                 download.setVisible(true);
@@ -135,14 +137,14 @@ public class AccountItemDetailActivity extends AppCompatActivity {
                 prolong.setVisible(false);
                 download.setVisible(false);
             }
-        } else if (binding.getItem() instanceof ReservedItem) {
-            final ReservedItem item = (ReservedItem) binding.getItem();
+        } else if (item instanceof ReservedItem) {
+            final ReservedItem i = (ReservedItem) item;
             prolong.setVisible(false);
             download.setVisible(false);
-            if (item.getBookingData() != null) {
+            if (i.getBookingData() != null) {
                 booking.setVisible(true);
                 cancel.setVisible(false);
-            } else if (item.getCancelData() != null) {
+            } else if (i.getCancelData() != null) {
                 cancel.setVisible(true);
                 booking.setVisible(false);
             } else {
@@ -161,16 +163,16 @@ public class AccountItemDetailActivity extends AppCompatActivity {
         int item_id = item.getItemId();
         if (item_id == R.id.action_prolong) {
             resultCode = RESULT_PROLONG;
-            intent.putExtra(EXTRA_DATA, ((LentItem) binding.getItem()).getProlongData());
+            intent.putExtra(EXTRA_DATA, ((LentItem) item).getProlongData());
         } else if (item_id == R.id.action_download) {
             resultCode = RESULT_DOWNLOAD;
-            intent.putExtra(EXTRA_DATA, ((LentItem) binding.getItem()).getDownloadData());
+            intent.putExtra(EXTRA_DATA, ((LentItem) item).getDownloadData());
         } else if (item_id == R.id.action_cancel) {
             resultCode = RESULT_CANCEL;
-            intent.putExtra(EXTRA_DATA, ((ReservedItem) binding.getItem()).getCancelData());
+            intent.putExtra(EXTRA_DATA, ((ReservedItem) item).getCancelData());
         } else if (item_id == R.id.action_booking) {
             resultCode = RESULT_BOOKING;
-            intent.putExtra(EXTRA_DATA, ((ReservedItem) binding.getItem()).getBookingData());
+            intent.putExtra(EXTRA_DATA, ((ReservedItem) item).getBookingData());
         } else {
             return super.onOptionsItemSelected(item);
         }
