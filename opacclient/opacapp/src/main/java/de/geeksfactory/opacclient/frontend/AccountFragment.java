@@ -177,8 +177,18 @@ public class AccountFragment extends Fragment implements
         tvReservationsEmpty = (TextView) view.findViewById(R.id.emptyReservations);
 
         lentAdapter = new LentAdapter(this);
+        try {
+            lentAdapter.setApi(app.getApi());
+        } catch (OpacClient.LibraryRemovedException e) {
+            e.printStackTrace();
+        }
         displayLentItems();
         resAdapter = new ReservationsAdapter(this);
+        try {
+            resAdapter.setApi(app.getApi());
+        } catch (OpacClient.LibraryRemovedException e) {
+            e.printStackTrace();
+        }
         displayReservedItems();
 
         if (view.findViewById(R.id.rlAccHeader) != null) {
