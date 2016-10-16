@@ -171,15 +171,12 @@ public class AccountEditActivity extends AppCompatActivity {
         rgType.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(RadioGroup radioGroup, int i) {
-                switch (i) {
-                    case R.id.rbAnonymous:
-                        passwordContainer.setVisibility(View.GONE);
-                        usernameContainer.setVisibility(View.GONE);
-                        break;
-                    case R.id.rbWithCredentials:
-                        passwordContainer.setVisibility(View.VISIBLE);
-                        usernameContainer.setVisibility(View.VISIBLE);
-                        break;
+                if (i == R.id.rbAnonymous) {
+                    passwordContainer.setVisibility(View.GONE);
+                    usernameContainer.setVisibility(View.GONE);
+                } else if (i == R.id.rbWithCredentials) {
+                    passwordContainer.setVisibility(View.VISIBLE);
+                    usernameContainer.setVisibility(View.VISIBLE);
                 }
                 refreshSslWarning();
             }
