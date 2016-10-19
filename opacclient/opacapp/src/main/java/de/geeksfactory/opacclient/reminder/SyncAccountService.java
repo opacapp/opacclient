@@ -30,6 +30,8 @@ import android.util.Log;
 import com.commonsware.cwac.wakeful.WakefulIntentService;
 
 import org.acra.ACRA;
+import org.joda.time.DateTime;
+import org.joda.time.Duration;
 import org.json.JSONException;
 
 import java.io.File;
@@ -106,8 +108,15 @@ public class SyncAccountService extends WakefulIntentService {
     }
 
     private void updateLibraryConfig() {
-        WebService service = WebServiceManager.getInstance();
         PreferenceDataSource prefs = new PreferenceDataSource(this);
+        if (prefs.getLastLibraryConfigUpdate() != null
+                && prefs.getLastLibraryConfigUpdate()
+                        .isAfter(new DateTime().minus(new Duration(3600 * 1000)))) {
+            Log.d(NAME, "Do not run updateLibraryConfig as last run was less than an hour ago.");
+            return;
+        }
+
+        WebService service = WebServiceManager.getInstance();
         File filesDir = new File(getFilesDir(), LibraryConfigUpdateService.LIBRARIES_DIR);
         filesDir.mkdirs();
         try {
