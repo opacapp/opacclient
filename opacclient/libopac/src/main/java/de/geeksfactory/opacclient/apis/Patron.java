@@ -208,7 +208,7 @@ public class Patron extends BaseApi {
     }
 
     @Override
-    public List<SearchField> getSearchFields()
+    public List<SearchField> parseSearchFields()
             throws IOException, OpacErrorException, JSONException {
 
         String url = base_url + "faces/Szukaj.jsp";
