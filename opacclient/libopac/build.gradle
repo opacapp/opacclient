@@ -58,3 +58,6 @@ ext {
 }
 
 apply from: '../bintray.gradle'
+dependencies {
+    compile 'org.apache.httpcomponents:httpclient-android:4.3.5.1'
+}

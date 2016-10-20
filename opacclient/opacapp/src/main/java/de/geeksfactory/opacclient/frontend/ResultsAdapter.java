@@ -109,6 +109,8 @@ public class ResultsAdapter extends ArrayAdapter<SearchResult> {
                 return R.drawable.type_map;
             case LP_RECORD:
                 return R.drawable.type_lp_record;
+            case OLD_PRINT:
+                return R.drawable.type_unknown;
         }
 
         return R.drawable.type_unknown;
