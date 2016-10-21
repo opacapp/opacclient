@@ -25,6 +25,7 @@ import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 
 import org.acra.ACRA;
+import org.joda.time.DateTime;
 import org.json.JSONException;
 
 import java.io.File;
@@ -58,8 +59,9 @@ public class LibraryConfigUpdateService extends IntentService {
             int count = ((OpacClient) getApplication()).getUpdateHandler().updateConfig(
                     service, prefs, new FileOutput(filesDir), new JsonSearchFieldDataSource(this));
             if (!BuildConfig.DEBUG) {
-                ACRA.getErrorReporter().putCustomData("data_version",
-                        prefs.getLastLibraryConfigUpdate().toString());
+                DateTime lastUpdate = prefs.getLastLibraryConfigUpdate();
+                ACRA.getErrorReporter().putCustomData("data_version", lastUpdate != null ?
+                        lastUpdate.toString() : "null");
             }
             if (BuildConfig.DEBUG) {
                 Log.d("LibraryConfigUpdate",
