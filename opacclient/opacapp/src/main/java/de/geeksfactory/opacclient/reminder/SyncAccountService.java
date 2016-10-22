@@ -31,7 +31,6 @@ import com.commonsware.cwac.wakeful.WakefulIntentService;
 
 import org.acra.ACRA;
 import org.joda.time.DateTime;
-import org.joda.time.Duration;
 import org.joda.time.Hours;
 import org.json.JSONException;
 
@@ -49,7 +48,6 @@ import de.geeksfactory.opacclient.storage.AccountDataSource;
 import de.geeksfactory.opacclient.storage.JsonSearchFieldDataSource;
 import de.geeksfactory.opacclient.storage.PreferenceDataSource;
 import de.geeksfactory.opacclient.webservice.LibraryConfigUpdateService;
-import de.geeksfactory.opacclient.webservice.UpdateHandler;
 import de.geeksfactory.opacclient.webservice.WebService;
 import de.geeksfactory.opacclient.webservice.WebServiceManager;
 
@@ -131,7 +129,7 @@ public class SyncAccountService extends WakefulIntentService {
                 ACRA.getErrorReporter().putCustomData("data_version",
                         prefs.getLastLibraryConfigUpdate().toString());
             }
-        } catch (IOException | JSONException e) {
+        } catch (IOException | JSONException ignore) {
 
         }
     }

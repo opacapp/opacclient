@@ -28,6 +28,10 @@ public class UpdateHandler {
         Response<List<Library>>
                 response = service.getLibraryConfigs(prefs.getLastLibraryConfigUpdate(),
                 BuildConfig.VERSION_CODE, 0, null).execute();
+        if (!response.isSuccessful()) {
+            throw new IOException(String.valueOf(response.code()));
+        }
+
         List<Library> updatedLibraries = response.body();
 
         for (Library lib : updatedLibraries) {
