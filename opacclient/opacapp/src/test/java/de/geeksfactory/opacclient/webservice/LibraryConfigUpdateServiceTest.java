@@ -72,7 +72,7 @@ public class LibraryConfigUpdateServiceTest {
         when(prefs.getLastLibraryConfigUpdateVersion()).thenReturn(BuildConfig.VERSION_CODE - 1);
 
         List<Library> libraries = new ArrayList<>();
-        when(service.getLibraryConfigs(LAST_UPDATE, BuildConfig.VERSION_CODE, 0, null))
+        when(service.getLibraryConfigs(null, BuildConfig.VERSION_CODE, 0, null))
                 .thenReturn(Calls.response(libraries));
 
         new UpdateHandler().updateConfig(service, prefs, output, searchFields);

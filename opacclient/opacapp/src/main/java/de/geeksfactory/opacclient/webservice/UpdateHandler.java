@@ -20,16 +20,20 @@ public class UpdateHandler {
             LibraryConfigUpdateService.FileOutput output,
             SearchFieldDataSource searchFields)
             throws IOException, JSONException {
+        DateTime last_update = prefs.getLastLibraryConfigUpdate();
         if (prefs.getLastLibraryConfigUpdateVersion() != BuildConfig.VERSION_CODE) {
-            output.clearFiles();
-            prefs.clearLastLibraryConfigUpdate();
+            last_update = prefs.getBundledConfigUpdateTime();
         }
 
         Response<List<Library>>
-                response = service.getLibraryConfigs(prefs.getLastLibraryConfigUpdate(),
-                BuildConfig.VERSION_CODE, 0, null).execute();
+                response = service.getLibraryConfigs(last_update, BuildConfig.VERSION_CODE, 0, null)
+                                  .execute();
         if (!response.isSuccessful()) {
             throw new IOException(String.valueOf(response.code()));
+        }
+
+        if (prefs.getLastLibraryConfigUpdateVersion() != BuildConfig.VERSION_CODE) {
+            output.clearFiles();
         }
 
         List<Library> updatedLibraries = response.body();
