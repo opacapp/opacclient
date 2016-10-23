@@ -126,16 +126,16 @@ public abstract class AccountAdapter<I extends AccountItem, VH extends AccountAd
                          .into(ivCover);
                 } else {
                     ivCover.setVisibility(View.GONE);
-                    ivMediaType.setVisibility(View.VISIBLE);
                     Glide.clear(ivCover);
-                }
-                if (item.getMediaType() != null) {
-                    ivMediaType.setImageResource(
-                            ResultsAdapter.getResourceByMediaType(item.getMediaType
-                                    ()));
-                    ivMediaType.setContentDescription(sp.getMediaTypeName(item.getMediaType()));
-                } else {
-                    ivMediaType.setVisibility(View.INVISIBLE);
+                    if (item.getMediaType() != null) {
+                        ivMediaType.setImageResource(
+                                ResultsAdapter.getResourceByMediaType(item.getMediaType
+                                        ()));
+                        ivMediaType.setContentDescription(sp.getMediaTypeName(item.getMediaType()));
+                        ivMediaType.setVisibility(View.VISIBLE);
+                    } else {
+                        ivMediaType.setVisibility(View.INVISIBLE);
+                    }
                 }
             }
         }
