@@ -4,9 +4,7 @@ import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.drawable.Drawable;
 import android.support.graphics.drawable.VectorDrawableCompat;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
-import android.text.Html;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.ImageButton;
@@ -151,16 +149,9 @@ public abstract class AccountAdapter<I extends AccountItem, VH extends AccountAd
         }
     }
 
-    protected static void setHtmlTextOrHide(String value, TextView tv) {
-        if (!TextUtils.isEmpty(value)) {
-            tv.setText(Html.fromHtml(value));
-        } else {
-            tv.setVisibility(View.GONE);
-        }
-    }
-
     protected static void setTextOrHide(CharSequence value, TextView tv) {
         if (!TextUtils.isEmpty(value)) {
+            tv.setVisibility(View.VISIBLE);
             tv.setText(value);
         } else {
             tv.setVisibility(View.GONE);
