@@ -3,15 +3,15 @@ package de.geeksfactory.opacclient.objects;
 import java.io.Serializable;
 
 public abstract class AccountItem implements Serializable {
-    private long account;
-    private String title;
-    private String author;
-    private String format;
-    private SearchResult.MediaType mediaType;
-    private String id;
-    private String status;
-    private Long dbId;
-    private String cover;
+    protected long account;
+    protected String title;
+    protected String author;
+    protected String format;
+    protected SearchResult.MediaType mediaType;
+    protected String id;
+    protected String status;
+    protected Long dbId;
+    protected String cover;
 
     /**
      * @return The ID of the account this item is associated with
@@ -187,5 +187,20 @@ public abstract class AccountItem implements Serializable {
             default:
                 throw new IllegalArgumentException("unknown key: " + key);
         }
+    }
+
+    @Override
+    public String toString() {
+        return "AccountItem{" +
+                "account=" + account +
+                ", title='" + title + '\'' +
+                ", author='" + author + '\'' +
+                ", format='" + format + '\'' +
+                ", mediaType=" + mediaType +
+                ", id='" + id + '\'' +
+                ", status='" + status + '\'' +
+                ", dbId=" + dbId +
+                ", cover='" + cover + '\'' +
+                '}';
     }
 }

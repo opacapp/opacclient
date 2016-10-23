@@ -207,10 +207,15 @@ public class MainPreferenceFragment extends PreferenceFragmentCompat {
 
     private void refreshLastConfigUpdate(Preference updateLibraryConfig) {
         DateTime lastUpdate = new PreferenceDataSource(context).getLastLibraryConfigUpdate();
-        CharSequence lastUpdateStr =
-                DateUtils.getRelativeTimeSpanString(context, lastUpdate.getMillis(), true);
-        updateLibraryConfig
-                .setSummary(getString(R.string.library_config_last_update, lastUpdateStr));
+        if (lastUpdate != null) {
+            CharSequence lastUpdateStr =
+                    DateUtils.getRelativeTimeSpanString(context, lastUpdate.getMillis(), true);
+            updateLibraryConfig
+                    .setSummary(getString(R.string.library_config_last_update, lastUpdateStr));
+        } else {
+            updateLibraryConfig
+                    .setSummary(getString(R.string.library_config_last_update_never));
+        }
     }
 
     private void showDialog(DialogFragment newFragment) {

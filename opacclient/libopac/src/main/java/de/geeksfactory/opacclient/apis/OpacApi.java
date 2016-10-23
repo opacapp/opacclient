@@ -610,6 +610,16 @@ public interface OpacApi {
             EMAIL_NEEDED
         }
 
+        @Override
+        public String toString() {
+            return "MultiStepResult{" +
+                    "status=" + status +
+                    ", selection=" + selection +
+                    ", details=" + details +
+                    ", actionidentifier=" + actionidentifier +
+                    ", message='" + message + '\'' +
+                    '}';
+        }
     }
 
     /**

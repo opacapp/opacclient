@@ -82,7 +82,7 @@ public class AccountDividerItemDecoration extends RecyclerView.ItemDecoration {
             if (vh instanceof AccountAdapter.ViewHolder) {
                 RvJoiner.PositionInfo pi =
                         rvJoiner.getPositionInfo(parent.getChildAdapterPosition(view));
-                return (pi.joinable.getAdapter() instanceof AccountAdapter
+                return (pi != null && pi.joinable.getAdapter() instanceof AccountAdapter
                         && pi.realPosition < pi.joinable.getAdapter().getItemCount() - 1);
             }
             return true;

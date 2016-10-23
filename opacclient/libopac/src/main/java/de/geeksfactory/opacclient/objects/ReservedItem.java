@@ -143,4 +143,24 @@ public class ReservedItem extends AccountItem implements Serializable {
                 break;
         }
     }
+
+    @Override
+    public String toString() {
+        return "ReservedItem{" +
+                "account=" + account +
+                ", title='" + title + '\'' +
+                ", author='" + author + '\'' +
+                ", format='" + format + '\'' +
+                ", mediaType=" + mediaType +
+                ", id='" + id + '\'' +
+                ", status='" + status + '\'' +
+                ", dbId=" + dbId +
+                ", cover='" + cover + '\'' +
+                ", readyDate=" + readyDate +
+                ", expirationDate=" + expirationDate +
+                ", branch='" + branch + '\'' +
+                ", cancelData='" + cancelData + '\'' +
+                ", bookingData='" + bookingData + '\'' +
+                '}';
+    }
 }

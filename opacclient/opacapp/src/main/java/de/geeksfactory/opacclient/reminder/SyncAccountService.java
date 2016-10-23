@@ -30,6 +30,8 @@ import android.util.Log;
 import com.commonsware.cwac.wakeful.WakefulIntentService;
 
 import org.acra.ACRA;
+import org.joda.time.DateTime;
+import org.joda.time.Hours;
 import org.json.JSONException;
 
 import java.io.File;
@@ -46,7 +48,6 @@ import de.geeksfactory.opacclient.storage.AccountDataSource;
 import de.geeksfactory.opacclient.storage.JsonSearchFieldDataSource;
 import de.geeksfactory.opacclient.storage.PreferenceDataSource;
 import de.geeksfactory.opacclient.webservice.LibraryConfigUpdateService;
-import de.geeksfactory.opacclient.webservice.UpdateHandler;
 import de.geeksfactory.opacclient.webservice.WebService;
 import de.geeksfactory.opacclient.webservice.WebServiceManager;
 
@@ -106,8 +107,15 @@ public class SyncAccountService extends WakefulIntentService {
     }
 
     private void updateLibraryConfig() {
-        WebService service = WebServiceManager.getInstance();
         PreferenceDataSource prefs = new PreferenceDataSource(this);
+        if (prefs.getLastLibraryConfigUpdate() != null
+                && prefs.getLastLibraryConfigUpdate()
+                        .isAfter(DateTime.now().minus(Hours.ONE))) {
+            Log.d(NAME, "Do not run updateLibraryConfig as last run was less than an hour ago.");
+            return;
+        }
+
+        WebService service = WebServiceManager.getInstance();
         File filesDir = new File(getFilesDir(), LibraryConfigUpdateService.LIBRARIES_DIR);
         filesDir.mkdirs();
         try {
@@ -121,7 +129,7 @@ public class SyncAccountService extends WakefulIntentService {
                 ACRA.getErrorReporter().putCustomData("data_version",
                         prefs.getLastLibraryConfigUpdate().toString());
             }
-        } catch (IOException | JSONException e) {
+        } catch (IOException | JSONException ignore) {
 
         }
     }

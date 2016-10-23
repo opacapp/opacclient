@@ -39,6 +39,7 @@ import com.commonsware.cwac.wakeful.WakefulIntentService;
 import org.acra.ACRA;
 import org.acra.ACRAConfiguration;
 import org.acra.annotation.ReportsCrashes;
+import org.joda.time.DateTime;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -377,9 +378,10 @@ public class OpacClient extends Application {
                 ACRA.getErrorReporter().putCustomData("library",
                         getLibrary().getIdent());
             }
+            DateTime lastUpdate = new PreferenceDataSource(getApplicationContext())
+                    .getLastLibraryConfigUpdate();
             ACRA.getErrorReporter().putCustomData("data_version",
-                    (new PreferenceDataSource(getApplicationContext())).getLastLibraryConfigUpdate()
-                                                                       .toString());
+                    lastUpdate != null ? lastUpdate.toString() : "null");
         }
         DebugTools.init(this);
 
