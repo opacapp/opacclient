@@ -68,6 +68,15 @@ public class PreferenceDataSource {
         sp.edit().putString(LAST_LIBRARY_CONFIG_UPDATE, lastUpdate.toString()).apply();
     }
 
+    public boolean hasBundledConfiguration() {
+        try {
+            InputStream is = context.getAssets().open(LAST_LIBRARY_CONFIG_UPDATE_FILE);
+            return true;
+        } catch (IOException e) {
+            return false;
+        }
+    }
+
     public void clearLastLibraryConfigUpdate() {
         sp.edit()
           .remove(LAST_LIBRARY_CONFIG_UPDATE)
