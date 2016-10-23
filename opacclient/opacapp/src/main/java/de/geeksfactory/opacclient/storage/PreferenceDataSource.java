@@ -21,6 +21,7 @@ package de.geeksfactory.opacclient.storage;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
+import android.support.annotation.Nullable;
 
 import org.joda.time.DateTime;
 
@@ -48,6 +49,7 @@ public class PreferenceDataSource {
         sp = PreferenceManager.getDefaultSharedPreferences(context);
     }
 
+    @Nullable
     public DateTime getLastLibraryConfigUpdate() {
         String lastUpdate = sp.getString(LAST_LIBRARY_CONFIG_UPDATE, null);
         if (lastUpdate == null || getLastLibraryConfigUpdateVersion() != BuildConfig.VERSION_CODE) {

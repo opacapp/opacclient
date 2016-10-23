@@ -59,18 +59,14 @@ public class ReservationsAdapter
                 }
             }
             if (item.getReadyDate() != null) {
-                status.append(context.getString(R.string.reservation_expire_until)).append(" ")
-                      .append(fmt.print(item.getReadyDate()));
+                status.append(fmt.print(item.getReadyDate()));
             }
             if (item.getExpirationDate() != null) {
                 if (item.getReadyDate() != null) status.append(", ");
-                status.append(fmt.print(item.getExpirationDate()));
+                status.append(context.getString(R.string.reservation_expire_until)).append(" ")
+                      .append(fmt.print(item.getExpirationDate()));
             }
-            if (status.length() > 0) {
-                tvStatus.setText(status);
-            } else {
-                tvStatus.setVisibility(View.GONE);
-            }
+            setTextOrHide(status, tvStatus);
 
             ivProlong.setVisibility(View.GONE);
             ivDownload.setVisibility(View.GONE);

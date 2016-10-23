@@ -831,8 +831,7 @@ public class LibraryListActivity extends AppCompatActivity
                         ACRA.getErrorReporter().putCustomData("data_version",
                                 prefs.getLastLibraryConfigUpdate().toString());
                     }
-                } catch (IOException | JSONException e) {
-                    e.printStackTrace();
+                } catch (IOException | JSONException ignore) {
                     // fail silently (e.g. when no Internet connection available)
                 }
             }
