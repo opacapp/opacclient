@@ -161,4 +161,15 @@ public class AccountData {
         this.warning = warning;
     }
 
+    @Override
+    public String toString() {
+        return "AccountData{" +
+                "lent=" + lent +
+                ", reservations=" + reservations +
+                ", account=" + account +
+                ", pendingFees='" + pendingFees + '\'' +
+                ", validUntil='" + validUntil + '\'' +
+                ", warning='" + warning + '\'' +
+                '}';
+    }
 }

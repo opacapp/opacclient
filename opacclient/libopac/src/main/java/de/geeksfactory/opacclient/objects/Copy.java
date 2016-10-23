@@ -311,4 +311,20 @@ public class Copy {
                 || getResInfo() != null
                 || getUrl() != null;
     }
+
+    @Override
+    public String toString() {
+        return "Copy{" +
+                "barcode='" + barcode + '\'' +
+                ", location='" + location + '\'' +
+                ", department='" + department + '\'' +
+                ", branch='" + branch + '\'' +
+                ", status='" + status + '\'' +
+                ", returnDate=" + returnDate +
+                ", reservations='" + reservations + '\'' +
+                ", shelfmark='" + shelfmark + '\'' +
+                ", resInfo='" + resInfo + '\'' +
+                ", url='" + url + '\'' +
+                '}';
+    }
 }

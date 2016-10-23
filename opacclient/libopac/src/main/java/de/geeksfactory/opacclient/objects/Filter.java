@@ -137,6 +137,15 @@ public class Filter {
         return true;
     }
 
+    @Override
+    public String toString() {
+        return "Filter{" +
+                "label='" + label + '\'' +
+                ", identifier='" + identifier + '\'' +
+                ", options=" + options +
+                '}';
+    }
+
     public class Option {
         /**
          * Object representing an option which can be applied
@@ -233,6 +242,17 @@ public class Filter {
          */
         public void setLoadnext(boolean is_loadnext) {
             this.is_loadnext = is_loadnext;
+        }
+
+        @Override
+        public String toString() {
+            return "Option{" +
+                    "label='" + label + '\'' +
+                    ", identifier='" + identifier + '\'' +
+                    ", results_expected=" + results_expected +
+                    ", is_applied=" + is_applied +
+                    ", is_loadnext=" + is_loadnext +
+                    '}';
         }
     }
 

@@ -56,4 +56,12 @@ public class Volume {
     public void setTitle(String title) {
         this.title = title;
     }
+
+    @Override
+    public String toString() {
+        return "Volume{" +
+                "id='" + id + '\'' +
+                ", title='" + title + '\'' +
+                '}';
+    }
 }

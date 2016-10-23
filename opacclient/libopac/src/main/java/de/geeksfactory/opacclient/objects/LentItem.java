@@ -179,4 +179,27 @@ public class LentItem extends AccountItem implements Serializable {
                 break;
         }
     }
+
+    @Override
+    public String toString() {
+        return "LentItem{" +
+                "account=" + account +
+                ", title='" + title + '\'' +
+                ", author='" + author + '\'' +
+                ", format='" + format + '\'' +
+                ", mediaType=" + mediaType +
+                ", id='" + id + '\'' +
+                ", status='" + status + '\'' +
+                ", dbId=" + dbId +
+                ", cover='" + cover + '\'' +
+                ", barcode='" + barcode + '\'' +
+                ", deadline=" + deadline +
+                ", homeBranch='" + homeBranch + '\'' +
+                ", lendingBranch='" + lendingBranch + '\'' +
+                ", prolongData='" + prolongData + '\'' +
+                ", renewable=" + renewable +
+                ", downloadData='" + downloadData + '\'' +
+                ", ebook=" + ebook +
+                '}';
+    }
 }

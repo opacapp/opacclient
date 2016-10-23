@@ -151,4 +151,14 @@ public class SearchRequestResult {
         this.filters = filters;
     }
 
+    @Override
+    public String toString() {
+        return "SearchRequestResult{" +
+                "results=" + results +
+                ", filters=" + filters +
+                ", total_result_count=" + total_result_count +
+                ", page_count=" + page_count +
+                ", page_index=" + page_index +
+                '}';
+    }
 }
