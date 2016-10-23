@@ -261,8 +261,9 @@ public class OpacClient extends Application {
         File filesDir = getLibrariesDir();
         PreferenceDataSource prefs = getPreferenceDataSource();
 
-        if (fileExists(filesDir, filename)
-                && prefs.getLastLibraryConfigUpdateVersion() == BuildConfig.VERSION_CODE) {
+        if (fileExists(filesDir, filename) && (
+                !prefs.hasBundledConfiguration() ||
+                        prefs.getLastLibraryConfigUpdateVersion() == BuildConfig.VERSION_CODE)) {
             // only use files if they were downloaded using the current app version
             json = Utils.readStreamToString(openFile(filesDir, filename));
         } else {
