@@ -8,13 +8,11 @@ import de.geeksfactory.opacclient.searchfields.SearchField;
 import de.geeksfactory.opacclient.searchfields.SearchQuery;
 import de.geeksfactory.opacclient.searchfields.TextSearchField;
 
-import org.apache.commons.codec.binary.Base64OutputStream;
 import org.apache.http.HttpEntity;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.CookieStore;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.utils.URIBuilder;
-import org.apache.http.entity.BasicHttpEntity;
 import org.apache.http.impl.client.BasicCookieStore;
 import org.apache.http.message.BasicNameValuePair;
 import org.json.JSONException;
@@ -28,11 +26,12 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.net.URISyntaxException;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class Patron extends BaseApi {
 
@@ -66,19 +65,52 @@ public class Patron extends BaseApi {
         sp.add(new BasicNameValuePair("form1:btnSzukajIndeks", "Szukaj"));
         HttpEntity ent = buildHttpEntity(sp);
         String html = httpPost(base_url + QUERY_URL, ent, getDefaultEncoding(), false, cookieStore);
-        ByteArrayOutputStream bos = new ByteArrayOutputStream();
+
+//        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+//        ent.writeTo(baos);
+//        String s = new String(baos.toByteArray(), "utf-8");
 
         Document doc = Jsoup.parse(html);
 
         return parseResults(doc, 1);
     }
 
+    private SearchResult parseListItem(Element item) {
+        SearchResult result = new SearchResult();
+
+        Element info = item.select(".info").first();
+        info.select("script").remove();
+        result.setInnerhtml(info.html());
+        result.setId(item.id());
+
+        return result;
+    }
+
+
+    private int parseTotalResultCount(Element doc){
+        Pattern p = Pattern.compile("Liczba rekordów:\\s*(\\d+)");
+
+        Matcher m = p.matcher(doc.select("#opisy").text());
+        if(!m.find()){
+            return 0;
+        }
+        return Integer.parseInt(m.group(1));
+    }
+    private int parsePageCount(Element doc){
+        return 1;
+    }
+    private int parsePageIndex(Element doc){
+        return Integer.parseInt( doc.select("#opisy .linki").eq(1).select(".sel").first().text());
+    }
+
     private SearchRequestResult parseResults(Document doc, int i) {
         List<SearchResult> results = new ArrayList<>();
-        int total_result_count = 0;
-        int page_count = 0;
-        int page_index = i;
-
+        int total_result_count = parseTotalResultCount(doc);
+        int page_count = parsePageCount(doc);
+        int page_index = parsePageIndex(doc);
+        for (Element e : doc.select("#opisy .opis")) {
+            results.add(parseListItem(e));
+        }
         SearchRequestResult result =
                 new SearchRequestResult(results, total_result_count, page_count, page_index);
 
@@ -91,6 +123,15 @@ public class Patron extends BaseApi {
 
     protected List<NameValuePair> buildSearchParams(List<SearchQuery> query)
             throws OpacErrorException {
+        if (lastFormState == null) {
+            try {
+                parseSearchFields();
+            } catch (IOException e) {
+                e.printStackTrace();
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
         List<NameValuePair> params = lastFormState;
 
         int n = 0;
@@ -186,9 +227,13 @@ public class Patron extends BaseApi {
     protected FormParseResult parseForm(Document doc) {
         List<NameValuePair> params = new ArrayList<>();
         Element form = doc.select("#form1").first();
-        for (Element e : form.select("input[type=\"text\"],input[type=\"hidden\"]," +
-                "input[type=\"radio\"][checked=\"checked\"],input[type=\"submit\"]"
-        )) {
+
+        Elements elements = form.select(
+                "input[type=\"text\"],input[type=\"hidden\"]," +
+                        "input[type=\"radio\"][checked=\"checked\"],input[type=\"submit\"]"
+        ).not("[id=\"form1:btnCzyscForme\"]");
+
+        for (Element e : elements) {
             params.add(new BasicNameValuePair(e.attr("name"), e.attr("value")));
         }
 
@@ -290,7 +335,6 @@ public class Patron extends BaseApi {
                 field.setDisplayName(displayName);
                 fields.add(field);
             }
-            throw new Exception("thesebas some err");
 
         } catch (Exception e) {
             System.err.print(e.getMessage());
