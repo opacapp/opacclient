@@ -344,6 +344,11 @@ public class Heidi extends BaseApi implements OpacApi {
         pagefield.setVisible(false);
         pagefield.setDisplayName("Seite");
         pagefield.setHint("");
+        for (SearchQuery q : last_query) {
+            if (q.getKey().equals("_heidi_page")) {
+                last_query.remove(q);
+            }
+        }
         last_query.add(new SearchQuery(pagefield, String.valueOf(page)));
         return search(last_query);
     }
