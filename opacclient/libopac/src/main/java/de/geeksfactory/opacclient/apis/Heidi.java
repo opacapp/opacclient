@@ -478,9 +478,7 @@ public class Heidi extends BaseApi implements OpacApi {
         Elements zst_opts = doc.select("#teilk2 option");
         for (int i = 0; i < zst_opts.size(); i++) {
             Element opt = zst_opts.get(i);
-            if (!opt.val().equals("")) {
-                field.addDropdownValue(opt.val(), opt.text());
-            }
+            field.addDropdownValue(opt.val(), opt.text());
         }
         field.setDisplayName("Einrichtung");
         field.setId("f[teil2]");
