@@ -41,8 +41,11 @@ import org.jsoup.nodes.TextNode;
 import org.jsoup.select.Elements;
 
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.net.URLDecoder;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -228,37 +231,32 @@ public class Heidi extends BaseApi implements OpacApi {
             if (tr.select("span.Z3988").size() == 1) {
                 // Luckily there is a <span class="Z3988"> item which provides
                 // data in a standardized format.
-                List<NameValuePair> z3988data;
+                String zdata = tr.select("span.Z3988").attr("title").replace(";", "%3B").replace(":", "%3A").replace("/", "%2F");
                 boolean hastitle = false;
-                try {
-                    description = new StringBuilder();
-                    z3988data = URLEncodedUtils.parse(new URI("http://dummy/?"
-                            + tr.select("span.Z3988").attr("title")), "UTF-8");
-                    for (NameValuePair nv : z3988data) {
-                        if (nv.getValue() != null) {
-                            if (!nv.getValue().trim().equals("")) {
-                                if (nv.getName().equals("rft.btitle")
-                                        && !hastitle) {
-                                    description.append("<b>").append(nv.getValue()).append("</b>");
-                                    hastitle = true;
-                                } else if (nv.getName().equals("rft.atitle")
-                                        && !hastitle) {
-                                    description.append("<b>").append(nv.getValue()).append("</b>");
-                                    hastitle = true;
-                                } else if (nv.getName().equals("rft.au")) {
-                                    author = nv.getValue();
-                                } else if (nv.getName().equals("rft.aufirst")) {
-                                    author = author + ", " + nv.getValue();
-                                } else if (nv.getName().equals("rft.aulast")) {
-                                    author = nv.getValue();
-                                } else if (nv.getName().equals("rft.date")) {
-                                    description.append("<br />").append(nv.getValue());
-                                }
+                description = new StringBuilder();
+                List<NameValuePair> z3988data = parse_z3988data(zdata);
+                for (NameValuePair nv : z3988data) {
+                    if (nv.getValue() != null) {
+                        if (!nv.getValue().trim().equals("")) {
+                            if (nv.getName().equals("rft.btitle")
+                                    && !hastitle) {
+                                description.append("<b>").append(nv.getValue()).append("</b>");
+                                hastitle = true;
+                            } else if (nv.getName().equals("rft.atitle")
+                                    && !hastitle) {
+                                description.append("<b>").append(nv.getValue()).append("</b>");
+                                hastitle = true;
+                            } else if (nv.getName().equals("rft.au")) {
+                                author = nv.getValue();
+                            } else if (nv.getName().equals("rft.aufirst")) {
+                                author = author + ", " + nv.getValue();
+                            } else if (nv.getName().equals("rft.aulast")) {
+                                author = nv.getValue();
+                            } else if (nv.getName().equals("rft.date")) {
+                                description.append("<br />").append(nv.getValue());
                             }
                         }
                     }
-                } catch (URISyntaxException e) {
-                    description = null;
                 }
             }
             if (!"".equals(author)) {
@@ -311,6 +309,24 @@ public class Heidi extends BaseApi implements OpacApi {
         }
         // TODO
         return new SearchRequestResult(results, results_total, page);
+    }
+
+    private List<NameValuePair> parse_z3988data(String zdata) {
+        List<NameValuePair> nvps = new ArrayList<>();
+        for (String tuple : zdata.split("&")) {
+            if (tuple.contains("=")) {
+                String[] parts = tuple.split("=");
+                try {
+                    nvps.add(new BasicNameValuePair(parts[0], URLDecoder.decode(parts[1],
+                                "UTF-8")));
+                } catch (UnsupportedEncodingException e) {
+                    nvps.add(new BasicNameValuePair(parts[0], "?"));
+                }
+            } else {
+                nvps.add(new BasicNameValuePair(tuple, ""));
+            }
+        }
+        return nvps;
     }
 
     @Override
