@@ -188,7 +188,10 @@ public class MainPreferenceFragment extends PreferenceFragmentCompat {
         }
 
         final Preference resetLibraryConfig = findPreference("reset_library_config");
+
         if (resetLibraryConfig != null) {
+            PreferenceDataSource prefs = new PreferenceDataSource(getActivity());
+            resetLibraryConfig.setEnabled(prefs.hasBundledConfiguration());
             resetLibraryConfig.setOnPreferenceClickListener(
                     new Preference.OnPreferenceClickListener() {
                         @Override
