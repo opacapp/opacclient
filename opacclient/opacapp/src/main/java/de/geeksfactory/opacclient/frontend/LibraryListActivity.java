@@ -834,6 +834,7 @@ public class LibraryListActivity extends AppCompatActivity
                                 prefs.getLastLibraryConfigUpdate().toString());
                     }
                 } catch (IOException | JSONException ignore) {
+                    ignore.printStackTrace();
                     // fail silently (e.g. when no Internet connection available)
                 }
             }

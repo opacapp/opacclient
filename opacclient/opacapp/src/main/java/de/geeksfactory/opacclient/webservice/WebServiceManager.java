@@ -54,7 +54,8 @@ public class WebServiceManager {
             try {
                 return Library.fromJSON(json.getString("_id"), json);
             } catch (JSONException e) {
-                throw new IOException(e);
+                e.printStackTrace();
+                return null;
             }
         }
 

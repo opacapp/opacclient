@@ -39,6 +39,9 @@ public class UpdateHandler {
         List<Library> updatedLibraries = response.body();
 
         for (Library lib : updatedLibraries) {
+            if (lib == null) {
+                continue;
+            }
             String filename = lib.getIdent() + ".json";
             JSONObject json = lib.toJSON();
             output.writeFile(filename, json.toString());
