@@ -19,6 +19,7 @@ import de.geeksfactory.opacclient.reminder.Alarm;
 import de.geeksfactory.opacclient.reminder.ReminderBroadcastReceiver;
 import de.geeksfactory.opacclient.reminder.ReminderHelper;
 import de.geeksfactory.opacclient.storage.AccountDataSource;
+import de.geeksfactory.opacclient.storage.DataIntegrityException;
 
 public class SnoozeDatePickerActivity extends Activity
         implements DatePickerDialog.OnDateSetListener, TimePickerDialog.OnTimeSetListener {
@@ -53,6 +54,10 @@ public class SnoozeDatePickerActivity extends Activity
         long alarmId = getIntent().getLongExtra(ReminderBroadcastReceiver.EXTRA_ALARM_ID, -1);
         AccountDataSource adata = new AccountDataSource(this);
         Alarm alarm = adata.getAlarm(alarmId);
+        if (alarm == null) {
+            throw new DataIntegrityException("Trying to snooze unknown alarm ID " + alarmId);
+        }
+
         alarm.notified = false;
         alarm.notificationTime = dt;
         adata.updateAlarm(alarm);
