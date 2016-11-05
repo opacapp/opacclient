@@ -308,4 +308,5 @@
     <string name="intro_description_1">You can enable notifications in the app settings to receive a reminder when your lent books are due.</string>
     <string name="intro_title_2">1000+ libraries</string>
     <string name="intro_description_2">This app supports more than 1,000 libraries from all around the world. Select yours or suggest it if it\'s not yet on the list!</string>
+    <string name="no_title">(no title)</string>
 </resources>
