@@ -632,7 +632,7 @@ public class Open extends BaseApi implements OpacApi {
         return item;
     }
 
-    private String getCopyColumnKey(String text) {
+    protected String getCopyColumnKey(String text) {
         switch (text) {
             case "Zweigstelle":
                 return "branch";
