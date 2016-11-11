@@ -413,7 +413,11 @@ public class SearchFragment extends Fragment implements AccountSelectedListener 
         }
 
         SearchFieldDataSource dataSource = new JsonSearchFieldDataSource(app);
-        int versionCode = BuildConfig.VERSION_CODE;
+        int versionCode = 0;
+        try {
+            versionCode = getActivity().getPackageManager().getPackageInfo(getActivity().getPackageName(), 0).versionCode;
+        } catch (NameNotFoundException e) {
+        }
         String language = getActivity().getResources().getConfiguration().locale
                 .getLanguage();
         if (dataSource.hasSearchFields(app.getLibrary().getIdent())
