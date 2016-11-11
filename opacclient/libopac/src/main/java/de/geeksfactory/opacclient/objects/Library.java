@@ -73,10 +73,10 @@ public class Library implements Comparable<Library> {
         lib.setAccountSupported(input.getBoolean("account_supported"));
         lib.setNfcSupported(input.optBoolean("nfc_supported", false));
 
-        lib.setInformation(input.getString("information"));
+        lib.setInformation(input.optString("information"));
         if (lib.getInformation() == null && lib.getData().has("information")) {
             // Backwards compatibility
-            lib.setInformation(lib.getData().getString("information"));
+            lib.setInformation(lib.getData().optString("information"));
         }
 
         if (input.has("displayname"))

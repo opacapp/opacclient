@@ -64,8 +64,22 @@ public class PreferenceDataSource {
         return new DateTime(lastUpdate);
     }
 
+    @Nullable
+    public DateTime getBundledConfigUpdateTime() {
+        try {
+            InputStream is = context.getAssets().open(LAST_LIBRARY_CONFIG_UPDATE_FILE);
+            return new DateTime(Utils.readStreamToString(is));
+        } catch (IOException e) {
+            return null;
+        }
+    }
+
     public void setLastLibraryConfigUpdate(DateTime lastUpdate) {
         sp.edit().putString(LAST_LIBRARY_CONFIG_UPDATE, lastUpdate.toString()).apply();
+    }
+
+    public boolean hasBundledConfiguration() {
+        return getBundledConfigUpdateTime() != null;
     }
 
     public void clearLastLibraryConfigUpdate() {

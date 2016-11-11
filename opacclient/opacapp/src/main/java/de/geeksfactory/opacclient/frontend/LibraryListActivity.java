@@ -292,7 +292,9 @@ public class LibraryListActivity extends AppCompatActivity
                             }
                             Collections.sort(distancedlibs,
                                     new DistanceComparator());
-                            distancedlibs = distancedlibs.subList(0, 20);
+                            if (distancedlibs.size() > 20) {
+                                distancedlibs = distancedlibs.subList(0, 20);
+                            }
 
                             LibraryAdapter adapter = new LibraryAdapter(
                                     LibraryListActivity.this,
@@ -832,6 +834,7 @@ public class LibraryListActivity extends AppCompatActivity
                                 prefs.getLastLibraryConfigUpdate().toString());
                     }
                 } catch (IOException | JSONException ignore) {
+                    ignore.printStackTrace();
                     // fail silently (e.g. when no Internet connection available)
                 }
             }

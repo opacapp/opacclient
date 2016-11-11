@@ -311,4 +311,5 @@
     <string name="intro_description_1">Sie können in den Einstellungen der App Benachrichtigungen aktivieren, um an ablaufende Entleihungen erinnert zu werden.</string>
     <string name="intro_title_2">1000+ Bibliotheken</string>
     <string name="intro_description_2">Diese App unterstützt mehr als 1.000 Bibliotheken im deutschsprachigen Raum und auf der ganzen Welt. Wählen Sie Ihre Bibliothek aus oder schlagen Sie sie vor, falls sie noch nicht auf der Liste ist!</string>
+    <string name="no_title">(kein Titel)</string>
 </resources>

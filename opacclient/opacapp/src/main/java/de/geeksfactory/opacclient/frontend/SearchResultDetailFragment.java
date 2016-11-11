@@ -775,6 +775,9 @@ public class SearchResultDetailFragment extends Fragment
                         .getSystemService(Context.PRINT_SERVICE);
                 PrintDocumentAdapter printAdapter = webView.createPrintDocumentAdapter();
                 String jobName = getItem().getTitle();
+                if (jobName == null || jobName.equals("")) {
+                    jobName = getString(R.string.no_title);
+                }
                 printManager.print(jobName, printAdapter,
                         new PrintAttributes.Builder().build());
             }
