@@ -709,15 +709,39 @@ public class Zones extends BaseApi {
             String message = media.split("\\|")[1];
             return new ProlongResult(MultiStepResult.Status.ERROR, message);
         }
-        if (accountobj == null) {
-            try {
-                login(account);
-            } catch (OpacErrorException e) {
-                return new ProlongResult(MultiStepResult.Status.ERROR,
-                        e.getMessage());
+
+        String found = null;
+        try {
+            Document login = login(account);
+            AccountLinks accountLinks = new AccountLinks(login, new AccountData(account.getId()));
+            String lentLink = accountLinks.getLentLink();
+            if (lentLink == null) {
+                return null;
             }
+
+            List<LentItem> lentItems = new ArrayList<>();
+            String lentUrl = opac_url + "/" + lentLink.replace("utf-8?Method", "utf-8&Method");
+            String lentHtml = httpGet(lentUrl, getDefaultEncoding());
+            Document lentDoc = Jsoup.parse(lentHtml);
+            lentDoc.setBaseUri(lentUrl);
+            loadMediaList(lentDoc, lentItems);
+            for (LentItem li : lentItems) {
+                if (li.getProlongData() != null && li.getProlongData().contains("|")) {
+                    if (li.getProlongData().split("\\|")[0]
+                            .equals(media.split("\\|")[0])) {
+                        found = li.getProlongData().split("\\|")[1];
+                        break;
+                    }
+                }
+            }
+            if (found == null) {
+                throw new OpacErrorException("Medium nicht gefunden.");
+            }
+        } catch (OpacErrorException e) {
+            return new ProlongResult(MultiStepResult.Status.ERROR,
+                    e.getMessage());
         }
-        String html = httpGet(opac_url + "/" + media, getDefaultEncoding());
+        String html = httpGet(opac_url + "/" + found, getDefaultEncoding());
         Document doc = Jsoup.parse(html);
         if ((html.contains("document.location.replace") || html
                 .contains("Schnellsuche")) && useraction == 0) {
@@ -943,7 +967,7 @@ public class Zones extends BaseApi {
             }
             if (table.select(".button[Title~=Zum]").size() == 1) {
                 Matcher matcher1 = id_pat.matcher(table.select(".button[Title~=Zum]").attr("href"));
-                if (matcher1.matches()) item.setProlongData(matcher1.group(1));
+                if (matcher1.matches()) item.setProlongData(item.getId() + "|" + matcher1.group(1));
             } else if (table.select(".CannotRenewLink").size() == 1) {
                 Matcher matcher = cannotrenew_pat
                         .matcher(table.select(".CannotRenewLink").attr("href").trim());

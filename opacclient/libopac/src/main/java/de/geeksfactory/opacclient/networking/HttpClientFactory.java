@@ -1,9 +1,12 @@
 package de.geeksfactory.opacclient.networking;
 
 import org.apache.http.Header;
+import org.apache.http.HttpEntity;
+import org.apache.http.HttpException;
 import org.apache.http.HttpHost;
 import org.apache.http.HttpRequest;
 import org.apache.http.HttpResponse;
+import org.apache.http.HttpResponseInterceptor;
 import org.apache.http.ProtocolException;
 import org.apache.http.client.CircularRedirectException;
 import org.apache.http.client.HttpClient;
@@ -16,10 +19,15 @@ import org.apache.http.conn.HttpClientConnectionManager;
 import org.apache.http.conn.socket.ConnectionSocketFactory;
 import org.apache.http.conn.socket.PlainConnectionSocketFactory;
 import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
+import org.apache.http.entity.AbstractHttpEntity;
+import org.apache.http.entity.HttpEntityWrapper;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.impl.client.LaxRedirectStrategy;
 import org.apache.http.impl.client.RedirectLocations;
 import org.apache.http.impl.conn.PoolingHttpClientConnectionManager;
+import org.apache.http.message.BasicHeader;
+import org.apache.http.message.BasicHttpResponse;
+import org.apache.http.protocol.HTTP;
 import org.apache.http.protocol.HttpContext;
 import org.apache.http.util.Args;
 import org.apache.http.util.Asserts;
@@ -86,6 +94,17 @@ public class HttpClientFactory {
         return null;
     }
 
+    public class FixingEntityWrapper extends HttpEntityWrapper {
+        public FixingEntityWrapper(HttpEntity wrappedEntity) {
+            super(wrappedEntity);
+        }
+
+        @Override
+        public Header getContentEncoding() {
+            return new BasicHeader(HTTP.CONTENT_ENCODING, "identity");
+        }
+    }
+
     /**
      * Create a new HttpClient.
      *
@@ -97,6 +116,20 @@ public class HttpClientFactory {
     public HttpClient getNewApacheHttpClient(boolean customssl, boolean tls_only,
             boolean disguise_app) {
         HttpClientBuilder builder = HttpClientBuilder.create();
+
+        builder.addInterceptorFirst(new HttpResponseInterceptor()  {
+            // Fix for Stb Köln which sends an invalid header during prolonging
+
+            @Override
+            public void process(HttpResponse response, HttpContext context) throws HttpException, IOException {
+                Header contentEncodingHeader = response.getFirstHeader(HTTP.CONTENT_ENCODING);
+                if(contentEncodingHeader != null && contentEncodingHeader.getValue().equalsIgnoreCase("8bit")) {
+                    response.setEntity(new FixingEntityWrapper(response.getEntity()));
+                    response.removeHeaders(HTTP.CONTENT_ENCODING);
+                }
+            }
+        });
+
         builder.setRedirectStrategy(new CustomRedirectStrategy());
         if (disguise_app) {
             builder.setUserAgent("Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, " +
