@@ -83,10 +83,10 @@
     </string-array>
     <string name="notification_warning">Warnzeitraum</string>
     <string name="notification_warning_desc">Wie lange vorher soll benachrichtigt werden?</string>
-    <string name="notif_ticker">%s Bücher müssen abgegeben oder verlängert werden!</string>
-    <string name="notif_title">Bücher laufen ab</string>
-    <string name="notif_ticker_expired">%s Bücher sind bereits abgelaufen!</string>
-    <string name="notif_title_expired">Bücher sind abgelaufen</string>
+    <string name="notif_ticker">%s Medien müssen abgegeben oder verlängert werden!</string>
+    <string name="notif_title">Medien laufen ab</string>
+    <string name="notif_ticker_expired">%s Medien sind bereits abgelaufen!</string>
+    <string name="notif_title_expired">Medien sind abgelaufen</string>
     <string name="notif_plus_more">+%d weitere</string>
     <string name="notif_snooze">Später</string>
     <string name="notif_dont_remind_again">Verwerfen</string>
