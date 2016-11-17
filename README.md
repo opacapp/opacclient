@@ -16,7 +16,7 @@ Features
 * Search by ISBN using barcodes
 * much more cool stuff
 
-Not all of the features are availably for every library.
+Not all of the features are available for every library.
 
 Support
 -------

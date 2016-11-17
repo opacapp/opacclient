@@ -1108,6 +1108,22 @@ public class TouchPoint extends BaseApi implements OpacApi {
             item.setTitle(tr.select(".account-display-title").select("b, strong")
                             .text().trim());
             try {
+                item.setRenewable(false);
+                if (tr.select("a").size() > 0) {
+                    for (Element link : tr.select("a")) {
+                        String href = link.attr("abs:href");
+                        Map<String, String> hrefq = getQueryParamsFirst(href);
+                        if (hrefq.containsKey("q")) {
+                            item.setId(extractIdFromQ(hrefq.get("q")));
+                        } else if ("renewal".equals(hrefq.get("methodToCall"))) {
+                            item.setProlongData(href.split("\\?")[1]);
+                            item.setRenewable(true);
+                            link.remove();
+                            break;
+                        }
+                    }
+                }
+
                 String[] lines = tr.select(".account-display-title").html().split("<br[ /]*>");
                 if (lines.length == 4 || lines.length == 5) {
                     // Winterthur
@@ -1148,21 +1164,6 @@ public class TouchPoint extends BaseApi implements OpacApi {
                 }
 
                 if (col3split.length > 1) item.setHomeBranch(col3split[1].trim());
-
-                item.setRenewable(false);
-                if (tr.select("a").size() > 0) {
-                    for (Element link : tr.select("a")) {
-                        String href = link.attr("abs:href");
-                        Map<String, String> hrefq = getQueryParamsFirst(href);
-                        if (hrefq.containsKey("q")) {
-                            item.setId(extractIdFromQ(hrefq.get("q")));
-                        } else if ("renewal".equals(hrefq.get("methodToCall"))) {
-                            item.setProlongData(href.split("\\?")[1]);
-                            item.setRenewable(true);
-                            break;
-                        }
-                    }
-                }
 
             } catch (Exception ex) {
                 ex.printStackTrace();
@@ -1293,7 +1294,7 @@ public class TouchPoint extends BaseApi implements OpacApi {
 
     @Override
     public int getSupportFlags() {
-        int flags = SUPPORT_FLAG_CHANGE_ACCOUNT;
+        int flags = SUPPORT_FLAG_CHANGE_ACCOUNT | SUPPORT_FLAG_ACCOUNT_PROLONG_ALL;
         flags |= SUPPORT_FLAG_ENDLESS_SCROLLING;
         return flags;
     }
@@ -1301,7 +1302,33 @@ public class TouchPoint extends BaseApi implements OpacApi {
     @Override
     public ProlongAllResult prolongAll(Account account, int useraction,
             String selection) throws IOException {
-        return null;
+        if (!initialised) {
+            start();
+        }
+        if (System.currentTimeMillis() - logged_in > SESSION_LIFETIME
+                || logged_in_as == null || logged_in_as.getId() != account.getId()) {
+            try {
+                login(account);
+            } catch (OpacErrorException e) {
+                return new ProlongAllResult(MultiStepResult.Status.ERROR,
+                        e.getMessage());
+            }
+        }
+        // We have to call the page we found the link originally on first
+        httpGet(opac_url
+                        + "/userAccount.do?methodToCall=showAccount&accountTyp=loaned",
+                ENCODING);
+                String html = httpGet(opac_url + "/renewal.do?methodToCall=accountRenewal", ENCODING);
+        Document doc = Jsoup.parse(html);
+        if (doc.select(".message-confirm, .message-info").size() > 0) {
+            return new ProlongAllResult(MultiStepResult.Status.OK,
+                    doc.select(".message-info").first().text());
+        } else if (doc.select(".alert").size() > 0) {
+            return new ProlongAllResult(MultiStepResult.Status.ERROR, doc
+                    .select(".alert").first().text());
+        } else {
+            return new ProlongAllResult(MultiStepResult.Status.ERROR);
+        }
     }
 
     @Override

@@ -173,13 +173,33 @@ public class Bibliotheca extends BaseApi {
                             ".suchfeld_inhalt_input select");
             if (inputs.size() == 1) {
                 SearchField field = createSearchField(name, hint, inputs.get(0));
-                if (field instanceof TextSearchField && fieldElem.select("input[type=radio]").size() > 0) {
+                Elements radios = fieldElem.select("input[type=radio]");
+                if (field instanceof TextSearchField && radios.size() > 0) {
                     TextSearchField tf = (TextSearchField) field;
-                    if (fieldElem.select("input[type=radio]").get(0).attr("value").equals("stich")) {
+                    if (radios.get(0).attr("value").equals("stich")) {
                         tf.setFreeSearch(true);
                         if (fieldElem.select("label[for=stichtit_sich]").size() > 0) {
                             tf.setHint(fieldElem.select("label[for=stichtit_sich]").text().trim());
                         }
+                        JSONObject addData = new JSONObject();
+                        JSONObject params = new JSONObject();
+                        params.put("stichtit", "stich");
+                        addData.put("additional_params", params);
+                        tf.setData(addData);
+                    }
+                    if (radios.size() == 2 && radios.get(1).attr("value").equals("titel")) {
+                        TextSearchField tf2 = new TextSearchField();
+                        tf2.setId(tf.getId());
+                        if (fieldElem.select("label[for=stichtit_titel]").size() > 0) {
+                            tf2.setDisplayName(
+                                    fieldElem.select("label[for=stichtit_titel]").text().trim());
+                        }
+                        JSONObject addData = new JSONObject();
+                        JSONObject params = new JSONObject();
+                        params.put("stichtit", "titel");
+                        addData.put("additional_params", params);
+                        tf2.setData(addData);
+                        fields.add(tf2);
                     }
                 }
 
@@ -290,7 +310,7 @@ public class Bibliotheca extends BaseApi {
         }
 
         List<NameValuePair> nameValuePairs = new ArrayList<>(2);
-        nameValuePairs.add(new BasicNameValuePair("stichtit", "stich"));
+        boolean stichtitSet = false;
 
         int ifeldCount = 0;
         String order = "asc";
@@ -325,12 +345,24 @@ public class Bibliotheca extends BaseApi {
                     Iterator<String> keys = new JsonKeyIterator(params);
                     while (keys.hasNext()) {
                         String additionalKey = keys.next();
+                        if (additionalKey.equals("stichtit")) {
+                            if (stichtitSet) {
+                                throw new OpacErrorException(
+                                        stringProvider.getString(
+                                                StringProvider.COMBINATION_NOT_SUPPORTED));
+                            }
+                            stichtitSet = true;
+                        }
                         nameValuePairs
                                 .add(new BasicNameValuePair(additionalKey,
                                         params.getString(additionalKey)));
                     }
                 }
             }
+        }
+
+        if (!stichtitSet) {
+            nameValuePairs.add(new BasicNameValuePair("stichtit", "stich"));
         }
 
         nameValuePairs.add(new BasicNameValuePair("suche_starten.x", "1"));

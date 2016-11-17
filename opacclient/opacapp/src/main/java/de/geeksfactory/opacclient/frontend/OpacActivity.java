@@ -360,6 +360,14 @@ public abstract class OpacActivity extends AppCompatActivity
         setTwoPane(twoPane);
         super.onResume();
         fixNavigationSelection();
+
+        Handler handler = new Handler();
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                setFabVisible(fragment instanceof SearchFragment);
+            }
+        }, 300);
     }
 
     protected void fixNavigationSelection() {
