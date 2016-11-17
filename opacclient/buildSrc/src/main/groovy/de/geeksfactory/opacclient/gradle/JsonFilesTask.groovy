@@ -14,27 +14,28 @@ import java.security.KeyStore
 
 class JsonFilesTask extends DefaultTask {
     private static final String API_URL = "https://info.opacapp.net/androidconfigs/?format=json"
-    private static final String BIBS_DIR = "opacapp/src/main/assets/bibs"
-    private static final String ASSETS_DIR = "opacapp/src/main/assets"
 
     @TaskAction
     def downloadFiles() {
+        String bibsDir = "${project.projectDir}/../opacapp/src/main/assets/bibs"
+        String assetsDir = "${project.projectDir}/../opacapp/src/main/assets"
+    
         HttpsURLConnection conn = (HttpsURLConnection) API_URL.toURL().openConnection()
         conn.setSSLSocketFactory(createSSLSocketFactory())
         String response = conn.inputStream.getText("UTF-8")
         JSONArray data = new JSONArray(response)
-        GFileUtils.mkdirs(new File(BIBS_DIR))
-        GFileUtils.cleanDirectory(new File(BIBS_DIR))
+        GFileUtils.mkdirs(new File(bibsDir))
+        GFileUtils.cleanDirectory(new File(bibsDir))
         for (int i = 0; i < data.length(); i++) {
             JSONObject library = data.get(i);
             String id = library.getString("_id")
             library.remove("_id")
-            File file = new File(BIBS_DIR, id + ".json")
+            File file = new File(bibsDir, id + ".json")
             file.write(library.toString(), "UTF-8")
         }
 
         String lastUpdate = conn.headerFields.get("X-Page-Generated").get(0)
-        File file = new File(ASSETS_DIR, "last_library_config_update.txt")
+        File file = new File(assetsDir, "last_library_config_update.txt")
         file.write(lastUpdate, "UTF-8")
     }
 
