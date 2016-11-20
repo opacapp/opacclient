@@ -69,6 +69,7 @@ public class Adis extends BaseApi implements OpacApi {
         types.put("DVD-Video", MediaType.DVD);
         types.put("Noten", MediaType.SCORE_MUSIC);
         types.put("Konsolenspiel", MediaType.GAME_CONSOLE);
+        types.put("Spielkonsole", MediaType.GAME_CONSOLE);
         types.put("CD", MediaType.CD);
         types.put("Zeitschrift", MediaType.MAGAZINE);
         types.put("Zeitschriftenheft", MediaType.MAGAZINE);
@@ -78,6 +79,9 @@ public class Adis extends BaseApi implements OpacApi {
         types.put("E-Book", MediaType.EBOOK);
         types.put("Karte", MediaType.MAP);
         types.put("E-Ressource", MediaType.EBOOK);
+        types.put("Munzinger", MediaType.EBOOK);
+        types.put("E-Audio", MediaType.EAUDIO);
+        types.put("Blu-Ray", MediaType.BLURAY);
 
         // TODO: The following fields from Berlin make no sense and don't work
         // when they are displayed alone.
