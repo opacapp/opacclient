@@ -1230,7 +1230,11 @@ public class BiBer1992 extends BaseApi {
             throw new OpacErrorException(errText);
         }
         if (doc.select("tr td font[color=red]").size() == 1) {
-            throw new OpacErrorException(doc.select("font[color=red]").text());
+            // Jena: Onleihe advertisement recognized as error message
+            if (!doc.select("tr td font[color=red]").text()
+                    .contains("Ausleihe per Download rund um die Uhr")) {
+                throw new OpacErrorException(doc.select("font[color=red]").text());
+            }
         }
         if (doc.text().contains("No html file set")
                 || doc.text().contains("Der BIBDIA Server konnte den Auftrag nicht")
