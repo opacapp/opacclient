@@ -682,7 +682,7 @@ public class Adis extends BaseApi implements OpacApi {
             } else if (head.contains("URL")) {
                 colmap.put(i, "url");
             } else if (head.contains("Status") || head.contains("Hinweis")
-                    || head.matches(".*Verf.+gbarkeit.*") || head.contains("Status")) {
+                    || head.contains("Leihfrist") || head.matches(".*Verf.+gbarkeit.*")) {
                 colmap.put(i, "status");
             }
             i++;
@@ -695,15 +695,16 @@ public class Adis extends BaseApi implements OpacApi {
             for (Entry<Integer, String> entry : colmap.entrySet()) {
                 if (entry.getValue().equals("status")) {
                     String status = tr.child(entry.getKey()).text().trim();
+                    String currentStatus = copy.getStatus() != null ? copy.getStatus() + " - " : "";
                     if (status.contains(" am: ")) {
-                        copy.setStatus(status.split("-")[0]);
+                        copy.setStatus(currentStatus + status.split("-")[0]);
                         try {
                             copy.setReturnDate(fmt.parseLocalDate(status.split(": ")[1]));
                         } catch (IllegalArgumentException e) {
                             e.printStackTrace();
                         }
                     } else {
-                        copy.setStatus(status);
+                        copy.setStatus(currentStatus + status);
                     }
                 } else {
                     copy.set(entry.getValue(), tr.child(entry.getKey()).text().trim());
