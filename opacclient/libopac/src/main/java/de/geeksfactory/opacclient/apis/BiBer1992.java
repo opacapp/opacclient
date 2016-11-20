@@ -241,30 +241,33 @@ public class BiBer1992 extends BaseApi {
         return fields;
     }
 
-    private void setMediaTypeFromImageFilename(SearchResult sr, String imagename) {
+    private static MediaType getMediaTypeFromImageFilename(SearchResult sr, String imagename,
+            JSONObject data) {
         String[] fparts1 = imagename.split("/"); // "images/31.gif.S"
         String[] fparts2 = fparts1[fparts1.length - 1].split("\\."); // "31.gif.S"
         String lookup = fparts2[0]; // "31"
 
         if (imagename.contains("amazon")) {
-            sr.setCover(imagename);
+            if (sr != null) sr.setCover(imagename);
+            return null;
         }
 
         if (data.has("mediatypes")) {
             try {
                 String typeStr = data.getJSONObject("mediatypes").getString(
                         lookup);
-                sr.setType(MediaType.valueOf(typeStr));
+                return MediaType.valueOf(typeStr);
             } catch (Exception e) {
                 if (defaulttypes.containsKey(lookup)) {
-                    sr.setType(defaulttypes.get(lookup));
+                    return defaulttypes.get(lookup);
                 }
             }
         } else {
             if (defaulttypes.containsKey(lookup)) {
-                sr.setType(defaulttypes.get(lookup));
+                return defaulttypes.get(lookup);
             }
         }
+        return null;
     }
 
     /*
@@ -447,7 +450,7 @@ public class BiBer1992 extends BaseApi {
             // media type
             elem = tr.select("td img");
             if (elem.size() > 0) {
-                setMediaTypeFromImageFilename(sr, elem.get(0).attr("src"));
+                sr.setType(getMediaTypeFromImageFilename(sr, elem.get(0).attr("src"), data));
             }
 
             // description
@@ -1025,6 +1028,12 @@ public class BiBer1992 extends BaseApi {
             }
             LentItem item = new LentItem();
 
+            Elements mediatypeImg = tr.select("td img");
+            if (mediatypeImg.size() > 0) {
+                item.setMediaType(getMediaTypeFromImageFilename(
+                        null, mediatypeImg.get(0).attr("src"), data));
+            }
+
             Pattern itemIdPat = Pattern
                     .compile("javascript:(?:smAcc|smMedk)\\('[a-z]+','[a-z]+','([A-Za-z0-9]+)'\\)");
             // columns: all elements of one media
@@ -1119,6 +1128,12 @@ public class BiBer1992 extends BaseApi {
             ReservedItem item = new ReservedItem();
 
             item.setCancelData(tr.select("input[type=checkbox]").attr("name"));
+
+            Elements mediatypeImg = tr.select("td img");
+            if (mediatypeImg.size() > 0) {
+                item.setMediaType(getMediaTypeFromImageFilename(
+                        null, mediatypeImg.get(0).attr("src"), data));
+            }
 
             // columns: all elements of one media
             Iterator<?> keys = copymap.keys();
