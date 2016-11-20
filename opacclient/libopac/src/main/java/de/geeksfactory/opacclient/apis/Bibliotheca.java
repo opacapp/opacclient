@@ -1257,11 +1257,13 @@ public class Bibliotheca extends BaseApi {
     @Override
     public String getShareUrl(String id, String title) {
         try {
-            return "http://opacapp.de/:" + library.getIdent() + ":" + id + ":"
-                    + URLEncoder.encode(title, "UTF-8");
-        } catch (UnsupportedEncodingException e) {
-            return "http://opacapp.de/:" + library.getIdent() + ":" + id + ":"
-                    + title;
+            // our server does not like getting a "+" as the encoding for a space, so we replace it
+            // with %20.
+            return "http://opacapp.de/:" +
+                    URLEncoder.encode(library.getIdent(), "UTF-8").replace("+", "%20") + ":"
+                    + id + ":" + URLEncoder.encode(title, "UTF-8");
+        } catch (UnsupportedEncodingException ignored) {
+            return null;
         }
     }
 
