@@ -69,6 +69,7 @@ public class Adis extends BaseApi implements OpacApi {
         types.put("DVD-Video", MediaType.DVD);
         types.put("Noten", MediaType.SCORE_MUSIC);
         types.put("Konsolenspiel", MediaType.GAME_CONSOLE);
+        types.put("Spielkonsole", MediaType.GAME_CONSOLE);
         types.put("CD", MediaType.CD);
         types.put("Zeitschrift", MediaType.MAGAZINE);
         types.put("Zeitschriftenheft", MediaType.MAGAZINE);
@@ -78,6 +79,9 @@ public class Adis extends BaseApi implements OpacApi {
         types.put("E-Book", MediaType.EBOOK);
         types.put("Karte", MediaType.MAP);
         types.put("E-Ressource", MediaType.EBOOK);
+        types.put("Munzinger", MediaType.EBOOK);
+        types.put("E-Audio", MediaType.EAUDIO);
+        types.put("Blu-Ray", MediaType.BLURAY);
 
         // TODO: The following fields from Berlin make no sense and don't work
         // when they are displayed alone.
@@ -414,20 +418,20 @@ public class Adis extends BaseApi implements OpacApi {
         int total_result_count = -1;
         List<SearchResult> results = new ArrayList<>();
 
-        if (doc.select("#right #R06").size() > 0) {
+        if (doc.select("#R06").size() > 0) {
             Pattern patNum = Pattern
                     .compile(".*Treffer: .* von ([0-9]+)[^0-9]*");
-            Matcher matcher = patNum.matcher(doc.select("#right #R06").text()
+            Matcher matcher = patNum.matcher(doc.select("#R06").text()
                                                 .trim());
             if (matcher.matches()) {
                 total_result_count = Integer.parseInt(matcher.group(1));
-            } else if (doc.select("#right #R06").text().trim().endsWith("Treffer: 1")) {
+            } else if (doc.select("#R06").text().trim().endsWith("Treffer: 1")) {
                 total_result_count = 1;
             }
         }
 
-        if (doc.select("#right #R03").size() == 1
-                && doc.select("#right #R03").text().trim()
+        if (doc.select("#R03").size() == 1
+                && doc.select("#R03").text().trim()
                       .endsWith("Treffer: 1")) {
             throw new SingleResultFound();
         }
@@ -665,9 +669,8 @@ public class Adis extends BaseApi implements OpacApi {
 
         Map<Integer, String> colmap = new HashMap<>();
         int i = 0;
-        for (Element th : doc
-                .select("#R08 table.rTable_table thead tr th, " +
-                        "#R09 table.rTable_table thead tr th")) {
+        for (Element th : doc.select("#R08 table.rTable_table, #R09 table.rTable_table").first()
+                             .select("thead tr th")) {
             String head = th.text().trim();
             if (head.contains("Bibliothek") || head.contains("Library")) {
                 colmap.put(i, "branch");
@@ -678,28 +681,29 @@ public class Adis extends BaseApi implements OpacApi {
             } else if (head.contains("URL")) {
                 colmap.put(i, "url");
             } else if (head.contains("Status") || head.contains("Hinweis")
-                    || head.matches(".*Verf.+gbarkeit.*") || head.contains("Status")) {
+                    || head.contains("Leihfrist") || head.matches(".*Verf.+gbarkeit.*")) {
                 colmap.put(i, "status");
             }
             i++;
         }
 
         DateTimeFormatter fmt = DateTimeFormat.forPattern("dd.MM.yyyy").withLocale(Locale.GERMAN);
-        for (Element tr : doc.select("#R08 table.rTable_table tbody tr," +
-                "#R09 table.rTable_table tbody tr")) {
+        for (Element tr : doc.select("#R08 table.rTable_table, #R09 table.rTable_table").first()
+                             .select("tbody tr th")) {
             Copy copy = new Copy();
             for (Entry<Integer, String> entry : colmap.entrySet()) {
                 if (entry.getValue().equals("status")) {
                     String status = tr.child(entry.getKey()).text().trim();
+                    String currentStatus = copy.getStatus() != null ? copy.getStatus() + " - " : "";
                     if (status.contains(" am: ")) {
-                        copy.setStatus(status.split("-")[0]);
+                        copy.setStatus(currentStatus + status.split("-")[0]);
                         try {
                             copy.setReturnDate(fmt.parseLocalDate(status.split(": ")[1]));
                         } catch (IllegalArgumentException e) {
                             e.printStackTrace();
                         }
                     } else {
-                        copy.setStatus(status);
+                        copy.setStatus(currentStatus + status);
                     }
                 } else {
                     copy.set(entry.getValue(), tr.child(entry.getKey()).text().trim());

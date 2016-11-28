@@ -316,6 +316,9 @@ public class Heidi extends BaseApi implements OpacApi {
         for (String tuple : zdata.split("&")) {
             if (tuple.contains("=")) {
                 String[] parts = tuple.split("=");
+                if (parts.length < 2) {
+                    continue;
+                }
                 try {
                     nvps.add(new BasicNameValuePair(parts[0], URLDecoder.decode(parts[1],
                                 "UTF-8")));

@@ -1252,25 +1252,46 @@ public class AccountFragment extends Fragment implements
                 ProlongAllResult res = (ProlongAllResult) result;
                 AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
 
-                LayoutInflater inflater = getLayoutInflater(null);
+                if (res.getResults() != null) {
+                    LayoutInflater inflater = getLayoutInflater(null);
+                    View view = inflater.inflate(R.layout.dialog_simple_list, null, false);
 
-                View view = inflater.inflate(R.layout.dialog_simple_list, null, false);
+                    ListView lv = (ListView) view.findViewById(R.id.lvBibs);
 
-                ListView lv = (ListView) view.findViewById(R.id.lvBibs);
-
-                lv.setAdapter(new ProlongAllResultAdapter(getActivity(), res.getResults()));
-                switch (result.getActionIdentifier()) {
-                    case ReservationResult.ACTION_BRANCH:
-                        builder.setTitle(R.string.branch);
+                    lv.setAdapter(new ProlongAllResultAdapter(getActivity(), res.getResults()));
+                    switch (result.getActionIdentifier()) {
+                        case ReservationResult.ACTION_BRANCH:
+                            builder.setTitle(R.string.branch);
+                    }
+                    builder.setView(view)
+                           .setNeutralButton(R.string.close, new DialogInterface.OnClickListener() {
+                               @Override
+                               public void onClick(DialogInterface dialog, int id) {
+                                   adialog.cancel();
+                                   invalidateData();
+                               }
+                           });
+                } else {
+                    builder.setMessage(result.getMessage())
+                           .setCancelable(true)
+                           .setNegativeButton(R.string.close,
+                                   new DialogInterface.OnClickListener() {
+                                       @Override
+                                       public void onClick(DialogInterface d,
+                                               int id) {
+                                           d.cancel();
+                                       }
+                                   })
+                           .setOnCancelListener(
+                                   new DialogInterface.OnCancelListener() {
+                                       @Override
+                                       public void onCancel(DialogInterface d) {
+                                           if (d != null) {
+                                               d.cancel();
+                                           }
+                                       }
+                                   });
                 }
-                builder.setView(view)
-                       .setNeutralButton(R.string.close, new DialogInterface.OnClickListener() {
-                           @Override
-                           public void onClick(DialogInterface dialog, int id) {
-                               adialog.cancel();
-                               invalidateData();
-                           }
-                       });
                 adialog = builder.create();
                 adialog.show();
             }

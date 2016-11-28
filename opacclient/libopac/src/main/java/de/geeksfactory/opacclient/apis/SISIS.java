@@ -808,12 +808,15 @@ public class SISIS extends BaseApi implements OpacApi {
                         text = text + element.text();
                     }
                 } else {
-                    if (element.tagName().equals("a") &&
-                            (element.text().trim().contains("hier klicken") ||
-                                    title.equals("Link:"))) {
-                        text = text + node.attr("href");
-                        takeover = true;
-                        break;
+                    if (element.tagName().equals("a")) {
+                        if (element.text().trim().contains("hier klicken") ||
+                                title.contains("Link")) {
+                            text = text + node.attr("href");
+                            takeover = true;
+                            break;
+                        } else {
+                            text = text + element.text();
+                        }
                     }
                 }
             } else if (node instanceof TextNode) {
