@@ -418,20 +418,20 @@ public class Adis extends BaseApi implements OpacApi {
         int total_result_count = -1;
         List<SearchResult> results = new ArrayList<>();
 
-        if (doc.select("#right #R06").size() > 0) {
+        if (doc.select("#R06").size() > 0) {
             Pattern patNum = Pattern
                     .compile(".*Treffer: .* von ([0-9]+)[^0-9]*");
-            Matcher matcher = patNum.matcher(doc.select("#right #R06").text()
+            Matcher matcher = patNum.matcher(doc.select("#R06").text()
                                                 .trim());
             if (matcher.matches()) {
                 total_result_count = Integer.parseInt(matcher.group(1));
-            } else if (doc.select("#right #R06").text().trim().endsWith("Treffer: 1")) {
+            } else if (doc.select("#R06").text().trim().endsWith("Treffer: 1")) {
                 total_result_count = 1;
             }
         }
 
-        if (doc.select("#right #R03").size() == 1
-                && doc.select("#right #R03").text().trim()
+        if (doc.select("#R03").size() == 1
+                && doc.select("#R03").text().trim()
                       .endsWith("Treffer: 1")) {
             throw new SingleResultFound();
         }
