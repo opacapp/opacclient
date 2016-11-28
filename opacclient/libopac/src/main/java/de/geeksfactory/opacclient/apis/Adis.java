@@ -669,9 +669,8 @@ public class Adis extends BaseApi implements OpacApi {
 
         Map<Integer, String> colmap = new HashMap<>();
         int i = 0;
-        for (Element th : doc
-                .select("#R08 table.rTable_table thead tr th, " +
-                        "#R09 table.rTable_table thead tr th")) {
+        for (Element th : doc.select("#R08 table.rTable_table, #R09 table.rTable_table").first()
+                             .select("thead tr th")) {
             String head = th.text().trim();
             if (head.contains("Bibliothek") || head.contains("Library")) {
                 colmap.put(i, "branch");
@@ -689,8 +688,8 @@ public class Adis extends BaseApi implements OpacApi {
         }
 
         DateTimeFormatter fmt = DateTimeFormat.forPattern("dd.MM.yyyy").withLocale(Locale.GERMAN);
-        for (Element tr : doc.select("#R08 table.rTable_table tbody tr," +
-                "#R09 table.rTable_table tbody tr")) {
+        for (Element tr : doc.select("#R08 table.rTable_table, #R09 table.rTable_table").first()
+                             .select("tbody tr th")) {
             Copy copy = new Copy();
             for (Entry<Integer, String> entry : colmap.entrySet()) {
                 if (entry.getValue().equals("status")) {
