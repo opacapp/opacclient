@@ -55,6 +55,7 @@ import de.geeksfactory.opacclient.objects.Filter;
 import de.geeksfactory.opacclient.objects.Library;
 import de.geeksfactory.opacclient.objects.SearchRequestResult;
 import de.geeksfactory.opacclient.objects.SearchResult;
+import de.geeksfactory.opacclient.searchfields.BarcodeSearchField;
 import de.geeksfactory.opacclient.searchfields.CheckboxSearchField;
 import de.geeksfactory.opacclient.searchfields.DropdownSearchField;
 import de.geeksfactory.opacclient.searchfields.SearchField;
@@ -225,8 +226,8 @@ public class Open extends BaseApi implements OpacApi {
         for (SearchQuery query : queries) {
             if (query.getValue().equals("") || query.getValue().equals("false")) continue;
 
-            if (query.getSearchField() instanceof TextSearchField) {
-                TextSearchField field = (TextSearchField) query.getSearchField();
+            if (query.getSearchField() instanceof TextSearchField | query.getSearchField() instanceof BarcodeSearchField) {
+                SearchField field = query.getSearchField();
                 if (field.getData().getBoolean("selectable")) {
                     selectableCount++;
                     if (selectableCount > 3) {
