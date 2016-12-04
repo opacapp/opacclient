@@ -689,7 +689,7 @@ public class Adis extends BaseApi implements OpacApi {
 
         DateTimeFormatter fmt = DateTimeFormat.forPattern("dd.MM.yyyy").withLocale(Locale.GERMAN);
         for (Element tr : doc.select("#R08 table.rTable_table, #R09 table.rTable_table").first()
-                             .select("tbody tr th")) {
+                             .select("tbody tr")) {
             Copy copy = new Copy();
             for (Entry<Integer, String> entry : colmap.entrySet()) {
                 if (entry.getValue().equals("status")) {
