@@ -688,28 +688,31 @@ public class Adis extends BaseApi implements OpacApi {
         }
 
         DateTimeFormatter fmt = DateTimeFormat.forPattern("dd.MM.yyyy").withLocale(Locale.GERMAN);
-        for (Element tr : doc.select("#R08 table.rTable_table, #R09 table.rTable_table").first()
-                             .select("tbody tr")) {
-            Copy copy = new Copy();
-            for (Entry<Integer, String> entry : colmap.entrySet()) {
-                if (entry.getValue().equals("status")) {
-                    String status = tr.child(entry.getKey()).text().trim();
-                    String currentStatus = copy.getStatus() != null ? copy.getStatus() + " - " : "";
-                    if (status.contains(" am: ")) {
-                        copy.setStatus(currentStatus + status.split("-")[0]);
-                        try {
-                            copy.setReturnDate(fmt.parseLocalDate(status.split(": ")[1]));
-                        } catch (IllegalArgumentException e) {
-                            e.printStackTrace();
+        if (doc.select("#R08 table.rTable_table, #R09 table.rTable_table").size() > 0) {
+            for (Element tr : doc.select("#R08 table.rTable_table, #R09 table.rTable_table").first()
+                                 .select("tbody tr")) {
+                Copy copy = new Copy();
+                for (Entry<Integer, String> entry : colmap.entrySet()) {
+                    if (entry.getValue().equals("status")) {
+                        String status = tr.child(entry.getKey()).text().trim();
+                        String currentStatus =
+                                copy.getStatus() != null ? copy.getStatus() + " - " : "";
+                        if (status.contains(" am: ")) {
+                            copy.setStatus(currentStatus + status.split("-")[0]);
+                            try {
+                                copy.setReturnDate(fmt.parseLocalDate(status.split(": ")[1]));
+                            } catch (IllegalArgumentException e) {
+                                e.printStackTrace();
+                            }
+                        } else {
+                            copy.setStatus(currentStatus + status);
                         }
                     } else {
-                        copy.setStatus(currentStatus + status);
+                        copy.set(entry.getValue(), tr.child(entry.getKey()).text().trim());
                     }
-                } else {
-                    copy.set(entry.getValue(), tr.child(entry.getKey()).text().trim());
                 }
+                res.addCopy(copy);
             }
-            res.addCopy(copy);
         }
 
         res.setId(""); // null would be overridden by the UI, because there _is_
