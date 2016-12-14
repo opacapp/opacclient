@@ -1294,6 +1294,9 @@ public class Adis extends BaseApi implements OpacApi {
                     // Format "Titel / Autor #Sig#Nr", z.B. normale Ausleihe in Berlin
                     String[] split = text.split("[/#\n]");
                     String title = split[0];
+                    //Is always the last one...
+                    String id = split[split.length-1];
+                    item.setId(id);
                     if (split_title_author) {
                         title = title.replaceFirst("([^:;\n]+)[:;\n](.*)$", "$1");
                     }
@@ -1310,6 +1313,9 @@ public class Adis extends BaseApi implements OpacApi {
                         item.setTitle(
                                 aut_tit[1].replaceFirst("([^:;\n]+)[:;\n](.*)$", "$1").trim());
                     }
+                    //Is always the last one...
+                    String id = split[split.length-1];
+                    item.setId(id);
                 }
                 String date = tr.child(1).text().trim();
                 if (date.contains("-")) {
