@@ -667,30 +667,29 @@ public class Adis extends BaseApi implements OpacApi {
             res.setReservation_info(id);
         }
 
-        Map<Integer, String> colmap = new HashMap<>();
-        int i = 0;
-        for (Element th : doc.select("#R08 table.rTable_table, #R09 table.rTable_table").first()
-                             .select("thead tr th")) {
-            String head = th.text().trim();
-            if (head.contains("Bibliothek") || head.contains("Library")) {
-                colmap.put(i, "branch");
-            } else if (head.contains("Standort") || head.contains("Location")) {
-                colmap.put(i, "location");
-            } else if (head.contains("Signatur") || head.contains("Call number")) {
-                colmap.put(i, "signature");
-            } else if (head.contains("URL")) {
-                colmap.put(i, "url");
-            } else if (head.contains("Status") || head.contains("Hinweis")
-                    || head.contains("Leihfrist") || head.matches(".*Verf.+gbarkeit.*")) {
-                colmap.put(i, "status");
-            }
-            i++;
-        }
-
         DateTimeFormatter fmt = DateTimeFormat.forPattern("dd.MM.yyyy").withLocale(Locale.GERMAN);
         if (doc.select("#R08 table.rTable_table, #R09 table.rTable_table").size() > 0) {
-            for (Element tr : doc.select("#R08 table.rTable_table, #R09 table.rTable_table").first()
-                                 .select("tbody tr")) {
+            Element table = doc.select("#R08 table.rTable_table, #R09 table.rTable_table").first();
+            Map<Integer, String> colmap = new HashMap<>();
+            int i = 0;
+            for (Element th : table.select("thead tr th")) {
+                String head = th.text().trim();
+                if (head.contains("Bibliothek") || head.contains("Library")) {
+                    colmap.put(i, "branch");
+                } else if (head.contains("Standort") || head.contains("Location")) {
+                    colmap.put(i, "location");
+                } else if (head.contains("Signatur") || head.contains("Call number")) {
+                    colmap.put(i, "signature");
+                } else if (head.contains("URL")) {
+                    colmap.put(i, "url");
+                } else if (head.contains("Status") || head.contains("Hinweis")
+                        || head.contains("Leihfrist") || head.matches(".*Verf.+gbarkeit.*")) {
+                    colmap.put(i, "status");
+                }
+                i++;
+            }
+
+            for (Element tr : table.select("tbody tr")) {
                 Copy copy = new Copy();
                 for (Entry<Integer, String> entry : colmap.entrySet()) {
                     if (entry.getValue().equals("status")) {
