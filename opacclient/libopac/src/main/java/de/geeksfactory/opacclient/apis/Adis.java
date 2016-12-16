@@ -1399,11 +1399,14 @@ public class Adis extends BaseApi implements OpacApi {
                 if (th.text().contains("Titel")) {
                     colmap.put("title", i);
                 }
+                if (th.text().contains("Hinweis")) {
+                    colmap.put("status", i);
+                }
                 i++;
 
             }
             for (Element tr : rdoc.select(".rTable_div tbody tr")) {
-                if (tr.children().size() >= 4) {
+                if (tr.children().size() >= colmap.size()) {
                     ReservedItem item = new ReservedItem();
                     String text = tr.child(colmap.get("title")).html();
                     text = Jsoup.parse(text.replaceAll("(?i)<br[^>]*>", ";")).text();
