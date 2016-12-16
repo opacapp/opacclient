@@ -156,14 +156,14 @@ public class BarcodeScanIntegrator {
     }
 
     public void initiate_scan_zxing() {
-        final Collection<String> desiredBarcodeFormats = list("UPC_A", "UPC_E",
-                "EAN_8", "EAN_13", "CODE_39", "CODE_93", "CODE_128");
+        /*final Collection<String> desiredBarcodeFormats = list("UPC_A", "UPC_E",
+                "EAN_8", "EAN_13", "CODE_39", "CODE_93", "CODE_128");*/
 
         Intent intentScan = new Intent("com.google.zxing.client.android.SCAN");
         intentScan.addCategory(Intent.CATEGORY_DEFAULT);
 
         // check which types of codes to scan for
-        if (desiredBarcodeFormats != null) {
+        /*if (desiredBarcodeFormats != null) {
             // set the desired barcode types
             StringBuilder joinedByComma = new StringBuilder();
             for (String format : desiredBarcodeFormats) {
@@ -173,7 +173,7 @@ public class BarcodeScanIntegrator {
                 joinedByComma.append(format);
             }
             intentScan.putExtra("SCAN_FORMATS", joinedByComma.toString());
-        }
+        }*/
 
         String targetAppPackage = findTargetAppPackage(intentScan);
         if (targetAppPackage == null) {
