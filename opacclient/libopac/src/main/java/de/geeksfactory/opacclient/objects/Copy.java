@@ -251,7 +251,9 @@ public class Copy {
      */
     public void set(String key, String value, DateTimeFormatter fmt) {
         if (key.equals("returndate")) {
-            setReturnDate(fmt.parseLocalDate(value));
+            if (!value.isEmpty()) {
+                setReturnDate(fmt.parseLocalDate(value));
+            }
         } else {
             set(key, value);
         }
