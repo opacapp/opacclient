@@ -111,6 +111,7 @@ public class WinBiap extends BaseApi implements OpacApi {
         defaulttypes.put("dvd", SearchResult.MediaType.DVD);
         defaulttypes.put("online", SearchResult.MediaType.EBOOK);
         defaulttypes.put("konsole", SearchResult.MediaType.GAME_CONSOLE);
+        defaulttypes.put("zschrift", SearchResult.MediaType.MAGAZINE);
     }
 
     protected String opac_url = "";
@@ -734,7 +735,9 @@ public class WinBiap extends BaseApi implements OpacApi {
                 // find media type
                 SearchResult.MediaType mt = getMediaType(cover, data);
                 item.setMediaType(mt);
-                item.setCover(src);
+
+                // set cover if it's not the media type image
+                if (!src.equals(cover.attr("grp"))) item.setCover(src);
             }
 
             item.setAuthor(nullIfEmpty(tr.select("[id$=LabelAutor]").text()));
@@ -812,7 +815,9 @@ public class WinBiap extends BaseApi implements OpacApi {
                     item.setFormat(stringProvider.getMediaTypeName(mt));
                     item.setMediaType(mt);
                 }
-                item.setCover(src);
+
+                // set cover if it's not the media type image
+                if (!src.equals(cover.attr("grp"))) item.setCover(src);
             }
 
             item.setStatus(nullIfEmpty(winBiap43 ? detailsTr.select("[id$=labelStatus], [id*=labelStatus_]").text() :
