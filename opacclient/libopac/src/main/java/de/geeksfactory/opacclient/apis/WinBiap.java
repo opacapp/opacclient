@@ -665,14 +665,31 @@ public class WinBiap extends BaseApi implements OpacApi {
         params.add(new BasicNameValuePair("data", media));
         String response = httpPost(opac_url + "/service/UserService.ashx",
                 new UrlEncodedFormEntity(params), getDefaultEncoding());
-        System.out.println("Antwort: " + response);
-        // Response: [number of reservations deleted];[number of remaining reservations]
-        String[] parts = response.split(";");
-        if (parts[0].equals("1")) {
-            return new CancelResult(MultiStepResult.Status.OK);
+        if (response.startsWith("{")) {
+            // new system (starting with 4.4.0?): JSON response
+            // e.g. {"Success":true,"Count":0} (Count = number of remaining reservations)
+            try {
+                JSONObject responseJson = new JSONObject(response);
+                if (responseJson.optBoolean("Success")) {
+                    return new CancelResult(MultiStepResult.Status.OK);
+                } else {
+                    return new CancelResult(MultiStepResult.Status.ERROR,
+                            stringProvider.getString(StringProvider.UNKNOWN_ERROR));
+                }
+            } catch (JSONException e) {
+                return new CancelResult(MultiStepResult.Status.ERROR,
+                        stringProvider.getString(StringProvider.INTERNAL_ERROR));
+            }
         } else {
-            return new CancelResult(MultiStepResult.Status.ERROR,
-                    stringProvider.getString(StringProvider.UNKNOWN_ERROR));
+            // Old system
+            // Response: [number of reservations deleted];[number of remaining reservations]
+            String[] parts = response.split(";");
+            if (parts[0].equals("1")) {
+                return new CancelResult(MultiStepResult.Status.OK);
+            } else {
+                return new CancelResult(MultiStepResult.Status.ERROR,
+                        stringProvider.getString(StringProvider.UNKNOWN_ERROR));
+            }
         }
     }
 
