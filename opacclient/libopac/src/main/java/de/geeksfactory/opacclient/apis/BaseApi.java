@@ -36,6 +36,7 @@ import org.apache.http.protocol.BasicHttpContext;
 import org.apache.http.protocol.HttpContext;
 import org.apache.http.util.EntityUtils;
 import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -49,6 +50,7 @@ import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -689,5 +691,46 @@ public abstract class BaseApi implements OpacApi {
 
     public void setReportHandler(ReportHandler reportHandler) {
         this.reportHandler = reportHandler;
+    }
+
+
+    /**
+     * Converts a {@link JSONObject} that contains only integer values into a {@link Map}.
+     *
+     * @param json a JSON object
+     * @return a Map
+     */
+    protected static Map<String, Integer> jsonToMap(JSONObject json) {
+        Map<String, Integer> map = new HashMap<>();
+        Iterator keys = json.keys();
+        while (keys.hasNext()) {
+            String key = (String) keys.next();
+            try {
+                int value = json.getInt(key);
+                if (value >= 0) map.put(key, value);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+        return map;
+    }
+
+
+    /**
+     * Loads a resource file in JSON format to a {@link JSONObject}. Returns null if an error
+     * occurred.
+     *
+     * @param filename the file name, relative to the resources directory, starting with a slash
+     * @return the loaded JSON object
+     */
+    protected JSONObject loadJsonResource(String filename) {
+        InputStream is = getClass().getResourceAsStream(filename);
+        if (is == null) return null;
+        try {
+            return new JSONObject(convertStreamToString(is));
+        } catch (IOException | JSONException e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 }
