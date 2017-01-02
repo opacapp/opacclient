@@ -63,7 +63,7 @@
   <string name="startup_summary">Ποια οθόνη θα πρέπει να εμφανίζεται κατά την εκκίνηση;</string>
   <string name="notification_warning">Περίοδος προειδοποίησης</string>
   <string name="notification_warning_desc">Πόσο διάστημα πριν από την καταληκτική ημερομηνία θα πρέπει να παρουσιάζεται μια κοινοποίηση;</string>
-  <string name="notif_ticker">%s στοιχεία που πρόκειται να λήξουν!</string>
+  <string name="notif_ticker">%d στοιχεία που πρόκειται να λήξουν!</string>
   <string name="notif_title">Στοιχεία που πρόκειται να λήξουν</string>
   <string name="volumes">Τόμοι</string>
   <string name="volumesearch">Εμφάνιση τόμων</string>

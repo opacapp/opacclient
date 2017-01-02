@@ -83,9 +83,9 @@
   </string-array>
   <string name="notification_warning">Okres ostrzeżenia</string>
   <string name="notification_warning_desc">Jak długo przed przedawnieniem powinno być pokazane powiadomienie.</string>
-  <string name="notif_ticker">%s pozycji wkrótce wygaśnie.</string>
+  <string name="notif_ticker">%d pozycji wkrótce wygaśnie.</string>
   <string name="notif_title">Pozycje które wygasają</string>
-  <string name="notif_ticker_expired">%s pozycji wygasło!</string>
+  <string name="notif_ticker_expired">%d pozycji wygasło!</string>
   <string name="notif_title_expired">Pozycje wygasły</string>
   <string name="notif_plus_more">+%d więcej</string>
   <string name="notif_snooze">Później</string>

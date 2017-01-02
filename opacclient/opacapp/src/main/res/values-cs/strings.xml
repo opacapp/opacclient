@@ -77,7 +77,7 @@
   </string-array>
   <string name="notification_warning">Perioda pro upozornění</string>
   <string name="notification_warning_desc">Jak dlouho dopředu chcete být upozorněni na blížící se datum vrácení?</string>
-  <string name="notif_ticker">u %s titulů se blíží datum vrácení!</string>
+  <string name="notif_ticker">u %d titulů se blíží datum vrácení!</string>
   <string name="star">Uložit do oblíbených</string>
   <string name="starred">Titul je nyní v seznamu vašich oblíbených.</string>
   <string name="star_wait">Prosím vyčkejte, než dojde ke stažení podobností.</string>

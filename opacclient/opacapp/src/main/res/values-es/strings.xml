@@ -81,7 +81,7 @@
   </string-array>
   <string name="notification_warning">Plazo de aviso</string>
   <string name="notification_warning_desc">¿Cuánto tiempo antes de la fecha de vencimiento quieres recibir un aviso?</string>
-  <string name="notif_ticker">¡%s artículos están a punto de expirar!</string>
+  <string name="notif_ticker">¡%d artículos están a punto de expirar!</string>
   <string name="notif_title">Artículos están a punto de expirar</string>
   <string name="volumes">Volúmenes</string>
   <string name="volumesearch">Muestra volúmenes</string>
