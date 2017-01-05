@@ -71,7 +71,7 @@ import de.geeksfactory.opacclient.searchfields.SearchField;
 import de.geeksfactory.opacclient.searchfields.SearchQuery;
 import de.geeksfactory.opacclient.searchfields.TextSearchField;
 
-public class Heidi extends BaseApi implements OpacApi {
+public class Heidi extends ApacheBaseApi implements OpacApi {
 
     protected String opac_url = "";
     protected Library library;

@@ -63,7 +63,7 @@ import de.geeksfactory.opacclient.searchfields.TextSearchField;
  * An implementation of *.web-opac.at sites operated by the Austrian company
  * <a href="https://littera.eu/">Littera</a>.
  */
-public class Littera extends SearchOnlyApi {
+public class Littera extends ApacheSearchOnlyApi {
     protected static final Map<String, String> LANGUAGE_CODES = new HashMap<String, String>() {{
         put("en", "eng");
         put("de", "deu");

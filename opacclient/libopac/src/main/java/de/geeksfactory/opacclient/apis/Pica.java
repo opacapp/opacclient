@@ -75,7 +75,7 @@ import de.geeksfactory.opacclient.utils.ISBNTools;
  * @author Johan von Forstner, 16.09.2013
  */
 
-public abstract class Pica extends BaseApi implements OpacApi {
+public abstract class Pica extends ApacheBaseApi implements OpacApi {
 
     protected static HashMap<String, MediaType> defaulttypes = new HashMap<>();
     protected static HashMap<String, String> languageCodes = new HashMap<>();
