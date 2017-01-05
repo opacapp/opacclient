@@ -68,7 +68,7 @@ import de.geeksfactory.opacclient.searchfields.TextSearchField;
  * @author Johan von Forstner, 29.03.2015
  */
 
-public class Open extends BaseApi implements OpacApi {
+public class Open extends ApacheBaseApi implements OpacApi {
     protected JSONObject data;
     protected String opac_url;
     protected Document searchResultDoc;

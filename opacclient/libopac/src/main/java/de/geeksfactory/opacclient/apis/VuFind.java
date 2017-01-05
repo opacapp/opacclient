@@ -44,7 +44,7 @@ import de.geeksfactory.opacclient.searchfields.SearchField;
 import de.geeksfactory.opacclient.searchfields.SearchQuery;
 import de.geeksfactory.opacclient.searchfields.TextSearchField;
 
-public class VuFind extends BaseApi {
+public class VuFind extends ApacheBaseApi {
     protected static final Pattern idPattern = Pattern.compile("\\/(?:Opacrl)?Record\\/([^/]+)");
     protected static HashMap<String, String> languageCodes = new HashMap<>();
     protected static HashMap<String, SearchResult.MediaType> mediaTypeSelectors = new HashMap<>();

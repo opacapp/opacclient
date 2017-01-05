@@ -36,7 +36,7 @@ import de.geeksfactory.opacclient.searchfields.SearchQuery;
 import de.geeksfactory.opacclient.searchfields.TextSearchField;
 import de.geeksfactory.opacclient.utils.ISBNTools;
 
-public class SRU extends BaseApi implements OpacApi {
+public class SRU extends ApacheBaseApi implements OpacApi {
 
     protected static HashMap<String, MediaType> defaulttypes = new HashMap<>();
 

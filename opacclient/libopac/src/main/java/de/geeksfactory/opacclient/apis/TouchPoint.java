@@ -77,7 +77,7 @@ import de.geeksfactory.opacclient.searchfields.TextSearchField;
 /**
  * OpacApi implementation for Web Opacs of the TouchPoint product, developed by OCLC.
  */
-public class TouchPoint extends BaseApi implements OpacApi {
+public class TouchPoint extends ApacheBaseApi implements OpacApi {
     protected static HashMap<String, MediaType> defaulttypes = new HashMap<>();
 
     static {

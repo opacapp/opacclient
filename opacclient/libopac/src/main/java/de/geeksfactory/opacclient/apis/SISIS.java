@@ -75,7 +75,7 @@ import de.geeksfactory.opacclient.searchfields.TextSearchField;
  *
  * Restrictions: Bookmarks are only constantly supported if the library uses the BibTip extension.
  */
-public class SISIS extends BaseApi implements OpacApi {
+public class SISIS extends ApacheBaseApi implements OpacApi {
     protected static HashMap<String, MediaType> defaulttypes = new HashMap<>();
 
     static {

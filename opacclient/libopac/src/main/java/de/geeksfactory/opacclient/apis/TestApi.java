@@ -28,7 +28,7 @@ import de.geeksfactory.opacclient.searchfields.SearchField;
 import de.geeksfactory.opacclient.searchfields.SearchQuery;
 import de.geeksfactory.opacclient.searchfields.TextSearchField;
 
-public class TestApi extends BaseApi {
+public class TestApi extends ApacheBaseApi {
     private Library library;
     private List<SearchResult> list = new ArrayList<>();
     private List<DetailedItem> detailList = new ArrayList<>();

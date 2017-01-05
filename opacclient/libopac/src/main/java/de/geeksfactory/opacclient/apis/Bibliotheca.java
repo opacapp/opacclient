@@ -87,7 +87,7 @@ import de.geeksfactory.opacclient.utils.JsonKeyIterator;
  * OpacApi implementation for Bibliotheca Web Opacs, originally developed by BOND, now owned by
  * OCLC. Known to work well with Web Opac versions from 2.6, maybe older, to 2.8
  */
-public class Bibliotheca extends BaseApi {
+public class Bibliotheca extends ApacheBaseApi {
 
     protected static HashMap<String, MediaType> defaulttypes = new HashMap<>();
 

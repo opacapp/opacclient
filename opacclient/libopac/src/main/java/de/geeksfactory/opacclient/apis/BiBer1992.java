@@ -73,7 +73,7 @@ import de.geeksfactory.opacclient.searchfields.TextSearchField;
 /**
  * @author Ruediger Wurth
  */
-public class BiBer1992 extends BaseApi {
+public class BiBer1992 extends ApacheBaseApi {
 
     protected static HashMap<String, MediaType> defaulttypes = new HashMap<>();
 

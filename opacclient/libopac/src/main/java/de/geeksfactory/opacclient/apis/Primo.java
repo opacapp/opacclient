@@ -45,7 +45,7 @@ import de.geeksfactory.opacclient.searchfields.TextSearchField;
 
 import static java.net.URLDecoder.decode;
 
-public class Primo extends BaseApi {
+public class Primo extends ApacheBaseApi {
     protected static HashMap<String, String> languageCodes = new HashMap<>();
     protected static HashMap<String, SearchResult.MediaType> mediaTypeClasses = new HashMap<>();
 

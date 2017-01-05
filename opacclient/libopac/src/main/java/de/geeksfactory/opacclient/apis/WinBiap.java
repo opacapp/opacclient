@@ -91,7 +91,7 @@ import de.geeksfactory.opacclient.utils.Base64;
  */
 //@formatter:on
 
-public class WinBiap extends BaseApi implements OpacApi {
+public class WinBiap extends ApacheBaseApi implements OpacApi {
 
     protected static final String QUERY_TYPE_CONTAINS = "8";
     protected static final String QUERY_TYPE_FROM = "6";

@@ -55,7 +55,7 @@ import de.geeksfactory.opacclient.searchfields.SearchField;
 import de.geeksfactory.opacclient.searchfields.SearchQuery;
 import de.geeksfactory.opacclient.searchfields.TextSearchField;
 
-public class Adis extends BaseApi implements OpacApi {
+public class Adis extends ApacheBaseApi implements OpacApi {
 
     protected static HashMap<String, MediaType> types = new HashMap<>();
     protected static HashSet<String> ignoredFieldNames = new HashSet<>();

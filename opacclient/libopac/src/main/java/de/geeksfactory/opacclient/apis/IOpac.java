@@ -77,7 +77,7 @@ import de.geeksfactory.opacclient.searchfields.TextSearchField;
  * @author Johan von Forstner, 17.09.2013
  */
 
-public class IOpac extends BaseApi implements OpacApi {
+public class IOpac extends ApacheBaseApi implements OpacApi {
 
     protected static HashMap<String, MediaType> defaulttypes = new HashMap<>();
 
