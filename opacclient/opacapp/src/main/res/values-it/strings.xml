@@ -101,8 +101,7 @@
   <string name="share_wait">Attendere il caricamento dei dettagli</string>
   <string name="share_notsupported">Non disponibile per questa biblioteca</string>
   <string name="unsupported">Funzione non supportata</string>
-  <string name="account_unsupported_api">Questa funzione non è ancora supportata per la tua biblioteca. Per renderla disponibile abbiamo bisogno dell\'aiuto degli utenti di questa biblioteca. Se hai voglia di aiutarci invia una e-mail all\'indirizzo info@opacapp.de</string>
-  <string name="write_mail">Scrivere una e-mail</string>
+  <string name="account_unsupported_api">Questa funzione non è ancora supportata per la tua biblioteca.</string>
   <string name="info_error">Non sono disponibili informazioni aggiuntive sulla biblioteca.</string>
   <string name="info_unsupported">Per questa biblioteca non sono disponibili informazioni aggiuntive.</string>
   <string name="connection_error_detail">La connessione al server della biblioteca non è riuscita. Controlla che la tua connessione internet sia attiva. Se il problema persiste probabilmente il server della biblioteca ha un problema oppure l\'applicazione non è riuscita ad elaborare la risposta ricevuta.</string>

@@ -93,8 +93,7 @@
   <string name="share_wait">Lütfen ayrıntıların yüklenmesini bekleyin</string>
   <string name="share_notsupported">Bu kütüphanede desteklenmiyor</string>
   <string name="unsupported">Desteklenmiyor</string>
-  <string name="account_unsupported_api">Bu özellik henüz kütüphanenizde desteklenmiyor. Bu özelliğin eklenmesi için okurların yardımına ihtiyacımız olabilir, ilgileniyorsanız bize e-posta atın: info@opacapp.de</string>
-  <string name="write_mail">E-posta yaz</string>
+  <string name="account_unsupported_api">Bu özellik henüz kütüphanenizde desteklenmiyor.</string>
   <string name="info_error">Bu kütüphane için ek bilgi yüklenemiyor</string>
   <string name="info_unsupported">Bu kütüphane için gösterek bilgi bulunmuyor</string>
   <string name="connection_error_detail">Kütüphane sunucusuna bağlantı başarısız oldu. Lütfen internet bağlantınızı kontrol edin. Eğer hata devam ederse kütüphane sunucusunda bir sorun olabilir veya uygulama kütüphane sunucusundan gelen cevabı okuyamıyor olabilir.</string>

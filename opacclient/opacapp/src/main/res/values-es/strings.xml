@@ -93,8 +93,7 @@
   <string name="share_wait">Por favor, espera la carga de los detalles.</string>
   <string name="share_notsupported">No compatible con esta biblioteca.</string>
   <string name="unsupported">No compatible</string>
-  <string name="account_unsupported_api">Esta propiedad todavía no está compatible con tu biblioteca. Podríamos recurrir a lectores locales para instalarlo. Si estás interesado, escribe un correo a info@opacapp.de</string>
-  <string name="write_mail">Escribir correo</string>
+  <string name="account_unsupported_api">Esta propiedad todavía no está compatible con tu biblioteca.</string>
   <string name="info_error">No podía cargar más información para esta biblioteca.</string>
   <string name="info_unsupported">No tenemos ninguna información sobre esta biblioteca.</string>
   <string name="connection_error_detail">La conexión con el servidor de la biblioteca falló. Por favor, compruebe su conexión de Internet. Si el problema continúa, probablemente había un problema en el servidor de la biblioteca o la aplicación no podía analizar la respuesta del servidor.</string>
