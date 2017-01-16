@@ -109,7 +109,7 @@ public class AccountFragment extends Fragment implements
     protected FrameLayout errorView;
     protected View unsupportedErrorView, answerErrorView;
     protected SwipeRefreshLayout swipeRefreshLayout;
-    protected Button btSend, btPrefs;
+    protected Button btPrefs;
     protected LinearLayout llLoading;
     protected TextView tvError, tvResHeader, tvPendingFeesLabel, tvPendingFees, tvValidUntilLabel,
             tvValidUntil, tvAge, tvLentHeader, tvWarning, tvAccCity, tvAccUser, tvAccLabel,
@@ -169,7 +169,6 @@ public class AccountFragment extends Fragment implements
         answerErrorView = view.findViewById(R.id.answer_error);
         llLoading = (LinearLayout) view.findViewById(R.id.llLoading);
         tvErrBodyU = (TextView) view.findViewById(R.id.tvErrBodyU);
-        btSend = (Button) view.findViewById(R.id.btSend);
         btPrefs = (Button) view.findViewById(R.id.btPrefs);
         tvErrHeadA = (TextView) view.findViewById(R.id.tvErrHeadA);
         tvErrBodyA = (TextView) view.findViewById(R.id.tvErrBodyA);
@@ -448,30 +447,6 @@ public class AccountFragment extends Fragment implements
             unsupportedErrorView.setVisibility(
                     View.VISIBLE);
             tvErrBodyU.setText(R.string.account_unsupported_api);
-            btSend.setText(R.string.write_mail);
-            btSend.setOnClickListener(new OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Intent emailIntent = new Intent(
-                            android.content.Intent.ACTION_SEND);
-                    emailIntent.putExtra(
-                            android.content.Intent.EXTRA_EMAIL,
-                            new String[]{"info@opacapp.de"});
-                    emailIntent
-                            .putExtra(
-                                    android.content.Intent.EXTRA_SUBJECT,
-                                    "Bibliothek "
-                                            + app.getLibrary()
-                                                 .getIdent());
-                    emailIntent.putExtra(
-                            android.content.Intent.EXTRA_TEXT,
-                            getResources().getString(
-                                    R.string.interested_to_help));
-                    emailIntent.setType("text/plain");
-                    startActivity(Intent.createChooser(emailIntent,
-                            getString(R.string.write_mail)));
-                }
-            });
 
         } else if (account.getPassword() == null
                 || account.getPassword().equals("null")

@@ -101,7 +101,7 @@
     <string name="share_wait">Please wait for the details to load.</string>
     <string name="share_notsupported">Not supported in this library.</string>
     <string name="unsupported">Not supported</string>
-    <string name="account_unsupported_api">This feature is not yet supported in your library. We might use some help from readers here to implement it. If you\'re interested, mail us at info@opacapp.de</string>
+    <string name="account_unsupported_api">This feature is not yet supported in your library.</string>
     <string name="write_mail">Write e-mail</string>
     <string name="info_error">Could not load additional information for this library.</string>
     <string name="info_unsupported">We don\'t have any information about this library to show.</string>
