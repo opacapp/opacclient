@@ -636,15 +636,20 @@ public class Open extends BaseApi implements OpacApi {
     protected String getCopyColumnKey(String text) {
         switch (text) {
             case "Zweigstelle":
+            case "Bibliothek":
                 return "branch";
             case "Standorte":
+            case "Standort":
                 return "location";
             case "Status":
                 return "status";
             case "Vorbestellungen":
                 return "reservations";
             case "Frist":
+            case "Rückgabedatum":
                 return "returndate";
+            case "Signatur":
+                return "signature";
             default:
                 return null;
         }
