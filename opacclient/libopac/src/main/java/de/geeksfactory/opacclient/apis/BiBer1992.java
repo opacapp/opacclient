@@ -1008,6 +1008,10 @@ public class BiBer1992 extends BaseApi {
             return media;
         }
 
+        if (doc.select("form[name=medkl] table").size() == 0){
+            return new ArrayList<LentItem>();
+        }
+
         // parse result list
         Map<String, Integer> copymap = new HashMap<>();
         Elements headerCells = doc.select("form[name=medkl] table tr:has(th)").last().select("th");
@@ -1122,6 +1126,9 @@ public class BiBer1992 extends BaseApi {
         if (doc == null) {
             // error message as html result
             return reservations;
+        }
+        if (doc.select("form[name=vorml] table").size() == 0){
+            return new ArrayList<ReservedItem>();
         }
 
         // parse result list
