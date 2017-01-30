@@ -289,7 +289,13 @@ public class Open extends BaseApi implements OpacApi {
             }
         }
 
-        int totalCount = Integer.parseInt(doc.select("span[id$=TotalItemsLabel]").first().text());
+
+        int totalCount;
+        if (doc.select("span[id$=TotalItemsLabel]").size() > 0) {
+            totalCount = Integer.parseInt(doc.select("span[id$=TotalItemsLabel]").first().text());
+        } else {
+            throw new OpacErrorException(stringProvider.getString(StringProvider.UNKNOWN_ERROR));
+        }
 
         Elements elements = doc.select("div[id$=divMedium], div[id$=divComprehensiveItem]");
         List<SearchResult> results = new ArrayList<>();
@@ -483,10 +489,27 @@ public class Open extends BaseApi implements OpacApi {
                 New style: Page buttons using normal links
                 We can go directly to the correct page
             */
-            String href = doc.select("a[id*=LinkButtonPageN]").first().attr("href");
-            String url = href.replaceFirst("page=\\d+", "page=" + page);
-            Document doc2 = Jsoup.parse(httpGet(url, getDefaultEncoding()));
-            return parse_search(doc2, page);
+            if (doc.select("a[id*=LinkButtonPageN]").size() > 0) {
+                String href = doc.select("a[id*=LinkButtonPageN]").first().attr("href");
+                String url = href.replaceFirst("page=\\d+", "page=" + page);
+                Document doc2 = Jsoup.parse(httpGet(url, getDefaultEncoding()));
+                return parse_search(doc2, page);
+            } else {
+                int totalCount;
+                try {
+                    totalCount = Integer.parseInt(
+                            doc.select("span[id$=TotalItemsLabel]").first().text());
+                } catch (Exception e) {
+                    totalCount = 0;
+                }
+
+                // Next page does not exist
+                return new SearchRequestResult(
+                        new ArrayList<SearchResult>(),
+                        0,
+                        totalCount
+                );
+            }
         } else {
             /*
                 Old style: Page buttons using Javascript
@@ -636,15 +659,20 @@ public class Open extends BaseApi implements OpacApi {
     protected String getCopyColumnKey(String text) {
         switch (text) {
             case "Zweigstelle":
+            case "Bibliothek":
                 return "branch";
             case "Standorte":
+            case "Standort":
                 return "location";
             case "Status":
                 return "status";
             case "Vorbestellungen":
                 return "reservations";
             case "Frist":
+            case "Rückgabedatum":
                 return "returndate";
+            case "Signatur":
+                return "signature";
             default:
                 return null;
         }
@@ -825,6 +853,10 @@ public class Open extends BaseApi implements OpacApi {
         MultipartEntityBuilder data = MultipartEntityBuilder.create();
         data.setLaxMode();
 
+        // data.setCharset somehow breaks everything in Bern.
+        // data.addTextBody breaks utf-8 characters in select boxes in Bern
+        // .getBytes is an implicit, undeclared UTF-8 conversion, this seems to work -- at least in Bern
+
         // iterate the form control elements and accumulate their values
         for (Element el : form.elements()) {
             if (!el.tag().isFormSubmittable()) {
@@ -838,26 +870,26 @@ public class Open extends BaseApi implements OpacApi {
                 Elements options = el.select("option[selected]");
                 boolean set = false;
                 for (Element option : options) {
-                    data.addTextBody(name, option.val());
+                    data.addBinaryBody(name, option.val().getBytes());
                     set = true;
                 }
                 if (!set) {
                     Element option = el.select("option").first();
                     if (option != null) {
-                        data.addTextBody(name, option.val());
+                        data.addBinaryBody(name, option.val().getBytes());
                     }
                 }
             } else if ("checkbox".equalsIgnoreCase(type) || "radio".equalsIgnoreCase(type)) {
                 // only add checkbox or radio if they have the checked attribute
                 if (el.hasAttr("checked")) {
-                    data.addTextBody(name, el.val().length() > 0 ? el.val() : "on");
+                    data.addBinaryBody(name, el.val().length() > 0 ? el.val().getBytes() : "on".getBytes());
                 }
             } else if ("submit".equalsIgnoreCase(type) || "image".equalsIgnoreCase(type)) {
                 if (submitName != null && el.attr("name").contains(submitName)) {
-                    data.addTextBody(name, el.val());
+                    data.addBinaryBody(name, el.val().getBytes());
                 }
             } else {
-                data.addTextBody(name, el.val());
+                data.addBinaryBody(name, el.val().getBytes());
             }
         }
         return data;

@@ -1,0 +1,13 @@
+{
+  "Nr": null,
+  "Mediennr": "barcode",
+  "\u00a0A\u00a0": null,
+  "Signatur / Kurztitel": "author+title",
+  "Vormerkung: Signatur / Kurztitel": "author+title",
+  "gültig ab": null,
+  "gültig bis": "expirationdate",
+  "entliehen bis": "availability",
+  "\u00a0": null,
+  "": null,
+  "Rang": null
+}

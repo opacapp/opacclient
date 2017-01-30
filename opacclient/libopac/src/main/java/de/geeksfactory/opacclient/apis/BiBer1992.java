@@ -23,6 +23,7 @@ import org.apache.http.NameValuePair;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.message.BasicNameValuePair;
+import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 import org.json.JSONArray;
@@ -36,7 +37,6 @@ import org.jsoup.select.Elements;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -62,6 +62,8 @@ import de.geeksfactory.opacclient.objects.SearchRequestResult;
 import de.geeksfactory.opacclient.objects.SearchResult;
 import de.geeksfactory.opacclient.objects.SearchResult.MediaType;
 import de.geeksfactory.opacclient.objects.SearchResult.Status;
+import de.geeksfactory.opacclient.reporting.Report;
+import de.geeksfactory.opacclient.reporting.ReportHandler;
 import de.geeksfactory.opacclient.searchfields.BarcodeSearchField;
 import de.geeksfactory.opacclient.searchfields.DropdownSearchField;
 import de.geeksfactory.opacclient.searchfields.SearchField;
@@ -994,18 +996,48 @@ public class BiBer1992 extends BaseApi {
         // get media list via http POST
         Document doc = accountHttpPost(account, "medk");
 
-        return parseMediaList(res, doc, data);
+        return parseMediaList(res, account, doc, data, reportHandler,
+                loadJsonResource("/biber1992/headers_lent.json"));
     }
 
-    static List<LentItem> parseMediaList(AccountData res, Document doc,
-            JSONObject data) throws JSONException {
+    static List<LentItem> parseMediaList(AccountData res, Account account, Document doc,
+            JSONObject data, ReportHandler reportHandler, JSONObject headers_lent)
+            throws JSONException {
         List<LentItem> media = new ArrayList<>();
         if (doc == null) {
             return media;
         }
 
         // parse result list
-        JSONObject copymap = data.getJSONObject("accounttable");
+        Map<String, Integer> copymap = new HashMap<>();
+        Elements headerCells = doc.select("form[name=medkl] table tr:has(th)").last().select("th");
+        JSONArray headersList = new JSONArray();
+        JSONArray unknownHeaders = new JSONArray();
+        int j = 0;
+        for (Element headerCell : headerCells) {
+            String header = headerCell.text();
+            headersList.put(header);
+            if (headers_lent.has(header)) {
+                if (!headers_lent.isNull(header)) copymap.put(headers_lent.getString(header), j);
+            } else {
+                unknownHeaders.put(header);
+            }
+            j++;
+        }
+
+        if (unknownHeaders.length() > 0) {
+            // send report
+            JSONObject reportData = new JSONObject();
+            reportData.put("headers", headersList);
+            reportData.put("unknown_headers", unknownHeaders);
+            Report report = new Report(account.getLibrary(), "biber1992", "unknown header - lent",
+                    DateTime.now(), reportData);
+            reportHandler.sendReport(report);
+
+            // fallback to JSON
+            JSONObject accounttable = data.getJSONObject("accounttable");
+            copymap = jsonToMap(accounttable);
+        }
 
         Pattern expire = Pattern.compile("Ausweisg.ltigkeit: ([0-9.]+)");
         Pattern fees = Pattern.compile("([0-9,.]+) .");
@@ -1037,42 +1069,32 @@ public class BiBer1992 extends BaseApi {
             Pattern itemIdPat = Pattern
                     .compile("javascript:(?:smAcc|smMedk)\\('[a-z]+','[a-z]+','([A-Za-z0-9]+)'\\)");
             // columns: all elements of one media
-            Iterator<?> keys = copymap.keys();
-            while (keys.hasNext()) {
-                String key = (String) keys.next();
-                int index;
-                try {
-                    index = copymap.has(key) ? copymap.getInt(key) : -1;
-                } catch (JSONException e1) {
-                    index = -1;
+            for (Map.Entry<String, Integer> entry : copymap.entrySet()) {
+                String key = entry.getKey();
+                int index = entry.getValue();
+                if (tr.child(index).select("a").size() == 1) {
+                    Matcher matcher = itemIdPat.matcher(tr.child(index)
+                                                          .select("a").attr("href"));
+                    if (matcher.find()) item.setId(matcher.group(1));
                 }
-                if (index >= 0) {
-                    String value = tr.child(index).text().trim().replace("\u00A0", "");
 
-                    switch (key) {
-                        case "author":
-                            value = findTitleAndAuthor(value)[1];
-                            break;
-                        case "title":
-                            value = findTitleAndAuthor(value)[0];
-                            break;
-                        case "returndate":
-                            try {
-                                value = fmt.parseLocalDate(value).toString();
-                            } catch (IllegalArgumentException e1) {
-                                e1.printStackTrace();
-                            }
-                            break;
-                    }
+                String value = tr.child(index).text().trim().replace("\u00A0", "");
 
-                    if (tr.child(index).select("a").size() == 1) {
-                        Matcher matcher = itemIdPat.matcher(tr.child(index)
-                                                              .select("a").attr("href"));
-                        if (matcher.find()) item.setId(matcher.group(1));
-                    }
-
-                    if (value != null && value.length() != 0) item.set(key, value);
+                switch (key) {
+                    case "author+title":
+                        item.setTitle(findTitleAndAuthor(value)[0]);
+                        item.setAuthor(findTitleAndAuthor(value)[1]);
+                        continue;
+                    case "returndate":
+                        try {
+                            value = fmt.parseLocalDate(value).toString();
+                        } catch (IllegalArgumentException e1) {
+                            e1.printStackTrace();
+                        }
+                        break;
                 }
+
+                if (value != null && value.length() != 0) item.set(key, value);
             }
 
             if (tr.select("input[type=checkbox][value=YES]").size() > 0) {
@@ -1089,10 +1111,12 @@ public class BiBer1992 extends BaseApi {
         // get reservations list via http POST
         Document doc = accountHttpPost(account, "vorm");
 
-        return parseResList(doc, data);
+        return parseResList(account, doc, data, reportHandler,
+                loadJsonResource("/biber1992/headers_reservations.json"));
     }
 
-    static List<ReservedItem> parseResList(Document doc, JSONObject data)
+    static List<ReservedItem> parseResList(Account account, Document doc, JSONObject data,
+            ReportHandler reportHandler, JSONObject headers_reservations)
             throws JSONException {
         List<ReservedItem> reservations = new ArrayList<>();
         if (doc == null) {
@@ -1101,19 +1125,37 @@ public class BiBer1992 extends BaseApi {
         }
 
         // parse result list
-        JSONObject copymap;
-        if (!data.has("reservationtable")) {
-            // reservations not specifically supported, let's just try it
-            // with default values but fail silently
-            copymap = new JSONObject();
-            copymap.put("author", 3);
-            copymap.put("availability", 6);
-            copymap.put("branch", -1);
-            copymap.put("cancelurl", -1);
-            copymap.put("expirationdate", 5);
-            copymap.put("title", 3);
-        } else {
-            copymap = data.getJSONObject("reservationtable");
+        Map<String, Integer> copymap = new HashMap<>();
+        Elements headerCells = doc.select("form[name=vorml] table tr:has(th)").last().select("th");
+        JSONArray headersList = new JSONArray();
+        JSONArray unknownHeaders = new JSONArray();
+        int j = 0;
+        for (Element headerCell : headerCells) {
+            String header = headerCell.text();
+            headersList.put(header);
+            if (headers_reservations.has(header)) {
+                if (!headers_reservations.isNull(header)) {
+                    copymap.put(headers_reservations.getString(header), j);
+                }
+            } else {
+                unknownHeaders.put(header);
+            }
+            j++;
+        }
+
+        if (unknownHeaders.length() > 0) {
+            // send report
+            JSONObject reportData = new JSONObject();
+            reportData.put("headers", headersList);
+            reportData.put("unknown_headers", unknownHeaders);
+            Report report =
+                    new Report(account.getLibrary(), "biber1992", "unknown header - reservations",
+                            DateTime.now(), reportData);
+            reportHandler.sendReport(report);
+
+            // fallback to JSON
+            JSONObject accounttable = data.getJSONObject("accounttable");
+            copymap = jsonToMap(accounttable);
         }
 
         DateTimeFormatter fmt = DateTimeFormat.forPattern("dd.MM.yyyy").withLocale(Locale.GERMAN);
@@ -1136,40 +1178,34 @@ public class BiBer1992 extends BaseApi {
             }
 
             // columns: all elements of one media
-            Iterator<?> keys = copymap.keys();
-            while (keys.hasNext()) {
-                String key = (String) keys.next();
-                int index = copymap.getInt(key);
-                if (index >= 0) {
-                    String value = tr.child(index).text().trim();
+            for (Map.Entry<String, Integer> entry : copymap.entrySet()) {
+                String key = entry.getKey();
+                int index = entry.getValue();
+                String value = tr.child(index).text().trim();
 
-                    switch (key) {
-                        case "author":
-                            value = findTitleAndAuthor(value)[1];
-                            break;
-                        case "title":
-                            value = findTitleAndAuthor(value)[0];
-                            break;
-                        case "availability":
-                            try {
-                                value = fmt.parseLocalDate(value).toString();
-                            } catch (IllegalArgumentException e1) {
-                                key = "status";
-                            }
-                            break;
-                        case "expirationdate":
-                            try {
-                                value = fmt.parseLocalDate(value).toString();
-                            } catch (IllegalArgumentException e1) {
-                                key = "status";
-                            }
-                            break;
-                    }
+                switch (key) {
+                    case "author+title":
+                        item.setTitle(findTitleAndAuthor(value)[0]);
+                        item.setAuthor(findTitleAndAuthor(value)[1]);
+                        continue;
+                    case "availability":
+                        try {
+                            value = fmt.parseLocalDate(value).toString();
+                        } catch (IllegalArgumentException e1) {
+                            key = "status";
+                        }
+                        break;
+                    case "expirationdate":
+                        try {
+                            value = fmt.parseLocalDate(value).toString();
+                        } catch (IllegalArgumentException e1) {
+                            key = "status";
+                        }
+                        break;
+                }
 
-                    if (value != null && value.length() != 0) {
-                        item.set(key, value);
-                    }
-
+                if (value != null && value.length() != 0) {
+                    item.set(key, value);
                 }
             }
             reservations.add(item);

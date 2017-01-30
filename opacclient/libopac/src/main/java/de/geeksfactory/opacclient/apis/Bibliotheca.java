@@ -42,7 +42,6 @@ import org.jsoup.nodes.TextNode;
 import org.jsoup.select.Elements;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -1045,19 +1044,8 @@ public class Bibliotheca extends BaseApi {
         logged_in_as = acc;
         logged_in = System.currentTimeMillis();
         return parse_account(acc, doc, data, reportHandler,
-                getHeadersFile("/bibliotheca/headers_lent.json"),
-                getHeadersFile("/bibliotheca/headers_reservations.json"));
-    }
-
-    private JSONObject getHeadersFile(String filename) {
-        InputStream is = getClass().getResourceAsStream(filename);
-        if (is == null) return null;
-        try {
-            return new JSONObject(convertStreamToString(is));
-        } catch (IOException | JSONException e) {
-            e.printStackTrace();
-            return null;
-        }
+                loadJsonResource("/bibliotheca/headers_lent.json"),
+                loadJsonResource("/bibliotheca/headers_reservations.json"));
     }
 
     public static AccountData parse_account(Account acc, Document doc, JSONObject data,
@@ -1237,21 +1225,6 @@ public class Bibliotheca extends BaseApi {
         res.setLent(media);
         res.setReservations(reservations);
         return res;
-    }
-
-    private static Map<String, Integer> jsonToMap(JSONObject json) {
-        Map<String, Integer> map = new HashMap<>();
-        Iterator keys = json.keys();
-        while (keys.hasNext()) {
-            String key = (String) keys.next();
-            try {
-                int value = json.getInt(key);
-                if (value >= 0) map.put(key, value);
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-        }
-        return map;
     }
 
     @Override

@@ -92,19 +92,29 @@ public class ReminderBroadcastReceiver extends BroadcastReceiver {
         }
         if (BuildConfig.DEBUG) Log.i(LOG_TAG, "showing notification");
 
-        alarm.notified = true;
-        adata.updateAlarm(alarm);
-
         List<LentItem> expiringItems = new ArrayList<>();
+        List<Long> updatedItemIds = new ArrayList<>();
+
         for (long mediaId : alarm.media) {
             LentItem item = adata.getLentItem(mediaId);
             if (item == null) {
-                throw new DataIntegrityException(
-                        "Unknown media ID " + mediaId + " in alarm with deadline " +
-                                alarm.deadline.toString());
+                if (BuildConfig.DEBUG) {
+                    throw new DataIntegrityException(
+                            "Unknown media ID " + mediaId + " in alarm with deadline " +
+                                    alarm.deadline.toString());
+                }
+            } else {
+                expiringItems.add(item);
+                updatedItemIds.add(mediaId);
             }
-            expiringItems.add(item);
         }
+
+        if (expiringItems.size() == 0) {
+            adata.removeAlarm(alarm);
+            return;
+        }
+
+        alarm.media = listToLongArray(updatedItemIds);
 
         String notificationText;
         String notificationTitle;
@@ -183,6 +193,15 @@ public class ReminderBroadcastReceiver extends BroadcastReceiver {
         NotificationManager notificationManager = (NotificationManager) context
                 .getSystemService(Context.NOTIFICATION_SERVICE);
         notificationManager.notify((int) alarm.id, builder.build());
+
+        alarm.notified = true;
+        adata.updateAlarm(alarm);
+    }
+
+    private static long[] listToLongArray(List<Long> list) {
+        long[] array = new long[list.size()];
+        for (int i = 0; i < list.size(); i++) array[i] = list.get(i);
+        return array;
     }
 
     private void notificationDeleted() {

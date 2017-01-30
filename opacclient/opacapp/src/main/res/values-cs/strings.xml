@@ -77,7 +77,7 @@
   </string-array>
   <string name="notification_warning">Perioda pro upozornění</string>
   <string name="notification_warning_desc">Jak dlouho dopředu chcete být upozorněni na blížící se datum vrácení?</string>
-  <string name="notif_ticker">u %s titulů se blíží datum vrácení!</string>
+  <string name="notif_ticker">u %d titulů se blíží datum vrácení!</string>
   <string name="star">Uložit do oblíbených</string>
   <string name="starred">Titul je nyní v seznamu vašich oblíbených.</string>
   <string name="star_wait">Prosím vyčkejte, než dojde ke stažení podobností.</string>
@@ -85,8 +85,7 @@
   <string name="share_wait">Prosím vyčkejte, než dojde ke stažení podobností.</string>
   <string name="share_notsupported">Tuto funkci bohužel knihovna nepodporuje.</string>
   <string name="unsupported">Funkce není podporována</string>
-  <string name="account_unsupported_api">Tato funkce bohužel není vaší knihovnou podporována. Pokud nám dáte vědět, že o ní máte zájem, pokusíme se ji v budoucnu implementovat. Budeme rádi pokud nám napíšete e-mail na info@opacapp.de</string>
-  <string name="write_mail">Napsat e-mail</string>
+  <string name="account_unsupported_api">Tato funkce bohužel není vaší knihovnou podporována.</string>
   <string name="info_error">Nepodařilo se získat doplňující informace k vybrané knihovně.</string>
   <string name="info_unsupported">Bohužel nemáme k dispozici žádné další infomace o knihovně.</string>
   <string name="retry">Prosím, zkuste to znovu</string>

@@ -83,9 +83,9 @@
     </string-array>
     <string name="notification_warning">Warning period</string>
     <string name="notification_warning_desc">How long before the due date should a notification be shown?</string>
-    <string name="notif_ticker">%s items are about to expire!</string>
+    <string name="notif_ticker">%d items are about to expire!</string>
     <string name="notif_title">Items are about to expire</string>
-    <string name="notif_ticker_expired">%s items have expired!</string>
+    <string name="notif_ticker_expired">%d items have expired!</string>
     <string name="notif_title_expired">Items have expired</string>
     <string name="notif_plus_more">+%d more</string>
     <string name="notif_snooze">Later</string>
@@ -101,7 +101,7 @@
     <string name="share_wait">Please wait for the details to load.</string>
     <string name="share_notsupported">Not supported in this library.</string>
     <string name="unsupported">Not supported</string>
-    <string name="account_unsupported_api">This feature is not yet supported in your library. We might use some help from readers here to implement it. If you\'re interested, mail us at info@opacapp.de</string>
+    <string name="account_unsupported_api">This feature is not yet supported in your library. Sorry :(</string>
     <string name="write_mail">Write e-mail</string>
     <string name="info_error">Could not load additional information for this library.</string>
     <string name="info_unsupported">We don\'t have any information about this library to show.</string>

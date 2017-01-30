@@ -83,9 +83,9 @@
   </string-array>
   <string name="notification_warning">Okres ostrzeżenia</string>
   <string name="notification_warning_desc">Jak długo przed przedawnieniem powinno być pokazane powiadomienie.</string>
-  <string name="notif_ticker">%s pozycji wkrótce wygaśnie.</string>
+  <string name="notif_ticker">%d pozycji wkrótce wygaśnie.</string>
   <string name="notif_title">Pozycje które wygasają</string>
-  <string name="notif_ticker_expired">%s pozycji wygasło!</string>
+  <string name="notif_ticker_expired">%d pozycji wygasło!</string>
   <string name="notif_title_expired">Pozycje wygasły</string>
   <string name="notif_plus_more">+%d więcej</string>
   <string name="notif_snooze">Później</string>
@@ -101,8 +101,7 @@
   <string name="share_wait">Poczekaj aż załadują się szczegóły.</string>
   <string name="share_notsupported">Nie wspierane w tej bibliotece.</string>
   <string name="unsupported">Nie wspierane</string>
-  <string name="account_unsupported_api">Ta funkcjonalność nie jest jeszcze wspierana w Twojej bibliotece. Moglibyśmy skorzystać z pomocy czytelników by ją zaimplementować. Jeśli chcesz pomóc, napisz na info@opacapp.de</string>
-  <string name="write_mail">Napisz e-maila</string>
+  <string name="account_unsupported_api">Ta funkcjonalność nie jest jeszcze wspierana w Twojej bibliotece.</string>
   <string name="info_error">Nie załadowano dodatkowych informacji o tej bibliotece.</string>
   <string name="info_unsupported">Brak informacji o tej bibliotece.</string>
   <string name="connection_error_detail">Połączenie do serwera tej biblioteki nie powiodło się. Sprawdź połączenie z internetem. Jeśli problem powtarza się powodem może być awaria serwera lub aplikacja nie potrafi zinterpretować odpowiedzi serwera.</string>

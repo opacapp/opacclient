@@ -56,12 +56,6 @@
             android:padding="10dp"
             android:text="@string/account_unsupported_api"/>
 
-        <Button
-            android:id="@+id/btSend"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/report"/>
-
     </LinearLayout>
 
     <LinearLayout

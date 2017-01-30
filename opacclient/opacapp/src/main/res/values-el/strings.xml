@@ -63,7 +63,7 @@
   <string name="startup_summary">Ποια οθόνη θα πρέπει να εμφανίζεται κατά την εκκίνηση;</string>
   <string name="notification_warning">Περίοδος προειδοποίησης</string>
   <string name="notification_warning_desc">Πόσο διάστημα πριν από την καταληκτική ημερομηνία θα πρέπει να παρουσιάζεται μια κοινοποίηση;</string>
-  <string name="notif_ticker">%s στοιχεία που πρόκειται να λήξουν!</string>
+  <string name="notif_ticker">%d στοιχεία που πρόκειται να λήξουν!</string>
   <string name="notif_title">Στοιχεία που πρόκειται να λήξουν</string>
   <string name="volumes">Τόμοι</string>
   <string name="volumesearch">Εμφάνιση τόμων</string>
@@ -75,8 +75,7 @@
   <string name="share_wait">Παρακαλούμε περιμένετε για να φορτωθουν οι λεπτομέρειες.</string>
   <string name="share_notsupported">Δεν υποστηρίζονται σε αυτή τη βιβλιοθήκη.</string>
   <string name="unsupported">Δεν υποστηρίζονται </string>
-  <string name="account_unsupported_api">Αυτή η δυνατότητα δεν υποστηρίζεται ακόμα στη βιβλιοθήκη σας. Θα μπορούσε να χρησιμοποιήθει κάποια βοήθεια από τους αναγνώστες εδώ για την εφαρμογή. Αν σας ενδιαφέρει, γραψτε μας στο info@opacapp.de</string>
-  <string name="write_mail">Γράψτε email</string>
+  <string name="account_unsupported_api">Αυτή η δυνατότητα δεν υποστηρίζεται ακόμα στη βιβλιοθήκη σας.</string>
   <string name="info_error">Δεν ήταν δυνατή η φόρτωση πρόσθετων πληροφοριών για αυτήν τη βιβλιοθήκη.</string>
   <string name="info_unsupported">Δεν έχουμε καμία πληροφορία σχετικά με αυτήν την βιβλιοθήκη να σας δείξουμε.</string>
   <string name="connection_error_detail">Η σύνδεση με το διακομιστή βιβλιοθήκης απέτυχε. Παρακαλούμε ελέγξτε την σύνδεσή σας στο διαδίκτυο. Αν το πρόβλημα επιμένει, τότε μπορεί να ήταν ένα πρόβλημα του διακομιστή βιβλιοθήκης ή η εφαρμογή δεν ήταν σε θέση να αναλύσει την απάντηση του server.</string>

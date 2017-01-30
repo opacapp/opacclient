@@ -83,9 +83,9 @@
   </string-array>
   <string name="notification_warning">警告時期</string>
   <string name="notification_warning_desc">期限のどれくらい前に警告を表示しますか?</string>
-  <string name="notif_ticker">%s 本の期限です!</string>
+  <string name="notif_ticker">%d 本の期限です!</string>
   <string name="notif_title">本の期限です</string>
-  <string name="notif_ticker_expired">%s 冊の期限が過ぎました!</string>
+  <string name="notif_ticker_expired">%d 冊の期限が過ぎました!</string>
   <string name="notif_title_expired">本の期限が過ぎました</string>
   <string name="notif_plus_more">さらに +%d</string>
   <string name="notif_snooze">後で</string>
@@ -101,8 +101,7 @@
   <string name="share_wait">詳細がロードされるまでしばらくお待ちください。</string>
   <string name="share_notsupported">この図書館でサポートされていません。</string>
   <string name="unsupported">サポートされていません</string>
-  <string name="account_unsupported_api">この機能は、まだこの図書館でサポートされていません。これに対応するには、この図書館の読者の助けを必要とします。もし興味があれば私たち info@opacapp.de までご連絡ください。</string>
-  <string name="write_mail">メールを作成</string>
+  <string name="account_unsupported_api">この機能は、まだこの図書館でサポートされていません。</string>
   <string name="info_error">図書館の追加情報が取得できませんでした。</string>
   <string name="info_unsupported">この図書館は追加の情報を提供していません。</string>
   <string name="connection_error_detail">図書館サーバーに接続できませんでした。インターネット接続を確認してください。問題が続く場合、図書館サーバーに問題があるか、アプリがサーバーのレスポンスを解析できませんでした。</string>
