@@ -289,7 +289,13 @@ public class Open extends BaseApi implements OpacApi {
             }
         }
 
-        int totalCount = Integer.parseInt(doc.select("span[id$=TotalItemsLabel]").first().text());
+
+        int totalCount;
+        if (doc.select("span[id$=TotalItemsLabel]").size() > 0) {
+            totalCount = Integer.parseInt(doc.select("span[id$=TotalItemsLabel]").first().text());
+        } else {
+            throw new OpacErrorException(stringProvider.getString(StringProvider.UNKNOWN_ERROR));
+        }
 
         Elements elements = doc.select("div[id$=divMedium], div[id$=divComprehensiveItem]");
         List<SearchResult> results = new ArrayList<>();
