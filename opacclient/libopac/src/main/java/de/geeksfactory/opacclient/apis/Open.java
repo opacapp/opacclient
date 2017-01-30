@@ -847,6 +847,10 @@ public class Open extends BaseApi implements OpacApi {
         MultipartEntityBuilder data = MultipartEntityBuilder.create();
         data.setLaxMode();
 
+        // data.setCharset somehow breaks everything in Bern.
+        // data.addTextBody breaks utf-8 characters in select boxes in Bern
+        // .getBytes is an implicit, undeclared UTF-8 conversion, this seems to work -- at least in Bern
+
         // iterate the form control elements and accumulate their values
         for (Element el : form.elements()) {
             if (!el.tag().isFormSubmittable()) {
@@ -860,26 +864,26 @@ public class Open extends BaseApi implements OpacApi {
                 Elements options = el.select("option[selected]");
                 boolean set = false;
                 for (Element option : options) {
-                    data.addTextBody(name, option.val());
+                    data.addBinaryBody(name, option.val().getBytes());
                     set = true;
                 }
                 if (!set) {
                     Element option = el.select("option").first();
                     if (option != null) {
-                        data.addTextBody(name, option.val());
+                        data.addBinaryBody(name, option.val().getBytes());
                     }
                 }
             } else if ("checkbox".equalsIgnoreCase(type) || "radio".equalsIgnoreCase(type)) {
                 // only add checkbox or radio if they have the checked attribute
                 if (el.hasAttr("checked")) {
-                    data.addTextBody(name, el.val().length() > 0 ? el.val() : "on");
+                    data.addBinaryBody(name, el.val().length() > 0 ? el.val().getBytes() : "on".getBytes());
                 }
             } else if ("submit".equalsIgnoreCase(type) || "image".equalsIgnoreCase(type)) {
                 if (submitName != null && el.attr("name").contains(submitName)) {
-                    data.addTextBody(name, el.val());
+                    data.addBinaryBody(name, el.val().getBytes());
                 }
             } else {
-                data.addTextBody(name, el.val());
+                data.addBinaryBody(name, el.val().getBytes());
             }
         }
         return data;
