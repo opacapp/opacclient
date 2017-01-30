@@ -483,10 +483,27 @@ public class Open extends BaseApi implements OpacApi {
                 New style: Page buttons using normal links
                 We can go directly to the correct page
             */
-            String href = doc.select("a[id*=LinkButtonPageN]").first().attr("href");
-            String url = href.replaceFirst("page=\\d+", "page=" + page);
-            Document doc2 = Jsoup.parse(httpGet(url, getDefaultEncoding()));
-            return parse_search(doc2, page);
+            if (doc.select("a[id*=LinkButtonPageN]").size() > 0) {
+                String href = doc.select("a[id*=LinkButtonPageN]").first().attr("href");
+                String url = href.replaceFirst("page=\\d+", "page=" + page);
+                Document doc2 = Jsoup.parse(httpGet(url, getDefaultEncoding()));
+                return parse_search(doc2, page);
+            } else {
+                int totalCount;
+                try {
+                    totalCount = Integer.parseInt(
+                            doc.select("span[id$=TotalItemsLabel]").first().text());
+                } catch (Exception e) {
+                    totalCount = 0;
+                }
+
+                // Next page does not exist
+                return new SearchRequestResult(
+                        new ArrayList<SearchResult>(),
+                        0,
+                        totalCount
+                );
+            }
         } else {
             /*
                 Old style: Page buttons using Javascript
