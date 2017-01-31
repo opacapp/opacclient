@@ -1161,8 +1161,21 @@ public class BiBer1992 extends BaseApi {
             reportHandler.sendReport(report);
 
             // fallback to JSON
-            JSONObject accounttable = data.getJSONObject("accounttable");
-            copymap = jsonToMap(accounttable);
+            JSONObject reservationtable;
+            if (data.has("reservationtable")) {
+                reservationtable = data.getJSONObject("reservationtable");
+            } else {
+                // reservations not specifically supported, let's just try it
+                // with default values but fail silently
+                reservationtable = new JSONObject();
+                reservationtable.put("author", 3);
+                reservationtable.put("availability", 6);
+                reservationtable.put("branch", -1);
+                reservationtable.put("cancelurl", -1);
+                reservationtable.put("expirationdate", 5);
+                reservationtable.put("title", 3);
+            }
+            copymap = jsonToMap(reservationtable);
         }
 
         DateTimeFormatter fmt = DateTimeFormat.forPattern("dd.MM.yyyy").withLocale(Locale.GERMAN);
