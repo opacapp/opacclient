@@ -122,7 +122,7 @@ public class LibraryListActivity extends AppCompatActivity
         setContentView(R.layout.activity_library_list);
         setSupportActionBar((Toolbar) findViewById(R.id.toolbar));
 
-        if (getIntent().hasExtra(EXTRA_WELCOME)) {
+        if (getIntent().hasExtra(EXTRA_WELCOME) && savedInstanceState == null) {
             getSupportActionBar().setHomeButtonEnabled(false);
             startActivity(new Intent(this, WelcomeActivity.class));
         } else {
