@@ -1096,6 +1096,16 @@ public class BiBer1992 extends BaseApi {
                             e1.printStackTrace();
                         }
                         break;
+                    case "renewals_number":
+                    case "status":
+                        if (value != null && value.length() != 0) {
+                            if (item.getStatus() == null) {
+                                item.setStatus(value);
+                            } else {
+                                item.setStatus(item.getStatus() + ", " + value);
+                            }
+                        }
+                        continue;
                 }
 
                 if (value != null && value.length() != 0) item.set(key, value);
