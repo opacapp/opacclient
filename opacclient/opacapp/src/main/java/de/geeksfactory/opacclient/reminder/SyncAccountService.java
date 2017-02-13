@@ -151,7 +151,10 @@ public class SyncAccountService extends WakefulIntentService {
             AccountData res;
             try {
                 Library library = app.getLibrary(account.getLibrary());
-                if (!library.isAccountSupported()) continue;
+                if (!library.isAccountSupported()) {
+                    data.deleteAccountData(account);
+                    continue;
+                }
                 OpacApi api = app.getNewApi(library);
                 res = api.account(account);
                 if (res == null) {

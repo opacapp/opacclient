@@ -100,7 +100,6 @@ public class ReminderHelper {
                 cancelNotification(alarm);
                 data.removeAlarm(alarm);
             }
-
         }
 
         // Find and add/update corresponding alarms for current lent media
