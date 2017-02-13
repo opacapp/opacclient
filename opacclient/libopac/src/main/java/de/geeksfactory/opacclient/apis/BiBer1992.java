@@ -1008,6 +1008,10 @@ public class BiBer1992 extends BaseApi {
             return media;
         }
 
+        if (doc.select("form[name=medkl] table").size() == 0){
+            return new ArrayList<LentItem>();
+        }
+
         // parse result list
         Map<String, Integer> copymap = new HashMap<>();
         Elements headerCells = doc.select("form[name=medkl] table tr:has(th)").last().select("th");
@@ -1123,6 +1127,9 @@ public class BiBer1992 extends BaseApi {
             // error message as html result
             return reservations;
         }
+        if (doc.select("form[name=vorml] table").size() == 0){
+            return new ArrayList<ReservedItem>();
+        }
 
         // parse result list
         Map<String, Integer> copymap = new HashMap<>();
@@ -1154,8 +1161,21 @@ public class BiBer1992 extends BaseApi {
             reportHandler.sendReport(report);
 
             // fallback to JSON
-            JSONObject accounttable = data.getJSONObject("accounttable");
-            copymap = jsonToMap(accounttable);
+            JSONObject reservationtable;
+            if (data.has("reservationtable")) {
+                reservationtable = data.getJSONObject("reservationtable");
+            } else {
+                // reservations not specifically supported, let's just try it
+                // with default values but fail silently
+                reservationtable = new JSONObject();
+                reservationtable.put("author", 3);
+                reservationtable.put("availability", 6);
+                reservationtable.put("branch", -1);
+                reservationtable.put("cancelurl", -1);
+                reservationtable.put("expirationdate", 5);
+                reservationtable.put("title", 3);
+            }
+            copymap = jsonToMap(reservationtable);
         }
 
         DateTimeFormatter fmt = DateTimeFormat.forPattern("dd.MM.yyyy").withLocale(Locale.GERMAN);

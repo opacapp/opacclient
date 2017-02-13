@@ -11,8 +11,8 @@ android {
         applicationId "de.geeksfactory.opacclient"
         minSdkVersion 9
         targetSdkVersion 25
-        versionCode 164
-        versionName "5.0.6"
+        versionCode 166
+        versionName "5.0.8"
         vectorDrawables.useSupportLibrary = true
     }
 

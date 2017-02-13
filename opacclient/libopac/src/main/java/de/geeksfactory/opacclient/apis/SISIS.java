@@ -266,7 +266,7 @@ public class SISIS extends BaseApi implements OpacApi {
             }
             if (entry.getSearchField() instanceof DropdownSearchField) {
                 JSONObject data = entry.getSearchField().getData();
-                if (data.getBoolean("restriction")) {
+                if (data.optBoolean("restriction", false)) {
                     params.add(new BasicNameValuePair("searchRestrictionID["
                             + restrictionIndex + "]", entry.getSearchField()
                                                            .getId()));
