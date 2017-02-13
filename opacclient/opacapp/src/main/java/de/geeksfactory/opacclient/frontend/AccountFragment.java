@@ -178,6 +178,9 @@ public class AccountFragment extends Fragment implements
         lentAdapter = new LentAdapter(this);
         try {
             lentAdapter.setApi(app.getApi());
+        } catch (NullPointerException e) {
+            e.printStackTrace();
+            return;
         } catch (OpacClient.LibraryRemovedException e) {
             e.printStackTrace();
         }
