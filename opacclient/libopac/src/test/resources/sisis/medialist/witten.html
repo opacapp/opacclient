@@ -1,0 +1,828 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!-- START jsp/common/metaHeader.jsp -->
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="de" lang="de">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta http-equiv="pragma" content="no-cache">
+    <meta http-equiv="expires" content="0">
+    <meta http-equiv="cache-control" content="no-cache">
+    <link rel="stylesheet"
+          href="Online-Katalog%20der%20Stadtb%C3%BCcherei%20Witten-Dateien/infoguide.css"
+          type="text/css">
+    <link rel="shortcut icon" href="https://webopac.stadt-witten.de/webOPACClient/images/OCLC.ico">
+    <!--[if IE 7]>
+    <style type="text/css">
+      #tab-content{margin-top:5px;}
+      select {height:auto;}
+      #searchfield input#f1 {width:10em;}
+
+    </style>
+    <![endif]--><title>
+
+    Online-Katalog der Stadtbücherei Witten
+
+</title>
+</head><!-- END of jsp/common/metaHeader.jsp --><!-- START jsp/useraccount/accountdata/Layout.jsp -->
+<body onunload="unBlockAction();">
+
+<script language="javascript" type="text/javascript"
+        src="Online-Katalog%20der%20Stadtb%C3%BCcherei%20Witten-Dateien/stdButton.js">
+</script>
+
+<div id="pageContainer">
+
+
+    <!-- START jsp/common/header.jsp -->
+
+
+    <div id="branding">
+  <span id="logo">
+    
+    
+      <img src="Online-Katalog%20der%20Stadtb%C3%BCcherei%20Witten-Dateien/webOPAC.gif"
+           alt="webOPAC" title="webOPAC" height="67" width="136">
+    
+  </span>
+        <div class="info">
+            <div>
+                Diese Seite verwendet Cookies.
+                <a href="#" onclick="return cookieHelp('/webOPACClient');">
+                    Weitere Informationen..</a>
+            </div>
+            <div id="timer" class="textrot">&nbsp;</div>
+        </div>
+    </div>
+
+
+    <!-- START jsp/common/timer.jsp -->
+
+
+    <script type="text/javascript" language="javascript">
+
+var timeout=(5 * 60 * 1000)  + new Date().getTime();
+timeout-=2000;
+
+var mesg="Diese Sitzung läuft in %VAR% Sek. ab!";
+var toFront=false;
+
+if(mesg.length <= 0 || mesg.indexOf("???") >= 0)
+	mesg="Diese Sitzung läuft in %VAR% Sek. ab!";
+ticker(); 
+
+function ticker()
+{
+  var timeoutID;
+  var s; 
+  var t=timeout - new Date().getTime();
+  t=(t<0)?0:Math.round(t/1000);
+  s=""+ ((t>60)?"":t.toFixed(0));
+ 	if(t <= 60)
+ 	{
+ 		if(toFront == false)
+ 		{
+ 			toFront=true;
+ 			window.focus();
+ 		}
+ 		var msg = mesg.replace("%VAR%", s);
+    document.getElementById("timer").innerHTML = msg;
+ 	}
+  if(t == 0)
+  {
+    window.clearTimeout(timeoutID);
+    window.location.replace("/webOPACClient/jsp/common/timeout.jsp");
+  } 
+  else
+    timeoutID = window.setTimeout("ticker()",(t>60) ? 6000 : 1000);
+}
+
+    </script>
+
+
+    <!-- END of jsp/common/timer.jsp -->
+    <!-- END of jsp/common/header.jsp -->
+
+
+    <div id="mainnav">
+
+
+        <!-- START jsp/navigation/mainNavi.jsp -->
+
+
+        <!-- Actual Tiles Context 756 -->
+
+        <ul>
+
+
+            <li><a href="https://webopac.stadt-witten.de/webOPACClient/search.do?methodToCall=start"
+                   title="Suche">Suche</a>
+
+            </li>
+
+
+            <li>
+                <a href="https://webopac.stadt-witten.de/webOPACClient/memorizelist.do?methodToCall=show"
+                   title="Merkliste">Merkliste</a></li>
+
+
+            <li id="current">
+                <div id="active">Konto</div>
+
+                <ul>
+
+                    <li id="current2">Kontostand</li>
+
+
+                    <li>
+                        <a href="https://webopac.stadt-witten.de/webOPACClient/userdata.do?methodToCall=showUserData"
+                           title="Benutzerdaten">Benutzerdaten</a></li>
+
+
+                    <li>
+                        <a href="https://webopac.stadt-witten.de/webOPACClient/searchpreferences.do?methodToCall=showSearchpreferences"
+                           title="Sucheinstellungen">Sucheinstellungen</a></li>
+
+
+                </ul>
+
+            </li>
+
+
+            <li>
+                <a href="https://webopac.stadt-witten.de/webOPACClient/additional.do?methodToCall=show"
+                   title="weitere Angebote">weitere Angebote</a></li>
+
+
+        </ul>
+        <!-- END of jsp/navigation/mainNavi.jsp -->
+
+
+        <!-- START jsp/navigation/loginnavi.jsp -->
+
+        <div id="login">
+
+
+            <strong class="c1">Benutzernummer</strong> XXXXXXXXX
+            <a href="https://webopac.stadt-witten.de/webOPACClient/login.do?methodToCall=logout"
+               title="Abmelden">Abmelden</a>
+
+
+        </div>
+        <!-- END of jsp/navigation/loginnavi.jsp -->
+    </div>
+    <br class="cleaner">
+
+
+    <!-- START jsp/navigation/bgnavi.jsp -->
+    <script language="javascript" type="text/javascript"
+            src="Online-Katalog%20der%20Stadtb%C3%BCcherei%20Witten-Dateien/help.js">
+    </script>
+
+    <div id="bgmainnav">
+        <div id="nav2">
+            <ul>
+
+
+                <li>
+                    <a href="#" onclick="return openHelp('/webOPACClient');" title="Hilfe">
+                        Hilfe</a>
+                </li>
+
+            </ul>
+        </div>
+    </div>
+    <!-- END of jsp/navigation/bgnavi.jsp -->
+
+    <br class="cleaner">
+
+
+    <!-- START jsp/search/searchbar.jsp -->
+
+    <div id="searchfield">
+
+
+        <form id="AdvancedSearchForm" method="post" action="/webOPACClient/search.do">
+            <input name="methodToCall" value="submit" type="hidden">
+            <input name="searchCategories[0]" value="-1" type="hidden">
+
+
+            <input name="searchString[1]" value="" type="hidden">
+
+
+            <input name="searchString[2]" value="" type="hidden">
+
+
+            <input name="searchString[3]" value="" type="hidden">
+
+
+            <input name="searchString[4]" value="" type="hidden">
+
+
+            <input name="CSId" value="21050N1Sc53be300a15e43c51d499cb1ac526539cc75e548"
+                   type="hidden">
+            <input name="searchHistory" value="" type="hidden">
+            <input name="queryString" value="" type="hidden">
+            <input name="searchString[0]" id="f1" type="text">
+
+
+            <input class="dbutton" id="submitSearch" name="submitSearch" value="Suchen"
+                   type="submit">
+        </form>
+    </div>
+
+    <!-- END of jsp/search/searchbar.jsp -->
+    <br class="cleaner">
+    <div id="main">
+        <div id="SOWrap">
+            <div id="middle">
+
+
+                <style type="text/css">
+#bgtab {width:auto;/*44.9em*/ height:1.5em; border:1px solid #a9bcd5;}
+* html #bgtab {margin-top:-1px;}
+/* wichtig bei Angabe in em: width:44.9em und nicht 45em, da sonst Verschiebungen (Abstand zw.Hauptnavi und Unternavi!) im Firefox!, zus㳺lich keine einheitliche re border */
+#tab-content {border-top:0;}
+table.data {width:100%; border-top:0;}
+
+                </style>
+
+                <!--[if IE 7]>
+                <style type="text/css">#bgtab {margin-top:5px;}</style>
+                <![endif]-->
+
+                <!-- START jsp/useraccount/accountdata/accountNavi.jsp -->
+
+
+                <div id="tab">
+                    <ul>
+
+                        <li id="current1">
+                            <div id="active1">Ausleihen&nbsp;(10)</div>
+
+                            <ul>
+                                <li id="current2">Übersicht</li>
+                                <li id="typ2">
+                                    <a href="https://webopac.stadt-witten.de/webOPACClient/userAccount.do?methodToCall=showAccount&amp;typ=2">Gemahnte Medien</a>
+                                </li>
+                                <li id="typ3">
+                                    <a href="https://webopac.stadt-witten.de/webOPACClient/userAccount.do?methodToCall=showAccount&amp;typ=3">Rückgeforderte Medien</a>
+                                </li>
+                                <li id="typ4">
+                                    <a href="https://webopac.stadt-witten.de/webOPACClient/userAccount.do?methodToCall=showAccount&amp;typ=4">Verlängerte Medien</a>
+                                </li>
+                                <li id="typ5">
+                                    <a href="https://webopac.stadt-witten.de/webOPACClient/userAccount.do?methodToCall=showAccount&amp;typ=5">Fernleihen</a>
+                                </li>
+                            </ul>
+
+                        </li>
+
+
+                        <li id="tab6">
+                            <div id="label6">
+                                <a href="https://webopac.stadt-witten.de/webOPACClient/userAccount.do?methodToCall=showAccount&amp;typ=6">Bestellungen
+                                    (0)</a>
+                            </div>
+                        </li>
+
+
+                        <li id="tab7">
+                            <div id="label7">
+                                <a href="https://webopac.stadt-witten.de/webOPACClient/userAccount.do?methodToCall=showAccount&amp;typ=7">Vormerkungen
+                                    (0)</a>
+                            </div>
+                        </li>
+
+
+                        <li id="tab8">
+                            <div id="label8">
+                                <a href="https://webopac.stadt-witten.de/webOPACClient/userAccount.do?methodToCall=showAccount&amp;typ=8">Gebühren
+                                    &nbsp;(0,00&nbsp;EUR)</a>
+                            </div>
+                        </li>
+
+
+                    </ul>
+
+                </div> <!-- tab -->
+                <div class="cleaner"></div>
+                <div id="bgtab"></div>
+
+                <script language="javascript" type="text/javascript">
+/* <![CDATA[ */
+var typ="1";
+if(typ >=1 && typ <= 5)
+{
+  var m_id;
+  var m_TypLabels = new Array();
+
+  m_TypLabels[1]='Übersicht';
+  m_TypLabels[2]='Gemahnte Medien';
+  m_TypLabels[3]='Rückgeforderte Medien';
+  m_TypLabels[4]='Verlängerte Medien';
+  m_TypLabels[5]='Fernleihen';
+
+  m_id=document.getElementById("typ" + typ);
+  if(m_id != null)
+  {
+    m_id.innerHTML=m_TypLabels[typ];
+    m_id.id="current2";
+
+    m_id=document.getElementById("label1");
+    m_id.innerHTML='Ausleihen' +
+                   '&nbsp;(10)';
+    m_id.id="active1";
+
+    m_id=document.getElementById("tab1");
+    m_id.id="current1";
+  }
+}
+else
+{
+  var m_id;
+  var m_TabLabels = new Array();
+
+  m_TabLabels[6]='Bestellungen' +
+		        '&nbsp;(0)';
+  m_TabLabels[7]='Vormerkungen' +
+        		'&nbsp;(0)';
+  m_TabLabels[8]='Gebühren' +
+      		       '&nbsp;(0,00&nbsp;EUR)';
+  m_TabLabels[9]='eMedien' +
+                 '&nbsp;(/)';
+
+  m_id=document.getElementById("label" + typ);
+  if(m_id != null)
+  {
+    m_id.innerHTML=m_TabLabels[typ];
+    m_id.id="active1";
+
+    m_id=document.getElementById("tab" + typ);
+    m_id.id="current1";
+  }
+}
+/* ]]> */
+
+                </script>
+                <!-- END of jsp/useraccount/accountdata/accountNavi.jsp -->
+
+                <div class="cleaner"></div>
+
+
+                <!-- START jsp/useraccount/accountdata/accountData.jsp -->
+
+
+                <div id="tab-content">
+                    <div class="box">
+                        <div class="box-header">
+                            <div class="box-right">
+                                <span class="selectedlink">«</span><span
+                                    class="selectedlink">&nbsp;1</span><span
+                                    class="selectedlink">&nbsp;»</span>
+                            </div>
+                            <h2>Ausleihen</h2>
+                        </div>
+                    </div>
+
+                    <table class="data" width="100%">
+                        <tbody>
+                        <tr>
+                            <th scope="col" style="width:2%"><abbr title="Nummer">Nr.</abbr></th>
+                            <th scope="col" class="left" style="width:65%">Titel,&nbsp;Verfasser
+                            </th>
+                            <th scope="col" class="left"
+                                style="width:33%">Leihfrist,&nbsp;Zweigstelle
+                            </th>
+                        </tr>
+
+
+                        <tr>
+                            <th scope="row">1.<br>
+                                <img src="Online-Katalog%20der%20Stadtb%C3%BCcherei%20Witten-Dateien/1.gif"
+                                     alt="" title="???de.alt.img.label.1???" height="32" width="32"
+                                     border="0">
+                            </th>
+                            <td>
+                                <strong>Bagger, Traktor, Mauersegler</strong><br>
+                                Nilsson, Ulf<br>
+                                00008973819X &nbsp;/&nbsp;Technik | Fahrzeuge<br>
+                                <a href="https://webopac.stadt-witten.de/webOPACClient/userAccount.do?methodToCall=renewalPossible&amp;actPos=0"
+                                   onclick="return blockAction();"><span
+                                        class="textgruen">Eine Verlängerung ist möglich.</span></a>
+
+                            </td>
+                            <td>
+
+                                24.01.2017 - 21.02.2017<br>
+                                Zentralbibliothek&nbsp;/&nbsp;Ausleihtheke
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <th scope="row">2.<br>
+                                <img src="Online-Katalog%20der%20Stadtb%C3%BCcherei%20Witten-Dateien/1.gif"
+                                     alt="" title="???de.alt.img.label.1???" height="32" width="32"
+                                     border="0">
+                            </th>
+                            <td>
+                                <strong>Eisenbahn</strong><br>
+                                Walther, Max<br>
+                                000089602509 &nbsp;/&nbsp;Pappbilderbuch<br>
+                                <a href="https://webopac.stadt-witten.de/webOPACClient/userAccount.do?methodToCall=renewalPossible&amp;actPos=1"
+                                   onclick="return blockAction();"><span
+                                        class="textgruen">Eine Verlängerung ist möglich.</span></a>
+
+                            </td>
+                            <td>
+
+                                24.01.2017 - 21.02.2017<br>
+                                Zentralbibliothek&nbsp;/&nbsp;Ausleihtheke
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <th scope="row">3.<br>
+                                <img src="Online-Katalog%20der%20Stadtb%C3%BCcherei%20Witten-Dateien/1.gif"
+                                     alt="" title="???de.alt.img.label.1???" height="32" width="32"
+                                     border="0">
+                            </th>
+                            <td>
+                                <strong>Elsa und der Zauber der Eisblumen</strong><br>
+                                Thilo<br>
+                                000090077720 &nbsp;/&nbsp;Erstes Lesen | Fantastisches THIL<br>
+                                <a href="https://webopac.stadt-witten.de/webOPACClient/userAccount.do?methodToCall=renewalPossible&amp;actPos=2"
+                                   onclick="return blockAction();"><span
+                                        class="textgruen">Eine Verlängerung ist möglich.</span></a>
+
+                            </td>
+                            <td>
+
+                                24.01.2017 - 21.02.2017<br>
+                                Zentralbibliothek&nbsp;/&nbsp;Ausleihtheke
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <th scope="row">4.<br>
+                                <img src="Online-Katalog%20der%20Stadtb%C3%BCcherei%20Witten-Dateien/1.gif"
+                                     alt="" title="???de.alt.img.label.1???" height="32" width="32"
+                                     border="0">
+                            </th>
+                            <td>
+                                <strong>Findus zieht um</strong><br>
+                                Nordqvist, Sven<br>
+                                000089939992 &nbsp;/&nbsp;orangener Punkt | Lustiges<br>
+                                <a href="https://webopac.stadt-witten.de/webOPACClient/userAccount.do?methodToCall=renewalPossible&amp;actPos=3"
+                                   onclick="return blockAction();"><span
+                                        class="textgruen">Eine Verlängerung ist möglich.</span></a>
+
+                            </td>
+                            <td>
+
+                                24.01.2017 - 21.02.2017<br>
+                                Zentralbibliothek&nbsp;/&nbsp;Ausleihtheke
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <th scope="row">5.<br>
+                                <img src="Online-Katalog%20der%20Stadtb%C3%BCcherei%20Witten-Dateien/1.gif"
+                                     alt="" title="???de.alt.img.label.1???" height="32" width="32"
+                                     border="0">
+                            </th>
+                            <td>
+                                <strong>Große Fahrzeuge</strong><br>
+                                Schnell, Lukas<br>
+                                000089612210 &nbsp;/&nbsp;Technik | Fahrzeuge<br>
+                                <a href="https://webopac.stadt-witten.de/webOPACClient/userAccount.do?methodToCall=renewalPossible&amp;actPos=4"
+                                   onclick="return blockAction();"><span
+                                        class="textgruen">Eine Verlängerung ist möglich.</span></a>
+
+                            </td>
+                            <td>
+
+                                24.01.2017 - 21.02.2017<br>
+                                Zentralbibliothek&nbsp;/&nbsp;Ausleihtheke
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <th scope="row">6.<br>
+                                <img src="Online-Katalog%20der%20Stadtb%C3%BCcherei%20Witten-Dateien/1.gif"
+                                     alt="" title="???de.alt.img.label.1???" height="32" width="32"
+                                     border="0">
+                            </th>
+                            <td>
+                                <strong>Mein erstes Such- und Zählbuch - Piraten</strong><br>
+                                Allen, Peter<br>
+                                000089416996 &nbsp;/&nbsp;04<br>
+                                <a href="https://webopac.stadt-witten.de/webOPACClient/userAccount.do?methodToCall=renewalPossible&amp;actPos=5"
+                                   onclick="return blockAction();"><span
+                                        class="textgruen">Eine Verlängerung ist möglich.</span></a>
+
+                            </td>
+                            <td>
+
+                                24.01.2017 - 21.02.2017<br>
+                                Zentralbibliothek&nbsp;/&nbsp;Ausleihtheke
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <th scope="row">7.<br>
+                                <img src="Online-Katalog%20der%20Stadtb%C3%BCcherei%20Witten-Dateien/1.gif"
+                                     alt="" title="???de.alt.img.label.1???" height="32" width="32"
+                                     border="0">
+                            </th>
+                            <td>
+                                <strong>Olivia und die peinliche Mütze</strong><br>
+                                Freeman, Tor<br>
+                                000090383297 &nbsp;/&nbsp;grüner Punkt | Freundschaft<br>
+                                <a href="https://webopac.stadt-witten.de/webOPACClient/userAccount.do?methodToCall=renewalPossible&amp;actPos=6"
+                                   onclick="return blockAction();"><span
+                                        class="textgruen">Eine Verlängerung ist möglich.</span></a>
+
+                            </td>
+                            <td>
+
+                                24.01.2017 - 21.02.2017<br>
+                                Zentralbibliothek&nbsp;/&nbsp;Ausleihtheke
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <th scope="row">8.<br>
+                                <img src="Online-Katalog%20der%20Stadtb%C3%BCcherei%20Witten-Dateien/1.gif"
+                                     alt="" title="???de.alt.img.label.1???" height="32" width="32"
+                                     border="0">
+                            </th>
+                            <td>
+                                <strong>Piraten</strong><br>
+                                Vohwinkel, Astrid<br>
+                                00008957638X &nbsp;/&nbsp;Geschichte | Neuzeit | Piraten<br>
+                                <a href="https://webopac.stadt-witten.de/webOPACClient/userAccount.do?methodToCall=renewalPossible&amp;actPos=7"
+                                   onclick="return blockAction();"><span
+                                        class="textgruen">Eine Verlängerung ist möglich.</span></a>
+
+                            </td>
+                            <td>
+
+                                24.01.2017 - 21.02.2017<br>
+                                Zentralbibliothek&nbsp;/&nbsp;Ausleihtheke
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <th scope="row">9.<br>
+                                <img src="Online-Katalog%20der%20Stadtb%C3%BCcherei%20Witten-Dateien/1.gif"
+                                     alt="" title="???de.alt.img.label.1???" height="32" width="32"
+                                     border="0">
+                            </th>
+                            <td>
+                                <strong>Rudi fährt los</strong><br>
+                                Redmer, Harald<br>
+                                000089538662 &nbsp;/&nbsp;Pappbilderbuch<br>
+                                <a href="https://webopac.stadt-witten.de/webOPACClient/userAccount.do?methodToCall=renewalPossible&amp;actPos=8"
+                                   onclick="return blockAction();"><span
+                                        class="textgruen">Eine Verlängerung ist möglich.</span></a>
+
+                            </td>
+                            <td>
+
+                                24.01.2017 - 21.02.2017<br>
+                                Zentralbibliothek&nbsp;/&nbsp;Ausleihtheke
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <th scope="row">10.<br>
+                                <img src="Online-Katalog%20der%20Stadtb%C3%BCcherei%20Witten-Dateien/1.gif"
+                                     alt="" title="???de.alt.img.label.1???" height="32" width="32"
+                                     border="0">
+                            </th>
+                            <td>
+                                <strong>Tiptoi - Entdecke die Stadt</strong><br>
+                                Betz, Daniela<br>
+                                00009040643X &nbsp;/&nbsp;Erdkunde<br>
+                                <a href="https://webopac.stadt-witten.de/webOPACClient/userAccount.do?methodToCall=renewalPossible&amp;actPos=9"
+                                   onclick="return blockAction();"><span
+                                        class="textgruen">Eine Verlängerung ist möglich.</span></a>
+
+                            </td>
+                            <td>
+
+                                24.01.2017 - 21.02.2017<br>
+                                Zentralbibliothek&nbsp;/&nbsp;Ausleihtheke
+                            </td>
+                        </tr>
+
+
+                        </tbody>
+                    </table>
+
+                    <div class="box">
+                        <div class="box-header">
+                            <div class="box-right">
+                                <span class="selectedlink">«</span><span
+                                    class="selectedlink">&nbsp;1</span><span
+                                    class="selectedlink">&nbsp;»</span>
+                            </div>
+                        </div>
+                    </div>
+
+                </div><!-- tab-content -->
+
+                <script language="javascript" type="text/javascript">
+/* <![CDATA[ */
+ setHelp("konto", "");
+/* ]]> */
+
+                </script>
+
+                <!-- END of jsp/useraccount/accountdata/accountData.jsp -->
+
+
+            </div> <!-- middle -->
+        </div> <!-- SOWrap -->
+        <div id="right">
+
+
+            <!-- START jsp/useraccount/action.jsp -->
+            <div class="box3">
+                <div class="box3-header">
+                    <div class="box3-img"><img
+                            src="Online-Katalog%20der%20Stadtb%C3%BCcherei%20Witten-Dateien/box3-right.gif"
+                            alt="" height="8" width="8"></div>
+                    <h2>
+                        weitere Optionen
+                    </h2>
+                </div>
+                <div class="box3-content">
+
+                    <p>
+                        <strong>Konto verlängern</strong>
+                        <br>
+                        <a href="https://webopac.stadt-witten.de/webOPACClient/userAccount.do?methodToCall=renewalPossible&amp;renewal=account"
+                           onclick="return blockAction();">verlängern</a>
+                    </p>
+
+
+                    <p><strong>Liste ausgeben</strong>
+                        <br>
+
+                        <a href="#" onclick="return printSubmit();">drucken</a>
+
+                        |
+                        <a href="" onclick="return saveSubmit();">speichern</a>
+
+                    </p>
+
+
+                    <form id="UserAccountForm" method="post" action="/webOPACClient/userAccount.do">
+                        <input name="methodToCall" value="showaccount" type="hidden">
+                        <input name="CSId" value="21050N1Sc53be300a15e43c51d499cb1ac526539cc75e548"
+                               type="hidden">
+
+                        <p>
+                            <label for="email">
+                                <span xml:lang="en" lang="en">E-Mail</span>
+                            </label>
+                            <br>
+                            <input name="email" value="XXX@example.com" id="email" type="text">
+                            <br>
+                            <label for="subject">
+                                Betreff
+                            </label>
+                            <br>
+                            <input name="subject" id="subject" type="text">
+                            <br>
+                            <a href="" onclick="return mailSubmit();">versenden</a>
+                        </p>
+                    </form>
+
+
+                </div> <!-- box3-content -->
+            </div> <!-- box3 -->
+            <script language="javascript" type="text/javascript">
+/* <![CDATA[ */
+             
+if(1 == 9)
+{
+	document.forms['UserAccountForm'].action="/webOPACClient/userNCIPAccount.do";
+}
+
+function printSubmit()
+{
+   document.forms['UserAccountForm'].methodToCall.value="print";
+   document.forms['UserAccountForm'].target="print";
+   document.forms['UserAccountForm'].submit();
+   return false;
+ }
+
+function saveSubmit()
+{
+   document.forms['UserAccountForm'].methodToCall.value="save";
+   document.forms['UserAccountForm'].submit();
+   return false;
+ }
+ function mailSubmit()
+{
+   if(document.forms['UserAccountForm'].email.value.length <= 0 ||
+      document.forms['UserAccountForm'].subject.value.length <= 0)
+   {
+     alert("Bitte geben Sie eine E-Mail-Adresse, bzw. einen Betreff ein!");
+     return false;
+   }
+   document.forms['UserAccountForm'].methodToCall.value="mail";
+   document.forms['UserAccountForm'].submit();
+   return false;
+ }
+/* ]]> */
+
+            </script>
+            <!-- END of jsp/useraccount/action.jsp -->
+
+
+            <!-- START jsp/useraccount/information.jsp -->
+
+
+            <br class="space">
+            <div class="box3">
+                <div class="box3-header">
+                    <div class="box3-img"><img
+                            src="Online-Katalog%20der%20Stadtb%C3%BCcherei%20Witten-Dateien/box3-right.gif"
+                            alt="" height="8" width="8"></div>
+                    <h2>Benutzerkonto</h2>
+                </div>
+                <div class="box3-content">
+
+                    <p>
+                        <strong>Ausweis gültig bis</strong>
+                        <br>
+                        28.12.2017
+                    </p>
+
+
+                </div>
+            </div>
+
+            <!-- END of jsp/useraccount/information.jsp -->
+            <br class="space">
+
+
+            <!-- START jsp/common/news.jsp -->
+
+
+            <!-- START jsp/news+info/de_756_1.jsp -->
+            <div class="box3">
+                <div class="box3-header">
+                    <div class="box3-img">
+                        <img src="Online-Katalog%20der%20Stadtb%C3%BCcherei%20Witten-Dateien/box3-right.gif"
+                             alt="" height="8" width="8">
+                    </div>
+                    <h2>Willkommen</h2>
+                </div>
+                <div class="box3-content">
+                    Herzlich Willkommen im Online-Angebot der Bibliothek Witten.<br>
+                    - Bitte
+                    <b>wählen Sie zu Beginn die von Ihnen genutzte Zweigstelle aus</b> und melden sich mit Ihrer Benutzernummer + PIN an.
+                    <br>
+                    - Ihr PIN setzt sich aus Ihrem Geburtstag und -monat zusammen.
+                    Beispiel: Geburtstag am <b>5.1.</b>1961 - Kennwort: <b>0501</b>.<br>
+                    Denken Sie daran, sich nach der Benutzung wieder abzumelden!
+                </div>
+            </div>
+            <!-- END of jsp/news+info/de_756_1.jsp -->
+            <br class="space">
+
+
+            <!-- END of jsp/common/news.jsp -->
+        </div> <!-- right -->
+        <br class="cleaner">
+    </div> <!-- main -->
+
+
+    <!-- START jsp/common/footer.jsp -->
+
+    <div id="footer">
+
+
+        Bitte verwenden Sie die Funktion
+        <a href="https://webopac.stadt-witten.de/webOPACClient/login.do?methodToCall=logout"
+           title="Abmelden">Abmelden</a>, um den versehentlichen Zugriff auf Ihre persönlichen Daten zu vermeiden.
+
+        <div id="copyright">
+            Copyright © 2015.&nbsp;Alle Rechte vorbehalten.
+            <img src="Online-Katalog%20der%20Stadtb%C3%BCcherei%20Witten-Dateien/OCLC.jpg"
+                 alt="OCLC" title="OCLC" height="19" width="54">
+        </div>
+        <div class="cleaner"></div>
+
+    </div>
+    <!-- END of jsp/common/footer.jsp -->
+
+
+</div>
+</body><!-- END of jsp/useraccount/accountdata/Layout.jsp --><!-- START jsp/common/metaFooter.jsp -->
+</html>
+<!-- END of jsp/common/metaFooter.jsp -->

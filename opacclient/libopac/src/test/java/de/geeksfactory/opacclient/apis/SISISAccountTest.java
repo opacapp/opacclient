@@ -11,7 +11,6 @@ import java.util.Collection;
 import java.util.List;
 
 import de.geeksfactory.opacclient.objects.LentItem;
-import de.geeksfactory.opacclient.objects.ReservedItem;
 
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
@@ -25,7 +24,7 @@ public class SISISAccountTest extends BaseHtmlTest {
     }
 
     private static final String[] FILES =
-            new String[]{"dresden.html"};
+            new String[]{"dresden.html", "witten.html"};
 
     @Parameterized.Parameters(name = "{0}")
     public static Collection<String[]> files() {
@@ -44,7 +43,9 @@ public class SISISAccountTest extends BaseHtmlTest {
 
         List<LentItem> media = new ArrayList<LentItem>();
         parser.parse_medialist(media, Jsoup.parse(html), 0, new JSONObject());
-        // assertTrue(media.size() > 0);
+        if (!file.equals("dresden.html")) {
+            assertTrue(media.size() > 0);
+        }
         // The dresden file is actually empty, so we can't even assert this; but before 4.5.9.
         // The test is still useful: Before 4.5.10 we actually had a bug with empty accounts.
         for (LentItem item : media) {
