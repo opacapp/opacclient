@@ -46,6 +46,9 @@ import android.widget.Toast;
 
 import net.opacapp.multilinecollapsingtoolbar.CollapsingToolbarLayout;
 
+import org.joda.time.LocalDate;
+import org.joda.time.format.DateTimeFormat;
+
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.util.List;
@@ -61,6 +64,7 @@ import de.geeksfactory.opacclient.frontend.MultiStepResultHelper.Callback;
 import de.geeksfactory.opacclient.frontend.MultiStepResultHelper.StepTask;
 import de.geeksfactory.opacclient.networking.CoverDownloadTask;
 import de.geeksfactory.opacclient.objects.Account;
+import de.geeksfactory.opacclient.objects.Copy;
 import de.geeksfactory.opacclient.objects.CoverHolder;
 import de.geeksfactory.opacclient.objects.Detail;
 import de.geeksfactory.opacclient.objects.DetailledItem;
@@ -689,6 +693,66 @@ public class SearchResultDetailFragment extends Fragment
                                 }
                                 text += detail.getDesc() + colon + "\n"
                                         + detail.getContent() + "\n\n";
+                            }
+
+                            for (Copy copy : getItem().getCopies()) {
+                                String branch = copy.getBranch();
+                                String branchTxt = "";
+                                if (branch != null && !branch.isEmpty()) {
+                                    branchTxt += getString(R.string.branch) + ":\n"
+                                            + branch + "\n\n";
+                                }
+
+                                String dept = copy.getDepartment();
+                                String deptTxt = "";
+                                if (dept != null && !dept.isEmpty()) {
+                                    deptTxt += getString(R.string.department) + ":\n"
+                                            + dept + "\n\n";
+                                }
+
+                                String loc = copy.getLocation();
+                                String locTxt = "";
+                                if (loc != null && !loc.isEmpty()) {
+                                    locTxt += getString(R.string.location) + ":\n" + loc + "\n\n";
+                                }
+
+                                String shelfMark = copy.getShelfmark();
+                                String shelfMarkTxt = "";
+                                if (shelfMark != null && !shelfMark.isEmpty()) {
+                                    shelfMarkTxt += getString(R.string.shelfmark) + ":\n"
+                                            + shelfMark + "\n\n";
+                                }
+
+                                String status = copy.getStatus();
+                                String statusTxt = "";
+                                if (status != null && !status.isEmpty()) {
+                                    statusTxt += getString(R.string.status) + ":\n"
+                                            + status + "\n\n";
+                                }
+
+                                String res = copy.getReservations();
+                                String resTxt = "";
+                                if (res != null && !res.isEmpty()) {
+                                    resTxt += getString(R.string.reservations) + ":\n"
+                                            + res + "\n\n";
+                                }
+
+                                String url = copy.getUrl();
+                                String urlTxt = "";
+                                if (url != null && !url.isEmpty()) {
+                                    urlTxt += getString(R.string.url) + ":\n" + url + "\n\n";
+                                }
+
+                                LocalDate retDate = copy.getReturnDate();
+                                String retDateTxt = "";
+                                if (retDate != null) {
+                                    retDateTxt += getString(R.string.return_date) + ":\n" + dept +
+                                            DateTimeFormat.shortDate().print(copy.getReturnDate())
+                                            + "\n\n";
+                                }
+
+                                text += branchTxt + deptTxt + locTxt + shelfMarkTxt + statusTxt +
+                                        resTxt + urlTxt + retDateTxt;
                             }
 
                             String shareUrl = api.getShareUrl(id, t);
