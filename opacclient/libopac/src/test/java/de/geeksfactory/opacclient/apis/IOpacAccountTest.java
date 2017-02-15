@@ -13,6 +13,7 @@ import java.util.List;
 import de.geeksfactory.opacclient.objects.LentItem;
 import de.geeksfactory.opacclient.objects.ReservedItem;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
@@ -44,6 +45,10 @@ public class IOpacAccountTest extends BaseHtmlTest {
         for (LentItem item : media) {
             assertNotNull(item.getTitle());
             assertNotNull(item.getDeadline());
+        }
+
+        if (file.equals("heide.html")) {
+            assertEquals("0x verl., 1 x reserv.", media.get(1).getStatus());
         }
     }
 

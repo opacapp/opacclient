@@ -794,6 +794,7 @@ public class IOpac extends BaseApi implements OpacApi {
         }
 
         Pattern datePattern = Pattern.compile("\\d{2}\\.\\d{2}\\.\\d{4}");
+        Pattern reservedPattern = Pattern.compile("\\d+ x reserv.");
         for (int i = 1; i < trs; i++) {
             Element tr = copytrs.get(i);
             LentItem item = new LentItem();
@@ -829,6 +830,14 @@ public class IOpac extends BaseApi implements OpacApi {
                         item.setDeadline(fmt.parseLocalDate(matcher.group()));
                     } catch (IllegalArgumentException e1) {
                         e1.printStackTrace();
+                    }
+                }
+                matcher = reservedPattern.matcher(value);
+                if (matcher.find()) {
+                    if (item.getStatus() != null) {
+                        item.setStatus(item.getStatus() + ", " + matcher.group());
+                    } else {
+                        item.setStatus(matcher.group());
                     }
                 }
             }
