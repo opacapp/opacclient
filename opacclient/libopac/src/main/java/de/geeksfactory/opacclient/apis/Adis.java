@@ -1283,7 +1283,10 @@ public class Adis extends BaseApi implements OpacApi {
             if (prolongTest != null) {
                 form.add(new BasicNameValuePair(prolongTest,
                         "Markierte Titel verlängerbar?"));
-                adoc = htmlPost(opac_url + ";jsessionid=" + s_sid, form);
+                Document adoc_new = htmlPost(opac_url + ";jsessionid=" + s_sid, form);
+                if (adoc_new.select(".message h1").size() == 0) {
+                    adoc = adoc_new;
+                }
             }
             for (Element tr : adoc.select(".rTable_div tbody tr")) {
                 LentItem item = new LentItem();
