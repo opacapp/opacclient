@@ -105,7 +105,7 @@ public class HttpClientFactory {
             builder.setUserAgent(user_agent);
         }
 
-        if (customssl) {
+        if (customssl && ssl_store_path != null) {
             try {
                 if (trust_store == null) {
                     trust_store = getKeyStore();

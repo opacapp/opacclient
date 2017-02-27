@@ -46,6 +46,9 @@ import android.widget.Toast;
 
 import net.opacapp.multilinecollapsingtoolbar.CollapsingToolbarLayout;
 
+import org.joda.time.LocalDate;
+import org.joda.time.format.DateTimeFormat;
+
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.util.List;
@@ -61,6 +64,7 @@ import de.geeksfactory.opacclient.frontend.MultiStepResultHelper.Callback;
 import de.geeksfactory.opacclient.frontend.MultiStepResultHelper.StepTask;
 import de.geeksfactory.opacclient.networking.CoverDownloadTask;
 import de.geeksfactory.opacclient.objects.Account;
+import de.geeksfactory.opacclient.objects.Copy;
 import de.geeksfactory.opacclient.objects.CoverHolder;
 import de.geeksfactory.opacclient.objects.Detail;
 import de.geeksfactory.opacclient.objects.DetailledItem;
@@ -76,6 +80,8 @@ import de.geeksfactory.opacclient.utils.PrintUtils;
 import su.j2e.rvjoiner.JoinableAdapter;
 import su.j2e.rvjoiner.JoinableLayout;
 import su.j2e.rvjoiner.RvJoiner;
+
+import static de.geeksfactory.opacclient.R.string.branch;
 
 /**
  * A fragment representing a single SearchResult detail screen. This fragment is either contained in
@@ -689,6 +695,75 @@ public class SearchResultDetailFragment extends Fragment
                                 }
                                 text += detail.getDesc() + colon + "\n"
                                         + detail.getContent() + "\n\n";
+                            }
+
+                            List<Copy> copies = getItem().getCopies();
+                            if (copies.size() > 0) {
+                                text += getString(R.string.copies_head) + ":\n\n";
+                            }
+
+                            for (Copy copy : copies) {
+                                String labelSeparator = ": ";
+                                String infoTypeSeparator = "\n";
+
+                                String branch = copy.getBranch();
+                                String branchTxt = "";
+                                if (branch != null && !branch.isEmpty()) {
+                                    branchTxt += getString(R.string.branch) + labelSeparator
+                                            + branch + infoTypeSeparator;
+                                }
+
+                                String dept = copy.getDepartment();
+                                String deptTxt = "";
+                                if (dept != null && !dept.isEmpty()) {
+                                    deptTxt += getString(R.string.department) + labelSeparator
+                                            + dept + infoTypeSeparator;
+                                }
+
+                                String loc = copy.getLocation();
+                                String locTxt = "";
+                                if (loc != null && !loc.isEmpty()) {
+                                    locTxt += getString(R.string.location) + labelSeparator
+                                            + loc + infoTypeSeparator;
+                                }
+
+                                String shelfMark = copy.getShelfmark();
+                                String shelfMarkTxt = "";
+                                if (shelfMark != null && !shelfMark.isEmpty()) {
+                                    shelfMarkTxt += getString(R.string.shelfmark) + labelSeparator
+                                            + shelfMark + infoTypeSeparator;
+                                }
+
+                                String status = copy.getStatus();
+                                String statusTxt = "";
+                                if (status != null && !status.isEmpty()) {
+                                    statusTxt += getString(R.string.status) + labelSeparator
+                                            + status + infoTypeSeparator;
+                                }
+
+                                String res = copy.getReservations();
+                                String resTxt = "";
+                                if (res != null && !res.isEmpty()) {
+                                    resTxt += getString(R.string.reservations) + labelSeparator
+                                            + res + infoTypeSeparator;
+                                }
+
+                                String url = copy.getUrl();
+                                String urlTxt = "";
+                                if (url != null && !url.isEmpty()) {
+                                    urlTxt += getString(R.string.url) + labelSeparator + url + infoTypeSeparator;
+                                }
+
+                                LocalDate retDate = copy.getReturnDate();
+                                String retDateTxt = "";
+                                if (retDate != null) {
+                                    retDateTxt += getString(R.string.return_date) + labelSeparator +
+                                            DateTimeFormat.shortDate().print(copy.getReturnDate())
+                                            + infoTypeSeparator;
+                                }
+
+                                text += branchTxt + deptTxt + locTxt + shelfMarkTxt + statusTxt +
+                                        resTxt + urlTxt + retDateTxt + "\n";
                             }
 
                             String shareUrl = api.getShareUrl(id, t);

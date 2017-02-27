@@ -794,6 +794,7 @@ public class IOpac extends BaseApi implements OpacApi {
         }
 
         Pattern datePattern = Pattern.compile("\\d{2}\\.\\d{2}\\.\\d{4}");
+        Pattern reservedPattern = Pattern.compile("\\d+ x reserv.");
         for (int i = 1; i < trs; i++) {
             Element tr = copytrs.get(i);
             LentItem item = new LentItem();
@@ -829,6 +830,14 @@ public class IOpac extends BaseApi implements OpacApi {
                         item.setDeadline(fmt.parseLocalDate(matcher.group()));
                     } catch (IllegalArgumentException e1) {
                         e1.printStackTrace();
+                    }
+                }
+                matcher = reservedPattern.matcher(value);
+                if (matcher.find()) {
+                    if (item.getStatus() != null) {
+                        item.setStatus(item.getStatus() + ", " + matcher.group());
+                    } else {
+                        item.setStatus(matcher.group());
                     }
                 }
             }
@@ -879,11 +888,16 @@ public class IOpac extends BaseApi implements OpacApi {
 
             item.setTitle(tr.child(0).text().trim().replace("\u00a0", ""));
             item.setAuthor(tr.child(1).text().trim().replace("\u00a0", ""));
-            try {
-                item.setReadyDate(
-                        fmt.parseLocalDate(tr.child(4).text().trim().replace("\u00a0", "")));
-            } catch (IllegalArgumentException e) {
-                item.setStatus(tr.child(4).text().trim().replace("\u00a0", ""));
+            String readyDate = tr.child(4).text().trim().replace("\u00a0", "");
+            if (readyDate.equals("")) {
+                item.setStatus("bereit");
+            } else {
+                try {
+                    item.setReadyDate(
+                            fmt.parseLocalDate(readyDate));
+                } catch (IllegalArgumentException e) {
+                    item.setStatus(readyDate);
+                }
             }
             if (tr.select("a").size() > 0) {
                 item.setCancelData(tr.select("a").last().attr("href"));

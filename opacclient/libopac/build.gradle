@@ -17,7 +17,7 @@ dependencies {
     testCompile 'org.mockito:mockito-core:1.10.19'
 }
 task copyTestResources(type: Copy) {
-    from "${projectDir}/src/test/resources"
+    from "${projectDir}/src/test/resources", "${projectDir}/src/main/resources"
     into "${buildDir}/classes/test"
 }
 
@@ -46,7 +46,7 @@ ext {
     siteUrl = 'https://github.com/opacapp/opacclient'
     gitUrl = 'https://github.com/opacapp/opacclient.git'
 
-    libraryVersion = '5.0.7'
+    libraryVersion = '5.0.10'
 
     developerId = 'opacapp'
     developerName = 'Web Opac App'
