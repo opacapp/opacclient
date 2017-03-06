@@ -188,6 +188,13 @@ public class AccountEditActivity extends AppCompatActivity {
                 (getIntent().getBooleanExtra(EXTRA_EDITING, false) || !lib.isAccountSupported())) {
             ((RadioButton) findViewById(R.id.rbAnonymous)).setChecked(true);
         }
+        if (account.getPassword() == null || account.getPassword().equals("")){
+            ((TextInputLayout) findViewById(R.id.tilPassword)).setPasswordVisibilityToggleEnabled(true);
+        }
+        else{
+            ((TextInputLayout) findViewById(R.id.tilPassword)).setPasswordVisibilityToggleEnabled(false);
+        }
+
     }
 
     public void refreshSslWarning() {
