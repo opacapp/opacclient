@@ -1,10 +1,12 @@
 package de.geeksfactory.opacclient.ui.vectordrawable;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.support.v7.widget.AppCompatDrawableManager;
 import android.support.v7.widget.AppCompatTextView;
 import android.util.AttributeSet;
 
+@SuppressLint("RestrictedApi")
 public class VectorDrawableTextView extends AppCompatTextView {
 
     private AppCompatTextViewImageHelper mImageHelper;

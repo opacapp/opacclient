@@ -40,7 +40,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import de.geeksfactory.opacclient.BuildConfig;
 import de.geeksfactory.opacclient.OpacClient;
 import de.geeksfactory.opacclient.R;
 import de.geeksfactory.opacclient.apis.OpacApi.OpacErrorException;
@@ -238,7 +237,7 @@ public class SearchFragment extends Fragment implements AccountSelectedListener 
                     tvSearchAdvHeader.setVisibility(View.VISIBLE);
                     etSimpleSearch.setHint(textSearchField.getHint());
                 } else {
-                    v = (ViewGroup) getLayoutInflater(null).inflate(
+                    v = (ViewGroup) getActivity().getLayoutInflater().inflate(
                             R.layout.searchfield_text, llFormFields, false);
                     TextView title = (TextView) v.findViewById(R.id.title);
                     title.setText(textSearchField.getDisplayName());
@@ -269,7 +268,7 @@ public class SearchFragment extends Fragment implements AccountSelectedListener 
                 }
             } else if (field instanceof BarcodeSearchField) {
                 BarcodeSearchField bcSearchField = (BarcodeSearchField) field;
-                v = (ViewGroup) getLayoutInflater(null).inflate(
+                v = (ViewGroup) getActivity().getLayoutInflater().inflate(
                         R.layout.searchfield_barcode, llFormFields, false);
                 TextView title = (TextView) v.findViewById(R.id.title);
                 title.setText(bcSearchField.getDisplayName());
@@ -300,7 +299,7 @@ public class SearchFragment extends Fragment implements AccountSelectedListener 
                 if (ddSearchField.getDropdownValues() == null) {
                     continue;
                 }
-                v = (ViewGroup) getLayoutInflater(null).inflate(
+                v = (ViewGroup) getActivity().getLayoutInflater().inflate(
                         R.layout.searchfield_dropdown, llFormFields, false);
                 TextView title = (TextView) v.findViewById(R.id.title);
                 title.setText(ddSearchField.getDisplayName());
@@ -339,7 +338,7 @@ public class SearchFragment extends Fragment implements AccountSelectedListener 
                 }
             } else if (field instanceof CheckboxSearchField) {
                 CheckboxSearchField cbSearchField = (CheckboxSearchField) field;
-                v = (ViewGroup) getLayoutInflater(null).inflate(
+                v = (ViewGroup) getActivity().getLayoutInflater().inflate(
                         R.layout.searchfield_checkbox, llFormFields, false);
                 CheckBox checkbox = (CheckBox) v.findViewById(R.id.checkbox);
                 checkbox.setText(cbSearchField.getDisplayName());

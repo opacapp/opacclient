@@ -1,10 +1,12 @@
 package de.geeksfactory.opacclient.ui.vectordrawable;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.widget.AppCompatImageHelper;
 import android.util.AttributeSet;
 
+@SuppressLint("RestrictedApi")
 public class VectorDrawableFloatingActionButton extends FloatingActionButton {
 
     private AppCompatImageHelper mImageHelper;
