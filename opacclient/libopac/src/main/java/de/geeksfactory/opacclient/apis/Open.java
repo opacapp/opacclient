@@ -297,6 +297,9 @@ public class Open extends BaseApi implements OpacApi {
             throw new OpacErrorException(stringProvider.getString(StringProvider.UNKNOWN_ERROR));
         }
 
+        Pattern idPattern = Pattern.compile("\\$(mdv|civ|dcv)(\\d+)\\$");
+        Pattern weakIdPattern = Pattern.compile("(mdv|civ|dcv)(\\d+)[^\\d]");
+
         Elements elements = doc.select("div[id$=divMedium], div[id$=divComprehensiveItem]");
         List<SearchResult> results = new ArrayList<>();
         int i = 0;
@@ -373,10 +376,14 @@ public class Open extends BaseApi implements OpacApi {
             result.setInnerhtml(text.toString());
 
             // ID
-            Pattern idPattern = Pattern.compile("\\$mdv(\\d+)\\$");
             Matcher matcher = idPattern.matcher(element.html());
             if (matcher.find()) {
-                result.setId(matcher.group(1));
+                result.setId(matcher.group(2));
+            } else {
+                matcher = weakIdPattern.matcher(element.html());
+                if (matcher.find()) {
+                    result.setId(matcher.group(2));
+                }
             }
 
             // Availability
