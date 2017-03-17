@@ -4,10 +4,17 @@ import org.apache.http.Header;
 import org.apache.http.HttpHost;
 import org.apache.http.HttpRequest;
 import org.apache.http.HttpResponse;
+import org.apache.http.HttpStatus;
 import org.apache.http.ProtocolException;
 import org.apache.http.client.CircularRedirectException;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.config.RequestConfig;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.client.methods.HttpHead;
+import org.apache.http.client.methods.HttpRequestBase;
+import org.apache.http.client.methods.HttpRequestWrapper;
+import org.apache.http.client.methods.HttpUriRequest;
+import org.apache.http.client.methods.RequestBuilder;
 import org.apache.http.client.protocol.HttpClientContext;
 import org.apache.http.client.utils.URIUtils;
 import org.apache.http.config.Registry;
@@ -137,6 +144,49 @@ public class HttpClientFactory {
 
         public CustomRedirectStrategy() {
             super();
+        }
+
+        @Override
+        public HttpUriRequest getRedirect(
+                final HttpRequest request,
+                final HttpResponse response,
+                final HttpContext context) throws ProtocolException {
+            URI uri = getLocationURI(request, response, context);
+            final Header last_host = request.getFirstHeader("Host");
+            final String method = request.getRequestLine().getMethod();
+            String original_scheme = "http";
+
+            if (request instanceof HttpRequestWrapper) {
+                HttpRequest original = ((HttpRequestWrapper) request).getOriginal();
+                if (original instanceof HttpRequestBase) {
+                    original_scheme = ((HttpRequestBase) original).getURI().getScheme();
+                }
+            } else if (request instanceof HttpRequestBase) {
+                if (((HttpRequestBase) request).getURI().getScheme() != null) {
+                    original_scheme = ((HttpRequestBase) request).getURI().getScheme();
+                }
+            }
+            // Strict Transport Security for redirects, required for misconfigured webservers like Erlangen
+            if ("https".equals(original_scheme) && uri.getScheme().equals("http") && uri.getHost().equals(last_host.getValue())) {
+                try {
+                    uri = new URI(uri.toString().replace("http://", "https://"));
+                } catch (URISyntaxException e) {
+                    e.printStackTrace();
+                }
+            }
+
+            if (method.equalsIgnoreCase(HttpHead.METHOD_NAME)) {
+                return new HttpHead(uri);
+            } else if (method.equalsIgnoreCase(HttpGet.METHOD_NAME)) {
+                return new HttpGet(uri);
+            } else {
+                final int status = response.getStatusLine().getStatusCode();
+                if (status == HttpStatus.SC_TEMPORARY_REDIRECT) {
+                    return RequestBuilder.copy(request).setUri(uri).build();
+                } else {
+                    return new HttpGet(uri);
+                }
+            }
         }
 
         @Override
