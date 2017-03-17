@@ -462,6 +462,25 @@ public class Open extends BaseApi implements OpacApi {
                 }
             }
         }
+
+        if (img.hasAttr("devsources")) {
+            img.attr("devsources").split("\\|");
+            for (int i = 0; i + 2 < parts.length; i++) {
+                if (parts[i].equals("SetSimpleCover")) {
+                    String url = parts[i + 2].replace("&amp;", "&");
+                    try {
+                        HttpURLConnection conn = (HttpURLConnection) new URL(url).openConnection();
+                        conn.setRequestMethod("HEAD");
+                        int code = conn.getResponseCode();
+                        if (code == 200) {
+                            return url;
+                        }
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        }
         return null;
     }
 
