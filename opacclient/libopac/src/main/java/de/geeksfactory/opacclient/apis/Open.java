@@ -660,23 +660,26 @@ public class Open extends BaseApi implements OpacApi {
 
         // Copies
         Element table = doc.select("table[id$=grdViewMediumCopies]").first();
-        Elements trs = table.select("tr");
-        List<String> columnmap = new ArrayList<>();
-        for (Element th : trs.first().select("th")) {
-            columnmap.add(getCopyColumnKey(th.text()));
-        }
-
-        DateTimeFormatter fmt = DateTimeFormat.forPattern("dd.MM.yyyy").withLocale(Locale.GERMAN);
-        for (int i = 1; i < trs.size(); i++) {
-            Elements tds = trs.get(i).select("td");
-            Copy copy = new Copy();
-            for (int j = 0; j < tds.size(); j++) {
-                if (columnmap.get(j) == null) continue;
-                String text = tds.get(j).text().replace("\u00a0", "");
-                if (text.equals("")) continue;
-                copy.set(columnmap.get(j), text, fmt);
+        if (table != null) {
+            Elements trs = table.select("tr");
+            List<String> columnmap = new ArrayList<>();
+            for (Element th : trs.first().select("th")) {
+                columnmap.add(getCopyColumnKey(th.text()));
             }
-            item.addCopy(copy);
+
+            DateTimeFormatter fmt =
+                    DateTimeFormat.forPattern("dd.MM.yyyy").withLocale(Locale.GERMAN);
+            for (int i = 1; i < trs.size(); i++) {
+                Elements tds = trs.get(i).select("td");
+                Copy copy = new Copy();
+                for (int j = 0; j < tds.size(); j++) {
+                    if (columnmap.get(j) == null) continue;
+                    String text = tds.get(j).text().replace("\u00a0", "");
+                    if (text.equals("")) continue;
+                    copy.set(columnmap.get(j), text, fmt);
+                }
+                item.addCopy(copy);
+            }
         }
 
         return item;
