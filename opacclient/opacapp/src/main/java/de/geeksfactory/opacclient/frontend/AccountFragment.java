@@ -628,7 +628,8 @@ public class AccountFragment extends Fragment implements
         } else {
             AlertDialog.Builder builder = new AlertDialog.Builder(
                     getActivity());
-            View content = getLayoutInflater(null).inflate(R.layout.dialog_prolong_confirm, null);
+            View content = getActivity().getLayoutInflater()
+                                        .inflate(R.layout.dialog_prolong_confirm, null);
             final CheckBox check = (CheckBox) content.findViewById(R.id.check_box1);
             builder.setView(content)
                    .setCancelable(false)
@@ -1231,7 +1232,7 @@ public class AccountFragment extends Fragment implements
                 AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
 
                 if (res.getResults() != null) {
-                    LayoutInflater inflater = getLayoutInflater(null);
+                    LayoutInflater inflater = getActivity().getLayoutInflater();
                     View view = inflater.inflate(R.layout.dialog_simple_list, null, false);
 
                     ListView lv = (ListView) view.findViewById(R.id.lvBibs);

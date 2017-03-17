@@ -951,7 +951,7 @@ public class SearchResultDetailFragment extends Fragment
                         .equals(""))) {
             AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
             // Get the layout inflater
-            LayoutInflater inflater = getLayoutInflater(null);
+            LayoutInflater inflater = getActivity().getLayoutInflater();
 
             View view = inflater.inflate(R.layout.dialog_simple_list, null, false);
 
@@ -1024,7 +1024,8 @@ public class SearchResultDetailFragment extends Fragment
         } else {
             AlertDialog.Builder builder = new AlertDialog.Builder(
                     getActivity());
-            View content = getLayoutInflater(null).inflate(R.layout.dialog_reservation_fees, null);
+            View content = getActivity().getLayoutInflater()
+                                        .inflate(R.layout.dialog_reservation_fees, null);
             final CheckBox check = (CheckBox) content.findViewById(R.id.check_box1);
             builder.setView(content)
                     .setCancelable(false)
@@ -1127,7 +1128,7 @@ public class SearchResultDetailFragment extends Fragment
         } else if (accounts.size() > 1) {
             AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
             // Get the layout inflater
-            LayoutInflater inflater = getLayoutInflater(null);
+            LayoutInflater inflater = getActivity().getLayoutInflater();
 
             View view = inflater.inflate(R.layout.dialog_simple_list, null, false);
 

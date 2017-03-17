@@ -1,5 +1,6 @@
 package de.geeksfactory.opacclient.ui.vectordrawable;
 
+import android.annotation.SuppressLint;
 import android.graphics.drawable.Drawable;
 import android.support.v7.widget.AppCompatDrawableManager;
 import android.support.v7.widget.TintTypedArray;
@@ -12,6 +13,7 @@ import de.geeksfactory.opacclient.R;
  *   Based on AOSP code for AppCompatImageHelper
  */
 
+@SuppressLint("RestrictedApi")
 public class AppCompatTextViewImageHelper {
     private final TextView mView;
     private final AppCompatDrawableManager mDrawableManager;
