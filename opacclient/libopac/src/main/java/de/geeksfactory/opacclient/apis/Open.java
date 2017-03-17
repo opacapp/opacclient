@@ -610,7 +610,7 @@ public class Open extends BaseApi implements OpacApi {
         // Title and Subtitle
         item.setTitle(doc.select("span[id$=LblShortDescriptionValue]").text());
         String subtitle = doc.select("span[id$=LblSubTitleValue]").text();
-        if (subtitle.equals("")) {
+        if (subtitle.equals("") && doc.select("span[id$=LblShortDescriptionValue]").size() > 0) {
             // Subtitle detection for Bern
             Element next = doc.select("span[id$=LblShortDescriptionValue]").first().parent().nextElementSibling();
             if (next.select("span").size() == 0) {
