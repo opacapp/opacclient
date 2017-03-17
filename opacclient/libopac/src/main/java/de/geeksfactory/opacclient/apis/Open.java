@@ -297,6 +297,9 @@ public class Open extends BaseApi implements OpacApi {
             throw new OpacErrorException(stringProvider.getString(StringProvider.UNKNOWN_ERROR));
         }
 
+        Pattern idPattern = Pattern.compile("\\$(mdv|civ|dcv)(\\d+)\\$");
+        Pattern weakIdPattern = Pattern.compile("(mdv|civ|dcv)(\\d+)[^\\d]");
+
         Elements elements = doc.select("div[id$=divMedium], div[id$=divComprehensiveItem]");
         List<SearchResult> results = new ArrayList<>();
         int i = 0;
@@ -373,10 +376,14 @@ public class Open extends BaseApi implements OpacApi {
             result.setInnerhtml(text.toString());
 
             // ID
-            Pattern idPattern = Pattern.compile("\\$mdv(\\d+)\\$");
             Matcher matcher = idPattern.matcher(element.html());
             if (matcher.find()) {
-                result.setId(matcher.group(1));
+                result.setId(matcher.group(2));
+            } else {
+                matcher = weakIdPattern.matcher(element.html());
+                if (matcher.find()) {
+                    result.setId(matcher.group(2));
+                }
             }
 
             // Availability
@@ -452,6 +459,25 @@ public class Open extends BaseApi implements OpacApi {
                     }
                 } catch (IOException e) {
                     e.printStackTrace();
+                }
+            }
+        }
+
+        if (img.hasAttr("devsources")) {
+            img.attr("devsources").split("\\|");
+            for (int i = 0; i + 2 < parts.length; i++) {
+                if (parts[i].equals("SetSimpleCover")) {
+                    String url = parts[i + 2].replace("&amp;", "&");
+                    try {
+                        HttpURLConnection conn = (HttpURLConnection) new URL(url).openConnection();
+                        conn.setRequestMethod("HEAD");
+                        int code = conn.getResponseCode();
+                        if (code == 200) {
+                            return url;
+                        }
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
                 }
             }
         }
@@ -584,7 +610,7 @@ public class Open extends BaseApi implements OpacApi {
         // Title and Subtitle
         item.setTitle(doc.select("span[id$=LblShortDescriptionValue]").text());
         String subtitle = doc.select("span[id$=LblSubTitleValue]").text();
-        if (subtitle.equals("")) {
+        if (subtitle.equals("") && doc.select("span[id$=LblShortDescriptionValue]").size() > 0) {
             // Subtitle detection for Bern
             Element next = doc.select("span[id$=LblShortDescriptionValue]").first().parent().nextElementSibling();
             if (next.select("span").size() == 0) {
@@ -634,23 +660,26 @@ public class Open extends BaseApi implements OpacApi {
 
         // Copies
         Element table = doc.select("table[id$=grdViewMediumCopies]").first();
-        Elements trs = table.select("tr");
-        List<String> columnmap = new ArrayList<>();
-        for (Element th : trs.first().select("th")) {
-            columnmap.add(getCopyColumnKey(th.text()));
-        }
-
-        DateTimeFormatter fmt = DateTimeFormat.forPattern("dd.MM.yyyy").withLocale(Locale.GERMAN);
-        for (int i = 1; i < trs.size(); i++) {
-            Elements tds = trs.get(i).select("td");
-            Copy copy = new Copy();
-            for (int j = 0; j < tds.size(); j++) {
-                if (columnmap.get(j) == null) continue;
-                String text = tds.get(j).text().replace("\u00a0", "");
-                if (text.equals("")) continue;
-                copy.set(columnmap.get(j), text, fmt);
+        if (table != null) {
+            Elements trs = table.select("tr");
+            List<String> columnmap = new ArrayList<>();
+            for (Element th : trs.first().select("th")) {
+                columnmap.add(getCopyColumnKey(th.text()));
             }
-            item.addCopy(copy);
+
+            DateTimeFormatter fmt =
+                    DateTimeFormat.forPattern("dd.MM.yyyy").withLocale(Locale.GERMAN);
+            for (int i = 1; i < trs.size(); i++) {
+                Elements tds = trs.get(i).select("td");
+                Copy copy = new Copy();
+                for (int j = 0; j < tds.size(); j++) {
+                    if (columnmap.get(j) == null) continue;
+                    String text = tds.get(j).text().replace("\u00a0", "");
+                    if (text.equals("")) continue;
+                    copy.set(columnmap.get(j), text, fmt);
+                }
+                item.addCopy(copy);
+            }
         }
 
         return item;
