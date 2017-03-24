@@ -525,7 +525,7 @@ public abstract class Pica extends BaseApi implements OpacApi {
             }
             String title = titleElem.text().replace("\u00a0", " ").trim();
 
-            if (element.select("hr").size() > 0)
+            if (element.select("hr").size() > 0 || element.text().trim().equals(""))
             // after the separator we get the copies
             {
                 break;
@@ -562,7 +562,7 @@ public abstract class Pica extends BaseApi implements OpacApi {
 
         while (line < lines.size()) {
             Element element = lines.get(line);
-            if (element.select("hr").size() == 0) {
+            if (element.select("hr").size() == 0 && !element.text().trim().equals("")) {
                 Element titleElem = element.firstElementSibling();
                 String detail = element.text().trim();
                 String title = titleElem.text().replace("\u00a0", " ").trim();
