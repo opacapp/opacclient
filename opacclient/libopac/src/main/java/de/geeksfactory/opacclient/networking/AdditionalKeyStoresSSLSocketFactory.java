@@ -134,8 +134,7 @@ public class AdditionalKeyStoresSSLSocketFactory {
             try {
                 defaultTrustManager.checkClientTrusted(chain, authType);
             } catch (CertificateException ce) {
-                localTrustManager.checkClientTrusted(
-                        new X509Certificate[]{chain[0]}, authType);
+                localTrustManager.checkClientTrusted(chain, authType);
             }
         }
 
@@ -145,8 +144,7 @@ public class AdditionalKeyStoresSSLSocketFactory {
             try {
                 defaultTrustManager.checkServerTrusted(chain, authType);
             } catch (CertificateException ce) {
-                localTrustManager.checkServerTrusted(
-                        new X509Certificate[]{chain[0]}, authType);
+                localTrustManager.checkServerTrusted(chain, authType);
             }
         }
 
