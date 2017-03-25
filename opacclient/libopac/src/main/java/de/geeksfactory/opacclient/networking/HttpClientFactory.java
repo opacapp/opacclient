@@ -167,7 +167,7 @@ public class HttpClientFactory {
                 }
             }
             // Strict Transport Security for redirects, required for misconfigured webservers like Erlangen
-            if ("https".equals(original_scheme) && uri.getScheme().equals("http") && uri.getHost().equals(last_host.getValue())) {
+            if (last_host != null && "https".equals(original_scheme) && uri.getScheme().equals("http") && uri.getHost().equals(last_host.getValue())) {
                 try {
                     uri = new URI(uri.toString().replace("http://", "https://"));
                 } catch (URISyntaxException e) {

@@ -39,7 +39,9 @@ import org.jsoup.select.Elements;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.net.MalformedURLException;
 import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.URLEncoder;
 import java.util.ArrayList;
@@ -620,7 +622,12 @@ public class TouchPoint extends BaseApi implements OpacApi {
         try {
             JSONObject json = new JSONObject(id);
             if (json.has("url")) {
-                return json.getString("url");
+                URI permaUrl = new URI(json.getString("url"));
+                URI baseUrl = new URI(opac_url);
+                URI newUrl = new URI(baseUrl.getScheme(), baseUrl.getUserInfo(), baseUrl.getHost(),
+                        baseUrl.getPort(), permaUrl.getPath(), permaUrl.getQuery(),
+                        permaUrl.getFragment());
+                return newUrl.toString();
             } else {
                 String param =
                         json.optString("field", "0") + "=\"" + json.getString("id") + "\" IN [" +
@@ -631,6 +638,9 @@ public class TouchPoint extends BaseApi implements OpacApi {
             // backwards compatibility
             return opac_url + "/perma.do?q=" +
                     URLEncoder.encode("0=\"" + id + "\" IN [2]", "UTF-8");
+        } catch (URISyntaxException e) {
+            e.printStackTrace();
+            return null;
         }
     }
 
