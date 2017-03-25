@@ -232,13 +232,17 @@ public class MainPreferenceFragment extends PreferenceFragmentCompat {
     }
 
     private void removeDialogs() {
-        FragmentTransaction ft = getFragmentManager().beginTransaction();
-        Fragment prev = getFragmentManager().findFragmentByTag(TAG_DIALOG);
-        if (prev != null) {
-            ft.remove(prev);
+        try {
+            FragmentTransaction ft = getFragmentManager().beginTransaction();
+            Fragment prev = getFragmentManager().findFragmentByTag(TAG_DIALOG);
+            if (prev != null) {
+                ft.remove(prev);
+            }
+            ft.disallowAddToBackStack();
+            ft.commit();
+        } catch (IllegalStateException e) {
+            // Ignored
         }
-        ft.disallowAddToBackStack();
-        ft.commit();
     }
 
     private class LibraryConfigServiceReceiver extends BroadcastReceiver {
