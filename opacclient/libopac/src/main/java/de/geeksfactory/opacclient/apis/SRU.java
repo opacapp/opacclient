@@ -21,7 +21,7 @@ import de.geeksfactory.opacclient.networking.NotReachableException;
 import de.geeksfactory.opacclient.objects.Account;
 import de.geeksfactory.opacclient.objects.AccountData;
 import de.geeksfactory.opacclient.objects.Detail;
-import de.geeksfactory.opacclient.objects.DetailledItem;
+import de.geeksfactory.opacclient.objects.DetailedItem;
 import de.geeksfactory.opacclient.objects.Filter;
 import de.geeksfactory.opacclient.objects.Filter.Option;
 import de.geeksfactory.opacclient.objects.Library;
@@ -219,7 +219,7 @@ public class SRU extends BaseApi implements OpacApi {
     }
 
     @Override
-    public DetailledItem getResultById(String id, String homebranch)
+    public DetailedItem getResultById(String id, String homebranch)
             throws IOException, OpacErrorException {
         if (idSearchQuery != null) {
             String xml = httpGet(opac_url
@@ -243,7 +243,7 @@ public class SRU extends BaseApi implements OpacApi {
         }
     }
 
-    private DetailledItem parse_detail(Element record) {
+    private DetailedItem parse_detail(Element record) {
         String title = getDetail(record, "titleInfo title");
         String firstName = getDetail(record, "name > namePart[type=given]");
         String lastName = getDetail(record, "name > namePart[type=family]");
@@ -252,7 +252,7 @@ public class SRU extends BaseApi implements OpacApi {
         String isbn = getDetail(record, "identifier[type=isbn]");
         String coverUrl = getDetail(record, "url[displayLabel=C Cover]");
 
-        DetailledItem item = new DetailledItem();
+        DetailedItem item = new DetailedItem();
         item.setTitle(title);
         item.addDetail(new Detail("Autor", firstName + " " + lastName));
         item.addDetail(new Detail("Jahr", year));
@@ -271,14 +271,14 @@ public class SRU extends BaseApi implements OpacApi {
     }
 
     @Override
-    public DetailledItem getResult(int position) throws IOException,
+    public DetailedItem getResult(int position) throws IOException,
             OpacErrorException {
         return parse_detail(searchDoc.select("zs|records > zs|record").get(
                 position));
     }
 
     @Override
-    public ReservationResult reservation(DetailledItem item, Account account,
+    public ReservationResult reservation(DetailedItem item, Account account,
             int useraction, String selection) throws IOException {
         return null;
     }

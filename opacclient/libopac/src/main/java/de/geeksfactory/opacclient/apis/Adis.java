@@ -41,7 +41,7 @@ import de.geeksfactory.opacclient.objects.Account;
 import de.geeksfactory.opacclient.objects.AccountData;
 import de.geeksfactory.opacclient.objects.Copy;
 import de.geeksfactory.opacclient.objects.Detail;
-import de.geeksfactory.opacclient.objects.DetailledItem;
+import de.geeksfactory.opacclient.objects.DetailedItem;
 import de.geeksfactory.opacclient.objects.Filter;
 import de.geeksfactory.opacclient.objects.Filter.Option;
 import de.geeksfactory.opacclient.objects.LentItem;
@@ -566,7 +566,7 @@ public class Adis extends BaseApi implements OpacApi {
     }
 
     @Override
-    public DetailledItem getResultById(String id, String homebranch)
+    public DetailedItem getResultById(String id, String homebranch)
             throws IOException, OpacErrorException {
 
         Document doc;
@@ -621,10 +621,10 @@ public class Adis extends BaseApi implements OpacApi {
         return parseResult(id, doc);
     }
 
-    DetailledItem parseResult(String id, Document doc)
+    DetailedItem parseResult(String id, Document doc)
             throws IOException, OpacErrorException {
         List<NameValuePair> nvpairs;
-        DetailledItem res = new DetailledItem();
+        DetailedItem res = new DetailedItem();
 
         if (doc.select("#R001 img").size() == 1) {
             String cover_url = doc.select("#R001 img").first().absUrl("src");
@@ -720,7 +720,7 @@ public class Adis extends BaseApi implements OpacApi {
     }
 
     @Override
-    public DetailledItem getResult(int position) throws IOException,
+    public DetailedItem getResult(int position) throws IOException,
             OpacErrorException {
         if (s_reusedoc != null) {
             return getResultById(null, null);
@@ -729,7 +729,7 @@ public class Adis extends BaseApi implements OpacApi {
     }
 
     @Override
-    public ReservationResult reservation(DetailledItem item, Account account,
+    public ReservationResult reservation(DetailedItem item, Account account,
             int useraction, String selection) throws IOException {
 
         Document doc;

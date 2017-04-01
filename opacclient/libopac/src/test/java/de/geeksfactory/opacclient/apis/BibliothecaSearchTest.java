@@ -12,7 +12,7 @@ import java.util.List;
 
 import de.geeksfactory.opacclient.networking.NotReachableException;
 import de.geeksfactory.opacclient.objects.Copy;
-import de.geeksfactory.opacclient.objects.DetailledItem;
+import de.geeksfactory.opacclient.objects.DetailedItem;
 import de.geeksfactory.opacclient.objects.SearchRequestResult;
 import de.geeksfactory.opacclient.objects.SearchResult;
 
@@ -62,7 +62,7 @@ public class BibliothecaSearchTest extends BaseHtmlTest {
             throws OpacApi.OpacErrorException, JSONException, NotReachableException {
         String html = readResource("/bibliotheca/result_detail/" + file);
         if (html == null) return; // we may not have all files for all libraries
-        DetailledItem result = Bibliotheca.parseResult(html, getData(file));
+        DetailedItem result = Bibliotheca.parseResult(html, getData(file));
         for (Copy copy : result.getCopies()) {
             assertContainsData(copy.getStatus());
             assertNullOrNotEmpty(copy.getBarcode());

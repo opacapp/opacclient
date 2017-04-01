@@ -33,7 +33,7 @@ import de.geeksfactory.opacclient.networking.HttpClientFactory;
 import de.geeksfactory.opacclient.networking.NotReachableException;
 import de.geeksfactory.opacclient.objects.Account;
 import de.geeksfactory.opacclient.objects.AccountData;
-import de.geeksfactory.opacclient.objects.DetailledItem;
+import de.geeksfactory.opacclient.objects.DetailedItem;
 import de.geeksfactory.opacclient.objects.Filter;
 import de.geeksfactory.opacclient.objects.Library;
 import de.geeksfactory.opacclient.objects.SearchRequestResult;
@@ -122,7 +122,7 @@ public interface OpacApi {
      * search criteria. See documentation on <code>SearchResult</code> for details.
      *
      * This function is always called from a background thread, you can use blocking network
-     * operations in it. See documentation on DetailledItem for details.
+     * operations in it. See documentation on DetailedItem for details.
      *
      * @param query see above
      * @return List of results and additional information, or result object with the error flag set
@@ -136,10 +136,10 @@ public interface OpacApi {
 
     /**
      * Performs a catalogue search for volumes of an item. The query is given to it from {@link
-     * DetailledItem#getVolumesearch()}.
+     * DetailedItem#getVolumesearch()}.
      *
      * This function is always called from a background thread, you can use blocking network
-     * operations in it. See documentation on DetailledItem for details.
+     * operations in it. See documentation on DetailedItem for details.
      *
      * @param query see above
      * @return List of results and additional information, or result object with the error flag set
@@ -159,7 +159,7 @@ public interface OpacApi {
      * <code>null</code>.
      *
      * This function is always called from a background thread, you can use blocking network
-     * operations in it. See documentation on DetailledItem for details.
+     * operations in it. See documentation on DetailedItem for details.
      *
      * @param filter The filter to be applied.
      * @param option The filters option to be applied. If the <code>option.isApplied()</code>
@@ -179,7 +179,7 @@ public interface OpacApi {
      * Get result page <code>page</code> of the search performed last with {@link #search}.
      *
      * This function is always called from a background thread, you can use blocking network
-     * operations in it. See documentation on DetailledItem for details.
+     * operations in it. See documentation on DetailedItem for details.
      *
      * @param page page number to fetch
      * @return List of results and additional information, or result object with the error flag set
@@ -201,9 +201,9 @@ public interface OpacApi {
      *                   require this information at search request time to determine where book
      *                   reservations should be placed. If in doubt, set to <code>null</code>.
      * @return Media details
-     * @see de.geeksfactory.opacclient.objects.DetailledItem
+     * @see DetailedItem
      */
-    public DetailledItem getResultById(String id, String homebranch)
+    public DetailedItem getResultById(String id, String homebranch)
             throws IOException, OpacErrorException;
 
     /**
@@ -219,9 +219,9 @@ public interface OpacApi {
      *
      * @param position position of object in last search
      * @return Media details
-     * @see de.geeksfactory.opacclient.objects.DetailledItem
+     * @see DetailedItem
      */
-    public DetailledItem getResult(int position) throws IOException,
+    public DetailedItem getResult(int position) throws IOException,
             OpacErrorException;
 
     /**
@@ -246,7 +246,7 @@ public interface OpacApi {
      *                   selection.
      * @return A <code>ReservationResult</code> object which has to have the status set.
      */
-    public ReservationResult reservation(DetailledItem item, Account account,
+    public ReservationResult reservation(DetailedItem item, Account account,
             int useraction, String selection) throws IOException;
 
     /**
@@ -623,7 +623,7 @@ public interface OpacApi {
     }
 
     /**
-     * The result of a {@link OpacApi#reservation(DetailledItem, Account, int, String)} call
+     * The result of a {@link OpacApi#reservation(DetailedItem, Account, int, String)} call
      */
     public class ReservationResult extends MultiStepResult {
 

@@ -6,8 +6,7 @@ import java.io.IOException;
 
 import de.geeksfactory.opacclient.objects.Account;
 import de.geeksfactory.opacclient.objects.AccountData;
-import de.geeksfactory.opacclient.objects.DetailledItem;
-import de.geeksfactory.opacclient.objects.Library;
+import de.geeksfactory.opacclient.objects.DetailedItem;
 
 /**
  * For search-only API implementations, i.e. without account support, some abstract method
@@ -16,7 +15,7 @@ import de.geeksfactory.opacclient.objects.Library;
 public abstract class SearchOnlyApi extends BaseApi {
 
     @Override
-    public final ReservationResult reservation(DetailledItem item, Account account,
+    public final ReservationResult reservation(DetailedItem item, Account account,
                                          int useraction, String selection) throws IOException {
         return null;
     }

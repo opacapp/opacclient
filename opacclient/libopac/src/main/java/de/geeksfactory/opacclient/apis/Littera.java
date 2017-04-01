@@ -49,7 +49,7 @@ import java.util.regex.Pattern;
 import de.geeksfactory.opacclient.networking.HttpClientFactory;
 import de.geeksfactory.opacclient.objects.Copy;
 import de.geeksfactory.opacclient.objects.Detail;
-import de.geeksfactory.opacclient.objects.DetailledItem;
+import de.geeksfactory.opacclient.objects.DetailedItem;
 import de.geeksfactory.opacclient.objects.Filter;
 import de.geeksfactory.opacclient.objects.Library;
 import de.geeksfactory.opacclient.objects.SearchRequestResult;
@@ -216,7 +216,7 @@ public class Littera extends SearchOnlyApi {
     }
 
     @Override
-    public DetailledItem getResultById(String id, String homebranch)
+    public DetailedItem getResultById(String id, String homebranch)
             throws IOException, OpacErrorException {
         if (!initialised) {
             start();
@@ -227,7 +227,7 @@ public class Littera extends SearchOnlyApi {
         final Element detailTable = detailData.select("table.titel").first();
         final Element availabilityTable = doc.select(".bibliothek table").first();
 
-        final DetailledItem result = new DetailledItem();
+        final DetailedItem result = new DetailedItem();
         final Copy copy = new Copy();
         result.addCopy(copy);
         result.setId(id);
@@ -281,7 +281,7 @@ public class Littera extends SearchOnlyApi {
     }
 
     @Override
-    public DetailledItem getResult(int position) throws IOException, OpacErrorException {
+    public DetailedItem getResult(int position) throws IOException, OpacErrorException {
         // Not necessary since getResultById returns an ID with every result
         return null;
     }

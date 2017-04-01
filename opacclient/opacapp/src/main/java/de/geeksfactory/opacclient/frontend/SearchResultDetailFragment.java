@@ -67,7 +67,7 @@ import de.geeksfactory.opacclient.objects.Account;
 import de.geeksfactory.opacclient.objects.Copy;
 import de.geeksfactory.opacclient.objects.CoverHolder;
 import de.geeksfactory.opacclient.objects.Detail;
-import de.geeksfactory.opacclient.objects.DetailledItem;
+import de.geeksfactory.opacclient.objects.DetailedItem;
 import de.geeksfactory.opacclient.objects.SearchResult;
 import de.geeksfactory.opacclient.storage.AccountDataSource;
 import de.geeksfactory.opacclient.storage.StarDataSource;
@@ -128,7 +128,7 @@ public class SearchResultDetailFragment extends Fragment
     /**
      * The detailled item that this fragment represents.
      */
-    private DetailledItem item;
+    private DetailedItem item;
     private String id;
     private Integer nr;
     private OpacClient app;
@@ -861,7 +861,7 @@ public class SearchResultDetailFragment extends Fragment
         webView.loadDataWithBaseURL(null, templateDetailles, "text/HTML", "UTF-8", null);
     }
 
-    public DetailledItem getItem() {
+    public DetailedItem getItem() {
         return item;
     }
 
@@ -1053,9 +1053,9 @@ public class SearchResultDetailFragment extends Fragment
     }
 
     public void reservationPerform() {
-        MultiStepResultHelper<DetailledItem> msrhReservation = new MultiStepResultHelper<>(
+        MultiStepResultHelper<DetailedItem> msrhReservation = new MultiStepResultHelper<>(
                 getActivity(), item, R.string.doing_res);
-        msrhReservation.setCallback(new Callback<DetailledItem>() {
+        msrhReservation.setCallback(new Callback<DetailedItem>() {
             @Override
             public void onSuccess(MultiStepResult result) {
                 AccountDataSource adata = new AccountDataSource(getActivity());
@@ -1111,7 +1111,7 @@ public class SearchResultDetailFragment extends Fragment
 
             @Override
             public StepTask<?> newTask(MultiStepResultHelper helper, int useraction,
-                                       String selection, DetailledItem item) {
+                                       String selection, DetailedItem item) {
                 return new ResTask(helper, useraction, selection, item);
             }
         });
@@ -1164,9 +1164,9 @@ public class SearchResultDetailFragment extends Fragment
     }
 
     public void bookingDo() {
-        MultiStepResultHelper<DetailledItem> msrhBooking = new MultiStepResultHelper<>(
+        MultiStepResultHelper<DetailedItem> msrhBooking = new MultiStepResultHelper<>(
                 getActivity(), item, R.string.doing_booking);
-        msrhBooking.setCallback(new Callback<DetailledItem>() {
+        msrhBooking.setCallback(new Callback<DetailedItem>() {
             @Override
             public void onSuccess(MultiStepResult result) {
                 if (getActivity() == null) {
@@ -1198,7 +1198,7 @@ public class SearchResultDetailFragment extends Fragment
 
             @Override
             public StepTask<?> newTask(MultiStepResultHelper helper, int useraction,
-                                       String selection, DetailledItem item) {
+                                       String selection, DetailedItem item) {
                 return new BookingTask(helper, useraction, selection, item);
             }
         });
@@ -1229,7 +1229,7 @@ public class SearchResultDetailFragment extends Fragment
         }
     }
 
-    public class FetchTask extends AsyncTask<Void, Void, DetailledItem> {
+    public class FetchTask extends AsyncTask<Void, Void, DetailedItem> {
         protected boolean success = true;
         protected Integer nr;
         protected String id;
@@ -1240,9 +1240,9 @@ public class SearchResultDetailFragment extends Fragment
         }
 
         @Override
-        protected DetailledItem doInBackground(Void... voids) {
+        protected DetailedItem doInBackground(Void... voids) {
             try {
-                DetailledItem res;
+                DetailedItem res;
                 if (id != null && !id.equals("")) {
                     SharedPreferences sp = PreferenceManager
                             .getDefaultSharedPreferences(getActivity());
@@ -1276,7 +1276,7 @@ public class SearchResultDetailFragment extends Fragment
 
         @Override
         @SuppressLint("NewApi")
-        protected void onPostExecute(DetailledItem result) {
+        protected void onPostExecute(DetailedItem result) {
             if (getActivity() == null) {
                 return;
             }
@@ -1319,10 +1319,10 @@ public class SearchResultDetailFragment extends Fragment
     }
 
     public class ResTask extends StepTask<ReservationResult> {
-        private DetailledItem item;
+        private DetailedItem item;
 
         public ResTask(MultiStepResultHelper helper, int useraction, String selection,
-                       DetailledItem item) {
+                       DetailedItem item) {
             super(helper, useraction, selection);
             this.item = item;
         }
@@ -1370,10 +1370,10 @@ public class SearchResultDetailFragment extends Fragment
 
     public class BookingTask extends StepTask<BookingResult> {
 
-        private DetailledItem item;
+        private DetailedItem item;
 
         public BookingTask(MultiStepResultHelper helper, int useraction, String selection,
-                           DetailledItem item) {
+                           DetailedItem item) {
             super(helper, useraction, selection);
             this.item = item;
         }

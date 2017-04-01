@@ -14,7 +14,7 @@ import java.util.List;
 import de.geeksfactory.opacclient.i18n.DummyStringProvider;
 import de.geeksfactory.opacclient.objects.Copy;
 import de.geeksfactory.opacclient.objects.Detail;
-import de.geeksfactory.opacclient.objects.DetailledItem;
+import de.geeksfactory.opacclient.objects.DetailedItem;
 import de.geeksfactory.opacclient.objects.Volume;
 
 import static org.junit.Assert.assertEquals;
@@ -51,7 +51,7 @@ public class SISISSearchTest extends BaseHtmlTest {
         if (html1 == null || html2 == null || html3 == null) {
             return; // we may not have all files for all libraries
         }
-        DetailledItem result = SISIS.parseDetail(html1, html2, html3, coverJs, new JSONObject(),
+        DetailedItem result = SISIS.parseDetail(html1, html2, html3, coverJs, new JSONObject(),
                 new DummyStringProvider());
         for (Copy copy : result.getCopies()) {
             assertContainsData(copy.getStatus());

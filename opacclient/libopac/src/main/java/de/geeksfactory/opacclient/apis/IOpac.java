@@ -55,7 +55,7 @@ import de.geeksfactory.opacclient.objects.Account;
 import de.geeksfactory.opacclient.objects.AccountData;
 import de.geeksfactory.opacclient.objects.Copy;
 import de.geeksfactory.opacclient.objects.Detail;
-import de.geeksfactory.opacclient.objects.DetailledItem;
+import de.geeksfactory.opacclient.objects.DetailedItem;
 import de.geeksfactory.opacclient.objects.Filter;
 import de.geeksfactory.opacclient.objects.Filter.Option;
 import de.geeksfactory.opacclient.objects.LentItem;
@@ -408,7 +408,7 @@ public class IOpac extends BaseApi implements OpacApi {
     }
 
     @Override
-    public DetailledItem getResultById(String id, String homebranch)
+    public DetailedItem getResultById(String id, String homebranch)
             throws IOException {
 
         if (!initialised) {
@@ -426,7 +426,7 @@ public class IOpac extends BaseApi implements OpacApi {
     }
 
     @Override
-    public DetailledItem getResult(int position) throws IOException {
+    public DetailedItem getResult(int position) throws IOException {
         if (!initialised) {
             start();
         }
@@ -439,10 +439,10 @@ public class IOpac extends BaseApi implements OpacApi {
         return parse_result(html);
     }
 
-    protected DetailledItem parse_result(String html) throws IOException {
+    protected DetailedItem parse_result(String html) throws IOException {
         Document doc = Jsoup.parse(html);
 
-        DetailledItem result = new DetailledItem();
+        DetailedItem result = new DetailedItem();
 
         String id = null;
         if (doc.select("input[name=mednr]").size() > 0) {
@@ -534,7 +534,7 @@ public class IOpac extends BaseApi implements OpacApi {
     }
 
     @Override
-    public ReservationResult reservation(DetailledItem item, Account account,
+    public ReservationResult reservation(DetailedItem item, Account account,
             int useraction, String selection) throws IOException {
         String reservation_info = item.getReservation_info();
         // STEP 1: Login page

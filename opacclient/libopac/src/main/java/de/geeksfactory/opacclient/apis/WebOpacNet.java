@@ -44,7 +44,7 @@ import de.geeksfactory.opacclient.objects.Account;
 import de.geeksfactory.opacclient.objects.AccountData;
 import de.geeksfactory.opacclient.objects.Copy;
 import de.geeksfactory.opacclient.objects.Detail;
-import de.geeksfactory.opacclient.objects.DetailledItem;
+import de.geeksfactory.opacclient.objects.DetailedItem;
 import de.geeksfactory.opacclient.objects.Filter;
 import de.geeksfactory.opacclient.objects.Filter.Option;
 import de.geeksfactory.opacclient.objects.Library;
@@ -238,7 +238,7 @@ public class WebOpacNet extends BaseApi implements OpacApi {
     }
 
     @Override
-    public DetailledItem getResultById(String id, String homebranch)
+    public DetailedItem getResultById(String id, String homebranch)
             throws IOException, OpacErrorException {
         List<NameValuePair> params = new ArrayList<>();
         params.add(new BasicNameValuePair("id", id));
@@ -251,9 +251,9 @@ public class WebOpacNet extends BaseApi implements OpacApi {
         return parse_detail(json);
     }
 
-    private DetailledItem parse_detail(String text) throws OpacErrorException {
+    private DetailedItem parse_detail(String text) throws OpacErrorException {
         try {
-            DetailledItem result = new DetailledItem();
+            DetailedItem result = new DetailedItem();
             JSONObject json = new JSONObject(text);
 
             result.setTitle(json.getString("titel"));
@@ -335,14 +335,14 @@ public class WebOpacNet extends BaseApi implements OpacApi {
     }
 
     @Override
-    public DetailledItem getResult(int position) throws IOException,
+    public DetailedItem getResult(int position) throws IOException,
             OpacErrorException {
         // TODO Auto-generated method stub
         return null;
     }
 
     @Override
-    public ReservationResult reservation(DetailledItem item, Account account,
+    public ReservationResult reservation(DetailedItem item, Account account,
             int useraction, String selection) throws IOException {
         // TODO Auto-generated method stub
         return null;

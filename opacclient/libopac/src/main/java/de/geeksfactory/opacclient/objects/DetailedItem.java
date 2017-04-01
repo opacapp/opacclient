@@ -30,7 +30,7 @@ import java.util.Map;
  *
  * @author Raphael Michel
  */
-public class DetailledItem implements CoverHolder {
+public class DetailedItem implements CoverHolder {
     private List<Detail> details = new ArrayList<>();
     private List<Copy> copies = new ArrayList<>();
     private List<Volume> volumes = new ArrayList<>();
@@ -116,7 +116,7 @@ public class DetailledItem implements CoverHolder {
      */
     @Override
     public String toString() {
-        return "DetailledItem [details=" + details + ", copies=" + copies
+        return "DetailedItem [details=" + details + ", copies=" + copies
                 + ", volumes=" + volumes + ", cover=" + cover + ", title="
                 + title + ", coverBitmap=" + coverBitmap + ", reservable="
                 + reservable + ", reservation_info=" + reservation_info
@@ -231,7 +231,7 @@ public class DetailledItem implements CoverHolder {
 
     /**
      * Get extra information stored to be returned to your
-     * {@link de.geeksfactory.opacclient.apis.OpacApi#reservation(DetailledItem, Account, int, String)}
+     * {@link de.geeksfactory.opacclient.apis.OpacApi#reservation(DetailedItem, Account, int, String)}
      * implementation.
      *
      * @return Some custom information.
@@ -242,7 +242,7 @@ public class DetailledItem implements CoverHolder {
 
     /**
      * Set extra information stored to be returned to your
-     * {@link de.geeksfactory.opacclient.apis.OpacApi#reservation(DetailledItem, Account, int, String)}
+     * {@link de.geeksfactory.opacclient.apis.OpacApi#reservation(DetailedItem, Account, int, String)}
      * implementation.
      *
      * @param reservation_info Some custom information.
