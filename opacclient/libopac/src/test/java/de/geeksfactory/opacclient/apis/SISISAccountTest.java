@@ -39,10 +39,9 @@ public class SISISAccountTest extends BaseHtmlTest {
     public void testParseMediaList() throws OpacApi.OpacErrorException {
         String html = readResource("/sisis/medialist/" + file);
         if (html == null) return; // we may not have all files for all libraries
-        SISIS parser = new SISIS();
 
         List<LentItem> media = new ArrayList<LentItem>();
-        parser.parse_medialist(media, Jsoup.parse(html), 0, new JSONObject());
+        SISIS.parse_medialist(media, Jsoup.parse(html), 0, new JSONObject());
         if (!file.equals("dresden.html")) {
             assertTrue(media.size() > 0);
         }
