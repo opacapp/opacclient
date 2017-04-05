@@ -29,6 +29,7 @@ import com.commonsware.cwac.endless.EndlessAdapter;
 import java.util.List;
 
 import de.geeksfactory.opacclient.R;
+import de.geeksfactory.opacclient.apis.OpacApi;
 import de.geeksfactory.opacclient.objects.SearchRequestResult;
 import de.geeksfactory.opacclient.objects.SearchResult;
 
@@ -42,9 +43,9 @@ public class ResultsAdapterEndless extends EndlessAdapter {
     private List<SearchResult> itemsToAppend;
 
     public ResultsAdapterEndless(Context context, SearchRequestResult result,
-                                 OnLoadMoreListener listener) {
+            OnLoadMoreListener listener, OpacApi api) {
         super(context, new ResultsAdapter(context,
-                result.getResults()), R.layout.listitem_searchresult_loading);
+                result.getResults(), api), R.layout.listitem_searchresult_loading);
         this.objects = result.getResults();
         this.listener = listener;
         this.maxPage = result.getPage_count();

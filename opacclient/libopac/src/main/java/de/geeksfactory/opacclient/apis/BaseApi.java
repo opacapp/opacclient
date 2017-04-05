@@ -75,7 +75,7 @@ import de.geeksfactory.opacclient.searchfields.SearchQuery;
  */
 public abstract class BaseApi implements OpacApi {
 
-    protected HttpClient http_client;
+    public HttpClient http_client;
     protected Library library;
     protected StringProvider stringProvider;
     protected Set<String> supportedLanguages;

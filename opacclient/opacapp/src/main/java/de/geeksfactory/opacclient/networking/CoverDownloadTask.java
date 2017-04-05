@@ -17,7 +17,7 @@ import de.geeksfactory.opacclient.objects.CoverHolder;
 import de.geeksfactory.opacclient.utils.Base64;
 import de.geeksfactory.opacclient.utils.ISBNTools;
 
-public class CoverDownloadTask extends AsyncTask<Void, Integer, CoverHolder> {
+public abstract class CoverDownloadTask extends AsyncTask<Void, Integer, CoverHolder> {
     protected static HashSet<String> rejectImages = new HashSet<>();
     protected int width = 0;
     protected int height = 0;
@@ -40,19 +40,18 @@ public class CoverDownloadTask extends AsyncTask<Void, Integer, CoverHolder> {
 
     protected CoverHolder item;
     protected Context context;
+    protected HttpClient httpClient;
 
-    public CoverDownloadTask(Context context, CoverHolder item) {
+    public CoverDownloadTask(Context context, CoverHolder item, HttpClient httpClient) {
         this.item = item;
         this.context = context;
+        this.httpClient = httpClient;
     }
 
     @Override
     protected CoverHolder doInBackground(Void... voids) {
         if (item.getCover() != null && item.getCoverBitmap() == null) {
             try {
-                HttpClient http_client = new AndroidHttpClientFactory()
-                        .getNewApacheHttpClient(false, true, false);
-
                 if (width == 0 && height == 0) {
                     // Use default
                     float density = context.getResources().getDisplayMetrics().density;
@@ -64,7 +63,7 @@ public class CoverDownloadTask extends AsyncTask<Void, Integer, CoverHolder> {
                 HttpResponse response;
 
                 try {
-                    response = http_client.execute(httpget);
+                    response = httpClient.execute(httpget);
 
                     if (response.getStatusLine().getStatusCode() >= 400) {
                         item.setCover(null);
@@ -103,4 +102,6 @@ public class CoverDownloadTask extends AsyncTask<Void, Integer, CoverHolder> {
         }
         return item;
     }
+
+    protected abstract void onPostExecute(CoverHolder result);
 }

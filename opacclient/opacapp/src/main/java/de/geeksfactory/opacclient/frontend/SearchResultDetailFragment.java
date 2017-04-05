@@ -46,6 +46,7 @@ import android.widget.Toast;
 
 import net.opacapp.multilinecollapsingtoolbar.CollapsingToolbarLayout;
 
+import org.apache.http.client.HttpClient;
 import org.joda.time.LocalDate;
 import org.joda.time.format.DateTimeFormat;
 
@@ -55,6 +56,7 @@ import java.util.List;
 
 import de.geeksfactory.opacclient.OpacClient;
 import de.geeksfactory.opacclient.R;
+import de.geeksfactory.opacclient.apis.BaseApi;
 import de.geeksfactory.opacclient.apis.EbookServiceApi;
 import de.geeksfactory.opacclient.apis.EbookServiceApi.BookingResult;
 import de.geeksfactory.opacclient.apis.OpacApi;
@@ -62,6 +64,7 @@ import de.geeksfactory.opacclient.apis.OpacApi.MultiStepResult;
 import de.geeksfactory.opacclient.apis.OpacApi.ReservationResult;
 import de.geeksfactory.opacclient.frontend.MultiStepResultHelper.Callback;
 import de.geeksfactory.opacclient.frontend.MultiStepResultHelper.StepTask;
+import de.geeksfactory.opacclient.networking.AndroidHttpClientFactory;
 import de.geeksfactory.opacclient.networking.CoverDownloadTask;
 import de.geeksfactory.opacclient.objects.Account;
 import de.geeksfactory.opacclient.objects.Copy;
@@ -80,8 +83,6 @@ import de.geeksfactory.opacclient.utils.PrintUtils;
 import su.j2e.rvjoiner.JoinableAdapter;
 import su.j2e.rvjoiner.JoinableLayout;
 import su.j2e.rvjoiner.RvJoiner;
-
-import static de.geeksfactory.opacclient.R.string.branch;
 
 /**
  * A fragment representing a single SearchResult detail screen. This fragment is either contained in
@@ -1219,8 +1220,8 @@ public class SearchResultDetailFragment extends Fragment
 
     public class LoadCoverTask extends CoverDownloadTask {
 
-        public LoadCoverTask(CoverHolder item, int width, int height) {
-            super(getActivity(), item);
+        public LoadCoverTask(CoverHolder item, int width, int height, HttpClient httpClient) {
+            super(getActivity(), item, httpClient);
             this.width = width;
             this.height = height;
         }
@@ -1290,7 +1291,20 @@ public class SearchResultDetailFragment extends Fragment
             item = result;
 
             if (item.getCover() != null && item.getCoverBitmap() == null) {
-                new LoadCoverTask(item, collapsingToolbar.getWidth(), collapsingToolbar.getHeight()).execute();
+                HttpClient httpClient;
+                try {
+                    if (app.getApi() instanceof BaseApi) {
+                        httpClient = ((BaseApi) app.getApi()).http_client;
+                    } else {
+                        httpClient = new AndroidHttpClientFactory()
+                                .getNewApacheHttpClient(false, true, false);
+                    }
+                } catch (OpacClient.LibraryRemovedException e) {
+                    httpClient = new AndroidHttpClientFactory()
+                            .getNewApacheHttpClient(false, true, false);
+                }
+                new LoadCoverTask(item, collapsingToolbar.getWidth(), collapsingToolbar.getHeight(),
+                        httpClient).execute();
             } else {
                 displayCover();
             }
