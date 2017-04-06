@@ -52,7 +52,7 @@ import de.geeksfactory.opacclient.objects.Account;
 import de.geeksfactory.opacclient.objects.AccountData;
 import de.geeksfactory.opacclient.objects.Copy;
 import de.geeksfactory.opacclient.objects.Detail;
-import de.geeksfactory.opacclient.objects.DetailledItem;
+import de.geeksfactory.opacclient.objects.DetailedItem;
 import de.geeksfactory.opacclient.objects.Filter;
 import de.geeksfactory.opacclient.objects.Filter.Option;
 import de.geeksfactory.opacclient.objects.LentItem;
@@ -517,7 +517,7 @@ public class BiBer1992 extends BaseApi {
      * OpacApi#getResultById(java.lang.String)
      */
     @Override
-    public DetailledItem getResultById(String id, String homebranch)
+    public DetailedItem getResultById(String id, String homebranch)
             throws IOException {
         if (!initialised) {
             start();
@@ -553,7 +553,7 @@ public class BiBer1992 extends BaseApi {
      * @see OpacApi#getResult(int)
      */
     @Override
-    public DetailledItem getResult(int position) throws IOException {
+    public DetailedItem getResult(int position) throws IOException {
         // not needed, normall all search results should have an ID,
         // so getResultById() is called
         return null;
@@ -576,8 +576,8 @@ public class BiBer1992 extends BaseApi {
      * Content | Content | Content | Content |
      * |-------------------------------------------------|
      */
-    private DetailledItem parse_result(String html) {
-        DetailledItem item = new DetailledItem();
+    private DetailedItem parse_result(String html) {
+        DetailedItem item = new DetailedItem();
 
         Document document = Jsoup.parse(html);
 
@@ -747,7 +747,7 @@ public class BiBer1992 extends BaseApi {
      * de.geeksfactory.opacclient.objects.Account, int, java.lang.String)
      */
     @Override
-    public ReservationResult reservation(DetailledItem item, Account account,
+    public ReservationResult reservation(DetailedItem item, Account account,
             int useraction, String selection) throws IOException {
         String resinfo = item.getReservation_info();
         if (selection == null || selection.equals("confirmed")) {

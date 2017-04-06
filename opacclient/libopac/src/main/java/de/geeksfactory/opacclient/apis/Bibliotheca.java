@@ -64,7 +64,7 @@ import de.geeksfactory.opacclient.objects.Account;
 import de.geeksfactory.opacclient.objects.AccountData;
 import de.geeksfactory.opacclient.objects.Copy;
 import de.geeksfactory.opacclient.objects.Detail;
-import de.geeksfactory.opacclient.objects.DetailledItem;
+import de.geeksfactory.opacclient.objects.DetailedItem;
 import de.geeksfactory.opacclient.objects.Filter;
 import de.geeksfactory.opacclient.objects.Filter.Option;
 import de.geeksfactory.opacclient.objects.LentItem;
@@ -476,14 +476,14 @@ public class Bibliotheca extends BaseApi {
     }
 
     @Override
-    public DetailledItem getResultById(String a, String homebranch)
+    public DetailedItem getResultById(String a, String homebranch)
             throws IOException {
         if (!initialised) {
             start();
         }
         String html = httpGet(opac_url + "/index.asp?MedienNr=" + a,
                 getDefaultEncoding());
-        DetailledItem result = parseResult(html, data);
+        DetailedItem result = parseResult(html, data);
         if (result.getId() == null) {
             result.setId(a);
         }
@@ -491,18 +491,18 @@ public class Bibliotheca extends BaseApi {
     }
 
     @Override
-    public DetailledItem getResult(int nr) throws IOException {
+    public DetailedItem getResult(int nr) throws IOException {
         String html = httpGet(opac_url + "/index.asp?detmediennr=" + nr,
                 getDefaultEncoding());
 
         return parseResult(html, data);
     }
 
-    static DetailledItem parseResult(String html, JSONObject data) {
+    static DetailedItem parseResult(String html, JSONObject data) {
         Document doc = Jsoup.parse(html);
         doc.setBaseUri(data.optString("baseurl"));
 
-        DetailledItem result = new DetailledItem();
+        DetailedItem result = new DetailedItem();
 
         if (doc.select(".detail_cover img").size() == 1) {
             result.setCover(doc.select(".detail_cover img").get(0).attr("src"));
@@ -638,7 +638,7 @@ public class Bibliotheca extends BaseApi {
     }
 
     @Override
-    public ReservationResult reservation(DetailledItem item, Account acc,
+    public ReservationResult reservation(DetailedItem item, Account acc,
             int useraction, String selection) throws IOException {
         String reservation_info = item.getReservation_info();
 

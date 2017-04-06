@@ -51,7 +51,7 @@ import de.geeksfactory.opacclient.objects.Account;
 import de.geeksfactory.opacclient.objects.AccountData;
 import de.geeksfactory.opacclient.objects.Copy;
 import de.geeksfactory.opacclient.objects.Detail;
-import de.geeksfactory.opacclient.objects.DetailledItem;
+import de.geeksfactory.opacclient.objects.DetailedItem;
 import de.geeksfactory.opacclient.objects.Filter;
 import de.geeksfactory.opacclient.objects.Filter.Option;
 import de.geeksfactory.opacclient.objects.LentItem;
@@ -440,7 +440,7 @@ public class Zones extends BaseApi {
     }
 
     @Override
-    public DetailledItem getResultById(String id, String homebranch)
+    public DetailedItem getResultById(String id, String homebranch)
             throws IOException {
 
         List<NameValuePair> params = new ArrayList<>();
@@ -460,14 +460,14 @@ public class Zones extends BaseApi {
     }
 
     @Override
-    public DetailledItem getResult(int nr) throws IOException {
+    public DetailedItem getResult(int nr) throws IOException {
         return null;
     }
 
-    private DetailledItem parse_result(String id, String html) {
+    private DetailedItem parse_result(String id, String html) {
         Document doc = Jsoup.parse(html);
 
-        DetailledItem result = new DetailledItem();
+        DetailedItem result = new DetailedItem();
         result.setTitle("");
         boolean title_is_set = false;
 
@@ -615,7 +615,7 @@ public class Zones extends BaseApi {
     }
 
     @Override
-    public ReservationResult reservation(DetailledItem item, Account acc,
+    public ReservationResult reservation(DetailedItem item, Account acc,
             int useraction, String selection) throws IOException {
         String reservation_info = item.getReservation_info();
         String html = httpGet(opac_url + "/" + reservation_info,

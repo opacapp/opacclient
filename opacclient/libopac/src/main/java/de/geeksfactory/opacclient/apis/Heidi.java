@@ -42,10 +42,7 @@ import org.jsoup.select.Elements;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
-import java.net.URI;
-import java.net.URISyntaxException;
 import java.net.URLDecoder;
-import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -59,7 +56,7 @@ import de.geeksfactory.opacclient.objects.Account;
 import de.geeksfactory.opacclient.objects.AccountData;
 import de.geeksfactory.opacclient.objects.Copy;
 import de.geeksfactory.opacclient.objects.Detail;
-import de.geeksfactory.opacclient.objects.DetailledItem;
+import de.geeksfactory.opacclient.objects.DetailedItem;
 import de.geeksfactory.opacclient.objects.Filter;
 import de.geeksfactory.opacclient.objects.Filter.Option;
 import de.geeksfactory.opacclient.objects.LentItem;
@@ -366,7 +363,7 @@ public class Heidi extends BaseApi implements OpacApi {
     }
 
     @Override
-    public DetailledItem getResultById(String id, final String homebranch)
+    public DetailedItem getResultById(String id, final String homebranch)
             throws IOException {
 
         if (sessid == null) {
@@ -382,7 +379,7 @@ public class Heidi extends BaseApi implements OpacApi {
                 + sessid, ENCODING, false, cookieStore);
         Document doc = Jsoup.parse(html);
 
-        DetailledItem item = new DetailledItem();
+        DetailedItem item = new DetailedItem();
         item.setId(id);
 
         Elements table = doc.select(".titelsatz tr");
@@ -448,7 +445,7 @@ public class Heidi extends BaseApi implements OpacApi {
     }
 
     @Override
-    public DetailledItem getResult(int position) throws IOException {
+    public DetailedItem getResult(int position) throws IOException {
         throw new UnsupportedOperationException("Not implemented.");
     }
 
@@ -529,7 +526,7 @@ public class Heidi extends BaseApi implements OpacApi {
     }
 
     @Override
-    public ReservationResult reservation(DetailledItem item, Account account,
+    public ReservationResult reservation(DetailedItem item, Account account,
             int useraction, String selection) throws IOException {
         String html = httpGet(opac_url + "/bestellung.cgi?ks=" + item.getId()
                 + "&sess=" + sessid, ENCODING, false, cookieStore);

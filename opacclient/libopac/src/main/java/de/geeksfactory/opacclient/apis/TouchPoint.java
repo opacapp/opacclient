@@ -60,7 +60,7 @@ import de.geeksfactory.opacclient.objects.Account;
 import de.geeksfactory.opacclient.objects.AccountData;
 import de.geeksfactory.opacclient.objects.Copy;
 import de.geeksfactory.opacclient.objects.Detail;
-import de.geeksfactory.opacclient.objects.DetailledItem;
+import de.geeksfactory.opacclient.objects.DetailedItem;
 import de.geeksfactory.opacclient.objects.Filter;
 import de.geeksfactory.opacclient.objects.Filter.Option;
 import de.geeksfactory.opacclient.objects.LentItem;
@@ -612,7 +612,7 @@ public class TouchPoint extends BaseApi implements OpacApi {
     }
 
     @Override
-    public DetailledItem getResultById(String id, String homebranch)
+    public DetailedItem getResultById(String id, String homebranch)
             throws IOException {
         String html = httpGet(getUrlForId(id), ENCODING);
         return parse_result(html);
@@ -645,18 +645,18 @@ public class TouchPoint extends BaseApi implements OpacApi {
     }
 
     @Override
-    public DetailledItem getResult(int nr) throws IOException {
+    public DetailedItem getResult(int nr) throws IOException {
         String html = httpGet(opac_url
                 + "/singleHit.do?methodToCall=showHit&curPos=" + nr
                 + "&identifier=" + identifier, ENCODING);
         return parse_result(html);
     }
 
-    protected DetailledItem parse_result(String html) throws IOException {
+    protected DetailedItem parse_result(String html) throws IOException {
         Document doc = Jsoup.parse(html);
         doc.setBaseUri(opac_url);
 
-        DetailledItem result = new DetailledItem();
+        DetailedItem result = new DetailedItem();
 
         if (doc.select("#cover script").size() > 0) {
             String js = doc.select("#cover script").first().html();
@@ -827,7 +827,7 @@ public class TouchPoint extends BaseApi implements OpacApi {
     }
 
     @Override
-    public ReservationResult reservation(DetailledItem item, Account acc,
+    public ReservationResult reservation(DetailedItem item, Account acc,
             int useraction, String selection) throws IOException {
         // Earlier, this place used some logic to find out whether it needed to re-login or not
         // before starting the reservation. Because this didn't work, it now simply logs in every

@@ -23,7 +23,7 @@ import org.joda.time.format.DateTimeFormatter;
 import org.joda.time.format.ISODateTimeFormat;
 
 /**
- * Represents a copy of a medium ({@link DetailledItem}) available in a library.
+ * Represents a copy of a medium ({@link DetailedItem}) available in a library.
  */
 public class Copy {
     private String barcode;
@@ -153,7 +153,7 @@ public class Copy {
 
     /**
      * @return Reservation information for copy-based reservations. Intended for use in your {@link
-     * de.geeksfactory.opacclient.apis.OpacApi#reservation(DetailledItem, Account, int, String)}
+     * de.geeksfactory.opacclient.apis.OpacApi#reservation(DetailedItem, Account, int, String)}
      * implementation.
      */
     public String getResInfo() {
@@ -162,7 +162,7 @@ public class Copy {
 
     /**
      * @param resInfo Reservation information for copy-based reservations. Intended for use in your
-     *                {@link de.geeksfactory.opacclient.apis.OpacApi#reservation (DetailledItem,
+     *                {@link de.geeksfactory.opacclient.apis.OpacApi#reservation (DetailedItem,
      *                Account, int, String)} implementation.
      */
     public void setResInfo(String resInfo) {

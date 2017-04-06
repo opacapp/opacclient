@@ -85,7 +85,7 @@ import de.geeksfactory.opacclient.networking.SSLSecurityException;
 import de.geeksfactory.opacclient.objects.Account;
 import de.geeksfactory.opacclient.objects.AccountData;
 import de.geeksfactory.opacclient.objects.AccountItem;
-import de.geeksfactory.opacclient.objects.DetailledItem;
+import de.geeksfactory.opacclient.objects.DetailedItem;
 import de.geeksfactory.opacclient.objects.LentItem;
 import de.geeksfactory.opacclient.objects.Library;
 import de.geeksfactory.opacclient.objects.ReservedItem;
@@ -1141,12 +1141,12 @@ public class AccountFragment extends Fragment implements
             }
             return;
         }
-        DetailledItem item = new DetailledItem();
+        DetailedItem item = new DetailedItem();
         item.setBookable(true);
         item.setBooking_info(booking_info);
-        MultiStepResultHelper<DetailledItem> msrhBooking = new MultiStepResultHelper<>(
+        MultiStepResultHelper<DetailedItem> msrhBooking = new MultiStepResultHelper<>(
                 getActivity(), item, R.string.doing_booking);
-        msrhBooking.setCallback(new Callback<DetailledItem>() {
+        msrhBooking.setCallback(new Callback<DetailedItem>() {
             @Override
             public void onSuccess(MultiStepResult result) {
                 invalidateData();
@@ -1183,7 +1183,7 @@ public class AccountFragment extends Fragment implements
 
             @Override
             public StepTask<?> newTask(MultiStepResultHelper helper, int useraction,
-                    String selection, DetailledItem argument) {
+                    String selection, DetailedItem argument) {
                 return new BookingTask(helper, useraction, selection, argument);
             }
         });
@@ -1639,10 +1639,10 @@ public class AccountFragment extends Fragment implements
     }
 
     public class BookingTask extends StepTask<BookingResult> {
-        private DetailledItem item;
+        private DetailedItem item;
 
         public BookingTask(MultiStepResultHelper helper, int useraction, String selection,
-                DetailledItem item) {
+                DetailedItem item) {
             super(helper, useraction, selection);
             this.item = item;
         }

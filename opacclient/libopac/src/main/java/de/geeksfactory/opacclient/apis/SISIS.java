@@ -56,7 +56,7 @@ import de.geeksfactory.opacclient.objects.Account;
 import de.geeksfactory.opacclient.objects.AccountData;
 import de.geeksfactory.opacclient.objects.Copy;
 import de.geeksfactory.opacclient.objects.Detail;
-import de.geeksfactory.opacclient.objects.DetailledItem;
+import de.geeksfactory.opacclient.objects.DetailedItem;
 import de.geeksfactory.opacclient.objects.Filter;
 import de.geeksfactory.opacclient.objects.Filter.Option;
 import de.geeksfactory.opacclient.objects.LentItem;
@@ -655,7 +655,7 @@ public class SISIS extends BaseApi implements OpacApi {
     }
 
     @Override
-    public DetailledItem getResultById(String id, String homebranch)
+    public DetailedItem getResultById(String id, String homebranch)
             throws IOException {
 
         // Some libraries require start parameters for start.do, like Login=foo
@@ -680,7 +680,7 @@ public class SISIS extends BaseApi implements OpacApi {
     }
 
     @Override
-    public DetailledItem getResult(int nr) throws IOException {
+    public DetailedItem getResult(int nr) throws IOException {
 
         String html = httpGet(
                 opac_url
@@ -690,7 +690,7 @@ public class SISIS extends BaseApi implements OpacApi {
         return loadDetail(html);
     }
 
-    protected DetailledItem loadDetail(String html) throws IOException {
+    protected DetailedItem loadDetail(String html) throws IOException {
         String html2 = httpGet(opac_url
                         + "/singleHit.do?methodToCall=activateTab&tab=showTitleActive",
                 ENCODING);
@@ -707,7 +707,7 @@ public class SISIS extends BaseApi implements OpacApi {
             coverJs = httpGet(opac_url + "/" + coverMatcher.group(1), ENCODING);
         }
 
-        DetailledItem result = parseDetail(html, html2, html3, coverJs, data, stringProvider);
+        DetailedItem result = parseDetail(html, html2, html3, coverJs, data, stringProvider);
         try {
             if (!result.getCover().contains("amazon")) downloadCover(result);
         } catch (Exception e) {
@@ -716,7 +716,7 @@ public class SISIS extends BaseApi implements OpacApi {
         return result;
     }
 
-    static DetailledItem parseDetail(String html, String html2, String html3, String coverJs,
+    static DetailedItem parseDetail(String html, String html2, String html3, String coverJs,
             JSONObject data,
             StringProvider stringProvider)
             throws IOException {
@@ -730,7 +730,7 @@ public class SISIS extends BaseApi implements OpacApi {
         Document doc3 = Jsoup.parse(html3);
         doc3.setBaseUri(opac_url);
 
-        DetailledItem result = new DetailledItem();
+        DetailedItem result = new DetailedItem();
 
         try {
             result.setId(doc.select("#bibtip_id").text().trim());
@@ -1029,7 +1029,7 @@ public class SISIS extends BaseApi implements OpacApi {
     }
 
     @Override
-    public ReservationResult reservation(DetailledItem item, Account acc,
+    public ReservationResult reservation(DetailedItem item, Account acc,
             int useraction, String selection) throws IOException {
         String reservation_info = item.getReservation_info();
         final String branch_inputfield = "issuepoint";

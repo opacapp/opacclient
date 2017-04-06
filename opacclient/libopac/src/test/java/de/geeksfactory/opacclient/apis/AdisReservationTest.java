@@ -13,7 +13,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-import de.geeksfactory.opacclient.objects.DetailledItem;
+import de.geeksfactory.opacclient.objects.DetailedItem;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -27,7 +27,7 @@ public class AdisReservationTest extends BaseHtmlTest {
     public static final String DIR = "/adis/reservation/";
     private String file;
     private Adis adis;
-    private DetailledItem item;
+    private DetailedItem item;
 
     public AdisReservationTest(String file) {
         this.file = file;

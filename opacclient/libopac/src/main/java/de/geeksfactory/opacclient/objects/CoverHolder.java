@@ -2,7 +2,7 @@ package de.geeksfactory.opacclient.objects;
 
 /**
  * Any object which can hold a cover should implement this interface. This might
- * be a {@link SearchResult} or {@link DetailledItem}.
+ * be a {@link SearchResult} or {@link DetailedItem}.
  */
 public interface CoverHolder {
     /**

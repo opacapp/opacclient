@@ -56,7 +56,7 @@ import de.geeksfactory.opacclient.i18n.StringProvider;
 import de.geeksfactory.opacclient.networking.HttpClientFactory;
 import de.geeksfactory.opacclient.objects.Copy;
 import de.geeksfactory.opacclient.objects.Detail;
-import de.geeksfactory.opacclient.objects.DetailledItem;
+import de.geeksfactory.opacclient.objects.DetailedItem;
 import de.geeksfactory.opacclient.objects.Filter;
 import de.geeksfactory.opacclient.objects.Filter.Option;
 import de.geeksfactory.opacclient.objects.Library;
@@ -268,7 +268,7 @@ public abstract class Pica extends BaseApi implements OpacApi {
 
         if (results_total == 1) {
             // Only one result
-            DetailledItem singleResult = parse_result(html);
+            DetailedItem singleResult = parse_result(html);
             SearchResult sr = new SearchResult();
             sr.setType(getMediaTypeInSingleResult(html));
             sr.setInnerhtml("<b>" + singleResult.getTitle() + "</b><br>"
@@ -408,7 +408,7 @@ public abstract class Pica extends BaseApi implements OpacApi {
     }
 
     @Override
-    public DetailledItem getResultById(String id, String homebranch)
+    public DetailedItem getResultById(String id, String homebranch)
             throws IOException {
 
         if (id == null && reusehtml != null) {
@@ -433,7 +433,7 @@ public abstract class Pica extends BaseApi implements OpacApi {
     }
 
     @Override
-    public DetailledItem getResult(int position) throws IOException {
+    public DetailedItem getResult(int position) throws IOException {
         if (!initialised) {
             start();
         }
@@ -445,11 +445,11 @@ public abstract class Pica extends BaseApi implements OpacApi {
         return parse_result(html);
     }
 
-    protected DetailledItem parse_result(String html) {
+    protected DetailedItem parse_result(String html) {
         Document doc = Jsoup.parse(html);
         doc.setBaseUri(opac_url);
 
-        DetailledItem result = new DetailledItem();
+        DetailedItem result = new DetailedItem();
         for (Element a : doc.select("a[href*=PPN")) {
             Map<String, String> hrefq = getQueryParamsFirst(a
                     .absUrl("href"));

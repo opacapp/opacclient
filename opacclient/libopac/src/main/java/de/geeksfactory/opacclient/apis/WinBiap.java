@@ -33,7 +33,7 @@ import de.geeksfactory.opacclient.objects.Account;
 import de.geeksfactory.opacclient.objects.AccountData;
 import de.geeksfactory.opacclient.objects.Copy;
 import de.geeksfactory.opacclient.objects.Detail;
-import de.geeksfactory.opacclient.objects.DetailledItem;
+import de.geeksfactory.opacclient.objects.DetailedItem;
 import de.geeksfactory.opacclient.objects.Filter;
 import de.geeksfactory.opacclient.objects.Filter.Option;
 import de.geeksfactory.opacclient.objects.LentItem;
@@ -424,15 +424,15 @@ public class WinBiap extends BaseApi implements OpacApi {
     }
 
     @Override
-    public DetailledItem getResultById(String id, String homebranch)
+    public DetailedItem getResultById(String id, String homebranch)
             throws IOException, OpacErrorException {
         String html = httpGet(opac_url + "/detail.aspx?Id=" + id, getDefaultEncoding(), false);
         return parse_result(html);
     }
 
-    private DetailledItem parse_result(String html) {
+    private DetailedItem parse_result(String html) {
         Document doc = Jsoup.parse(html);
-        DetailledItem item = new DetailledItem();
+        DetailedItem item = new DetailedItem();
 
         if (doc.select(".cover").size() > 0) {
             Element cover = doc.select(".cover").first();
@@ -520,14 +520,14 @@ public class WinBiap extends BaseApi implements OpacApi {
     }
 
     @Override
-    public DetailledItem getResult(int position) throws IOException,
+    public DetailedItem getResult(int position) throws IOException,
             OpacErrorException {
         // Should not be called because every media has an ID
         return null;
     }
 
     @Override
-    public ReservationResult reservation(DetailledItem item, Account account,
+    public ReservationResult reservation(DetailedItem item, Account account,
             int useraction, String selection) throws IOException {
         if (selection == null) {
             // Which copy?
