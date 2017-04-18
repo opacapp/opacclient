@@ -303,6 +303,12 @@ public class SearchResultListFragment extends CustomListFragment {
             setEmptyText(getString(R.string.no_results));
         }
         this.searchresult = searchresult;
+        OpacApi api = null;
+        try {
+            api = app.getApi();
+        } catch (OpacClient.LibraryRemovedException ignored) {
+
+        }
         adapter = new ResultsAdapterEndless(getActivity(), searchresult,
                 new OnLoadMoreListener() {
                     @Override
@@ -348,7 +354,7 @@ public class SearchResultListFragment extends CustomListFragment {
                                             resultCount, resultCount));
                         }
                     }
-                });
+                }, api);
         setListAdapter(adapter);
         getListView().setTextFilterEnabled(true);
         setListShown(true);

@@ -24,7 +24,7 @@ import de.geeksfactory.opacclient.OpacApiFactory;
 import de.geeksfactory.opacclient.apis.OpacApi;
 import de.geeksfactory.opacclient.apis.OpacApi.OpacErrorException;
 import de.geeksfactory.opacclient.objects.Account;
-import de.geeksfactory.opacclient.objects.DetailledItem;
+import de.geeksfactory.opacclient.objects.DetailedItem;
 import de.geeksfactory.opacclient.objects.Library;
 import de.geeksfactory.opacclient.objects.SearchRequestResult;
 import de.geeksfactory.opacclient.objects.SearchResult;
@@ -139,7 +139,7 @@ public class LibraryApiTestCases {
         } else {
             third = res.getResults().get(res.getResults().size() - 1);
         }
-        DetailledItem detail;
+        DetailedItem detail;
         if (third.getId() != null) {
             detail = api.getResultById(third.getId(), "");
         } else {
@@ -151,7 +151,7 @@ public class LibraryApiTestCases {
         if (res.getResults().size() < res.getTotal_result_count()) {
             api.searchGetPage(2);
             SearchResult second = res.getResults().get(1);
-            DetailledItem detail2;
+            DetailedItem detail2;
             if (second.getId() != null) {
                 detail2 = api.getResultById(second.getId(), "");
             } else {
@@ -186,7 +186,7 @@ public class LibraryApiTestCases {
         assertTrue(exception != null);
     }
 
-    private void confirmDetail(SearchResult result, DetailledItem detail) {
+    private void confirmDetail(SearchResult result, DetailedItem detail) {
         assertTrue(detail != null);
         assertTrue(detail.getDetails().size() > 0);
         if (detail.isReservable()) {

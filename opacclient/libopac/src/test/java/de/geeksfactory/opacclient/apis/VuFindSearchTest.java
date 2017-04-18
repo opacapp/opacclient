@@ -13,7 +13,7 @@ import java.util.List;
 
 import de.geeksfactory.opacclient.networking.NotReachableException;
 import de.geeksfactory.opacclient.objects.Copy;
-import de.geeksfactory.opacclient.objects.DetailledItem;
+import de.geeksfactory.opacclient.objects.DetailedItem;
 import de.geeksfactory.opacclient.objects.Volume;
 
 import static org.junit.Assert.assertEquals;
@@ -44,7 +44,7 @@ public class VuFindSearchTest extends BaseHtmlTest {
             throws OpacApi.OpacErrorException, JSONException, NotReachableException {
         String html = readResource("/vufind/result_detail/" + file);
         if (html == null) return; // we may not have all files for all libraries
-        DetailledItem result = VuFind.parseDetail("0", Jsoup.parse(html), getData(file));
+        DetailedItem result = VuFind.parseDetail("0", Jsoup.parse(html), getData(file));
         for (Copy copy : result.getCopies()) {
             assertContainsData(copy.getStatus());
             assertNullOrNotEmpty(copy.getBarcode());

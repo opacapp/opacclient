@@ -19,7 +19,7 @@
 package de.geeksfactory.opacclient.objects;
 
 /**
- * Represents a volume of a series of media ({@link DetailledItem}) available in a library.
+ * Represents a volume of a series of media ({@link DetailedItem}) available in a library.
  *
  * This is to be used, if a search result is not a real item but more like a "meta item" for a
  * collection, for example a "Harry Potter" item containing a collection of all seven Harry Potter

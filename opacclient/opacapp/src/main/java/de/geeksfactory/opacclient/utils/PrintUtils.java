@@ -11,24 +11,24 @@ import java.io.InputStreamReader;
 import java.io.StringWriter;
 
 import de.geeksfactory.opacclient.R;
-import de.geeksfactory.opacclient.objects.DetailledItem;
+import de.geeksfactory.opacclient.objects.DetailedItem;
 
 public class PrintUtils {
-    public static String printDetails(DetailledItem detailledItem, Context context) {
+    public static String printDetails(DetailedItem detailedItem, Context context) {
 
         InputStream is = context.getResources().openRawResource(R.raw.print_template);
         BufferedReader r = new BufferedReader(new InputStreamReader(is));
         Template tmpl = Mustache.compiler().compile(r);
         StringWriter sw = new StringWriter();
-        tmpl.execute(new PrintData(detailledItem, context), sw);
+        tmpl.execute(new PrintData(detailedItem, context), sw);
         return sw.toString();
     }
 
     private static class PrintData {
-        public DetailledItem item;
+        public DetailedItem item;
         public Strings strings;
 
-        public PrintData(DetailledItem item, Context context) {
+        public PrintData(DetailedItem item, Context context) {
             this.item = item;
             this.strings = new Strings(context);
         }

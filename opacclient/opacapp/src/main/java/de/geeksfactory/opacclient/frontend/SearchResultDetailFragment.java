@@ -46,6 +46,7 @@ import android.widget.Toast;
 
 import net.opacapp.multilinecollapsingtoolbar.CollapsingToolbarLayout;
 
+import org.apache.http.client.HttpClient;
 import org.joda.time.LocalDate;
 import org.joda.time.format.DateTimeFormat;
 
@@ -55,6 +56,7 @@ import java.util.List;
 
 import de.geeksfactory.opacclient.OpacClient;
 import de.geeksfactory.opacclient.R;
+import de.geeksfactory.opacclient.apis.BaseApi;
 import de.geeksfactory.opacclient.apis.EbookServiceApi;
 import de.geeksfactory.opacclient.apis.EbookServiceApi.BookingResult;
 import de.geeksfactory.opacclient.apis.OpacApi;
@@ -62,12 +64,13 @@ import de.geeksfactory.opacclient.apis.OpacApi.MultiStepResult;
 import de.geeksfactory.opacclient.apis.OpacApi.ReservationResult;
 import de.geeksfactory.opacclient.frontend.MultiStepResultHelper.Callback;
 import de.geeksfactory.opacclient.frontend.MultiStepResultHelper.StepTask;
+import de.geeksfactory.opacclient.networking.AndroidHttpClientFactory;
 import de.geeksfactory.opacclient.networking.CoverDownloadTask;
 import de.geeksfactory.opacclient.objects.Account;
 import de.geeksfactory.opacclient.objects.Copy;
 import de.geeksfactory.opacclient.objects.CoverHolder;
 import de.geeksfactory.opacclient.objects.Detail;
-import de.geeksfactory.opacclient.objects.DetailledItem;
+import de.geeksfactory.opacclient.objects.DetailedItem;
 import de.geeksfactory.opacclient.objects.SearchResult;
 import de.geeksfactory.opacclient.storage.AccountDataSource;
 import de.geeksfactory.opacclient.storage.StarDataSource;
@@ -80,8 +83,6 @@ import de.geeksfactory.opacclient.utils.PrintUtils;
 import su.j2e.rvjoiner.JoinableAdapter;
 import su.j2e.rvjoiner.JoinableLayout;
 import su.j2e.rvjoiner.RvJoiner;
-
-import static de.geeksfactory.opacclient.R.string.branch;
 
 /**
  * A fragment representing a single SearchResult detail screen. This fragment is either contained in
@@ -128,7 +129,7 @@ public class SearchResultDetailFragment extends Fragment
     /**
      * The detailled item that this fragment represents.
      */
-    private DetailledItem item;
+    private DetailedItem item;
     private String id;
     private Integer nr;
     private OpacClient app;
@@ -861,7 +862,7 @@ public class SearchResultDetailFragment extends Fragment
         webView.loadDataWithBaseURL(null, templateDetailles, "text/HTML", "UTF-8", null);
     }
 
-    public DetailledItem getItem() {
+    public DetailedItem getItem() {
         return item;
     }
 
@@ -1054,9 +1055,9 @@ public class SearchResultDetailFragment extends Fragment
     }
 
     public void reservationPerform() {
-        MultiStepResultHelper<DetailledItem> msrhReservation = new MultiStepResultHelper<>(
+        MultiStepResultHelper<DetailedItem> msrhReservation = new MultiStepResultHelper<>(
                 getActivity(), item, R.string.doing_res);
-        msrhReservation.setCallback(new Callback<DetailledItem>() {
+        msrhReservation.setCallback(new Callback<DetailedItem>() {
             @Override
             public void onSuccess(MultiStepResult result) {
                 AccountDataSource adata = new AccountDataSource(getActivity());
@@ -1112,7 +1113,7 @@ public class SearchResultDetailFragment extends Fragment
 
             @Override
             public StepTask<?> newTask(MultiStepResultHelper helper, int useraction,
-                                       String selection, DetailledItem item) {
+                                       String selection, DetailedItem item) {
                 return new ResTask(helper, useraction, selection, item);
             }
         });
@@ -1165,9 +1166,9 @@ public class SearchResultDetailFragment extends Fragment
     }
 
     public void bookingDo() {
-        MultiStepResultHelper<DetailledItem> msrhBooking = new MultiStepResultHelper<>(
+        MultiStepResultHelper<DetailedItem> msrhBooking = new MultiStepResultHelper<>(
                 getActivity(), item, R.string.doing_booking);
-        msrhBooking.setCallback(new Callback<DetailledItem>() {
+        msrhBooking.setCallback(new Callback<DetailedItem>() {
             @Override
             public void onSuccess(MultiStepResult result) {
                 if (getActivity() == null) {
@@ -1199,7 +1200,7 @@ public class SearchResultDetailFragment extends Fragment
 
             @Override
             public StepTask<?> newTask(MultiStepResultHelper helper, int useraction,
-                                       String selection, DetailledItem item) {
+                                       String selection, DetailedItem item) {
                 return new BookingTask(helper, useraction, selection, item);
             }
         });
@@ -1219,8 +1220,8 @@ public class SearchResultDetailFragment extends Fragment
 
     public class LoadCoverTask extends CoverDownloadTask {
 
-        public LoadCoverTask(CoverHolder item, int width, int height) {
-            super(getActivity(), item);
+        public LoadCoverTask(CoverHolder item, int width, int height, HttpClient httpClient) {
+            super(getActivity(), item, httpClient);
             this.width = width;
             this.height = height;
         }
@@ -1230,7 +1231,7 @@ public class SearchResultDetailFragment extends Fragment
         }
     }
 
-    public class FetchTask extends AsyncTask<Void, Void, DetailledItem> {
+    public class FetchTask extends AsyncTask<Void, Void, DetailedItem> {
         protected boolean success = true;
         protected Integer nr;
         protected String id;
@@ -1241,9 +1242,9 @@ public class SearchResultDetailFragment extends Fragment
         }
 
         @Override
-        protected DetailledItem doInBackground(Void... voids) {
+        protected DetailedItem doInBackground(Void... voids) {
             try {
-                DetailledItem res;
+                DetailedItem res;
                 if (id != null && !id.equals("")) {
                     SharedPreferences sp = PreferenceManager
                             .getDefaultSharedPreferences(getActivity());
@@ -1277,7 +1278,7 @@ public class SearchResultDetailFragment extends Fragment
 
         @Override
         @SuppressLint("NewApi")
-        protected void onPostExecute(DetailledItem result) {
+        protected void onPostExecute(DetailedItem result) {
             if (getActivity() == null) {
                 return;
             }
@@ -1290,7 +1291,20 @@ public class SearchResultDetailFragment extends Fragment
             item = result;
 
             if (item.getCover() != null && item.getCoverBitmap() == null) {
-                new LoadCoverTask(item, collapsingToolbar.getWidth(), collapsingToolbar.getHeight()).execute();
+                HttpClient httpClient;
+                try {
+                    if (app.getApi() instanceof BaseApi) {
+                        httpClient = ((BaseApi) app.getApi()).http_client;
+                    } else {
+                        httpClient = new AndroidHttpClientFactory()
+                                .getNewApacheHttpClient(false, true, false);
+                    }
+                } catch (OpacClient.LibraryRemovedException e) {
+                    httpClient = new AndroidHttpClientFactory()
+                            .getNewApacheHttpClient(false, true, false);
+                }
+                new LoadCoverTask(item, collapsingToolbar.getWidth(), collapsingToolbar.getHeight(),
+                        httpClient).execute();
             } else {
                 displayCover();
             }
@@ -1320,10 +1334,10 @@ public class SearchResultDetailFragment extends Fragment
     }
 
     public class ResTask extends StepTask<ReservationResult> {
-        private DetailledItem item;
+        private DetailedItem item;
 
         public ResTask(MultiStepResultHelper helper, int useraction, String selection,
-                       DetailledItem item) {
+                       DetailedItem item) {
             super(helper, useraction, selection);
             this.item = item;
         }
@@ -1371,10 +1385,10 @@ public class SearchResultDetailFragment extends Fragment
 
     public class BookingTask extends StepTask<BookingResult> {
 
-        private DetailledItem item;
+        private DetailedItem item;
 
         public BookingTask(MultiStepResultHelper helper, int useraction, String selection,
-                           DetailledItem item) {
+                           DetailedItem item) {
             super(helper, useraction, selection);
             this.item = item;
         }

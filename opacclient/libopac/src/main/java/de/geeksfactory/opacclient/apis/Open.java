@@ -50,7 +50,7 @@ import de.geeksfactory.opacclient.objects.Account;
 import de.geeksfactory.opacclient.objects.AccountData;
 import de.geeksfactory.opacclient.objects.Copy;
 import de.geeksfactory.opacclient.objects.Detail;
-import de.geeksfactory.opacclient.objects.DetailledItem;
+import de.geeksfactory.opacclient.objects.DetailedItem;
 import de.geeksfactory.opacclient.objects.Filter;
 import de.geeksfactory.opacclient.objects.Library;
 import de.geeksfactory.opacclient.objects.SearchRequestResult;
@@ -592,7 +592,7 @@ public class Open extends BaseApi implements OpacApi {
     }
 
     @Override
-    public DetailledItem getResultById(String id, String homebranch)
+    public DetailedItem getResultById(String id, String homebranch)
             throws IOException, OpacErrorException {
         try {
             String html =
@@ -604,8 +604,8 @@ public class Open extends BaseApi implements OpacApi {
         }
     }
 
-    protected DetailledItem parse_result(Document doc) {
-        DetailledItem item = new DetailledItem();
+    protected DetailedItem parse_result(Document doc) {
+        DetailedItem item = new DetailedItem();
 
         // Title and Subtitle
         item.setTitle(doc.select("span[id$=LblShortDescriptionValue]").text());
@@ -708,12 +708,12 @@ public class Open extends BaseApi implements OpacApi {
     }
 
     @Override
-    public DetailledItem getResult(int position) throws IOException, OpacErrorException {
+    public DetailedItem getResult(int position) throws IOException, OpacErrorException {
         return null;
     }
 
     @Override
-    public ReservationResult reservation(DetailledItem item, Account account,
+    public ReservationResult reservation(DetailedItem item, Account account,
             int useraction, String selection) throws IOException {
         return null;
     }

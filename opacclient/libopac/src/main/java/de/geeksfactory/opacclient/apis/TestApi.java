@@ -17,7 +17,7 @@ import de.geeksfactory.opacclient.networking.NotReachableException;
 import de.geeksfactory.opacclient.objects.Account;
 import de.geeksfactory.opacclient.objects.AccountData;
 import de.geeksfactory.opacclient.objects.Detail;
-import de.geeksfactory.opacclient.objects.DetailledItem;
+import de.geeksfactory.opacclient.objects.DetailedItem;
 import de.geeksfactory.opacclient.objects.Filter;
 import de.geeksfactory.opacclient.objects.LentItem;
 import de.geeksfactory.opacclient.objects.Library;
@@ -31,7 +31,7 @@ import de.geeksfactory.opacclient.searchfields.TextSearchField;
 public class TestApi extends BaseApi {
     private Library library;
     private List<SearchResult> list = new ArrayList<>();
-    private List<DetailledItem> detailList = new ArrayList<>();
+    private List<DetailedItem> detailList = new ArrayList<>();
 
     @Override
     public void start() throws IOException {
@@ -75,7 +75,7 @@ public class TestApi extends BaseApi {
         res.setCover(url);
         res.setType(SearchResult.MediaType.BOOK);
         list.add(res);
-        DetailledItem item = new DetailledItem();
+        DetailedItem item = new DetailedItem();
         item.setTitle(name);
         item.setReservable(reservable);
         item.setCover(url);
@@ -134,18 +134,18 @@ public class TestApi extends BaseApi {
     }
 
     @Override
-    public DetailledItem getResultById(String id, String homebranch)
+    public DetailedItem getResultById(String id, String homebranch)
             throws IOException, OpacErrorException {
         return null;
     }
 
     @Override
-    public DetailledItem getResult(int position) throws IOException, OpacErrorException {
+    public DetailedItem getResult(int position) throws IOException, OpacErrorException {
         return detailList.get(position);
     }
 
     @Override
-    public ReservationResult reservation(DetailledItem item, Account account,
+    public ReservationResult reservation(DetailedItem item, Account account,
             int useraction, String selection) throws IOException {
         return null;
     }

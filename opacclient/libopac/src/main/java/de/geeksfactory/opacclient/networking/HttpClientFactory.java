@@ -152,22 +152,24 @@ public class HttpClientFactory {
                 final HttpResponse response,
                 final HttpContext context) throws ProtocolException {
             URI uri = getLocationURI(request, response, context);
-            final Header last_host = request.getFirstHeader("Host");
             final String method = request.getRequestLine().getMethod();
             String original_scheme = "http";
+            String original_host = "";
 
             if (request instanceof HttpRequestWrapper) {
                 HttpRequest original = ((HttpRequestWrapper) request).getOriginal();
                 if (original instanceof HttpRequestBase) {
                     original_scheme = ((HttpRequestBase) original).getURI().getScheme();
+                    original_host = ((HttpRequestBase) original).getURI().getHost();
                 }
             } else if (request instanceof HttpRequestBase) {
                 if (((HttpRequestBase) request).getURI().getScheme() != null) {
                     original_scheme = ((HttpRequestBase) request).getURI().getScheme();
+                    original_host = ((HttpRequestBase) request).getURI().getHost();
                 }
             }
             // Strict Transport Security for redirects, required for misconfigured webservers like Erlangen
-            if (last_host != null && "https".equals(original_scheme) && uri.getScheme().equals("http") && uri.getHost().equals(last_host.getValue())) {
+            if ("https".equals(original_scheme) && uri.getScheme().equals("http") && uri.getHost().equals(original_host)) {
                 try {
                     uri = new URI(uri.toString().replace("http://", "https://"));
                 } catch (URISyntaxException e) {

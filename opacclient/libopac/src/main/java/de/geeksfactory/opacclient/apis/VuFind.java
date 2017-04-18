@@ -33,7 +33,7 @@ import de.geeksfactory.opacclient.objects.Account;
 import de.geeksfactory.opacclient.objects.AccountData;
 import de.geeksfactory.opacclient.objects.Copy;
 import de.geeksfactory.opacclient.objects.Detail;
-import de.geeksfactory.opacclient.objects.DetailledItem;
+import de.geeksfactory.opacclient.objects.DetailedItem;
 import de.geeksfactory.opacclient.objects.Filter;
 import de.geeksfactory.opacclient.objects.Library;
 import de.geeksfactory.opacclient.objects.SearchRequestResult;
@@ -273,7 +273,7 @@ public class VuFind extends BaseApi {
     }
 
     @Override
-    public DetailledItem getResultById(String id, String homebranch)
+    public DetailedItem getResultById(String id, String homebranch)
             throws IOException, OpacErrorException {
         if (!initialised) start();
         String url = opac_url + "/Record/" + id;
@@ -287,13 +287,13 @@ public class VuFind extends BaseApi {
         }
     }
 
-    static DetailledItem parseDetail(String id, Document doc, JSONObject data)
+    static DetailedItem parseDetail(String id, Document doc, JSONObject data)
             throws OpacErrorException, JSONException {
         if (doc.select("p.error, p.errorMsg, .alert-error").size() > 0) {
             throw new OpacErrorException(doc.select("p.error, p.errorMsg, .alert-error").text());
         }
 
-        DetailledItem res = new DetailledItem();
+        DetailedItem res = new DetailedItem();
         res.setId(id);
 
         Elements title = doc.select(".record h1, .record [itemprop=name], .record [property=name]");
@@ -333,7 +333,7 @@ public class VuFind extends BaseApi {
         return res;
     }
 
-    private static void parseVolumes(DetailledItem res, Document doc, JSONObject data) {
+    private static void parseVolumes(DetailedItem res, Document doc, JSONObject data) {
         // only tested in Münster
         // e.g. https://www.stadt-muenster.de/opac2/Record/0900944
         Element table = doc.select(".recordsubcontent, .tab-container").first()
@@ -347,7 +347,7 @@ public class VuFind extends BaseApi {
         }
     }
 
-    static void parseCopies(DetailledItem res, Document doc, JSONObject data) throws JSONException {
+    static void parseCopies(DetailedItem res, Document doc, JSONObject data) throws JSONException {
         if ("doublestacked".equals(data.optString("copystyle"))) {
             // e.g. http://vopac.nlg.gr/Record/393668/Holdings#tabnav
             // for Athens_GreekNationalLibrary
@@ -447,7 +447,7 @@ public class VuFind extends BaseApi {
     }
 
     @Override
-    public DetailledItem getResult(int position) throws IOException, OpacErrorException {
+    public DetailedItem getResult(int position) throws IOException, OpacErrorException {
         return null;
     }
 
@@ -569,7 +569,7 @@ public class VuFind extends BaseApi {
     }
 
     @Override
-    public ReservationResult reservation(DetailledItem item, Account account,
+    public ReservationResult reservation(DetailedItem item, Account account,
             int useraction, String selection) throws IOException {
         return null;
     }
