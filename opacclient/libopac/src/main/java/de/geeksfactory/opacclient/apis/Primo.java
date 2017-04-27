@@ -28,6 +28,7 @@ import java.util.regex.Pattern;
 
 import de.geeksfactory.opacclient.i18n.StringProvider;
 import de.geeksfactory.opacclient.networking.HttpClientFactory;
+import de.geeksfactory.opacclient.networking.NotReachableException;
 import de.geeksfactory.opacclient.objects.Account;
 import de.geeksfactory.opacclient.objects.AccountData;
 import de.geeksfactory.opacclient.objects.Copy;
@@ -441,6 +442,9 @@ public class Primo extends BaseApi {
 
         List<SearchField> fields = new ArrayList<>();
 
+        if (doc.select("select#exlidInput_scope_1").size() < 1) {
+            throw new NotReachableException();
+        }
         Elements options = doc.select("select#exlidInput_scope_1").first().select("option");
         for (Element option : options) {
             TextSearchField field = new TextSearchField();
