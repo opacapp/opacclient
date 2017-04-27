@@ -913,7 +913,7 @@ public class Open extends BaseApi implements OpacApi {
                 if (el.hasAttr("checked")) {
                     data.addBinaryBody(name, el.val().length() > 0 ? el.val().getBytes() : "on".getBytes());
                 }
-            } else if ("submit".equalsIgnoreCase(type) || "image".equalsIgnoreCase(type)) {
+            } else if ("submit".equalsIgnoreCase(type) || "image".equalsIgnoreCase(type) || "button".equalsIgnoreCase(type)) {
                 if (submitName != null && el.attr("name").contains(submitName)) {
                     data.addBinaryBody(name, el.val().getBytes());
                 }
