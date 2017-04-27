@@ -24,6 +24,7 @@ package de.geeksfactory.opacclient.apis;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
+import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.CookieStore;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
@@ -486,7 +487,7 @@ public abstract class BaseApi implements OpacApi {
         } catch (InterruptedIOException e) {
             logHttpError(e);
             throw new NotReachableException(e.getMessage());
-        } catch (UnknownHostException e) {
+        } catch (UnknownHostException | ClientProtocolException e) {
             throw new NotReachableException(e.getMessage());
         } catch (IOException e) {
             if (e.getMessage() != null
@@ -603,7 +604,7 @@ public abstract class BaseApi implements OpacApi {
         } catch (InterruptedIOException e) {
             logHttpError(e);
             throw new NotReachableException(e.getMessage());
-        } catch (UnknownHostException e) {
+        } catch (UnknownHostException | ClientProtocolException e) {
             throw new NotReachableException(e.getMessage());
         } catch (IOException e) {
             if (e.getMessage() != null
