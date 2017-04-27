@@ -427,8 +427,9 @@ public class SearchFragment extends Fragment implements AccountSelectedListener 
             if (task != null && !task.isCancelled()) {
                 task.cancel(true);
             }
+            Map<String, String> saved = saveQuery();
             fields = dataSource.getSearchFields(app.getLibrary().getIdent());
-            buildSearchForm(savedState != null ? OpacClient.bundleToMap(savedState) : saveQuery());
+            buildSearchForm(savedState != null ? OpacClient.bundleToMap(savedState) : saved);
             savedState = null;
         } else {
             executeNewLoadSearchFieldsTask();
