@@ -17,6 +17,7 @@ import de.geeksfactory.opacclient.utils.JsonKeyIterator;
 
 import static org.hamcrest.CoreMatchers.anyOf;
 import static org.hamcrest.CoreMatchers.instanceOf;
+import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.isIn;
 import static org.junit.Assert.assertThat;
 
@@ -36,6 +37,8 @@ public class JSONFilesTest extends BaseHtmlTest {
 
     JSONObject bibliothecaHeadersLent;
     JSONObject bibliothecaHeadersReservations;
+    JSONObject biber1992HeadersLent;
+    JSONObject biber1992HeadersReservations;
     List<JSONObject> meaningsData;
     JSONArray meaningsIgnore;
 
@@ -44,6 +47,9 @@ public class JSONFilesTest extends BaseHtmlTest {
         bibliothecaHeadersLent = new JSONObject(readResource("/bibliotheca/headers_lent.json"));
         bibliothecaHeadersReservations =
                 new JSONObject(readResource("/bibliotheca/headers_reservations.json"));
+        biber1992HeadersLent = new JSONObject(readResource("/biber1992/headers_lent.json"));
+        biber1992HeadersReservations =
+                new JSONObject(readResource("/biber1992/headers_reservations.json"));
 
         List<String> meaningsFiles = getResourceFiles("/meanings");
         meaningsData = new ArrayList<>();
@@ -82,6 +88,32 @@ public class JSONFilesTest extends BaseHtmlTest {
             if (!bibliothecaHeadersReservations.isNull(key)) {
                 String value = bibliothecaHeadersReservations.getString(key);
                 assertThat(value, anyOf(isIn(keys_both), isIn(keys_reservations)));
+            }
+        }
+    }
+
+    @Test
+    public void testBiBer1992HeadersLent() throws JSONException {
+        Iterator iterator = biber1992HeadersLent.keys();
+        while (iterator.hasNext()) {
+            String key = (String) iterator.next();
+            if (!biber1992HeadersLent.isNull(key)) {
+                String value = biber1992HeadersLent.getString(key);
+                assertThat(value, anyOf(isIn(keys_both), isIn(keys_lent),
+                        equalTo("author+title"), equalTo("renewals_number")));
+            }
+        }
+    }
+
+    @Test
+    public void testBiBer1992HeadersReservations() throws JSONException {
+        Iterator iterator = biber1992HeadersReservations.keys();
+        while (iterator.hasNext()) {
+            String key = (String) iterator.next();
+            if (!biber1992HeadersReservations.isNull(key)) {
+                String value = biber1992HeadersReservations.getString(key);
+                assertThat(value, anyOf(isIn(keys_both), isIn(keys_reservations),
+                        equalTo("author+title"), equalTo("renewals_number")));
             }
         }
     }
