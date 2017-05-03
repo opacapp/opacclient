@@ -293,8 +293,8 @@
     <string name="preference_update_library_config">Bibliotheksdaten aktualisieren</string>
     <string name="preference_reset_library_config">Bibliotheksdaten zurücksetzen</string>
     <string name="preference_reset_library_config_desc">zum Stand des letzten App-Updates</string>
-    <string name="library_config_no_updates">Keine aktualisierten Bibliotheksdaten gefunden.</string>
     <string name="updating_library_config">Aktualisiere Bibliotheksdaten</string>
+    <string name="library_config_no_updates">Keine aktualisierten Bibliotheksdaten gefunden.</string>
     <string name="library_config_update_success">Daten für %d Bibliotheken aktualisiert.</string>
     <string name="library_config_update_failure">Konnte Bibliotheksdaten nicht aktualisieren.</string>
     <string name="library_config_last_update">Zuletzt aktualisiert %s</string>

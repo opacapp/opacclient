@@ -102,6 +102,7 @@
   <string name="share_notsupported">Nie wspierane w tej bibliotece.</string>
   <string name="unsupported">Nie wspierane</string>
   <string name="account_unsupported_api">Ta funkcjonalność nie jest jeszcze wspierana w Twojej bibliotece.</string>
+    <string name="write_mail">Napisz e-maila</string>
   <string name="info_error">Nie załadowano dodatkowych informacji o tej bibliotece.</string>
   <string name="info_unsupported">Brak informacji o tej bibliotece.</string>
   <string name="connection_error_detail">Połączenie do serwera tej biblioteki nie powiodło się. Sprawdź połączenie z internetem. Jeśli problem powtarza się powodem może być awaria serwera lub aplikacja nie potrafi zinterpretować odpowiedzi serwera.</string>
