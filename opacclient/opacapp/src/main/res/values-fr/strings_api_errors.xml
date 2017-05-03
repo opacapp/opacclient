@@ -1,7 +1,7 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
     <!--These strings may be shown as unused by Android Lint, but are in fact used by the AndroidStringProvider class-->
-    <plurals name="limited_num_of_criteria">
+    <plurals name="limited_num_of_criteria" tools:ignore="ImpliedQuantity">
         <item quantity="one">Cette bibliothèque ne prend en charge qu\'un seul critère de recherche.</item>
         <item quantity="other">Cette bibliothèque ne prend en charge que jusqu\'à %d critères de recherche.</item>
     </plurals>
