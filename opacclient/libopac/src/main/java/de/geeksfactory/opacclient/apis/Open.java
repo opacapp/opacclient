@@ -516,7 +516,7 @@ public class Open extends BaseApi implements OpacApi {
                 We can go directly to the correct page
             */
             if (doc.select("a[id*=LinkButtonPageN]").size() > 0) {
-                String href = doc.select("a[id*=LinkButtonPageN]").first().attr("href");
+                String href = doc.select("a[id*=LinkButtonPageN][href*=page]").first().attr("href");
                 String url = href.replaceFirst("page=\\d+", "page=" + page);
                 Document doc2 = Jsoup.parse(httpGet(url, getDefaultEncoding()));
                 return parse_search(doc2, page);

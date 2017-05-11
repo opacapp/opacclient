@@ -3,11 +3,18 @@
   "F\u00e4llig": "returndate",
   "Mediennr": "barcode",
   "\u00a0A\u00a0": null,
+  "A": null,
   "\u00a0V\u00a0": "renewals_number",
+  "V": "renewals_number",
   "\u00a0M\u00a0": null,
+  "M": null,
   "Signatur / Kurztitel": "author+title",
   "Vormerkung: Signatur / Kurztitel": "author+title",
+  "Kurztitel": "title",
   "Status": "status",
   "\u00a0": null,
-  "": null
+  "": null,
+  "KurzInformation": null,
+  "EUR\u00a0": null,
+  "EUR": null
 }
