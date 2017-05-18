@@ -435,7 +435,9 @@ public class BiBer1992 extends BaseApi {
 
             // ID as href tag
             elem = tr.select("td a");
-            if (elem.size() > 0) {
+            if (elem.size() > 0 && !elem.get(0).attr("href").contains("ISBN")) {
+                // Exclude the cover links in Ludwigsburg as they lead to a page that misses the
+                // reservation button
                 String hrefID = elem.get(0).attr("href");
                 sr.setId(hrefID);
             } else {
