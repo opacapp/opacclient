@@ -1,0 +1,188 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   width="888mm"
+   height="192mm"
+   viewBox="0 0 888 192"
+   version="1.1"
+   id="svg4601"
+   inkscape:version="0.92.1 r"
+   sodipodi:docname="github_banner.svg"
+   inkscape:export-filename="/home/raphael/proj/opacapp/opensource/img/github_banner.png"
+   inkscape:export-xdpi="25.4"
+   inkscape:export-ydpi="25.4">
+  <defs
+     id="defs4595" />
+  <sodipodi:namedview
+     id="base"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageopacity="0.0"
+     inkscape:pageshadow="2"
+     inkscape:zoom="0.175"
+     inkscape:cx="1491.2089"
+     inkscape:cy="1403.6084"
+     inkscape:document-units="mm"
+     inkscape:current-layer="layer1"
+     showgrid="false"
+     inkscape:window-width="1916"
+     inkscape:window-height="951"
+     inkscape:window-x="1920"
+     inkscape:window-y="108"
+     inkscape:window-maximized="0"
+     fit-margin-top="0"
+     fit-margin-left="0"
+     fit-margin-right="0"
+     fit-margin-bottom="0" />
+  <metadata
+     id="metadata4598">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title></dc:title>
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <g
+     inkscape:label="Ebene 1"
+     inkscape:groupmode="layer"
+     id="layer1"
+     transform="translate(-27.814868,-89.5)">
+    <g
+       id="g5222"
+       transform="translate(53.454378)">
+      <g
+         transform="matrix(0.37586548,0,0,0.37586548,127.94706,89.46637)"
+         id="XMLID_32_">
+        <g
+           id="XMLID_137_">
+          <g
+             id="XMLID_155_">
+            <path
+               style="fill:#f4f4f4"
+               inkscape:connector-curvature="0"
+               d="m 441.6,370 c 0,-1.5 -0.1,-2.8 -0.2,-4.2 -2.6,-6.7 -10.1,-19.8 -28.1,-19.8 -23.9,0 -320.8,0 -325.8,0 0.9,3 1.7,6.5 2.2,9.9 2.9,18.5 0.2,38.1 -8.8,54.1 h 327.2 c 18.5,0 33.5,-18 33.5,-40 z"
+               class="st0"
+               id="XMLID_158_" />
+            <path
+               style="fill:#c4c4c4"
+               inkscape:connector-curvature="0"
+               d="M 441.4,365.7 C 439.5,345.8 425.3,330 408.1,330 H 81.3 c 4.3,9 6.1,16 6.1,16 0,0 0,0 0.1,0 5.1,0 301.9,0 325.8,0 18,0 25.5,13 28.1,19.7 z"
+               class="st1"
+               id="XMLID_157_" />
+            <path
+               style="fill:#d90000;fill-opacity:0.94117647"
+               inkscape:connector-curvature="0"
+               d="M 408.1,312 H 62.8 c -4.7,0 -8.5,4.3 -8.5,9 0,4.7 3.8,9 8.5,9 h 18.5 326.8 c 17.2,0 31.4,15.6 33.3,35.5 0.1,1.5 0.2,3 0.2,4.5 0,22 -15,40 -33.5,40 H 80.9 62.8 c -4.7,0 -8.5,3.8 -8.5,8.5 0,4.7 3.8,8.5 8.5,8.5 h 345.3 c 27.8,0 50.5,-26.1 50.5,-57.5 0,-31.4 -22.7,-57.5 -50.5,-57.5 z"
+               class="st2"
+               id="XMLID_156_" />
+          </g>
+          <path
+             style="fill:#f4f4f4"
+             inkscape:connector-curvature="0"
+             d="M 100.5,231 C 78,231 72,252.3 71.3,255.1 c 0,0.1 0,0 0,0.1 0,22 15,39.7 33.5,39.7 h 327.1 c -6.5,-12 -9.7,-25.8 -9.7,-39.6 0,-10.4 1.6,-20.7 5.2,-30.4 l -2.8,6 c 0,0.1 -300,0.1 -324.1,0.1 z"
+             class="st0"
+             id="XMLID_154_" />
+          <path
+             style="fill:#c4c4c4"
+             inkscape:connector-curvature="0"
+             d="M 104.8,216 C 86.4,216 71.5,233.5 71.3,255.4 72,252.6 78,231 100.5,231 c 24.1,0 324.1,0 324.1,0 l 2.8,-5.7 4.6,-9.3 z"
+             class="st1"
+             id="XMLID_150_" />
+          <path
+             style="fill:#3496dc"
+             inkscape:connector-curvature="0"
+             d="m 450.1,295 h -18.3 -327 c -18.5,0 -33.5,-17.7 -33.5,-39.7 0,-0.1 0,0.1 0,0 C 71.4,233.4 86.4,216 104.8,216 H 432 450.2 c 4.7,0 8.5,-3.8 8.5,-8.5 0,-4.7 -3.8,-8.5 -8.5,-8.5 H 104.8 c -27.8,0 -50.5,25.1 -50.5,56.5 0,31.4 22.6,56.5 50.5,56.5 h 345.3 c 4.7,0 8.5,-3.8 8.5,-8.5 0,-4.7 -3.8,-8.5 -8.5,-8.5 z"
+             class="st3"
+             id="XMLID_149_" />
+          <path
+             style="fill:#f4f4f4"
+             inkscape:connector-curvature="0"
+             d="m 81.2,102.3 c 0.2,0.5 0.5,0.9 0.7,1.4 -0.2,-0.5 -0.4,-1 -0.7,-1.4 z"
+             class="st0"
+             id="XMLID_148_" />
+          <path
+             style="fill:#f4f4f4"
+             inkscape:connector-curvature="0"
+             d="m 441.6,141.6 c 0,-1 0,-1.9 -0.1,-2.8 -2.3,-6.5 -9.5,-20.8 -28.2,-20.8 -23.9,0 -321.7,0 -325.9,0 0.6,2 1.1,3.7 1.5,5.7 4,19.3 1.2,40.3 -7.7,57.3 h 326.9 c 18.5,0 33.5,-17.4 33.5,-39.4 z"
+             class="st0"
+             id="XMLID_146_" />
+          <path
+             style="fill:#c4c4c4"
+             inkscape:connector-curvature="0"
+             d="M 441.5,138.7 C 440.2,118.1 425.7,102 408.1,102 H 81.3 c 0.2,1 0.4,1.2 0.7,1.6 3.8,8.2 5.5,14.4 5.5,14.4 0,0 0,0 0,0 4.1,0 301.9,0 325.9,0 18.7,0 25.8,14.2 28.1,20.7 z"
+             class="st1"
+             id="XMLID_145_" />
+          <path
+             style="fill:#f3854e"
+             inkscape:connector-curvature="0"
+             d="M 408.1,84 H 62.8 c -4.7,0 -8.5,4.3 -8.5,9 0,4.7 3.8,9 8.5,9 h 18.4 0.1 326.8 c 17.6,0 32.1,15.9 33.4,36.5 0.1,1 0.1,2 0.1,3 0,22 -15,39.4 -33.5,39.4 H 81.3 62.8 c -4.7,0 -8.5,4.3 -8.5,9 0,4.7 3.8,9 8.5,9 h 345.3 c 27.8,0 50.5,-26.1 50.5,-57.5 C 458.6,110 435.9,84 408.1,84 Z"
+             class="st4"
+             id="XMLID_144_" />
+          <polygon
+             style="opacity:0.32000002;fill:#1e1e1e"
+             points="309.3,268.7 339.9,277.8 347.5,207.3 339.9,147.9 278.8,277.8 "
+             class="st5"
+             id="XMLID_143_" />
+          <g
+             id="XMLID_138_">
+            <g
+               id="XMLID_141_">
+              <polygon
+                 style="fill:#dd2f44"
+                 points="278.6,254.9 278.6,147.6 339.4,147.6 339.4,254.9 309.3,254.9 "
+                 class="st2"
+                 id="XMLID_142_" />
+            </g>
+            <g
+               id="XMLID_139_">
+              <polygon
+                 style="fill:#c92837"
+                 points="309,264.5 278.6,277.8 278.6,220.3 339.4,220.3 339.4,277.8 "
+                 class="st6"
+                 id="XMLID_140_" />
+            </g>
+          </g>
+        </g>
+      </g>
+      <g
+         transform="translate(0,21.13837)"
+         id="g5196">
+        <text
+           xml:space="preserve"
+           style="font-style:normal;font-variant:normal;font-weight:300;font-stretch:normal;font-size:55.34408569px;line-height:103.77016449px;font-family:Roboto;-inkscape-font-specification:'Roboto, Light';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;text-align:start;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;stroke-width:4.15080643px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+           x="334.9783"
+           y="163.19569"
+           id="text5186"><tspan
+             sodipodi:role="line"
+             id="tspan5184"
+             x="334.9783"
+             y="163.19569"
+             style="stroke-width:4.15080643px">Web Opac App</tspan></text>
+        <text
+           id="text5190"
+           y="207.36351"
+           x="333.48907"
+           style="font-style:normal;font-variant:normal;font-weight:300;font-stretch:normal;font-size:31.27435303px;line-height:58.63941574px;font-family:Roboto;-inkscape-font-specification:'Roboto, Light';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;text-align:start;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;stroke-width:2.34557652px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+           xml:space="preserve"><tspan
+             style="stroke-width:2.34557652px"
+             y="207.36351"
+             x="333.48907"
+             id="tspan5188"
+             sodipodi:role="line">Public libraries on Android</tspan></text>
+      </g>
+    </g>
+  </g>
+</svg>
