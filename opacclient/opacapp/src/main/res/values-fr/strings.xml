@@ -266,8 +266,6 @@ les frais de votre bibliothèque.</string>
     <string name="do_not_ask_again">Ne plus afficher</string>
     <string name="reservation_fee_continue">Continuer</string>
     <string name="notification_repeat">Répéter les notifications</string>
-    <string name="update_info_title">Politique de confidentialité</string>
-    <string name="update_info_text">Avec cette mise à jour, l\'application commence automatiquement à signaler les informations de diagnostic à notre serveur en cas d\'erreurs. Dans l\'une des prochaines mises à jour, l\'application commencera à extraire périodiquement des informations sur les bibliothèques de notre serveur. Cela nous aide à répondre aux changements des bibliothèques plus rapidement et plus facilement. Nous continuerons à NE JAMAIS transmettre ou stocker des données personnelles sur nos serveurs.</string>
     <string name="accountdata_export_header">Données de compte de %1$s le %2$s</string>
     <string name="accountdata_title">Titre</string>
     <string name="accountdata_author">Auteur</string>

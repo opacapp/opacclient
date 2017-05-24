@@ -267,8 +267,6 @@ controlla le tariffe della biblioteca.</string>
     <string name="do_not_ask_again">Non mostrarlo ancora</string>
     <string name="reservation_fee_continue">Continua</string>
     <string name="notification_repeat">Ripeti notifiche</string>
-    <string name="update_info_title">Informativa sulla privacy</string>
-    <string name="update_info_text">Con questo aggiornamento l\'applicazione invia dati di diagnostica al nostro server in caso si verifichino degli errori. Nei successivi aggiornamenti, l\'applicazione si collegherà periodicamente al nostro server per recuperare informazioni sulle biblioteche. Questo per consentirci di seguire le modifiche delle biblioteche velocemente e in modo e semplice. Continuiamo però a NON inviare o salvare alcun dato personale al nostro server. </string>
     <string name="accountdata_title">Titolo</string>
     <string name="accountdata_author">Autore</string>
     <string name="accountdata_format">Tipo materiale</string>

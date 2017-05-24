@@ -497,17 +497,14 @@ public class MainActivity extends OpacActivity
 
         SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(this);
         Calendar cal = Calendar.getInstance();
-        cal.set(2016, 9, 15, 0, 0, 0);
+        cal.set(2017, 7, 1, 0, 0, 0);
         if ((new Date()).after(cal.getTime())) {
             return;
         }
-        if (!sp.getBoolean(SyncAccountAlarmListener.PREF_SYNC_SERVICE, false)) {
-            return;
-        }
-        if (!sp.contains("seen_update_dialog_4.5.10")) {
+        if (!sp.contains("seen_update_dialog_5.1.1")) {
             DialogFragment newFragment = new UpdateInfoDialogFragment();
             newFragment.show(getSupportFragmentManager(), "updateinfo");
-            sp.edit().putBoolean("seen_update_dialog_4.5.10", true).commit();
+            sp.edit().putBoolean("seen_update_dialog_5.1.1", true).commit();
         }
     }
 

@@ -269,8 +269,9 @@
     <string name="do_not_ask_again">Nicht noch einmal anzeigen</string>
     <string name="reservation_fee_continue">Weiter</string>
     <string name="notification_repeat">Benachrichtigungen wiederholen</string>
-    <string name="update_info_title">Datenschutzhinweis</string>
-    <string name="update_info_text">Mit diesem Update beginnen wir, in seltenen Fehlersituationen technische Details automatisch an unseren Server zu schicken. In einem der nächsten Updates wird die App beginnen, regelmäßig Bibliotheksdaten von unserem Server abrufen. Diese Änderung erlaubt uns, die App schneller auf Änderungen der Bibliotheken anzupassen. Wir werden weiterhin KEINE persönlichen Daten an unsere Server übertragen oder dort speichern.</string>
+    <string name="update_info_title">Happy Birthday Opac App!</string>
+    <string name="update_info_text">Diesen Mai wurde die Opac App stolze fünf Jahre alt. Wir feiern den Geburtstag mit einem modernisierten Logo und möchten uns für all das Feedback über die Jahre bedanken.</string>
+    <string name="update_info_text_second">Wenn du uns helfen willst, die App weiter betreiben zu können, sprich deine Bibliothek an: Wenn sie die Plus-Edition unserer App kauft, ermöglicht sie uns damit die langfristige Weiterentwicklung und schaltet nützliche Funktionen frei. Mehr Details gibt es auf unserer Website www.opacapp.de.</string>
     <string name="accountdata_export_header">Kontodaten von %1$s am %2$s</string>
     <string name="accountdata_title">Titel</string>
     <string name="accountdata_author">Autor</string>
