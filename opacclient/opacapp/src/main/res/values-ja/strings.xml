@@ -259,8 +259,6 @@
     <string name="do_not_ask_again">再度表示しない</string>
     <string name="reservation_fee_continue">続行</string>
     <string name="notification_repeat">通知の繰り返し</string>
-    <string name="update_info_title">プライバシーポリシー</string>
-    <string name="update_info_text">このアップデートにより、エラーが発生した場合にアプリが自動的に私たちのサーバーに診断情報の報告を開始します。次のアップデートで、このアプリは定期的に私たちのサーバーから図書館に関する情報の取得を開始します。これにより、私たちがより少ない労力で図書館による変更に対応しつづけるのに役立ちます。私たちは、サーバーに個人データを送信したり、格納したりしません。</string>
     <string name="accountdata_export_header">%1$s のアカウントデータ: %2$s</string>
     <string name="accountdata_title">タイトル</string>
     <string name="accountdata_author">作者</string>
