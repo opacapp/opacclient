@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
@@ -28,7 +29,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignBottom="@id/imageView3"
-            android:background="?attr/selectableItemBackgroundBorderless"
+            android:background="@color/nav_header_account_bg"
             android:clickable="true"
             android:orientation="horizontal"
             android:paddingBottom="8dp"
@@ -87,6 +88,18 @@
                 android:src="@drawable/ic_arrow_drop_selector"
                 android:tint="#FFF"/>
         </LinearLayout>
+
+        <ImageView
+            android:id="@+id/ivLogo"
+            android:layout_width="72dp"
+            android:layout_height="72dp"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:layout_marginLeft="16dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="16dp"
+            app:srcCompat="@drawable/ic_logo"/>
 
     </RelativeLayout>
 

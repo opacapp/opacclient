@@ -1,14 +1,14 @@
+![Screenshot](https://raw.githubusercontent.com/opacapp/opacclient/master/img/github_banner.png)
+
 Web Opac App [![Build Status](https://travis-ci.org/opacapp/opacclient.svg?branch=master)](https://travis-ci.org/opacapp/opacclient)
 ============
+
 Android client for public libraries. See [opacapp.net](http://opacapp.net) for details.
 
 <a href="https://f-droid.org/repository/browse/?fdid=de.geeksfactory.opacclient" target="_blank">
 <img src="https://f-droid.org/badge/get-it-on.png" alt="Get it on F-Droid" height="100"/></a>
 <a href="https://play.google.com/store/apps/details?id=de.geeksfactory.opacclient" target="_blank">
 <img src="https://play.google.com/intl/en_us/badges/images/generic/en-play-badge.png" alt="Get it on Google Play" height="100"/></a>
-
-![Screenshot](http://opacapp.de/wp-content/themes/opacapp/img/020_menue.png)
-
 
 Features
 --------
