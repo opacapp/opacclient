@@ -397,6 +397,9 @@ public class BiBer1992 extends BaseApi {
 
         Elements trList = doc.select("form table tr[valign]"); // <tr
         // valign="top">
+        if (trList.size() == 0) { // Schwieberdingen
+            trList = doc.select("table:has(input[type=checkbox]) tr");
+        }
         Elements elem;
         int rows_per_hit = 2;
         if (trList.size() == 1
