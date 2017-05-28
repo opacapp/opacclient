@@ -1232,7 +1232,7 @@ public class Bibliotheca extends BaseApi {
         try {
             // our server does not like getting a "+" as the encoding for a space, so we replace it
             // with %20.
-            return "http://opacapp.de/:" +
+            return "https://info.opacapp.net/bibproxy/:" +
                     URLEncoder.encode(library.getIdent(), "UTF-8").replace("+", "%20") + ":"
                     + id + ":" + URLEncoder.encode(title, "UTF-8");
         } catch (UnsupportedEncodingException ignored) {
