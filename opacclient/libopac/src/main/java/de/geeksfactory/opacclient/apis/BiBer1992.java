@@ -1031,7 +1031,9 @@ public class BiBer1992 extends BaseApi {
             } else {
                 unknownHeaders.put(header);
             }
-            j++;
+
+            String colspan = headerCell.attr("colspan");
+            j += !colspan.equals("") ? Integer.valueOf(colspan) : 1;
         }
 
         if (unknownHeaders.length() > 0) {
@@ -1162,7 +1164,9 @@ public class BiBer1992 extends BaseApi {
             } else {
                 unknownHeaders.put(header);
             }
-            j++;
+
+            String colspan = headerCell.attr("colspan");
+            j += !colspan.equals("") ? Integer.valueOf(colspan) : 1;
         }
 
         if (unknownHeaders.length() > 0) {
