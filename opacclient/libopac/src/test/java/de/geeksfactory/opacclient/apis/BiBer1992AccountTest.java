@@ -1,5 +1,6 @@
 package de.geeksfactory.opacclient.apis;
 
+import org.joda.time.LocalDate;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.jsoup.Jsoup;
@@ -38,7 +39,7 @@ public class BiBer1992AccountTest extends BaseHtmlTest {
 
     private static final String[] FILES =
             new String[]{"gelsenkirchen.htm", "freising.html", "herford.htm", "erkrath_opac.html",
-                    "erkrath_opax.html", "nuertingen.html"};
+                    "erkrath_opax.html", "nuertingen.html", "jena.html"};
 
     @Parameterized.Parameters(name = "{0}")
     public static Collection<String[]> files() {
@@ -60,6 +61,7 @@ public class BiBer1992AccountTest extends BaseHtmlTest {
         assertTrue(media.size() > 0);
         for (LentItem item : media) {
             assertNotNull(item.getDeadline());
+            assertTrue(item.getDeadline().isAfter(new LocalDate(2010, 1, 1))); // sensible dates
             assertNotNull(item.getId());
         }
     }
