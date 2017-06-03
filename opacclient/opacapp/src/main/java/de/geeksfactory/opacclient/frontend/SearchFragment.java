@@ -184,26 +184,27 @@ public class SearchFragment extends Fragment implements AccountSelectedListener 
     }
 
     protected void buildSearchForm(Map<String, String> restoreQuery) {
-
+        String skey = "annoyed_" + app.getLibrary().getIdent();
         if (app.getLibrary().getReplacedBy() != null
-                && sp.getInt("annoyed", 0) < 5) {
+                && sp.getInt(skey, 0) < 5) {
             rlReplaced.setVisibility(View.VISIBLE);
             ivReplacedStore.setOnClickListener(
                     new OnClickListener() {
                         @Override
                         public void onClick(View v) {
                             try {
-                                Intent i = new Intent(Intent.ACTION_VIEW, Uri
-                                        .parse("market://details?id="
-                                                + app.getLibrary()
-                                                     .getReplacedBy()));
+                                Intent i = new Intent(Intent.ACTION_VIEW,
+                                        Uri.parse(app.getLibrary().getReplacedBy()
+                                                     .replace("https://play.google.com/store/apps/details?id=", "market://details?id=")));
                                 startActivity(i);
                             } catch (ActivityNotFoundException e) {
-                                Log.i("play", "no market installed");
+                                Intent i = new Intent(Intent.ACTION_VIEW,
+                                        Uri.parse(app.getLibrary().getReplacedBy()));
+                                startActivity(i);
                             }
                         }
                     });
-            sp.edit().putInt("annoyed", sp.getInt("annoyed", 0) + 1).commit();
+            sp.edit().putInt(skey, sp.getInt(skey, 0) + 1).commit();
         } else {
             rlReplaced.setVisibility(View.GONE);
         }

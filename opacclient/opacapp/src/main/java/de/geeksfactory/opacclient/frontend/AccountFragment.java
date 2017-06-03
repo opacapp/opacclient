@@ -19,6 +19,7 @@
 package de.geeksfactory.opacclient.frontend;
 
 import android.annotation.SuppressLint;
+import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -48,8 +49,10 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.FrameLayout;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -115,6 +118,8 @@ public class AccountFragment extends Fragment implements
             tvValidUntil, tvAge, tvLentHeader, tvWarning, tvAccCity, tvAccUser, tvAccLabel,
             tvErrBodyA, tvErrHeadA, tvErrBodyU;
     protected LentAdapter lentAdapter;
+    protected RelativeLayout rlReplaced;
+    protected ImageView ivReplacedStore;
     protected ReservationsAdapter resAdapter;
     protected AccountData accountData;
     private LoadTask lt;
@@ -173,6 +178,8 @@ public class AccountFragment extends Fragment implements
         tvErrHeadA = (TextView) view.findViewById(R.id.tvErrHeadA);
         tvErrBodyA = (TextView) view.findViewById(R.id.tvErrBodyA);
         tvLentEmpty = (TextView) view.findViewById(R.id.emptyLent);
+        rlReplaced = (RelativeLayout) view.findViewById(R.id.rlReplaced);
+        ivReplacedStore = (ImageView) view.findViewById(R.id.ivReplacedStore);
         tvReservationsEmpty = (TextView) view.findViewById(R.id.emptyReservations);
 
         lentAdapter = new LentAdapter(this);
@@ -444,6 +451,31 @@ public class AccountFragment extends Fragment implements
             return;
         }
         if (api != null && !app.getLibrary().isAccountSupported()) {
+
+            if (app.getLibrary().getReplacedBy() != null) {
+                rlReplaced.setVisibility(View.VISIBLE);
+                tvErrBodyU.setVisibility(View.GONE);
+                ivReplacedStore.setOnClickListener(
+                        new OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                try {
+                                    Intent i = new Intent(Intent.ACTION_VIEW,
+                                            Uri.parse(app.getLibrary().getReplacedBy()
+                                                         .replace("https://play.google.com/store/apps/details?id=", "market://details?id=")));
+                                    startActivity(i);
+                                } catch (ActivityNotFoundException e) {
+                                    Intent i = new Intent(Intent.ACTION_VIEW,
+                                            Uri.parse(app.getLibrary().getReplacedBy()));
+                                    startActivity(i);
+                                }
+                            }
+                        });
+            } else {
+                rlReplaced.setVisibility(View.GONE);
+                tvErrBodyU.setVisibility(View.VISIBLE);
+            }
+
             supported = false;
             // Not supported with this api at all
             llLoading.setVisibility(View.GONE);
