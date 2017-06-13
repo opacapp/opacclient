@@ -422,4 +422,8 @@ public class OpacClient extends Application {
     public UpdateHandler getUpdateHandler() {
         return new UpdateHandler();
     }
+
+    public boolean promotePlusApps() {
+        return true;
+    }
 }

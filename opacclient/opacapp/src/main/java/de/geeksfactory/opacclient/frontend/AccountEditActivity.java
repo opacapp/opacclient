@@ -142,7 +142,7 @@ public class AccountEditActivity extends AppCompatActivity {
             }
 
             if (lib.getReplacedBy() != null && !"".equals(lib.getReplacedBy())
-                    && findViewById(R.id.rlReplaced) != null) {
+                    && findViewById(R.id.rlReplaced) != null && ((OpacClient) getApplication()).promotePlusApps()) {
                 findViewById(R.id.rlReplaced).setVisibility(View.VISIBLE);
                 findViewById(R.id.ivReplacedStore).setOnClickListener(
                         new OnClickListener() {
