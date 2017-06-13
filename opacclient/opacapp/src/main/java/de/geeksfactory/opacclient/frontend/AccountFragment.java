@@ -452,7 +452,7 @@ public class AccountFragment extends Fragment implements
         }
         if (api != null && !app.getLibrary().isAccountSupported()) {
 
-            if (app.getLibrary().getReplacedBy() != null && !"".equals(app.getLibrary().getReplacedBy())) {
+            if (app.getLibrary().getReplacedBy() != null && !"".equals(app.getLibrary().getReplacedBy()) && app.promotePlusApps()) {
                 rlReplaced.setVisibility(View.VISIBLE);
                 tvErrBodyU.setVisibility(View.GONE);
                 ivReplacedStore.setOnClickListener(

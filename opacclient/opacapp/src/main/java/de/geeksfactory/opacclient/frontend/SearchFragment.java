@@ -186,7 +186,7 @@ public class SearchFragment extends Fragment implements AccountSelectedListener 
     protected void buildSearchForm(Map<String, String> restoreQuery) {
         String skey = "annoyed_" + app.getLibrary().getIdent();
         if (app.getLibrary().getReplacedBy() != null && !"".equals(app.getLibrary().getReplacedBy())
-                && sp.getInt(skey, 0) < 5) {
+                && sp.getInt(skey, 0) < 5 && app.promotePlusApps()) {
             rlReplaced.setVisibility(View.VISIBLE);
             ivReplacedStore.setOnClickListener(
                     new OnClickListener() {
@@ -204,7 +204,7 @@ public class SearchFragment extends Fragment implements AccountSelectedListener 
                             }
                         }
                     });
-            sp.edit().putInt(skey, sp.getInt(skey, 0) + 1).commit();
+            sp.edit().putInt(skey, sp.getInt(skey, 0) + 1).apply();
         } else {
             rlReplaced.setVisibility(View.GONE);
         }
