@@ -185,7 +185,7 @@ public class SearchFragment extends Fragment implements AccountSelectedListener 
 
     protected void buildSearchForm(Map<String, String> restoreQuery) {
         String skey = "annoyed_" + app.getLibrary().getIdent();
-        if (app.getLibrary().getReplacedBy() != null
+        if (app.getLibrary().getReplacedBy() != null && !"".equals(app.getLibrary().getReplacedBy())
                 && sp.getInt(skey, 0) < 5) {
             rlReplaced.setVisibility(View.VISIBLE);
             ivReplacedStore.setOnClickListener(

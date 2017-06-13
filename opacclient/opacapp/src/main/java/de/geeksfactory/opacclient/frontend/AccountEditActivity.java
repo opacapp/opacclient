@@ -141,7 +141,7 @@ public class AccountEditActivity extends AppCompatActivity {
                 tvCity.setText(lib.getDisplayName());
             }
 
-            if (lib.getReplacedBy() != null
+            if (lib.getReplacedBy() != null && !"".equals(lib.getReplacedBy())
                     && findViewById(R.id.rlReplaced) != null) {
                 findViewById(R.id.rlReplaced).setVisibility(View.VISIBLE);
                 findViewById(R.id.ivReplacedStore).setOnClickListener(
