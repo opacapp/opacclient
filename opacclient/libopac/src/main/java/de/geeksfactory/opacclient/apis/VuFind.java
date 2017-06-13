@@ -45,7 +45,7 @@ import de.geeksfactory.opacclient.searchfields.SearchQuery;
 import de.geeksfactory.opacclient.searchfields.TextSearchField;
 
 public class VuFind extends BaseApi {
-    protected static final Pattern idPattern = Pattern.compile("\\/Record\\/([^/]+)");
+    protected static final Pattern idPattern = Pattern.compile("\\/(?:Opacrl)?Record\\/([^/]+)");
     protected static HashMap<String, String> languageCodes = new HashMap<>();
     protected static HashMap<String, SearchResult.MediaType> mediaTypeSelectors = new HashMap<>();
 
@@ -161,7 +161,8 @@ public class VuFind extends BaseApi {
         int rescount = -1;
         if (doc.select(".resulthead").size() == 1) {
             rescount = Integer.parseInt(
-                    doc.select(".resulthead strong").get(2).text());
+                    doc.select(".resulthead strong").get(2).text().replace(",", "")
+                       .replace(".", ""));
         }
         List<SearchResult> reslist = new ArrayList<>();
 
@@ -243,7 +244,11 @@ public class VuFind extends BaseApi {
                 String path = idurl.getPath();
                 Matcher matcher = idPattern.matcher(path);
                 if (matcher.find()) {
-                    res.setId(matcher.group(1));
+                    if (matcher.group().contains("/OpacrlRecord/")) {
+                        res.setId("Opacrl:" + matcher.group(1));
+                    } else {
+                        res.setId(matcher.group(1));
+                    }
                 }
             } catch (MalformedURLException e) {
                 e.printStackTrace();
@@ -276,7 +281,7 @@ public class VuFind extends BaseApi {
     public DetailedItem getResultById(String id, String homebranch)
             throws IOException, OpacErrorException {
         if (!initialised) start();
-        String url = opac_url + "/Record/" + id;
+        String url = getShareUrl(id, null);
         String html = httpGet(url, getDefaultEncoding());
         Document doc = Jsoup.parse(html);
         doc.setBaseUri(url);
@@ -309,16 +314,33 @@ public class VuFind extends BaseApi {
                 break;
             }
         }
+
+        String head = null;
+        StringBuilder value = new StringBuilder();
         for (Element tr : doc.select(".record table").first().select("tr")) {
-            String text = tr.child(1).text();
-            if (tr.child(1).select("a").size() > 0) {
-                String href = tr.child(1).select("a").attr("href");
-                if (!href.startsWith("/") && !text.contains(data.getString("baseurl"))) {
-                    text += " " + href;
+            if (tr.children().size() == 1) {
+                if (tr.child(0).tagName().equals("th")) {
+                    if (head != null) {
+                        res.addDetail(new Detail(head, value.toString()));
+                        value = new StringBuilder();
+                    }
+                    head = tr.child(0).text();
+                } else {
+                    if (!value.toString().equals("")) value.append("\n");
+                    value.append(tr.child(0).text());
                 }
+            } else {
+                String text = tr.child(1).text();
+                if (tr.child(1).select("a").size() > 0) {
+                    String href = tr.child(1).select("a").attr("href");
+                    if (!href.startsWith("/") && !text.contains(data.getString("baseurl"))) {
+                        text += " " + href;
+                    }
+                }
+                res.addDetail(new Detail(tr.child(0).text(), text));
             }
-            res.addDetail(new Detail(tr.child(0).text(), text));
         }
+        if (head != null) res.addDetail(new Detail(head, value.toString()));
 
         try {
             if (doc.select("#Volumes").size() > 0) {
@@ -507,9 +529,11 @@ public class VuFind extends BaseApi {
             if (select.parent().select("label").size() > 0) {
                 field.setDisplayName(select.parent().select("label").first()
                                            .text());
+            } else if (select.parent().parent().select("label").size() == 1) {
+                field.setDisplayName(select.parent().parent().select("label").first()
+                                           .text());
             }
             field.setId(select.attr("name") + select.attr("id"));
-            List<Map<String, String>> dropdownOptions = new ArrayList<>();
             String meaning = select.attr("id");
             field.addDropdownValue("", "");
             for (Element option : select.select("option")) {
@@ -528,7 +552,12 @@ public class VuFind extends BaseApi {
 
     @Override
     public String getShareUrl(String id, String title) {
-        return opac_url + "/Record/" + id;
+        if (id.contains(":")) {
+            String[] parts = id.split(":");
+            return opac_url + "/" + parts[0] + "Record/" + parts[1];
+        } else {
+            return opac_url + "/Record/" + id;
+        }
     }
 
     @Override

@@ -1055,6 +1055,7 @@ public class SISIS extends BaseApi implements OpacApi {
 
             if (doc.select("input[name=username]").size() > 0) {
                 // Login vonnöten
+                CSId = doc.select("input[name=CSId]").val();
                 List<NameValuePair> nameValuePairs = new ArrayList<>(
                         2);
                 nameValuePairs.add(new BasicNameValuePair("username", acc
@@ -1129,6 +1130,11 @@ public class SISIS extends BaseApi implements OpacApi {
         if (doc.getElementsByClass("error").size() >= 1) {
             return new ReservationResult(MultiStepResult.Status.ERROR, doc
                     .getElementsByClass("error").get(0).text());
+        }
+
+        if (doc.html().contains("jsp/error.jsp")) {
+            return new ReservationResult(MultiStepResult.Status.ERROR, doc
+                    .getElementsByTag("h2").get(0).text());
         }
 
         if (doc.select("#CirculationForm p").size() > 0
@@ -1322,6 +1328,7 @@ public class SISIS extends BaseApi implements OpacApi {
                         loginPageDoc.select("input[name=as_fid]").first()
                                     .attr("value")));
             }
+            CSId = loginPageDoc.select("input[name=CSId]").val();
         } catch (IOException e1) {
             e1.printStackTrace();
         }

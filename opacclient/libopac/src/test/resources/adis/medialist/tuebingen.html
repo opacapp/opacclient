@@ -1,0 +1,581 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="de" lang="de">
+<!-- solution for: conditional-comments block downloads  -->
+<!--[if IE]><![endif]-->
+<head>
+    <style type="text/css">
+		@import url(css/aDISStandard.css);
+
+    </style>
+    <script src="js/aDISMain.min.js" type="text/javascript"></script>
+    <script src="js/fckeditor/fckeditor.js" type="text/javascript"></script>
+    <title> Gesamtbestand T&#252;bingen </title>
+    <script type="text/javascript">
+	var text = '';
+	window.defaultStatus=text;
+
+    </script>
+    <title>Universit&auml;sbibliothek T&uuml;bingen</title>
+
+    <!--
+    (c) Software: aDIS/BMS und aDIS/Archiv by |a|S|tec| GmbH Berlin und Muenchen - www.astec.de
+    HTML-/CSS-Anpassungen: ena Webstudio - www.ena-webstudio.com
+    HTML-/CSS-Framework basiert grob auf Contao (c) Leo Feyer www.contao.org
+    Formulare, Tabellen, etc. werden automatisch durch aDIS generiert
+    Projekt: TUE Deutsch - OPAC02
+    Letztes Update: 04.08.2016
+    //-->
+
+    <meta http-equiv="x-ua-compatible" content="ie=edge"/>
+    <meta http-equiv="cache-control" content="no-cache"/>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8"/>
+    <meta http-equiv="content-style-type" content="text/css"/>
+    <meta http-equiv="content-script-type" content="text/javascript"/>
+    <meta http-equiv="content-language" content="de"/>
+    <meta name="language" content="de"/>
+
+    <link rel="shortcut icon" type="image/x-icon" href="/aDISWeb_stg/basis/images/favicon.ico"/>
+    <link rel="stylesheet" href="/aDISWeb_kopac/css/kopac_style.css" type="text/css"/>
+    <link rel="stylesheet" type="text/css" href="/aDISWeb_tue/basis/css/kopac_diff.css"/>
+
+    <!-- incl=includeCSS.html -->
+    <link rel="stylesheet" type="text/css" media="screen, projection"
+          href="/aDISWeb_tue/m00/css/diff.css"/>
+    <link rel="shortcut icon" type="image/x-icon"
+          href="/aDISWeb_tue/m00/images/favicon.ico"/><!-- stop -->
+
+    <!-- incl=includeMeta_en.html -->
+    <meta name="description"
+          content="Online Library Catalogue - OPAC - University of Tuebingen"/><!-- stop -->
+</head>
+<body class="zweier deutsch">
+<script type="text/javascript"><!--
+
+
+
+
+function startIdleTimer() {
+  if (typeof idleId != 'undefined')
+    clearTimeout(idleId)
+  idleId = window.setTimeout("to('"+ idleLink + "')", idleTime);
+  }
+function to(link) {
+  location.href=link;
+  }
+
+
+
+
+
+function EventTarget() {
+	this.handlers = [];
+	}
+EventTarget.prototype = {
+	constructor : EventTarget,
+	addhandler: function (type, handler) {
+		if (typeof this.handlers[type] == "undefined")
+			this.handlers[type] = [];
+		this.handlers[type].push(handler);
+		},
+	fire : function (event) {
+		if (this.handlers[event.type] instanceof Array) {
+			var handlers = this.handlers[event.type];
+			for (var i = 0; i < handlers.length; i++)
+				handlers[i](event);
+			}
+		}
+	};
+var eventHandler = new EventTarget();
+
+function setupHandlers()  {
+	document.onmousedown = docOnEvent;
+	document.onkeydown = docOnEvent;
+	document.onkeypress = docOnEvent;
+	document.onhelp = cancelF1;
+
+	initFormElements();
+	initIframes();
+	initScrollPos();
+	}
+function getDimensions()  {
+	document.forms[0].scrDim.value = screen.width + ";" + screen.height;
+	if (window.innerWidth)
+		document.forms[0].winDim.value = window.innerWidth + ";" + window.innerHeight;
+	else
+		document.forms[0].winDim.value = document.body.offsetWidth + ";" + document.body.offsetHeight;
+	node = document.getElementById("img_content");
+	if (node != undefined)
+		document.forms[0].imgDim.value = node.offsetWidth + ";" + node.offsetHeight;
+	}
+
+
+
+
+
+	window.onpopstate = function (e) {
+	  if(e.state != null && e.state.action){
+	  var button = document.getElementById("Toolbar_0");
+      	if(button) button.click();
+      }
+    }
+    if(history.pushState && history.state == null){
+		history.pushState({ action : 1 }, "", null);
+		history.pushState({ action : 2 }, "", null);
+	}
+
+
+
+
+
+
+aDIS.onLoad = function (e)
+{
+
+  idleTime=600000;
+  idleLink="/aDISWeb/app;jsessionid=XXXXXXXXXXXXXXXXXXXXXXXXXXXXX?service=direct/1/POOLM00Ptue@@@@@_4B004600_322CC680/$Timeout";
+  startIdleTimer();
+
+
+if (!e) var e = window.event;
+document.forms[0].scriptEnabled.value=true;
+if (self.specialOnLoad != undefined)
+	specialOnLoad(e);
+setupHandlers();
+getDimensions();
+
+
+
+}
+
+aDIS.addListener('load', window, aDIS.onLoad);
+
+
+// -->
+</script>
+<div class="aDISMaske">
+    <form method="post" name="Form0" action="/aDISWeb/app;jsessionid=XXXXXXXXXXXXXXXXXXXXXXXXXXXXX"
+          onsubmit="return formOnSubmit();">
+        <input type="hidden" name="service"
+               value="direct/1/POOLM00Ptue@@@@@_4B004600_322CC680/$Form.form"/>
+        <input type="hidden" name="sp" value="S0"/>
+        <input type="hidden" name="Form0"
+               value="focus,keyCode,stz,source,selected,requestCount,scriptEnabled,scrollPos,scrDim,winDim,imgDim,$Toolbar,$FormConditional,$FormConditional$0,textButton,$FormConditional$1,textButton$0,$FormConditional$2,$FormConditional$3,$FormConditional$4,cellCheck,$FormConditional$5,$FormConditional$6,textButton$1,$FormConditional$7,textButton$2,$FormConditional$8,$FormConditional$9,$FormConditional$10,$Toolbar$0"/>
+        <input type="hidden" name="focus" value=""/>
+        <input type="hidden" name="keyCode" value="0"/>
+        <input type="hidden" name="stz" value=""/>
+        <input type="hidden" name="source" value=""/>
+        <input type="hidden" name="selected" value=""/>
+        <input type="hidden" name="requestCount" value="2"/>
+        <input type="hidden" name="scriptEnabled" value="T"/>
+        <input type="hidden" name="scrollPos" value="0"/>
+        <input type="hidden" name="scrDim" value=""/>
+        <input type="hidden" name="winDim" value=""/>
+        <input type="hidden" name="imgDim" value=""/>
+        <input type="hidden" name="$FormConditional" value="F"/>
+        <input type="hidden" name="$FormConditional$0" value="T"/>
+        <input type="hidden" name="$FormConditional$1" value="T"/>
+        <input type="hidden" name="$FormConditional$2" value="F"/>
+        <input type="hidden" name="$FormConditional$3" value="F"/>
+        <input type="hidden" name="$FormConditional$4" value="F"/>
+        <input type="hidden" name="$FormConditional$5" value="F"/>
+        <input type="hidden" name="$FormConditional$6" value="T"/>
+        <input type="hidden" name="$FormConditional$7" value="T"/>
+        <input type="hidden" name="$FormConditional$8" value="F"/>
+        <input type="hidden" name="$FormConditional$9" value="F"/>
+        <input type="hidden" name="$FormConditional$10" value="F"/>
+
+
+        <div id="wrapper">
+            <div class="inside">
+
+                <div id="header" role="banner">
+                    <div class="inside">
+
+                        <ul id="sprunglinks">
+                            <li><a class="sprung" href="#main">Zum Inhalt</a></li>
+                            <li><a class="sprung" href="#hnav">Zur Navigation</a></li>
+                        </ul>
+
+                        <!-- incl=includeLogo_de.html --><!--
+<p id="logo"><a jwcid="@aDIS:InternalLink" label="" fld="$$GFNV_1" suppressLabel="true" tag="Startseite=CW00" staticTag="true" title="Startseite"><img src="/aDISWeb_tue/basis/images/logo-uni-tuebingen.png" width="260" height="100" alt="Eberhard Karls Universit&auml;t T&uuml;bingen" /></a></p>
+-->
+                        <p id="logo"><a href="http://www.uni-tuebingen.de/"
+                                        title="home page of University T%uuml;bingen"><img
+                                src="/aDISWeb_tue/basis/images/logo-uni-tuebingen.png" width="260"
+                                height="100"
+                                alt="Eberhard Karls Universit&auml;t T&uuml;bingen"/></a></p>
+                        <p id="logo2"><a href="http://www.ub.uni-tuebingen.de/home.html"
+                                         title="home page of University T&uuml;bingen"><img
+                                src="/aDISWeb_tue/basis/images/unibibliothek.gif" width="318"
+                                height="100" alt="Universit&auml;tsbibliothek"/></a></p>
+                        <!-- stop -->
+                        <div id="settings">
+
+                        </div>
+
+                        <div class="block" id="topleiste">
+                            <p id="breadcrumb" class="block"><span
+                                    class="invisible">Sie sind hier: </span> <!-- incl=includeBreadcrumb_de.html --><span
+                                    class="invisible">Pfad: </span> <a
+                                    href="http://www.ub.uni-tuebingen.de/"> Bibliothek</a> &gt; <!-- stop -->
+                                <a href="/aDISWeb/app;jsessionid=XXXXXXXXXXXXXXXXXXXXXXXXXXXXX?service=direct/1/POOLM00Ptue@@@@@_4B004600_322CC680/$InternalLink.directlink&amp;sp=S%24%24GFNV_1&amp;sp=SStartseite%3DCW00&amp;requestCount=2"
+                                   title="" fld="$$GFNV_1">
+
+
+                                    Online-Katalog
+
+                                </a> <span class="outside">.</span>
+                                &gt; <span class="navicl">
+
+
+
+
+<a href="/aDISWeb/app;jsessionid=XXXXXXXXXXXXXXXXXXXXXXXXXXXXX?service=direct/1/POOLM00Ptue@@@@@_4B004600_322CC680/navpath.intlink.directlink&amp;sp=S%24%24GFNV_1&amp;sp=SAAAU&amp;requestCount=2"
+   title="Mein Konto / &#220;bersicht" fld="$$GFNV_1">
+Mein Konto / &#220;bersicht
+
+</a>	<span class="outside">.</span>
+
+
+
+
+</span> &gt;
+
+                                <span class="txtinsert">
+Mein Konto / Ausleihen
+</span>
+                            </p>
+                        </div>
+
+                    </div>
+                </div>
+
+                <div id="container">
+                    <div class="inside">
+
+                        <div id="left">
+                            <div class="inside">
+
+                                <h2 class="invisible">Navigation</h2>
+
+                                <div id="navbox" class="block">
+                                    <div id="R20">
+
+<span class="bnzeig">
+Himmel, Petrus: Sie sind angemeldet
+</span>
+
+
+                                        <span class="mmzeig">
+
+</span>
+                                    </div>
+                                </div>
+
+                                <div id="unav" class="mod_navigation block" role="navigation">
+                                    <!-- incl=includeNavigation_a.html --><!-- Platz fuer externe Navigation VOR aDIS-Navigation -->
+                                    <!-- stop -->
+                                    <div class="tree_div">
+                                        <ul class="tree_ul">
+                                            <li class="tree_leaf_li">
+                                                <span class="tree_disabled">Anmelden</span>
+                                                <span class="outside">.</span></li>
+                                            <li class="tree_leaf_li">
+                                                <a href="/aDISWeb/app;jsessionid=XXXXXXXXXXXXXXXXXXXXXXXXXXXXX?service=direct/1/POOLM00Ptue@@@@@_4B004600_322CC680/$Tree.treeNodes&amp;sp=SL2&amp;requestCount=2"
+                                                   class="tree_leaf_a"><span>Abmelden</span></a><span
+                                                    class="outside">.</span></li>
+                                            <li class="tree_leaf_li_sel">
+                                                <strong><span class="tree_strong">Mein Konto</span></strong>
+                                            </li>
+                                            <li class="tree_branch_li">
+                                                <a href="/aDISWeb/app;jsessionid=XXXXXXXXXXXXXXXXXXXXXXXXXXXXX?service=direct/1/POOLM00Ptue@@@@@_4B004600_322CC680/$Tree.treeNodes&amp;sp=SBD&amp;requestCount=2"
+                                                   class="tree_branch_a"><span>Online-Katalog</span></a><span
+                                                    class="outside">.</span></li>
+                                            <li class="tree_branch_li">
+                                                <a href="/aDISWeb/app;jsessionid=XXXXXXXXXXXXXXXXXXXXXXXXXXXXX?service=direct/1/POOLM00Ptue@@@@@_4B004600_322CC680/$Tree.treeNodes&amp;sp=SF1&amp;requestCount=2"
+                                                   class="tree_branch_a"><span>Fernleihportal</span></a><span
+                                                    class="outside">.</span></li>
+                                            <li class="tree_leaf_li">
+                                                <a href="http://biber3.ub.uni-tuebingen.de/nelol/cgi-bin/neuerw.pl"
+                                                   target="&quot;_blank&quot;"
+                                                   class="tree_leaf_a"><span>Neuerwerbungsliste</span></a><span
+                                                    class="outside">.</span></li>
+                                            <li class="tree_leaf_li">
+                                                <a href="http://biber3.ub.uni-tuebingen.de/dissol/cgi-bin/neuerw.pl"
+                                                   target="&quot;_blank&quot;"
+                                                   class="tree_leaf_a"><span>Neue T&#252;binger Dissertationen</span></a><span
+                                                    class="outside">.</span></li>
+                                            <li class="tree_leaf_li">
+                                                <a href="http://www.uni-tuebingen.de/index.php?id=1076"
+                                                   target="&quot;_blank&quot;"
+                                                   class="tree_leaf_a"><span>Anschaffungsvorschlag UB</span></a><span
+                                                    class="outside">.</span></li>
+                                            <li class="tree_leaf_li">
+                                                <a href="https://katalog.ub.uni-tuebingen.de/opac/"
+                                                   target="&quot;_blank&quot;"
+                                                   class="tree_leaf_a"><span>Alternativ-OPAC (f&#252;r TAD)</span></a><span
+                                                    class="outside">.</span></li>
+                                            <li class="tree_leaf_li">
+                                                <a href="http://swb2.bsz-bw.de/DB=2.101/"
+                                                   target="&quot;_blank&quot;"
+                                                   class="tree_leaf_a"><span>Bibinfo</span></a><span
+                                                    class="outside">.</span></li>
+                                        </ul>
+                                    </div>
+
+                                    <!-- incl=includeNavigation_b.html --><!-- Platz fuer externe Navigation NACH aDIS-Navigation -->
+                                    <!-- stop -->
+                                </div>
+
+                            </div>
+                        </div>
+
+                        <div id="main" role="main">
+                            <div class="inside">
+                                <div class="block">
+
+
+                                    <h1><span class="invisible">Aktuelle Seite: </span>
+                                        <span class="markh1">
+Gesamtbestand T&#252;bingen
+</span>
+                                        :
+                                        <span class="txtinsert">
+Mein Konto / Ausleihen
+</span>
+                                    </h1>
+                                    <div class="toolbar_div">
+                                        <ul class="toolbar_ul">
+                                            <li class="toolbar_li">
+                                                <input type="image"
+                                                       src="/aDISWeb/images/POOLM00Ptue@@@@@/gif/POOLM00Ptue@@@@@_53010E00_31758600.gif;jsessionid=XXXXXXXXXXXXXXXXXXXXXXXXXXXXX"
+                                                       alt="Zur&#252;ck zur vorherigen Seite"
+                                                       id="Toolbar_0" name="$Toolbar_0"
+                                                       title="Zur&#252;ck zur vorherigen Seite"
+                                                       onmouseover="self.status='Zur&#252;ck zur vorherigen Seite';return true;"
+                                                       onmouseout="self.status='';"
+                                                       class="toolbar_img"/><label
+                                                    for="Toolbar_0"><span
+                                                    class="toolbar_txt">Zur&#252;ck</span></label>
+                                            </li>
+                                            <li class="toolbar_li">
+                                                <input type="image"
+                                                       src="/aDISWeb/images/POOLM00Ptue@@@@@/gif/POOLM00Ptue@@@@@_53002400_31169A00.gif;jsessionid=XXXXXXXXXXXXXXXXXXXXXXXXXXXXX"
+                                                       alt="Beenden der Recherche" id="Toolbar_2"
+                                                       name="$Toolbar_2"
+                                                       title="Beenden der Recherche"
+                                                       onmouseover="self.status='Beenden der Recherche';return true;"
+                                                       onmouseout="self.status='';"
+                                                       class="toolbar_img"/><label
+                                                    for="Toolbar_2"><span
+                                                    class="toolbar_txt">Beenden</span></label></li>
+                                            <li class="toolbar_li">
+                                                <input type="image"
+                                                       src="/aDISWeb/images/POOLM00Ptue@@@@@/gif/POOLM00Ptue@@@@@_53001D00_31169A00.gif;jsessionid=XXXXXXXXXXXXXXXXXXXXXXXXXXXXX"
+                                                       alt="Hilfe zur Vollanzeige" id="Toolbar_3"
+                                                       name="$Toolbar_3"
+                                                       title="Hilfe zur Vollanzeige"
+                                                       onmouseover="self.status='Hilfe zur Vollanzeige';return true;"
+                                                       onmouseout="self.status='';"
+                                                       class="toolbar_img"/><label
+                                                    for="Toolbar_3"><span
+                                                    class="toolbar_txt">Hilfe</span></label></li>
+                                        </ul>
+                                        <div style="clear:both"></div>
+                                    </div>
+                                    <div class="fsgrp">
+
+
+                                        <div id="OPACLI" style="   width:99%;" class="aDISListe">
+                                            <div class="html_div" style="width:99%; height:100%;">
+                                                <p>Ihre ausgeliehenen Titel: Bitte beachten Sie das Fälligkeitsdatum. Nutzen Sie rechtzeitig das Verlängerungsangebot.</p>
+                                                <p>Konto - Ausleihen für Herrn Himmel, Petrus - Abholcode: 123 ABC</p>
+                                            </div>
+                                        </div>
+
+
+                                        <div id="R04">
+                                            <p class="block">
+
+
+                                                <input type="submit" name="textButton"
+                                                       value="Alle verl&#228;ngern" class="buttong"
+                                                       fld="$$GFBO_3"/>
+
+
+                                                <input type="submit" name="textButton$0"
+                                                       value="Markierte Titel verl&#228;ngern"
+                                                       class="buttong" fld="$$GFBO_4"/>
+
+
+                                            </p>
+                                        </div>
+                                        <div id="R05">
+                                            <div style="   width:99%; ">
+                                                <div class="rTable_div">
+                                                    <table colDisable="[true, true, true, true, true]"
+                                                           width="100%" colCase="[, , , , ]"
+                                                           class="rTable_table">
+                                                        <colgroup>
+                                                            <col width="04%"></col>
+                                                            <col width="14%"></col>
+                                                            <col width="19%"></col>
+                                                            <col width="34%"></col>
+                                                            <col width="29%"></col>
+                                                        </colgroup>
+                                                        <thead class="rTable_thead">
+                                                        <tr>
+                                                            <th scope="col" class="rTable_th"></th>
+                                                            <th scope="col"
+                                                                class="rTable_th">Ausleihe am - Fällig am
+                                                            </th>
+                                                            <th scope="col"
+                                                                class="rTable_th">Bibliothek
+                                                            </th>
+                                                            <th scope="col"
+                                                                class="rTable_th">Titel
+                                                            </th>
+                                                            <th scope="col"
+                                                                class="rTable_th">Hinweis
+                                                            </th>
+                                                        </tr>
+                                                        </thead>
+                                                        <tbody>
+
+                                                        <tr class="rTable_tr_even">
+
+                                                            <td class="">
+                                                                <label for="cellCheck"
+                                                                       class="invisible">Markieren</label><input
+                                                                    type="checkbox" name="cellCheck"
+                                                                    fld="###CHK_1" id="cellCheck"/>
+                                                            </td>
+
+                                                            <td class="">
+                                                                27.05.2017 - 26.06.2017
+                                                            </td>
+
+                                                            <td class="">
+                                                                Wilhelmstraße
+                                                            </td>
+
+                                                            <td class="">
+                                                                Gouverneursbesprechungen : die deutschen Protokolle der Besprechungen zwischen Vertretern der Regierung von Württemberg-Hohenzollern und der französischen Militärregierung in Tübingen 1945 - 1952 / bearb. von Frank Raberg. Hrsg. von Edwin Ernst Weber<br/>49 A 3729<br/>524548802021
+                                                            </td>
+
+                                                            <td class="">
+
+                                                            </td>
+
+                                                        </tr>
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+
+
+                                            </div>
+
+
+                                            <object width="0" id="$Plugin"
+                                                    type="application/x-aStec-aDISPrint"
+                                                    data="/aDISWeb/app;jsessionid=XXXXXXXXXXXXXXXXXXXXXXXXXXXXX?service=aDISPrint/POOLM00Ptue@@@@@_4B004600_322CC680/$Plugin"
+                                                    height="0"></object>
+                                        </div>
+                                        <div id="R06">
+                                            <p class="block">
+
+
+                                                <input type="submit" name="textButton$1"
+                                                       value="Alle verl&#228;ngern" class="buttong"
+                                                       fld="$$GFBO_13"/>
+
+
+                                                <input type="submit" name="textButton$2"
+                                                       value="Markierte Titel verl&#228;ngern"
+                                                       class="buttong" fld="$$GFBO_14"/>
+
+
+                                            </p>
+                                        </div>
+
+
+                                    </div>
+
+                                    <div class="clear"></div>
+                                    <div class="toolbar_div">
+                                        <ul class="toolbar_ul">
+                                            <li class="toolbar_li">
+                                                <input type="image"
+                                                       src="/aDISWeb/images/POOLM00Ptue@@@@@/gif/POOLM00Ptue@@@@@_53010E00_31758600.gif;jsessionid=XXXXXXXXXXXXXXXXXXXXXXXXXXXXX"
+                                                       alt="Zur&#252;ck zur vorherigen Seite"
+                                                       id="Toolbar$0_0" name="$Toolbar$0_0"
+                                                       title="Zur&#252;ck zur vorherigen Seite"
+                                                       onmouseover="self.status='Zur&#252;ck zur vorherigen Seite';return true;"
+                                                       onmouseout="self.status='';"
+                                                       class="toolbar_img"/><label
+                                                    for="Toolbar$0_0"><span
+                                                    class="toolbar_txt">Zur&#252;ck</span></label>
+                                            </li>
+                                            <li class="toolbar_li">
+                                                <input type="image"
+                                                       src="/aDISWeb/images/POOLM00Ptue@@@@@/gif/POOLM00Ptue@@@@@_53002400_31169A00.gif;jsessionid=XXXXXXXXXXXXXXXXXXXXXXXXXXXXX"
+                                                       alt="Beenden der Recherche" id="Toolbar$0_2"
+                                                       name="$Toolbar$0_2"
+                                                       title="Beenden der Recherche"
+                                                       onmouseover="self.status='Beenden der Recherche';return true;"
+                                                       onmouseout="self.status='';"
+                                                       class="toolbar_img"/><label
+                                                    for="Toolbar$0_2"><span
+                                                    class="toolbar_txt">Beenden</span></label></li>
+                                            <li class="toolbar_li">
+                                                <input type="image"
+                                                       src="/aDISWeb/images/POOLM00Ptue@@@@@/gif/POOLM00Ptue@@@@@_53001D00_31169A00.gif;jsessionid=XXXXXXXXXXXXXXXXXXXXXXXXXXXXX"
+                                                       alt="Hilfe zur Vollanzeige" id="Toolbar$0_3"
+                                                       name="$Toolbar$0_3"
+                                                       title="Hilfe zur Vollanzeige"
+                                                       onmouseover="self.status='Hilfe zur Vollanzeige';return true;"
+                                                       onmouseout="self.status='';"
+                                                       class="toolbar_img"/><label
+                                                    for="Toolbar$0_3"><span
+                                                    class="toolbar_txt">Hilfe</span></label></li>
+                                        </ul>
+                                        <div style="clear:both"></div>
+                                    </div>
+                                </div>
+                                <div class="clear"></div>
+
+                            </div>
+                            <div id="clear"></div>
+
+                        </div>
+                    </div>
+                </div>
+
+                <div id="footer">
+                    <div class="inside">
+
+                        <div id="foot1">
+                            <!-- incl=includeFooter_de.html -->|a|S|tec| angewandte Systemtechnik GmbH -
+                            <a href="http://www.astec.de">Barrierefreie Bibliothekssoftware - OPAC</a> -
+                            <a href="http://www.ena-webstudio.com"
+                               title="ena Webstudio - Webdesign Berlin">ena Webstudio</a><!-- stop -->
+                        </div>
+
+                        <div id="foot2">
+                            <div id="goingup"><a href="#wrapper">Seitenanfang</a></div>
+                        </div>
+                        <div class="clear"></div>
+
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <script src="/aDISWeb_kopac/js/yaml-focusfix.js" type="text/javascript"></script>
+
+    </form>
+</div>
+</body>
+</html>

@@ -266,8 +266,9 @@
     <string name="do_not_ask_again">Do not show again</string>
     <string name="reservation_fee_continue">Continue</string>
     <string name="notification_repeat">Repeat notifications</string>
-    <string name="update_info_title">Privacy notice</string>
-    <string name="update_info_text">With this update, the app starts to automatically report diagnosis information to our server in case of some errors. In one of the next updates, the app will start to periodically fetch information about the libraries from our server. This helps us keep to respond to changes by the libraries quicker and with less effort. We will continue to NEVER transmit or store any personal data to our servers.</string>
+    <string name="update_info_title">Happy Birthday Opac App!</string>
+    <string name="update_info_text">This May, our app turned five years old. We\'re celebrating the birthday with a new logo and want to thank all of you for all the feedback that we received.</string>
+    <string name="update_info_text_second">If you want to help us keep the app sustainable in the future, talk to your library: By buying the Plus Edition of the app, they allows us to continue developing this app and at the same time unlocks a set of useful features for you. Check our website www.opacapp.net for more details!</string>
     <string name="accountdata_export_header">Account data of %1$s at %2$s</string>
     <string name="accountdata_title">Title</string>
     <string name="accountdata_author">Author</string>

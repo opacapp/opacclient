@@ -397,6 +397,9 @@ public class BiBer1992 extends BaseApi {
 
         Elements trList = doc.select("form table tr[valign]"); // <tr
         // valign="top">
+        if (trList.size() == 0) { // Schwieberdingen
+            trList = doc.select("table:has(input[type=checkbox]) tr");
+        }
         Elements elem;
         int rows_per_hit = 2;
         if (trList.size() == 1
@@ -1028,7 +1031,9 @@ public class BiBer1992 extends BaseApi {
             } else {
                 unknownHeaders.put(header);
             }
-            j++;
+
+            String colspan = headerCell.attr("colspan");
+            j += !colspan.equals("") ? Integer.valueOf(colspan) : 1;
         }
 
         if (unknownHeaders.length() > 0) {
@@ -1159,7 +1164,9 @@ public class BiBer1992 extends BaseApi {
             } else {
                 unknownHeaders.put(header);
             }
-            j++;
+
+            String colspan = headerCell.attr("colspan");
+            j += !colspan.equals("") ? Integer.valueOf(colspan) : 1;
         }
 
         if (unknownHeaders.length() > 0) {

@@ -1287,59 +1287,7 @@ public class Adis extends BaseApi implements OpacApi {
                     adoc = adoc_new;
                 }
             }
-            for (Element tr : adoc.select(".rTable_div tbody tr")) {
-                LentItem item = new LentItem();
-                String text = Jsoup.parse(tr.child(3).html().replaceAll("(?i)<br[^>]*>", "#"))
-                                   .text();
-                if (text.contains(" / ")) {
-                    // Format "Titel / Autor #Sig#Nr", z.B. normale Ausleihe in Berlin
-                    String[] split = text.split("[/#\n]");
-                    String title = split[0];
-                    //Is always the last one...
-                    String id = split[split.length-1];
-                    item.setId(id);
-                    if (split_title_author) {
-                        title = title.replaceFirst("([^:;\n]+)[:;\n](.*)$", "$1");
-                    }
-                    item.setTitle(title.trim());
-                    if (split.length > 1) {
-                        item.setAuthor(split[1].replaceFirst("([^:;\n]+)[:;\n](.*)$", "$1").trim());
-                    }
-                } else {
-                    // Format "Autor: Titel - Verlag - ISBN:... #Nummer", z.B. Fernleihe in Berlin
-                    String[] split = text.split("#");
-                    String[] aut_tit = split[0].split(": ");
-                    item.setAuthor(aut_tit[0].replaceFirst("([^:;\n]+)[:;\n](.*)$", "$1").trim());
-                    if (aut_tit.length > 1) {
-                        item.setTitle(
-                                aut_tit[1].replaceFirst("([^:;\n]+)[:;\n](.*)$", "$1").trim());
-                    }
-                    //Is always the last one...
-                    String id = split[split.length-1];
-                    item.setId(id);
-                }
-                String date = tr.child(1).text().trim();
-                if (date.contains("-")) {
-                    // Nürnberg: "29.03.2016 - 26.04.2016"
-                    // for beginning and end date in one field
-                    date = date.split("-")[1].trim();
-                }
-                try {
-                    item.setDeadline(fmt.parseLocalDate(date));
-                } catch (IllegalArgumentException e) {
-                    e.printStackTrace();
-                }
-                item.setHomeBranch(tr.child(2).text().trim());
-                if (tr.select("input[type=checkbox]").hasAttr("disabled")) {
-                    item.setRenewable(false);
-                } else {
-                    item.setProlongData(
-                            tr.select("input[type=checkbox]").attr("name") + "|" + alink);
-                }
-
-                // item.setRenewable(tr.child(4).text().matches(".*nicht verl.+ngerbar.*"));
-                lent.add(item);
-            }
+            parseMediaList(adoc, alink, lent, split_title_author);
             assert (lent.size() == anum);
             form = new ArrayList<>();
             for (Element input : adoc.select("input, select")) {
@@ -1489,6 +1437,64 @@ public class Adis extends BaseApi implements OpacApi {
         adata.setReservations(res);
 
         return adata;
+    }
+
+    static void parseMediaList(Document adoc, String alink, List<LentItem> lent,
+            boolean split_title_author) {
+        DateTimeFormatter fmt = DateTimeFormat.forPattern("dd.MM.yyyy").withLocale(Locale.GERMAN);
+        for (Element tr : adoc.select(".rTable_div tbody tr")) {
+            LentItem item = new LentItem();
+            String text = Jsoup.parse(tr.child(3).html().replaceAll("(?i)<br[^>]*>", "#"))
+                               .text();
+            if (text.contains(" / ")) {
+                // Format "Titel / Autor #Sig#Nr", z.B. normale Ausleihe in Berlin
+                String[] split = text.split("[/#\n]");
+                String title = split[0];
+                //Is always the last one...
+                String id = split[split.length - 1];
+                item.setId(id);
+                if (split_title_author) {
+                    title = title.replaceFirst("([^:;\n]+)[:;\n](.*)$", "$1");
+                }
+                item.setTitle(title.trim());
+                if (split.length > 1) {
+                    item.setAuthor(split[1].replaceFirst("([^:;\n]+)[:;\n](.*)$", "$1").trim());
+                }
+            } else {
+                // Format "Autor: Titel - Verlag - ISBN:... #Nummer", z.B. Fernleihe in Berlin
+                String[] split = text.split("#");
+                String[] aut_tit = split[0].split(": ");
+                item.setAuthor(aut_tit[0].replaceFirst("([^:;\n]+)[:;\n](.*)$", "$1").trim());
+                if (aut_tit.length > 1) {
+                    item.setTitle(
+                            aut_tit[1].replaceFirst("([^:;\n]+)[:;\n](.*)$", "$1").trim());
+                }
+                //Is always the last one...
+                String id = split[split.length - 1];
+                item.setId(id);
+            }
+            String date = tr.child(1).text().trim();
+            if (date.contains("-")) {
+                // Nürnberg: "29.03.2016 - 26.04.2016"
+                // for beginning and end date in one field
+                date = date.split("-")[1].trim();
+            }
+            try {
+                item.setDeadline(fmt.parseLocalDate(date));
+            } catch (IllegalArgumentException e) {
+                e.printStackTrace();
+            }
+            item.setHomeBranch(tr.child(2).text().trim());
+            if (tr.select("input[type=checkbox]").hasAttr("disabled")) {
+                item.setRenewable(false);
+            } else {
+                item.setProlongData(
+                        tr.select("input[type=checkbox]").attr("name") + "|" + alink);
+            }
+
+            // item.setRenewable(tr.child(4).text().matches(".*nicht verl.+ngerbar.*"));
+            lent.add(item);
+        }
     }
 
     protected Document handleLoginForm(Document doc, Account account)

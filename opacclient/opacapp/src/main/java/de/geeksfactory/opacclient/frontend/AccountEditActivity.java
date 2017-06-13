@@ -141,7 +141,7 @@ public class AccountEditActivity extends AppCompatActivity {
                 tvCity.setText(lib.getDisplayName());
             }
 
-            if (lib.getReplacedBy() != null
+            if (lib.getReplacedBy() != null && !"".equals(lib.getReplacedBy())
                     && findViewById(R.id.rlReplaced) != null) {
                 findViewById(R.id.rlReplaced).setVisibility(View.VISIBLE);
                 findViewById(R.id.ivReplacedStore).setOnClickListener(
@@ -150,11 +150,13 @@ public class AccountEditActivity extends AppCompatActivity {
                             public void onClick(View v) {
                                 try {
                                     Intent i = new Intent(Intent.ACTION_VIEW,
-                                            Uri.parse("market://details?id="
-                                                    + lib.getReplacedBy()));
+                                            Uri.parse(lib.getReplacedBy()
+                                                         .replace("https://play.google.com/store/apps/details?id=", "market://details?id=")));
                                     startActivity(i);
                                 } catch (ActivityNotFoundException e) {
-                                    Log.i("play", "no market installed");
+                                    Intent i = new Intent(Intent.ACTION_VIEW,
+                                            Uri.parse(lib.getReplacedBy()));
+                                    startActivity(i);
                                 }
                             }
                         });

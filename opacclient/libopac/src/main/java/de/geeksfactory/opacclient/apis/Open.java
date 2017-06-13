@@ -756,6 +756,10 @@ public class Open extends BaseApi implements OpacApi {
                         NO_MOBILE;
         Document doc = Jsoup.parse(httpGet(url, getDefaultEncoding()));
 
+        if (doc.select("[id$=LblErrorMsg]").size() > 0 && doc.select("[id$=ContentPane] input").size() == 0) {
+            throw new OpacErrorException(doc.select("[id$=LblErrorMsg]").text());
+        }
+
         Element table = doc.select(".ModOPENExtendedSearchModuleC table").first();
 
         List<SearchField> fields = new ArrayList<>();

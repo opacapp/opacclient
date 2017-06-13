@@ -79,11 +79,13 @@ public class Library implements Comparable<Library> {
             lib.setInformation(lib.getData().optString("information"));
         }
 
-        if (input.has("displayname"))
+        if (input.has("displayname")) {
             lib.setDisplayName(input.getString("displayname"));
+        }
 
-        if (input.has("replacedby"))
-            lib.setReplacedBy(input.getString("replacedby"));
+        if (input.has("_plus_store_url") && !input.isNull("_plus_store_url")) {
+            lib.setReplacedBy(input.getString("_plus_store_url"));
+        }
 
         if (input.has("geo") && !input.isNull("geo")) {
             double[] geo = new double[2];
@@ -114,7 +116,7 @@ public class Library implements Comparable<Library> {
         json.put("nfc_supported", nfcSupported);
         json.put("information", information);
         if (displayName != null) json.put("displayname", displayName);
-        json.put("replacedby", replacedby);
+        json.put("_plus_store_url", replacedby);
         if (geo != null) {
             JSONArray geoJson = new JSONArray();
             geoJson.put(geo[0]);
