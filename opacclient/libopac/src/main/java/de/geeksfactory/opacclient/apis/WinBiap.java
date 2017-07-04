@@ -1031,11 +1031,15 @@ public class WinBiap extends BaseApi implements OpacApi {
         String postUrl = opac_url + (homePage ? "/index.aspx" : "/user/login.aspx");
         String html = httpPost(postUrl, new UrlEncodedFormEntity(data), "UTF-8");
         Document doc = Jsoup.parse(html);
-        if (doc.select("#ctl00_ContentPlaceHolderMain_LabelLoginMessage").size() > 0) {
-            throw new OpacErrorException(
-                    doc.select("#ctl00_ContentPlaceHolderMain_LabelLoginMessage").text());
-        }
+        handleLoginErrors(doc);
         return doc;
+    }
+
+    static void handleLoginErrors(Document doc) throws OpacErrorException {
+        String errorSelector = "span[id$=LabelLoginMessage]";
+        if (doc.select(errorSelector).size() > 0) {
+            throw new OpacErrorException(doc.select(errorSelector).text());
+        }
     }
 
     @Override

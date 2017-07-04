@@ -1,0 +1,698 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head><title>
+    WebOPAC Leserkonto - Anmelden - Hauptstelle
+</title>
+    <meta name="language" content="deutsch"/>
+    <meta name="robots" content="all"/>
+    <meta name="author" content="J�rgen M�dl, Oliver Janssen"/>
+    <meta name="abstract" content="Mediensuche online"/>
+    <meta name="copyright" content="Copyright by datronic IT-Systeme GmbH &amp; Co. KG."/>
+    <meta name="publisher" content="datronic IT-Systeme GmbH &amp; Co. KG."/>
+    <meta name="distribution" content="global"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta http-equiv="content-type" content="text/html; charset=iso-8859-1"/>
+    <meta http-equiv="Content-Style-Type" content="text/css"/>
+    <link href='https://webopac.citkomm.de/leichlingen/favicon.ico' rel='shortcut icon'/>
+    <link href='https://webopac.citkomm.de/leichlingen/favicon.ico' rel='icon' type='image/ico'/>
+    <link rel='apple-touch-icon'
+          href='https://webopac.citkomm.de/leichlingen/apple-touch-icon-57x57.png' sizes='57x57'/>
+    <link rel='apple-touch-icon'
+          href='https://webopac.citkomm.de/leichlingen/apple-touch-icon-60x60.png' sizes='60x60'/>
+    <link rel='apple-touch-icon'
+          href='https://webopac.citkomm.de/leichlingen/apple-touch-icon-72x72.png' sizes='72x72'/>
+    <link rel='apple-touch-icon'
+          href='https://webopac.citkomm.de/leichlingen/apple-touch-icon-76x76.png' sizes='76x76'/>
+    <link rel='apple-touch-icon'
+          href='https://webopac.citkomm.de/leichlingen/apple-touch-icon-114x114.png'
+          sizes='114x114'/>
+    <link rel='apple-touch-icon'
+          href='https://webopac.citkomm.de/leichlingen/apple-touch-icon-120x120.png'
+          sizes='120x120'/>
+    <link rel='apple-touch-icon'
+          href='https://webopac.citkomm.de/leichlingen/apple-touch-icon-144x144.png'
+          sizes='144x144'/>
+    <link rel='apple-touch-icon'
+          href='https://webopac.citkomm.de/leichlingen/apple-touch-icon-precomposed.png'
+          sizes='152x152'/>
+    <link rel='shortcut icon'
+          href='https://webopac.citkomm.de/leichlingen/apple-touch-icon-precomposed.png'
+          sizes='152x152'/>
+    <link rel='shortcut icon'
+          href='https://webopac.citkomm.de/leichlingen/apple-touch-icon-precomposed.png'
+          sizes='152x152'/>
+    <link href='https://webopac.citkomm.de/leichlingen/css/styles.min.css' type='text/css'
+          rel='stylesheet' media='all'/>
+    <link href='https://webopac.citkomm.de/leichlingen/css/print.min.css' type='text/css'
+          rel='stylesheet' media='print'/>
+    <link class='design'
+          href='https://webopac.citkomm.de/leichlingen/customers/leichlingen/css/additional.css'
+          type='text/css' rel='stylesheet' media='screen'/>
+    <script src='https://webopac.citkomm.de/leichlingen/js/scripts.js' type='text/javascript'
+            charset='UTF-8'></script>
+</head>
+<body id="body">
+<form method="post" action="./login.aspx" id="formMain">
+    <input type="hidden" name="__VIEWSTATEFIELDCOUNT" id="__VIEWSTATEFIELDCOUNT" value="3"/>
+    <input type="hidden" name="__VIEWSTATE" id="__VIEWSTATE"
+           value="/wEPDwULLTE3OTMwNTcxNzQPZBYCZg9kFgICAw9kFgJmD2QWCAIBDw8WAh4HVmlzaWJsZWhkZAIFD2QWBGYPFgIeC18hSXRlbUNvdW50AgcWDmYPZBYEAgEPZBYCZg8PFgQeC05hdmlnYXRlVXJsBTFodHRwczovL3dlYm9wYWMuY2l0a29tbS5kZS9sZWljaGxpbmdlbi9pbmRleC5hc3B4HgRUZXh0BTs8aSBjbGFzcz0iZmEgZmEtaG9tZSIgc3R5bGU9ImNvbG9yOiAjMEE0RkE4Ij48L2k+U3RhcnRzZWl0ZWRkAgMPDxYCHwBoZBYCZg9kFgICAQ9kFgICBQ9kFgRmDw8WAh4PQ29tbWFuZEFyZ3VtZW50BQEwZBYCZg8VAgAAZAIBDxYCHwEC/////w9kAgEPZBYEAgEPZBYCZg8PFgQfAgVQaHR0cHM6Ly93ZWJvcGFjLmNpdGtvbW0uZGUvbGVpY2hsaW5nZW4vaW5kZXguYXNweD9kYXRhPWNHRm5aVWxrUFRNdy1VZ0wramwzMXRMND0fAwU/PGkgY2xhc3M9ImZhIGZhLWV5ZSIgc3R5bGU9ImNvbG9yOiAjMEE0RkE4Ij48L2k+VmVyYW5zdGFsdHVuZ2VuZGQCAw8PFgIfAGhkFgJmD2QWAgIBD2QWAgIFD2QWBGYPDxYCHwQFATBkFgJmDxUCAABkAgEPFgIfAQL/////D2QCAg9kFgQCAQ9kFgJmDw8WBB8CBTJodHRwczovL3dlYm9wYWMuY2l0a29tbS5kZS9sZWljaGxpbmdlbi9zZWFyY2guYXNweB8DBTk8aSBjbGFzcz0iZmEgZmEtc2VhcmNoIiBzdHlsZT0iY29sb3I6ICMwQTRGQTgiPjwvaT5TdWNoZW5kZAIDDw8WAh8AaGQWAmYPZBYCAgEPZBYCAgUPZBYEZg8PFgIfBAUBMGQWAmYPFQIAAGQCAQ8WAh8BAv////8PZAIDD2QWBAIBD2QWAmYPDxYEHwIFOGh0dHBzOi8v"/>
+    <input type="hidden" name="__VIEWSTATE1" id="__VIEWSTATE1"
+           value="d2Vib3BhYy5jaXRrb21tLmRlL2xlaWNobGluZ2VuL2FjcXVpc2l0aW9ucy5hc3B4HwMFQDxpIGNsYXNzPSJmYSBmYS10cnVjayIgc3R5bGU9ImNvbG9yOiAjMEE0RkE4Ij48L2k+TmV1ZXJ3ZXJidW5nZW5kZAIDDw8WAh8AaGQWAmYPZBYCAgEPZBYCAgUPZBYEZg8PFgIfBAUBMGQWAmYPFQIAAGQCAQ8WAh8BAv////8PZAIED2QWBAIBD2QWAmYPDxYEHwIFM2h0dHBzOi8vd2Vib3BhYy5jaXRrb21tLmRlL2xlaWNobGluZ2VuL3RvcGxpc3QuYXNweB8DBTk8aSBjbGFzcz0iZmEgZmEtc3RhciIgc3R5bGU9ImNvbG9yOiAjMEE0RkE4Ij48L2k+VG9wbGlzdGVkZAIDDw8WAh8AaGQWAmYPZBYCAgEPZBYCAgUPZBYEZg8PFgIfBAUBMGQWAmYPFQIAAGQCAQ8WAh8BAv////8PZAIFD2QWBAIBD2QWAmYPDxYEHwIFNGh0dHBzOi8vd2Vib3BhYy5jaXRrb21tLmRlL2xlaWNobGluZ2VuL3JlZ2lzdGVyLmFzcHgfAwU5PGkgY2xhc3M9ImZhIGZhLWxpc3QiIHN0eWxlPSJjb2xvcjogIzBBNEZBOCI+PC9pPlJlZ2lzdGVyZGQCAw8PFgIfAGhkFgJmD2QWAgIBD2QWAgIFD2QWBGYPDxYCHwQFATBkFgJmDxUCAABkAgEPFgIfAQL/////D2QCBg9kFgQCAQ8PFgIfAGhkZAIDD2QWAmYPZBYEZg9kFgJmDw8WBB8DBTI8c3BhbiBpZD0nMTInIGNsYXNzPSdhY3RpdmVtZW51Jz5MZXNlcmtvbnRvPC9zcGFuPh8CBTZodHRwczovL3dlYm9wYWMuY2l0a29tbS5kZS9sZWljaGxpbmdlbi91c2VyL2xvZ2luLmFzcHhkZAIBD2QWBGYPDxYIHwIFNmh0dHBzOi8vd2Vib3BhYy5jaXRrb21t"/>
+    <input type="hidden" name="__VIEWSTATE2" id="__VIEWSTATE2"
+           value="LmRlL2xlaWNobGluZ2VuL3VzZXIvbG9naW4uYXNweB8DBTI8c3BhbiBpZD0nMTInIGNsYXNzPSdhY3RpdmVtZW51Jz5MZXNlcmtvbnRvPC9zcGFuPh4IQ3NzQ2xhc3MFHE1lbnVJdGVtTGluayBkcm9wZG93bi10b2dnbGUeBF8hU0ICAmRkAgUPZBYEZg8PFgIfBAUBMGQWAmYPFQIAAGQCAQ8WAh8BAv////8PZAIBD2QWAmYPFgIfAWZkAgYPDxYCHwBoZBYGZg8PFgIfAGhkZAIBDw8WAh8AaGRkAgsPFgIfAGhkAgsPZBYGZg8WAh8AaGQCAQ8WAh8AZxYCAgEPDxYCHwMFWUxlaWRlciBzdGltbWVuIElocmUgQW5tZWxkZWRhdGVuIG5pY2h0Ljxicj5IYWJlbiBTaWUgSWhyZSBMZXNlcm51bW1lciByaWNodGlnIGVpbmdlZ2ViZW4/ZGQCAg9kFgRmDw9kFgIeC1BsYWNlaG9sZGVyBQtMZXNlcm51bW1lcmQCAQ8PZBYCHwcFCFBhc3N3b3J0ZBgBBU5jdGwwMCRtYWluTWVudU5hdmlnYXRpb24kcmVwZWF0ZXJNYWluTWVudSRjdGwwNiRtZW51SXRlbUFjY291bnQkbXVsdGlWaWV3U3RhdGUPD2RmZGNZwtj3HoC0DbaXsB/YJAmclfgSF4gQE6w3zaNcjjrh"/>
+
+    <input type="hidden" name="__VIEWSTATEGENERATOR" id="__VIEWSTATEGENERATOR" value="3F0DF0DD"/>
+    <input type="hidden" name="__EVENTVALIDATION" id="__EVENTVALIDATION"
+           value="/wEdAASxuAOyUG2n0ZQnzleNviUAvF5/GRBA7Pd9flFOF5QN0ZIn0xEQz/pWlmTQJexMhE9DGmdEcNmIYzQlHgBqLyMUYm36t6fXlcmONAzGn0EiObsY+KtDzoaymTqo4e45idc="/>
+
+    <a id="top" name="top" style="position: absolute; top: -20px; left: -20px;"></a>
+
+    <div id="PageMain" class="PageMain container">
+        <div id="PageMainContent" class="PageMainContent">
+            <div style="left: 0px; width: 96px; position: absolute; top: 0px; height: 19px"
+                 id="DivScrollTop">
+
+            </div>
+            <div id="header" class="hidden-print">
+
+
+                <div id="LogoCustomer">
+                    <a href="https://webopac.citkomm.de/leichlingen/index.aspx">
+                        <img alt="Hauptstelle"
+                             src="https://webopac.citkomm.de/leichlingen/customers/leichlingen/images/customer.png"/></a>
+                </div>
+
+            </div>
+
+
+            <div id="menu-wrapper" class="hidden-print">
+                <div id="menu-toolbar">
+                    <ul id="mainmenu">
+
+
+                        <li id='page-1' class='MenuItem '>
+    <span id='1' class=''>
+    <a id="mainMenuNavigation_repeaterMainMenu_menuItem_0_HyperLinkMenuItem_0" class="MenuItemLink"
+       href="https://webopac.citkomm.de/leichlingen/index.aspx"><i class="fa fa-home"
+                                                                   style="color: #0A4FA8"></i>Startseite</a>
+    </span>
+
+
+                        </li>
+
+
+                        <li id='page-30' class='MenuItem '>
+    <span id='30' class=''>
+    <a id="mainMenuNavigation_repeaterMainMenu_menuItem_1_HyperLinkMenuItem_1" class="MenuItemLink"
+       href="https://webopac.citkomm.de/leichlingen/index.aspx?data=cGFnZUlkPTMw-UgL+jl31tL4="><i
+            class="fa fa-eye" style="color: #0A4FA8"></i>Veranstaltungen</a>
+    </span>
+
+
+                        </li>
+
+
+                        <li id='page-2' class='MenuItem '>
+    <span id='2' class=''>
+    <a id="mainMenuNavigation_repeaterMainMenu_menuItem_2_HyperLinkMenuItem_2" class="MenuItemLink"
+       href="https://webopac.citkomm.de/leichlingen/search.aspx"><i class="fa fa-search"
+                                                                    style="color: #0A4FA8"></i>Suchen</a>
+    </span>
+
+
+                        </li>
+
+
+                        <li id='page-3' class='MenuItem '>
+    <span id='3' class=''>
+    <a id="mainMenuNavigation_repeaterMainMenu_menuItem_3_HyperLinkMenuItem_3" class="MenuItemLink"
+       href="https://webopac.citkomm.de/leichlingen/acquisitions.aspx"><i class="fa fa-truck"
+                                                                          style="color: #0A4FA8"></i>Neuerwerbungen</a>
+    </span>
+
+
+                        </li>
+
+
+                        <li id='page-4' class='MenuItem '>
+    <span id='4' class=''>
+    <a id="mainMenuNavigation_repeaterMainMenu_menuItem_4_HyperLinkMenuItem_4" class="MenuItemLink"
+       href="https://webopac.citkomm.de/leichlingen/toplist.aspx"><i class="fa fa-star"
+                                                                     style="color: #0A4FA8"></i>Topliste</a>
+    </span>
+
+
+                        </li>
+
+
+                        <li id='page-6' class='MenuItem '>
+    <span id='6' class=''>
+    <a id="mainMenuNavigation_repeaterMainMenu_menuItem_5_HyperLinkMenuItem_5" class="MenuItemLink"
+       href="https://webopac.citkomm.de/leichlingen/register.aspx"><i class="fa fa-list"
+                                                                      style="color: #0A4FA8"></i>Register</a>
+    </span>
+
+
+                        </li>
+
+
+                        <li id='page-12' class='MenuItem menu-account dropdown active '>
+
+
+                            <a id="mainMenuNavigation_repeaterMainMenu_menuItemAccount_6_HyperLinkMenuItemLogin_6"
+                               class="MenuItemLink loginLink"
+                               href="https://webopac.citkomm.de/leichlingen/user/login.aspx"><span
+                                    id='12' class='activemenu'>Leserkonto</span></a>
+
+                            <ul id="menuUserAccount" class="dropdown-menu keep-open" role="menu">
+                                <li>
+
+                                    <div class="loginForm">
+                                        <div class="loginFormWrapper">
+                                            <p class="lead text-center"
+                                               style="margin-bottom: 0">Im Leserkonto anmelden.</p>
+                                            <hr/>
+                                            <div class="loginBody">
+                                                <fieldset class="loginFieldset">
+                                                    <div class="text-center">
+                                                        <label for="username" class="text-left">
+                                                            Lesernummer:</label>
+                                                        <input type="text" name="username"
+                                                               id="AccountUsername"/>
+                                                    </div>
+                                                    <div class="text-center">
+                                                        <label for="password" class="text-left">
+                                                            Passwort:</label>
+                                                        <input type="password" name="password"
+                                                               id="AccountPassword"
+                                                               autocomplete="off"/>
+                                                    </div>
+                                                    <div class="text-center">
+                                                        <br/>
+                                                        <input id="AccountLoginButton"
+                                                               class="btn btn-primary" type="button"
+                                                               value="Anmelden"
+                                                               style="width: 10em"/>
+                                                    </div>
+                                                </fieldset>
+                                                <div id="AccountErrorMessage"
+                                                     class="alert alert-error"
+                                                     style="display: none">
+                                                </div>
+                                                <div class="loginLoading" style="display: none">
+                                                    <div class="spinner-container"></div>
+                                                    Anmeldung wird �berpr�ft...
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </li>
+                            </ul>
+                            <script type="text/javascript">
+                $(document).on('click', function (event) {
+                    if (!$(event.target).closest('.dropdown, .loginForm').length) {
+                        // Hide the menus.
+                        $('#mainMenuNavigation_repeaterMainMenu_menuItemAccount_6_HyperLinkMenuItemLogin_6').parents('.dropdown').removeClass('open');
+                    }
+                });
+               
+                $(document).on('click', '#mainMenuNavigation_repeaterMainMenu_menuItemAccount_6_HyperLinkMenuItemLogin_6', function (e) {
+                    e.preventDefault();
+                    setTimeout(function () {
+                        $('#AccountUsername').focus();
+                    }, 100);
+                    $(this).parents('.dropdown').toggleClass('open');
+                });
+
+                $(document).ready(function () {
+                    $('#AccountLoginButton').loginAsync({
+                        serviceUserUrl: 'https://webopac.citkomm.de/leichlingen/service/UserService.ashx',
+                        usernameField: '#AccountUsername',
+                        passwordField: '#AccountPassword',
+                        errorObject: '#AccountErrorMessage',
+                        loginFormId: '#menuUserAccount',
+                        redirectTo: 'https://webopac.citkomm.de/leichlingen/user/overview.aspx'
+                    });
+                });
+
+
+
+                            </script>
+
+
+                        </li>
+
+
+                    </ul>
+                </div>
+                <div id="SubMenu" class="submenu">
+                    <ul id="mainMenuNavigation_MainSubMenu" class="submenu-toolbar ">
+
+                    </ul>
+                </div>
+
+            </div>
+
+
+            <!--[if IE 8]>
+            <br/>
+            <div class="alert alert-danger">F�r die korrekte Anzeige dieser Webseite wird ein aktueller Internet-Browser ben�tigt.
+                Bitte aktualisieren Sie Ihren Internet Explorer auf die aktuelle Version.
+            </div>
+            <![endif]-->
+            <div id="ContentMain">
+                <div id="ContentTitleWrapper">
+
+                    <h2>Leserkonto - Anmelden</h2>
+
+                </div>
+                <div style="clear: both">
+
+
+                </div>
+                <div id="Content">
+
+                    <div id="PanelTop" class="panel panel-top" style="">
+
+                        <div id="Container-24" class='box'>
+
+                            <div class="heading">
+
+
+                            </div>
+
+                            <div class="body">
+                                <p style="text-align: center;">Bitte beachten Sie:</p>
+                                <p style="text-align: center;"><span
+                                        style="text-decoration: underline;">Nach Ablauf Ihres Leseausweises ist ein LogIn in Ihr Benutzerkonto nicht mehr m&ouml;glich</span>.
+                                </p>
+                                <p style="text-align: center;">Wir verl&auml;ngern Ihnen die Medien in dem Fall gerne telefonisch oder per E-Mail.</p>
+                                <p style="text-align: center;">______________________________________________________________________________________________________________________</p>
+                                <p style="text-align: center;">Wenn Sie erstmalig Ihr Passwort &auml;ndern m&ouml;chten, dann geben Sie bitte in diesem Fall ihr altes Passwort ohne Punkte in der Form TTMMJJJJ an.</p>
+                            </div>
+                        </div>
+
+                    </div>
+
+
+                    <div id="LoginContent" style="text-align: center; margin: 10px;">
+
+
+                        <div id="ContentPlaceHolderMain_DivWarning" class="alert alert-error">
+                            <span id="ContentPlaceHolderMain_LabelloginMessage" class="Login_Error">Leider stimmen Ihre Anmeldedaten nicht.<br>Haben Sie Ihre Lesernummer richtig eingegeben?</span>
+                        </div>
+                        <div id="ContentPlaceHolderMain_panelLogin" class="login-wrapper">
+
+                            <div style="margin-bottom: 20px;">
+                <span class="fa fa-login fa-stack fa-5x">
+                    <i class="fa fa-circle fa-stack-1x"></i>
+                    <i class="fa fa-user fa-stack-2x"></i>
+                </span>
+                            </div>
+                            <div>
+                                <label>
+                                    Lesernummer:</label>
+                            </div>
+                            <input name="ctl00$ContentPlaceHolderMain$TextBoxLoginName" type="text"
+                                   id="ContentPlaceHolderMain_TextBoxLoginName" tabindex="1"
+                                   Placeholder="Lesernummer"/>
+                            <div>
+                                <label>
+                                    Passwort:</label>
+                            </div>
+                            <input name="ctl00$ContentPlaceHolderMain$TextBoxLoginPassword"
+                                   type="password" maxlength="20"
+                                   id="ContentPlaceHolderMain_TextBoxLoginPassword" tabindex="2"
+                                   autocomplete="off" Placeholder="Passwort"/>
+
+                            <div style="margin-top: 20px;">
+                                <input type="submit" name="ctl00$ContentPlaceHolderMain$ButtonLogin"
+                                       value="Anmelden" id="ContentPlaceHolderMain_ButtonLogin"
+                                       tabindex="3" class="btn btn-large btn-primary"/>
+                            </div>
+
+                        </div>
+
+                        <div style="margin-top: 40px">
+
+
+                            <script type="text/javascript">
+    blurOnWait = true;
+    $('#formMain').on('submit', function () {
+        ShowWait();
+        return true;
+    });
+
+    function ShowWait() {
+
+        $('body').backdrop({ text: "Anmeldung wird �berpr�ft", animation: true, spinner: true });
+        $(":button").attr("disabled", true);
+        
+        
+    }
+    
+    function SetWaitText(html) {
+        $('#backdrop .lead').html(html);
+    }
+
+    function HideWait() {
+        $('body').backdropClear();
+        $(":button").removeAttr("disabled");
+        
+    }
+
+    function ShowWaitCallback() {
+        if (blurOnWait)
+            $('#master').addClass('blur');
+    }
+
+    function HideWaitCallback() {
+        $('#master').removeClass('blur');
+    }
+
+
+
+                            </script>
+
+                        </div>
+                    </div>
+                    <script type="text/javascript">
+
+        $(document).ready(function () {
+            $('#ContentPlaceHolderMain_TextBoxLoginName').focus();
+
+        });
+
+
+                    </script>
+
+
+                    <div id="PanelBottom" class="panel panel-bottom" style="">
+
+                    </div>
+                </div>
+
+
+            </div>
+            <br style="clear: both"/>
+            <br/>
+            <div id="Navi" style="text-align: center;">
+
+                <a id="gototop" href="#top" class="GoTop">
+                    <small>Nach oben</small>
+                </a>
+
+            </div>
+            <div style="clear: both">
+
+            </div>
+            <br/>
+            <div id="Footer" class="hidden-print">
+                <div id="FooterSeperator">
+                </div>
+                <span class="muted">
+                        <a id="impressum"
+                           href="https://webopac.citkomm.de/leichlingen/impressum.aspx">Impressum</a> &#183; <a
+                        id="privacy"
+                        href="https://webopac.citkomm.de/leichlingen/privacy.aspx">Datenschutzerkl�rung</a> &#183;
+                        <small>Powered by&nbsp;<a href="http://www.datronic.de/"
+                                                  target="_blank"><span
+                                style="color: #008000">datronic</span></a> WinBIAP WebOPAC 4.4.0
+                            
+                        </small>
+                    </span>
+
+                <div id="Textsize" class="Textsize">
+                    <a id="linkFontSizeBig" class="fontsize" data-value="1" title="Text gr��er"
+                       href="#">A+</a>
+                    <a id="linkFontSizeDefault" class="fontsize" data-value="-1"
+                       title="Text Normalgr��e" href="#">A</a>
+                    <a id="linkFontSizeSmall" class="fontsize" data-value="2" title="Text kleiner"
+                       href="#">A-</a>
+                    <script type="text/javascript">
+        $(document).on('click', '.fontsize', function (e) {
+            e.preventDefault();
+            
+            var value = $(this).data('value');
+            //Check for int
+            if (value % 1 === 0) {
+                SearchService.SetFontSizeState(value);
+                var size = '';
+
+                switch (value) {
+                    case 1:
+                        size = '1.2em';
+                        break;
+                    case 2:
+                        size = '0.8em';
+                        break;
+                }
+
+                $('form').css('font-size', size);
+            }
+        });
+
+
+                    </script>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <div id="loginBox" class="loginBox">
+        <div class="loginForm">
+            <div class="loginFormWrapper">
+                <p class="lead text-center" style="margin-bottom: 0">Im Leserkonto anmelden.</p>
+                <hr/>
+                <div class="loginBody">
+                    <fieldset class="loginFieldset">
+                        <fieldset class="text-center">
+                            <label for="username" class="text-left">
+                                Lesernummer:</label>
+                            <input type="text" name="username" id="username"/>
+                        </fieldset>
+                        <fieldset class="text-center">
+                            <label for="password" class="text-left">
+                                Passwort:</label>
+                            <input type="password" name="password" id="password"
+                                   autocomplete="off"/>
+                        </fieldset>
+                        <fieldset class="text-center">
+                            <br/>
+                            <input id="buttonLogon" class="btn btn-primary" type="button"
+                                   value="Anmelden" style="width:10em"/>
+                        </fieldset>
+                    </fieldset>
+                    <div id="errorMessage" class="alert alert-error" style="display: none">
+                    </div>
+                    <div class="loginLoading" style="display: none">
+                        <div class="spinner-container"></div>
+                        Anmeldung wird �berpr�ft...
+                    </div>
+                </div>
+            </div>
+        </div>
+        <input type="hidden" id="returnUrl"
+               value="https://webopac.citkomm.de/leichlingen/user/overview.aspx"/>
+    </div>
+    <script type="text/javascript">
+    $(document).ready(function() {
+        loginButtonPlugin = $('#buttonLogon').loginAsync({
+            serviceUserUrl: 'https://webopac.citkomm.de/leichlingen/service/UserService.ashx',
+            usernameField: '#username',
+            passwordField: '#password',
+            errorObject: '#errorMessage',
+            loginFormId: '#loginBox',
+            redirectTo: 'https://webopac.citkomm.de/leichlingen/user/overview.aspx'
+        });
+    });
+
+
+    </script>
+
+
+    <div id="loginBoxDiviBib" class="loginBox">
+        <div class="loginForm">
+            <div class="loginFormWrapper">
+                <p class="lead text-center" style="margin-bottom: 0">Im Leserkonto anmelden.</p>
+                <p id="loginSuccessful" class="text-center"
+                   style="display: none; margin-bottom: 0">Bitte klicken Sie unten auf den Link.</p>
+                <hr/>
+                <div class="loginBody">
+                    <fieldset class="loginFieldset">
+                        <fieldset class="text-center">
+                            <label for="username" class="text-left">
+                                Lesernummer:</label>
+                            <input type="text" name="username" id="usernameDiviBib"/>
+                        </fieldset>
+                        <fieldset class="text-center">
+                            <label for="password" class="text-left">
+                                Passwort:</label>
+                            <input type="password" name="password" id="passwordDiviBib"/>
+                        </fieldset>
+                        <fieldset class="text-center">
+                            <br/>
+                            <input id="buttonLogonDiviBib" class="btn btn-primary" type="button"
+                                   value="Anmelden" style="width: 10em"/>
+                        </fieldset>
+                    </fieldset>
+                    <div id="errorMessageDiviBib" class="alert alert-error" style="display: none">
+                    </div>
+                    <div class="loginLoading" style="display: none">
+                        <div class="spinner-container"></div>
+                        Anmeldung wird �berpr�ft...
+                    </div>
+                    <div id="redirectToDiviBib" class="text-center" style="display: none">
+                        <br/>
+                        <a id="buttonRedirect" class="btn btn-primary" style="width: 10em"
+                           target="_blank">Onleihe �ffnen</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <input type="hidden" id="returnUrl"
+               value="https://webopac.citkomm.de/leichlingen/user/overview.aspx"/>
+    </div>
+    <script type="text/javascript">
+    
+    var userLoggedIn = false;
+    var checkStatus = function() {
+        $('.divibib-async').each(function () {
+            var $elem = $(this);
+            var id = $elem.data('id');
+
+            $.ajax({
+                type: "POST",
+                async: true,
+                cache: false,
+                url: 'https://webopac.citkomm.de/leichlingen/service/ncipservice.ashx',
+                data: 'action=lookup&itemId=' + id,
+                dataType: "json",
+                success: function (data) {
+                    if (data.Error) {
+                        console.warn(data.Problem.ProblemDetail);
+                    } 
+                    else {
+                        if (data.MediaItem.Available) {
+                            $elem.parent().find('.mediaStatus').html('verf�gbar');
+                        
+                            if (userLoggedIn) {
+                                $elem.html('<i class="fa fa-at fa-fw"></i>&nbsp;Ausleihen');
+                                $elem.attr('href', 'https://webopac.citkomm.de/leichlingen/user/divibib.aspx?data=cmVkaXJlY3RUb0RpdmlCaWI9MQ==-PAQ+C/JJy6k=&itemId=' + id);
+                            }
+                        }
+                        else {
+                            $elem.parent().find('.mediaStatus').html('entliehen');
+
+                            if (data.MediaItem.Reservable && userLoggedIn) {
+                                $elem.html('<i class="fa fa-at fa-fw"></i>&nbsp;Vorbestellen');
+                                $elem.attr('href', 'https://webopac.citkomm.de/leichlingen/user/divibib.aspx?data=cmVkaXJlY3RUb0RpdmlCaWI9MSZhbXA7cHJlYm9vaz0x-LvKRWpHtgBQ=&itemId=' + id);
+                            }
+                        }
+                    }
+
+                }
+            });
+        });
+    }
+    
+$(document).ready(checkStatus);
+    
+
+
+    </script>
+
+
+</form>
+
+
+<script type="text/javascript">
+
+        SearchService.Init('https://webopac.citkomm.de/leichlingen/service/SearchService.ashx');
+        var rootUrl = "https://webopac.citkomm.de/leichlingen";
+
+        
+        
+        
+
+        $('.selectpicker').selectpicker();
+
+        $(document).on('click', '#gototop', function (e) {
+            e.preventDefault();
+            e.stopPropagation();
+
+            window.scrollTo(0, 0);
+        });
+
+        window.onload = function () {
+            unveilCovers();
+        };
+
+        $(window).bind("beforeunload", function () {
+            showLoadingMessage();
+        });
+
+
+        $(document).on('click', '.morebutton', function () {
+            var $link = $(this);
+            var $more = $(this).prev(".more");
+
+            $more.slideToggle('fast', function () {
+                if ($(this).is(":hidden")) {
+                    $link.text('mehr...');
+                    $link.attr('title', 'Mehr Informationen anzeigen');
+                }
+                else {
+                    $link.attr('title', 'Informationen ausblenden');
+                    $link.html('...weniger');
+                }
+            });
+        });
+        $(document).ready(function () {
+            $('input, a').attr('disabled', false);
+        });
+
+        var loadingMessage = 'Bitte warten.';
+        var showLoadingMessage = function () {
+            setTimeout(function () {
+                $('input, a').attr('disabled', 'disabled');
+            }, 200);
+            setTimeout(function () {
+                if ($('.searchtext').length > 0) {
+                    var autocomplete = $('.searchtext').autocomplete();
+                    if (autocomplete)
+                        autocomplete.clear();
+                }
+
+                $('body').backdrop({
+                    small: true,
+                    spinner: true,
+                    text: loadingMessage
+                });
+
+                setTimeout(function () {
+                    $('.backdrop-wrapper p').html('Es wird auf eine R�ckantwort gewartet.');
+                }, 5000);
+                setTimeout(function () {
+                    $('.backdrop-wrapper p').html('Die Anfrage dauert ungew�hnlich lange.<br/>Es geht gleich weiter.');
+                }, 10000);
+                setTimeout(function () {
+                    $('.backdrop-wrapper p').html('Augsburg? We have a problem.');
+                }, 20000);
+                setTimeout(function () {
+                    location.href = 'https://webopac.citkomm.de/leichlingen/index.aspx';
+                    $('.backdrop-wrapper p').html('Weiterleitung...');
+                }, 30000);
+
+            }, 4000);
+        }
+
+
+
+
+</script>
+
+</body>
+</html>

@@ -37,7 +37,7 @@
                 android:layout_height="wrap_content"
                 android:background="@color/account_head_bg"
                 android:orientation="vertical"
-                android:padding="8dp"
+                android:padding="@dimen/simple_search_padding"
                 android:transitionName="@string/transition_gray_box">
 
                 <EditText
@@ -48,8 +48,8 @@
                     android:ems="10"
                     android:hint="@string/search_free"
                     android:inputType="text"
-                    android:textColor="@color/account_head_fg"
-                    android:textColorHint="@color/hint_fg">
+                    android:textColor="@color/simple_search_fg"
+                    android:textColorHint="@color/simple_search_hint">
 
                     <requestFocus/>
                 </EditText>
@@ -97,7 +97,7 @@
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="10dp"
-                    android:layout_marginTop="8dp"
+                    android:layout_marginTop="@dimen/advanced_search_header_mtop"
                     android:text="@string/search_advanced"
                     android:textAppearance="@style/TextAppearance.Opacapp.Subhead"/>
 

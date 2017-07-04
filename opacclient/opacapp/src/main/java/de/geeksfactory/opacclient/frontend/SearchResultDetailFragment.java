@@ -1020,6 +1020,7 @@ public class SearchResultDetailFragment extends Fragment
             return;
         }
         if (sp.getBoolean("reservation_fee_warning_ignore", false) ||
+                app.getLibrary().isSuppressFeeWarnings() ||
                 (api.getSupportFlags() & OpacApi.SUPPORT_FLAG_WARN_RESERVATION_FEES) > 0) {
             reservationPerform();
         } else {

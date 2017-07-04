@@ -36,5 +36,8 @@
     <color name="intro_world_bg_dark">#1976D2</color>
     <color name="intro_library_bg">#F44336</color>
     <color name="intro_library_bg_dark">#D32F2F</color>
+    <color name="simple_search_bg">#505050</color>
+    <color name="simple_search_fg">#F3F3F3</color>
+    <color name="simple_search_hint">#ffcacaca</color>
 
 </resources>

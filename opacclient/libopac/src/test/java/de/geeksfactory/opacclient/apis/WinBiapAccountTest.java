@@ -16,6 +16,7 @@ import de.geeksfactory.opacclient.objects.ReservedItem;
 
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 @RunWith(Parameterized.class)
 public class WinBiapAccountTest extends BaseHtmlTest {
@@ -26,7 +27,8 @@ public class WinBiapAccountTest extends BaseHtmlTest {
     }
 
     private static final String[] FILES =
-            new String[]{"guetersloh.html", "geltendorf.html", "neufahrn.html", "memmingen.html", "immenstadt.html"};
+            new String[]{"guetersloh.html", "geltendorf.html", "neufahrn.html", "memmingen.html",
+                    "immenstadt.html", "leichlingen.html"};
 
     @Parameterized.Parameters(name = "{0}")
     public static Collection<String[]> files() {
@@ -63,5 +65,18 @@ public class WinBiapAccountTest extends BaseHtmlTest {
             assertContainsData(item.getCover());
         }
         assertTrue(media.size() > 0);
+    }
+
+    @Test
+    public void testLogin() throws OpacApi.OpacErrorException {
+        String html = readResource("/winbiap/login/" + file);
+        if (html == null) return; // we may not have all files for all libraries
+
+        try {
+            WinBiap.handleLoginErrors(Jsoup.parse(html));
+            fail("Login succeeded even though the password was wrong");
+        } catch (OpacApi.OpacErrorException e) {
+            assertTrue(e.getMessage().startsWith("Leider stimmen Ihre Anmeldedaten nicht."));
+        }
     }
 }

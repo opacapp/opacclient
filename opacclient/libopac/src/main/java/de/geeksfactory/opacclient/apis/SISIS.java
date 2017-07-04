@@ -467,7 +467,7 @@ public class SISIS extends BaseApi implements OpacApi {
                            .not("#hlrightblock,.bestellfunktionen").size() == 1) {
                 Element indiv = middlething.select("div")
                                            .not("#hlrightblock,.bestellfunktionen").first();
-                if (indiv.children().size() > 1) {
+                if (indiv.select("a").size() > 0 && indiv.children().size() > 1) {
                     children = indiv.childNodes();
                 }
             } else if (middlething.select("span.titleData").size() == 1) {
@@ -966,7 +966,7 @@ public class SISIS extends BaseApi implements OpacApi {
                     copy.setReservations(matcher.group(3));
                     copy.setReturnDate(fmt.parseLocalDate(matcher.group(2)));
                 } else {
-                    copy.setStatus(statustext);
+                    copy.setStatus(statustext.trim().replace(" Wegweiser", ""));
                 }
                 copy.setBarcode(barcodetext);
                 if (status.select("a[href*=doVormerkung]").size() == 1) {

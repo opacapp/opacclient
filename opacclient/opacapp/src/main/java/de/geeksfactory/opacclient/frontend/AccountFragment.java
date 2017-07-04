@@ -655,6 +655,7 @@ public class AccountFragment extends Fragment implements
             return;
         }
         if (sp.getBoolean("prolong_fee_warning_ignore", false) ||
+                app.getLibrary().isSuppressFeeWarnings() ||
                 (api.getSupportFlags() & OpacApi.SUPPORT_FLAG_WARN_PROLONG_FEES) > 0) {
             prolongPerform(a);
         } else {
