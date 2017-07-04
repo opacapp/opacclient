@@ -50,6 +50,7 @@ public class Library implements Comparable<Library> {
     private float geo_distance;
     private boolean account_supported;
     private boolean nfcSupported;
+    private boolean suppressFeeWarnings = false;
 
     /**
      * Create a Library object based on a <code>JSONObject</code>.
@@ -72,6 +73,7 @@ public class Library implements Comparable<Library> {
         lib.setData(input.getJSONObject("data"));
         lib.setAccountSupported(input.getBoolean("account_supported"));
         lib.setNfcSupported(input.optBoolean("nfc_supported", false));
+        lib.setSuppressFeeWarnings(input.optBoolean("suppress_fee_warnings", false));
 
         lib.setInformation(input.optString("information"));
         if (lib.getInformation() == null && lib.getData().has("information")) {
@@ -377,6 +379,14 @@ public class Library implements Comparable<Library> {
      */
     public void setActive(boolean active) {
         this.active = active;
+    }
+
+    public boolean isSuppressFeeWarnings() {
+        return suppressFeeWarnings;
+    }
+
+    public void setSuppressFeeWarnings(boolean suppressFeeWarnings) {
+        this.suppressFeeWarnings = suppressFeeWarnings;
     }
 
     @Override
