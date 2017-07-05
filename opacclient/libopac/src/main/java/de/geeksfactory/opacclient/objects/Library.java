@@ -73,7 +73,7 @@ public class Library implements Comparable<Library> {
         lib.setData(input.getJSONObject("data"));
         lib.setAccountSupported(input.getBoolean("account_supported"));
         lib.setNfcSupported(input.optBoolean("nfc_supported", false));
-        lib.setSuppressFeeWarnings(input.optBoolean("suppress_fee_warnings", false));
+        lib.setSuppressFeeWarnings(lib.getData().optBoolean("suppress_fee_warnings", false));
 
         lib.setInformation(input.optString("information"));
         if (lib.getInformation() == null && lib.getData().has("information")) {
