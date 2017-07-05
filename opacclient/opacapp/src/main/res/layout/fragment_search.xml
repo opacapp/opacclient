@@ -35,7 +35,7 @@
                 android:id="@+id/rlSimpleSearch"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@color/account_head_bg"
+                android:background="@color/simple_search_bg"
                 android:orientation="vertical"
                 android:padding="@dimen/simple_search_padding"
                 android:transitionName="@string/transition_gray_box">
