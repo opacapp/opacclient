@@ -760,7 +760,7 @@ public class Open extends BaseApi implements OpacApi {
             throw new OpacErrorException(doc.select("[id$=LblErrorMsg]").text());
         }
 
-        Element table = doc.select(".ModOPENExtendedSearchModuleC table").first();
+        Element module = doc.select(".ModOPENExtendedSearchModuleC").first();
 
         List<SearchField> fields = new ArrayList<>();
 
@@ -771,7 +771,7 @@ public class Open extends BaseApi implements OpacApi {
         notSelectable.put("selectable", false);
 
         // Selectable search criteria
-        Elements options = table.select("select[id$=FirstSearchField] option");
+        Elements options = module.select("select[id$=FirstSearchField] option");
         for (Element option : options) {
             TextSearchField field = new TextSearchField();
             field.setId(option.val());
@@ -782,7 +782,7 @@ public class Open extends BaseApi implements OpacApi {
 
         // More criteria
         Element moreHeader =
-                table.select("span[id$=LblMoreCriterias]").parents().select("tr").first();
+                module.select("span[id$=LblMoreCriterias]").parents().select("tr").first();
         if (moreHeader != null) {
             Elements siblings = moreHeader.siblingElements();
             int startIndex = moreHeader.elementSiblingIndex();
