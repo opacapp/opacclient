@@ -608,6 +608,7 @@ public class SISIS extends BaseApi implements OpacApi {
                 if (sr.getStatus() == null) {
                     if ((part[2].contains("entliehen") && part[2]
                             .startsWith("Vormerkung ist leider nicht möglich"))
+                            || part[2].contains("Alle Exemplare des gewählten Titels sind entliehen")
                             || part[2]
                             .contains(
                                     "nur in anderer Zweigstelle ausleihbar und nicht bestellbar")) {
