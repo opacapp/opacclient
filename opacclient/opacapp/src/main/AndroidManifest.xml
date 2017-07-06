@@ -191,6 +191,10 @@
             android:name="de.geeksfactory.opacclient.storage.StarContentProvider"
             android:authorities="${applicationId}.starprovider"
             android:exported="false"/>
+
+        <meta-data
+            android:name="de.geeksfactory.opacclient.networking.CustomSSLGlideModule"
+            android:value="GlideModule"/>
     </application>
 
 </manifest>
