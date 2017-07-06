@@ -9,7 +9,7 @@ android {
 
     defaultConfig {
         applicationId "de.geeksfactory.opacclient"
-        minSdkVersion 9
+        minSdkVersion 10
         targetSdkVersion 25
         versionCode 173
         versionName "5.1.3"
@@ -95,7 +95,8 @@ dependencies {
     compile 'com.squareup.retrofit2:converter-moshi:2.1.0'
     compile 'com.samskivert:jmustache:1.13'
     compile 'com.github.johan12345:material-intro:custom_layout-1.5.5-g47ed124'
-    compile 'com.github.bumptech.glide:glide:3.7.0'
+    compile 'com.github.bumptech.glide:glide:3.8.0'
+    compile 'com.github.bumptech.glide:okhttp3-integration:1.5.0@aar'
     debugCompile 'com.facebook.stetho:stetho:1.3.1'
     debugCompile 'com.facebook.stetho:stetho-okhttp3:1.3.1'
     debugCompile 'com.squareup.leakcanary:leakcanary-android:1.4-beta2'
