@@ -47,7 +47,7 @@ public class TlsSniSocketFactory extends SSLConnectionSocketFactory {
                 port,
                 true);
         // If supported protocols are not explicitly set, remove all SSL protocol versions
-        final String[] allProtocols = sslsock.getEnabledProtocols();
+        final String[] allProtocols = sslsock.getSupportedProtocols();
         final List<String> enabledProtocols = new ArrayList<String>(allProtocols.length);
         for (String protocol : allProtocols) {
             if (!protocol.startsWith("SSL") || !tls_only) {
