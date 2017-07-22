@@ -615,8 +615,10 @@ public class PicaOld extends Pica {
         Document doc = Jsoup.parse(html);
 
         if (doc.select(".cnt .alert, .cnt .error").size() > 0) {
-            throw new OpacErrorException(doc.select(".cnt .alert, .cnt .error")
-                                            .text());
+            String text = doc.select(".cnt .alert, .cnt .error").text();
+            if (doc.select("table[summary^=User data]").size() == 0) {
+                throw new OpacErrorException(text);
+            }
         }
     }
 
