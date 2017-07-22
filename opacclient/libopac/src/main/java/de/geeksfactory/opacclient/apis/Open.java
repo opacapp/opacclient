@@ -292,7 +292,7 @@ public class Open extends BaseApi implements OpacApi {
 
         int totalCount;
         if (doc.select("span[id$=TotalItemsLabel]").size() > 0) {
-            totalCount = Integer.parseInt(doc.select("span[id$=TotalItemsLabel]").first().text());
+            totalCount = Integer.parseInt(doc.select("span[id$=TotalItemsLabel]").first().text().split("\\s")[0]);
         } else {
             throw new OpacErrorException(stringProvider.getString(StringProvider.UNKNOWN_ERROR));
         }
@@ -312,7 +312,7 @@ public class Open extends BaseApi implements OpacApi {
                 result.setCover(getCoverUrl(element.select("img[id$=CoverView_Image]").first()));
             }
 
-            Element catalogueContent = element.select(".catalogueContent").first();
+            Element catalogueContent = element.select(".catalogueContent, .oclc-searchmodule-mediumview-content").first();
             // Media Type
             if (catalogueContent.select("#spanMediaGrpIcon").size() > 0) {
                 String mediatype = catalogueContent.select("#spanMediaGrpIcon").attr("class");
@@ -637,9 +637,12 @@ public class Open extends BaseApi implements OpacApi {
             String value = doc.select("span[id$=ucCatalogueContent_LblAnnotation]").text();
             item.addDetail(new Detail(name, value));
         }
+
         // Details
         String DETAIL_SELECTOR = "div[id$=CatalogueDetailView] .spacingBottomSmall:has(span+span)," +
-                "div[id$=CatalogueDetailView] .spacingBottomSmall:has(span+a)";
+                "div[id$=CatalogueDetailView] .spacingBottomSmall:has(span+a), " +
+                "div[id$=CatalogueDetailView] .oclc-searchmodule-detail-data div:has(span+span), " +
+                "div[id$=CatalogueDetailView] .oclc-searchmodule-detail-data div:has(span+a)";
         for (Element detail : doc.select(DETAIL_SELECTOR)) {
             String name = detail.select("span").get(0).text().replace(": ", "");
             String value = "";
@@ -655,6 +658,13 @@ public class Open extends BaseApi implements OpacApi {
             } else {
                 value = detail.select("span, a").get(1).text();
             }
+            item.addDetail(new Detail(name, value));
+        }
+
+        // Description
+        if (doc.select("div[id$=CatalogueContent]").size() > 0) {
+            String name = doc.select("div[id$=CatalogueContent] .oclc-module-header").text();
+            String value = doc.select("div[id$=CatalogueContent] .oclc-searchmodule-detail-annotation").text();
             item.addDetail(new Detail(name, value));
         }
 
@@ -675,6 +685,10 @@ public class Open extends BaseApi implements OpacApi {
                 for (int j = 0; j < tds.size(); j++) {
                     if (columnmap.get(j) == null) continue;
                     String text = tds.get(j).text().replace("\u00a0", "");
+                    if (tds.get(j).select(".oclc-module-label").size() > 0 && tds.get(j).select("span").size() == 2) {
+                        text = tds.get(j).select("span").get(1).text();
+                    }
+
                     if (text.equals("")) continue;
                     copy.set(columnmap.get(j), text, fmt);
                 }
