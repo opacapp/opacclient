@@ -39,7 +39,7 @@ public class BiBer1992AccountTest extends BaseHtmlTest {
 
     private static final String[] FILES =
             new String[]{"gelsenkirchen.htm", "freising.html", "herford.htm", "erkrath_opac.html",
-                    "erkrath_opax.html", "nuertingen.html", "jena.html"};
+                    "erkrath_opax.html", "nuertingen.html", "jena.html", "bochum.html"};
 
     @Parameterized.Parameters(name = "{0}")
     public static Collection<String[]> files() {
