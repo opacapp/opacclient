@@ -176,8 +176,9 @@ public class Primo extends BaseApi {
         if (doc.select(".EXLResultsNumbers").size() > 0) {
             try {
                 resnum = Integer.valueOf(
-                        doc.select(".EXLResultsNumbers em").first().text().trim().replace(".", "")
-                           .replace(",", "").replace(" ", ""));
+                        doc.select(".EXLResultsNumbers em, .PaginationLabel strong").first().text()
+                           .trim().replace(".", "")
+                           .replace(",", "").replace(" ", "").replace("Ergebnisse", ""));
             } catch (NumberFormatException e) {
                 e.printStackTrace();
             }
