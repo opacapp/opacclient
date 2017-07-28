@@ -89,7 +89,7 @@ public class ISBNTools {
             // Amazon Covers, according to http://aaugh.com/imageabuse.html
             String base = amazonMatcher.group(1);
             if (!base.endsWith(".")) base = base + ".";
-            return base + "SL" + max + ".jpg";
+            return base + "_SL" + max + "_SCLZZZZZZZ_.jpg";
         } else {
             return url;
         }

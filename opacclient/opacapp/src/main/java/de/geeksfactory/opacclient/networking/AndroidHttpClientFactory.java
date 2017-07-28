@@ -36,7 +36,7 @@ public class AndroidHttpClientFactory extends HttpClientFactory {
     }
 
     @Override
-    protected KeyStore getKeyStore()
+    public KeyStore getKeyStore()
             throws KeyStoreException, IOException, CertificateException, NoSuchAlgorithmException {
         KeyStore trustStore = KeyStore.getInstance("BKS");
         final InputStream in = OpacClient.context.getResources().openRawResource(

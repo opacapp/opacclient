@@ -5,9 +5,13 @@ import android.graphics.BitmapFactory;
 
 public class BitmapUtils {
     public static Bitmap bitmapFromBytes(byte[] b) {
-        if (b == null) {
+        try {
+            if (b == null) {
+                return null;
+            }
+            return BitmapFactory.decodeByteArray(b, 0, b.length);
+        } catch (OutOfMemoryError e) {
             return null;
         }
-        return BitmapFactory.decodeByteArray(b, 0, b.length);
     }
 }

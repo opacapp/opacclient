@@ -1019,21 +1019,31 @@ public class BiBer1992 extends BaseApi {
 
         // parse result list
         Map<String, Integer> copymap = new HashMap<>();
+        Map<String, Integer> colspanmap = new HashMap<>();
         Elements headerCells = doc.select("form[name=medkl] table tr:has(th)").last().select("th");
         JSONArray headersList = new JSONArray();
         JSONArray unknownHeaders = new JSONArray();
         int j = 0;
         for (Element headerCell : headerCells) {
             String header = headerCell.text();
+
+            String colspan_str = headerCell.attr("colspan");
+            int colspan = 1;
+            if (!colspan_str.equals("")) {
+                colspan = Integer.valueOf(colspan_str);
+            }
+
             headersList.put(header);
             if (headers_lent.has(header)) {
-                if (!headers_lent.isNull(header)) copymap.put(headers_lent.getString(header), j);
+                if (!headers_lent.isNull(header)) {
+                    copymap.put(headers_lent.getString(header), j);
+                    colspanmap.put(headers_lent.getString(header), colspan);
+                }
             } else {
                 unknownHeaders.put(header);
             }
 
-            String colspan = headerCell.attr("colspan");
-            j += !colspan.equals("") ? Integer.valueOf(colspan) : 1;
+            j += colspan;
         }
 
         if (unknownHeaders.length() > 0) {
@@ -1090,6 +1100,12 @@ public class BiBer1992 extends BaseApi {
                 }
 
                 String value = tr.child(index).text().trim().replace("\u00A0", "");
+                if (colspanmap.get(key) > 1) {
+                    for (int k = 1; k < colspanmap.get(key); k++) {
+                        value = value + " " + tr.child(index + k).text().trim().replace("\u00A0", "");
+                    }
+                    value = value.trim();
+                }
 
                 switch (key) {
                     case "author+title":

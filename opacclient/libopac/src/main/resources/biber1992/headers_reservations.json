@@ -7,6 +7,7 @@
   "g\u00fcltig ab": null,
   "g\u00fcltig bis": "expirationdate",
   "entliehen bis": "availability",
+  "ausgeliehen bis": "availability",
   "\u00a0": null,
   "": null,
   "Rang": null,

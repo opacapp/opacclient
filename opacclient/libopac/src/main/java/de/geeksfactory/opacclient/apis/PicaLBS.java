@@ -345,7 +345,7 @@ public class PicaLBS extends Pica {
         if (!html.contains("Login") && !html.equals("")) return;
 
         // Get JSESSIONID cookie
-        httpGet(lbsUrl + "/LBS_WEB/borrower/borrower.htm?USR=1000&BES=1&LAN=" + getLang(),
+        httpGet(lbsUrl + "/LBS_WEB/borrower/borrower.htm?USR=1000&BES=" + db + "&LAN=" + getLang(),
                 getDefaultLBSEncoding());
         List<NameValuePair> data = new ArrayList<>();
         data.add(new BasicNameValuePair("j_username", account.getName()));
