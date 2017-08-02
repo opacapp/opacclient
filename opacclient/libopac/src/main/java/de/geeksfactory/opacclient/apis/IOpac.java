@@ -722,6 +722,9 @@ public class IOpac extends BaseApi implements OpacApi {
             Matcher matcher = regex.matcher(h4.text());
             if (matcher.find()) res.setValidUntil(matcher.group(1));
         }
+        if (doc.select(".ReaderAccount_expiredID").size() > 0) {
+            res.setWarning(doc.select(".ReaderAccount_expiredID").text());
+        }
 
         if (media.isEmpty() && reserved.isEmpty()) {
             if (doc.select("h1").size() > 0) {
