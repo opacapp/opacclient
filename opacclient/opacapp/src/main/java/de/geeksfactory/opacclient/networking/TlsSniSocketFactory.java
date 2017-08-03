@@ -28,6 +28,7 @@ public class TlsSniSocketFactory extends SSLConnectionSocketFactory {
     private javax.net.ssl.SSLSocketFactory socketfactory;
     private final X509HostnameVerifier hostnameVerifier;
     protected boolean tls_only = true;
+    public boolean allCipherSuites = false;
 
     public TlsSniSocketFactory(final SSLContext sslContext) {
         super(sslContext, BROWSER_COMPATIBLE_HOSTNAME_VERIFIER);
@@ -57,6 +58,10 @@ public class TlsSniSocketFactory extends SSLConnectionSocketFactory {
         if (!enabledProtocols.isEmpty()) {
             sslsock.setEnabledProtocols(
                     enabledProtocols.toArray(new String[enabledProtocols.size()]));
+        }
+
+        if (allCipherSuites) {
+            sslsock.setEnabledCipherSuites(sslsock.getSupportedCipherSuites());
         }
 
         Log.d(TAG, "Enabled protocols: " + Arrays.asList(sslsock.getEnabledProtocols()));

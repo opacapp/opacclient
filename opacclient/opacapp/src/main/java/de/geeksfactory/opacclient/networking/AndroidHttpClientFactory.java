@@ -49,10 +49,15 @@ public class AndroidHttpClientFactory extends HttpClientFactory {
         return trustStore;
     }
 
-    protected Class<?> getSocketFactoryClass(boolean tls_only) {
-        if (tls_only)
-            return TlsSniSocketFactory.class;
-        else
+    protected Class<?> getSocketFactoryClass(boolean tls_only, boolean allCipherSuites) {
+        if (tls_only) {
+            if (allCipherSuites) {
+                return TlsSniSocketFactoryWithAllCipherSuites.class;
+            } else {
+                return TlsSniSocketFactory.class;
+            }
+        } else {
             return TlsSniSocketFactoryWithSSL3.class;
+        }
     }
 }

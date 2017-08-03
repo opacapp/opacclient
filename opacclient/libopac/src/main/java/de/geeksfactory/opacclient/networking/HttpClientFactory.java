@@ -89,7 +89,7 @@ public class HttpClientFactory {
         return trustStore;
     }
 
-    protected Class<?> getSocketFactoryClass(boolean tls_only) {
+    protected Class<?> getSocketFactoryClass(boolean tls_only, boolean allCipherSuites) {
         return null;
     }
 
@@ -102,7 +102,7 @@ public class HttpClientFactory {
      *                 implementation!
      */
     public HttpClient getNewApacheHttpClient(boolean customssl, boolean tls_only,
-            boolean disguise_app) {
+            boolean allCipherSuites, boolean disguise_app) {
         HttpClientBuilder builder = HttpClientBuilder.create();
         builder.setRedirectStrategy(new CustomRedirectStrategy());
         if (disguise_app) {
@@ -119,7 +119,7 @@ public class HttpClientFactory {
                 }
                 SSLConnectionSocketFactory sf =
                         AdditionalKeyStoresSSLSocketFactory.create(trust_store,
-                                getSocketFactoryClass(tls_only));
+                                getSocketFactoryClass(tls_only, allCipherSuites));
 
                 Registry<ConnectionSocketFactory> registry =
                         RegistryBuilder.<ConnectionSocketFactory>create().register("http",

@@ -56,7 +56,7 @@ public class ResultsAdapter extends ArrayAdapter<SearchResult> {
             this.httpClient = ((BaseApi) api).http_client;
         } else {
             this.httpClient = new AndroidHttpClientFactory()
-                    .getNewApacheHttpClient(false, true, false);
+                    .getNewApacheHttpClient(false, true, false, false);
         }
     }
 
