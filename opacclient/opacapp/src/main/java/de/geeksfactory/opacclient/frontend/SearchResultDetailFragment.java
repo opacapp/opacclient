@@ -335,6 +335,8 @@ public class SearchResultDetailFragment extends Fragment
             image_analyzed = true;
         } catch (IllegalArgumentException ignored) {
             Log.w("analyzeCover", "Invalid bitmap received");
+            gradientBottom.setVisibility(View.GONE);
+            gradientTop.setVisibility(View.GONE);
         }
     }
 
