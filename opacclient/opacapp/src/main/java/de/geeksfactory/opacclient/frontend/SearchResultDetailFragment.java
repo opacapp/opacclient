@@ -335,6 +335,8 @@ public class SearchResultDetailFragment extends Fragment
             image_analyzed = true;
         } catch (IllegalArgumentException ignored) {
             Log.w("analyzeCover", "Invalid bitmap received");
+            gradientBottom.setVisibility(View.GONE);
+            gradientTop.setVisibility(View.GONE);
         }
     }
 
@@ -1298,11 +1300,11 @@ public class SearchResultDetailFragment extends Fragment
                         httpClient = ((BaseApi) app.getApi()).http_client;
                     } else {
                         httpClient = new AndroidHttpClientFactory()
-                                .getNewApacheHttpClient(false, true, false);
+                                .getNewApacheHttpClient(false, true, false, false);
                     }
                 } catch (OpacClient.LibraryRemovedException e) {
                     httpClient = new AndroidHttpClientFactory()
-                            .getNewApacheHttpClient(false, true, false);
+                            .getNewApacheHttpClient(false, true, false, false);
                 }
                 new LoadCoverTask(item, collapsingToolbar.getWidth(), collapsingToolbar.getHeight(),
                         httpClient).execute();

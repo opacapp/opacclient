@@ -419,6 +419,7 @@ public abstract class BaseApi implements OpacApi {
         http_client = http_client_factory.getNewApacheHttpClient(
                 library.getData().optBoolean("customssl", false),
                 library.getData().optBoolean("customssl_tls_only", true),
+                library.getData().optBoolean("customssl_all_ciphersuites", false),
                 library.getData().optBoolean("disguise", false));
         this.library = library;
         stringProvider = new DummyStringProvider();
