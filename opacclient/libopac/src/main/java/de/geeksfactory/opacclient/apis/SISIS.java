@@ -659,6 +659,10 @@ public class SISIS extends BaseApi implements OpacApi {
     public DetailedItem getResultById(String id, String homebranch)
             throws IOException {
 
+        if (id.startsWith("http://") || id.startsWith("https://")) {
+            return loadDetail(id);
+        }
+
         // Some libraries require start parameters for start.do, like Login=foo
         String startparams = "";
         if (data.has("startparams")) {
@@ -766,6 +770,10 @@ public class SISIS extends BaseApi implements OpacApi {
             result.setReservable(false);
         } else {
             // TODO: Multiple options - handle this case!
+        }
+
+        if (result.getId() == null && doc.select("#permalink_link").size() > 0) {
+            result.setId(doc.select("#permalink_link").text());
         }
 
         if (coverJs != null) {
