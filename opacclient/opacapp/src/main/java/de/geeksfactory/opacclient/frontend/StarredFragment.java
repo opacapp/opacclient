@@ -1,31 +1,33 @@
 /**
  * Copyright (C) 2013 by Raphael Michel under the MIT license:
- *
+ * <p>
  * Permission is hereby granted, free of charge, to any person obtaining a copy
- * of this software and associated documentation files (the "Software"), 
- * to deal in the Software without restriction, including without limitation 
- * the rights to use, copy, modify, merge, publish, distribute, sublicense, 
- * and/or sell copies of the Software, and to permit persons to whom the Software 
+ * of this software and associated documentation files (the "Software"),
+ * to deal in the Software without restriction, including without limitation
+ * the rights to use, copy, modify, merge, publish, distribute, sublicense,
+ * and/or sell copies of the Software, and to permit persons to whom the Software
  * is furnished to do so, subject to the following conditions:
- *
- * The above copyright notice and this permission notice shall be included in 
+ * <p>
+ * The above copyright notice and this permission notice shall be included in
  * all copies or substantial portions of the Software.
- *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR 
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, 
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. 
- * IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, 
- * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, 
- * ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER 
+ * <p>
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+ * IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
+ * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,
+ * ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
  * DEALINGS IN THE SOFTWARE.
  */
 package de.geeksfactory.opacclient.frontend;
 
 import android.app.Activity;
+import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
+import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.design.widget.Snackbar;
@@ -35,6 +37,7 @@ import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.support.v4.widget.SimpleCursorAdapter;
 import android.text.Html;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuInflater;
 import android.view.View;
@@ -48,6 +51,18 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.BufferedReader;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.io.PrintWriter;
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -55,6 +70,7 @@ import de.geeksfactory.opacclient.OpacClient;
 import de.geeksfactory.opacclient.R;
 import de.geeksfactory.opacclient.frontend.OpacActivity.AccountSelectedListener;
 import de.geeksfactory.opacclient.objects.Account;
+import de.geeksfactory.opacclient.objects.SearchResult;
 import de.geeksfactory.opacclient.objects.Starred;
 import de.geeksfactory.opacclient.searchfields.SearchField;
 import de.geeksfactory.opacclient.searchfields.SearchField.Meaning;
@@ -68,6 +84,14 @@ public class StarredFragment extends Fragment implements
         LoaderCallbacks<Cursor>, AccountSelectedListener {
 
     private static final String STATE_ACTIVATED_POSITION = "activated_position";
+    private static final String JSON_LIBRARY_NAME = "library_name";
+    private static final String JSON_STARRED_LIST = "starred_list";
+    private static final String JSON_ITEM_MNR = "item_mnr";
+    private static final String JSON_ITEM_TITLE = "item_title";
+    private static final String JSON_ITEM_MEDIATYPE = "item_mediatype";
+    private static final int REQUEST_CODE_EXPORT = 123;
+    private static final int REQUEST_CODE_IMPORT = 124;
+
     protected View view;
     protected OpacClient app;
     private ItemListAdapter adapter;
@@ -79,7 +103,7 @@ public class StarredFragment extends Fragment implements
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+            Bundle savedInstanceState) {
 
         setHasOptionsMenu(true);
 
@@ -94,7 +118,7 @@ public class StarredFragment extends Fragment implements
         listView.setOnItemClickListener(new OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view,
-                                    int position, long id) {
+                    int position, long id) {
                 Starred item = (Starred) view.findViewById(R.id.ivDelete)
                                              .getTag();
                 if (item.getMNr() == null || item.getMNr().equals("null")
@@ -157,7 +181,7 @@ public class StarredFragment extends Fragment implements
 
     @Override
     public void onCreateOptionsMenu(android.view.Menu menu,
-                                    MenuInflater inflater) {
+            MenuInflater inflater) {
         inflater.inflate(R.menu.activity_starred, menu);
         super.onCreateOptionsMenu(menu, inflater);
     }
@@ -165,7 +189,13 @@ public class StarredFragment extends Fragment implements
     @Override
     public boolean onOptionsItemSelected(android.view.MenuItem item) {
         if (item.getItemId() == R.id.action_export) {
-            export();
+            share();
+            return true;
+        } else if (item.getItemId() == R.id.action_export_to_storage) {
+            exportToStorage();
+            return true;
+        } else if (item.getItemId() == R.id.action_import_from_storage) {
+            importFromStorage();
             return true;
         }
         return super.onOptionsItemSelected(item);
@@ -185,7 +215,8 @@ public class StarredFragment extends Fragment implements
 
     //Added code to show SnackBar when clicked on Remove button in Favorites screen
     private void showSnackBar() {
-        Snackbar snackbar = Snackbar.make(view, getString(R.string.starred_removed), Snackbar.LENGTH_LONG);
+        Snackbar snackbar =
+                Snackbar.make(view, getString(R.string.starred_removed), Snackbar.LENGTH_LONG);
         snackbar.setAction(R.string.starred_removed_undo, new View.OnClickListener() {
 
             @Override
@@ -225,7 +256,7 @@ public class StarredFragment extends Fragment implements
         adapter.swapCursor(null);
     }
 
-    protected void export() {
+    protected void share() {
         Intent intent = new Intent(android.content.Intent.ACTION_SEND);
         intent.setType("text/plain");
         intent.addFlags(CompatibilityUtils.getNewDocumentIntentFlag());
@@ -254,6 +285,153 @@ public class StarredFragment extends Fragment implements
         intent.putExtra(Intent.EXTRA_TEXT, text.toString().trim());
         startActivity(Intent.createChooser(intent,
                 getResources().getString(R.string.share)));
+    }
+
+    public void exportToStorage() {
+        Intent intent = null;
+        //android 4.4+; use Storage Access Framework
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.KITKAT) {
+            intent = new Intent(Intent.ACTION_CREATE_DOCUMENT);
+            intent.addCategory(Intent.CATEGORY_OPENABLE);
+            // Create a file with the requested MIME type.
+            intent.setType("application/json");
+            intent.putExtra(Intent.EXTRA_TITLE, "share.json");
+            startActivityForResult(intent, REQUEST_CODE_EXPORT);
+        } else {        // <android 4.4; share json as text
+            intent = new Intent();
+            intent.setAction(Intent.ACTION_SEND);
+            intent.setType("text/plain");
+            intent.putExtra(Intent.EXTRA_TEXT, getEncodedStarredObjects().toString());
+            Intent chooser =
+                    Intent.createChooser(intent, getString(R.string.export_starred_to_storage));
+            startActivity(chooser);
+        }
+    }
+
+    /**
+     * Mainly to handle exceptions as well as the regular use cases
+     */
+    private void showExportError() {
+        Snackbar.make(getView(), R.string.failed_exporting_file,
+                Snackbar.LENGTH_SHORT).show();
+    }
+
+    private void showImportError() {
+        Snackbar.make(getView(), R.string.failed_importing_file,
+                Snackbar.LENGTH_SHORT).show();
+    }
+
+    private JSONObject getEncodedStarredObjects() {
+        JSONObject starred = new JSONObject();
+        try {
+            starred.put(JSON_LIBRARY_NAME, app.getLibrary().getIdent());
+            JSONArray items = new JSONArray();
+            StarDataSource data = new StarDataSource(getActivity());
+            List<Starred> libItems = data.getAllItems(app.getLibrary().getIdent());
+            for (Starred libItem : libItems) {
+                JSONObject item = new JSONObject();
+                item.put(JSON_ITEM_MNR, libItem.getMNr());
+                item.put(JSON_ITEM_TITLE, libItem.getTitle());
+                item.put(JSON_ITEM_MEDIATYPE, libItem.getMediaType());
+                items.put(item);
+            }
+            starred.put(JSON_STARRED_LIST, items);
+        } catch (JSONException e) {
+            showExportError();
+        }
+        return starred;
+    }
+
+    public void importFromStorage() {
+        //Use SAF
+        Intent intent = null;
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.KITKAT) {
+            intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
+            intent.addCategory(Intent.CATEGORY_OPENABLE);
+            intent.setType("application/json");
+        } else {    //let user use a custom picker
+            intent = new Intent(Intent.ACTION_GET_CONTENT);
+            intent.addCategory(Intent.CATEGORY_OPENABLE);
+            intent.setType("application/json");
+        }
+        try {
+            startActivityForResult(intent, REQUEST_CODE_IMPORT);
+        } catch (ActivityNotFoundException e) {
+            showImportError();//No picker app installed!
+        }
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == REQUEST_CODE_EXPORT && resultCode == Activity.RESULT_OK) {
+            Log.i("StarredFragment", data.toString());
+            Uri uri = data.getData();
+            try {
+                OutputStream os = getActivity().getContentResolver().openOutputStream(uri);
+                if (os != null) {
+                    JSONObject starred = getEncodedStarredObjects();
+                    PrintWriter pw = new PrintWriter(os, true);
+                    pw.write(starred.toString());
+                    pw.close();
+                    os.close();
+                } else {
+                    showExportError();
+                }
+            } catch (FileNotFoundException e) {
+                showExportError();
+            } catch (IOException e) {
+                showExportError();
+            }
+        } else if (requestCode == REQUEST_CODE_IMPORT && resultCode == Activity.RESULT_OK) {
+            Uri uri = data.getData();
+            try {
+                StarDataSource dataSource = new StarDataSource(getActivity());
+                InputStream is = getActivity().getContentResolver().openInputStream(uri);
+                if (is != null) {
+                    BufferedReader reader = new BufferedReader(new InputStreamReader(is, "UTF-8"));
+                    StringBuilder builder = new StringBuilder();
+                    String line = "";
+                    while ((line = reader.readLine()) != null) {
+                        builder.append(line);
+                    }
+                    String list = builder.toString();
+                    if (list != null) {
+                        JSONObject savedList = new JSONObject(list);
+                        String bib = savedList.getString(JSON_LIBRARY_NAME);
+                        //disallow import if from different library than current library
+                        if (bib != null && !bib.equals(app.getLibrary().getIdent())) {
+                            Snackbar.make(getView(), R.string.info_different_library,
+                                    Snackbar.LENGTH_SHORT).show();
+                            return;
+                        }
+                        JSONArray items = savedList.getJSONArray(JSON_STARRED_LIST);
+                        for (int i = 0; i < items.length(); i++) {
+                            JSONObject entry = items.getJSONObject(i);
+                            if (!dataSource
+                                    .isStarred(bib,
+                                            entry.getString(JSON_ITEM_MNR))) { //disallow dupes
+                                dataSource.star(entry.getString(JSON_ITEM_MNR),
+                                        entry.getString(JSON_ITEM_TITLE), bib,
+                                        SearchResult.MediaType
+                                                .valueOf(entry.getString(JSON_ITEM_MEDIATYPE)));
+                            }
+                        }
+                        adapter.notifyDataSetChanged();
+                        Snackbar.make(getView(), R.string.info_starred_updated,
+                                Snackbar.LENGTH_SHORT).show();
+                    } else {
+                        showImportError();
+                    }
+                } else {
+                    showImportError();
+                }
+            } catch (FileNotFoundException | JSONException | UnsupportedEncodingException e) {
+                showImportError();
+            } catch (IOException e) {
+                showImportError();
+            }
+        }
+
     }
 
     @Override
