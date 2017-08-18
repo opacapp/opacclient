@@ -105,6 +105,9 @@
     <string name="write_mail">Write e-mail</string>
     <string name="info_error">Could not load additional information for this library.</string>
     <string name="info_unsupported">We don\'t have any information about this library to show.</string>
+    <string name="info_different_library">Selected list is from another library! Try switching to the correct library</string>
+    <string name="info_starred_updated">Import complete.</string>
+
     <string name="connection_error_detail">The connection to the library server failed. Please check your internet connection. If the problem persits, there may have been a problem on the library server or the app was unable to parse the server\'s response.</string>
     <string name="connection_error_detail_nre">The connection to the library server failed. Please check your internet connection. If the problem persits, there may have been a problem on the library server.</string>
     <string name="retry">Try again</string>
@@ -164,8 +167,13 @@
         <item quantity="one">One search result</item>
         <item quantity="other">%d search results</item>
     </plurals>
-    <string name="export_starred">Export</string>
+    <string name="share_starred">Share</string>
+    <string name="export_starred_to_storage">Export</string>
+    <string name="import_starred_from_storage">Import</string>
+
     <string name="export_account">Share as text</string>
+    <string name="failed_exporting_file">An error occurred during export. Please try again later.</string>
+    <string name="failed_importing_file">An error occurred during import.</string>
     <string name="geolocate">Find nearby libraries</string>
     <string name="geolocate_progress">Locating you…</string>
     <string name="geolocate_not_available">Location is not available on this device. You might need to enable it in the settings.</string>
