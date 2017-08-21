@@ -161,6 +161,10 @@ public class SISIS extends BaseApi implements OpacApi {
     protected Account logged_in_as;
     protected static final String ENCODING = "UTF-8";
 
+    protected String getDefaultEncoding() {
+        return ENCODING;
+    }
+
     public List<SearchField> parseSearchFields() throws IOException,
             JSONException {
         if (!initialised) {
