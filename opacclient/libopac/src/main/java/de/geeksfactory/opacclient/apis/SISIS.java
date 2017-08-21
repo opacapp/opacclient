@@ -1349,7 +1349,7 @@ public class SISIS extends BaseApi implements OpacApi {
         nameValuePairs.add(new BasicNameValuePair("methodToCall", "submit"));
         try {
             html = handleLoginMessage(httpPost(opac_url + "/login.do",
-                    new UrlEncodedFormEntity(nameValuePairs), ENCODING));
+                    new UrlEncodedFormEntity(nameValuePairs, ENCODING), ENCODING));
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
             return false;
