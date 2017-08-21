@@ -161,6 +161,10 @@ public class SISIS extends BaseApi implements OpacApi {
     protected Account logged_in_as;
     protected static final String ENCODING = "UTF-8";
 
+    protected String getDefaultEncoding() {
+        return ENCODING;
+    }
+
     public List<SearchField> parseSearchFields() throws IOException,
             JSONException {
         if (!initialised) {
@@ -909,6 +913,12 @@ public class SISIS extends BaseApi implements OpacApi {
                         .absUrl("href")));
             }
         }
+        if (doc3.select("#tab-content .textrot").size() > 0) {
+            result.addDetail(new Detail(
+                    stringProvider.getString(StringProvider.STATUS),
+                    doc3.select("#tab-content .textrot").text()
+            ));
+        }
 
         Map<String, Integer> copy_columnmap = new HashMap<>();
         // Default values
@@ -1349,7 +1359,7 @@ public class SISIS extends BaseApi implements OpacApi {
         nameValuePairs.add(new BasicNameValuePair("methodToCall", "submit"));
         try {
             html = handleLoginMessage(httpPost(opac_url + "/login.do",
-                    new UrlEncodedFormEntity(nameValuePairs), ENCODING));
+                    new UrlEncodedFormEntity(nameValuePairs, ENCODING), ENCODING));
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
             return false;

@@ -46,6 +46,7 @@
   </plurals>
   <string name="reserved_at_date">res. am %s</string>
   <string name="link">Link</string>
+  <string name="status_detail">Status</string>
 
   <string name="mediatype_none">keiner</string>
   <string name="mediatype_book">Buch</string>
