@@ -913,6 +913,12 @@ public class SISIS extends BaseApi implements OpacApi {
                         .absUrl("href")));
             }
         }
+        if (doc3.select("#tab-content .textrot").size() > 0) {
+            result.addDetail(new Detail(
+                    stringProvider.getString(StringProvider.STATUS),
+                    doc3.select("#tab-content .textrot").text()
+            ));
+        }
 
         Map<String, Integer> copy_columnmap = new HashMap<>();
         // Default values

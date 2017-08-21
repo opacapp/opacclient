@@ -58,6 +58,7 @@ public interface StringProvider {
     String COULD_NOT_LOAD_DETAIL = "could_not_load_detail";
     String ERROR = "error";
     String DOWNLOAD = "download";
+    String STATUS = "status_detail";
     String REMINDERS = "reminders";
     String PROLONGED_ABBR = "prolonged_abbr";
     String FREE_SEARCH = "free_search";
