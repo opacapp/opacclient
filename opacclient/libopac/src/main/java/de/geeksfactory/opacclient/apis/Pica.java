@@ -632,7 +632,9 @@ public abstract class Pica extends BaseApi implements OpacApi {
                 }
             } else {
                 copy.setBranch(location);
-                result.addCopy(copy);
+                if (copy.notEmpty()) {
+                    result.addCopy(copy);
+                }
                 location = "";
                 copy = new Copy();
             }
