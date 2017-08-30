@@ -145,6 +145,17 @@ public class PicaOld extends Pica {
                         }
                         res.setSelection(selections);
                         return res;
+                    } else if (useraction == 0 && doc1.select("table[summary=title data]").size() > 0) {
+                        ReservationResult res = new ReservationResult(MultiStepResult.Status.CONFIRMATION_NEEDED);
+                        List<String[]> details = new ArrayList<>();
+                        for (Element tr : doc1.select("table[summary=title data] tr")) {
+                            details.add(new String[]{
+                                    tr.select("td").first().text(),
+                                    tr.select("td").last().text()
+                            });
+                        }
+                        res.setDetails(details);
+                        return res;
                     } else {
                         params.put("CTRID", selection);
                     }
