@@ -122,8 +122,11 @@ public class PicaOld extends Pica {
                     }
 
                 } else {
-                    String html1 = httpGet(json.getJSONObject(selectedPos)
-                                               .getString("link"), getDefaultEncoding());
+                    String url = json.getJSONObject(selectedPos).getString("link");
+                    if (!url.contains("LNG=")) {
+                        url = url.replace("DB=", "LNG=" + getLang() + "/DB=");
+                    }
+                    String html1 = httpGet(url, getDefaultEncoding());
                     Document doc1 = Jsoup.parse(html1);
 
                     Map<String, String> params = new HashMap<>();
@@ -141,6 +144,17 @@ public class PicaOld extends Pica {
                             selections.add(selopt);
                         }
                         res.setSelection(selections);
+                        return res;
+                    } else if (useraction == 0 && doc1.select("table[summary=title data]").size() > 0) {
+                        ReservationResult res = new ReservationResult(MultiStepResult.Status.CONFIRMATION_NEEDED);
+                        List<String[]> details = new ArrayList<>();
+                        for (Element tr : doc1.select("table[summary=title data] tr")) {
+                            details.add(new String[]{
+                                    tr.select("td").first().text(),
+                                    tr.select("td").last().text()
+                            });
+                        }
+                        res.setDetails(details);
                         return res;
                     } else {
                         params.put("CTRID", selection);
