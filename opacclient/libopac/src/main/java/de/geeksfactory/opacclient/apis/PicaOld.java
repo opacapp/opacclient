@@ -122,8 +122,11 @@ public class PicaOld extends Pica {
                     }
 
                 } else {
-                    String html1 = httpGet(json.getJSONObject(selectedPos)
-                                               .getString("link"), getDefaultEncoding());
+                    String url = json.getJSONObject(selectedPos).getString("link");
+                    if (!url.contains("LNG=")) {
+                        url = url.replace("DB=", "LNG=" + getLang() + "/DB=");
+                    }
+                    String html1 = httpGet(url, getDefaultEncoding());
                     Document doc1 = Jsoup.parse(html1);
 
                     Map<String, String> params = new HashMap<>();
