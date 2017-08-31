@@ -621,7 +621,7 @@ public abstract class Pica extends BaseApi implements OpacApi {
                         JSONObject reservation = new JSONObject();
                         try {
                             reservation.put("multi", multipleCopies);
-                            reservation.put("link", _extract_url(a.absUrl("href")));
+                            reservation.put("link", _extract_url(a));
                             reservation.put("desc", location);
                             reservationInfo.put(reservation);
                         } catch (JSONException e1) {
@@ -658,7 +658,7 @@ public abstract class Pica extends BaseApi implements OpacApi {
                 JSONObject reservation = new JSONObject();
                 try {
                     reservation.put("multi", multipleCopies);
-                    reservation.put("link", _extract_url(a.attr("href")));
+                    reservation.put("link", _extract_url(a));
                     reservation.put("desc", location);
                     reservationInfo.put(reservation);
                 } catch (JSONException e1) {
@@ -681,7 +681,12 @@ public abstract class Pica extends BaseApi implements OpacApi {
         return result;
     }
 
-    private String _extract_url(String javascriptUrl) {
+    private String _extract_url(Element link) {
+        String javascriptUrl = link.absUrl("href");
+        if (javascriptUrl.isEmpty()) {
+            // absUrl does not work with javascript: links, obviously
+            javascriptUrl = link.attr("href");
+        }
         if (javascriptUrl.startsWith("javascript:")) {
             javascriptUrl = javascriptUrl.replaceAll("^javascript:PU\\('(.*)',(.*)\\)(.*)", "$1");
         }
