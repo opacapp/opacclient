@@ -459,17 +459,15 @@ public abstract class Pica extends BaseApi implements OpacApi {
         }
 
         // GET COVER
-        if (doc.select("td.preslabel:contains(ISBN) + td.presvalue").size() > 0) {
+        if (doc.select("img[title=Titelbild]").size() > 0) {
+            result.setCover(doc.select("img[title=Titelbild]").first().absUrl("src"));
+        } else if (doc.select("td.preslabel:contains(ISBN) + td.presvalue").size() > 0) {
             Element isbnElement = doc.select(
                     "td.preslabel:contains(ISBN) + td.presvalue").first();
-            String isbn = "";
-            for (Node child : isbnElement.childNodes()) {
-                if (child instanceof TextNode) {
-                    isbn = ((TextNode) child).text().trim();
-                    break;
-                }
+            String isbn = isbnElement.text().trim();
+            if (!isbn.equals("")) {
+                result.setCover(ISBNTools.getAmazonCoverURL(isbn, true));
             }
-            result.setCover(ISBNTools.getAmazonCoverURL(isbn, true));
         }
 
         // GET TITLE AND SUBTITLE
