@@ -717,11 +717,11 @@ public abstract class Pica extends BaseApi implements OpacApi {
             field.setData(new JSONObject("{\"ADI\": false}"));
 
             Pattern pattern = Pattern
-                    .compile("\\[X?[A-Za-z]{2,3}:?\\]|\\(X?[A-Za-z]{2,3}:?\\)");
+                    .compile("(?: --- )?(\\[X?[A-Za-z]{2,3}:?\\]|\\(X?[A-Za-z]{2,3}:?\\))");
             Matcher matcher = pattern.matcher(field.getDisplayName());
             if (matcher.find()) {
                 field.getData().put("meaning",
-                        matcher.group().replace(":", "").toUpperCase());
+                        matcher.group(1).replace(":", "").toUpperCase());
                 field.setDisplayName(matcher.replaceFirst("").trim());
             }
 
