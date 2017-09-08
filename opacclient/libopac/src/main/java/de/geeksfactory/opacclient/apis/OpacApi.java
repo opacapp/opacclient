@@ -203,7 +203,7 @@ public interface OpacApi {
      * @return Media details
      * @see DetailedItem
      */
-    DetailledItem getResultById(String id, String homebranch)
+    DetailedItem getResultById(String id, String homebranch)
             throws IOException, OpacErrorException;
 
     /**
@@ -221,7 +221,7 @@ public interface OpacApi {
      * @return Media details
      * @see DetailedItem
      */
-    DetailledItem getResult(int position) throws IOException,
+    DetailedItem getResult(int position) throws IOException,
             OpacErrorException;
 
     /**
@@ -246,7 +246,7 @@ public interface OpacApi {
      *                   selection.
      * @return A <code>ReservationResult</code> object which has to have the status set.
      */
-    ReservationResult reservation(DetailledItem item, Account account,
+    ReservationResult reservation(DetailedItem item, Account account,
             int useraction, String selection) throws IOException;
 
     /**
