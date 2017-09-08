@@ -13,6 +13,7 @@ import de.geeksfactory.opacclient.networking.NotReachableException;
 import de.geeksfactory.opacclient.networking.SSLSecurityException;
 import de.geeksfactory.opacclient.objects.CoverHolder;
 import de.geeksfactory.opacclient.objects.Library;
+import okhttp3.Callback;
 import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -23,7 +24,8 @@ import okhttp3.internal.Util;
 import okio.BufferedSource;
 
 public abstract class OkHttpBaseApi extends BaseApi {
-    public static final MediaType MEDIA_TYPE_JSON = MediaType.parse("application/json; charset=utf-8");
+    public static final MediaType MEDIA_TYPE_JSON =
+            MediaType.parse("application/json; charset=utf-8");
 
     public OkHttpClient http_client;
     public HttpClientFactory http_client_factory;
@@ -40,6 +42,7 @@ public abstract class OkHttpBaseApi extends BaseApi {
                 library.getData().optBoolean("customssl_tls_only", true),
                 library.getData().optBoolean("customssl_all_ciphersuites", false)
         );
+        http_client.dispatcher().setMaxRequestsPerHost(10);
         this.library = library;
         stringProvider = new DummyStringProvider();
     }
@@ -72,7 +75,6 @@ public abstract class OkHttpBaseApi extends BaseApi {
      */
     public String httpGet(String url, String encoding, boolean ignore_errors) throws
             IOException {
-
         Request request = new Request.Builder()
                 .url(cleanUrl(url))
                 .header("Accept", "*/*")
@@ -169,11 +171,8 @@ public abstract class OkHttpBaseApi extends BaseApi {
      * @throws NotReachableException Thrown when server returns a HTTP status code greater or equal
      *                               than 400.
      */
-    public String httpPost(String url, RequestBody data,
-            String encoding, boolean ignore_errors)
+    public String httpPost(String url, RequestBody data, String encoding, boolean ignore_errors)
             throws IOException {
-
-
         Request request = new Request.Builder()
                 .url(cleanUrl(url))
                 .header("Accept", "*/*")
@@ -219,6 +218,56 @@ public abstract class OkHttpBaseApi extends BaseApi {
         }
     }
 
+    public void asyncPost(String url, RequestBody data, Callback callback)
+            throws IOException {
+        Request request = new Request.Builder()
+                .url(cleanUrl(url))
+                .header("Accept", "*/*")
+                .header("User-Agent", getUserAgent())
+                .post(data)
+                .build();
+
+        http_client.newCall(request).enqueue(callback);
+    }
+
+    public void asyncGet(String url, Callback callback)
+            throws IOException {
+        Request request = new Request.Builder()
+                .url(cleanUrl(url))
+                .header("Accept", "*/*")
+                .header("User-Agent", getUserAgent())
+                .build();
+
+        http_client.newCall(request).enqueue(callback);
+    }
+
+    public void asyncHead(String url, Callback callback)
+            throws IOException {
+        Request request = new Request.Builder()
+                .url(cleanUrl(url))
+                .header("Accept", "*/*")
+                .header("User-Agent", getUserAgent())
+                .build();
+
+        http_client.newCall(request).enqueue(callback);
+    }
+
+    public void asyncWait() {
+        long started = System.currentTimeMillis();
+        while (http_client.dispatcher().runningCallsCount() > 0 || http_client.dispatcher().queuedCallsCount() > 0) {
+            try {
+                Thread.sleep(100);
+            } catch (InterruptedException e) {
+                // pass
+            }
+            if (System.currentTimeMillis() - started > 1000 * 90) {
+                // Timeout
+                http_client.dispatcher().cancelAll();
+                break;
+            }
+        }
+    }
+
     protected void logHttpError(Throwable e) {
         if (httpLoggingEnabled) {
             e.printStackTrace();
@@ -244,7 +293,7 @@ public abstract class OkHttpBaseApi extends BaseApi {
     protected String getUserAgent() {
         if (library.getData().optBoolean("disguise", false)) {
             return "Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, " +
-                   "like Gecko) Chrome/43.0.2357.130 Safari/537.36\t";
+                    "like Gecko) Chrome/43.0.2357.130 Safari/537.36\t";
         } else {
             return http_client_factory.user_agent;
         }

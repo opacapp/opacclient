@@ -18,10 +18,6 @@
  */
 package de.geeksfactory.opacclient.apis;
 
-import org.apache.http.HttpEntity;
-import org.apache.http.entity.ContentType;
-import org.apache.http.entity.StringEntity;
-import org.apache.http.entity.mime.MultipartEntityBuilder;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 import org.json.JSONException;
@@ -35,7 +31,6 @@ import org.jsoup.select.Elements;
 import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.text.Normalizer;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -50,6 +45,7 @@ import de.geeksfactory.opacclient.networking.NotReachableException;
 import de.geeksfactory.opacclient.objects.Account;
 import de.geeksfactory.opacclient.objects.AccountData;
 import de.geeksfactory.opacclient.objects.Copy;
+import de.geeksfactory.opacclient.objects.CoverHolder;
 import de.geeksfactory.opacclient.objects.Detail;
 import de.geeksfactory.opacclient.objects.DetailedItem;
 import de.geeksfactory.opacclient.objects.Filter;
@@ -62,6 +58,8 @@ import de.geeksfactory.opacclient.searchfields.DropdownSearchField;
 import de.geeksfactory.opacclient.searchfields.SearchField;
 import de.geeksfactory.opacclient.searchfields.SearchQuery;
 import de.geeksfactory.opacclient.searchfields.TextSearchField;
+import okhttp3.Call;
+import okhttp3.Callback;
 import okhttp3.FormBody;
 import okhttp3.Request;
 import okhttp3.RequestBody;
@@ -231,7 +229,8 @@ public class Open extends OkHttpBaseApi implements OpacApi {
         for (SearchQuery query : queries) {
             if (query.getValue().equals("") || query.getValue().equals("false")) continue;
 
-            if (query.getSearchField() instanceof TextSearchField | query.getSearchField() instanceof BarcodeSearchField) {
+            if (query.getSearchField() instanceof TextSearchField |
+                    query.getSearchField() instanceof BarcodeSearchField) {
                 SearchField field = query.getSearchField();
                 if (field.getData().getBoolean("selectable")) {
                     selectableCount++;
@@ -282,6 +281,33 @@ public class Open extends OkHttpBaseApi implements OpacApi {
         }
     }
 
+    protected void assignBestCover(final CoverHolder result, final List<String> queue) {
+        if (queue.size() > 0) {
+            final String url = queue.get(0);
+            queue.remove(0);
+            try {
+                asyncHead(url, new Callback() {
+                    @Override
+                    public void onFailure(Call call, IOException e) {
+                        assignBestCover(result, queue);
+                    }
+
+                    @Override
+                    public void onResponse(Call call, Response response) throws IOException {
+                        if (response.code() == 200) {
+                            result.setCover(url);
+                        } else {
+                            assignBestCover(result, queue);
+                        }
+                    }
+                });
+            } catch (IOException e) {
+                e.printStackTrace();
+                assignBestCover(result, queue);
+            }
+        }
+    }
+
     protected SearchRequestResult parse_search(Document doc, int page) throws OpacErrorException {
         searchResultDoc = doc;
 
@@ -297,7 +323,8 @@ public class Open extends OkHttpBaseApi implements OpacApi {
 
         int totalCount;
         if (doc.select("span[id$=TotalItemsLabel]").size() > 0) {
-            totalCount = Integer.parseInt(doc.select("span[id$=TotalItemsLabel]").first().text().split("\\s")[0]);
+            totalCount = Integer.parseInt(
+                    doc.select("span[id$=TotalItemsLabel]").first().text().split("\\s")[0]);
         } else {
             throw new OpacErrorException(stringProvider.getString(StringProvider.UNKNOWN_ERROR));
         }
@@ -309,15 +336,18 @@ public class Open extends OkHttpBaseApi implements OpacApi {
         List<SearchResult> results = new ArrayList<>();
         int i = 0;
         for (Element element : elements) {
-            SearchResult result = new SearchResult();
+            final SearchResult result = new SearchResult();
             // Cover
             if (element.select("input[id$=mediumImage]").size() > 0) {
                 result.setCover(element.select("input[id$=mediumImage]").first().attr("src"));
             } else if (element.select("img[id$=CoverView_Image]").size() > 0) {
-                result.setCover(getCoverUrl(element.select("img[id$=CoverView_Image]").first()));
+
+                assignBestCover(result, getCoverUrlList(element.select("img[id$=CoverView_Image]").first()));
             }
 
-            Element catalogueContent = element.select(".catalogueContent, .oclc-searchmodule-mediumview-content").first();
+            Element catalogueContent =
+                    element.select(".catalogueContent, .oclc-searchmodule-mediumview-content")
+                           .first();
             // Media Type
             if (catalogueContent.select("#spanMediaGrpIcon").size() > 0) {
                 String mediatype = catalogueContent.select("#spanMediaGrpIcon").attr("class");
@@ -399,6 +429,7 @@ public class Open extends OkHttpBaseApi implements OpacApi {
                 String culture = element.select("input[name$=culture]").val();
                 JSONObject data = new JSONObject();
                 try {
+
                     // Determine portalID value
                     int portalId = 1;
                     for (Element scripttag : doc.select("script")) {
@@ -418,21 +449,39 @@ public class Open extends OkHttpBaseApi implements OpacApi {
                         .put("culture", culture).put("requestCopyData", false)
                         .put("branchFilter", "");
                     RequestBody entity = RequestBody.create(MEDIA_TYPE_JSON, data.toString());
-                    String json = httpPost(url, entity, getDefaultEncoding());
-                    JSONObject availabilityData = new JSONObject(json);
-                    String isAvail = availabilityData.getJSONObject("d").getString("IsAvail");
-                    switch (isAvail) {
-                        case "true":
-                            result.setStatus(SearchResult.Status.GREEN);
-                            break;
-                        case "false":
-                            result.setStatus(SearchResult.Status.RED);
-                            break;
-                        case "digital":
-                            result.setStatus(SearchResult.Status.UNKNOWN);
-                            break;
-                    }
 
+                    asyncPost(url, entity, new Callback() {
+                        @Override
+                        public void onFailure(Call call, IOException e) {
+                            // ignore
+                        }
+
+                        @Override
+                        public void onResponse(Call call, Response response) throws IOException {
+                            if (response.code() != 200) {
+                                return;
+                            }
+                            try {
+                                JSONObject availabilityData =
+                                        new JSONObject(response.body().string());
+                                String isAvail =
+                                        availabilityData.getJSONObject("d").getString("IsAvail");
+                                switch (isAvail) {
+                                    case "true":
+                                        result.setStatus(SearchResult.Status.GREEN);
+                                        break;
+                                    case "false":
+                                        result.setStatus(SearchResult.Status.RED);
+                                        break;
+                                    case "digital":
+                                        result.setStatus(SearchResult.Status.UNKNOWN);
+                                        break;
+                                }
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    });
                 } catch (JSONException | IOException e) {
                     e.printStackTrace();
                 }
@@ -441,55 +490,37 @@ public class Open extends OkHttpBaseApi implements OpacApi {
             result.setNr(i);
             results.add(result);
         }
+
+        asyncWait();
         return new SearchRequestResult(results, totalCount, page);
     }
 
-    private String getCoverUrl(Element img) {
+    private List<String> getCoverUrlList(Element img) {
         String[] parts = img.attr("sources").split("\\|");
         // Example: SetSimpleCover|a|https://vlb.de/GetBlob.aspx?strIsbn=9783868511291&amp;
         // size=S|a|http://www.buchhandel.de/default.aspx?strframe=titelsuche&amp;
         // caller=vlbPublic&amp;func=DirectIsbnSearch&amp;isbn=9783868511291&amp;
         // nSiteId=11|c|SetNoCover|a|/DesktopModules/OCLC.OPEN.PL.DNN
         // .BaseLibrary/StyleSheets/Images/Fallbacks/emptyURL.gif?4.2.0.0|a|
+        List<String> alternatives = new ArrayList<>();
+
         for (int i = 0; i + 2 < parts.length; i++) {
             if (parts[i].equals("SetSimpleCover")) {
                 String url = parts[i + 2].replace("&amp;", "&");
-                try {
-                    Request request = new Request.Builder()
-                            .url(url)
-                            .method("HEAD", null)
-                            .header("User-Agent", getUserAgent())
-                            .build();
-
-                    Response response = http_client.newCall(request).execute();;
-                    if (response.code() == 200) {
-                        return url;
-                    }
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
+                alternatives.add(url);
             }
         }
 
         if (img.hasAttr("devsources")) {
-            img.attr("devsources").split("\\|");
+            parts = img.attr("devsources").split("\\|");
             for (int i = 0; i + 2 < parts.length; i++) {
                 if (parts[i].equals("SetSimpleCover")) {
                     String url = parts[i + 2].replace("&amp;", "&");
-                    try {
-                        HttpURLConnection conn = (HttpURLConnection) new URL(url).openConnection();
-                        conn.setRequestMethod("HEAD");
-                        int code = conn.getResponseCode();
-                        if (code == 200) {
-                            return url;
-                        }
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
+                    alternatives.add(url);
                 }
             }
         }
-        return null;
+        return alternatives;
     }
 
     private String numberToText(int number) {
@@ -620,7 +651,8 @@ public class Open extends OkHttpBaseApi implements OpacApi {
         String subtitle = doc.select("span[id$=LblSubTitleValue]").text();
         if (subtitle.equals("") && doc.select("span[id$=LblShortDescriptionValue]").size() > 0) {
             // Subtitle detection for Bern
-            Element next = doc.select("span[id$=LblShortDescriptionValue]").first().parent().nextElementSibling();
+            Element next = doc.select("span[id$=LblShortDescriptionValue]").first().parent()
+                              .nextElementSibling();
             if (next.select("span").size() == 0) {
                 subtitle = next.text().trim();
             }
@@ -633,7 +665,7 @@ public class Open extends OkHttpBaseApi implements OpacApi {
         if (doc.select("input[id$=mediumImage]").size() > 0) {
             item.setCover(doc.select("input[id$=mediumImage]").attr("src"));
         } else if (doc.select("img[id$=CoverView_Image]").size() > 0) {
-            item.setCover(getCoverUrl(doc.select("img[id$=CoverView_Image]").first()));
+            assignBestCover(item, getCoverUrlList(doc.select("img[id$=CoverView_Image]").first()));
         }
 
         // ID
@@ -647,10 +679,13 @@ public class Open extends OkHttpBaseApi implements OpacApi {
         }
 
         // Details
-        String DETAIL_SELECTOR = "div[id$=CatalogueDetailView] .spacingBottomSmall:has(span+span)," +
-                "div[id$=CatalogueDetailView] .spacingBottomSmall:has(span+a), " +
-                "div[id$=CatalogueDetailView] .oclc-searchmodule-detail-data div:has(span+span), " +
-                "div[id$=CatalogueDetailView] .oclc-searchmodule-detail-data div:has(span+a)";
+        String DETAIL_SELECTOR =
+                "div[id$=CatalogueDetailView] .spacingBottomSmall:has(span+span)," +
+                        "div[id$=CatalogueDetailView] .spacingBottomSmall:has(span+a), " +
+                        "div[id$=CatalogueDetailView] .oclc-searchmodule-detail-data div:has" +
+                        "(span+span), " +
+                        "div[id$=CatalogueDetailView] .oclc-searchmodule-detail-data div:has" +
+                        "(span+a)";
         for (Element detail : doc.select(DETAIL_SELECTOR)) {
             String name = detail.select("span").get(0).text().replace(": ", "");
             String value = "";
@@ -672,7 +707,9 @@ public class Open extends OkHttpBaseApi implements OpacApi {
         // Description
         if (doc.select("div[id$=CatalogueContent]").size() > 0) {
             String name = doc.select("div[id$=CatalogueContent] .oclc-module-header").text();
-            String value = doc.select("div[id$=CatalogueContent] .oclc-searchmodule-detail-annotation").text();
+            String value =
+                    doc.select("div[id$=CatalogueContent] .oclc-searchmodule-detail-annotation")
+                       .text();
             item.addDetail(new Detail(name, value));
         }
 
@@ -693,7 +730,8 @@ public class Open extends OkHttpBaseApi implements OpacApi {
                 for (int j = 0; j < tds.size(); j++) {
                     if (columnmap.get(j) == null) continue;
                     String text = tds.get(j).text().replace("\u00a0", "");
-                    if (tds.get(j).select(".oclc-module-label").size() > 0 && tds.get(j).select("span").size() == 2) {
+                    if (tds.get(j).select(".oclc-module-label").size() > 0 &&
+                            tds.get(j).select("span").size() == 2) {
                         text = tds.get(j).select("span").get(1).text();
                     }
 
@@ -704,6 +742,7 @@ public class Open extends OkHttpBaseApi implements OpacApi {
             }
         }
 
+        asyncWait();
         return item;
     }
 
@@ -778,7 +817,8 @@ public class Open extends OkHttpBaseApi implements OpacApi {
                         NO_MOBILE;
         Document doc = Jsoup.parse(httpGet(url, getDefaultEncoding()));
 
-        if (doc.select("[id$=LblErrorMsg]").size() > 0 && doc.select("[id$=ContentPane] input").size() == 0) {
+        if (doc.select("[id$=LblErrorMsg]").size() > 0 &&
+                doc.select("[id$=ContentPane] input").size() == 0) {
             throw new OpacErrorException(doc.select("[id$=LblErrorMsg]").text());
         }
 
@@ -909,7 +949,8 @@ public class Open extends OkHttpBaseApi implements OpacApi {
 
         // data.setCharset somehow breaks everything in Bern.
         // data.addTextBody breaks utf-8 characters in select boxes in Bern
-        // .getBytes is an implicit, undeclared UTF-8 conversion, this seems to work -- at least in Bern
+        // .getBytes is an implicit, undeclared UTF-8 conversion, this seems to work -- at least
+        // in Bern
 
         // iterate the form control elements and accumulate their values
         for (Element el : form.elements()) {
@@ -938,7 +979,8 @@ public class Open extends OkHttpBaseApi implements OpacApi {
                 if (el.hasAttr("checked")) {
                     data.add(name, el.val().length() > 0 ? el.val() : "on");
                 }
-            } else if ("submit".equalsIgnoreCase(type) || "image".equalsIgnoreCase(type) || "button".equalsIgnoreCase(type)) {
+            } else if ("submit".equalsIgnoreCase(type) || "image".equalsIgnoreCase(type) ||
+                    "button".equalsIgnoreCase(type)) {
                 if (submitName != null && el.attr("name").contains(submitName)) {
                     data.add(name, el.val());
                 }
