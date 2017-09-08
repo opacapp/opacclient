@@ -56,9 +56,11 @@ import java.util.List;
 
 import de.geeksfactory.opacclient.OpacClient;
 import de.geeksfactory.opacclient.R;
+import de.geeksfactory.opacclient.apis.ApacheBaseApi;
 import de.geeksfactory.opacclient.apis.BaseApi;
 import de.geeksfactory.opacclient.apis.EbookServiceApi;
 import de.geeksfactory.opacclient.apis.EbookServiceApi.BookingResult;
+import de.geeksfactory.opacclient.apis.OkHttpBaseApi;
 import de.geeksfactory.opacclient.apis.OpacApi;
 import de.geeksfactory.opacclient.apis.OpacApi.MultiStepResult;
 import de.geeksfactory.opacclient.apis.OpacApi.ReservationResult;
@@ -1296,8 +1298,8 @@ public class SearchResultDetailFragment extends Fragment
             if (item.getCover() != null && item.getCoverBitmap() == null) {
                 HttpClient httpClient;
                 try {
-                    if (app.getApi() instanceof BaseApi) {
-                        httpClient = ((BaseApi) app.getApi()).http_client;
+                    if (app.getApi() instanceof ApacheBaseApi) {
+                        httpClient = ((ApacheBaseApi) app.getApi()).http_client;
                     } else {
                         httpClient = new AndroidHttpClientFactory()
                                 .getNewApacheHttpClient(false, true, false, false);

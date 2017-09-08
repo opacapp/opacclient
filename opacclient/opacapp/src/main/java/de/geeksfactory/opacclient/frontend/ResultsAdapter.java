@@ -36,6 +36,7 @@ import org.apache.http.client.HttpClient;
 import java.util.List;
 
 import de.geeksfactory.opacclient.R;
+import de.geeksfactory.opacclient.apis.ApacheBaseApi;
 import de.geeksfactory.opacclient.apis.BaseApi;
 import de.geeksfactory.opacclient.apis.OpacApi;
 import de.geeksfactory.opacclient.networking.AndroidHttpClientFactory;
@@ -52,8 +53,8 @@ public class ResultsAdapter extends ArrayAdapter<SearchResult> {
     public ResultsAdapter(Context context, List<SearchResult> objects, OpacApi api) {
         super(context, R.layout.listitem_searchresult, objects);
         this.objects = objects;
-        if (api != null && api instanceof BaseApi) {
-            this.httpClient = ((BaseApi) api).http_client;
+        if (api != null && api instanceof ApacheBaseApi) {
+            this.httpClient = ((ApacheBaseApi) api).http_client;
         } else {
             this.httpClient = new AndroidHttpClientFactory()
                     .getNewApacheHttpClient(false, true, false, false);
