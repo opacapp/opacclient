@@ -459,17 +459,15 @@ public abstract class Pica extends BaseApi implements OpacApi {
         }
 
         // GET COVER
-        if (doc.select("td.preslabel:contains(ISBN) + td.presvalue").size() > 0) {
+        if (doc.select("img[title=Titelbild]").size() > 0) {
+            result.setCover(doc.select("img[title=Titelbild]").first().absUrl("src"));
+        } else if (doc.select("td.preslabel:contains(ISBN) + td.presvalue").size() > 0) {
             Element isbnElement = doc.select(
                     "td.preslabel:contains(ISBN) + td.presvalue").first();
-            String isbn = "";
-            for (Node child : isbnElement.childNodes()) {
-                if (child instanceof TextNode) {
-                    isbn = ((TextNode) child).text().trim();
-                    break;
-                }
+            String isbn = isbnElement.text().trim();
+            if (!isbn.equals("")) {
+                result.setCover(ISBNTools.getAmazonCoverURL(isbn, true));
             }
-            result.setCover(ISBNTools.getAmazonCoverURL(isbn, true));
         }
 
         // GET TITLE AND SUBTITLE
@@ -579,10 +577,12 @@ public abstract class Pica extends BaseApi implements OpacApi {
                 } else if (title.contains("Sonderstandort")) {
                     location += " - " + detail;
                 } else if (title.contains("Systemstelle")
+                        || title.contains("Sachgebiete")
                         || title.contains("Subject")) {
                     copy.setDepartment(detail);
                 } else if (title.contains("Fachnummer")
-                        || title.contains("locationnumber")) {
+                        || title.contains("locationnumber")
+                        || title.contains("Schlagwörter")) {
                     copy.setLocation(detail);
                 } else if (title.contains("Signatur")
                         || title.contains("Shelf mark")) {
@@ -621,7 +621,7 @@ public abstract class Pica extends BaseApi implements OpacApi {
                         JSONObject reservation = new JSONObject();
                         try {
                             reservation.put("multi", multipleCopies);
-                            reservation.put("link", _extract_url(a.absUrl("href")));
+                            reservation.put("link", _extract_url(a));
                             reservation.put("desc", location);
                             reservationInfo.put(reservation);
                         } catch (JSONException e1) {
@@ -658,7 +658,7 @@ public abstract class Pica extends BaseApi implements OpacApi {
                 JSONObject reservation = new JSONObject();
                 try {
                     reservation.put("multi", multipleCopies);
-                    reservation.put("link", _extract_url(a.attr("href")));
+                    reservation.put("link", _extract_url(a));
                     reservation.put("desc", location);
                     reservationInfo.put(reservation);
                 } catch (JSONException e1) {
@@ -681,7 +681,12 @@ public abstract class Pica extends BaseApi implements OpacApi {
         return result;
     }
 
-    private String _extract_url(String javascriptUrl) {
+    private String _extract_url(Element link) {
+        String javascriptUrl = link.absUrl("href");
+        if (javascriptUrl.isEmpty()) {
+            // absUrl does not work with javascript: links, obviously
+            javascriptUrl = link.attr("href");
+        }
         if (javascriptUrl.startsWith("javascript:")) {
             javascriptUrl = javascriptUrl.replaceAll("^javascript:PU\\('(.*)',(.*)\\)(.*)", "$1");
         }
@@ -714,11 +719,11 @@ public abstract class Pica extends BaseApi implements OpacApi {
             field.setData(new JSONObject("{\"ADI\": false}"));
 
             Pattern pattern = Pattern
-                    .compile("\\[X?[A-Za-z]{2,3}:?\\]|\\(X?[A-Za-z]{2,3}:?\\)");
+                    .compile("(?: --- )?(\\[X?[A-Za-z]{2,3}:?\\]|\\(X?[A-Za-z]{2,3}:?\\))");
             Matcher matcher = pattern.matcher(field.getDisplayName());
             if (matcher.find()) {
                 field.getData().put("meaning",
-                        matcher.group().replace(":", "").toUpperCase());
+                        matcher.group(1).replace(":", "").toUpperCase());
                 field.setDisplayName(matcher.replaceFirst("").trim());
             }
 

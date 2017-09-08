@@ -441,6 +441,8 @@ public class PicaOld extends Pica {
                 Elements datatrs = tr.select("table[summary=title data] tr");
                 item.setTitle(datatrs.get(0).text());
 
+                String reservations = null;
+
                 for (Element td : datatrs.get(1).select("td")) {
                     List<TextNode> textNodes = td.textNodes();
                     Elements titles = td.select("span.label-small");
@@ -485,7 +487,7 @@ public class PicaOld extends Pica {
                                     || title.contains("reservations")
                                     || title.contains("reserveringen")
                                     || title.contains("réservations")) {
-                                // not supported
+                                reservations = value;
                             }
                     }
                 }
@@ -520,9 +522,22 @@ public class PicaOld extends Pica {
                     status += reminderCount + " " + stringProvider
                             .getString(StringProvider.REMINDERS) + ", ";
                 }
-                if (!status.equals("")) status += ", ";
-                status += prolongCount + "x " + stringProvider
-                        .getString(StringProvider.PROLONGED_ABBR);
+                if (!"".equals(prolongCount)) {
+                    if (!status.equals("")) status += ", ";
+                    status += prolongCount + "x " + stringProvider
+                            .getString(StringProvider.PROLONGED_ABBR);
+                }
+                if (tr.children().size() >= 26 && !"".equals(tr.child(25).text().trim())) {
+                    if (!status.equals("")) status += ", ";
+                    try {
+                        status +=
+                                stringProvider.getQuantityString(StringProvider.RESERVATIONS_NUMBER,
+                                        Integer.parseInt(tr.child(25).text().trim()),
+                                        Integer.parseInt(tr.child(25).text().trim()));
+                    } catch (NumberFormatException e) {
+                        // pass
+                    }
+                }
                 // + tr.child(25).text().trim() + " Vormerkungen");
                 item.setStatus(status);
                 try {
