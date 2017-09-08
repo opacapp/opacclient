@@ -9,8 +9,6 @@ import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.protocol.ClientContext;
 import org.apache.http.client.utils.URIBuilder;
-import org.apache.http.client.utils.URLEncodedUtils;
-import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.protocol.BasicHttpContext;
 import org.apache.http.protocol.HttpContext;
 import org.apache.http.util.EntityUtils;
@@ -19,9 +17,7 @@ import java.io.IOException;
 import java.io.InterruptedIOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URISyntaxException;
-import java.net.URLDecoder;
 import java.net.UnknownHostException;
-import java.util.ArrayList;
 import java.util.List;
 
 import de.geeksfactory.opacclient.i18n.DummyStringProvider;
@@ -33,7 +29,7 @@ import de.geeksfactory.opacclient.objects.CoverHolder;
 import de.geeksfactory.opacclient.objects.Library;
 
 public abstract class ApacheBaseApi extends BaseApi {
-    protected HttpClient http_client;
+    public HttpClient http_client;
     protected boolean httpLoggingEnabled = true;
 
     /**
@@ -274,46 +270,5 @@ public abstract class ApacheBaseApi extends BaseApi {
 
     public void setHttpLoggingEnabled(boolean httpLoggingEnabled) {
         this.httpLoggingEnabled = httpLoggingEnabled;
-    }
-
-
-    /**
-     * Cleans the parameters of a URL by parsing it manually and reformatting it using {@link
-     * URLEncodedUtils#format(java.util.List, String)}
-     *
-     * @param myURL the URL to clean
-     * @return cleaned URL
-     */
-    public static String cleanUrl(String myURL) {
-        String[] parts = myURL.split("\\?");
-        String url = parts[0];
-        try {
-            if (parts.length > 1) {
-                url += "?";
-                List<NameValuePair> params = new ArrayList<>();
-                String[] pairs = parts[1].split("&");
-                for (String pair : pairs) {
-                    String[] kv = pair.split("=");
-                    if (kv.length > 1) {
-                        StringBuilder join = new StringBuilder();
-                        for (int i = 1; i < kv.length; i++) {
-                            if (i > 1) join.append("=");
-                            join.append(kv[i]);
-                        }
-                        params.add(new BasicNameValuePair(URLDecoder.decode(
-                                kv[0], "UTF-8"), URLDecoder.decode(join.toString(),
-                                "UTF-8")));
-                    } else {
-                        params.add(new BasicNameValuePair(URLDecoder.decode(
-                                kv[0], "UTF-8"), ""));
-                    }
-                }
-                url += URLEncodedUtils.format(params, "UTF-8");
-            }
-            return url;
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
-            return myURL;
-        }
     }
 }

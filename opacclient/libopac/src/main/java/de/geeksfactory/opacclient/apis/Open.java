@@ -35,6 +35,7 @@ import org.jsoup.select.Elements;
 import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.text.Normalizer;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -61,6 +62,8 @@ import de.geeksfactory.opacclient.searchfields.DropdownSearchField;
 import de.geeksfactory.opacclient.searchfields.SearchField;
 import de.geeksfactory.opacclient.searchfields.SearchQuery;
 import de.geeksfactory.opacclient.searchfields.TextSearchField;
+import okhttp3.FormBody;
+import okhttp3.RequestBody;
 
 /**
  * API for Bibliotheca+/OPEN OPAC software
@@ -68,7 +71,7 @@ import de.geeksfactory.opacclient.searchfields.TextSearchField;
  * @author Johan von Forstner, 29.03.2015
  */
 
-public class Open extends ApacheBaseApi implements OpacApi {
+public class Open extends OkHttpBaseApi implements OpacApi {
     protected JSONObject data;
     protected String opac_url;
     protected Document searchResultDoc;
@@ -258,7 +261,7 @@ public class Open extends ApacheBaseApi implements OpacApi {
 
         // Submit form
         FormElement form = (FormElement) doc.select("form").first();
-        HttpEntity data = formData(form, "BtnSearch").build();
+        FormBody data = formData(form, "BtnSearch").build();
         String postUrl = form.attr("abs:action");
 
         String html = httpPost(postUrl, data, "UTF-8");
@@ -412,8 +415,7 @@ public class Open extends ApacheBaseApi implements OpacApi {
                     data.put("portalId", portalId).put("mednr", result.getId())
                         .put("culture", culture).put("requestCopyData", false)
                         .put("branchFilter", "");
-                    StringEntity entity = new StringEntity(data.toString());
-                    entity.setContentType(ContentType.APPLICATION_JSON.getMimeType());
+                    RequestBody entity = RequestBody.create(MEDIA_TYPE_JSON, data.toString());
                     String json = httpPost(url, entity, getDefaultEncoding());
                     JSONObject availabilityData = new JSONObject(json);
                     String isAvail = availabilityData.getJSONObject("d").getString("IsAvail");
@@ -570,9 +572,9 @@ public class Open extends ApacheBaseApi implements OpacApi {
             if (!matcher.find()) throw new OpacErrorException(StringProvider.INTERNAL_ERROR);
 
             FormElement form = (FormElement) doc.select("form").first();
-            HttpEntity data = formData(form, null).addTextBody("__EVENTTARGET", matcher.group(1))
-                                                  .addTextBody("__EVENTARGUMENT", matcher.group(2))
-                                                  .build();
+            FormBody data = formData(form, null).add("__EVENTTARGET", matcher.group(1))
+                                                .add("__EVENTARGUMENT", matcher.group(2))
+                                                .build();
 
             String postUrl = form.attr("abs:action");
 
@@ -896,9 +898,8 @@ public class Open extends ApacheBaseApi implements OpacApi {
      *                   null
      * @return A MultipartEntityBuilder containing the data of the form
      */
-    protected MultipartEntityBuilder formData(FormElement form, String submitName) {
-        MultipartEntityBuilder data = MultipartEntityBuilder.create();
-        data.setLaxMode();
+    protected FormBody.Builder formData(FormElement form, String submitName) {
+        FormBody.Builder data = new FormBody.Builder();
 
         // data.setCharset somehow breaks everything in Bern.
         // data.addTextBody breaks utf-8 characters in select boxes in Bern
@@ -917,26 +918,26 @@ public class Open extends ApacheBaseApi implements OpacApi {
                 Elements options = el.select("option[selected]");
                 boolean set = false;
                 for (Element option : options) {
-                    data.addBinaryBody(name, option.val().getBytes());
+                    data.add(name, option.val());
                     set = true;
                 }
                 if (!set) {
                     Element option = el.select("option").first();
                     if (option != null) {
-                        data.addBinaryBody(name, option.val().getBytes());
+                        data.add(name, option.val());
                     }
                 }
             } else if ("checkbox".equalsIgnoreCase(type) || "radio".equalsIgnoreCase(type)) {
                 // only add checkbox or radio if they have the checked attribute
                 if (el.hasAttr("checked")) {
-                    data.addBinaryBody(name, el.val().length() > 0 ? el.val().getBytes() : "on".getBytes());
+                    data.add(name, el.val().length() > 0 ? el.val() : "on");
                 }
             } else if ("submit".equalsIgnoreCase(type) || "image".equalsIgnoreCase(type) || "button".equalsIgnoreCase(type)) {
                 if (submitName != null && el.attr("name").contains(submitName)) {
-                    data.addBinaryBody(name, el.val().getBytes());
+                    data.add(name, el.val());
                 }
             } else {
-                data.addBinaryBody(name, el.val().getBytes());
+                data.add(name, el.val());
             }
         }
         return data;

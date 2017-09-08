@@ -22,6 +22,7 @@ import java.util.Collections;
 import java.util.List;
 
 import javax.net.ssl.SSLContext;
+import javax.net.ssl.SSLSocketFactory;
 import javax.net.ssl.TrustManager;
 import javax.net.ssl.TrustManagerFactory;
 import javax.net.ssl.X509TrustManager;
@@ -40,11 +41,10 @@ public class AdditionalKeyStoresSSLSocketFactory {
      *                      be a subclass of {@link SSLConnectionSocketFactory}.
      * @return a new {@link SSLConnectionSocketFactory}
      */
-    public static SSLConnectionSocketFactory create(KeyStore keyStore, Class<?> socketFactory)
+    public static SSLConnectionSocketFactory create(Class<?> socketFactory, X509TrustManager trustManager)
             throws NoSuchAlgorithmException, KeyManagementException {
         SSLContext sslContext = SSLContext.getInstance("TLS");
-        sslContext.init(null, new TrustManager[]{new AdditionalKeyStoresTrustManager(keyStore)},
-                null);
+        sslContext.init(null, new TrustManager[]{trustManager}, null);
         if (socketFactory != null) {
             try {
                 return (SSLConnectionSocketFactory) socketFactory
@@ -56,6 +56,32 @@ public class AdditionalKeyStoresSSLSocketFactory {
             }
         }
         return new SSLConnectionSocketFactory(sslContext);
+    }
+
+    /**
+     * Creates a customized keystore
+     *
+     * @param keyStore      The keystore object that should be used in addition to the environments
+     *                      default key store.
+     * @param socketFactory The class that should be used to instantiate a new socket factory, must
+     *                      be a subclass of {@link SSLConnectionSocketFactory}.
+     * @return a new {@link SSLConnectionSocketFactory}
+     */
+    public static SSLSocketFactory createForOkHttp(Class<?> socketFactory, X509TrustManager trustManager)
+            throws NoSuchAlgorithmException, KeyManagementException {
+        SSLContext sslContext = SSLContext.getInstance("TLS");
+        sslContext.init(null, new TrustManager[]{trustManager}, null);
+        /*if (socketFactory != null) {
+            try {
+                return (SSLConnectionSocketFactory) socketFactory
+                        .getDeclaredConstructor(SSLContext.class).newInstance
+                                (sslContext);
+            } catch (Exception e) {
+                // Fall back to default
+                e.printStackTrace();
+            }
+        }*/
+        return sslContext.getSocketFactory();
     }
 
     public static class AdditionalKeyStoresTrustManager implements
