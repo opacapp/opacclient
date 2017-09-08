@@ -577,10 +577,12 @@ public abstract class Pica extends BaseApi implements OpacApi {
                 } else if (title.contains("Sonderstandort")) {
                     location += " - " + detail;
                 } else if (title.contains("Systemstelle")
+                        || title.contains("Sachgebiete")
                         || title.contains("Subject")) {
                     copy.setDepartment(detail);
                 } else if (title.contains("Fachnummer")
-                        || title.contains("locationnumber")) {
+                        || title.contains("locationnumber")
+                        || title.contains("Schlagwörter")) {
                     copy.setLocation(detail);
                 } else if (title.contains("Signatur")
                         || title.contains("Shelf mark")) {
