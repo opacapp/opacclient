@@ -63,7 +63,9 @@ import de.geeksfactory.opacclient.searchfields.SearchField;
 import de.geeksfactory.opacclient.searchfields.SearchQuery;
 import de.geeksfactory.opacclient.searchfields.TextSearchField;
 import okhttp3.FormBody;
+import okhttp3.Request;
 import okhttp3.RequestBody;
+import okhttp3.Response;
 
 /**
  * API for Bibliotheca+/OPEN OPAC software
@@ -453,10 +455,14 @@ public class Open extends OkHttpBaseApi implements OpacApi {
             if (parts[i].equals("SetSimpleCover")) {
                 String url = parts[i + 2].replace("&amp;", "&");
                 try {
-                    HttpURLConnection conn = (HttpURLConnection) new URL(url).openConnection();
-                    conn.setRequestMethod("HEAD");
-                    int code = conn.getResponseCode();
-                    if (code == 200) {
+                    Request request = new Request.Builder()
+                            .url(url)
+                            .method("HEAD", null)
+                            .header("User-Agent", getUserAgent())
+                            .build();
+
+                    Response response = http_client.newCall(request).execute();;
+                    if (response.code() == 200) {
                         return url;
                     }
                 } catch (IOException e) {
