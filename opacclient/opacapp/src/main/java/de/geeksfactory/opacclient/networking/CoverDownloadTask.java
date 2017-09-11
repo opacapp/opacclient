@@ -1,6 +1,7 @@
 package de.geeksfactory.opacclient.networking;
 
 import android.content.Context;
+import android.net.http.AndroidHttpClient;
 import android.os.AsyncTask;
 import android.util.Log;
 
@@ -13,9 +14,16 @@ import org.apache.http.util.EntityUtils;
 import java.io.IOException;
 import java.util.HashSet;
 
+import de.geeksfactory.opacclient.OpacClient;
+import de.geeksfactory.opacclient.apis.ApacheBaseApi;
+import de.geeksfactory.opacclient.apis.OkHttpBaseApi;
+import de.geeksfactory.opacclient.apis.OpacApi;
 import de.geeksfactory.opacclient.objects.CoverHolder;
 import de.geeksfactory.opacclient.utils.Base64;
 import de.geeksfactory.opacclient.utils.ISBNTools;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
 
 public abstract class CoverDownloadTask extends AsyncTask<Void, Integer, CoverHolder> {
     protected static HashSet<String> rejectImages = new HashSet<>();
@@ -40,16 +48,60 @@ public abstract class CoverDownloadTask extends AsyncTask<Void, Integer, CoverHo
 
     protected CoverHolder item;
     protected Context context;
-    protected HttpClient httpClient;
 
-    public CoverDownloadTask(Context context, CoverHolder item, HttpClient httpClient) {
+    public CoverDownloadTask(Context context, CoverHolder item) {
         this.item = item;
         this.context = context;
-        this.httpClient = httpClient;
+    }
+
+    protected byte[] getImageApacheClient(HttpClient httpClient) throws IOException {
+        HttpGet httpget = new HttpGet(ISBNTools.getBestSizeCoverUrl(item.getCover(),
+                width, height));
+        HttpResponse response;
+
+        response = httpClient.execute(httpget);
+
+        if (response.getStatusLine().getStatusCode() >= 400) {
+            return null;
+        }
+        HttpEntity entity = response.getEntity();
+        return EntityUtils.toByteArray(entity);
+    }
+
+
+    protected byte[] getImageOkHttpClient(OkHttpClient httpClient) throws IOException {
+        Request request = new Request.Builder()
+                .url(ISBNTools.getBestSizeCoverUrl(item.getCover(), width, height))
+                .header("Accept", "*/*")
+                .build();
+        Response response = httpClient.newCall(request).execute();
+
+        if (response.code() >= 400) {
+            return null;
+        }
+
+        return response.body().bytes();
+    }
+
+    protected byte[] getImage() throws IOException {
+        try {
+            OpacApi api = ((OpacClient) context.getApplicationContext()).getApi();
+            if (api instanceof ApacheBaseApi) {
+                return getImageApacheClient(((ApacheBaseApi) api).http_client);
+            } else if (api instanceof OkHttpBaseApi) {
+                return getImageOkHttpClient(((OkHttpBaseApi) api).http_client);
+            }
+        } catch (OpacClient.LibraryRemovedException e) {
+        }
+        HttpClient httpClient;
+        httpClient =
+                new AndroidHttpClientFactory().getNewApacheHttpClient(false, true, false, false);
+        return getImageApacheClient(httpClient);
     }
 
     @Override
     protected CoverHolder doInBackground(Void... voids) {
+
         if (item.getCover() != null && item.getCoverBitmap() == null) {
             try {
                 if (width == 0 && height == 0) {
@@ -58,19 +110,10 @@ public abstract class CoverDownloadTask extends AsyncTask<Void, Integer, CoverHo
                     width = height = (int) density * 56;
                 }
 
-                HttpGet httpget = new HttpGet(ISBNTools.getBestSizeCoverUrl(item.getCover(),
-                        width, height));
-                HttpResponse response;
 
                 try {
-                    response = httpClient.execute(httpget);
-
-                    if (response.getStatusLine().getStatusCode() >= 400) {
-                        item.setCover(null);
-                    }
-                    HttpEntity entity = response.getEntity();
-                    byte[] bytes = EntityUtils.toByteArray(entity);
-                    if (rejectImages.contains(Base64.encodeBytes(bytes))) {
+                    byte[] bytes = getImage();
+                    if (rejectImages.contains(Base64.encodeBytes(bytes)) || bytes == null) {
                         // OPACs like VuFind have a 'cover proxy' that returns a simple GIF with
                         // the text 'no image available' if no cover was found. We don't want to
                         // display this image but the media type,

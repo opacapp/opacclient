@@ -1225,8 +1225,8 @@ public class SearchResultDetailFragment extends Fragment
 
     public class LoadCoverTask extends CoverDownloadTask {
 
-        public LoadCoverTask(CoverHolder item, int width, int height, HttpClient httpClient) {
-            super(getActivity(), item, httpClient);
+        public LoadCoverTask(CoverHolder item, int width, int height) {
+            super(getActivity(), item);
             this.width = width;
             this.height = height;
         }
@@ -1296,20 +1296,7 @@ public class SearchResultDetailFragment extends Fragment
             item = result;
 
             if (item.getCover() != null && item.getCoverBitmap() == null) {
-                HttpClient httpClient;
-                try {
-                    if (app.getApi() instanceof ApacheBaseApi) {
-                        httpClient = ((ApacheBaseApi) app.getApi()).http_client;
-                    } else {
-                        httpClient = new AndroidHttpClientFactory()
-                                .getNewApacheHttpClient(false, true, false, false);
-                    }
-                } catch (OpacClient.LibraryRemovedException e) {
-                    httpClient = new AndroidHttpClientFactory()
-                            .getNewApacheHttpClient(false, true, false, false);
-                }
-                new LoadCoverTask(item, collapsingToolbar.getWidth(), collapsingToolbar.getHeight(),
-                        httpClient).execute();
+                new LoadCoverTask(item, collapsingToolbar.getWidth(), collapsingToolbar.getHeight()).execute();
             } else {
                 displayCover();
             }
