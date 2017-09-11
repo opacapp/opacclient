@@ -49,8 +49,20 @@ public class AndroidHttpClientFactory extends HttpClientFactory {
         return trustStore;
     }
 
-    protected Class<?> getSocketFactoryClass(boolean tls_only, boolean allCipherSuites) {
-        if (tls_only) {
+    @Override
+    protected Class<?> getSocketFactoryClass(boolean tls_only, boolean allCipherSuites, boolean okhttp) {
+        if (okhttp) {
+            return CompatSSLSocketFactory.class;
+            /*if (tls_only) {
+                if (allCipherSuites) {
+                    return CompatSSLSocketFactory.class;
+                } else {
+                    return TlsSniSocketFactory.class;
+                }
+            } else {
+                return TlsSniSocketFactoryWithSSL3.class;
+            }*/
+        } else if (tls_only) {
             if (allCipherSuites) {
                 return TlsSniSocketFactoryWithAllCipherSuites.class;
             } else {
