@@ -61,9 +61,14 @@ import de.geeksfactory.opacclient.searchfields.TextSearchField;
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.FormBody;
+import okhttp3.Headers;
+import okhttp3.MediaType;
+import okhttp3.MultipartBody;
 import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
+
+import static okhttp3.MultipartBody.Part.create;
 
 /**
  * API for Bibliotheca+/OPEN OPAC software
@@ -262,7 +267,7 @@ public class Open extends OkHttpBaseApi implements OpacApi {
 
         // Submit form
         FormElement form = (FormElement) doc.select("form").first();
-        FormBody data = formData(form, "BtnSearch").build();
+        MultipartBody data = formData(form, "BtnSearch").build();
         String postUrl = form.attr("abs:action");
 
         String html = httpPost(postUrl, data, "UTF-8");
@@ -609,9 +614,9 @@ public class Open extends OkHttpBaseApi implements OpacApi {
             if (!matcher.find()) throw new OpacErrorException(StringProvider.INTERNAL_ERROR);
 
             FormElement form = (FormElement) doc.select("form").first();
-            FormBody data = formData(form, null).add("__EVENTTARGET", matcher.group(1))
-                                                .add("__EVENTARGUMENT", matcher.group(2))
-                                                .build();
+            MultipartBody data = formData(form, null).addFormDataPart("__EVENTTARGET", matcher.group(1))
+                                                     .addFormDataPart("__EVENTARGUMENT", matcher.group(2))
+                                                     .build();
 
             String postUrl = form.attr("abs:action");
 
@@ -935,6 +940,48 @@ public class Open extends OkHttpBaseApi implements OpacApi {
         return "UTF-8";
     }
 
+    static StringBuilder appendQuotedString(StringBuilder target, String key) {
+        target.append('"');
+        for (int i = 0, len = key.length(); i < len; i++) {
+            char ch = key.charAt(i);
+            switch (ch) {
+                case '\n':
+                    target.append("%0A");
+                    break;
+                case '\r':
+                    target.append("%0D");
+                    break;
+                case '"':
+                    target.append("%22");
+                    break;
+                default:
+                    target.append(ch);
+                    break;
+            }
+        }
+        target.append('"');
+        return target;
+    }
+
+    public static MultipartBody.Part createFormData(String name, String value) {
+        return createFormData(name, null, RequestBody.create(null, value.getBytes()));
+    }
+
+    public static MultipartBody.Part createFormData(String name, String filename, RequestBody body) {
+        if (name == null) {
+            throw new NullPointerException("name == null");
+        }
+        StringBuilder disposition = new StringBuilder("form-data; name=");
+        appendQuotedString(disposition, name);
+
+        if (filename != null) {
+            disposition.append("; filename=");
+            appendQuotedString(disposition, filename);
+        }
+
+        return create(Headers.of("Content-Disposition", disposition.toString()), body);
+    }
+
     /**
      * Better version of JSoup's implementation of this function ({@link
      * org.jsoup.nodes.FormElement#formData()}).
@@ -944,8 +991,9 @@ public class Open extends OkHttpBaseApi implements OpacApi {
      *                   null
      * @return A MultipartEntityBuilder containing the data of the form
      */
-    protected FormBody.Builder formData(FormElement form, String submitName) {
-        FormBody.Builder data = new FormBody.Builder();
+    protected MultipartBody.Builder formData(FormElement form, String submitName) {
+        MultipartBody.Builder data = new MultipartBody.Builder();
+        data.setType(MediaType.parse("multipart/form-data; charset=utf-8"));
 
         // data.setCharset somehow breaks everything in Bern.
         // data.addTextBody breaks utf-8 characters in select boxes in Bern
@@ -965,27 +1013,27 @@ public class Open extends OkHttpBaseApi implements OpacApi {
                 Elements options = el.select("option[selected]");
                 boolean set = false;
                 for (Element option : options) {
-                    data.add(name, option.val());
+                    data.addPart(createFormData(name, option.val()));
                     set = true;
                 }
                 if (!set) {
                     Element option = el.select("option").first();
                     if (option != null) {
-                        data.add(name, option.val());
+                        data.addPart(createFormData(name, option.val()));
                     }
                 }
             } else if ("checkbox".equalsIgnoreCase(type) || "radio".equalsIgnoreCase(type)) {
                 // only add checkbox or radio if they have the checked attribute
                 if (el.hasAttr("checked")) {
-                    data.add(name, el.val().length() > 0 ? el.val() : "on");
+                    data.addFormDataPart(name, el.val().length() > 0 ? el.val() : "on");
                 }
             } else if ("submit".equalsIgnoreCase(type) || "image".equalsIgnoreCase(type) ||
                     "button".equalsIgnoreCase(type)) {
                 if (submitName != null && el.attr("name").contains(submitName)) {
-                    data.add(name, el.val());
+                    data.addPart(createFormData(name, el.val()));
                 }
             } else {
-                data.add(name, el.val());
+                data.addPart(createFormData(name, el.val()));
             }
         }
         return data;
