@@ -49,6 +49,7 @@ import java.util.List;
 import javax.net.ssl.SSLSocketFactory;
 import javax.net.ssl.X509TrustManager;
 
+import okhttp3.CipherSuite;
 import okhttp3.ConnectionSpec;
 import okhttp3.HttpUrl;
 import okhttp3.Interceptor;
@@ -106,7 +107,7 @@ public class HttpClientFactory {
         return trustStore;
     }
 
-    protected Class<?> getSocketFactoryClass(boolean tls_only, boolean allCipherSuites, boolean okhttp) {
+    protected Class<?> getSocketFactoryClass(boolean tls_only, boolean allCipherSuites) {
         return null;
     }
 
@@ -136,8 +137,10 @@ public class HttpClientFactory {
                 }
                 SSLConnectionSocketFactory sf =
                         AdditionalKeyStoresSSLSocketFactory.create(
-                                getSocketFactoryClass(tls_only, allCipherSuites, false),
-                                new AdditionalKeyStoresSSLSocketFactory.AdditionalKeyStoresTrustManager(trust_store)
+                                getSocketFactoryClass(tls_only, allCipherSuites),
+                                new AdditionalKeyStoresSSLSocketFactory
+                                        .AdditionalKeyStoresTrustManager(
+                                        trust_store)
                         );
 
                 Registry<ConnectionSocketFactory> registry =
@@ -175,25 +178,36 @@ public class HttpClientFactory {
                 if (trust_store == null) {
                     trust_store = getKeyStore();
                 }
-                X509TrustManager trustManager = new AdditionalKeyStoresSSLSocketFactory.AdditionalKeyStoresTrustManager(trust_store);
+                X509TrustManager trustManager =
+                        new AdditionalKeyStoresSSLSocketFactory.AdditionalKeyStoresTrustManager(
+                                trust_store);
 
                 SSLSocketFactory sf = AdditionalKeyStoresSSLSocketFactory.createForOkHttp(
-                        getSocketFactoryClass(tls_only, allCipherSuites, true),
                         trustManager
                 );
 
                 builder.sslSocketFactory(sf, trustManager);
                 builder.addNetworkInterceptor(new CustomRedirectInterceptor());
 
-
                 List<ConnectionSpec> connectionSpecs = new ArrayList<ConnectionSpec>();
+
                 connectionSpecs.add(ConnectionSpec.MODERN_TLS);
-                connectionSpecs.add(ConnectionSpec.COMPATIBLE_TLS);
+
+                connectionSpecs.add(new ConnectionSpec.Builder(ConnectionSpec.COMPATIBLE_TLS)
+                        .allEnabledCipherSuites()
+                        .build());
+
                 if (!tls_only) {
                     connectionSpecs.add(new ConnectionSpec.Builder(ConnectionSpec.COMPATIBLE_TLS)
-                            .tlsVersions(TlsVersion.SSL_3_0)
+                            .tlsVersions(TlsVersion.SSL_3_0, TlsVersion.TLS_1_0)
+                            .allEnabledCipherSuites()
+                            .build());
+                } else if (allCipherSuites) {
+                    connectionSpecs.add(new ConnectionSpec.Builder(ConnectionSpec.COMPATIBLE_TLS)
+                            .allEnabledCipherSuites()
                             .build());
                 }
+
                 connectionSpecs.add(ConnectionSpec.CLEARTEXT);
                 builder.connectionSpecs(connectionSpecs);
 
@@ -221,9 +235,12 @@ public class HttpClientFactory {
             if (originalResponse.isRedirect()) {
                 HttpUrl oldUrl = req.url();
                 HttpUrl newUrl = oldUrl.newBuilder(originalResponse.header("Location")).build();
-                if (oldUrl.scheme().equals("https") && newUrl.scheme().equals("http") && oldUrl.host().equals(newUrl.host())) {
+                if (oldUrl.scheme().equals("https") && newUrl.scheme().equals("http") &&
+                        oldUrl.host().equals(newUrl.host())) {
                     return originalResponse.newBuilder()
-                                           .header("Location", newUrl.newBuilder().scheme("https").build().toString())
+                                           .header("Location",
+                                                   newUrl.newBuilder().scheme("https").build()
+                                                         .toString())
                                            .build();
                 }
             }
@@ -260,8 +277,10 @@ public class HttpClientFactory {
                     original_host = ((HttpRequestBase) request).getURI().getHost();
                 }
             }
-            // Strict Transport Security for redirects, required for misconfigured webservers like Erlangen
-            if ("https".equals(original_scheme) && uri.getScheme().equals("http") && uri.getHost().equals(original_host)) {
+            // Strict Transport Security for redirects, required for misconfigured webservers
+            // like Erlangen
+            if ("https".equals(original_scheme) && uri.getScheme().equals("http") &&
+                    uri.getHost().equals(original_host)) {
                 try {
                     uri = new URI(uri.toString().replace("http://", "https://"));
                 } catch (URISyntaxException e) {
