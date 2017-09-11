@@ -41,7 +41,8 @@ public class AdditionalKeyStoresSSLSocketFactory {
      *                      be a subclass of {@link SSLConnectionSocketFactory}.
      * @return a new {@link SSLConnectionSocketFactory}
      */
-    public static SSLConnectionSocketFactory create(Class<?> socketFactory, X509TrustManager trustManager)
+    public static SSLConnectionSocketFactory create(Class<?> socketFactory,
+            X509TrustManager trustManager)
             throws NoSuchAlgorithmException, KeyManagementException {
         SSLContext sslContext = SSLContext.getInstance("TLS");
         sslContext.init(null, new TrustManager[]{trustManager}, null);
@@ -67,20 +68,21 @@ public class AdditionalKeyStoresSSLSocketFactory {
      *                      be a subclass of {@link SSLConnectionSocketFactory}.
      * @return a new {@link SSLConnectionSocketFactory}
      */
-    public static SSLSocketFactory createForOkHttp(Class<?> socketFactory, X509TrustManager trustManager)
+    public static SSLSocketFactory createForOkHttp(Class<?> socketFactory,
+            X509TrustManager trustManager)
             throws NoSuchAlgorithmException, KeyManagementException {
         SSLContext sslContext = SSLContext.getInstance("TLS");
         sslContext.init(null, new TrustManager[]{trustManager}, null);
-        /*if (socketFactory != null) {
+
+        if (socketFactory != null) {
             try {
-                return (SSLConnectionSocketFactory) socketFactory
-                        .getDeclaredConstructor(SSLContext.class).newInstance
-                                (sslContext);
+                return (SSLSocketFactory) socketFactory.getDeclaredConstructor(SSLContext.class)
+                                                       .newInstance(sslContext);
             } catch (Exception e) {
                 // Fall back to default
                 e.printStackTrace();
             }
-        }*/
+        }
         return sslContext.getSocketFactory();
     }
 

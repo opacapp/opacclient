@@ -43,16 +43,21 @@ import java.security.KeyStore;
 import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
 import java.security.cert.CertificateException;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.net.ssl.SSLSocketFactory;
 import javax.net.ssl.X509TrustManager;
 
+import okhttp3.ConnectionSpec;
 import okhttp3.HttpUrl;
 import okhttp3.Interceptor;
 import okhttp3.JavaNetCookieJar;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
+import okhttp3.TlsVersion;
+import okhttp3.internal.Util;
 
 /**
  * Utility to create a new HTTP client.
@@ -101,7 +106,7 @@ public class HttpClientFactory {
         return trustStore;
     }
 
-    protected Class<?> getSocketFactoryClass(boolean tls_only, boolean allCipherSuites) {
+    protected Class<?> getSocketFactoryClass(boolean tls_only, boolean allCipherSuites, boolean okhttp) {
         return null;
     }
 
@@ -131,7 +136,7 @@ public class HttpClientFactory {
                 }
                 SSLConnectionSocketFactory sf =
                         AdditionalKeyStoresSSLSocketFactory.create(
-                                getSocketFactoryClass(tls_only, allCipherSuites),
+                                getSocketFactoryClass(tls_only, allCipherSuites, false),
                                 new AdditionalKeyStoresSSLSocketFactory.AdditionalKeyStoresTrustManager(trust_store)
                         );
 
@@ -173,12 +178,24 @@ public class HttpClientFactory {
                 X509TrustManager trustManager = new AdditionalKeyStoresSSLSocketFactory.AdditionalKeyStoresTrustManager(trust_store);
 
                 SSLSocketFactory sf = AdditionalKeyStoresSSLSocketFactory.createForOkHttp(
-                        getSocketFactoryClass(tls_only, allCipherSuites),
+                        getSocketFactoryClass(tls_only, allCipherSuites, true),
                         trustManager
                 );
 
                 builder.sslSocketFactory(sf, trustManager);
                 builder.addNetworkInterceptor(new CustomRedirectInterceptor());
+
+
+                List<ConnectionSpec> connectionSpecs = new ArrayList<ConnectionSpec>();
+                connectionSpecs.add(ConnectionSpec.MODERN_TLS);
+                connectionSpecs.add(ConnectionSpec.COMPATIBLE_TLS);
+                if (!tls_only) {
+                    connectionSpecs.add(new ConnectionSpec.Builder(ConnectionSpec.COMPATIBLE_TLS)
+                            .tlsVersions(TlsVersion.SSL_3_0)
+                            .build());
+                }
+                connectionSpecs.add(ConnectionSpec.CLEARTEXT);
+                builder.connectionSpecs(connectionSpecs);
 
                 CookieManager cookieManager = new CookieManager();
                 cookieManager.setCookiePolicy(CookiePolicy.ACCEPT_ALL);
