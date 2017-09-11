@@ -35,12 +35,30 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.CookieManager;
+import java.net.CookiePolicy;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.security.KeyStore;
 import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
 import java.security.cert.CertificateException;
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.net.ssl.SSLSocketFactory;
+import javax.net.ssl.X509TrustManager;
+
+import okhttp3.CipherSuite;
+import okhttp3.ConnectionSpec;
+import okhttp3.HttpUrl;
+import okhttp3.Interceptor;
+import okhttp3.JavaNetCookieJar;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
+import okhttp3.TlsVersion;
+import okhttp3.internal.Util;
 
 /**
  * Utility to create a new HTTP client.
@@ -118,8 +136,12 @@ public class HttpClientFactory {
                     trust_store = getKeyStore();
                 }
                 SSLConnectionSocketFactory sf =
-                        AdditionalKeyStoresSSLSocketFactory.create(trust_store,
-                                getSocketFactoryClass(tls_only, allCipherSuites));
+                        AdditionalKeyStoresSSLSocketFactory.create(
+                                getSocketFactoryClass(tls_only, allCipherSuites),
+                                new AdditionalKeyStoresSSLSocketFactory
+                                        .AdditionalKeyStoresTrustManager(
+                                        trust_store)
+                        );
 
                 Registry<ConnectionSocketFactory> registry =
                         RegistryBuilder.<ConnectionSocketFactory>create().register("http",
@@ -136,6 +158,93 @@ public class HttpClientFactory {
             }
         } else {
             return builder.build();
+        }
+    }
+
+    /**
+     * Create a new OkHttpClient.
+     *
+     * @param tls_only If this is true, only TLS v1 and newer will be used, SSLv3 will be disabled.
+     *                 We highly recommend to set this to true, if possible. This is currently a
+     *                 no-op on the default implementation and only used in the Android
+     *                 implementation!
+     */
+    public OkHttpClient getNewOkHttpClient(boolean customssl, boolean tls_only,
+            boolean allCipherSuites) {
+        OkHttpClient.Builder builder = new OkHttpClient.Builder();
+
+        if (customssl && ssl_store_path != null) {
+            try {
+                if (trust_store == null) {
+                    trust_store = getKeyStore();
+                }
+                X509TrustManager trustManager =
+                        new AdditionalKeyStoresSSLSocketFactory.AdditionalKeyStoresTrustManager(
+                                trust_store);
+
+                SSLSocketFactory sf = AdditionalKeyStoresSSLSocketFactory.createForOkHttp(
+                        trustManager
+                );
+
+                builder.sslSocketFactory(sf, trustManager);
+                builder.addNetworkInterceptor(new CustomRedirectInterceptor());
+
+                List<ConnectionSpec> connectionSpecs = new ArrayList<ConnectionSpec>();
+
+                connectionSpecs.add(ConnectionSpec.MODERN_TLS);
+
+                connectionSpecs.add(new ConnectionSpec.Builder(ConnectionSpec.COMPATIBLE_TLS)
+                        .allEnabledCipherSuites()
+                        .build());
+
+                if (!tls_only) {
+                    connectionSpecs.add(new ConnectionSpec.Builder(ConnectionSpec.COMPATIBLE_TLS)
+                            .tlsVersions(TlsVersion.SSL_3_0, TlsVersion.TLS_1_0)
+                            .allEnabledCipherSuites()
+                            .build());
+                } else if (allCipherSuites) {
+                    connectionSpecs.add(new ConnectionSpec.Builder(ConnectionSpec.COMPATIBLE_TLS)
+                            .allEnabledCipherSuites()
+                            .build());
+                }
+
+                connectionSpecs.add(ConnectionSpec.CLEARTEXT);
+                builder.connectionSpecs(connectionSpecs);
+
+                CookieManager cookieManager = new CookieManager();
+                cookieManager.setCookiePolicy(CookiePolicy.ACCEPT_ALL);
+                builder.cookieJar(new JavaNetCookieJar(cookieManager));
+
+                return builder.build();
+            } catch (Exception e) {
+                e.printStackTrace();
+                return builder.build();
+            }
+        } else {
+            return builder.build();
+        }
+    }
+
+    public static class CustomRedirectInterceptor implements Interceptor {
+
+        @Override
+        public Response intercept(Chain chain) throws IOException {
+            Request req = chain.request();
+            Response originalResponse = chain.proceed(chain.request());
+
+            if (originalResponse.isRedirect()) {
+                HttpUrl oldUrl = req.url();
+                HttpUrl newUrl = oldUrl.newBuilder(originalResponse.header("Location")).build();
+                if (oldUrl.scheme().equals("https") && newUrl.scheme().equals("http") &&
+                        oldUrl.host().equals(newUrl.host())) {
+                    return originalResponse.newBuilder()
+                                           .header("Location",
+                                                   newUrl.newBuilder().scheme("https").build()
+                                                         .toString())
+                                           .build();
+                }
+            }
+            return originalResponse;
         }
     }
 
@@ -168,8 +277,10 @@ public class HttpClientFactory {
                     original_host = ((HttpRequestBase) request).getURI().getHost();
                 }
             }
-            // Strict Transport Security for redirects, required for misconfigured webservers like Erlangen
-            if ("https".equals(original_scheme) && uri.getScheme().equals("http") && uri.getHost().equals(original_host)) {
+            // Strict Transport Security for redirects, required for misconfigured webservers
+            // like Erlangen
+            if ("https".equals(original_scheme) && uri.getScheme().equals("http") &&
+                    uri.getHost().equals(original_host)) {
                 try {
                     uri = new URI(uri.toString().replace("http://", "https://"));
                 } catch (URISyntaxException e) {

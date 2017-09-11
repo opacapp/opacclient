@@ -56,9 +56,11 @@ import java.util.List;
 
 import de.geeksfactory.opacclient.OpacClient;
 import de.geeksfactory.opacclient.R;
+import de.geeksfactory.opacclient.apis.ApacheBaseApi;
 import de.geeksfactory.opacclient.apis.BaseApi;
 import de.geeksfactory.opacclient.apis.EbookServiceApi;
 import de.geeksfactory.opacclient.apis.EbookServiceApi.BookingResult;
+import de.geeksfactory.opacclient.apis.OkHttpBaseApi;
 import de.geeksfactory.opacclient.apis.OpacApi;
 import de.geeksfactory.opacclient.apis.OpacApi.MultiStepResult;
 import de.geeksfactory.opacclient.apis.OpacApi.ReservationResult;
@@ -1223,8 +1225,8 @@ public class SearchResultDetailFragment extends Fragment
 
     public class LoadCoverTask extends CoverDownloadTask {
 
-        public LoadCoverTask(CoverHolder item, int width, int height, HttpClient httpClient) {
-            super(getActivity(), item, httpClient);
+        public LoadCoverTask(CoverHolder item, int width, int height) {
+            super(getActivity(), item);
             this.width = width;
             this.height = height;
         }
@@ -1294,20 +1296,7 @@ public class SearchResultDetailFragment extends Fragment
             item = result;
 
             if (item.getCover() != null && item.getCoverBitmap() == null) {
-                HttpClient httpClient;
-                try {
-                    if (app.getApi() instanceof BaseApi) {
-                        httpClient = ((BaseApi) app.getApi()).http_client;
-                    } else {
-                        httpClient = new AndroidHttpClientFactory()
-                                .getNewApacheHttpClient(false, true, false, false);
-                    }
-                } catch (OpacClient.LibraryRemovedException e) {
-                    httpClient = new AndroidHttpClientFactory()
-                            .getNewApacheHttpClient(false, true, false, false);
-                }
-                new LoadCoverTask(item, collapsingToolbar.getWidth(), collapsingToolbar.getHeight(),
-                        httpClient).execute();
+                new LoadCoverTask(item, collapsingToolbar.getWidth(), collapsingToolbar.getHeight()).execute();
             } else {
                 displayCover();
             }

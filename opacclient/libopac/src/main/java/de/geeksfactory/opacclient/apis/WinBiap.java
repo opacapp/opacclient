@@ -49,6 +49,7 @@ import de.geeksfactory.opacclient.searchfields.SearchField.Meaning;
 import de.geeksfactory.opacclient.searchfields.SearchQuery;
 import de.geeksfactory.opacclient.searchfields.TextSearchField;
 import de.geeksfactory.opacclient.utils.Base64;
+import okhttp3.FormBody;
 
 //@formatter:off
 
@@ -91,7 +92,7 @@ import de.geeksfactory.opacclient.utils.Base64;
  */
 //@formatter:on
 
-public class WinBiap extends BaseApi implements OpacApi {
+public class WinBiap extends OkHttpBaseApi implements OpacApi {
 
     protected static final String QUERY_TYPE_CONTAINS = "8";
     protected static final String QUERY_TYPE_FROM = "6";
@@ -559,35 +560,32 @@ public class WinBiap extends BaseApi implements OpacApi {
             String reservationUrl = new URL(new URL(opac_url), selection).toString();
             // the URL stored in selection contains "=" and other things inside params
             // and will be messed up by our cleanUrl function, therefore we use a direct HttpGet
-            Document doc = Jsoup.parse(convertStreamToString(
-                    http_client.execute(new HttpGet(
-                            reservationUrl))
-                               .getEntity().getContent()));
+            Document doc = Jsoup.parse(httpGet(reservationUrl, getDefaultEncoding()));
             if (doc.select("[id$=LabelLoginMessage]").size() > 0) {
                 doc.select("[id$=TextBoxLoginName]").val(account.getName());
                 doc.select("[id$=TextBoxLoginPassword]").val(account.getPassword());
                 FormElement form = (FormElement) doc.select("form").first();
 
                 List<Connection.KeyVal> formData = form.formData();
-                List<NameValuePair> params = new ArrayList<>();
+                FormBody.Builder paramBuilder = new FormBody.Builder();
                 for (Connection.KeyVal kv : formData) {
                     if (!kv.key().contains("Button") || kv.key().endsWith("ButtonLogin")) {
-                        params.add(new BasicNameValuePair(kv.key(), kv.value()));
+                        paramBuilder.add(kv.key(), kv.value());
                     }
                 }
                 doc = Jsoup.parse(httpPost(opac_url + "/user/" + form.attr("action"),
-                        new UrlEncodedFormEntity(params), getDefaultEncoding()));
+                        paramBuilder.build(), getDefaultEncoding()));
             }
             FormElement confirmationForm = (FormElement) doc.select("form").first();
             List<Connection.KeyVal> formData = confirmationForm.formData();
-            List<NameValuePair> params = new ArrayList<>();
+            FormBody.Builder paramBuilder = new FormBody.Builder();
             for (Connection.KeyVal kv : formData) {
                 if (!kv.key().contains("Button") || kv.key().endsWith("ButtonVorbestOk")) {
-                    params.add(new BasicNameValuePair(kv.key(), kv.value()));
+                    paramBuilder.add(kv.key(), kv.value());
                 }
             }
             httpPost(opac_url + "/user/" + confirmationForm.attr("action"),
-                    new UrlEncodedFormEntity(params), getDefaultEncoding());
+                    paramBuilder.build(), getDefaultEncoding());
 
             // TODO: handle errors (I did not encounter any)
 
@@ -608,9 +606,9 @@ public class WinBiap extends BaseApi implements OpacApi {
         lentPage.select("input[name=" + media + "]").first().attr("checked", true);
         List<Connection.KeyVal> formData =
                 ((FormElement) lentPage.select("form").first()).formData();
-        List<NameValuePair> params = new ArrayList<>();
+        FormBody.Builder paramBuilder = new FormBody.Builder();
         for (Connection.KeyVal kv : formData) {
-            params.add(new BasicNameValuePair(kv.key(), kv.value()));
+            paramBuilder.add(kv.key(), kv.value());
         }
 
         if (lentPage.select("a[id$=ButtonBorrowChecked][href^=javascript]").size() > 0) {
@@ -622,24 +620,23 @@ public class WinBiap extends BaseApi implements OpacApi {
                 return new ProlongResult(MultiStepResult.Status.ERROR,
                         StringProvider.INTERNAL_ERROR);
             }
-            params.add(new BasicNameValuePair("__EVENTTARGET", matcher.group(1)));
-            params.add(new BasicNameValuePair("__EVENTARGUMENT", matcher.group(2)));
+            paramBuilder.add("__EVENTTARGET", matcher.group(1));
+            paramBuilder.add("__EVENTARGUMENT", matcher.group(2));
         }
 
-        String html = httpPost(opac_url + "/user/borrow.aspx", new UrlEncodedFormEntity
-                (params), getDefaultEncoding());
+        String html = httpPost(opac_url + "/user/borrow.aspx", paramBuilder.build(), getDefaultEncoding());
         Document confirmationPage = Jsoup.parse(html);
 
         FormElement confirmationForm = (FormElement) confirmationPage.select("form").first();
         List<Connection.KeyVal> formData2 = confirmationForm.formData();
-        List<NameValuePair> params2 = new ArrayList<>();
+        FormBody.Builder params2 = new FormBody.Builder();
         for (Connection.KeyVal kv : formData2) {
             if (!kv.key().contains("Button") || kv.key().endsWith("ButtonProlongationOk")) {
-                params2.add(new BasicNameValuePair(kv.key(), kv.value()));
+                params2.add(kv.key(), kv.value());
             }
         }
         httpPost(opac_url + "/user/" + confirmationForm.attr("action"),
-                new UrlEncodedFormEntity(params2), getDefaultEncoding());
+                params2.build(), getDefaultEncoding());
 
         // TODO: handle errors (I did not encounter any)
 
@@ -660,11 +657,11 @@ public class WinBiap extends BaseApi implements OpacApi {
         } catch (OpacErrorException e) {
             return new CancelResult(MultiStepResult.Status.ERROR, e.getMessage());
         }
-        List<NameValuePair> params = new ArrayList<>();
-        params.add(new BasicNameValuePair("action", "reservationdelete"));
-        params.add(new BasicNameValuePair("data", media));
+        FormBody.Builder params = new FormBody.Builder();
+        params.add("action", "reservationdelete");
+        params.add("data", media);
         String response = httpPost(opac_url + "/service/UserService.ashx",
-                new UrlEncodedFormEntity(params), getDefaultEncoding());
+                params.build(), getDefaultEncoding());
         if (response.startsWith("{")) {
             // new system (starting with 4.4.0?): JSON response
             // e.g. {"Success":true,"Count":0} (Count = number of remaining reservations)
@@ -1003,7 +1000,7 @@ public class WinBiap extends BaseApi implements OpacApi {
     protected Document login(Account account) throws IOException, OpacErrorException {
         Document loginPage = Jsoup.parse(
                 httpGet(opac_url + "/user/login.aspx", getDefaultEncoding()));
-        List<NameValuePair> data = new ArrayList<>();
+        FormBody.Builder data = new FormBody.Builder();
 
         String formAction = loginPage.select("form").attr("action");
         boolean homePage = formAction.endsWith("index.aspx");
@@ -1011,25 +1008,23 @@ public class WinBiap extends BaseApi implements OpacApi {
         /* pass all input fields beginning with two underscores to login url */
         Elements inputFields = loginPage.select("input[id^=__]");
         for (Element inputField : inputFields) {
-            data.add(new BasicNameValuePair(inputField.attr("name"), inputField.val()));
+            data.add(inputField.attr("name"), inputField.val());
         }
 
         // Some WinBiap 4.4 installations (such as Neufahrn) redirect user/login.aspx to index.aspx
         // This page then also has a login form, but it has different text box IDs:
         // TextBoxLoginName -> TextBoxUsername and TextBoxLoginPassword -> TextBoxPassword
 
-        data.add(new BasicNameValuePair(
-                loginPage.select("input[id$=TextBoxLoginName], input[id$=TextBoxUsername]")
-                         .attr("name"), account.getName()));
-        data.add(new BasicNameValuePair(
-                loginPage.select("input[id$=TextBoxLoginPassword], input[id$=TextBoxPassword]")
-                         .attr("name"), account.getPassword()));
-        data.add(new BasicNameValuePair(loginPage.select("input[id$=ButtonLogin]").attr("name"),
-                "Anmelden"));
+        data.add(loginPage.select("input[id$=TextBoxLoginName], input[id$=TextBoxUsername]")
+                         .attr("name"), account.getName());
+        data.add(loginPage.select("input[id$=TextBoxLoginPassword], input[id$=TextBoxPassword]")
+                         .attr("name"), account.getPassword());
+        data.add(loginPage.select("input[id$=ButtonLogin]").attr("name"),
+                "Anmelden");
 
         // We also need to POST our data to the correct page.
         String postUrl = opac_url + (homePage ? "/index.aspx" : "/user/login.aspx");
-        String html = httpPost(postUrl, new UrlEncodedFormEntity(data), "UTF-8");
+        String html = httpPost(postUrl, data.build(), "UTF-8");
         Document doc = Jsoup.parse(html);
         handleLoginErrors(doc);
         return doc;

@@ -72,7 +72,7 @@ weitere kompatible Bibliotheken:
  https://www.google.de/search?q=webOpac.net%202.1.30%20powered%20by%20winMedio.net&qscrl=1#q=%22webOpac.net+2.2.70+powered+by+winMedio.net%22+inurl%3Awinmedio&qscrl=1&start=0
   */
 
-public class WebOpacNet extends BaseApi implements OpacApi {
+public class WebOpacNet extends ApacheBaseApi implements OpacApi {
 
     protected static HashMap<String, MediaType> defaulttypes = new HashMap<>();
 

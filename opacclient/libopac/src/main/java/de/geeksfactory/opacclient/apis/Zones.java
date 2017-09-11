@@ -70,7 +70,7 @@ import de.geeksfactory.opacclient.searchfields.TextSearchField;
  *
  * TODO: Kontofunktionen für Zones 1.8.1
  */
-public class Zones extends BaseApi {
+public class Zones extends ApacheBaseApi {
 
     private static HashMap<String, MediaType> defaulttypes = new HashMap<>();
 

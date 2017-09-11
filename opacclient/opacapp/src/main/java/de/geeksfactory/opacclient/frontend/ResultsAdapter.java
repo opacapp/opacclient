@@ -36,6 +36,7 @@ import org.apache.http.client.HttpClient;
 import java.util.List;
 
 import de.geeksfactory.opacclient.R;
+import de.geeksfactory.opacclient.apis.ApacheBaseApi;
 import de.geeksfactory.opacclient.apis.BaseApi;
 import de.geeksfactory.opacclient.apis.OpacApi;
 import de.geeksfactory.opacclient.networking.AndroidHttpClientFactory;
@@ -47,17 +48,10 @@ import de.geeksfactory.opacclient.utils.BitmapUtils;
 
 public class ResultsAdapter extends ArrayAdapter<SearchResult> {
     private List<SearchResult> objects;
-    private HttpClient httpClient;
 
     public ResultsAdapter(Context context, List<SearchResult> objects, OpacApi api) {
         super(context, R.layout.listitem_searchresult, objects);
         this.objects = objects;
-        if (api != null && api instanceof BaseApi) {
-            this.httpClient = ((BaseApi) api).http_client;
-        } else {
-            this.httpClient = new AndroidHttpClientFactory()
-                    .getNewApacheHttpClient(false, true, false, false);
-        }
     }
 
     @DrawableRes
@@ -160,7 +154,7 @@ public class ResultsAdapter extends ArrayAdapter<SearchResult> {
             ivType.setImageBitmap(BitmapUtils.bitmapFromBytes(item.getCoverBitmap()));
             ivType.setVisibility(View.VISIBLE);
         } else if (item.getCover() != null) {
-            LoadCoverTask lct = new LoadCoverTask(ivType, item, httpClient);
+            LoadCoverTask lct = new LoadCoverTask(ivType, item);
             lct.execute();
             ivType.setImageResource(R.drawable.ic_loading);
             ivType.setVisibility(View.VISIBLE);
@@ -198,8 +192,8 @@ public class ResultsAdapter extends ArrayAdapter<SearchResult> {
     public class LoadCoverTask extends CoverDownloadTask {
         protected ImageView iv;
 
-        public LoadCoverTask(ImageView iv, SearchResult item, HttpClient httpClient) {
-            super(getContext(), item, httpClient);
+        public LoadCoverTask(ImageView iv, SearchResult item) {
+            super(getContext(), item);
             this.iv = iv;
         }
 

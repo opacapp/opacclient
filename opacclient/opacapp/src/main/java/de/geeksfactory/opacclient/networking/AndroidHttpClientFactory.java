@@ -49,6 +49,7 @@ public class AndroidHttpClientFactory extends HttpClientFactory {
         return trustStore;
     }
 
+    @Override
     protected Class<?> getSocketFactoryClass(boolean tls_only, boolean allCipherSuites) {
         if (tls_only) {
             if (allCipherSuites) {
