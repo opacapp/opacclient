@@ -35,8 +35,6 @@ public class AdditionalKeyStoresSSLSocketFactory {
     /**
      * Creates a customized keystore
      *
-     * @param keyStore      The keystore object that should be used in addition to the environments
-     *                      default key store.
      * @param socketFactory The class that should be used to instantiate a new socket factory, must
      *                      be a subclass of {@link SSLConnectionSocketFactory}.
      * @return a new {@link SSLConnectionSocketFactory}
@@ -60,12 +58,8 @@ public class AdditionalKeyStoresSSLSocketFactory {
     }
 
     /**
-     * Creates a customized keystore
+     * Creates a customized keystore for OkHttp
      *
-     * @param keyStore      The keystore object that should be used in addition to the environments
-     *                      default key store.
-     * @param socketFactory The class that should be used to instantiate a new socket factory, must
-     *                      be a subclass of {@link SSLConnectionSocketFactory}.
      * @return a new {@link SSLConnectionSocketFactory}
      */
     public static SSLSocketFactory createForOkHttp(X509TrustManager trustManager)
