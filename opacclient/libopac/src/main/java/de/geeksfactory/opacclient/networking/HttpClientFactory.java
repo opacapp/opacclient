@@ -173,6 +173,12 @@ public class HttpClientFactory {
             boolean allCipherSuites) {
         OkHttpClient.Builder builder = new OkHttpClient.Builder();
 
+        CookieManager cookieManager = new CookieManager();
+        cookieManager.setCookiePolicy(CookiePolicy.ACCEPT_ALL);
+        builder.cookieJar(new JavaNetCookieJar(cookieManager));
+
+        builder.addNetworkInterceptor(new CustomRedirectInterceptor());
+
         if (customssl && ssl_store_path != null) {
             try {
                 if (trust_store == null) {
@@ -187,12 +193,9 @@ public class HttpClientFactory {
                 );
 
                 builder.sslSocketFactory(sf, trustManager);
-                builder.addNetworkInterceptor(new CustomRedirectInterceptor());
 
                 List<ConnectionSpec> connectionSpecs = new ArrayList<ConnectionSpec>();
-
                 connectionSpecs.add(ConnectionSpec.MODERN_TLS);
-
                 connectionSpecs.add(new ConnectionSpec.Builder(ConnectionSpec.COMPATIBLE_TLS)
                         .allEnabledCipherSuites()
                         .build());
@@ -210,10 +213,6 @@ public class HttpClientFactory {
 
                 connectionSpecs.add(ConnectionSpec.CLEARTEXT);
                 builder.connectionSpecs(connectionSpecs);
-
-                CookieManager cookieManager = new CookieManager();
-                cookieManager.setCookiePolicy(CookiePolicy.ACCEPT_ALL);
-                builder.cookieJar(new JavaNetCookieJar(cookieManager));
 
                 return builder.build();
             } catch (Exception e) {
