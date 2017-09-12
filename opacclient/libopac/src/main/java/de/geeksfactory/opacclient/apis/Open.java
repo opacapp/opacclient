@@ -354,8 +354,8 @@ public class Open extends OkHttpBaseApi implements OpacApi {
                     element.select(".catalogueContent, .oclc-searchmodule-mediumview-content")
                            .first();
             // Media Type
-            if (catalogueContent.select("#spanMediaGrpIcon").size() > 0) {
-                String mediatype = catalogueContent.select("#spanMediaGrpIcon").attr("class");
+            if (catalogueContent.select("#spanMediaGrpIcon, .spanMediaGrpIcon").size() > 0) {
+                String mediatype = catalogueContent.select("#spanMediaGrpIcon, .spanMediaGrpIcon").attr("class");
                 if (mediatype.startsWith("itemtype ")) {
                     mediatype = mediatype.substring("itemtype ".length());
                 }
