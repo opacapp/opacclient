@@ -329,7 +329,7 @@ public class Open extends OkHttpBaseApi implements OpacApi {
         int totalCount;
         if (doc.select("span[id$=TotalItemsLabel]").size() > 0) {
             totalCount = Integer.parseInt(
-                    doc.select("span[id$=TotalItemsLabel]").first().text().split("\\s")[0]);
+                    doc.select("span[id$=TotalItemsLabel]").first().text().split("[ \\t\\xA0\\u1680\\u180e\\u2000-\\u200a\\u202f\\u205f\\u3000]")[0]);
         } else {
             throw new OpacErrorException(stringProvider.getString(StringProvider.UNKNOWN_ERROR));
         }
