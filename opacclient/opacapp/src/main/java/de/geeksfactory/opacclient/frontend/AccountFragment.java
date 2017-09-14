@@ -780,7 +780,7 @@ public class AccountFragment extends Fragment implements
             public void onSuccess(MultiStepResult res) {
                 final EbookServiceApi.DownloadResult result = (EbookServiceApi.DownloadResult) res;
                 if (result.getUrl() != null) {
-                    if (result.getUrl().contains("acsm") || (a.contains("overdrive") && (result.getUrl().contains(".odm") || result.getUrl().contains(".epub")))) {
+                    if (result.getUrl().contains("acsm") || (a.contains("overdrive") && !result.getUrl().contains("epub-sample") && (result.getUrl().contains(".odm") || result.getUrl().contains(".epub")))) {
                         String[] download_clients = new String[]{
                                 "com.android.aldiko", "com.aldiko.android",
                                 "com.bluefirereader",
