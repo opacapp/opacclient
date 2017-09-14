@@ -1051,9 +1051,9 @@ public class Adis extends ApacheBaseApi implements OpacApi {
                 boolean disabled = tr.select("input").hasAttr("disabled");
                 try {
                     disabled = (
-                            disabled &&
-                            !tr.child(4).text().matches(".*nicht verl.+ngerbar.*") &&
-                            !tr.child(4).text().matches(".*Verl.+ngerung nicht m.+glich.*")
+                            disabled
+                                    || tr.child(4).text().matches(".*nicht verl.+ngerbar.*")
+                                    || tr.child(4).text().matches(".*Verl.+ngerung nicht m.+glich.*")
                     );
                 } catch (Exception e) {
                 }
