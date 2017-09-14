@@ -803,10 +803,8 @@ public class AccountFragment extends Fragment implements
                         if (!found && !sp.contains("reader_needed_ignore")) {
 
                             int msg = R.string.reader_needed;
-                            String reader = "com.bluefirereader";
                             if (result.getUrl().toLowerCase().contains("overdrive")) {
                                 msg = R.string.reader_needed_overdrive;
-                                reader = "com.overdrive.mobile.android.mediaconsole";
                             }
 
                             AlertDialog.Builder builder = new AlertDialog.Builder(
@@ -841,10 +839,14 @@ public class AccountFragment extends Fragment implements
                                                public void onClick(
                                                        DialogInterface dialog, int id) {
                                                    dialog.cancel();
+                                                   String reader = "com.bluefirereader";
+                                                   if (result.getUrl().toLowerCase().contains("overdrive")) {
+                                                       reader = "com.overdrive.mobile.android.mediaconsole";
+                                                   }
                                                    Intent i = new Intent(
                                                            Intent.ACTION_VIEW,
                                                            Uri.parse(
-                                                                   "market://details?id=" + reader);
+                                                                   "market://details?id=" + reader));
                                                    startActivity(i);
                                                }
                                            });
