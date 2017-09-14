@@ -1047,13 +1047,23 @@ public class Adis extends ApacheBaseApi implements OpacApi {
             }
         }
         for (Element tr : doc.select(".rTable_div tr")) {
-            if (tr.select("input").attr("name").equals(media.split("\\|")[0])
-                    && tr.select("input").hasAttr("disabled")) {
-                form.add(new BasicNameValuePair("$Toolbar_0.x", "1"));
-                form.add(new BasicNameValuePair("$Toolbar_0.y", "1"));
-                htmlPost(opac_url + ";jsessionid=" + s_sid, form);
-                return new ProlongResult(Status.ERROR, tr.child(4).text()
-                                                         .trim());
+            if (tr.select("input").attr("name").equals(media.split("\\|")[0])) {
+                boolean disabled = tr.select("input").hasAttr("disabled");
+                try {
+                    disabled = (
+                            disabled &&
+                            !tr.child(4).text().matches(".*nicht verl.+ngerbar.*") &&
+                            !tr.child(4).text().matches(".*Verl.+ngerung nicht m.+glich.*")
+                    );
+                } catch (Exception e) {
+                }
+
+                if (disabled) {
+                    form.add(new BasicNameValuePair("$Toolbar_0.x", "1"));
+                    form.add(new BasicNameValuePair("$Toolbar_0.y", "1"));
+                    htmlPost(opac_url + ";jsessionid=" + s_sid, form);
+                    return new ProlongResult(Status.ERROR, tr.child(4).text().trim());
+                }
             }
         }
         form.add(new BasicNameValuePair(media.split("\\|")[0], "on"));
