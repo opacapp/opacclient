@@ -785,6 +785,7 @@ public class AccountFragment extends Fragment implements
                                 "com.android.aldiko", "com.aldiko.android",
                                 "com.bluefirereader",
                                 "com.mantano.reader.android.lite",
+                                "com.overdrive.mobile.android.mediaconsole",
                                 "com.datalogics.dlreader",
                                 "com.mantano.reader.android.normal",
                                 "com.mantano.reader.android", "com.neosoar"};
@@ -800,9 +801,17 @@ public class AccountFragment extends Fragment implements
                         final SharedPreferences sp = PreferenceManager
                                 .getDefaultSharedPreferences(getActivity());
                         if (!found && !sp.contains("reader_needed_ignore")) {
+
+                            int msg = R.string.reader_needed;
+                            String reader = "com.bluefirereader";
+                            if (result.getUrl().toLowerCase().contains("overdrive")) {
+                                msg = R.string.reader_needed_overdrive;
+                                reader = "com.overdrive.mobile.android.mediaconsole";
+                            }
+
                             AlertDialog.Builder builder = new AlertDialog.Builder(
                                     getActivity());
-                            builder.setMessage(R.string.reader_needed)
+                            builder.setMessage(msg)
                                    .setCancelable(true)
                                    .setNegativeButton(R.string.cancel,
                                            new DialogInterface.OnClickListener() {
@@ -835,8 +844,7 @@ public class AccountFragment extends Fragment implements
                                                    Intent i = new Intent(
                                                            Intent.ACTION_VIEW,
                                                            Uri.parse(
-                                                                   "market://details?id=de" +
-                                                                           ".bluefirereader"));
+                                                                   "market://details?id=" + reader);
                                                    startActivity(i);
                                                }
                                            });
