@@ -803,7 +803,7 @@ public class AccountFragment extends Fragment implements
                         if (!found && !sp.contains("reader_needed_ignore")) {
 
                             int msg = R.string.reader_needed;
-                            if (result.getUrl().toLowerCase().contains("overdrive")) {
+                            if (a.contains("overdrive")) {
                                 msg = R.string.reader_needed_overdrive;
                             }
 
@@ -840,7 +840,7 @@ public class AccountFragment extends Fragment implements
                                                        DialogInterface dialog, int id) {
                                                    dialog.cancel();
                                                    String reader = "com.bluefirereader";
-                                                   if (result.getUrl().toLowerCase().contains("overdrive")) {
+                                                   if (a.toLowerCase().contains("overdrive")) {
                                                        reader = "com.overdrive.mobile.android.mediaconsole";
                                                    }
                                                    Intent i = new Intent(
