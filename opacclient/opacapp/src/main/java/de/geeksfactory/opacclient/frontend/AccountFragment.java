@@ -780,7 +780,7 @@ public class AccountFragment extends Fragment implements
             public void onSuccess(MultiStepResult res) {
                 final EbookServiceApi.DownloadResult result = (EbookServiceApi.DownloadResult) res;
                 if (result.getUrl() != null) {
-                    if (result.getUrl().contains("acsm")) {
+                    if (result.getUrl().contains("acsm") || (a.contains("overdrive") && (result.getUrl().contains(".odm") || result.getUrl().contains(".epub")))) {
                         String[] download_clients = new String[]{
                                 "com.android.aldiko", "com.aldiko.android",
                                 "com.bluefirereader",
@@ -789,6 +789,11 @@ public class AccountFragment extends Fragment implements
                                 "com.datalogics.dlreader",
                                 "com.mantano.reader.android.normal",
                                 "com.mantano.reader.android", "com.neosoar"};
+                        if (a.contains("overdrive") && result.getUrl().contains(".odm")) {
+                            download_clients = new String[] {
+                                    "com.overdrive.mobile.android.mediaconsole",
+                            };
+                        }
                         boolean found = false;
                         PackageManager pm = getActivity().getPackageManager();
                         for (String id : download_clients) {
