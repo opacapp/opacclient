@@ -848,8 +848,13 @@ public class Open extends OkHttpBaseApi implements OpacApi {
         }
 
         // More criteria
-        Element moreHeader =
-                module.select("span[id$=LblMoreCriterias]").parents().select("tr").first();
+        Element moreHeader = null;
+        if (module.select("table").size() == 1) {
+            moreHeader = module.select("span[id$=LblMoreCriterias]").parents().select("tr").first();
+        } else {
+            // Newer OPEN, e.g. Erlangen
+            moreHeader = module.select("span[id$=LblMoreCriterias]").first();
+        }
         if (moreHeader != null) {
             Elements siblings = moreHeader.siblingElements();
             int startIndex = moreHeader.elementSiblingIndex();
