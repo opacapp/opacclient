@@ -677,6 +677,9 @@ public class SearchFragment extends Fragment implements AccountSelectedListener 
             } else if (field instanceof DropdownSearchField) {
                 Spinner spinner = (Spinner) v.findViewById(R.id.spinner);
                 int i = 0;
+                if (((DropdownSearchField) field).getDropdownValues() == null) {
+                    continue;
+                }
                 for (DropdownSearchField.Option map : ((DropdownSearchField) field)
                         .getDropdownValues()) {
                     if (map.getKey().equals(query.getString(field.getId()))) {

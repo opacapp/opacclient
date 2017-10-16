@@ -46,6 +46,7 @@ import java.io.UnsupportedEncodingException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URLEncoder;
+import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -142,7 +143,7 @@ public class Bibliotheca extends OkHttpBaseApi {
 
         List<SearchField> fields = new ArrayList<>();
         // Read branches and media types
-        FormBody.Builder formData = new FormBody.Builder();
+        FormBody.Builder formData = new FormBody.Builder(Charset.forName(getDefaultEncoding()));
         formData.add("link_profis.x", "0");
         formData.add("link_profis.y", "1");
         String html = httpPost(opac_url + "/index.asp",
@@ -309,7 +310,7 @@ public class Bibliotheca extends OkHttpBaseApi {
             start();
         }
 
-        FormBody.Builder formData = new FormBody.Builder();
+        FormBody.Builder formData = new FormBody.Builder(Charset.forName(getDefaultEncoding()));
         boolean stichtitSet = false;
 
         int ifeldCount = 0;
@@ -640,7 +641,7 @@ public class Bibliotheca extends OkHttpBaseApi {
         Document doc = null;
 
         if (useraction == MultiStepResult.ACTION_CONFIRMATION) {
-            FormBody.Builder formData = new FormBody.Builder();
+            FormBody.Builder formData = new FormBody.Builder(Charset.forName(getDefaultEncoding()));
             formData.add("make_allvl", "Bestaetigung");
             formData.add("target", "makevorbest");
             httpPost(opac_url + "/index.asp", formData.build(), getDefaultEncoding());
@@ -652,7 +653,7 @@ public class Bibliotheca extends OkHttpBaseApi {
 
             if (doc.select("input[name=AUSWEIS]").size() > 0) {
                 // Needs login
-                FormBody.Builder formData = new FormBody.Builder();
+                FormBody.Builder formData = new FormBody.Builder(Charset.forName(getDefaultEncoding()));
                 formData.add("AUSWEIS", acc.getName());
                 formData.add("PWD", acc.getPassword());
                 if (data.has("db")) {
@@ -701,7 +702,7 @@ public class Bibliotheca extends OkHttpBaseApi {
                 return result;
             }
         } else if (useraction == ReservationResult.ACTION_BRANCH) {
-            FormBody.Builder formData = new FormBody.Builder();
+            FormBody.Builder formData = new FormBody.Builder(Charset.forName(getDefaultEncoding()));
             formData.add(branch_inputfield, selection);
             formData.add("button2", "weiter");
             formData.add("target", _res_target);
@@ -805,7 +806,7 @@ public class Bibliotheca extends OkHttpBaseApi {
         }
 
         if (useraction == MultiStepResult.ACTION_CONFIRMATION) {
-            FormBody.Builder formData = new FormBody.Builder();
+            FormBody.Builder formData = new FormBody.Builder(Charset.forName(getDefaultEncoding()));
             formData.add("target", "make_vl");
             formData.add("verlaengern", "Bestätigung");
             httpPost(opac_url + "/index.asp", formData.build(), getDefaultEncoding());
@@ -840,7 +841,7 @@ public class Bibliotheca extends OkHttpBaseApi {
                     res.setDetails(details);
                     return res;
                 } else {
-                    FormBody.Builder formData = new FormBody.Builder();
+                    FormBody.Builder formData = new FormBody.Builder(Charset.forName(getDefaultEncoding()));
                     formData.add("target", "make_vl");
                     formData.add("verlaengern", "Bestätigung");
                     httpPost(opac_url + "/index.asp", formData.build(), getDefaultEncoding());
@@ -932,7 +933,7 @@ public class Bibliotheca extends OkHttpBaseApi {
             }
 
             if (doc.select("input#make_allvl").size() > 0) {
-                FormBody.Builder formData = new FormBody.Builder();
+                FormBody.Builder formData = new FormBody.Builder(Charset.forName(getDefaultEncoding()));
                 formData.add("target", "make_allvl_flag");
                 formData.add("make_allvl", "Bestaetigung");
                 httpPost(opac_url + "/index.asp", formData.build(), getDefaultEncoding());
@@ -973,7 +974,7 @@ public class Bibliotheca extends OkHttpBaseApi {
         }
         httpGet(opac_url + "/" + media, getDefaultEncoding());
 
-        FormBody.Builder formData = new FormBody.Builder();
+        FormBody.Builder formData = new FormBody.Builder(Charset.forName(getDefaultEncoding()));
         formData.add("target", "delvorbest");
         formData.add("vorbdelbest", "Bestätigung");
         httpPost(opac_url + "/index.asp", formData.build(), getDefaultEncoding());
@@ -994,7 +995,7 @@ public class Bibliotheca extends OkHttpBaseApi {
         Document doc = Jsoup.parse(html);
         if (doc.select("input[name=AUSWEIS]").size() > 0) {
             // Login vonnöten
-            FormBody.Builder formData = new FormBody.Builder();
+            FormBody.Builder formData = new FormBody.Builder(Charset.forName(getDefaultEncoding()));
             formData.add("AUSWEIS", acc.getName());
             formData.add("PWD", acc.getPassword());
             if (data.has("db")) {
@@ -1230,7 +1231,7 @@ public class Bibliotheca extends OkHttpBaseApi {
     public void checkAccountData(Account acc) throws IOException,
             JSONException, OpacErrorException {
         start();
-        FormBody.Builder formData = new FormBody.Builder();
+        FormBody.Builder formData = new FormBody.Builder(Charset.forName(getDefaultEncoding()));
         formData.add("AUSWEIS", acc.getName());
         formData.add("PWD", acc.getPassword());
         if (data.has("db")) {

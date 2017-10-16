@@ -192,6 +192,10 @@ public class HttpClientFactory {
                         trustManager
                 );
 
+                if (allCipherSuites) {
+                    sf = new AllCiphersProxySocketFactory(sf);
+                }
+
                 builder.sslSocketFactory(sf, trustManager);
 
                 List<ConnectionSpec> connectionSpecs = new ArrayList<ConnectionSpec>();
