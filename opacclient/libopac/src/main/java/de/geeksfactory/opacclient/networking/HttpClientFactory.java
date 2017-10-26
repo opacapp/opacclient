@@ -39,6 +39,7 @@ import java.net.CookieManager;
 import java.net.CookiePolicy;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.security.KeyManagementException;
 import java.security.KeyStore;
 import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
@@ -46,10 +47,12 @@ import java.security.cert.CertificateException;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.net.ssl.SSLContext;
 import javax.net.ssl.SSLSocketFactory;
+import javax.net.ssl.TrustManager;
+import javax.net.ssl.TrustManagerFactory;
 import javax.net.ssl.X509TrustManager;
 
-import okhttp3.CipherSuite;
 import okhttp3.ConnectionSpec;
 import okhttp3.HttpUrl;
 import okhttp3.Interceptor;
@@ -58,7 +61,6 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
 import okhttp3.TlsVersion;
-import okhttp3.internal.Util;
 
 /**
  * Utility to create a new HTTP client.
@@ -195,6 +197,7 @@ public class HttpClientFactory {
                 if (allCipherSuites) {
                     sf = new AllCiphersProxySocketFactory(sf);
                 }
+                sf = new TLS12ProxySocketFactory(sf);
 
                 builder.sslSocketFactory(sf, trustManager);
 
@@ -224,8 +227,35 @@ public class HttpClientFactory {
                 return builder.build();
             }
         } else {
+            TrustManagerFactory tmf = null;
+            try {
+                X509TrustManager trustManager = getSystemDefaultTrustManager();
+                SSLSocketFactory socketFactory = getSystemDefaultSSLSocketFactory(trustManager);
+
+                builder.sslSocketFactory(new TLS12ProxySocketFactory(socketFactory), trustManager);
+            } catch (NoSuchAlgorithmException | KeyStoreException | KeyManagementException
+                    ignored) {
+
+            }
             return builder.build();
         }
+    }
+
+    private SSLSocketFactory getSystemDefaultSSLSocketFactory(X509TrustManager trustManager)
+            throws NoSuchAlgorithmException, KeyManagementException {
+        SSLContext sslContext = SSLContext.getInstance("TLS");
+        sslContext.init(null, new TrustManager[]{trustManager}, null);
+        return sslContext.getSocketFactory();
+    }
+
+    private X509TrustManager getSystemDefaultTrustManager()
+            throws NoSuchAlgorithmException, KeyStoreException {
+        TrustManagerFactory tmf;
+        tmf = TrustManagerFactory
+                .getInstance(TrustManagerFactory.getDefaultAlgorithm());
+        tmf.init((KeyStore) null);
+        return AdditionalKeyStoresSSLSocketFactory.AdditionalKeyStoresTrustManager
+                .findX509TrustManager(tmf);
     }
 
     public static class CustomRedirectInterceptor implements Interceptor {
