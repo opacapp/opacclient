@@ -7,6 +7,7 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
@@ -71,7 +72,7 @@ public class SearchFragment extends Fragment implements AccountSelectedListener 
 
     protected LinearLayout llFormFields, llAdvancedFields, llExpand;
     protected EditText etSimpleSearch;
-    protected RelativeLayout rlReplaced;
+    protected RelativeLayout rlReplaced, rlOldAndroid;
     protected ImageView ivReplacedStore, ivExpandIcon;
     protected ScrollView scroll;
     protected ProgressBar progressBar;
@@ -119,6 +120,7 @@ public class SearchFragment extends Fragment implements AccountSelectedListener 
         llAdvancedFields = (LinearLayout) view.findViewById(R.id.llAdvancedFields);
         etSimpleSearch = (EditText) view.findViewById(R.id.etSimpleSearch);
         rlReplaced = (RelativeLayout) view.findViewById(R.id.rlReplaced);
+        rlOldAndroid = (RelativeLayout) view.findViewById(R.id.rlOldAndroid);
         ivReplacedStore = (ImageView) view.findViewById(R.id.ivReplacedStore);
         llExpand = (LinearLayout) view.findViewById(R.id.llExpand);
         scroll = (ScrollView) view.findViewById(R.id.scroll);
@@ -184,6 +186,10 @@ public class SearchFragment extends Fragment implements AccountSelectedListener 
     }
 
     protected void buildSearchForm(Map<String, String> restoreQuery) {
+        rlOldAndroid.setVisibility(
+                Build.VERSION.SDK_INT < 14 ? View.VISIBLE : View.GONE
+        );
+
         String skey = "annoyed_" + app.getLibrary().getIdent();
         if (app.getLibrary().getReplacedBy() != null && !"".equals(app.getLibrary().getReplacedBy())
                 && sp.getInt(skey, 0) < 5 && app.promotePlusApps()) {

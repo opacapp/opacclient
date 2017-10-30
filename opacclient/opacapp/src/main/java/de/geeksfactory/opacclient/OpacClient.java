@@ -28,6 +28,7 @@ import android.content.res.AssetManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
@@ -367,7 +368,7 @@ public class OpacClient extends Application {
         super.onCreate();
         sp = PreferenceManager.getDefaultSharedPreferences(this);
 
-        if (!BuildConfig.DEBUG) {
+        if (!BuildConfig.DEBUG && Build.VERSION.SDK_INT >= 14) {
             ACRAConfiguration config = ACRA.getNewDefaultConfig(this);
             config.setResToastText(R.string.crash_toast_text);
             config.setResDialogText(R.string.crash_dialog_text);

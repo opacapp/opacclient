@@ -176,6 +176,7 @@
     <string name="notification_problems">Notifications might be broken.</string>
     <string name="no_results">The search returned no results.</string>
     <string name="replacedby">This library now has an own app with extended features. We recommend using this special app. Click on the Play Store Icon on the right to download it</string>
+    <string name="oldandroid">Your phone has an old version of Android. We are sorry to say that this is the last version of our app to support this version and you will no longer receive updates or bugfixes.</string>
     <string name="email_address">Email address</string>
     <string name="email_address_description">Required for e-book reservations</string>
     <string name="accchange_sorry">Switching accounts failed, please start a new search.</string>
