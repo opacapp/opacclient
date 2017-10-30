@@ -640,7 +640,7 @@ public class SearchFragment extends Fragment implements AccountSelectedListener 
                 if (!homeBranch.equals("")) {
                     sp.edit()
                       .putString(OpacClient.PREF_HOME_BRANCH_PREFIX + app.getAccount().getId(),
-                              homeBranch).commit();
+                              homeBranch).apply();
                 }
                 return;
             }

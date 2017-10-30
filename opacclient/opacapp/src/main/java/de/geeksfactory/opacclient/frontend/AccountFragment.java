@@ -834,7 +834,7 @@ public class AccountFragment extends Fragment implements
                                                    i.setData(Uri.parse(result.getUrl()));
                                                    sp.edit()
                                                      .putBoolean("reader_needed_ignore", true)
-                                                     .commit();
+                                                     .apply();
                                                    startActivity(i);
                                                }
                                            })

@@ -504,7 +504,7 @@ public class MainActivity extends OpacActivity
         if (!sp.contains("seen_update_dialog_5.1.1")) {
             DialogFragment newFragment = new UpdateInfoDialogFragment();
             newFragment.show(getSupportFragmentManager(), "updateinfo");
-            sp.edit().putBoolean("seen_update_dialog_5.1.1", true).commit();
+            sp.edit().putBoolean("seen_update_dialog_5.1.1", true).apply();
         }
     }
 

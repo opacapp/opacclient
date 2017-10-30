@@ -246,7 +246,7 @@ public class OpacClient extends Application {
     }
 
     public void setAccount(long id) {
-        sp.edit().putLong(OpacClient.PREF_SELECTED_ACCOUNT, id).commit();
+        sp.edit().putLong(OpacClient.PREF_SELECTED_ACCOUNT, id).apply();
         resetCache();
         if (getLibrary() != null && !BuildConfig.DEBUG) {
             ACRA.getErrorReporter().putCustomData("library",
