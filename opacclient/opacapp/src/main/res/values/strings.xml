@@ -62,6 +62,7 @@
     <string name="notification_service_desc">Notify, if an item is about to expire (no warranties given)</string>
     <string name="notification_service_wifionly">Check on WiFi only</string>
     <string name="notification_service_wifionly_desc">Does not download information over mobile networks. You might miss some notifications if you go without WiFi for a longer time.</string>
+    <string name="notification_channel">Expiry notifications</string>
     <string-array name="warning">
         <item>Same day</item>
         <item>1 day before</item>

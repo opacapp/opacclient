@@ -48,4 +48,4 @@
 -dontwarn retrofit2.Platform$Java8
 
 # Apache
--dontwarn org.apache.**
+#-dontwarn org.apache.**

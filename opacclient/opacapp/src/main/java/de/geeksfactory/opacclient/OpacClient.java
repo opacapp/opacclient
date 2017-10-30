@@ -37,8 +37,10 @@ import android.util.Log;
 import com.commonsware.cwac.wakeful.WakefulIntentService;
 
 import org.acra.ACRA;
-import org.acra.ACRAConfiguration;
 import org.acra.annotation.ReportsCrashes;
+import org.acra.config.ACRAConfiguration;
+import org.acra.config.ACRAConfigurationException;
+import org.acra.config.ConfigurationBuilder;
 import org.joda.time.DateTime;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -368,25 +370,30 @@ public class OpacClient extends Application {
         sp = PreferenceManager.getDefaultSharedPreferences(this);
 
         if (!BuildConfig.DEBUG) {
-            ACRAConfiguration config = ACRA.getNewDefaultConfig(this);
-            config.setResToastText(R.string.crash_toast_text);
-            config.setResDialogText(R.string.crash_dialog_text);
-            config.setResToastText(R.string.crash_toast_text);
-            config.setResNotifTickerText(R.string.crash_notif_ticker_text);
-            config.setResNotifTitle(R.string.crash_notif_title);
-            config.setResNotifText(R.string.crash_notif_text);
-            config.setResNotifIcon(android.R.drawable.stat_notify_error);
-            config.setResDialogText(R.string.crash_dialog_text);
-            ACRA.init(this, config);
+            try {
+                final ACRAConfiguration config = new ConfigurationBuilder(this)
+                        .setResToastText(R.string.crash_toast_text)
+                        .setResDialogText(R.string.crash_dialog_text)
+                        .setResToastText(R.string.crash_toast_text)
+                        .setResNotifTickerText(R.string.crash_notif_ticker_text)
+                        .setResNotifTitle(R.string.crash_notif_title)
+                        .setResNotifText(R.string.crash_notif_text)
+                        .setResNotifIcon(android.R.drawable.stat_notify_error)
+                        .setResDialogText(R.string.crash_dialog_text)
+                        .build();
+                ACRA.init(this, config);
 
-            if (getLibrary() != null) {
-                ACRA.getErrorReporter().putCustomData("library",
-                        getLibrary().getIdent());
+                if (getLibrary() != null) {
+                    ACRA.getErrorReporter().putCustomData("library",
+                            getLibrary().getIdent());
+                }
+                DateTime lastUpdate = new PreferenceDataSource(getApplicationContext())
+                        .getLastLibraryConfigUpdate();
+                ACRA.getErrorReporter().putCustomData("data_version",
+                        lastUpdate != null ? lastUpdate.toString() : "null");
+            } catch (ACRAConfigurationException e) {
+                e.printStackTrace();
             }
-            DateTime lastUpdate = new PreferenceDataSource(getApplicationContext())
-                    .getLastLibraryConfigUpdate();
-            ACRA.getErrorReporter().putCustomData("data_version",
-                    lastUpdate != null ? lastUpdate.toString() : "null");
         }
         DebugTools.init(this);
 
