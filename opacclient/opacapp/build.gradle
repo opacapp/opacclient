@@ -4,8 +4,8 @@ apply plugin: 'com.android.application'
 apply plugin: 'jacoco'
 
 android {
-    compileSdkVersion 25
-    buildToolsVersion '25.0.3'
+    compileSdkVersion 26
+    buildToolsVersion '26.0.2'
 
     defaultConfig {
         applicationId "de.geeksfactory.opacclient"
@@ -53,6 +53,7 @@ android {
     packagingOptions {
         exclude 'META-INF/NOTICE'
         exclude 'META-INF/LICENSE'
+        exclude 'META-INF/DEPENDENCIES'
     }
 
     useLibrary 'org.apache.http.legacy'
@@ -83,8 +84,7 @@ dependencies {
     compile 'com.android.support:preference-v7:25.4.0'
     compile 'com.nineoldandroids:library:2.4.0'
     compile 'org.apmem.tools:layouts:1.8@aar'
-    compile 'org.apache.httpcomponents:httpclient-android:4.3.5.1'
-    compile 'org.apache.httpcomponents:httpmime:4.3.6'
+    implementation 'org.apache.httpcomponents:httpmime:4.3.6'
     compile 'net.opacapp:multiline-collapsingtoolbar:1.5.0'
     compile 'joda-time:joda-time:2.8.2'
     compile 'org.joda:joda-convert:1.8'
