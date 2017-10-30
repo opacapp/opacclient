@@ -5,6 +5,7 @@ apply plugin: 'jacoco'
 buildscript {
     repositories {
         jcenter()
+        google()
     }
     dependencies {
         classpath 'com.android.tools.build:gradle:3.0.0'
@@ -17,8 +18,8 @@ buildscript {
 allprojects {
     repositories {
         jcenter()
+        google()
         maven { url "https://jitpack.io" }
-        maven { url 'https://maven.google.com' }
 
     }
 }
