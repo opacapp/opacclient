@@ -11,7 +11,7 @@ android:
 script:
     - cd opacclient
     - ./gradlew checkDebug lintDebug test jacocoRootReport coveralls
-    - cat opacapp/build/reports/lint-results.xml
+    - cat opacapp/build/reports/lint-results-debug.xml
 cache:
     directories:
         - $HOME/.gradle
