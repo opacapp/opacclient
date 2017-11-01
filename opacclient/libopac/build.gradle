@@ -23,6 +23,10 @@ task copyTestResources(type: Copy) {
     into "${buildDir}/classes/test"
 }
 
+jacoco {
+    toolVersion = "0.7.4.201502262128"
+}
+
 jacocoTestReport {
     reports {
         xml.enabled = true
@@ -48,7 +52,7 @@ ext {
     siteUrl = 'https://github.com/opacapp/opacclient'
     gitUrl = 'https://github.com/opacapp/opacclient.git'
 
-    libraryVersion = '5.2.2'
+    libraryVersion = '5.2.3'
 
     developerId = 'opacapp'
     developerName = 'Web Opac App'

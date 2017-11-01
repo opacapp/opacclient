@@ -11,8 +11,8 @@ android {
         applicationId "de.geeksfactory.opacclient"
         minSdkVersion 14
         targetSdkVersion 27
-        versionCode 180
-        versionName "5.2.2"
+        versionCode 181
+        versionName "5.2.3"
         vectorDrawables.useSupportLibrary = true
     }
 
@@ -111,6 +111,10 @@ dependencies {
     compile files('libs/adapter-1.0.1.jar')
     compile files('libs/endless-1.2.3.jar')
     compile files('libs/cwac-wakeful-1.0.5.jar')
+}
+
+jacoco {
+    toolVersion = "0.7.4.201502262128"
 }
 
 task jacocoTestReport(type: JacocoReport, dependsOn: 'testDebugUnitTest') {
