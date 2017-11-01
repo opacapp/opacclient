@@ -453,10 +453,14 @@ public abstract class OpacActivity extends AppCompatActivity
         try {
             if (previousFragment instanceof SearchFragment &&
                     fragment instanceof AccountFragment && previousFragment.getView() != null) {
+                ViewCompat.setTransitionName(previousFragment.getView().findViewById(R.id
+                        .rlSimpleSearch), getString(R.string.transition_gray_box));
                 transaction.addSharedElement(previousFragment.getView().findViewById(R.id
                         .rlSimpleSearch), getString(R.string.transition_gray_box));
             } else if (previousFragment instanceof AccountFragment &&
                     fragment instanceof SearchFragment && previousFragment.getView() != null) {
+                ViewCompat.setTransitionName(previousFragment.getView().findViewById(R.id
+                        .rlAccHeader), getString(R.string.transition_gray_box));
                 transaction.addSharedElement(previousFragment.getView().findViewById(R.id
                         .rlAccHeader), getString(R.string.transition_gray_box));
             }
