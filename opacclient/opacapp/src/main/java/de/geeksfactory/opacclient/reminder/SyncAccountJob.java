@@ -18,16 +18,15 @@
  */
 package de.geeksfactory.opacclient.reminder;
 
-import android.app.AlarmManager;
+import android.app.Service;
 import android.content.Context;
-import android.content.Intent;
 import android.content.SharedPreferences;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
 import android.preference.PreferenceManager;
+import android.support.annotation.NonNull;
 import android.util.Log;
 
-import com.commonsware.cwac.wakeful.WakefulIntentService;
+import com.evernote.android.job.Job;
+import com.evernote.android.job.JobRequest;
 
 import org.acra.ACRA;
 import org.joda.time.DateTime;
@@ -37,6 +36,7 @@ import org.json.JSONException;
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import de.geeksfactory.opacclient.BuildConfig;
 import de.geeksfactory.opacclient.OpacClient;
@@ -51,80 +51,119 @@ import de.geeksfactory.opacclient.webservice.LibraryConfigUpdateService;
 import de.geeksfactory.opacclient.webservice.WebService;
 import de.geeksfactory.opacclient.webservice.WebServiceManager;
 
-public class SyncAccountService extends WakefulIntentService {
+public class SyncAccountJob extends Job {
 
-    private static final String NAME = "SyncAccountService";
+    static final String TAG = "SyncAccountJob";
+    static final String TAG_RETRY = "SyncAccountJob_retry";
+    static final String TAG_IMMEDIATE = "SyncAccountJob_immediate";
 
-    public SyncAccountService() {
-        super(NAME);
+    public static void scheduleJob(Context ctx) {
+        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(ctx);
+        new JobRequest.Builder(TAG)
+                .setPeriodic(TimeUnit.HOURS.toMillis(12), TimeUnit.HOURS.toMillis(3))
+                .setRequiredNetworkType(sp.getBoolean("notification_service_wifionly", false) ?
+                        JobRequest.NetworkType.UNMETERED : JobRequest.NetworkType.CONNECTED)
+                .setRequirementsEnforced(true)
+                .setUpdateCurrent(true)
+                .build()
+                .schedule();
     }
 
+    public static void scheduleRetryJob(Context ctx) {
+        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(ctx);
+        new JobRequest.Builder(TAG_RETRY)
+                .setExecutionWindow(TimeUnit.MINUTES.toMillis(30), TimeUnit.MINUTES.toMillis(60))
+                .setBackoffCriteria(TimeUnit.MINUTES.toMillis(30),
+                        JobRequest.BackoffPolicy.EXPONENTIAL)
+                .setRequiredNetworkType(sp.getBoolean("notification_service_wifionly", false) ?
+                        JobRequest.NetworkType.UNMETERED : JobRequest.NetworkType.CONNECTED)
+                .setRequirementsEnforced(true)
+                .setUpdateCurrent(true)
+                .build()
+                .schedule();
+    }
+
+    public static void runImmediately() {
+        new JobRequest.Builder(TAG_IMMEDIATE)
+                .startNow()
+                .setUpdateCurrent(true)
+                .build()
+                .schedule();
+    }
+
+    @NonNull
     @Override
-    protected void doWakefulWork(Intent intent) {
-        if (BuildConfig.DEBUG) Log.i(NAME, "SyncAccountService started");
+    protected Result onRunJob(Params params) {
+        if (BuildConfig.DEBUG) Log.i(TAG, "SyncAccountJob started");
 
-        updateLibraryConfig();
-
-        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(this);
-
-        if (!sp.getBoolean(SyncAccountAlarmListener.PREF_SYNC_SERVICE, false)) {
-            if (BuildConfig.DEBUG) Log.i(NAME, "notifications are disabled");
-            return;
+        if (getParams().getTag().equals(TAG_RETRY) && getParams().getFailureCount() >= 4) {
+            // too many retries, give up and wait for the next regular scheduled run
+            return Result.SUCCESS;
         }
 
-        ConnectivityManager connMgr = (ConnectivityManager) getSystemService(
-                Context.CONNECTIVITY_SERVICE);
-        NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
-        boolean failed;
-        if (networkInfo != null) {
-            if (!sp.getBoolean("notification_service_wifionly", false) ||
-                    networkInfo.getType() == ConnectivityManager.TYPE_WIFI ||
-                    networkInfo.getType() == ConnectivityManager.TYPE_ETHERNET) {
-                OpacClient app = (OpacClient) getApplication();
-                AccountDataSource data = new AccountDataSource(this);
-                ReminderHelper helper = new ReminderHelper(app);
-                failed = syncAccounts(app, data, sp, helper);
-            } else {
-                failed = true;
-            }
-        } else {
-            failed = true;
+        if (!getParams().getTag().equals(TAG_RETRY)) {
+            updateLibraryConfig();
         }
+
+        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(getContext());
+
+        if (!sp.getBoolean(SyncAccountJobCreator.PREF_SYNC_SERVICE, false)) {
+            if (BuildConfig.DEBUG) Log.i(TAG, "notifications are disabled");
+            return Result.SUCCESS;
+        }
+
+        OpacClient app = getApp();
+        AccountDataSource data = new AccountDataSource(getContext());
+        ReminderHelper helper = new ReminderHelper(app);
+        boolean failed = syncAccounts(app, data, sp, helper);
 
         if (BuildConfig.DEBUG) {
-            Log.i(NAME, "SyncAccountService finished " +
+            Log.i(TAG, "SyncAccountJob finished " +
                     (failed ? " with errors" : " " + "successfully"));
         }
 
-        long previousPeriod = sp.getLong(SyncAccountAlarmListener.PREF_SYNC_INTERVAL, 0);
-        long newPeriod = failed ? AlarmManager.INTERVAL_HOUR : AlarmManager.INTERVAL_HALF_DAY;
-        if (previousPeriod != newPeriod) {
-            sp.edit().putLong(SyncAccountAlarmListener.PREF_SYNC_INTERVAL, newPeriod).apply();
-            WakefulIntentService.cancelAlarms(this);
-            WakefulIntentService
-                    .scheduleAlarms(SyncAccountAlarmListener.withOnePeriodBeforeStart(), this);
+        if (failed && params.getTag().equals(TAG)) {
+            // only schedule a retry job if this is not already a retry
+            scheduleRetryJob(getContext());
+        }
+        if (params.getTag().equals(TAG_RETRY)) {
+            return failed ? Result.RESCHEDULE : Result.SUCCESS;
+        } else {
+            return failed ? Result.FAILURE : Result.SUCCESS;
+        }
+    }
+
+    private OpacClient getApp() {
+        Context ctx = getContext();
+        if (ctx instanceof Service) {
+            return (OpacClient) ((Service) ctx).getApplication();
+        } else if (ctx instanceof OpacClient) {
+            return (OpacClient) ctx;
+        } else {
+            return (OpacClient) ctx.getApplicationContext();
         }
     }
 
     private void updateLibraryConfig() {
-        PreferenceDataSource prefs = new PreferenceDataSource(this);
+        PreferenceDataSource prefs = new PreferenceDataSource(getContext());
         if (prefs.getLastLibraryConfigUpdate() != null
                 && prefs.getLastLibraryConfigUpdate()
                         .isAfter(DateTime.now().minus(Hours.ONE))) {
-            Log.d(NAME, "Do not run updateLibraryConfig as last run was less than an hour ago.");
+            Log.d(TAG, "Do not run updateLibraryConfig as last run was less than an hour ago.");
             return;
         }
 
         WebService service = WebServiceManager.getInstance();
-        File filesDir = new File(getFilesDir(), LibraryConfigUpdateService.LIBRARIES_DIR);
+        File filesDir =
+                new File(getContext().getFilesDir(), LibraryConfigUpdateService.LIBRARIES_DIR);
         filesDir.mkdirs();
         try {
-            int count = ((OpacClient) getApplication()).getUpdateHandler().updateConfig(
+            int count = getApp().getUpdateHandler().updateConfig(
                     service, prefs,
                     new LibraryConfigUpdateService.FileOutput(filesDir),
-                    new JsonSearchFieldDataSource(this));
-            Log.d(NAME, "updated config for " + String.valueOf(count) + " libraries");
-            ((OpacClient) getApplication()).resetCache();
+                    new JsonSearchFieldDataSource(getContext()));
+            Log.d(TAG, "updated config for " + String.valueOf(count) + " libraries");
+            getApp().resetCache();
             if (!BuildConfig.DEBUG) {
                 ACRA.getErrorReporter().putCustomData("data_version",
                         prefs.getLastLibraryConfigUpdate().toString());
@@ -142,11 +181,12 @@ public class SyncAccountService extends WakefulIntentService {
         if (!sp.contains("update_151_clear_cache")) {
             data.invalidateCachedData();
             sp.edit().putBoolean("update_151_clear_cache", true).apply();
-       }
+        }
 
         for (Account account : accounts) {
-            if (BuildConfig.DEBUG)
-                Log.i(NAME, "Loading data for Account " + account.toString());
+            if (BuildConfig.DEBUG) {
+                Log.i(TAG, "Loading data for Account " + account.toString());
+            }
 
             AccountData res;
             try {

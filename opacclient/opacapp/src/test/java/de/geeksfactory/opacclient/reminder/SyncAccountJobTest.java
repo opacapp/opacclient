@@ -28,8 +28,8 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
 
-public class SyncAccountServiceTest {
-    private SyncAccountService service;
+public class SyncAccountJobTest {
+    private SyncAccountJob service;
 
     // mocks
     private OpacClient app;
@@ -53,7 +53,7 @@ public class SyncAccountServiceTest {
         helper = mock(ReminderHelper.class);
         api1 = mock(OpacApi.class);
         api2 = mock(OpacApi.class);
-        service = new SyncAccountService();
+        service = new SyncAccountJob();
 
         when(sp.contains("update_151_clear_cache")).thenReturn(true);
 

@@ -44,7 +44,7 @@ import org.joda.time.DateTime;
 import de.geeksfactory.opacclient.OpacClient;
 import de.geeksfactory.opacclient.R;
 import de.geeksfactory.opacclient.reminder.ReminderHelper;
-import de.geeksfactory.opacclient.reminder.SyncAccountService;
+import de.geeksfactory.opacclient.reminder.SyncAccountJob;
 import de.geeksfactory.opacclient.storage.AccountDataSource;
 import de.geeksfactory.opacclient.storage.JsonSearchFieldDataSource;
 import de.geeksfactory.opacclient.storage.PreferenceDataSource;
@@ -127,8 +127,7 @@ public class MainPreferenceFragment extends PreferenceFragmentCompat {
             meta_run_check.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
                 @Override
                 public boolean onPreferenceClick(Preference arg0) {
-                    Intent i = new Intent(context, SyncAccountService.class);
-                    context.startService(i);
+                    SyncAccountJob.runImmediately();
                     return false;
                 }
             });
@@ -150,8 +149,7 @@ public class MainPreferenceFragment extends PreferenceFragmentCompat {
                             PreferenceManager.getDefaultSharedPreferences(getActivity());
                     sp.edit().remove("reservation_fee_warning_ignore").apply();
 
-                    Intent i = new Intent(context, SyncAccountService.class);
-                    context.startService(i);
+                    SyncAccountJob.runImmediately();
                     return false;
                 }
             });

@@ -93,7 +93,7 @@ import de.geeksfactory.opacclient.objects.LentItem;
 import de.geeksfactory.opacclient.objects.Library;
 import de.geeksfactory.opacclient.objects.ReservedItem;
 import de.geeksfactory.opacclient.reminder.ReminderHelper;
-import de.geeksfactory.opacclient.reminder.SyncAccountAlarmListener;
+import de.geeksfactory.opacclient.reminder.SyncAccountJobCreator;
 import de.geeksfactory.opacclient.storage.AccountDataSource;
 import de.geeksfactory.opacclient.ui.AccountDividerItemDecoration;
 import de.geeksfactory.opacclient.utils.ErrorReporter;
@@ -1124,7 +1124,7 @@ public class AccountFragment extends Fragment implements
             Lent items
          */
         final boolean notification_on =
-                sp.getBoolean(SyncAccountAlarmListener.PREF_SYNC_SERVICE, false);
+                sp.getBoolean(SyncAccountJobCreator.PREF_SYNC_SERVICE, false);
         boolean notification_problems = false;
 
         displayWarning();
