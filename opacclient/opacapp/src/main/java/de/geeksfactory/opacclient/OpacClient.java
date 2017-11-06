@@ -34,7 +34,7 @@ import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.util.Log;
 
-import com.commonsware.cwac.wakeful.WakefulIntentService;
+import com.evernote.android.job.JobManager;
 
 import org.acra.ACRA;
 import org.acra.annotation.ReportsCrashes;
@@ -69,7 +69,8 @@ import de.geeksfactory.opacclient.i18n.AndroidStringProvider;
 import de.geeksfactory.opacclient.networking.AndroidHttpClientFactory;
 import de.geeksfactory.opacclient.objects.Account;
 import de.geeksfactory.opacclient.objects.Library;
-import de.geeksfactory.opacclient.reminder.SyncAccountAlarmListener;
+import de.geeksfactory.opacclient.reminder.SyncAccountJob;
+import de.geeksfactory.opacclient.reminder.SyncAccountJobCreator;
 import de.geeksfactory.opacclient.searchfields.SearchField;
 import de.geeksfactory.opacclient.searchfields.SearchQuery;
 import de.geeksfactory.opacclient.storage.AccountDataSource;
@@ -407,7 +408,8 @@ public class OpacClient extends Application {
         }
 
         // Schedule alarms
-        WakefulIntentService.scheduleAlarms(new SyncAccountAlarmListener(), this);
+        JobManager.create(this).addJobCreator(new SyncAccountJobCreator());
+        SyncAccountJob.scheduleJob(this);
     }
 
     public boolean getSlidingMenuEnabled() {

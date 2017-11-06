@@ -36,7 +36,6 @@ import de.geeksfactory.opacclient.objects.Account;
 import de.geeksfactory.opacclient.objects.LentItem;
 import de.geeksfactory.opacclient.reminder.Alarm;
 import de.geeksfactory.opacclient.reminder.ReminderBroadcastReceiver;
-import de.geeksfactory.opacclient.reminder.SyncAccountAlarmListener;
 import de.geeksfactory.opacclient.searchfields.SearchField;
 import de.geeksfactory.opacclient.searchfields.SearchQuery;
 import de.geeksfactory.opacclient.storage.AccountDataSource;
