@@ -158,11 +158,6 @@
             android:theme="@style/Theme.Opacapp.Base.AccountDetail"/>
 
         <service
-            android:name="de.geeksfactory.opacclient.reminder.SyncAccountService"
-            android:exported="false">
-        </service>
-
-        <service
             android:name="de.geeksfactory.opacclient.webservice.LibraryConfigUpdateService"
             android:exported="false">
         </service>
@@ -173,16 +168,6 @@
                 <action android:name="android.intent.action.BOOT_COMPLETED"/>
                 <action android:name="android.intent.action.MY_PACKAGE_REPLACED"/>
             </intent-filter>
-        </receiver>
-
-        <receiver android:name="com.commonsware.cwac.wakeful.AlarmReceiver">
-            <intent-filter>
-                <action android:name="android.intent.action.BOOT_COMPLETED"/>
-            </intent-filter>
-
-            <meta-data
-                android:name="com.commonsware.cwac.wakeful"
-                android:resource="@xml/wakefulintentservice"/>
         </receiver>
 
         <receiver android:name="de.geeksfactory.opacclient.reminder.ReminderBroadcastReceiver"/>

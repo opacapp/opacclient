@@ -237,16 +237,23 @@ public class Bibliotheca extends OkHttpBaseApi {
             }
         }
 
-        DropdownSearchField orderField = new DropdownSearchField("orderselect",
-                stringProvider.getString(StringProvider.ORDER), false,
-                null);
-        orderField.addDropdownValue("1", stringProvider.getString(StringProvider.ORDER_DEFAULT));
-        orderField.addDropdownValue("2:desc", stringProvider.getString(StringProvider.ORDER_YEAR_DESC));
-        orderField.addDropdownValue("2:asc", stringProvider.getString(StringProvider.ORDER_YEAR_ASC));
-        orderField.addDropdownValue("3:desc", stringProvider.getString(StringProvider.ORDER_CATEGORY_DESC));
-        orderField.addDropdownValue("3:asc", stringProvider.getString(StringProvider.ORDER_CATEGORY_ASC));
-        orderField.setMeaning(Meaning.ORDER);
-        fields.add(orderField);
+        if (fields.size() > 0) {
+            DropdownSearchField orderField = new DropdownSearchField("orderselect",
+                    stringProvider.getString(StringProvider.ORDER), false,
+                    null);
+            orderField
+                    .addDropdownValue("1", stringProvider.getString(StringProvider.ORDER_DEFAULT));
+            orderField.addDropdownValue("2:desc",
+                    stringProvider.getString(StringProvider.ORDER_YEAR_DESC));
+            orderField.addDropdownValue("2:asc",
+                    stringProvider.getString(StringProvider.ORDER_YEAR_ASC));
+            orderField.addDropdownValue("3:desc",
+                    stringProvider.getString(StringProvider.ORDER_CATEGORY_DESC));
+            orderField.addDropdownValue("3:asc",
+                    stringProvider.getString(StringProvider.ORDER_CATEGORY_ASC));
+            orderField.setMeaning(Meaning.ORDER);
+            fields.add(orderField);
+        }
 
         return fields;
     }

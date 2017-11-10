@@ -21,6 +21,7 @@
  */
 package de.geeksfactory.opacclient.frontend;
 
+import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -189,7 +190,7 @@ public abstract class OpacActivity extends AppCompatActivity
                 new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        sp.edit().putBoolean("seen_drawer_toggle_notice", true).commit();
+                        sp.edit().putBoolean("seen_drawer_toggle_notice", true).apply();
                         header.findViewById(R.id.toggle_notice)
                               .setVisibility(View.GONE);
                     }
@@ -322,7 +323,7 @@ public abstract class OpacActivity extends AppCompatActivity
                                 .getDefaultSharedPreferences(OpacActivity.this);
                         drawerLayout.openDrawer(drawer);
                         sp.edit().putBoolean("version2.0.0-introduced", true)
-                          .commit();
+                          .apply();
                     }
                 }, 500);
 
@@ -452,10 +453,14 @@ public abstract class OpacActivity extends AppCompatActivity
         try {
             if (previousFragment instanceof SearchFragment &&
                     fragment instanceof AccountFragment && previousFragment.getView() != null) {
+                ViewCompat.setTransitionName(previousFragment.getView().findViewById(R.id
+                        .rlSimpleSearch), getString(R.string.transition_gray_box));
                 transaction.addSharedElement(previousFragment.getView().findViewById(R.id
                         .rlSimpleSearch), getString(R.string.transition_gray_box));
             } else if (previousFragment instanceof AccountFragment &&
                     fragment instanceof SearchFragment && previousFragment.getView() != null) {
+                ViewCompat.setTransitionName(previousFragment.getView().findViewById(R.id
+                        .rlAccHeader), getString(R.string.transition_gray_box));
                 transaction.addSharedElement(previousFragment.getView().findViewById(R.id
                         .rlAccHeader), getString(R.string.transition_gray_box));
             }
@@ -643,6 +648,7 @@ public abstract class OpacActivity extends AppCompatActivity
         return findViewById(R.id.content_frame_right) != null;
     }
 
+    @SuppressLint("WrongViewCast")
     protected void setTwoPane(boolean active) {
         twoPane = active;
         if (isTablet()) {

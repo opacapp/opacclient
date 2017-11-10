@@ -24,7 +24,7 @@ public class PicaLBSAccountTest extends BaseHtmlTest {
         this.file = file;
     }
 
-    private static final String[] FILES = new String[]{"greifswald.html"};
+    private static final String[] FILES = new String[]{"greifswald.html", "erfurt.html"};
 
     @Parameterized.Parameters(name = "{0}")
     public static Collection<String[]> files() {

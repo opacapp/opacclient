@@ -1,11 +1,13 @@
 package de.geeksfactory.opacclient.reminder;
 
+import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.preference.PreferenceManager;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
@@ -37,6 +39,7 @@ public class ReminderBroadcastReceiver extends BroadcastReceiver {
     public static final String ACTION_NOTIFICATION_SNOOZE = "snooze";
     public static final String ACTION_NOTIFICATION_CLICK = "click";
     public static final String ACTION_NOTIFICATION_DONT_REMIND_AGAIN = "dontremindagain";
+    public static final String NOTIFICATION_CHANNEL_REMINDER = "reminder";
     private static final String LOG_TAG = "ReminderBroadcastRcvr";
 
     private AccountDataSource adata;
@@ -44,6 +47,25 @@ public class ReminderBroadcastReceiver extends BroadcastReceiver {
     private Context context;
     private Intent intent;
     private SharedPreferences prefs;
+
+    private void setUpChannel() {
+        if (android.os.Build.VERSION.SDK_INT < android.os.Build.VERSION_CODES.O) {
+            return;
+        }
+        NotificationChannel channel = new NotificationChannel(
+                NOTIFICATION_CHANNEL_REMINDER,
+                context.getString(R.string.notification_channel),
+                NotificationManager.IMPORTANCE_DEFAULT
+        );
+        channel.enableLights(true);
+        channel.setLightColor(Color.RED);
+        channel.enableVibration(false);
+        channel.setSound(null, null);
+
+        NotificationManager notificationManager = (NotificationManager) context
+                .getSystemService(Context.NOTIFICATION_SERVICE);
+        notificationManager.createNotificationChannel(channel);
+    }
 
     @Override
     public void onReceive(Context context, Intent intent) {
@@ -80,6 +102,8 @@ public class ReminderBroadcastReceiver extends BroadcastReceiver {
     }
 
     private void showNotification() {
+        setUpChannel();
+
         if (!prefs.getBoolean("notification_service", false)) {
             if (BuildConfig.DEBUG) Log.i(LOG_TAG, "not showing notification because disabled");
             return;
@@ -129,7 +153,7 @@ public class ReminderBroadcastReceiver extends BroadcastReceiver {
             notificationTitle = context.getString(R.string.notif_title);
         }
 
-        NotificationCompat.Builder builder = new NotificationCompat.Builder(context)
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(context, NOTIFICATION_CHANNEL_REMINDER)
                 .setContentTitle(notificationTitle)
                 .setContentText(notificationText).setTicker(notificationText);
 

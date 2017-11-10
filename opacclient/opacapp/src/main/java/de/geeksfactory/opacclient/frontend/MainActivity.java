@@ -36,7 +36,6 @@ import de.geeksfactory.opacclient.objects.Account;
 import de.geeksfactory.opacclient.objects.LentItem;
 import de.geeksfactory.opacclient.reminder.Alarm;
 import de.geeksfactory.opacclient.reminder.ReminderBroadcastReceiver;
-import de.geeksfactory.opacclient.reminder.SyncAccountAlarmListener;
 import de.geeksfactory.opacclient.searchfields.SearchField;
 import de.geeksfactory.opacclient.searchfields.SearchQuery;
 import de.geeksfactory.opacclient.storage.AccountDataSource;
@@ -504,7 +503,7 @@ public class MainActivity extends OpacActivity
         if (!sp.contains("seen_update_dialog_5.1.1")) {
             DialogFragment newFragment = new UpdateInfoDialogFragment();
             newFragment.show(getSupportFragmentManager(), "updateinfo");
-            sp.edit().putBoolean("seen_update_dialog_5.1.1", true).commit();
+            sp.edit().putBoolean("seen_update_dialog_5.1.1", true).apply();
         }
     }
 

@@ -62,6 +62,7 @@
     <string name="notification_service_desc">Benachrichtigung, wenn ein Medium abgegeben werden muss (keine Garantie)</string>
     <string name="notification_service_wifionly">Nur über WLAN</string>
     <string name="notification_service_wifionly_desc">Ruft keine Infos ab, wenn das Gerät mobiles Datennetz benutzt. Wenn lange keine WLAN-Verbindung verfügbar ist, erscheinen eventuell keine Benachrichtigungen.</string>
+    <string name="notification_channel">Ablauf-Benachrichtigungen</string>
     <string-array name="warning">
         <item>Am selben Tag</item>
         <item>1 Tag vorher</item>
