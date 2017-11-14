@@ -173,6 +173,11 @@ public class HttpClientFactory {
      */
     public OkHttpClient getNewOkHttpClient(boolean customssl, boolean tls_only,
             boolean allCipherSuites) {
+        return getOkHttpClientBuilder(customssl, tls_only, allCipherSuites).build();
+    }
+
+    protected OkHttpClient.Builder getOkHttpClientBuilder(boolean customssl, boolean tls_only,
+            boolean allCipherSuites) {
         OkHttpClient.Builder builder = new OkHttpClient.Builder();
 
         CookieManager cookieManager = new CookieManager();
@@ -221,13 +226,12 @@ public class HttpClientFactory {
                 connectionSpecs.add(ConnectionSpec.CLEARTEXT);
                 builder.connectionSpecs(connectionSpecs);
 
-                return builder.build();
+                return builder;
             } catch (Exception e) {
                 e.printStackTrace();
-                return builder.build();
+                return builder;
             }
         } else {
-            TrustManagerFactory tmf = null;
             try {
                 X509TrustManager trustManager = getSystemDefaultTrustManager();
                 SSLSocketFactory socketFactory = getSystemDefaultSSLSocketFactory(trustManager);
@@ -237,7 +241,7 @@ public class HttpClientFactory {
                     ignored) {
 
             }
-            return builder.build();
+            return builder;
         }
     }
 
