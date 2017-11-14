@@ -46,6 +46,7 @@ import java.security.NoSuchAlgorithmException;
 import java.security.cert.CertificateException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import javax.net.ssl.SSLContext;
 import javax.net.ssl.SSLSocketFactory;
@@ -185,6 +186,9 @@ public class HttpClientFactory {
         builder.cookieJar(new JavaNetCookieJar(cookieManager));
 
         builder.addNetworkInterceptor(new CustomRedirectInterceptor());
+        builder.connectTimeout(60, TimeUnit.SECONDS);
+        builder.readTimeout(60, TimeUnit.SECONDS);
+        builder.writeTimeout(60, TimeUnit.SECONDS);
 
         if (customssl && ssl_store_path != null) {
             try {
