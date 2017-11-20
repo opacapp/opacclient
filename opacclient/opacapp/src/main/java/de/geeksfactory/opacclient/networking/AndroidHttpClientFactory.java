@@ -28,6 +28,8 @@ import java.security.cert.CertificateException;
 
 import de.geeksfactory.opacclient.OpacClient;
 import de.geeksfactory.opacclient.R;
+import de.geeksfactory.opacclient.utils.DebugTools;
+import okhttp3.OkHttpClient;
 
 public class AndroidHttpClientFactory extends HttpClientFactory {
 
@@ -60,5 +62,13 @@ public class AndroidHttpClientFactory extends HttpClientFactory {
         } else {
             return TlsSniSocketFactoryWithSSL3.class;
         }
+    }
+
+    @Override
+    public OkHttpClient getNewOkHttpClient(boolean customssl, boolean tls_only,
+            boolean allCipherSuites) {
+        OkHttpClient.Builder client =
+                super.getOkHttpClientBuilder(customssl, tls_only, allCipherSuites);
+        return DebugTools.prepareHttpClient(client).build();
     }
 }
