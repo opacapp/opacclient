@@ -388,7 +388,7 @@ public class Bibliotheca extends OkHttpBaseApi {
     }
 
     @Override
-    public SearchRequestResult searchGetPage(int page) throws IOException {
+    public SearchRequestResult searchGetPage(int page) throws IOException, OpacErrorException {
         if (!initialised) {
             start();
         }
@@ -398,7 +398,8 @@ public class Bibliotheca extends OkHttpBaseApi {
         return parseSearch(html, page, data);
     }
 
-    public static SearchRequestResult parseSearch(String html, int page, JSONObject data) {
+    public static SearchRequestResult parseSearch(String html, int page, JSONObject data)
+            throws OpacErrorException {
         Document doc = Jsoup.parse(html);
         doc.setBaseUri(data.optString("baseurl"));
         Elements table = doc
@@ -474,6 +475,8 @@ public class Bibliotheca extends OkHttpBaseApi {
                 e.printStackTrace();
                 results_total = -1;
             }
+        } else if (doc.select(".resultzeile").size() > 0) {
+            throw new OpacErrorException(doc.select(".resultzeile").text());
         }
         return new SearchRequestResult(results, results_total, page);
     }
