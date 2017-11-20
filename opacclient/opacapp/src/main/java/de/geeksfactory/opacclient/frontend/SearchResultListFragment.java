@@ -287,7 +287,7 @@ public class SearchResultListFragment extends CustomListFragment {
         activatedPosition = position;
     }
 
-    public void setSearchResult(SearchRequestResult searchresult) {
+    public void setSearchResult(final SearchRequestResult searchresult) {
         for (SearchResult result : searchresult.getResults()) {
             result.setPage(searchresult.getPage_index());
         }
@@ -299,7 +299,7 @@ public class SearchResultListFragment extends CustomListFragment {
         }
 
         if (searchresult.getResults().size() == 0
-                && searchresult.getTotal_result_count() == 0) {
+                && searchresult.getTotal_result_count() <= 0) {
             setEmptyText(getString(R.string.no_results));
         }
         this.searchresult = searchresult;
@@ -346,9 +346,7 @@ public class SearchResultListFragment extends CustomListFragment {
 						 * result count is not known until the second page is
 						 * loaded
 						 */
-                        if (resultCount >= 0 && getActivity() != null)
-
-                        {
+                        if (resultCount >= 0 && getActivity() != null) {
                             ((AppCompatActivity) getActivity()).getSupportActionBar().setSubtitle(
                                     getResources().getQuantityString(R.plurals.result_number,
                                             resultCount, resultCount));

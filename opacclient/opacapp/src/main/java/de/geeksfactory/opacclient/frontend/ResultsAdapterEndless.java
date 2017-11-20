@@ -76,7 +76,7 @@ public class ResultsAdapterEndless extends EndlessAdapter {
 
     @Override
     protected boolean cacheInBackground() throws Exception {
-        if (page < maxPage || getWrappedAdapter().getCount() < resultCount || (resultCount == -1 && !endReached)) {
+        if (page < maxPage || getWrappedAdapter().getCount() < resultCount || (resultCount == -1 && objects.size() > 0 && !endReached)) {
             page++;
             SearchRequestResult result = listener.onLoadMore(page);
             itemsToAppend = result.getResults();
