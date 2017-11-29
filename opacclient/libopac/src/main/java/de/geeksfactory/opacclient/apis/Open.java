@@ -29,7 +29,7 @@ import org.jsoup.nodes.FormElement;
 import org.jsoup.select.Elements;
 
 import java.io.IOException;
-import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -60,11 +60,9 @@ import de.geeksfactory.opacclient.searchfields.SearchQuery;
 import de.geeksfactory.opacclient.searchfields.TextSearchField;
 import okhttp3.Call;
 import okhttp3.Callback;
-import okhttp3.FormBody;
 import okhttp3.Headers;
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
-import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
 
@@ -512,7 +510,11 @@ public class Open extends OkHttpBaseApi implements OpacApi {
         for (int i = 0; i + 2 < parts.length; i++) {
             if (parts[i].equals("SetSimpleCover")) {
                 String url = parts[i + 2].replace("&amp;", "&");
-                alternatives.add(url);
+                try {
+                    alternatives.add(new URL(new URL(opac_url), url).toString());
+                } catch (MalformedURLException ignored) {
+
+                }
             }
         }
 
@@ -521,7 +523,11 @@ public class Open extends OkHttpBaseApi implements OpacApi {
             for (int i = 0; i + 2 < parts.length; i++) {
                 if (parts[i].equals("SetSimpleCover")) {
                     String url = parts[i + 2].replace("&amp;", "&");
-                    alternatives.add(url);
+                    try {
+                        alternatives.add(new URL(new URL(opac_url), url).toString());
+                    } catch (MalformedURLException ignored) {
+
+                    }
                 }
             }
         }
