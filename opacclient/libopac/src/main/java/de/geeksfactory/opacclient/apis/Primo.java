@@ -397,6 +397,16 @@ public class Primo extends ApacheBaseApi {
                 }
                 res.addCopy(copy);
             }
+        } else if (doc2.select(".EXLLocationList").size() > 0) {
+            // e.g. University of South Wales
+            for (Element row : doc2.select(".EXLLocationList")) {
+                Copy copy = new Copy();
+                copy.setBranch(row.select(".EXLLocationsTitle").text());
+                copy.setDepartment(row.select(".EXLLocationInfo strong").text());
+                copy.setShelfmark(row.select(".EXLLocationInfo cite").text());
+                copy.setStatus(row.select(".EXLLocationInfo em").text());
+                res.addCopy(copy);
+            }
         }
 
         if (res.getCopies().size() == 0) {
