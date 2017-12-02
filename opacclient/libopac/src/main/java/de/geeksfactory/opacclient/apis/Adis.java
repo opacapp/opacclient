@@ -28,6 +28,8 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -56,6 +58,8 @@ import de.geeksfactory.opacclient.searchfields.SearchQuery;
 import de.geeksfactory.opacclient.searchfields.TextSearchField;
 
 public class Adis extends ApacheBaseApi implements OpacApi {
+
+    private static final Logger LOGGER = Logger.getLogger(Adis.class.getName());
 
     protected static HashMap<String, MediaType> types = new HashMap<>();
     protected static HashSet<String> ignoredFieldNames = new HashSet<>();
@@ -99,6 +103,7 @@ public class Adis extends ApacheBaseApi implements OpacApi {
     protected String s_service;
     protected String s_sid;
     protected String s_exts;
+    protected String s_exts1;
     protected String s_alink;
     protected List<NameValuePair> s_pageform;
     protected int s_lastpage;
@@ -135,6 +140,9 @@ public class Adis extends ApacheBaseApi implements OpacApi {
 
     public Document htmlGet(String url) throws
             IOException {
+
+        final String methodName = "htmlGet";
+        logInfo("%s - url  = %s", methodName,  url);
 
         if (!url.contains("requestCount") && s_requestCount >= 0) {
             url = url + (url.contains("?") ? "&" : "?") + "requestCount="
@@ -175,11 +183,16 @@ public class Adis extends ApacheBaseApi implements OpacApi {
         }
         String html = convertStreamToString(response.getEntity().getContent(),
                 getDefaultEncoding());
+
+        logInfo("%s - html = %s", methodName,  html);
+
         HttpUtils.consume(response.getEntity());
         Document doc = Jsoup.parse(html);
-        Pattern patRequestCount = Pattern.compile("requestCount=([0-9]+)");
-        for (Element a : doc.select("a")) {
-            Matcher objid_matcher = patRequestCount.matcher(a.attr("href"));
+        Pattern patRequestCount = Pattern.compile(".*requestCount=([0-9]+)");
+        final Elements a1 = doc.select("a");
+        for (Element a : a1) {
+            final String href = a.attr("href");
+            Matcher objid_matcher = patRequestCount.matcher(href);
             if (objid_matcher.matches()) {
                 s_requestCount = Integer.parseInt(objid_matcher.group(1));
             }
@@ -242,10 +255,13 @@ public class Adis extends ApacheBaseApi implements OpacApi {
         Document doc = Jsoup.parse(html);
         Pattern patRequestCount = Pattern
                 .compile(".*requestCount=([0-9]+)[^0-9].*");
-        for (Element a : doc.select("a")) {
-            Matcher objid_matcher = patRequestCount.matcher(a.attr("href"));
+        Elements a1 = doc.select("a");
+        for (Element a : a1) {
+            String href = a.attr("href");
+            Matcher objid_matcher = patRequestCount.matcher(href);
             if (objid_matcher.matches()) {
                 s_requestCount = Integer.parseInt(objid_matcher.group(1));
+                break;
             }
         }
         doc.setBaseUri(url);
@@ -277,7 +293,25 @@ public class Adis extends ApacheBaseApi implements OpacApi {
                 }
             }
             if (s_exts == null) {
-                s_exts = "SS6";
+                for (Element navitem : doc.select(".search-adv-a a")) {
+                    if (navitem.text().contains("Erweiterte Suche")) {
+                        List<String> spParams = getQueryParams(navitem.attr("href")).get("sp");
+                        if(spParams.size()>1) {
+                            s_exts = spParams.get(0);
+                            s_exts1 = spParams.get(1);
+                        } else {
+                            s_exts = spParams.get(0);
+                            s_exts1 = null;
+                        }
+                        if (navitem.attr("href").contains("service=")) {
+                            s_service = getQueryParams(navitem.attr("href")).get(
+                                    "service").get(0);
+                        }
+                    }
+                }
+                if (s_exts == null) {
+                    s_exts = "SS6";
+                }
             }
 
         } catch (JSONException e) {
@@ -294,12 +328,14 @@ public class Adis extends ApacheBaseApi implements OpacApi {
     @Override
     public SearchRequestResult search(List<SearchQuery> queries)
             throws IOException, OpacErrorException {
-        start();
+        if (!initialised) {
+            start();
+        }
         // TODO: There are also libraries with a different search form,
         // s_exts=SS2 instead of s_exts=SS6
         // e.g. munich. Treat them differently!
-        Document doc = htmlGet(opac_url + ";jsessionid=" + s_sid + "?service="
-                + s_service + "&sp=" + s_exts);
+
+        Document doc = getSearchPage();
 
         int dropdownTextCount = 0;
         int totalCount = 0;
@@ -1566,6 +1602,14 @@ public class Adis extends ApacheBaseApi implements OpacApi {
         }
     }
 
+    private Document getSearchPage() throws IOException {
+        String url = opac_url + ";jsessionid=" + s_sid + "?service="
+                + s_service + "&sp=" + s_exts + (s_exts1 == null ? "" : ("&sp=" + s_exts1) );
+
+        Document doc = htmlGet(url);
+        return doc;
+    }
+
     @Override
     public List<SearchField> parseSearchFields() throws IOException,
             JSONException {
@@ -1573,8 +1617,7 @@ public class Adis extends ApacheBaseApi implements OpacApi {
             start();
         }
 
-        Document doc = htmlGet(opac_url + ";jsessionid=" + s_sid + "?service="
-                + s_service + "&sp=" + s_exts);
+        Document doc = getSearchPage();
 
         List<SearchField> fields = new ArrayList<>();
         // dropdown to select which field you want to search in
@@ -1723,6 +1766,36 @@ public class Adis extends ApacheBaseApi implements OpacApi {
     public Set<String> getSupportedLanguages() throws IOException {
         // TODO Auto-generated method stub
         return null;
+    }
+    private static void logInfo(String format, Object ... args) {
+        if (!LOGGER.isLoggable(Level.INFO)) {
+            return;
+        }
+        String msg = String.format(format, args);
+        LOGGER.log(Level.INFO, msg);
+    }
+
+    private static void logWarning(String format, Object ... args) {
+        if (!LOGGER.isLoggable(Level.WARNING)) {
+            return;
+        }
+        String msg = String.format(format, args);
+        LOGGER.log(Level.INFO, msg);
+    }
+
+    private static void logStart(String methodName) {
+        if (!LOGGER.isLoggable(Level.INFO)) {
+            return;
+        }
+        String msg = String.format("Start %s", methodName);
+        LOGGER.log(Level.INFO, msg);
+    }
+    private static void logEnde(String methodName) {
+        if (!LOGGER.isLoggable(Level.INFO)) {
+            return;
+        }
+        String msg = String.format("Ende  %s", methodName);
+        LOGGER.log(Level.INFO, msg);
     }
 
 }
