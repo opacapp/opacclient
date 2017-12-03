@@ -206,7 +206,7 @@ public abstract class SearchField {
      * providing additional UI features.
      */
     public enum Meaning {
-        FREE, TITLE, AUTHOR, DIGITAL, AVAILABLE, ISBN, BARCODE, YEAR, BRANCH, HOME_BRANCH, CATEGORY,
+        FREE, TITLE, AUTHOR, DIGITAL, AVAILABLE, ISBN, BARCODE, BRANCH, HOME_BRANCH, CATEGORY, YEAR,
         PUBLISHER, KEYWORD, SYSTEM, AUDIENCE, LOCATION, ORDER, DATABASE
     }
 
