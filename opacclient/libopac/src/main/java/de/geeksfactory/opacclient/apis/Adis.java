@@ -686,7 +686,8 @@ public class Adis extends ApacheBaseApi implements OpacApi {
 
         if (res.getTitle() == null) {
             for (Detail d : res.getDetails()) {
-                if (d.getDesc().contains("Gesamtwerk")) {
+                if (d.getDesc().contains("Gesamtwerk")
+                        || d.getDesc().contains("Zeitschrift")) {
                     res.setTitle(d.getContent());
                     break;
                 }
