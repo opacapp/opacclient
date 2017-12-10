@@ -416,8 +416,13 @@ public class Adis extends ApacheBaseApi implements OpacApi {
                             .attr("value")));
                 }
             }
-            nvpairs.add(new BasicNameValuePair("$Toolbar_1.x", "1"));
-            nvpairs.add(new BasicNameValuePair("$Toolbar_1.y", "1"));
+            String name = "$Toolbar_0";
+            if (doc.select("[id^=Toolbar_][title*=Trefferliste]").size() > 0) {
+                // In Stuttgart, "Trefferliste" is Nr. 5, in Zurich its Nr. 1. Ofen, 0 ("back") works as well.
+                name = doc.select("[id^=Toolbar_][title*=Trefferliste]").first().attr("name");
+            }
+            nvpairs.add(new BasicNameValuePair(name + ".x", "1"));
+            nvpairs.add(new BasicNameValuePair(name + ".y", "1"));
 
             doc  = htmlPost(opac_url + ";jsessionid=" + s_sid, nvpairs);
 
