@@ -1595,9 +1595,7 @@ public class Adis extends ApacheBaseApi implements OpacApi {
     @Override
     public List<SearchField> parseSearchFields() throws IOException,
             JSONException {
-        if (!initialised) {
-            start();
-        }
+        start();
 
         Document doc = htmlGet(opac_url + ";jsessionid=" + s_sid + "?service="
                 + s_service + getSpParams());
@@ -1623,7 +1621,7 @@ public class Adis extends ApacheBaseApi implements OpacApi {
         JSONObject selectableData = new JSONObject();
         selectableData.put("selectable", false);
 
-        for (Element row : doc.select("div[id~=F\\d+]")) {
+        for (Element row : doc.select("div[id~=F\\d+], .search-adv-source")) {
             if (row.select("input[type=text]").size() == 1
                     && row.select("input, select").first().tagName()
                           .equals("input")) {
