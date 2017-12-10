@@ -1640,7 +1640,6 @@ public class Adis extends ApacheBaseApi implements OpacApi {
                 DropdownSearchField field = new DropdownSearchField();
                 field.setId(select.id());
                 field.setDisplayName(row.select("label").first().text());
-                List<Map<String, String>> values = new ArrayList<>();
                 for (Element opt : select.select("option")) {
                     field.addDropdownValue(opt.attr("value"), opt.text());
                 }
