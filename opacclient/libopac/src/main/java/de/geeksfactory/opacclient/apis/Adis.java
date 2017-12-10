@@ -5,6 +5,7 @@ import org.apache.http.NameValuePair;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
+import org.apache.http.client.methods.HttpUriRequest;
 import org.apache.http.message.BasicNameValuePair;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
@@ -101,13 +102,10 @@ public class Adis extends ApacheBaseApi implements OpacApi {
     protected Library library;
     protected int s_requestCount = 0;
     protected String s_service;
-    protected String s_serviceSearch;
-    protected String s_serviceAccount;
     protected String s_hrefFormatSearch;
     protected String s_hrefFormatAccount;
     protected String s_sid;
     protected String s_exts;
-    protected String s_exts1;
     protected String s_alink;
     protected List<NameValuePair> s_pageform;
     protected int s_lastpage;
@@ -142,48 +140,31 @@ public class Adis extends ApacheBaseApi implements OpacApi {
         }
     }
 
-    private Document getSearchPage() throws IOException {
+    protected Document getSearchPage() throws IOException {
 
         final String methodName = "getSearchPage";
         logInfo("%s > requestCount = %d", methodName,  s_requestCount);
 
-        StringBuffer sb = new StringBuffer();
-        sb.append(opac_url);
-
-        sb.append(";jsessionid=");
-        sb.append(s_sid);
-
-        sb.append("?service=");
-        sb.append(s_serviceSearch);
-
-        sb.append("&sp=");
-        sb.append(s_exts);
-
-        if (s_exts1!=null) {
-            sb.append("&sp=");
-            sb.append(s_exts1);
-        }
-//        String url = opac_url + ";jsessionid=" + s_sid + "?service="
-//                + s_serviceSearch + "&sp=" + s_exts + (s_exts1 == null ? "" : ("&sp=" + s_exts1) );
-
-        // SearchPage wurd u. U. aus GUI 2 x aufgerufen,
-        // dabei idintischen requestCount verwenden
-        if(s_requestCount>0) {
-            sb.append("&requestCount=");
-            sb.append(s_requestCount-1);
-        }
-
-        String url = sb.toString();
-        // Beachtet s_requestCount<=0 beim -1 nicht:
-        // url = String.format(s_hrefFormatSearch, opac_url, s_sid, s_requestCount-1);
-        // Frage: Stört das überhaupt?
-         url = String.format(s_hrefFormatSearch, opac_url, s_sid
-                , (s_requestCount > 0 ? s_requestCount-1 : s_requestCount));
-
+        String url = String.format(s_hrefFormatSearch, opac_url, s_sid, s_requestCount);
         Document doc = htmlGet(url);
 
         logInfo("%s < requestCount = %d", methodName,  s_requestCount);
         return doc;
+    }
+
+    protected void updateFormatSearch(Document doc) {
+        for (Element navitem : doc.select(".search-adv-a a")) {
+            if (navitem.text().contains("Erweiterte Suche")) {
+                String href = navitem.attr("href");
+                List<String> spParams = getQueryParams(href).get("sp");
+                if(spParams.size()>0) {
+                    s_exts = spParams.get(0);
+                }
+                s_hrefFormatSearch = getQueryParamFormat(href);
+                logInfo("%s - s_hrefFormatSearch = %s", "updateFormatSearch", s_hrefFormatSearch);
+                break;
+            }
+        }
     }
 
     protected static String getQueryParamFormat(final String href) {
@@ -216,24 +197,39 @@ public class Adis extends ApacheBaseApi implements OpacApi {
         return format;
     }
 
-    public Document htmlGet(String url) throws
-            IOException {
-
-        final String methodName = "htmlGet";
-        logInfo("%s > requestCount = %d, url  = %s", methodName,  s_requestCount, url);
-
-        if (!url.contains("requestCount") && s_requestCount >= 0) {
-            logFine("%s - !url.contains(\"requestCount\")", methodName);
-            url = url + (url.contains("?") ? "&" : "?") + "requestCount="
-                    + s_requestCount;
-            logInfo("%s   requestCount = %d, url  = %s", methodName,  s_requestCount, url);
+    protected int getRequestCount(Document doc) {
+        Pattern patRequestCount = Pattern.compile(".*requestCount=([0-9]+)");
+        final Elements a1 = doc.select("a");
+        for (Element a : a1) {
+            final String href = a.attr("href");
+            Matcher objid_matcher = patRequestCount.matcher(href);
+            if (objid_matcher.matches()) {
+                return Integer.parseInt(objid_matcher.group(1));
+            }
         }
 
-        HttpGet httpget = new HttpGet(cleanUrl(url));
-        HttpResponse response;
+        logWarning("requestCount nicht gefunden");
+        return -1;
+    }
 
+    protected void updateRequestCount(Document doc) {
+        int  requestCount = getRequestCount(doc);
+        if(requestCount>=0) {
+            if(s_requestCount == requestCount) {
+                logWarning("requestCount didnot change");
+//                s_requestCount++;
+            } else {
+                s_requestCount = requestCount;
+            }
+        }
+    }
+
+    protected Document htmlExecute(final String methodName, HttpUriRequest request) throws IOException {
+
+        HttpResponse response;
+        final String url = request.getURI().toURL().toString();
         try {
-            response = http_client.execute(httpget);
+            response = http_client.execute(request);
         } catch (javax.net.ssl.SSLPeerUnverifiedException e) {
             LOGGER.log(Level.SEVERE, url, e);
             throw new SSLSecurityException(e.getMessage());
@@ -269,19 +265,92 @@ public class Adis extends ApacheBaseApi implements OpacApi {
 
         HttpUtils.consume(response.getEntity());
         Document doc = Jsoup.parse(html);
-        Pattern patRequestCount = Pattern.compile(".*requestCount=([0-9]+)");
-        final Elements a1 = doc.select("a");
-        for (Element a : a1) {
-            final String href = a.attr("href");
-            Matcher objid_matcher = patRequestCount.matcher(href);
-            if (objid_matcher.matches()) {
-                s_requestCount = Integer.parseInt(objid_matcher.group(1));
-                logInfo("%s < requestCount = %d", methodName,  s_requestCount);
-                break;
+
+        if (LOGGER.isLoggable(Level.INFO)) {
+            Elements h1s = doc.select("h1");
+            if(h1s.size()>0) {
+                logInfo("%s - h1: %s", methodName, h1s.first().text());
             }
         }
+
+        updateFormatSearch(doc);
+        updateRequestCount(doc);
+
         doc.setBaseUri(url);
+        logInfo("%s < requestCount = %d, url  = %s", methodName,  s_requestCount, url);
         return doc;
+
+    }
+    public Document htmlGet(String url) throws
+            IOException {
+
+        final String methodName = "htmlGet";
+        logInfo("%s > requestCount = %d, url  = %s", methodName,  s_requestCount, url);
+
+        if (!url.contains("requestCount") && s_requestCount >= 0) {
+            logFine("%s - !url.contains(\"requestCount\")", methodName);
+            url = url + (url.contains("?") ? "&" : "?") + "requestCount="
+                    + s_requestCount;
+            logInfo("%s   requestCount = %d, url  = %s", methodName,  s_requestCount, url);
+        }
+
+        HttpGet httpget = new HttpGet(cleanUrl(url));
+
+        return htmlExecute(methodName, httpget);
+        /*
+        HttpResponse response;
+
+        try {
+            response = http_client.execute(httpget);
+        } catch (javax.net.ssl.SSLPeerUnverifiedException e) {
+            LOGGER.log(Level.SEVERE, url, e);
+            throw new SSLSecurityException(e.getMessage());
+        } catch (javax.net.ssl.SSLException e) {
+            // Can be "Not trusted server certificate" or can be a
+            // aborted/interrupted handshake/connection
+            if (e.getMessage().contains("timed out")
+                    || e.getMessage().contains("reset by")) {
+                e.printStackTrace();
+                throw new NotReachableException(e.getMessage());
+            } else {
+                throw new SSLSecurityException(e.getMessage());
+            }
+        } catch (InterruptedIOException e) {
+            e.printStackTrace();
+            throw new NotReachableException(e.getMessage());
+        } catch (IOException e) {
+            if (e.getMessage() != null && e.getMessage().contains("Request aborted")) {
+                e.printStackTrace();
+                throw new NotReachableException(e.getMessage());
+            } else {
+                throw e;
+            }
+        }
+
+        if (response.getStatusLine().getStatusCode() >= 400) {
+            throw new NotReachableException(response.getStatusLine().getReasonPhrase());
+        }
+        String html = convertStreamToString(response.getEntity().getContent(),
+                getDefaultEncoding());
+
+
+        logFine("%s - html = %s", methodName,  html);
+
+        HttpUtils.consume(response.getEntity());
+        Document doc = Jsoup.parse(html);
+
+        if (LOGGER.isLoggable(Level.INFO)) {
+            Elements h1s = doc.select("h1");
+            if(h1s.size()>0) {
+                logInfo("%s - h1: ", h1s.first().val());
+            }
+        }
+
+        updateRequestCount(doc);
+        doc.setBaseUri(url);
+        logInfo("%s < requestCount = %d, url  = %s", methodName,  s_requestCount, url);
+        return doc;
+        */
     }
 
     public Document htmlPost(String url, List<NameValuePair> data)
@@ -294,10 +363,19 @@ public class Adis extends ApacheBaseApi implements OpacApi {
 
         boolean rcf = false;
         for (NameValuePair nv : data) {
-            logInfo("%s - %s = %s", methodName,  nv.getName(), nv.getValue());
+
+            // nur gesetzte Werte loggen
+            if((nv.getValue()!=null)&&(nv.getValue().length()>0)) {
+                logInfo("%s - %s = %s", methodName,  nv.getName(), nv.getValue());
+            }
+
             if (nv.getName().equals("requestCount")) {
                 rcf = true;
-                break;
+                if (!LOGGER.isLoggable(Level.INFO)) {
+                    // falls nicht geloggt wird,
+                    // kann die Schleife hier abgebrochen werden
+                    break;
+                }
             }
         }
         if (!rcf) {
@@ -305,6 +383,9 @@ public class Adis extends ApacheBaseApi implements OpacApi {
         }
 
         httppost.setEntity(new UrlEncodedFormEntity(data, getDefaultEncoding()));
+
+        return htmlExecute(methodName, httppost);
+        /*
         HttpResponse response;
 
         try {
@@ -344,20 +425,11 @@ public class Adis extends ApacheBaseApi implements OpacApi {
 
         HttpUtils.consume(response.getEntity());
         Document doc = Jsoup.parse(html);
-        Pattern patRequestCount = Pattern
-                .compile(".*requestCount=([0-9]+)[^0-9].*");
-        Elements a1 = doc.select("a");
-        for (Element a : a1) {
-            String href = a.attr("href");
-            Matcher objid_matcher = patRequestCount.matcher(href);
-            if (objid_matcher.matches()) {
-                s_requestCount = Integer.parseInt(objid_matcher.group(1));
-                break;
-            }
-        }
+        updateRequestCount(doc);
         doc.setBaseUri(url);
         logInfo("%s < requestCount = %d, url  = %s", methodName,  s_requestCount, url);
         return doc;
+        */
     }
 
     @Override
@@ -386,30 +458,19 @@ public class Adis extends ApacheBaseApi implements OpacApi {
                     s_sid = objid_matcher.group(1);
                 }
             }
-            s_serviceAccount = s_service;
             for (Element navitem : doc.select(".cssmenu_button a")) {
                 if (navitem.text().contains("Mein Konto")) {
                     String href = navitem.attr("href");
-                    s_serviceAccount = getQueryParams(href).get("service").get(0);
                     s_hrefFormatAccount = getQueryParamFormat(href);
                 }
             }
-            s_serviceSearch = s_service;
             if (s_exts == null) {
                 for (Element navitem : doc.select(".search-adv-a a")) {
                     if (navitem.text().contains("Erweiterte Suche")) {
                         String href = navitem.attr("href");
                         List<String> spParams = getQueryParams(href).get("sp");
-                        if(spParams.size()>1) {
+                        if(spParams.size()>0) {
                             s_exts = spParams.get(0);
-                            s_exts1 = spParams.get(1);
-                        } else {
-                            s_exts = spParams.get(0);
-                            s_exts1 = null;
-                        }
-                        if (href.contains("service=")) {
-                            s_serviceSearch = getQueryParams(href).get(
-                                    "service").get(0);
                         }
                         s_hrefFormatSearch = getQueryParamFormat(href);
                     }
@@ -433,6 +494,16 @@ public class Adis extends ApacheBaseApi implements OpacApi {
     @Override
     public SearchRequestResult search(List<SearchQuery> queries)
             throws IOException, OpacErrorException {
+
+        final String methodName = "search";
+        if(LOGGER.isLoggable(Level.FINE)) {
+            for (SearchQuery query : queries) {
+                if((query.getValue()!=null)&&(query.getValue().length()>0)) {
+                    logFine("%s - SearchQuery: %s = %s", methodName,  query.getKey(), query.getValue());
+                }
+            }
+        }
+
         if (!initialised) {
             start();
         }
@@ -444,7 +515,6 @@ public class Adis extends ApacheBaseApi implements OpacApi {
 
         int dropdownTextCount = 0;
         int totalCount = 0;
-        List<NameValuePair> nvpairs = new ArrayList<>();
         for (SearchQuery query : queries) {
             if (!query.getValue().equals("")) {
                 totalCount++;
@@ -492,6 +562,7 @@ public class Adis extends ApacheBaseApi implements OpacApi {
             }
         }
 
+        List<NameValuePair> nvpairs = new ArrayList<>();
         for (Element input : doc.select("input, select")) {
             if (!"image".equals(input.attr("type"))
                     && !"submit".equals(input.attr("type"))
@@ -499,6 +570,7 @@ public class Adis extends ApacheBaseApi implements OpacApi {
                 nvpairs.add(new BasicNameValuePair(input.attr("name"), input
                         .attr("value")));
             }
+            addIfSubmitWithFocus(nvpairs, input, "Suche starten");
         }
         nvpairs.add(new BasicNameValuePair("$Toolbar_0.x", "1"));
         nvpairs.add(new BasicNameValuePair("$Toolbar_0.y", "1"));
@@ -533,6 +605,9 @@ public class Adis extends ApacheBaseApi implements OpacApi {
             }
             nvpairs.add(new BasicNameValuePair("$Toolbar_1.x", "1"));
             nvpairs.add(new BasicNameValuePair("$Toolbar_1.y", "1"));
+            // Stuttgart
+            nvpairs.add(new BasicNameValuePair("$Toolbar_0.x", "1"));
+            nvpairs.add(new BasicNameValuePair("$Toolbar_0.y", "1"));
 
             doc  = htmlPost(opac_url + ";jsessionid=" + s_sid, nvpairs);
 
@@ -1036,6 +1111,8 @@ public class Adis extends ApacheBaseApi implements OpacApi {
                                 msg);
                     }
                 } else {
+                    form = getPageform(doc);
+                    /*
                     form = new ArrayList<>();
                     for (Element input : doc.select("input, select")) {
                         if (!"image".equals(input.attr("type"))
@@ -1046,6 +1123,7 @@ public class Adis extends ApacheBaseApi implements OpacApi {
                                     input.attr("value")));
                         }
                     }
+                    */
                     form.add(new BasicNameValuePair("textButton",
                             "Reservation abschicken"));
                     res = new ReservationResult(MultiStepResult.Status.OK);
@@ -1054,6 +1132,8 @@ public class Adis extends ApacheBaseApi implements OpacApi {
                     if (doc.select("input[name=textButton]").attr("value")
                            .contains("kostenpflichtig bestellen")) {
                         // Munich
+                        form = getPageform(doc);
+                        /*
                         form = new ArrayList<>();
                         for (Element input : doc.select("input, select")) {
                             if (!"image".equals(input.attr("type"))
@@ -1064,6 +1144,7 @@ public class Adis extends ApacheBaseApi implements OpacApi {
                                         input.attr("value")));
                             }
                         }
+                        */
                         form.add(new BasicNameValuePair("textButton",
                                 doc.select("input[name=textButton]").first().attr("value")));
                         doc = htmlPost(opac_url + ";jsessionid=" + s_sid, form);
@@ -1116,6 +1197,8 @@ public class Adis extends ApacheBaseApi implements OpacApi {
         if (res == null
                 || res.getStatus() == MultiStepResult.Status.SELECTION_NEEDED
                 || res.getStatus() == MultiStepResult.Status.CONFIRMATION_NEEDED) {
+            form = getPageform(doc);
+            /*
             form = new ArrayList<>();
             for (Element input : doc.select("input, select")) {
                 if (!"image".equals(input.attr("type"))
@@ -1126,6 +1209,7 @@ public class Adis extends ApacheBaseApi implements OpacApi {
                             .attr("value")));
                 }
             }
+            */
             Element button = doc.select("input[value=Abbrechen], input[value=Zurück]").first();
             form.add(new BasicNameValuePair(button.attr("name"), button.attr("value")));
             doc = htmlPost(opac_url + ";jsessionid=" + s_sid, form);
@@ -1153,6 +1237,8 @@ public class Adis extends ApacheBaseApi implements OpacApi {
     }
 
     void updatePageform(Document doc) {
+        s_pageform = getPageform(doc);
+        /*
         s_pageform = new ArrayList<>();
         for (Element input : doc.select("input, select")) {
             if (!"image".equals(input.attr("type"))
@@ -1163,6 +1249,29 @@ public class Adis extends ApacheBaseApi implements OpacApi {
                         .attr("value")));
             }
         }
+        */
+    }
+
+    /**
+     * Sammelt alle name-value-Paare zu input- oder select-Elementen
+     * in der Seite ein, die nicht vom type image, submit, checkbox sind
+     * oder deren name leer ist
+     *
+     * @param doc das html-Document mit der FORM
+     * @return Liste der NameValuePair's
+     */
+    protected List<NameValuePair> getPageform(Document doc) {
+        List<NameValuePair> form = new ArrayList<>();
+        for (Element input : doc.select("input, select")) {
+            if (!"image".equals(input.attr("type"))
+                    && !"submit".equals(input.attr("type"))
+                    && !"checkbox".equals(input.attr("type"))
+                    && !"".equals(input.attr("name"))) {
+                form.add(new BasicNameValuePair(input.attr("name"), input
+                        .attr("value")));
+            }
+        }
+        return form;
     }
 
     @Override
@@ -1180,6 +1289,7 @@ public class Adis extends ApacheBaseApi implements OpacApi {
         for (Element input : doc.select("input, select")) {
             logInfo("%s - type=%s %s=%s", methodName,  input.attr("type"),
                     input.attr("type"), input.attr("value"));
+            // erstes if passt zu getPageForm
             if (!"image".equals(input.attr("type"))
                     && !"submit".equals(input.attr("type"))
                     && !"checkbox".equals(input.attr("type"))
@@ -1222,6 +1332,8 @@ public class Adis extends ApacheBaseApi implements OpacApi {
         form.add(new BasicNameValuePair(media.split("\\|")[0], "on"));
         doc = htmlPost(opac_url + ";jsessionid=" + s_sid, form);
 
+        form = getPageform(doc);
+        /*
         form = new ArrayList<>();
         for (Element input : doc.select("input, select")) {
             if (!"image".equals(input.attr("type"))
@@ -1232,6 +1344,7 @@ public class Adis extends ApacheBaseApi implements OpacApi {
                         .attr("value")));
             }
         }
+        */
         form.add(new BasicNameValuePair("$Toolbar_0.x", "1"));
         form.add(new BasicNameValuePair("$Toolbar_0.y", "1"));
         htmlPost(opac_url + ";jsessionid=" + s_sid, form);
@@ -1252,6 +1365,7 @@ public class Adis extends ApacheBaseApi implements OpacApi {
 
         List<NameValuePair> form = new ArrayList<>();
         for (Element input : doc.select("input, select")) {
+            // erstes if passt zu getPageForm
             if (!"image".equals(input.attr("type"))
                     && !"submit".equals(input.attr("type"))
                     && !"checkbox".equals(input.attr("type"))
@@ -1290,6 +1404,8 @@ public class Adis extends ApacheBaseApi implements OpacApi {
             result.add(line);
         }
 
+        form = getPageform(doc);
+        /*
         form = new ArrayList<>();
         for (Element input : doc.select("input, select")) {
             if (!"image".equals(input.attr("type"))
@@ -1300,6 +1416,7 @@ public class Adis extends ApacheBaseApi implements OpacApi {
                         .attr("value")));
             }
         }
+        */
         form.add(new BasicNameValuePair("$Toolbar_0.x", "1"));
         form.add(new BasicNameValuePair("$Toolbar_0.y", "1"));
         htmlPost(opac_url + ";jsessionid=" + s_sid, form);
@@ -1375,8 +1492,9 @@ public class Adis extends ApacheBaseApi implements OpacApi {
         // Seite mit Vormerkungen aufrufen
         doc = htmlGet(rlink);
 
-        List<NameValuePair> form = new ArrayList<>();
         // Standard (hidden) inputs setzen
+//        List<NameValuePair> form = getPageform(doc);
+        List<NameValuePair> form = new ArrayList<>();
         for (Element input : doc.select("input, select")) {
             if (!"image".equals(input.attr("type"))
                     && !"submit".equals(input.attr("type"))
@@ -1384,7 +1502,7 @@ public class Adis extends ApacheBaseApi implements OpacApi {
                     && !"".equals(input.attr("name"))) {
                 form.add(new BasicNameValuePair(input.attr("name"), input
                         .attr("value")));
-//                addIfSubmitWithFocus(form, input, null); Notwendig?
+                addIfSubmitWithFocus(form, input, null); // Notwendig?
             }
         }
         // Checkbox setzen
@@ -1394,8 +1512,10 @@ public class Adis extends ApacheBaseApi implements OpacApi {
         // Aufrufen
         doc = htmlPost(opac_url + ";jsessionid=" + s_sid, form);
 
-        form = new ArrayList<>();
         // Standard (hidden) inputs setzen
+        form = getPageform(doc);
+        /*
+        form = new ArrayList<>();
         for (Element input : doc.select("input, select")) {
             if (!"image".equals(input.attr("type"))
                     && !"submit".equals(input.attr("type"))
@@ -1405,6 +1525,7 @@ public class Adis extends ApacheBaseApi implements OpacApi {
                         .attr("value")));
             }
         }
+        */
         form.add(new BasicNameValuePair("$Toolbar_0.x", "1"));
         form.add(new BasicNameValuePair("$Toolbar_0.y", "1"));
         // Nochmal aufrufen? Warum? Bestätigen?
@@ -1644,6 +1765,7 @@ public class Adis extends ApacheBaseApi implements OpacApi {
     protected Document htmlPostBack(Document doc) throws IOException {
         List<NameValuePair> form = new ArrayList<>();
         for (Element input : doc.select("input, select")) {
+            // if passt zu getPageform
             if (!"image".equals(input.attr("type"))
                     && !"submit".equals(input.attr("type"))
                     && !"checkbox".equals(input.attr("type"))
@@ -1668,7 +1790,23 @@ public class Adis extends ApacheBaseApi implements OpacApi {
                     .attr("value")));
             String fld = input.attr("fld");
             if((fld!=null)&&(fld.length()>0)) {
-                form.add(new BasicNameValuePair("focus", fld));
+
+                // ev. vorhandenen focus-Wert überschreiben
+                int i = 0;
+                for (i = 0; i < form.size(); i++) {
+                    NameValuePair pair = form.get(i);
+                    if (pair.getName().equals("focus")) {
+                        // bereits vorhanden
+                        break;
+                    }
+                }
+                if(i<form.size()) {
+                    // replace
+                    form.set(i, new BasicNameValuePair("focus", fld));
+                } else {
+                    // add
+                    form.add(new BasicNameValuePair("focus", fld));
+                }
             }
             return true;
         }
