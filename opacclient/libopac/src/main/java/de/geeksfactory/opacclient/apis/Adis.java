@@ -504,9 +504,9 @@ public class Adis extends ApacheBaseApi implements OpacApi {
             }
         }
 
-        if (!initialised) {
-            start();
-        }
+//        if (!initialised) {
+            start();    // notwendig wenn man vom Accoun kommt
+//        }
         // TODO: There are also libraries with a different search form,
         // s_exts=SS2 instead of s_exts=SS6
         // e.g. munich. Treat them differently!
@@ -1451,14 +1451,13 @@ public class Adis extends ApacheBaseApi implements OpacApi {
             String selection) throws IOException, OpacErrorException {
 
         start();
-        Document doc = htmlGetWithHandleLogin(account);
-//        doc = htmlGet(opac_url + ";jsessionid=" + s_sid + "?service="
-//                + s_service + "&sp=SBK");
-//        try {
-//            doc = handleLoginForm(doc, account);
-//        } catch (OpacErrorException e) {
-//            return new CancelResult(Status.ERROR, e.getMessage());
-//        }
+
+        Document doc = null;
+        try {
+            doc = htmlGetWithHandleLogin(account);
+        } catch (OpacErrorException e) {
+            return new CancelResult(Status.ERROR, e.getMessage());
+        }
 
         String rlink = null;
         rlink = media.split("\\|")[1].replace("requestCount=", "fooo=");
@@ -1497,44 +1496,36 @@ public class Adis extends ApacheBaseApi implements OpacApi {
         List<NameValuePair> form = new ArrayList<>();
         for (Element input : doc.select("input, select")) {
             if (!"image".equals(input.attr("type"))
-                    && !"submit".equals(input.attr("type"))
                     && !"checkbox".equals(input.attr("type"))
                     && !"".equals(input.attr("name"))) {
-                form.add(new BasicNameValuePair(input.attr("name"), input
-                        .attr("value")));
-                addIfSubmitWithFocus(form, input, null); // Notwendig?
+
+                if("submit".equals(input.attr("type"))) {
+                    addIfSubmitWithFocus(form, input, "Markierte Titel löschen"); // Stuttgart
+                } else {
+                    form.add(new BasicNameValuePair(input.attr("name"), input
+                            .attr("value")));
+                }
             }
         }
         // Checkbox setzen
         form.add(new BasicNameValuePair(media.split("\\|")[0], "on"));
+        // Button bedienen (wäre für Stuttgar nicht notwendig)
         form.add(new BasicNameValuePair("textButton$0",
                 "Markierte Titel löschen"));
         // Aufrufen
         doc = htmlPost(opac_url + ";jsessionid=" + s_sid, form);
 
-        // Standard (hidden) inputs setzen
+        // Wir kommen wieder auf der Seite mit den Vormerkungen raus
+        // daher zuück zur Konto-Übersichts-Seite
         form = getPageform(doc);
-        /*
-        form = new ArrayList<>();
-        for (Element input : doc.select("input, select")) {
-            if (!"image".equals(input.attr("type"))
-                    && !"submit".equals(input.attr("type"))
-                    && !"checkbox".equals(input.attr("type"))
-                    && !"".equals(input.attr("name"))) {
-                form.add(new BasicNameValuePair(input.attr("name"), input
-                        .attr("value")));
-            }
-        }
-        */
         form.add(new BasicNameValuePair("$Toolbar_0.x", "1"));
         form.add(new BasicNameValuePair("$Toolbar_0.y", "1"));
-        // Nochmal aufrufen? Warum? Bestätigen?
         htmlPost(opac_url + ";jsessionid=" + s_sid, form);
 
         return new CancelResult(Status.OK);
     }
 
-    private Document htmlGetWithHandleLogin(Account account) throws IOException,
+    protected Document htmlGetWithHandleLogin(Account account) throws IOException,
             OpacErrorException
     {
         String url = String.format(s_hrefFormatAccount, opac_url, s_sid, s_requestCount);
