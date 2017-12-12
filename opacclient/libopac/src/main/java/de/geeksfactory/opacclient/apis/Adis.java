@@ -452,6 +452,7 @@ public class Adis extends ApacheBaseApi implements OpacApi {
                 }
                 if (navitem.text().contains("Erweiterte Suche")) {
                     s_exts = getQueryParams(href).get("sp").get(0);
+                    s_hrefFormatSearch = getQueryParamFormat(href);
                 }
                 Matcher objid_matcher = padSid.matcher(href);
                 if (objid_matcher.matches()) {
@@ -472,11 +473,17 @@ public class Adis extends ApacheBaseApi implements OpacApi {
                         if(spParams.size()>0) {
                             s_exts = spParams.get(0);
                         }
-                        s_hrefFormatSearch = getQueryParamFormat(href);
+//                        s_hrefFormatSearch = getQueryParamFormat(href);
                     }
                 }
                 if (s_exts == null) {
                     s_exts = "SS6";
+                }
+            }
+            for (Element navitem : doc.select(".search-adv-a a")) {
+                if (navitem.text().contains("Erweiterte Suche")) {
+                    String href = navitem.attr("href");
+                    s_hrefFormatSearch = getQueryParamFormat(href);
                 }
             }
 
