@@ -17,8 +17,8 @@
         "Filiale",
         "Bibliotheksstandorte",
         "library",
-        "Lesesaalbestand",
-        "Sie suchen in der Bibliothek:"
+        "Sie suchen in der Bibliothek:",
+        "Lesesaalbestand"
     ],
     "LOCATION": [
         "Ort",
