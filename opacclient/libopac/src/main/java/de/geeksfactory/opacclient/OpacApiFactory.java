@@ -32,7 +32,6 @@ import de.geeksfactory.opacclient.apis.Primo;
 import de.geeksfactory.opacclient.apis.SISIS;
 import de.geeksfactory.opacclient.apis.SRU;
 import de.geeksfactory.opacclient.apis.TestApi;
-import de.geeksfactory.opacclient.apis.TouchPoint;
 import de.geeksfactory.opacclient.apis.VuFind;
 import de.geeksfactory.opacclient.apis.WebOpacNet;
 import de.geeksfactory.opacclient.apis.WinBiap;
@@ -123,8 +122,6 @@ public class OpacApiFactory {
             newApiInstance = new WinBiap();
         } else if (lib.getApi().equals("heidi")) {
             newApiInstance = new Heidi();
-        } else if (lib.getApi().equals("touchpoint")) {
-            newApiInstance = new TouchPoint();
         } else if (lib.getApi().equals("open")) {
             newApiInstance = new Open();
         } else if (lib.getApi().equals("test")) {
