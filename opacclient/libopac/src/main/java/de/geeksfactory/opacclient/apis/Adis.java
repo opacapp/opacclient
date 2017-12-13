@@ -21,6 +21,7 @@ import java.io.InterruptedIOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -105,7 +106,7 @@ public class Adis extends ApacheBaseApi implements OpacApi {
     protected String s_hrefFormatSearch;
     protected String s_hrefFormatAccount;
     protected String s_sid;
-    protected String s_exts;
+    protected List<String> s_exts;
     protected String s_alink;
     protected List<NameValuePair> s_pageform;
     protected int s_lastpage;
@@ -156,10 +157,7 @@ public class Adis extends ApacheBaseApi implements OpacApi {
         for (Element navitem : doc.select(".search-adv-a a")) {
             if (navitem.text().contains("Erweiterte Suche")) {
                 String href = navitem.attr("href");
-                List<String> spParams = getQueryParams(href).get("sp");
-                if(spParams.size()>0) {
-                    s_exts = spParams.get(0);
-                }
+                s_exts = getQueryParams(href).get("sp");
                 s_hrefFormatSearch = getQueryParamFormat(href);
                 logInfo("%s - s_hrefFormatSearch = %s", "updateFormatSearch", s_hrefFormatSearch);
                 break;
@@ -352,7 +350,7 @@ public class Adis extends ApacheBaseApi implements OpacApi {
                     s_service = getQueryParams(href).get("service").get(0);
                 }
                 if (navitem.text().contains("Erweiterte Suche")) {
-                    s_exts = getQueryParams(href).get("sp").get(0);
+                    s_exts = getQueryParams(href).get("sp");
                     s_hrefFormatSearch = getQueryParamFormat(href);
                 }
                 Matcher objid_matcher = padSid.matcher(href);
@@ -370,15 +368,11 @@ public class Adis extends ApacheBaseApi implements OpacApi {
                 for (Element navitem : doc.select(".search-adv-a a")) {
                     if (navitem.text().contains("Erweiterte Suche")) {
                         String href = navitem.attr("href");
-                        List<String> spParams = getQueryParams(href).get("sp");
-                        if(spParams.size()>0) {
-                            s_exts = spParams.get(0);
-                        }
-//                        s_hrefFormatSearch = getQueryParamFormat(href);
+                        s_exts = getQueryParams(href).get("sp");
                     }
                 }
                 if (s_exts == null) {
-                    s_exts = "SS6";
+                    s_exts = Collections.singletonList("SS6");
                 }
             }
             for (Element navitem : doc.select(".search-adv-a a")) {
@@ -444,7 +438,7 @@ public class Adis extends ApacheBaseApi implements OpacApi {
 
                 dropdownTextCount++;
 
-                if (s_exts.equals("SS2")
+                if (s_exts.get(0).equals("SS2")
                         || (query.getSearchField().getData() != null && !query
                         .getSearchField().getData()
                         .optBoolean("selectable", true))) {
