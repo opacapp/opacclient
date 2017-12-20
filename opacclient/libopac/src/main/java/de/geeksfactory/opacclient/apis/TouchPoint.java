@@ -397,7 +397,7 @@ public class TouchPoint extends ApacheBaseApi implements OpacApi {
 
         int results_total = -1;
 
-        String resultnumstr = doc.select(".box-header h2").first().text();
+        String resultnumstr = doc.select(".box-header h2, .box-header h1").first().text();
         if (resultnumstr.contains("(1/1)") || resultnumstr.contains(" 1/1")) {
             throw new SingleResultFound();
         } else if (resultnumstr.contains("(")) {
@@ -406,6 +406,13 @@ public class TouchPoint extends ApacheBaseApi implements OpacApi {
         } else if (resultnumstr.contains(": ")) {
             results_total = Integer.parseInt(resultnumstr.replaceAll(
                     ".*: ([0-9]+)$", "$1"));
+        } else if (resultnumstr.contains("Treffer")) {
+            try {
+                results_total = Integer.parseInt(resultnumstr.replaceAll(
+                        ".* ([0-9]+)$", "$1"));
+            } catch (NumberFormatException e) {
+                // pass
+            }
         }
 
         Elements table = doc.select("table.data > tbody > tr");

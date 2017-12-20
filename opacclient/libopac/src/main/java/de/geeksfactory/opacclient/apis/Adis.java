@@ -20,6 +20,7 @@ import java.io.InterruptedIOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -98,7 +99,7 @@ public class Adis extends ApacheBaseApi implements OpacApi {
     protected int s_requestCount = 0;
     protected String s_service;
     protected String s_sid;
-    protected String s_exts;
+    protected List<String> s_exts;
     protected String s_alink;
     protected List<NameValuePair> s_pageform;
     protected int s_lastpage;
@@ -261,15 +262,17 @@ public class Adis extends ApacheBaseApi implements OpacApi {
 
             Pattern padSid = Pattern
                     .compile(".*;jsessionid=([0-9A-Fa-f]+)[^0-9A-Fa-f].*");
-            for (Element navitem : doc.select("#unav li a, .tree_ul li a")) {
+            for (Element navitem : doc
+                    .select("#unav li a, #hnav li a, .tree_ul li a, .search-adv-repeat")) {
                 // Düsseldorf uses a custom layout where the navbar is .tree_ul
+                // in Stuttgart, the navbar is #hnav and advanced search is linked outside the
+                // navbar as .search-adv-repeat
                 if (navitem.attr("href").contains("service=")) {
                     s_service = getQueryParams(navitem.attr("href")).get(
                             "service").get(0);
                 }
                 if (navitem.text().contains("Erweiterte Suche")) {
-                    s_exts = getQueryParams(navitem.attr("href")).get("sp")
-                                                                 .get(0);
+                    s_exts = getQueryParams(navitem.attr("href")).get("sp");
                 }
                 Matcher objid_matcher = padSid.matcher(navitem.attr("href"));
                 if (objid_matcher.matches()) {
@@ -277,7 +280,7 @@ public class Adis extends ApacheBaseApi implements OpacApi {
                 }
             }
             if (s_exts == null) {
-                s_exts = "SS6";
+                s_exts = Collections.singletonList("SS6");
             }
 
         } catch (JSONException e) {
@@ -299,7 +302,7 @@ public class Adis extends ApacheBaseApi implements OpacApi {
         // s_exts=SS2 instead of s_exts=SS6
         // e.g. munich. Treat them differently!
         Document doc = htmlGet(opac_url + ";jsessionid=" + s_sid + "?service="
-                + s_service + "&sp=" + s_exts);
+                + s_service + getSpParams());
 
         int dropdownTextCount = 0;
         int totalCount = 0;
@@ -325,7 +328,7 @@ public class Adis extends ApacheBaseApi implements OpacApi {
 
                 dropdownTextCount++;
 
-                if (s_exts.equals("SS2")
+                if (s_exts.get(0).equals("SS2")
                         || (query.getSearchField().getData() != null && !query
                         .getSearchField().getData()
                         .optBoolean("selectable", true))) {
@@ -373,6 +376,29 @@ public class Adis extends ApacheBaseApi implements OpacApi {
         return parse_search_wrapped(docresults, 1);
     }
 
+    private String getSpParams() {
+        return getSpParams(null);
+    }
+
+    private String getSpParams(String overrideSecond) {
+        if (overrideSecond != null && s_exts.size() == 1) {
+            return "&sp=" + overrideSecond;
+        }
+
+        StringBuilder builder = new StringBuilder();
+        int i = 0;
+        for (String sp : s_exts) {
+            builder.append("&sp=");
+            if (i == 1 && overrideSecond != null) {
+                builder.append(overrideSecond);
+            } else {
+                builder.append(sp);
+            }
+            i++;
+        }
+        return builder.toString();
+    }
+
     public class SingleResultFound extends Exception {
     }
 
@@ -390,8 +416,13 @@ public class Adis extends ApacheBaseApi implements OpacApi {
                             .attr("value")));
                 }
             }
-            nvpairs.add(new BasicNameValuePair("$Toolbar_1.x", "1"));
-            nvpairs.add(new BasicNameValuePair("$Toolbar_1.y", "1"));
+            String name = "$Toolbar_0";
+            if (doc.select("[id^=Toolbar_][title*=Trefferliste]").size() > 0) {
+                // In Stuttgart, "Trefferliste" is Nr. 5, in Zurich its Nr. 1. Ofen, 0 ("back") works as well.
+                name = doc.select("[id^=Toolbar_][title*=Trefferliste]").first().attr("name");
+            }
+            nvpairs.add(new BasicNameValuePair(name + ".x", "1"));
+            nvpairs.add(new BasicNameValuePair(name + ".y", "1"));
 
             doc  = htmlPost(opac_url + ";jsessionid=" + s_sid, nvpairs);
 
@@ -1016,7 +1047,7 @@ public class Adis extends ApacheBaseApi implements OpacApi {
 
         start();
         doc = htmlGet(opac_url + ";jsessionid=" + s_sid + "?service="
-                + s_service + "&sp=SBK");
+                + s_service + getSpParams("SBK"));
         try {
             doc = handleLoginForm(doc, account);
         } catch (OpacErrorException e) {
@@ -1095,7 +1126,7 @@ public class Adis extends ApacheBaseApi implements OpacApi {
         Document doc;
         start();
         doc = htmlGet(opac_url + ";jsessionid=" + s_sid + "?service="
-                + s_service + "&sp=SBK");
+                + s_service + getSpParams("SBK"));
         try {
             doc = handleLoginForm(doc, account);
         } catch (OpacErrorException e) {
@@ -1169,7 +1200,7 @@ public class Adis extends ApacheBaseApi implements OpacApi {
         rlink = media.split("\\|")[1].replace("requestCount=", "fooo=");
         start();
         doc = htmlGet(opac_url + ";jsessionid=" + s_sid + "?service="
-                + s_service + "&sp=SBK");
+                + s_service + getSpParams("SBK"));
         try {
             doc = handleLoginForm(doc, account);
         } catch (OpacErrorException e) {
@@ -1239,7 +1270,7 @@ public class Adis extends ApacheBaseApi implements OpacApi {
         start();
 
         Document doc = htmlGet(opac_url + ";jsessionid=" + s_sid + "?service="
-                + s_service + "&sp=SBK");
+                + s_service + getSpParams("SBK"));
         doc = handleLoginForm(doc, account);
 
         boolean split_title_author = true;
@@ -1545,8 +1576,8 @@ public class Adis extends ApacheBaseApi implements OpacApi {
 
         doc = htmlPost(opac_url + ";jsessionid=" + s_sid, form);
 
-        if (doc.select(".message h1").size() > 0) {
-            String msg = doc.select(".message h1").text().trim();
+        if (doc.select(".message h1, .alert").size() > 0) {
+            String msg = doc.select(".message h1, .alert").text().trim();
             form = new ArrayList<>();
             for (Element input : doc.select("input")) {
                 if (!"image".equals(input.attr("type"))
@@ -1569,12 +1600,10 @@ public class Adis extends ApacheBaseApi implements OpacApi {
     @Override
     public List<SearchField> parseSearchFields() throws IOException,
             JSONException {
-        if (!initialised) {
-            start();
-        }
+        start();
 
         Document doc = htmlGet(opac_url + ";jsessionid=" + s_sid + "?service="
-                + s_service + "&sp=" + s_exts);
+                + s_service + getSpParams());
 
         List<SearchField> fields = new ArrayList<>();
         // dropdown to select which field you want to search in
@@ -1597,7 +1626,7 @@ public class Adis extends ApacheBaseApi implements OpacApi {
         JSONObject selectableData = new JSONObject();
         selectableData.put("selectable", false);
 
-        for (Element row : doc.select("div[id~=F\\d+]")) {
+        for (Element row : doc.select("div[id~=F\\d+], .search-adv-source")) {
             if (row.select("input[type=text]").size() == 1
                     && row.select("input, select").first().tagName()
                           .equals("input")) {
@@ -1616,7 +1645,6 @@ public class Adis extends ApacheBaseApi implements OpacApi {
                 DropdownSearchField field = new DropdownSearchField();
                 field.setId(select.id());
                 field.setDisplayName(row.select("label").first().text());
-                List<Map<String, String>> values = new ArrayList<>();
                 for (Element opt : select.select("option")) {
                     field.addDropdownValue(opt.attr("value"), opt.text());
                 }
@@ -1709,7 +1737,7 @@ public class Adis extends ApacheBaseApi implements OpacApi {
         start();
 
         Document doc = htmlGet(opac_url + ";jsessionid=" + s_sid + "?service="
-                + s_service + "&sp=SBK");
+                + s_service + getSpParams("SBK"));
         handleLoginForm(doc, account);
     }
 

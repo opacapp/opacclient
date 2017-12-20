@@ -17,6 +17,7 @@
         "Filiale",
         "Bibliotheksstandorte",
         "library",
+        "Sie suchen in der Bibliothek:",
         "Lesesaalbestand"
     ],
     "LOCATION": [
@@ -323,7 +324,9 @@
         "title words",
         "Mots titre",
         "Titelwort/Thema",
-        "Titelanfang"
+        "Titelanfang",
+        "Titel / Reihe",
+        "exakter Titel"
     ],
     "DIGITAL": [
         "digital",
