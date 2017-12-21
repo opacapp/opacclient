@@ -335,7 +335,7 @@ public class Open extends OkHttpBaseApi implements OpacApi {
         Pattern idPattern = Pattern.compile("\\$(mdv|civ|dcv)(\\d+)\\$");
         Pattern weakIdPattern = Pattern.compile("(mdv|civ|dcv)(\\d+)[^\\d]");
 
-        Elements elements = doc.select("div[id$=divMedium], div[id$=divComprehensiveItem]");
+        Elements elements = doc.select("div[id$=divMedium], div[id$=divComprehensiveItem], div[id$=divDependentCatalogue]");
         List<SearchResult> results = new ArrayList<>();
         int i = 0;
         for (Element element : elements) {
@@ -349,7 +349,7 @@ public class Open extends OkHttpBaseApi implements OpacApi {
             }
 
             Element catalogueContent =
-                    element.select(".catalogueContent, .oclc-searchmodule-mediumview-content, .oclc-searchmodule-comprehensiveitemview-content")
+                    element.select(".catalogueContent, .oclc-searchmodule-mediumview-content, .oclc-searchmodule-comprehensiveitemview-content, .oclc-searchmodule-dependentitemview-content")
                            .first();
             // Media Type
             if (catalogueContent.select("#spanMediaGrpIcon, .spanMediaGrpIcon").size() > 0) {
