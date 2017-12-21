@@ -351,19 +351,9 @@ public class Open extends OkHttpBaseApi implements OpacApi {
                 assignBestCover(result, getCoverUrlList(element.select("img[id$=CoverView_Image]").first()));
             }
 
-<<<<<<< Updated upstream
             Element catalogueContent =
                     element.select(".catalogueContent, .oclc-searchmodule-mediumview-content, .oclc-searchmodule-comprehensiveitemview-content, .oclc-searchmodule-dependentitemview-content")
                            .first();
-=======
-<<<<<<< Updated upstream
-            Element catalogueContent = element.select(".catalogueContent").first();
-=======
-            Element catalogueContent =
-                    element.select(".catalogueContent, .oclc-searchmodule-mediumview-content, .oclc-searchmodule-comprehensiveitemview-content, .oclc-searchmodule-dependentitemview-content")
-                           .first();
->>>>>>> Stashed changes
->>>>>>> Stashed changes
             // Media Type
             if (catalogueContent.select("#spanMediaGrpIcon, .spanMediaGrpIcon").size() > 0) {
                 String mediatype = catalogueContent.select("#spanMediaGrpIcon, .spanMediaGrpIcon").attr("class");
