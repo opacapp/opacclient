@@ -173,12 +173,15 @@ public abstract class OkHttpBaseApi extends BaseApi {
      */
     public String httpPost(String url, RequestBody data, String encoding, boolean ignore_errors)
             throws IOException {
-        Request request = new Request.Builder()
+        Request.Builder requestbuilder = new Request.Builder()
                 .url(cleanUrl(url))
                 .header("Accept", "*/*")
-                .header("User-Agent", getUserAgent())
-                .post(data)
-                .build();
+                .header("User-Agent", getUserAgent());
+
+        if (data.contentType() != null) {
+            requestbuilder = requestbuilder.header("Content-Type", data.contentType().toString());
+        }
+        Request request = requestbuilder.post(data).build();
 
         try {
             Response response = http_client.newCall(request).execute();

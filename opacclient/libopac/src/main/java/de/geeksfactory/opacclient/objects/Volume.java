@@ -57,6 +57,14 @@ public class Volume {
         this.title = title;
     }
 
+    public Volume(String id, String title) {
+        this.id = id;
+        this.title = title;
+    }
+
+    public Volume() {
+    }
+
     @Override
     public String toString() {
         return "Volume{" +
