@@ -20,6 +20,7 @@ package de.geeksfactory.opacclient.apis;
 
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.jsoup.Jsoup;
@@ -35,6 +36,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -52,6 +54,7 @@ import de.geeksfactory.opacclient.objects.Filter;
 import de.geeksfactory.opacclient.objects.Library;
 import de.geeksfactory.opacclient.objects.SearchRequestResult;
 import de.geeksfactory.opacclient.objects.SearchResult;
+import de.geeksfactory.opacclient.objects.Volume;
 import de.geeksfactory.opacclient.searchfields.BarcodeSearchField;
 import de.geeksfactory.opacclient.searchfields.CheckboxSearchField;
 import de.geeksfactory.opacclient.searchfields.DropdownSearchField;
@@ -348,9 +351,19 @@ public class Open extends OkHttpBaseApi implements OpacApi {
                 assignBestCover(result, getCoverUrlList(element.select("img[id$=CoverView_Image]").first()));
             }
 
+<<<<<<< Updated upstream
             Element catalogueContent =
                     element.select(".catalogueContent, .oclc-searchmodule-mediumview-content, .oclc-searchmodule-comprehensiveitemview-content, .oclc-searchmodule-dependentitemview-content")
                            .first();
+=======
+<<<<<<< Updated upstream
+            Element catalogueContent = element.select(".catalogueContent").first();
+=======
+            Element catalogueContent =
+                    element.select(".catalogueContent, .oclc-searchmodule-mediumview-content, .oclc-searchmodule-comprehensiveitemview-content, .oclc-searchmodule-dependentitemview-content")
+                           .first();
+>>>>>>> Stashed changes
+>>>>>>> Stashed changes
             // Media Type
             if (catalogueContent.select("#spanMediaGrpIcon, .spanMediaGrpIcon").size() > 0) {
                 String mediatype = catalogueContent.select("#spanMediaGrpIcon, .spanMediaGrpIcon").attr("class");
@@ -646,10 +659,16 @@ public class Open extends OkHttpBaseApi implements OpacApi {
     public DetailedItem getResultById(String id, String homebranch)
             throws IOException, OpacErrorException {
         try {
-            String html =
-                    httpGet(opac_url + "/" + data.getJSONObject("urls").getString("simple_search") +
-                            NO_MOBILE + "&id=" + id, getDefaultEncoding());
-            return parse_result(Jsoup.parse(html));
+            String url;
+            if (id.startsWith("https://") || id.startsWith("http://")) {
+                url = id;
+            } else {
+                url = opac_url + "/" + data.getJSONObject("urls").getString("simple_search") +
+                        NO_MOBILE + "&id=" + id;
+            }
+            Document doc = Jsoup.parse(httpGet(url, getDefaultEncoding()));
+            doc.setBaseUri(url);
+            return parse_result(doc);
         } catch (JSONException e) {
             throw new IOException(e.getMessage());
         }
@@ -659,7 +678,7 @@ public class Open extends OkHttpBaseApi implements OpacApi {
         DetailedItem item = new DetailedItem();
 
         // Title and Subtitle
-        item.setTitle(doc.select("span[id$=LblShortDescriptionValue]").text());
+        item.setTitle(doc.select("span[id$=LblShortDescriptionValue], span[id$=LblTitleValue]").text());
         String subtitle = doc.select("span[id$=LblSubTitleValue]").text();
         if (subtitle.equals("") && doc.select("span[id$=LblShortDescriptionValue]").size() > 0) {
             // Subtitle detection for Bern
@@ -688,6 +707,11 @@ public class Open extends OkHttpBaseApi implements OpacApi {
             String name = doc.select("span[id$=lblCatalogueContent]").text();
             String value = doc.select("span[id$=ucCatalogueContent_LblAnnotation]").text();
             item.addDetail(new Detail(name, value));
+        }
+
+        // Parent
+        if (doc.select("a[id$=HyperLinkParent]").size() > 0) {
+            item.setCollectionId(doc.select("a[id$=HyperLinkParent]").first().attr("href"));
         }
 
         // Details
@@ -751,6 +775,50 @@ public class Open extends OkHttpBaseApi implements OpacApi {
                     copy.set(columnmap.get(j), text, fmt);
                 }
                 item.addCopy(copy);
+            }
+        }
+
+        // Dependent (e.g. Verden)
+        if (doc.select("div[id$=DivDependentCatalogue]").size() > 0) {
+            String url = opac_url +
+                    "/DesktopModules/OCLC.OPEN.PL.DNN.SearchModule/SearchService.asmx/GetDependantCatalogues";
+            JSONObject postData = new JSONObject();
+
+            // Determine portalID value
+            int portalId = 1;
+            for (Element scripttag : doc.select("script")) {
+                String scr = scripttag.html();
+                if (scr.contains("LoadCatalogueViewDependantCataloguesAsync")) {
+                    Pattern portalIdPattern = Pattern.compile(
+                            ".*LoadCatalogueViewDependantCataloguesAsync\\([^,]*,[^,]*," +
+                                    "[^,]*,[^,]*,[^,]*,[^0-9,]*([0-9]+)[^0-9,]*,.*\\).*");
+                    Matcher portalIdMatcher = portalIdPattern.matcher(scr);
+                    if (portalIdMatcher.find()) {
+                        portalId = Integer.parseInt(portalIdMatcher.group(1));
+                    }
+                }
+            }
+
+            try {
+                postData.put("portalId", portalId).put("mednr", item.getId())
+                        .put("tabUrl", opac_url + "/" + data.getJSONObject("urls").getString("simple_search") + NO_MOBILE + "&id=")
+                        .put("branchFilter", "");
+                RequestBody entity = RequestBody.create(MEDIA_TYPE_JSON, postData.toString());
+
+                String json = httpPost(url, entity, getDefaultEncoding());
+
+                JSONObject volumeData = new JSONObject(json);
+                JSONArray cat = volumeData.getJSONObject("d").getJSONArray("Catalogues");
+                for (int i = 0; i < cat.length(); i++) {
+                    JSONObject obj = cat.getJSONObject(i);
+                    Map<String, String> params = getQueryParamsFirst(obj.getString("DependantUrl"));
+                    item.addVolume(new Volume(
+                            params.get("id"),
+                            obj.getString("DependantTitle")
+                    ));
+                }
+            } catch (JSONException | IOException e) {
+                e.printStackTrace();
             }
         }
 
