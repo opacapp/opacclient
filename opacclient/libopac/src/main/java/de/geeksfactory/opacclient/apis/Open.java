@@ -569,6 +569,7 @@ public class Open extends OkHttpBaseApi implements OpacApi {
                 String href = doc.select("a[id*=LinkButtonPageN][href*=page]").first().attr("href");
                 String url = href.replaceFirst("page=\\d+", "page=" + page);
                 Document doc2 = Jsoup.parse(httpGet(url, getDefaultEncoding()));
+                doc2.setBaseUri(url);
                 return parse_search(doc2, page);
             } else {
                 int totalCount;
