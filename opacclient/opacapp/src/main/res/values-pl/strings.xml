@@ -170,7 +170,7 @@
         <item quantity="many">%d wyniki wyszukiwania</item>
         <item quantity="other">%d wyników wyszukiwania</item>
     </plurals>
-    <string name="export_starred">Eksport</string>
+    <string name="share_starred">Eksport</string>
     <string name="export_account">Udostępnij jako tekst</string>
     <string name="geolocate">Znajdź pobliską bibliotekę</string>
     <string name="geolocate_progress">Lokalizowanie Ciebie...</string>

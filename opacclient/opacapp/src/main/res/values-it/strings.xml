@@ -164,7 +164,7 @@
         <item quantity="one">Un risultato</item>
         <item quantity="other">%d risultati</item>
     </plurals>
-    <string name="export_starred">Esporta</string>
+    <string name="share_starred">Esporta</string>
     <string name="export_account">Condividi come testo</string>
     <string name="geolocate">Cerca le biblioteche nelle mie vicinanze</string>
     <string name="geolocate_progress">Ricerca della tua posizione in corso…</string>

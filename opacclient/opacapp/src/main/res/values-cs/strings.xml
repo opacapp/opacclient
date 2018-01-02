@@ -151,7 +151,7 @@
         <item quantity="few">%d výsledky hledání</item>
         <item quantity="other">%d výsledků hledání</item>
     </plurals>
-    <string name="export_starred">Export</string>
+    <string name="share_starred">Export</string>
     <string name="geolocate">Najít nejbližší knihovnu</string>
     <string name="geolocate_progress">Provádím lokalizaci vaší polohy...</string>
     <string name="alphabetic_list">Zobrazit celý seznam</string>
