@@ -10,14 +10,12 @@
     </item>
     <item
         android:id="@+id/action_export_to_storage"
-        android:icon="@drawable/ic_cloud_upload_white_24dp"
-        app:showAsAction="ifRoom"
+        app:showAsAction="never"
         android:title="@string/export_starred_to_storage">
     </item>
     <item
         android:id="@+id/action_import_from_storage"
-        android:icon="@drawable/ic_cloud_download_white_24dp"
-        app:showAsAction="ifRoom"
+        app:showAsAction="never"
         android:title="@string/import_starred_from_storage">
     </item>
 
