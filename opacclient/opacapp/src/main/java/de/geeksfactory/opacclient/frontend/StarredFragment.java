@@ -345,7 +345,7 @@ public class StarredFragment extends Fragment implements
 
     public void importFromStorage() {
         //Use SAF
-        Intent intent = null;
+        Intent intent;
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.KITKAT) {
             intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
             intent.addCategory(Intent.CATEGORY_OPENABLE);
@@ -396,33 +396,29 @@ public class StarredFragment extends Fragment implements
                         builder.append(line);
                     }
                     String list = builder.toString();
-                    if (list != null) {
-                        JSONObject savedList = new JSONObject(list);
-                        String bib = savedList.getString(JSON_LIBRARY_NAME);
-                        //disallow import if from different library than current library
-                        if (bib != null && !bib.equals(app.getLibrary().getIdent())) {
-                            Snackbar.make(getView(), R.string.info_different_library,
-                                    Snackbar.LENGTH_SHORT).show();
-                            return;
-                        }
-                        JSONArray items = savedList.getJSONArray(JSON_STARRED_LIST);
-                        for (int i = 0; i < items.length(); i++) {
-                            JSONObject entry = items.getJSONObject(i);
-                            if (!dataSource
-                                    .isStarred(bib,
-                                            entry.getString(JSON_ITEM_MNR))) { //disallow dupes
-                                dataSource.star(entry.getString(JSON_ITEM_MNR),
-                                        entry.getString(JSON_ITEM_TITLE), bib,
-                                        SearchResult.MediaType
-                                                .valueOf(entry.getString(JSON_ITEM_MEDIATYPE)));
-                            }
-                        }
-                        adapter.notifyDataSetChanged();
-                        Snackbar.make(getView(), R.string.info_starred_updated,
+                    JSONObject savedList = new JSONObject(list);
+                    String bib = savedList.getString(JSON_LIBRARY_NAME);
+                    //disallow import if from different library than current library
+                    if (bib != null && !bib.equals(app.getLibrary().getIdent())) {
+                        Snackbar.make(getView(), R.string.info_different_library,
                                 Snackbar.LENGTH_SHORT).show();
-                    } else {
-                        showImportError();
+                        return;
                     }
+                    JSONArray items = savedList.getJSONArray(JSON_STARRED_LIST);
+                    for (int i = 0; i < items.length(); i++) {
+                        JSONObject entry = items.getJSONObject(i);
+                        if (!dataSource
+                                .isStarred(bib,
+                                        entry.getString(JSON_ITEM_MNR))) { //disallow dupes
+                            dataSource.star(entry.getString(JSON_ITEM_MNR),
+                                    entry.getString(JSON_ITEM_TITLE), bib,
+                                    SearchResult.MediaType
+                                            .valueOf(entry.getString(JSON_ITEM_MEDIATYPE)));
+                        }
+                    }
+                    adapter.notifyDataSetChanged();
+                    Snackbar.make(getView(), R.string.info_starred_updated,
+                            Snackbar.LENGTH_SHORT).show();
                 } else {
                     showImportError();
                 }
