@@ -144,12 +144,12 @@ public class Adis extends ApacheBaseApi implements OpacApi {
     protected Document getSearchPage() throws IOException {
 
         final String methodName = "getSearchPage";
-        logInfo("%s > requestCount = %d", methodName,  s_requestCount);
+        logInfo("%s > requestCount = %d", methodName, s_requestCount);
 
         String url = String.format(s_hrefFormatSearch, opac_url, s_sid, s_requestCount);
         Document doc = htmlGet(url);
 
-        logInfo("%s < requestCount = %d", methodName,  s_requestCount);
+        logInfo("%s < requestCount = %d", methodName, s_requestCount);
         return doc;
     }
 
@@ -176,7 +176,7 @@ public class Adis extends ApacheBaseApi implements OpacApi {
 
         Pattern patRequestCount = Pattern.compile(".*requestCount=([0-9]+)");
         Matcher matcher = patRequestCount.matcher(query);
-        if(!matcher.find()) {
+        if (!matcher.find()) {
             // requestCount kommt nicht vor
             return null;
         }
@@ -184,7 +184,7 @@ public class Adis extends ApacheBaseApi implements OpacApi {
         StringBuffer sb = new StringBuffer();
         sb.append("%s;jsessionid=%s?");    // opac_url, s_sid
 
-        String  format = query;
+        String format = query;
         // bereits vorkommende % escapen/verdoppeln
         format = format.replaceAll("%", "%%");
         // value von requestCount durch Platzhalter ersetzen
@@ -211,9 +211,9 @@ public class Adis extends ApacheBaseApi implements OpacApi {
     }
 
     protected void updateRequestCount(Document doc) {
-        int  requestCount = getRequestCount(doc);
-        if(requestCount>=0) {
-            if(s_requestCount == requestCount) {
+        int requestCount = getRequestCount(doc);
+        if (requestCount >= 0) {
+            if (s_requestCount == requestCount) {
                 logWarning("requestCount didnot change");
 //                s_requestCount++;
             } else {
@@ -222,7 +222,8 @@ public class Adis extends ApacheBaseApi implements OpacApi {
         }
     }
 
-    protected Document htmlExecute(final String methodName, HttpUriRequest request) throws IOException {
+    protected Document htmlExecute(final String methodName, HttpUriRequest request)
+            throws IOException {
 
         HttpResponse response;
         final String url = request.getURI().toURL().toString();
@@ -259,14 +260,14 @@ public class Adis extends ApacheBaseApi implements OpacApi {
         String html = convertStreamToString(response.getEntity().getContent(),
                 getDefaultEncoding());
 
-        logFine("%s - html = %s", methodName,  html);
+        logFine("%s - html = %s", methodName, html);
 
         HttpUtils.consume(response.getEntity());
         Document doc = Jsoup.parse(html);
 
         if (LOGGER.isLoggable(Level.INFO)) {
             Elements h1s = doc.select("h1");
-            if(h1s.size()>0) {
+            if (h1s.size() > 0) {
                 logInfo("%s - h1: %s", methodName, h1s.first().text());
             }
         }
@@ -275,21 +276,22 @@ public class Adis extends ApacheBaseApi implements OpacApi {
         updateRequestCount(doc);
 
         doc.setBaseUri(url);
-        logInfo("%s < requestCount = %d, url  = %s", methodName,  s_requestCount, url);
+        logInfo("%s < requestCount = %d, url  = %s", methodName, s_requestCount, url);
         return doc;
 
     }
+
     public Document htmlGet(String url) throws
             IOException {
 
         final String methodName = "htmlGet";
-        logInfo("%s > requestCount = %d, url  = %s", methodName,  s_requestCount, url);
+        logInfo("%s > requestCount = %d, url  = %s", methodName, s_requestCount, url);
 
         if (!url.contains("requestCount") && s_requestCount >= 0) {
             logFine("%s - !url.contains(\"requestCount\")", methodName);
             url = url + (url.contains("?") ? "&" : "?") + "requestCount="
                     + s_requestCount;
-            logInfo("%s   requestCount = %d, url  = %s", methodName,  s_requestCount, url);
+            logInfo("%s   requestCount = %d, url  = %s", methodName, s_requestCount, url);
         }
 
         HttpGet httpget = new HttpGet(cleanUrl(url));
@@ -301,7 +303,7 @@ public class Adis extends ApacheBaseApi implements OpacApi {
             throws IOException {
 
         final String methodName = "htmlPost";
-        logInfo("%s > requestCount = %d, url  = %s", methodName,  s_requestCount, url);
+        logInfo("%s > requestCount = %d, url  = %s", methodName, s_requestCount, url);
 
         HttpPost httppost = new HttpPost(cleanUrl(url));
 
@@ -309,8 +311,8 @@ public class Adis extends ApacheBaseApi implements OpacApi {
         for (NameValuePair nv : data) {
 
             // nur gesetzte Werte loggen
-            if((nv.getValue()!=null)&&(nv.getValue().length()>0)) {
-                logInfo("%s - %s = %s", methodName,  nv.getName(), nv.getValue());
+            if ((nv.getValue() != null) && (nv.getValue().length() > 0)) {
+                logInfo("%s - %s = %s", methodName, nv.getName(), nv.getValue());
             }
 
             if (nv.getName().equals("requestCount")) {
@@ -398,16 +400,17 @@ public class Adis extends ApacheBaseApi implements OpacApi {
             throws IOException, OpacErrorException {
 
         final String methodName = "search";
-        if(LOGGER.isLoggable(Level.FINE)) {
+        if (LOGGER.isLoggable(Level.FINE)) {
             for (SearchQuery query : queries) {
-                if((query.getValue()!=null)&&(query.getValue().length()>0)) {
-                    logFine("%s - SearchQuery: %s = %s", methodName,  query.getKey(), query.getValue());
+                if ((query.getValue() != null) && (query.getValue().length() > 0)) {
+                    logFine("%s - SearchQuery: %s = %s", methodName, query.getKey(),
+                            query.getValue());
                 }
             }
         }
 
 //        if (!initialised) {
-            start();    // notwendig wenn man vom Accoun kommt
+        start();    // notwendig wenn man vom Accoun kommt
 //        }
         // TODO: There are also libraries with a different search form,
         // s_exts=SS2 instead of s_exts=SS6
@@ -491,7 +494,8 @@ public class Adis extends ApacheBaseApi implements OpacApi {
     public class SingleResultFound extends Exception {
     }
 
-    protected SearchRequestResult parse_search_wrapped(Document doc, int page) throws IOException, OpacErrorException {
+    protected SearchRequestResult parse_search_wrapped(Document doc, int page)
+            throws IOException, OpacErrorException {
         try {
             return parse_search(doc, page);
         } catch (SingleResultFound e) {
@@ -511,7 +515,7 @@ public class Adis extends ApacheBaseApi implements OpacApi {
             nvpairs.add(new BasicNameValuePair("$Toolbar_0.x", "1"));
             nvpairs.add(new BasicNameValuePair("$Toolbar_0.y", "1"));
 
-            doc  = htmlPost(opac_url + ";jsessionid=" + s_sid, nvpairs);
+            doc = htmlPost(opac_url + ";jsessionid=" + s_sid, nvpairs);
 
             try {
                 return parse_search(doc, page);
@@ -571,7 +575,9 @@ public class Adis extends ApacheBaseApi implements OpacApi {
             selector_row = ".rList li.rList_li_even, .rList li.rList_li_odd";
             selector_link = ".rList_titel a";
             selector_text = ".rList_name";
-            selector_img = ".rlist_icon img, .rList_titel img, .rList_medium .icon, .rList_availability .icon, .rList_img img";
+            selector_img =
+                    ".rlist_icon img, .rList_titel img, .rList_medium .icon, .rList_availability " +
+                            ".icon, .rList_img img";
             selector_num = ".rList_num";
         }
         for (Element tr : doc.select(selector_row)) {
@@ -779,7 +785,9 @@ public class Adis extends ApacheBaseApi implements OpacApi {
             }
         }
 
-        if (doc.select("input[value*=Reservieren], input[value*=Vormerken], input[value*=Einzelbestellung]")
+        if (doc.select(
+                "input[value*=Reservieren], input[value*=Vormerken], " +
+                        "input[value*=Einzelbestellung]")
                .size() > 0 && id != null) {
             res.setReservable(true);
             res.setReservation_info(id);
@@ -902,7 +910,7 @@ public class Adis extends ApacheBaseApi implements OpacApi {
                 // Bei Einzelbestellung (StB Suttgart) och focus setzen
                 if (input.val().contains("Einzelbestellung")) {
                     String fld = input.attr("fld");
-                    if(fld!=null) {
+                    if (fld != null) {
                         form.add(new BasicNameValuePair("focus", fld));
                     }
                 }
@@ -939,7 +947,8 @@ public class Adis extends ApacheBaseApi implements OpacApi {
                 List<String[]> details = new ArrayList<>();
                 details.add(new String[]{doc.select("#F23").text()});
                 res.setDetails(details);
-            } else if (doc.select("#AUSGAB_1").size() > 0 && (selection == null || "confirmed".equals(selection))) {
+            } else if (doc.select("#AUSGAB_1").size() > 0 &&
+                    (selection == null || "confirmed".equals(selection))) {
                 List<Map<String, String>> sel = new ArrayList<>();
                 for (Element opt : doc.select("#AUSGAB_1 option")) {
                     if (opt.text().trim().length() > 0) {
@@ -1142,7 +1151,7 @@ public class Adis extends ApacheBaseApi implements OpacApi {
 
         List<NameValuePair> form = new ArrayList<>();
         for (Element input : doc.select("input, select")) {
-            logInfo("%s - type=%s %s=%s", methodName,  input.attr("type"),
+            logInfo("%s - type=%s %s=%s", methodName, input.attr("type"),
                     input.attr("type"), input.attr("value"));
             // erstes if passt zu getPageForm
             if (!"image".equals(input.attr("type"))
@@ -1155,8 +1164,8 @@ public class Adis extends ApacheBaseApi implements OpacApi {
             if ("submit".equals(input.attr("type"))
                     && "Markierte Titel verlängern".equals(input.attr("value"))) {
 
-                logInfo("%s - type=submit %s=%s, fld=%s", methodName,  input.attr("type"),
-                    input.attr("value"), input.attr("fld"));
+                logInfo("%s - type=submit %s=%s, fld=%s", methodName, input.attr("type"),
+                        input.attr("value"), input.attr("fld"));
 
                 form.add(new BasicNameValuePair(input.attr("name"), input
                         .attr("value")));
@@ -1171,7 +1180,8 @@ public class Adis extends ApacheBaseApi implements OpacApi {
                     disabled = (
                             disabled
                                     || tr.child(4).text().matches(".*nicht verl.+ngerbar.*")
-                                    || tr.child(4).text().matches(".*Verl.+ngerung nicht m.+glich.*")
+                                    ||
+                                    tr.child(4).text().matches(".*Verl.+ngerung nicht m.+glich.*")
                     );
                 } catch (Exception e) {
                 }
@@ -1223,7 +1233,7 @@ public class Adis extends ApacheBaseApi implements OpacApi {
             if ("submit".equals(input.attr("type"))
                     && "Markierte Titel verlängern".equals(input.attr("value"))) {
 
-                logInfo("%s - type=submit %s=%s, fld=%s", methodName,  input.attr("type"),
+                logInfo("%s - type=submit %s=%s, fld=%s", methodName, input.attr("type"),
                         input.attr("value"), input.attr("fld"));
 
                 form.add(new BasicNameValuePair(input.attr("name"), input
@@ -1255,7 +1265,7 @@ public class Adis extends ApacheBaseApi implements OpacApi {
         return new ProlongAllResult(Status.OK, result);
     }
 
-    private Document htmlGetAusleihen(Account account) throws  IOException {
+    private Document htmlGetAusleihen(Account account) throws IOException {
         start();
 
         Document doc = null;
@@ -1305,10 +1315,10 @@ public class Adis extends ApacheBaseApi implements OpacApi {
             }
             if (tr.select("a").size() == 1) {
                 if ((tr.text().contains("Reservationen")
-                      || tr.text().contains("Vormerkung")
-                      || tr.text().contains("Bestellung"))
-                      && !tr.child(0).text().trim().equals("")
-                      && tr.select("a").first().attr("href")
+                        || tr.text().contains("Vormerkung")
+                        || tr.text().contains("Bestellung"))
+                        && !tr.child(0).text().trim().equals("")
+                        && tr.select("a").first().attr("href")
                              .toUpperCase(Locale.GERMAN)
                              .contains("SP=" + sp)) {
                     rlink = tr.select("a").first().absUrl("href");
@@ -1330,7 +1340,7 @@ public class Adis extends ApacheBaseApi implements OpacApi {
                     && !"checkbox".equals(input.attr("type"))
                     && !"".equals(input.attr("name"))) {
 
-                if("submit".equals(input.attr("type"))) {
+                if ("submit".equals(input.attr("type"))) {
                     addIfSubmitWithFocus(form, input, "Markierte Titel löschen"); // Stuttgart
                 } else {
                     form.add(new BasicNameValuePair(input.attr("name"), input
@@ -1357,13 +1367,13 @@ public class Adis extends ApacheBaseApi implements OpacApi {
     }
 
     protected Document htmlGetWithHandleLogin(Account account) throws IOException,
-            OpacErrorException
-    {
+            OpacErrorException {
         String url = String.format(s_hrefFormatAccount, opac_url, s_sid, s_requestCount);
         Document doc = htmlGet(url);
         return doc = handleLoginForm(doc, account);
 
     }
+
     @Override
     public AccountData account(Account account) throws IOException,
             JSONException, OpacErrorException {
@@ -1598,11 +1608,11 @@ public class Adis extends ApacheBaseApi implements OpacApi {
             return false;
         }
 
-        if ((text==null)||input.val().contains(text)) {
+        if ((text == null) || input.val().contains(text)) {
             form.add(new BasicNameValuePair(input.attr("name"), input
                     .attr("value")));
             String fld = input.attr("fld");
-            if((fld!=null)&&(fld.length()>0)) {
+            if ((fld != null) && (fld.length() > 0)) {
 
                 // ev. vorhandenen focus-Wert überschreiben
                 int i = 0;
@@ -1613,7 +1623,7 @@ public class Adis extends ApacheBaseApi implements OpacApi {
                         break;
                     }
                 }
-                if(i<form.size()) {
+                if (i < form.size()) {
                     // replace
                     form.set(i, new BasicNameValuePair("focus", fld));
                 } else {
@@ -1678,7 +1688,8 @@ public class Adis extends ApacheBaseApi implements OpacApi {
                 try {
                     item.setRenewable(
                             !tr.child(4).text().matches(".*nicht verl.+ngerbar.*")
-                            && !tr.child(4).text().matches(".*Verl.+ngerung nicht m.+glich.*")
+                                    &&
+                                    !tr.child(4).text().matches(".*Verl.+ngerung nicht m.+glich.*")
                     );
                 } catch (Exception e) {
 
@@ -1774,7 +1785,7 @@ public class Adis extends ApacheBaseApi implements OpacApi {
                     break;
                 }
             }
-            if(!found) {
+            if (!found) {
                 TextSearchField field = new TextSearchField();
                 field.setId(opt.attr("value"));
                 field.setDisplayName(opt.text());
@@ -1916,7 +1927,7 @@ public class Adis extends ApacheBaseApi implements OpacApi {
         return null;
     }
 
-    private static void logFine(String format, Object ... args) {
+    private static void logFine(String format, Object... args) {
         if (!LOGGER.isLoggable(Level.FINE)) {
             return;
         }
@@ -1924,7 +1935,7 @@ public class Adis extends ApacheBaseApi implements OpacApi {
         LOGGER.log(Level.FINE, msg);
     }
 
-    private static void logInfo(String format, Object ... args) {
+    private static void logInfo(String format, Object... args) {
         if (!LOGGER.isLoggable(Level.INFO)) {
             return;
         }
@@ -1932,7 +1943,7 @@ public class Adis extends ApacheBaseApi implements OpacApi {
         LOGGER.log(Level.INFO, msg);
     }
 
-    private static void logWarning(String format, Object ... args) {
+    private static void logWarning(String format, Object... args) {
         if (!LOGGER.isLoggable(Level.WARNING)) {
             return;
         }
@@ -1947,6 +1958,7 @@ public class Adis extends ApacheBaseApi implements OpacApi {
         String msg = String.format("Start %s", methodName);
         LOGGER.log(Level.INFO, msg);
     }
+
     private static void logEnde(String methodName) {
         if (!LOGGER.isLoggable(Level.INFO)) {
             return;
