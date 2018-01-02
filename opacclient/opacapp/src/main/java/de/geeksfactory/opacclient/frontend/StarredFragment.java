@@ -321,6 +321,12 @@ public class StarredFragment extends Fragment implements
                 Snackbar.LENGTH_SHORT).show();
     }
 
+
+    private void showImportErrorNoPickerApp() {
+        Snackbar.make(getView(), R.string.failed_importing_file_picker_app,
+                Snackbar.LENGTH_SHORT).show();
+    }
+
     private JSONObject getEncodedStarredObjects() {
         JSONObject starred = new JSONObject();
         try {
@@ -357,7 +363,7 @@ public class StarredFragment extends Fragment implements
         try {
             startActivityForResult(intent, REQUEST_CODE_IMPORT);
         } catch (ActivityNotFoundException e) {
-            showImportError();//No picker app installed!
+            showImportErrorNoPickerApp();//No picker app installed!
         }
     }
 
