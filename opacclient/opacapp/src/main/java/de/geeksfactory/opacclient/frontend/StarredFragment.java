@@ -62,7 +62,6 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.PrintWriter;
-import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -422,9 +421,7 @@ public class StarredFragment extends Fragment implements
                 } else {
                     showImportError();
                 }
-            } catch (FileNotFoundException | JSONException | UnsupportedEncodingException e) {
-                showImportError();
-            } catch (IOException e) {
+            } catch (JSONException | IOException e) {
                 showImportError();
             }
         }
