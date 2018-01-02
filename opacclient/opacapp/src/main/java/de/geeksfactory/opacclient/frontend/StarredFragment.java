@@ -295,7 +295,8 @@ public class StarredFragment extends Fragment implements
             intent.addCategory(Intent.CATEGORY_OPENABLE);
             // Create a file with the requested MIME type.
             intent.setType("application/json");
-            intent.putExtra(Intent.EXTRA_TITLE, "share.json");
+            intent.putExtra(Intent.EXTRA_TITLE,
+                    "webopac_starred_" + app.getLibrary().getIdent() + ".json");
             startActivityForResult(intent, REQUEST_CODE_EXPORT);
         } else {        // <android 4.4; share json as text
             intent = new Intent();
