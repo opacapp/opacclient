@@ -138,7 +138,7 @@
         <item quantity="one">%d αποτελέσματα αναζήτησης</item>
         <item quantity="other">%d αποτελέσματα αναζήτησης</item>
     </plurals>
-    <string name="export_starred">Εξαγωγή</string>
+    <string name="share_starred">Εξαγωγή</string>
     <string name="geolocate">Εντοπισμός κοντινών βιβλιοθηκών</string>
     <string name="geolocate_progress">Ο εντοπισμός σας…</string>
     <string name="alphabetic_list">Εμφάνιση πλήρους λίστας</string>
