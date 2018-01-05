@@ -156,7 +156,7 @@
         <item quantity="one">%d resultados de búsqueda</item>
         <item quantity="other">%d resultados de búsqueda</item>
     </plurals>
-    <string name="export_starred">Exportar</string>
+    <string name="share_starred">Exportar</string>
     <string name="geolocate">Encontrar bibliotecas cercanas</string>
     <string name="geolocate_progress">Localizando…</string>
     <string name="alphabetic_list">Mostrar lista entera</string>

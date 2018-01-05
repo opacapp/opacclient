@@ -160,7 +160,7 @@
     <plurals name="result_number">
         <item quantity="other">%d の検索結果</item>
     </plurals>
-    <string name="export_starred">エクスポート</string>
+    <string name="share_starred">エクスポート</string>
     <string name="export_account">テキストとして共有</string>
     <string name="geolocate">近くの図書館を探す</string>
     <string name="geolocate_progress">位置の確定中…</string>

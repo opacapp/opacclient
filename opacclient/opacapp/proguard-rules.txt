@@ -49,3 +49,8 @@
 
 # Apache
 #-dontwarn org.apache.**
+
+# streamsupport
+# https://github.com/streamsupport/streamsupport/blob/master/streamsupport-pro/streamsupport.pro
+-keep class java8.** { *; }
+-dontwarn java8.**

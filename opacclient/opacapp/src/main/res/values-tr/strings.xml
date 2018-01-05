@@ -163,7 +163,7 @@
         <item quantity="one">Bir arama sonucu</item>
         <item quantity="other">%d arama sonucu</item>
     </plurals>
-    <string name="export_starred">Dışa aktar</string>
+    <string name="share_starred">Dışa aktar</string>
     <string name="export_account">Yazı olarak paylaş</string>
     <string name="geolocate">Yakındaki kütüphaneleri bul</string>
     <string name="geolocate_progress">Yeriniz bulunuyor…</string>
