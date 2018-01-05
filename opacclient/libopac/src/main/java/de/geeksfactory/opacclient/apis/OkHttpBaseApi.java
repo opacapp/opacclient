@@ -1,7 +1,5 @@
 package de.geeksfactory.opacclient.apis;
 
-import org.apache.http.protocol.HTTP;
-
 import java.io.IOException;
 import java.io.InterruptedIOException;
 import java.net.UnknownHostException;
@@ -13,6 +11,8 @@ import de.geeksfactory.opacclient.networking.NotReachableException;
 import de.geeksfactory.opacclient.networking.SSLSecurityException;
 import de.geeksfactory.opacclient.objects.CoverHolder;
 import de.geeksfactory.opacclient.objects.Library;
+import java8.util.concurrent.CompletableFuture;
+import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
@@ -221,8 +221,8 @@ public abstract class OkHttpBaseApi extends BaseApi {
         }
     }
 
-    public void asyncPost(String url, RequestBody data, Callback callback)
-            throws IOException {
+    public CompletableFuture<Response> asyncPost(String url, RequestBody data,
+            final boolean ignore_errors) {
         Request request = new Request.Builder()
                 .url(cleanUrl(url))
                 .header("Accept", "*/*")
@@ -230,45 +230,58 @@ public abstract class OkHttpBaseApi extends BaseApi {
                 .post(data)
                 .build();
 
-        http_client.newCall(request).enqueue(callback);
+        return adapt(http_client.newCall(request), ignore_errors);
     }
 
-    public void asyncGet(String url, Callback callback)
-            throws IOException {
+    public CompletableFuture<Response> asyncGet(String url, final boolean ignore_errors) {
         Request request = new Request.Builder()
                 .url(cleanUrl(url))
                 .header("Accept", "*/*")
                 .header("User-Agent", getUserAgent())
                 .build();
 
-        http_client.newCall(request).enqueue(callback);
+        return adapt(http_client.newCall(request), ignore_errors);
     }
 
-    public void asyncHead(String url, Callback callback)
-            throws IOException {
+    public CompletableFuture<Response> asyncHead(String url, final boolean ignore_errors) {
         Request request = new Request.Builder()
                 .url(cleanUrl(url))
                 .header("Accept", "*/*")
                 .header("User-Agent", getUserAgent())
                 .build();
 
-        http_client.newCall(request).enqueue(callback);
+        return adapt(http_client.newCall(request), ignore_errors);
     }
 
-    public void asyncWait() {
-        long started = System.currentTimeMillis();
-        while (http_client.dispatcher().runningCallsCount() > 0 || http_client.dispatcher().queuedCallsCount() > 0) {
-            try {
-                Thread.sleep(100);
-            } catch (InterruptedException e) {
-                // pass
+    private CompletableFuture<Response> adapt(final Call call, final boolean ignore_errors) {
+        // based on the similar implementation in Retrofit
+        // https://github.com/square/retrofit/blob/master/retrofit-adapters/java8/src/main/java
+        // /retrofit2/adapter/java8/Java8CallAdapterFactory.java
+        final CompletableFuture<Response> future = new CompletableFuture<Response>() {
+            @Override
+            public boolean cancel(boolean mayInterruptIfRunning) {
+                if (mayInterruptIfRunning) {
+                    call.cancel();
+                }
+                return super.cancel(mayInterruptIfRunning);
             }
-            if (System.currentTimeMillis() - started > 1000 * 90) {
-                // Timeout
-                http_client.dispatcher().cancelAll();
-                break;
+        };
+        call.enqueue(new Callback() {
+            @Override
+            public void onResponse(Call call, Response response) {
+                if (response.isSuccessful() || ignore_errors) {
+                    future.complete(response);
+                } else {
+                    future.completeExceptionally(new NotReachableException(response.message()));
+                }
             }
-        }
+
+            @Override
+            public void onFailure(Call call, IOException t) {
+                future.completeExceptionally(t);
+            }
+        });
+        return future;
     }
 
     protected void logHttpError(Throwable e) {

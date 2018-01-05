@@ -61,13 +61,11 @@ import de.geeksfactory.opacclient.searchfields.DropdownSearchField;
 import de.geeksfactory.opacclient.searchfields.SearchField;
 import de.geeksfactory.opacclient.searchfields.SearchQuery;
 import de.geeksfactory.opacclient.searchfields.TextSearchField;
-import okhttp3.Call;
-import okhttp3.Callback;
+import java8.util.concurrent.CompletableFuture;
 import okhttp3.Headers;
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
-import okhttp3.Response;
 
 import static okhttp3.MultipartBody.Part.create;
 
@@ -287,30 +285,25 @@ public class Open extends OkHttpBaseApi implements OpacApi {
         }
     }
 
-    protected void assignBestCover(final CoverHolder result, final List<String> queue) {
+    protected CompletableFuture<Void> assignBestCover(final CoverHolder result,
+            final List<String> queue) {
         if (queue.size() > 0) {
             final String url = queue.get(0);
             queue.remove(0);
-            try {
-                asyncHead(url, new Callback() {
-                    @Override
-                    public void onFailure(Call call, IOException e) {
-                        assignBestCover(result, queue);
-                    }
-
-                    @Override
-                    public void onResponse(Call call, Response response) throws IOException {
-                        if (response.code() == 200) {
+            return asyncHead(url, false)
+                    .handle((response, throwable) -> {
+                        if (throwable == null) {
                             result.setCover(url);
                         } else {
-                            assignBestCover(result, queue);
+                            assignBestCover(result, queue).join();
                         }
-                    }
-                });
-            } catch (IOException e) {
-                e.printStackTrace();
-                assignBestCover(result, queue);
-            }
+                        return null;
+                    });
+        } else {
+            // we don't have any more URLs in the queue
+            CompletableFuture<Void> future = new CompletableFuture<>();
+            future.complete(null);
+            return future;
         }
     }
 
@@ -341,6 +334,7 @@ public class Open extends OkHttpBaseApi implements OpacApi {
         Elements elements = doc.select("div[id$=divMedium], div[id$=divComprehensiveItem], div[id$=divDependentCatalogue]");
         List<SearchResult> results = new ArrayList<>();
         int i = 0;
+        List<CompletableFuture<Void>> futures = new ArrayList<>();
         for (Element element : elements) {
             final SearchResult result = new SearchResult();
             // Cover
@@ -456,39 +450,29 @@ public class Open extends OkHttpBaseApi implements OpacApi {
                         .put("branchFilter", "");
                     RequestBody entity = RequestBody.create(MEDIA_TYPE_JSON, data.toString());
 
-                    asyncPost(url, entity, new Callback() {
-                        @Override
-                        public void onFailure(Call call, IOException e) {
-                            // ignore
-                        }
-
-                        @Override
-                        public void onResponse(Call call, Response response) throws IOException {
-                            if (response.code() != 200) {
-                                return;
+                    futures.add(asyncPost(url, entity, false).handle((response, throwable) -> {
+                        if (throwable != null) return null;
+                        try {
+                            JSONObject availabilityData = new JSONObject(response.body().string());
+                            String isAvail =
+                                    availabilityData.getJSONObject("d").getString("IsAvail");
+                            switch (isAvail) {
+                                case "true":
+                                    result.setStatus(SearchResult.Status.GREEN);
+                                    break;
+                                case "false":
+                                    result.setStatus(SearchResult.Status.RED);
+                                    break;
+                                case "digital":
+                                    result.setStatus(SearchResult.Status.UNKNOWN);
+                                    break;
                             }
-                            try {
-                                JSONObject availabilityData =
-                                        new JSONObject(response.body().string());
-                                String isAvail =
-                                        availabilityData.getJSONObject("d").getString("IsAvail");
-                                switch (isAvail) {
-                                    case "true":
-                                        result.setStatus(SearchResult.Status.GREEN);
-                                        break;
-                                    case "false":
-                                        result.setStatus(SearchResult.Status.RED);
-                                        break;
-                                    case "digital":
-                                        result.setStatus(SearchResult.Status.UNKNOWN);
-                                        break;
-                                }
-                            } catch (JSONException e) {
-                                e.printStackTrace();
-                            }
+                        } catch (JSONException | IOException e) {
+                            e.printStackTrace();
                         }
-                    });
-                } catch (JSONException | IOException e) {
+                        return null;
+                    }));
+                } catch (JSONException e) {
                     e.printStackTrace();
                 }
             }
@@ -496,8 +480,8 @@ public class Open extends OkHttpBaseApi implements OpacApi {
             result.setNr(i);
             results.add(result);
         }
+        CompletableFuture.allOf(futures.toArray(new CompletableFuture[futures.size()])).join();
 
-        asyncWait();
         return new SearchRequestResult(results, totalCount, page);
     }
 
@@ -811,8 +795,6 @@ public class Open extends OkHttpBaseApi implements OpacApi {
                 e.printStackTrace();
             }
         }
-
-        asyncWait();
         return item;
     }
 
