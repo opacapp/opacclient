@@ -908,10 +908,11 @@ public class Adis extends ApacheBaseApi implements OpacApi {
                         .attr("value")));
 
 //                addIfSubmitWithFocus(form, input, "Einzelbestellung");
-                // Bei Einzelbestellung (StB Suttgart) och focus setzen
+                // Bei Einzelbestellung (StB Suttgart) noch focus setzen
                 if (input.val().contains("Einzelbestellung")) {
                     String fld = input.attr("fld");
-                    if (fld != null) {
+                    boolean withFocus = false;
+                    if (withFocus && (fld != null)) {
                         form.add(new BasicNameValuePair("focus", fld));
                     }
                 }
@@ -1604,6 +1605,15 @@ public class Adis extends ApacheBaseApi implements OpacApi {
         return htmlPost(opac_url + ";jsessionid=" + s_sid, form);
     }
 
+    /**
+     * Ergänzt zur form ein NameValuePair mit "name" und "value" des Elements input.
+     * falls es sich vom type "submit" ist und ( text==null oder input den Text text enthält)
+     *
+     * @param form  Liste von NameValuePair's
+     * @param input das input-Element
+     * @param text  für den Test von input.val().contains
+     * @return true falls ein NameValuePair in form ergänzt wurde, sonst false
+     */
     protected boolean addIfSubmitWithFocus(List<NameValuePair> form, Element input, String text) {
         if (!"submit".equals(input.attr("type"))) {
             return false;
@@ -1613,7 +1623,9 @@ public class Adis extends ApacheBaseApi implements OpacApi {
             form.add(new BasicNameValuePair(input.attr("name"), input
                     .attr("value")));
             String fld = input.attr("fld");
-            if ((fld != null) && (fld.length() > 0)) {
+            boolean withFocus = false;
+            // Test ohne focus-fld als NameValuePair
+            if (withFocus && (fld != null) && (fld.length() > 0)) {
 
                 // ev. vorhandenen focus-Wert überschreiben
                 int i = 0;
