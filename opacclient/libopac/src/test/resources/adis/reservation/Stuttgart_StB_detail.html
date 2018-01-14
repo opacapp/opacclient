@@ -1,0 +1,627 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="de" lang="de"><head>
+	<style type="text/css">
+		@import url(css/aDISStandard.css);
+	</style>
+	<script src="js/aDISMain.min.js" type="text/javascript"></script>
+	<script src="js/fckeditor/fckeditor.js" type="text/javascript"></script>
+	<title> Stadtbibliothek_Stuttgart      </title>
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,shrink-to-fit=no">
+<meta name="HandheldFriendly" content="true">
+<title>Stadtbibliothek Stuttgart</title>
+<!--
+(c) Software: aDIS/BMS und aDIS/Archiv by |a|S|tec| GmbH Berlin und Muenchen - www.astec.de
+HTML/CSS: Formulare, Tabellen, Inhalte, etc. werden automatisiert durch aDIS/BMS generiert
+Anpassungen im aDIS-Rahmen durch ena Webstudio - www.ena-webstudio.com
+Projekt: aDIS-85 Stuttgart, OPAC01, de
+Letztes Update: 26.11.2017 - 19:43
+//-->
+<script src="/aDISWeb_kopac85/js/scripts-head.js"></script>
+<link rel="stylesheet" href="/aDISWeb_kopac85/css/kopac_style.css">
+<link rel="stylesheet" href="/aDISWeb_stu/css/kopac_diff.css">
+<!--[if lte IE 8]><link rel="stylesheet" href="/aDISWeb_kopac85/css/kopac_ie-old.css"><![endif]-->
+<!--[if lt IE 9]><script src="/aDISWeb_kopac85/js/html5shiv-printshiv.min.js"></script><script src="/aDISWeb_kopac85/js/css3-mediaqueries.js"></script><![endif]-->
+<link rel="shortcut icon" type="image/x-icon" href="/aDISWeb_stu/images/favicon.ico">
+</head>
+<body class="opac01">
+<script type="text/javascript"><!--
+
+
+
+
+
+function sendRequest() {
+  location.href="/aDISWeb/app;jsessionid=5857D6AED39DEF0C37ABDD67CD89DC19?service=direct/1/POOLM02Q@@@@@@@@_4B033400_349DAD80/$BrowserBack";
+  }
+
+
+
+
+
+
+function startIdleTimer() {
+  if (typeof idleId != 'undefined')
+    clearTimeout(idleId)
+  idleId = window.setTimeout("to('"+ idleLink + "')", idleTime);
+}			
+function to(link) {
+  location.href=link;
+}
+
+
+
+
+
+function setupHandlers()  {
+  document.onmousedown = docOnEvent;		
+  document.onkeydown = docOnEvent;	
+  document.onkeypress = docOnEvent;
+  document.onhelp = cancelF1;
+
+  initFormElements();
+  initIframes();
+  initScrollPos();
+}
+function getDimensions()  {
+  document.forms[0].scrDim.value = screen.width + ";" + screen.height;
+  if (window.innerWidth)
+    document.forms[0].winDim.value = window.innerWidth + ";" + window.innerHeight;
+  else
+    document.forms[0].winDim.value = document.body.offsetWidth + ";" + document.body.offsetHeight;
+  node = document.getElementById("img_content");
+  if (node != undefined)
+    document.forms[0].imgDim.value = node.offsetWidth + ";" + node.offsetHeight;
+}
+
+
+
+
+
+aDISAjax.URL = "/aDISWeb/app;jsessionid=5857D6AED39DEF0C37ABDD67CD89DC19?service=aDISAjax/POOLM02Q@@@@@@@@_4B033400_349DAD80/$AjaxScript";
+
+
+
+
+aDIS.onLoad = function (e)
+{
+
+
+if (history.pushState && history.state == null) {
+  history.pushState({ action : 1 }, "", null);
+  history.pushState({ action : 2 }, "", null);
+  }         
+         
+window.onpopstate = function (e) {
+  if(e.state != null && e.state.action)
+      sendRequest();
+  }
+
+
+
+  idleTime=600000;
+  idleLink="/aDISWeb/app;jsessionid=5857D6AED39DEF0C37ABDD67CD89DC19?service=direct/1/POOLM02Q@@@@@@@@_4B033400_349DAD80/$Timeout";
+  startIdleTimer();
+
+
+  if (!e) var e = window.event;
+  document.forms[0].scriptEnabled.value=true;
+  if (self.specialOnLoad != undefined)
+    specialOnLoad(e);
+  setupHandlers();
+  getDimensions();
+
+
+  aDIS.Suggest["Autosuggest"] = new Suggester({inputid:"Autosuggest",listid:"listAutosuggest",rule:"BM9316", minchars:3, searchhistory:true, ajaxcontext:""}); 
+
+
+  var UserAgent = navigator.userAgent.toLowerCase();
+  if (UserAgent.search(/(iphone|ipod|ipad|opera mini|fennec|palm|blackberry|android|symbian|series60)/) == -1)
+    document.Form0.$Autosuggest.focus();
+
+}
+
+aDIS.addListener('load', window, aDIS.onLoad);
+
+
+// --></script>
+<div class="aDISMaske"><form method="post" name="Form0" action="/aDISWeb/app;jsessionid=5857D6AED39DEF0C37ABDD67CD89DC19" onsubmit="return formOnSubmit();">
+<input type="hidden" name="service" value="direct/1/POOLM02Q@@@@@@@@_4B033400_349DAD80/$Form.form"/>
+<input type="hidden" name="sp" value="S0"/>
+<input type="hidden" name="Form0" value="focus,keyCode,stz,source,selected,requestCount,scriptEnabled,scrollPos,scrDim,winDim,imgDim,$Autosuggest,select,$Toolbar,$FormConditional,textButton,$Textfield,$FormConditional$0,textButton$0,$FormConditional$1,textButton$1,textButton$2,$FormConditional$2,textButton$3,$Toolbar$0"/>
+<input type="hidden" name="focus" value=""/>
+<input type="hidden" name="keyCode" value="0"/>
+<input type="hidden" name="stz" value=""/>
+<input type="hidden" name="source" value=""/>
+<input type="hidden" name="selected" value=""/>
+<input type="hidden" name="requestCount" value="7"/>
+<input type="hidden" name="scriptEnabled" value="T"/>
+<input type="hidden" name="scrollPos" value="0"/>
+<input type="hidden" name="scrDim" value=""/>
+<input type="hidden" name="winDim" value=""/>
+<input type="hidden" name="imgDim" value=""/>
+<input type="hidden" name="$FormConditional" value="T"/>
+<input type="hidden" name="$FormConditional$0" value="T"/>
+<input type="hidden" name="$FormConditional$1" value="T"/>
+<input type="hidden" name="$FormConditional$2" value="T"/>
+				
+<div id="wrapper">
+  <div id="wrapper_inside">
+
+    <ul id="sprunglinks">
+      <li><a class="sprung" href="#main">Zum Inhalt</a></li>
+    </ul>
+
+    <div id="header">
+      <div class="inside">
+
+          <div id="mhead" class="block">
+            <div id="mhead-inside">
+              <div id="logo" role="banner"><a href="http://www1.stuttgart.de/stadtbibliothek/" title="Zur Homepage der Bibliothek"><img src="/aDISWeb_stu/images/logo.png" alt="Stuttgart-Logo"></a></div>
+              <ul id="mnav" class="mod_navigation block" role="navigation" aria-label="Service-Navigation">
+               
+               <li id="navbox">
+               <div class="mod_navigation block" id="mnav" role="navigation" aria-label="Servicemen&uuml;"><div class="tree_div">
+<ul class="tree_ul">
+<li class="tree_leaf_li_sel">
+<strong><span class="tree_strong">Anmelden</span></strong></li>
+<li class="tree_leaf_li">
+<a href="/aDISWeb/app;jsessionid=5857D6AED39DEF0C37ABDD67CD89DC19?service=direct/1/POOLM02Q@@@@@@@@_4B033400_349DAD80/$Tree.treeNodes&amp;sp=SL2&amp;requestCount=7" class="tree_leaf_a">Abmelden</a></li>
+</ul></div>
+ </div>
+
+               </li>
+             </ul>
+            </div>
+          </div>
+
+          <div id="hnav" class="mod_navigation block" role="navigation" aria-label="Hauptnavigation">
+            <!-- Mobile toggle -->
+            <div id="hnav-toggle">
+            <input id="main-menu-state" type="checkbox">
+            <label class="main-menu-btn" for="main-menu-state"><span class="main-menu-btn-icon"></span> Navigation</label>
+            </div>
+
+            <!-- Menu -->
+            <ul class="cssmenu_ul sm sm-style" id="main-menu">
+<li class="cssmenu_button"><a href="/aDISWeb/app;jsessionid=5857D6AED39DEF0C37ABDD67CD89DC19?service=direct/1/POOLM02Q@@@@@@@@_4B033400_349DAD80/$InternalLink.directlink&amp;sp=S%24%24GFBO_41&amp;sp=SS1&amp;requestCount=7" title="" fld="$$GFBO_41">Startseite</a></li>
+<li class="cssmenu_button"><a href="/aDISWeb/app;jsessionid=5857D6AED39DEF0C37ABDD67CD89DC19?service=direct/1/POOLM02Q@@@@@@@@_4B033400_349DAD80/$InternalLink$0.directlink&amp;sp=S%24%24GFBO_42&amp;sp=SBK&amp;requestCount=7" title="" fld="$$GFBO_42">Mein Konto</a></li>
+<li class="cssmenu_button"><a href="/aDISWeb/app;jsessionid=5857D6AED39DEF0C37ABDD67CD89DC19?service=direct/1/POOLM02Q@@@@@@@@_4B033400_349DAD80/$InternalLink$1.directlink&amp;sp=S%24%24GFBO_43&amp;sp=SAP&amp;requestCount=7" title="" fld="$$GFBO_43">Meine Suchen</a></li>
+<li class="cssmenu_ul"><a href="#">Medienlisten</a>
+<ul class="menufts">
+<li class="cssmenu_button"><a href="/aDISWeb/app;jsessionid=5857D6AED39DEF0C37ABDD67CD89DC19?service=direct/1/POOLM02Q@@@@@@@@_4B033400_349DAD80/$InternalLink$2.directlink&amp;sp=S%24%24GFBO_44&amp;sp=SW1&amp;requestCount=7" title="" fld="$$GFBO_44">Neuerwerbungen</a></li>
+<li class="cssmenu_button"><a href="/aDISWeb/app;jsessionid=5857D6AED39DEF0C37ABDD67CD89DC19?service=direct/1/POOLM02Q@@@@@@@@_4B033400_349DAD80/$InternalLink$3.directlink&amp;sp=S%24%24GFBO_45&amp;sp=SW4&amp;requestCount=7" title="" fld="$$GFBO_45">Empfehlungen</a></li>
+</ul></li>
+<li class="cssmenu_button"><a href="/aDISWeb/app;jsessionid=5857D6AED39DEF0C37ABDD67CD89DC19?service=direct/1/POOLM02Q@@@@@@@@_4B033400_349DAD80/$InternalLink$4.directlink&amp;sp=S%24%24GFBO_46&amp;sp=SW2&amp;requestCount=7" title="" fld="$$GFBO_46">Digitale Angebote</a></li>
+<li class="cssmenu_button"><a href="/aDISWeb/app;jsessionid=5857D6AED39DEF0C37ABDD67CD89DC19?service=direct/1/POOLM02Q@@@@@@@@_4B033400_349DAD80/$InternalLink$5.directlink&amp;sp=S%24%24GFBO_47&amp;sp=SW6&amp;requestCount=7" title="" fld="$$GFBO_47">Kontakt</a></li>
+<li class="cssmenu_button"><a href="/aDISWeb/app;jsessionid=5857D6AED39DEF0C37ABDD67CD89DC19?service=direct/1/POOLM02Q@@@@@@@@_4B033400_349DAD80/$InternalLink$6.directlink&amp;sp=S%24%24GFBO_48&amp;sp=SW9&amp;requestCount=7" title="" fld="$$GFBO_48">Hilfe</a></li>
+</ul>
+          </div>
+      </div>
+    </div>
+
+    <div id="R22"> <div id="search" role="search" aria-label="Schnellsuche">
+
+      <div class="grid-wrapper">
+        <div class="grid-row">
+          <div class="grid-col col-xs-12 col-md-4">
+            <div class="grid-inside field-phrase">
+
+              <label for="Autosuggest"><span class="fbz-text">Suchbegriff:</span></label><input type="text" autocomplete="off" id="Autosuggest" list="listAutosuggest" data-allowReturn="true" placeholder="" name="$Autosuggest" fld="THEMA2_1" value="" specialType="search"/><datalist id="listAutosuggest" role="listbox" aria-live="polite"/> </div>
+          </div>
+          <div class="grid-col col-xs-12 col-md-6">
+            <div class="grid-inside field-library">
+
+              <label for="AUSGAB_1">
+                <span class="fbz-text">Bibliothek:</span>
+              </label><select name="select" id="AUSGAB_1" class="fb">
+<option value="Alle">Alle</option>
+<option value="Stadtbibliothek am Mail&#228;nder Platz">Stadtbibliothek am Mail&#228;nder Platz</option>
+<option value="Bibliothek f&#252;r Schlaflose">Bibliothek f&#252;r Schlaflose</option>
+<option value="Bad Cannstatt">Bad Cannstatt</option>
+<option value="Degerloch">Degerloch</option>
+<option value="Kneippweg">Kneippweg</option>
+<option value="Botnang">Botnang</option>
+<option value="Feuerbach">Feuerbach</option>
+<option value="Freiberg">Freiberg</option>
+<option value="M&#246;hringen">M&#246;hringen</option>
+<option value="M&#252;nster">M&#252;nster</option>
+<option value="Neugereut">Neugereut</option>
+<option value="Ost">Ost</option>
+<option value="Plieningen">Plieningen</option>
+<option value="Stammheim">Stammheim</option>
+<option value="Untert&#252;rkheim">Untert&#252;rkheim</option>
+<option value="Vaihingen">Vaihingen</option>
+<option value="Weilimdorf">Weilimdorf</option>
+<option value="West">West</option>
+<option value="Zuffenhausen">Zuffenhausen</option>
+<option value="Fahrbibliothek">Fahrbibliothek</option>
+<option value="Mobile Ger&#228;te (Mail&#228;nder Platz)">Mobile Ger&#228;te (Mail&#228;nder Platz)</option>
+</select> <button type="submit" id="ZLO1_ddGFBO_1" fld="$$GFBO_1" class="imp-button suche-starten"><i></i><span class="button-text">Suche starten</span></button>
+            </div>
+          </div>
+          <div class="grid-col col-xs-12 col-md-2">
+            <div class="grid-inside search-adv-a"><a href="/aDISWeb/app;jsessionid=5857D6AED39DEF0C37ABDD67CD89DC19?service=direct/1/POOLM02Q@@@@@@@@_4B033400_349DAD80/ZLO1_ddGFBO_3.directlink&amp;sp=S%24%24GFBO_3&amp;sp=SS6&amp;requestCount=7" title="Erweiterte Suche" class="link-button search-adv" fld="$$GFBO_3">Erweiterte Suche</a> </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+    <div id="container">
+      <div id="container-inside">
+
+        <div id="main" role="main" aria-label="Hauptbereich">
+          <div class="inside">
+
+            <!-- GRID SYSTEM START -->
+            <div class="grid-wrapper">
+              <div class="grid-row">
+                <div class="grid-col col-xs-12 col-md-12 col-xl-12">
+                  <div class="grid-inside">
+
+                    <h1><span class="invisible">Aktuelle Seite: </span><span class="txtinsert">Vollanzeige Katalog</span> </h1>
+                    
+                    
+                    
+
+                    <h2><span class="invisible">Aktuelle Seite: </span>
+                    <div id="R27">
+  <div class="aDISListe"><div class="html_div" style="width:100%; height:100%;">Die Geschichte der getrennten Wege : Erwachsenenjahre / Elena Ferrante ; aus dem Italienischen von Karin Krieger</div></div>
+</div>
+                    </h2>
+
+
+                    <div class="grid-wrapper"><div class="grid-row">
+                      <div class="grid-col col-xs-12 col-md-6 col-xl-6"><div class="grid-inside">
+                      <!-- R06=Gesucht wurde mit -->
+
+                        
+                        
+                        <div id="R03">
+  <p><span>Gesucht wurde mit: "Autor / Verfasser / Person= ferrante". Treffer: 1 von 22</span> </p>
+</div>
+
+                      </div></div>
+                      <div class="grid-col col-xs-12 col-md-6 col-xl-6"><div class="grid-inside"><div class="toolbar_div">
+<ul class="toolbar_ul">
+<li class="toolbar_li">
+<input type="image" src="/aDISWeb/images/POOLM02Q@@@@@@@@/gif/POOLM02Q@@@@@@@@_53010E00_31758600.gif;jsessionid=5857D6AED39DEF0C37ABDD67CD89DC19" alt="Zur&#252;ck zur vorherigen Seite" id="Toolbar_0" name="$Toolbar_0" title="Zur&#252;ck zur vorherigen Seite" onmouseover="self.status='Zur&#252;ck zur vorherigen Seite';return true;" onmouseout="self.status='';" class="toolbar_img"/><label for="Toolbar_0"><span class="toolbar_txt"></span></label></li>
+<li class="toolbar_li">
+<input type="image" src="/aDISWeb/images/POOLM02Q@@@@@@@@/gif/POOLM02Q@@@@@@@@_53006901_327BE080.gif;jsessionid=5857D6AED39DEF0C37ABDD67CD89DC19" alt="Zum Anfang" id="Toolbar_1" name="$Toolbar_1" disabled="disabled" title="Zum Anfang" onmouseover="self.status='Zum Anfang';return true;" onmouseout="self.status='';" class="toolbar_img_dis"/><label for="Toolbar_1"><span class="toolbar_txt_dis"> </span></label></li>
+<li class="toolbar_li">
+<input type="image" src="/aDISWeb/images/POOLM02Q@@@@@@@@/gif/POOLM02Q@@@@@@@@_53011501_327BE080.gif;jsessionid=5857D6AED39DEF0C37ABDD67CD89DC19" alt="zur&#252;ck" id="Toolbar_2" name="$Toolbar_2" disabled="disabled" title="zur&#252;ck" onmouseover="self.status='zur&#252;ck';return true;" onmouseout="self.status='';" class="toolbar_img_dis"/><label for="Toolbar_2"><span class="toolbar_txt_dis"></span></label></li>
+<li class="toolbar_li">
+<input type="image" src="/aDISWeb/images/POOLM02Q@@@@@@@@/gif/POOLM02Q@@@@@@@@_53011400_327BE080.gif;jsessionid=5857D6AED39DEF0C37ABDD67CD89DC19" alt="n&#228;chster" id="Toolbar_3" name="$Toolbar_3" title="n&#228;chster" onmouseover="self.status='n&#228;chster';return true;" onmouseout="self.status='';" class="toolbar_img"/><label for="Toolbar_3"><span class="toolbar_txt"></span></label></li>
+<li class="toolbar_li">
+<input type="image" src="/aDISWeb/images/POOLM02Q@@@@@@@@/gif/POOLM02Q@@@@@@@@_53011B00_327BE080.gif;jsessionid=5857D6AED39DEF0C37ABDD67CD89DC19" alt="zum Ende" id="Toolbar_4" name="$Toolbar_4" title="zum Ende" onmouseover="self.status='zum Ende';return true;" onmouseout="self.status='';" class="toolbar_img"/><label for="Toolbar_4"><span class="toolbar_txt"></span></label></li>
+<li class="toolbar_li">
+<input type="image" src="/aDISWeb/images/POOLM02Q@@@@@@@@/gif/POOLM02Q@@@@@@@@_53012000_327BE080.gif;jsessionid=5857D6AED39DEF0C37ABDD67CD89DC19" alt="Zur Trefferliste" id="Toolbar_5" name="$Toolbar_5" title="Zur Trefferliste" onmouseover="self.status='Zur Trefferliste';return true;" onmouseout="self.status='';" class="toolbar_img"/><label for="Toolbar_5"><span class="toolbar_txt"></span></label></li></ul><div style="clear:both"></div></div> </div></div>
+                    </div></div>
+
+                    <hr>
+
+                  </div>
+                </div>
+
+               <!-- START: HAUPTBEREICH-Spalte -->
+                <div class="grid-col col-xs-12 col-md-8 col-xl-9">
+                  <div class="grid-inside">
+                    <section id="results" aria-label="Details">
+
+                      
+                      <div id="R06">
+  <div class="aDISListe"><div class="html_div" style="width:100%; height:100%;"><div class="aDISListe">
+<table class="gi" summary="Auflistung der Kategorien des ausgew�hlten Treffers" width="100%"><colgroup><col align="left" valign=top width="25%"/>
+<col align="left" valign=top width="75%"/>
+</colgroup><thead><tr><th colspan="2" class="thseite">Katalogangaben</th></tr></thead><tbody><tr><th scope="row" class="spaltelinks">&nbsp;</th><td class="spalterechts"><a href="https://opac.sbs.stuttgart.de/aDISWeb/app?service=direct/0/Home/$DirectLink&sp=SOPAC&sp=SAK00648340">Zitierlink</a></td></tr>
+<tr><th scope="row" class="spaltelinks">Medienart</th><td class="spalterechts"><img class='icon' height='16' width='16' src='/aDISWeb_kopac85/icons/buch_rot_a.png' alt='Band' title='Band' /> [Band]</td></tr>
+<tr><th scope="row" class="spaltelinks">Art/Inhalt</th><td class="spalterechts">Fiktionale Darstellung</td></tr>
+<tr><th scope="row" class="spaltelinks">Verfasser</td><td class="spalterechts"><a href="/aDISWeb/app;jsessionid=5857D6AED39DEF0C37ABDD67CD89DC19?service=direct/1/POOLM02Q@@@@@@@@_4B033400_349DAD80/ZLO1_HTMLGL_1&sp=SPE00228450&requestCount=7">Ferrante, Elena </a></td></tr>
+<tr><th scope="row" class="spaltelinks">Titel </th><td class="spalterechts">Die Geschichte der getrennten Wege : Erwachsenenjahre / Elena Ferrante ; aus dem Italienischen von Karin Krieger </td></tr>
+<tr><th scope="row" class="spaltelinks">Bevorzugter Titel</th><td class="spalterechts">Storia di chi fugge e di chi resta </td></tr>
+<tr><th scope="row" class="spaltelinks">Person</th><td class="spalterechts"><a href="/aDISWeb/app;jsessionid=5857D6AED39DEF0C37ABDD67CD89DC19?service=direct/1/POOLM02Q@@@@@@@@_4B033400_349DAD80/ZLO1_HTMLGL_1&sp=SPE00063009&requestCount=7">Krieger, Karin </a></td></tr>
+<tr><th scope="row" class="spaltelinks">Veröffentlichung</th><td class="spalterechts">Frankfurt a. M. [u.a.] : Suhrkamp, 2017 </td></tr>
+<tr><th scope="row" class="spaltelinks">Umfang / Format </th><td class="spalterechts">540 Seiten </td></tr>
+<tr><th scope="row" class="spaltelinks">Ausgabe</th><td class="spalterechts">Erste Auflage </td></tr>
+<tr><th scope="row" class="spaltelinks">Anmerkungen </th><td class="spalterechts">Aus dem Ital. übers. - Spiegel-Bestseller KW 36/2017 </td></tr>
+<tr><th scope="row" class="spaltelinks">Sprache</th><td class="spalterechts">Deutsch </td></tr>
+<tr><th scope="row" class="spaltelinks">Land</th><td class="spalterechts">Deutschland </td></tr>
+<tr><th scope="row" class="spaltelinks">ISBN</th><td class="spalterechts">978-3-518-42575-6 <br/>3-518-42575-7 </td></tr>
+<tr><th scope="row" class="spaltelinks">Nummer</th><td class="spalterechts">9783518425756  (Europäische Artikelnummerierung (EAN)) </td></tr>
+<tr><th scope="row" class="spaltelinks">Gesamtwerk </th><td class="spalterechts"><a href="/aDISWeb/app;jsessionid=5857D6AED39DEF0C37ABDD67CD89DC19?service=direct/1/POOLM02Q@@@@@@@@_4B033400_349DAD80/ZLO1_HTMLGL_1&sp=SAK00475856&requestCount=7">(Neapolitanische Saga ; 3) </a></td></tr>
+<tr><th scope="row" class="spaltelinks">Interessenskreis </td><td class="spalterechts">Frauen </td></tr>
+<tr><th scope="row" class="spaltelinks">Lokale Systematik </th><td class="spalterechts"><a href="/aDISWeb/app;jsessionid=5857D6AED39DEF0C37ABDD67CD89DC19?service=direct/1/POOLM02Q@@@@@@@@_4B033400_349DAD80/ZLO1_HTMLGL_1&sp=SSY02003432&requestCount=7">Romane Romane</a></td></tr>
+<tr><th scope="row" class="spaltelinks">Inhalt </th><td class="spalterechts">Teil 3 der Neapel-Saga. Es sind die turbulenten 1970er-Jahre. Lila ist Mutter geworden und hat sich befreit und alles hingeworfen - den Wohlstand, ihre Ehe, ihren neuen Namen - und arbeitet unter entwürdigenden Bedingungen in einer Fabrik. Elena hat ihr altes neapolitanisches Viertel hinter sich gelassen, das Studium beendet und ihren 1. Roman veröffentlicht. Als sie in eine angesehene norditalienische Familie einheiratet und ihrerseits ein Kind bekommt, hält sie ihren gesellschaftlichen Aufstieg für vollendet. Ganze Welten trennen die Freundinnen, doch gerade in diesen schwierigen Jahren sind sie füreinander da. (Verlagstext)</td></tr>
+<tr><th scope="row" class="spaltelinks">Vormerkungen </td><td class="spalterechts">40 </td></tr>
+</tbody></table></div></div> </div>
+</div><div id="R08" class="grid-col col-xs-12 col-md-12 col-xl-12">
+  <div class="grid-inside register-table">	<div class="rTable_div"><table colDisable="[true, true, true, true, true, true, true]" width="100%" colCase="[, , , , , , ]" class="rTable_table">	<colgroup><col width="16%"></col><col width="25%"></col><col width="18%"></col><col width="19%"></col><col width="19%"></col>	</colgroup>	<thead class="rTable_thead">
+				<tr><th scope="col" class="rTable_th">Bibliothek</th><th scope="col" class="rTable_th">Standort</th><th scope="col" class="rTable_th">Signatur</th><th scope="col" class="rTable_th">Bestellmöglichkeit</th><th scope="col" class="rTable_th">Verfügbarkeit</th>	</tr>	
+			</thead>
+			<tbody><tr class="rTable_tr_even"><td class="rTable_td_text"><a href="http://www.stuttgart.de/stadtbibliothek/mailaender_platz" target="_blank" title="Internetseite der Bibliothek">Stadtbibliothek am Mailänder Platz</a></td><td class="rTable_td_text">Romane</td><td class="rTable_td_text">Ferr</td><td class="rTable_td_text">Vormerkung möglich - 28-Tage Ausleihe</td><td class="rTable_td_text">Reserviert -  bis: 24.1.2018</td></tr><tr class="rTable_tr_odd"><td class="rTable_td_text"><a href="http://www.stuttgart.de/stadtbibliothek/mailaender_platz" target="_blank" title="Internetseite der Bibliothek">Stadtbibliothek am Mailänder Platz</a></td><td class="rTable_td_text">Romane</td><td class="rTable_td_text">Ferr</td><td class="rTable_td_text">Vormerkung möglich - 28-Tage Ausleihe</td><td class="rTable_td_text">Ausgeliehen -  Fällig am: 15.1.2018</td></tr><tr class="rTable_tr_even"><td class="rTable_td_text"><a href="http://www.stuttgart.de/stadtbibliothek/mailaender_platz" target="_blank" title="Internetseite der Bibliothek">Stadtbibliothek am Mailänder Platz</a></td><td class="rTable_td_text">Romane</td><td class="rTable_td_text">Ferr</td><td class="rTable_td_text">Vormerkung möglich - 28-Tage Ausleihe</td><td class="rTable_td_text">Ausgeliehen -  Fällig am: 16.1.2018</td></tr><tr class="rTable_tr_odd"><td class="rTable_td_text"><a href="http://www.stuttgart.de/stadtbibliothek/mailaender_platz" target="_blank" title="Internetseite der Bibliothek">Stadtbibliothek am Mailänder Platz</a></td><td class="rTable_td_text">Romane</td><td class="rTable_td_text">Ferr</td><td class="rTable_td_text">Vormerkung möglich - 28-Tage Ausleihe</td><td class="rTable_td_text">Ausgeliehen -  Fällig am: 16.1.2018</td></tr><tr class="rTable_tr_even"><td class="rTable_td_text"><a href="http://www.stuttgart.de/stadtbibliothek/mailaender_platz" target="_blank" title="Internetseite der Bibliothek">Stadtbibliothek am Mailänder Platz</a></td><td class="rTable_td_text">Romane</td><td class="rTable_td_text">Ferr</td><td class="rTable_td_text">Vormerkung möglich - 28-Tage Ausleihe</td><td class="rTable_td_text">Ausgeliehen -  Fällig am: 2.2.2018</td></tr><tr class="rTable_tr_odd"><td class="rTable_td_text"><a href="http://www.stuttgart.de/stadtbibliothek/untertuerkheim/" target="_blank" title="Internetseite der Bibliothek">Untertürkheim</a></td><td class="rTable_td_text">Romane</td><td class="rTable_td_text">Ferr</td><td class="rTable_td_text">Vormerkung möglich - 28-Tage Ausleihe</td><td class="rTable_td_text">Ausgeliehen -  Fällig am: 2.2.2018</td></tr><tr class="rTable_tr_even"><td class="rTable_td_text"><a href=" http://www.stuttgart.de/stadtbibliothek/weilimdorf/" target="_blank" title="Internetseite der Bibliothek">Weilimdorf</a></td><td class="rTable_td_text">Romane</td><td class="rTable_td_text">Ferr</td><td class="rTable_td_text">Vormerkung möglich - 28-Tage Ausleihe</td><td class="rTable_td_text">Ausgeliehen -  Fällig am: 19.1.2018</td></tr><tr class="rTable_tr_odd"><td class="rTable_td_text"><a href="http://www1.stuttgart.de/stadtbibliothek/stadtteile/fahrbibliothek/haltestellen.pdf" target="_blank" title="Internetseite der Bibliothek">Fahrbibliothek</a></td><td class="rTable_td_text">Fahrbibliothek / Romane</td><td class="rTable_td_text">Ferr</td><td class="rTable_td_text">Vormerkung möglich - 28-Tage Ausleihe</td><td class="rTable_td_text">Reserviert -  bis: 26.1.2018</td></tr><tr class="rTable_tr_even"><td class="rTable_td_text"><a href="http://www1.stuttgart.de/stadtbibliothek/stadtteile/fahrbibliothek/haltestellen.pdf" target="_blank" title="Internetseite der Bibliothek">Fahrbibliothek</a></td><td class="rTable_td_text">Fahrbibliothek / Romane</td><td class="rTable_td_text">Ferr</td><td class="rTable_td_text">Vormerkung möglich - 28-Tage Ausleihe</td><td class="rTable_td_text">Ausgeliehen -  Fällig am: 16.1.2018</td></tr><tr class="rTable_tr_odd"><td class="rTable_td_text"><a href="http://www.stuttgart.de/stadtbibliothek/ost/" target="_blank" title="Internetseite der Bibliothek">Ost</a></td><td class="rTable_td_text">Romane</td><td class="rTable_td_text">Ferr</td><td class="rTable_td_text">Vormerkung möglich - 28-Tage Ausleihe</td><td class="rTable_td_text">Ausgeliehen -  Fällig am: 16.1.2018</td></tr><tr class="rTable_tr_even"><td class="rTable_td_text"><a href="http://www.stuttgart.de/stadtbibliothek/ost/" target="_blank" title="Internetseite der Bibliothek">Ost</a></td><td class="rTable_td_text">Romane</td><td class="rTable_td_text">Ferr</td><td class="rTable_td_text">Vormerkung möglich - 28-Tage Ausleihe</td><td class="rTable_td_text">Ausgeliehen -  Fällig am: 20.1.2018</td></tr><tr class="rTable_tr_odd"><td class="rTable_td_text"><a href="http://www.stuttgart.de/stadtbibliothek/plieningen/" target="_blank" title="Internetseite der Bibliothek">Plieningen</a></td><td class="rTable_td_text">Romane</td><td class="rTable_td_text">Ferr</td><td class="rTable_td_text">Vormerkung möglich - 28-Tage Ausleihe</td><td class="rTable_td_text">Ausgeliehen -  Fällig am: 2.2.2018</td></tr><tr class="rTable_tr_even"><td class="rTable_td_text"><a href="http://www.stuttgart.de/stadtbibliothek/vaihingen/" target="_blank" title="Internetseite der Bibliothek">Vaihingen</a></td><td class="rTable_td_text">Romane</td><td class="rTable_td_text">Ferr</td><td class="rTable_td_text">Vormerkung möglich - 28-Tage Ausleihe</td><td class="rTable_td_text">Ausgeliehen -  Fällig am: 17.1.2018</td></tr><tr class="rTable_tr_odd"><td class="rTable_td_text"><a href="http://www.stuttgart.de/stadtbibliothek/vaihingen/" target="_blank" title="Internetseite der Bibliothek">Vaihingen</a></td><td class="rTable_td_text">Romane</td><td class="rTable_td_text">Ferr</td><td class="rTable_td_text">Vormerkung möglich - 28-Tage Ausleihe</td><td class="rTable_td_text">Ausgeliehen -  Fällig am: 20.1.2018</td></tr><tr class="rTable_tr_even"><td class="rTable_td_text"><a href="http://www.stuttgart.de/stadtbibliothek/stammheim/" target="_blank" title="Internetseite der Bibliothek">Stammheim</a></td><td class="rTable_td_text">Romane</td><td class="rTable_td_text">Ferr</td><td class="rTable_td_text">Vormerkung möglich - 28-Tage Ausleihe</td><td class="rTable_td_text">Ausgeliehen -  Fällig am: 11.1.2018</td></tr><tr class="rTable_tr_odd"><td class="rTable_td_text"><a href=" http://www.stuttgart.de/stadtbibliothek/kneippweg/" target="_blank" title="Internetseite der Bibliothek">Kneippweg</a></td><td class="rTable_td_text">Romane</td><td class="rTable_td_text">Ferr</td><td class="rTable_td_text">Vormerkung möglich - 28-Tage Ausleihe</td><td class="rTable_td_text">Ausgeliehen -  Fällig am: 1.2.2018</td></tr><tr class="rTable_tr_even"><td class="rTable_td_text"><a href="http://www.stuttgart.de/stadtbibliothek/moehringen/" target="_blank" title="Internetseite der Bibliothek">Möhringen</a></td><td class="rTable_td_text">Romane</td><td class="rTable_td_text">Ferr</td><td class="rTable_td_text">Vormerkung möglich - 28-Tage Ausleihe</td><td class="rTable_td_text">Ausgeliehen -  Fällig am: 13.1.2018</td></tr><tr class="rTable_tr_odd"><td class="rTable_td_text"><a href="http://www.stuttgart.de/stadtbibliothek/moehringen/" target="_blank" title="Internetseite der Bibliothek">Möhringen</a></td><td class="rTable_td_text">Romane</td><td class="rTable_td_text">Ferr</td><td class="rTable_td_text">Vormerkung möglich - 28-Tage Ausleihe</td><td class="rTable_td_text">Ausgeliehen -  Fällig am: 18.1.2018</td></tr><tr class="rTable_tr_even"><td class="rTable_td_text"><a href="http://www.stuttgart.de/stadtbibliothek/muenster/" target="_blank" title="Internetseite der Bibliothek">Münster</a></td><td class="rTable_td_text">Romane</td><td class="rTable_td_text">Ferr</td><td class="rTable_td_text">Vormerkung möglich - 28-Tage Ausleihe</td><td class="rTable_td_text">Ausgeliehen -  Fällig am: 31.1.2018</td></tr><tr class="rTable_tr_odd"><td class="rTable_td_text"><a href="http://www.stuttgart.de/stadtbibliothek/neugereut/" target="_blank" title="Internetseite der Bibliothek">Neugereut</a></td><td class="rTable_td_text">Romane</td><td class="rTable_td_text">Ferr</td><td class="rTable_td_text">Vormerkung möglich - 28-Tage Ausleihe</td><td class="rTable_td_text">Ausgeliehen -  Fällig am: 30.1.2018</td></tr><tr class="rTable_tr_even"><td class="rTable_td_text"><a href="http://www.stuttgart.de/stadtbibliothek/badcannstatt/" target="_blank" title="Internetseite der Bibliothek">Bad Cannstatt</a></td><td class="rTable_td_text">Romane</td><td class="rTable_td_text">Ferr</td><td class="rTable_td_text">Vormerkung möglich - 28-Tage Ausleihe</td><td class="rTable_td_text">Reserviert -  bis: 23.1.2018</td></tr><tr class="rTable_tr_odd"><td class="rTable_td_text"><a href="http://www.stuttgart.de/stadtbibliothek/degerloch/" target="_blank" title="Internetseite der Bibliothek">Degerloch</a></td><td class="rTable_td_text">Romane</td><td class="rTable_td_text">Ferr</td><td class="rTable_td_text">Vormerkung möglich - 28-Tage Ausleihe</td><td class="rTable_td_text">Reserviert -  bis: 25.1.2018</td></tr><tr class="rTable_tr_even"><td class="rTable_td_text"><a href="http://www.stuttgart.de/stadtbibliothek/degerloch/" target="_blank" title="Internetseite der Bibliothek">Degerloch</a></td><td class="rTable_td_text">Romane</td><td class="rTable_td_text">Ferr</td><td class="rTable_td_text">Vormerkung möglich - 28-Tage Ausleihe</td><td class="rTable_td_text">Ausgeliehen -  Fällig am: 1.2.2018</td></tr><tr class="rTable_tr_odd"><td class="rTable_td_text"><a href=" http://www.stuttgart.de/stadtbibliothek/botnang/" target="_blank" title="Internetseite der Bibliothek">Botnang</a></td><td class="rTable_td_text">Romane</td><td class="rTable_td_text">Ferr</td><td class="rTable_td_text">Vormerkung möglich - 28-Tage Ausleihe</td><td class="rTable_td_text">Reserviert -  bis: 24.1.2018</td></tr><tr class="rTable_tr_even"><td class="rTable_td_text"><a href="http://www.stuttgart.de/stadtbibliothek/west/" target="_blank" title="Internetseite der Bibliothek">West</a></td><td class="rTable_td_text">Romane</td><td class="rTable_td_text">Ferr</td><td class="rTable_td_text">Vormerkung möglich - 28-Tage Ausleihe</td><td class="rTable_td_text">Reserviert -  bis: 23.1.2018</td></tr><tr class="rTable_tr_odd"><td class="rTable_td_text"><a href="http://www.stuttgart.de/stadtbibliothek/zuffenhausen/" target="_blank" title="Internetseite der Bibliothek">Zuffenhausen</a></td><td class="rTable_td_text">Romane</td><td class="rTable_td_text">Ferr</td><td class="rTable_td_text">Vormerkung möglich - 28-Tage Ausleihe</td><td class="rTable_td_text">Ausgeliehen -  Fällig am: 9.1.2018</td></tr><tr class="rTable_tr_even"><td class="rTable_td_text"><a href="http://www.stuttgart.de/stadtbibliothek/west/" target="_blank" title="Internetseite der Bibliothek">West</a></td><td class="rTable_td_text">Romane</td><td class="rTable_td_text">Ferr</td><td class="rTable_td_text">Vormerkung möglich - 28-Tage Ausleihe</td><td class="rTable_td_text">Ausgeliehen -  Fällig am: 30.1.2018</td></tr><tr class="rTable_tr_odd"><td class="rTable_td_text"><a href="http://www.stuttgart.de/stadtbibliothek/feuerbach/" target="_blank" title="Internetseite der Bibliothek">Feuerbach</a></td><td class="rTable_td_text">Romane</td><td class="rTable_td_text">Ferr</td><td class="rTable_td_text">Vormerkung möglich - 28-Tage Ausleihe</td><td class="rTable_td_text">Ausgeliehen -  Fällig am: 2.2.2018</td></tr><tr class="rTable_tr_even"><td class="rTable_td_text"><a href="http://www.stuttgart.de/stadtbibliothek/freiberg/" target="_blank" title="Internetseite der Bibliothek">Freiberg</a></td><td class="rTable_td_text">Romane</td><td class="rTable_td_text">Ferr</td><td class="rTable_td_text">Vormerkung möglich - 28-Tage Ausleihe</td><td class="rTable_td_text">Ausgeliehen -  Fällig am: 18.1.2018</td></tr>	</tbody></table>	</div> </div>
+</div>
+                      
+                      
+                      
+                      
+
+                    </section>
+                  </div>
+                </div>
+               <!-- ENDE: HAIPTBEREICH-Spalte-->
+
+               <!-- START: OPTIONEN-Spalte RECHTS -->
+                <div class="grid-col col-xs-12 col-md-4 col-xl-3">
+                  <div class="grid-inside">
+                    <section id="options" aria-label="Optionen">
+                      <!-- R14=Treffer direktwahl, R05=Sortierangaben,R08=Treffer einschr. -->
+                      <!-- GFBO_100=Drill down.R09=Treffewreinschr. R16=Quellensuche       -->
+
+                      <!--  -->
+
+                      
+                      
+
+                      
+                      
+                      
+                      
+
+                      <ul class="cssmenu_ul" id="Mainmenu">
+<li class="cssmenu_ul"><a href="#"> </a>
+<ul class="menufts">
+<li class="var_button"><a href="/aDISWeb/app;jsessionid=5857D6AED39DEF0C37ABDD67CD89DC19?service=direct/1/POOLM02Q@@@@@@@@_4B033400_349DAD80/$InternalLink$7.directlink&amp;sp=S%24%24GFBO_41&amp;sp=SML01&amp;requestCount=7" title="" data-ajax="$MLFLD_1" fld="$$GFBO_41"><span class="merkzettel status-inactive">Merkliste</span></a></li>
+<li class="var_button"><a href="/aDISWeb/app;jsessionid=5857D6AED39DEF0C37ABDD67CD89DC19?service=direct/1/POOLM02Q@@@@@@@@_4B033400_349DAD80/$InternalLink$8.directlink&amp;sp=S%24%24GFBO_42&amp;sp=SML02&amp;requestCount=7" title="" data-ajax="$MLFLD_2" fld="$$GFBO_42"></a></li>
+<li class="var_button"><a href="/aDISWeb/app;jsessionid=5857D6AED39DEF0C37ABDD67CD89DC19?service=direct/1/POOLM02Q@@@@@@@@_4B033400_349DAD80/$InternalLink$9.directlink&amp;sp=S%24%24GFBO_43&amp;sp=SML03&amp;requestCount=7" title="" data-ajax="$MLFLD_3" fld="$$GFBO_43"></a></li>
+<li class="var_button"><a href="/aDISWeb/app;jsessionid=5857D6AED39DEF0C37ABDD67CD89DC19?service=direct/1/POOLM02Q@@@@@@@@_4B033400_349DAD80/$InternalLink$10.directlink&amp;sp=S%24%24GFBO_44&amp;sp=SML04&amp;requestCount=7" title="" data-ajax="$MLFLD_4" fld="$$GFBO_44"></a></li>
+<li class="var_button"><a href="/aDISWeb/app;jsessionid=5857D6AED39DEF0C37ABDD67CD89DC19?service=direct/1/POOLM02Q@@@@@@@@_4B033400_349DAD80/$InternalLink$11.directlink&amp;sp=S%24%24GFBO_45&amp;sp=SML05&amp;requestCount=7" title="" data-ajax="$MLFLD_5" fld="$$GFBO_45"></a></li>
+<li class="var_button"><a href="/aDISWeb/app;jsessionid=5857D6AED39DEF0C37ABDD67CD89DC19?service=direct/1/POOLM02Q@@@@@@@@_4B033400_349DAD80/$InternalLink$12.directlink&amp;sp=S%24%24GFBO_46&amp;sp=SML06&amp;requestCount=7" title="" data-ajax="$MLFLD_6" fld="$$GFBO_46"></a></li>
+<li class="var_button"><a href="/aDISWeb/app;jsessionid=5857D6AED39DEF0C37ABDD67CD89DC19?service=direct/1/POOLM02Q@@@@@@@@_4B033400_349DAD80/$InternalLink$13.directlink&amp;sp=S%24%24GFBO_47&amp;sp=SML07&amp;requestCount=7" title="" data-ajax="$MLFLD_7" fld="$$GFBO_47"></a></li>
+<li class="var_button"><a href="/aDISWeb/app;jsessionid=5857D6AED39DEF0C37ABDD67CD89DC19?service=direct/1/POOLM02Q@@@@@@@@_4B033400_349DAD80/$InternalLink$14.directlink&amp;sp=S%24%24GFBO_48&amp;sp=SML08&amp;requestCount=7" title="" data-ajax="$MLFLD_8" fld="$$GFBO_48"></a></li>
+</ul></li>
+</ul>
+
+                      <div id="R10">
+  <p><input type="submit" name="textButton" value="Einzelbestellung" class="wichtig" fld="$$GFBO_10"/></p>
+</div><div id="R14">
+  <div class="show-results">
+
+<div class="accordion">
+  <h3 class="toggler" role="tab" id="accordion-R14-toggler" aria-controls="accordion-R14-content" aria-selected="false" aria-expanded="false">
+    <i class="accordion-icon icon-direkt" aria-hidden="true"></i>Treffer-Direktwahl
+  </h3>
+  <div class="accordion-content" id="accordion-R14-content" aria-labelledby="accordion-R14-toggler" role="tabpanel" aria-hidden="true">
+    <div class="accordion-inner">
+
+    <div class="widget">
+      <label for="ZISTRZ_1">Treffer-Nr.</label><input type="text" name="$Textfield" fld="ZISTRZ_1" onkeypress="checkNumeric(event,this);" id="ZISTRZ_1" maxlength="10" class="text"/> </div>
+    <input class="buttong" type="submit" name="Submit" value="Los" />
+
+    </div>
+  </div>
+</div>
+
+  </div>
+</div><div id="R30">
+  <div class="show-full-basics"><div class="html_div" style="width:100%; height:100%;"><div class="aDISListe">
+<div ID=R001 style="margin-top:10px;" class="clearfix">
+<div style=" width:97%; float:left; overflow:hidden;"><img src="/aDISWeb/app;jsessionid=5857D6AED39DEF0C37ABDD67CD89DC19?service=aDISAsset/POOLM02Q@@@@@@@@_4B033400_349DAD80/ZLO1_SPALTR_1&sp=S%24OTJPG_1&sp=S78520751&sp=Stext%2Fjavascript" height="202"><br/> <br/></div>
+</div>
+<div ID=R002 style="margin-top:10px;" class="clearfix">
+<div style=" width:97%; float:left; overflow:hidden;"><h3>Weitere Infos bei <br/><a href="https://www.buchhandel.de/buch/9783518425756?MVB-Kennnummer=bhde5280144" target="_blank">buchhandel.de</a></h3><br/></div>
+</div>
+</tbody></table></div></div> </div>
+</div><div id="R04">
+
+<div class="accordion">
+  <h3 class="toggler" role="tab" id="accordion-R04-toggler" aria-controls="accordion-R04-content" aria-selected="false" aria-expanded="false">
+    <i class="accordion-icon icon-darstellung" aria-hidden="true"></i>Darstellung &#228;ndern </h3>
+  <div class="accordion-content" id="accordion-R04-content" aria-labelledby="accordion-R04-toggler" role="tabpanel" aria-hidden="true">
+    <div class="accordion-inner">
+
+  <p><input type="submit" name="textButton$0" value="Standardformat" class="buttong" fld="$$GFBO_6"/><input type="submit" name="textButton$1" value="Zitierformat" class="buttong" fld="$$GFBO_8"/> </p>
+
+    </div>
+  </div>
+</div>
+
+</div><div id="R11">
+
+<div class="accordion">
+  <h3 class="toggler" role="tab" id="accordion-R11-toggler" aria-controls="accordion-R11-content" aria-selected="false" aria-expanded="false">
+    <i class="accordion-icon icon-export" aria-hidden="true"></i>Exportieren </h3>
+  <div class="accordion-content" id="accordion-R11-content" aria-labelledby="accordion-R11-toggler" role="tabpanel" aria-hidden="true">
+    <div class="accordion-inner"><p class="buttong"><input type="submit" name="textButton$2" value="EndNote" class="buttong"/></p> </div>
+  </div>
+</div>
+
+</div>
+                      
+
+
+                      <p id="druckversion"><input type="submit" name="textButton$3" value="Druckversion" fld="$$GFBO_88"/> </p>
+
+                    </section>
+                  </div>
+                </div>
+               <!-- ENDE: OPTIONEN-Spalte RECHTS -->
+
+<!-- START Erweiterte Suche -->
+                <!-- START Quellenhinweis - Erweiterte Suche -->
+                
+                  
+                    
+                <!-- STOP Quellenhinweis - Erweiterte Suche -->
+
+                <!-- START Felder - Erweiterte Suche -->
+                    
+                      
+                      
+                      
+                    
+
+                  
+                
+                <!-- STOP Felder - Erweiterte Suche -->
+
+
+                
+
+                  <!--  -->
+
+                  <!-- START Merkliste - Erweiterte Suche -->
+                    
+                      
+                        
+                      
+
+                <!-- START Hilfebereich - Erweiterte Suche -->
+
+                    
+                    
+                    <!-- START Hilfetext 6 -->
+                    
+                      
+                      
+                      
+                      
+                      
+                      
+                      
+                    <!-- STOP Hilfetext 6 -->
+
+                    <!-- START Hilfetext 1 -->
+                    
+                      
+                      
+                      
+                      
+                      
+                      
+                      
+                    <!-- STOP Hilfetext 1 -->
+
+                    <!-- START Hilfetext 2 -->
+                      
+                      
+                      
+                      
+                      
+                      
+                      
+                      
+                    <!-- STOP Hilfetext 2 -->
+
+                    <!-- START Hilfetext 3 -->
+                      
+                      
+                      
+                      
+                      
+                      
+                      
+                      
+                    <!-- STOP Hilfetext 3 -->
+
+
+                    <!-- START Hilfetext 4 -->
+                      
+                      
+                      
+                      
+                      
+                      
+                      
+                      
+                    <!-- STOP Hilfetext 4 -->
+
+                    <!-- START Hilfetext 5 -->
+                      
+                      
+                      
+                      
+                      
+                      
+                      
+                      
+                    <!-- STOP Hilfetext 5 -->
+
+                <!-- STOP Hilfebereich - Erweiterte Suche -->
+
+
+
+<!-- ENDE Erweiterte Suche -->
+
+                <div class="grid-col col-xs-12 col-md-12 col-xl-12">
+                  <div class="grid-inside"><div class="toolbar_div">
+<ul class="toolbar_ul">
+<li class="toolbar_li">
+<input type="image" src="/aDISWeb/images/POOLM02Q@@@@@@@@/gif/POOLM02Q@@@@@@@@_53010E00_31758600.gif;jsessionid=5857D6AED39DEF0C37ABDD67CD89DC19" alt="Zur&#252;ck zur vorherigen Seite" id="Toolbar$0_0" name="$Toolbar$0_0" title="Zur&#252;ck zur vorherigen Seite" onmouseover="self.status='Zur&#252;ck zur vorherigen Seite';return true;" onmouseout="self.status='';" class="toolbar_img"/><label for="Toolbar$0_0"><span class="toolbar_txt"></span></label></li>
+<li class="toolbar_li">
+<input type="image" src="/aDISWeb/images/POOLM02Q@@@@@@@@/gif/POOLM02Q@@@@@@@@_53006901_327BE080.gif;jsessionid=5857D6AED39DEF0C37ABDD67CD89DC19" alt="Zum Anfang" id="Toolbar$0_1" name="$Toolbar$0_1" disabled="disabled" title="Zum Anfang" onmouseover="self.status='Zum Anfang';return true;" onmouseout="self.status='';" class="toolbar_img_dis"/><label for="Toolbar$0_1"><span class="toolbar_txt_dis"> </span></label></li>
+<li class="toolbar_li">
+<input type="image" src="/aDISWeb/images/POOLM02Q@@@@@@@@/gif/POOLM02Q@@@@@@@@_53011501_327BE080.gif;jsessionid=5857D6AED39DEF0C37ABDD67CD89DC19" alt="zur&#252;ck" id="Toolbar$0_2" name="$Toolbar$0_2" disabled="disabled" title="zur&#252;ck" onmouseover="self.status='zur&#252;ck';return true;" onmouseout="self.status='';" class="toolbar_img_dis"/><label for="Toolbar$0_2"><span class="toolbar_txt_dis"></span></label></li>
+<li class="toolbar_li">
+<input type="image" src="/aDISWeb/images/POOLM02Q@@@@@@@@/gif/POOLM02Q@@@@@@@@_53011400_327BE080.gif;jsessionid=5857D6AED39DEF0C37ABDD67CD89DC19" alt="n&#228;chster" id="Toolbar$0_3" name="$Toolbar$0_3" title="n&#228;chster" onmouseover="self.status='n&#228;chster';return true;" onmouseout="self.status='';" class="toolbar_img"/><label for="Toolbar$0_3"><span class="toolbar_txt"></span></label></li>
+<li class="toolbar_li">
+<input type="image" src="/aDISWeb/images/POOLM02Q@@@@@@@@/gif/POOLM02Q@@@@@@@@_53011B00_327BE080.gif;jsessionid=5857D6AED39DEF0C37ABDD67CD89DC19" alt="zum Ende" id="Toolbar$0_4" name="$Toolbar$0_4" title="zum Ende" onmouseover="self.status='zum Ende';return true;" onmouseout="self.status='';" class="toolbar_img"/><label for="Toolbar$0_4"><span class="toolbar_txt"></span></label></li>
+<li class="toolbar_li">
+<input type="image" src="/aDISWeb/images/POOLM02Q@@@@@@@@/gif/POOLM02Q@@@@@@@@_53012000_327BE080.gif;jsessionid=5857D6AED39DEF0C37ABDD67CD89DC19" alt="Zur Trefferliste" id="Toolbar$0_5" name="$Toolbar$0_5" title="Zur Trefferliste" onmouseover="self.status='Zur Trefferliste';return true;" onmouseout="self.status='';" class="toolbar_img"/><label for="Toolbar$0_5"><span class="toolbar_txt"></span></label></li></ul><div style="clear:both"></div></div> </div>
+                </div>
+
+              </div>
+            </div>
+            <!-- GRID SYSTEM STOP -->
+
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <div id="footer">
+      <div class="inside">
+
+            <div class="grid-wrapper">
+              <div class="grid-row">
+
+                <div class="grid-col col-xs-12 col-md-6">
+                  <p id="legal">
+                    <a href="http://www.stuttgart.de/stadtbibliothek/bvs/actions/profile/view.php?id=67" target="_blank">Impressum</a> |
+                    <a href="http://www.stuttgart.de/item/show/339312/1" target="_blank">Datenschutz</a> |
+                    <a href="http://www1.stuttgart.de/stadtbibliothek/bvs/actions/profile/view.php?id=172" target="_blank">Benutzungs- und Geb&uuml;hrenordnung</a> |
+                    <a href="mailto:ebibliothek@stuttgart.de">E-Mail eBibliothek Webmaster</a>
+                  </p>
+                </div>
+
+                <div class="grid-col col-xs-12 col-md-6">
+                  <p class="block" id="goingup">
+                    <a href="#wrapper">Seitenanfang</a>
+                  </p>
+                </div>
+
+                <div class="grid-col col-xs-12">
+                  <p id="credits">
+                  <a href="http://www.astec.de" target="_blank">Barrierefreie Bibliothekssoftware der |a|S|tec| GmbH</a> - 
+                  <a href="http://www.ena-webstudio.com" title="ena Webstudio - Webdesign" rel="nofollow" target="_blank">ena Webstudio</a>
+                  </p>
+                </div>
+
+              </div>
+            </div>
+
+        <div class="clear"></div>
+
+      </div>
+    </div>
+
+  </div><!-- /wrapper_inside -->
+</div><!-- /wrapper -->
+
+<script src="/aDISWeb_kopac85/js/scripts-main.js"></script></form>
+</div></body>
+</html>

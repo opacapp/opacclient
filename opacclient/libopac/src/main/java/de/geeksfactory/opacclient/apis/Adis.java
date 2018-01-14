@@ -1399,53 +1399,12 @@ public class Adis extends ApacheBaseApi implements OpacApi {
         }
         DateTimeFormatter fmt = DateTimeFormat.forPattern("dd.MM.yyyy").withLocale(Locale.GERMAN);
 
-        // für Link auf die Ausleih-Seite
-        String alink = null;
-        int anum = 0;
-        // für Links auf Reservations-Seiten
-        List<String[]> rlinks = new ArrayList<>();
-        int rnum = 0;
-
-        // Mein-Konto-/Übersichtseite nach Links durchsuchen und einsammeln
+        AccountPageReturn apr = parseAccount(doc);
         List<LentItem> lent = new ArrayList<>();
-        for (Element tr : doc.select(".rTable_div tr")) {
-            Elements as = tr.select("a");
-            if (as.size() == 1) {
-                String href = as.first().absUrl("href");
-                if (href.contains("sp=SZA")) {
-                    // Link auf die Ausleihen-Seite
-                    alink = href;
-                    anum = Integer.parseInt(tr.child(0).text().trim());
-                } else if ((tr.text().contains("Reservationen")
-                        || tr.text().contains("Vormerkung")
-                        || tr.text().contains("Fernleihbestellung")
-                        || tr.text().contains("Bereitstellung")
-                        || tr.text().contains("Bestellw")
-                        || tr.text().contains("Magazin"))
-                        && !tr.child(0).text().trim().equals("")) {
-
-                    // Link eine Reservations-Sseite
-                    rlinks.add(new String[]{
-                            tr.select("a").text(),
-                            href,
-                    });
-                    rnum += Integer.parseInt(tr.child(0).text().trim());
-                } else if (href.contains("sp=SZM")) {
-                    // auch Link auf Reservations-Seite,
-                    // in StB Stuttgart = tr.text().contains("Vormerkung")
-                    rlinks.add(new String[]{
-                            as.first().text(),
-                            href,
-                    });
-                    rnum += Integer.parseInt(tr.child(0).text().trim());
-                }
-            }
-        }
-
-        if (alink != null) {
+        if (apr.alink != null) {
             // Ausleihen-Seite aufrufen
-            Document adoc = htmlGet(alink);
-            s_alink = alink;
+            Document adoc = htmlGet(apr.alink);
+            s_alink = apr.alink;
             List<NameValuePair> form = new ArrayList<>();
             String prolongTest = null;
             for (Element input : adoc.select("input, select")) {
@@ -1470,104 +1429,25 @@ public class Adis extends ApacheBaseApi implements OpacApi {
                     adoc = adoc_new;
                 }
             }
-            parseMediaList(adoc, alink, lent, split_title_author);
-            assert (lent.size() == anum);
+            parseMediaList(adoc, apr.alink, split_title_author, lent);
+            assert (lent.size() == apr.anum);
 
             // Zurück auf Mein-Konto-Seite mit Abbrechen
             htmlPostCancel(adoc);
         } else {
-            assert (anum == 0);
+            assert (apr.anum == 0);
         }
         adata.setLent(lent);
 
-        // ReseverdItem auf den diversen Reservation-Übersichtsseiten einsammeln
+        // ReseverdItem auf den diversen Reservation-Übersichtseiten einsammeln
         List<ReservedItem> res = new ArrayList<>();
-        for (String[] rlink : rlinks) {
+        for (String[] rlink : apr.rlinks) {
             // Reservations-Seite aufrufen
             Document rdoc = htmlGet(rlink[1]);
 
-            boolean error = false;
-            boolean interlib = rdoc.html().contains("Ihre Fernleih-Bestellung");
-            boolean stacks = rdoc.html().contains("aus dem Magazin");
-            boolean provision = rdoc.html().contains("Ihre Bereitstellung");
+            // Reservations-Seite parsen
+            boolean error = parseReservationList(rdoc, rlink, split_title_author, res, fmt);
 
-            Map<String, Integer> colmap = new HashMap<>();
-            colmap.put("title", 2);
-            colmap.put("branch", 1);
-            colmap.put("expirationdate", 0);
-            int i = 0;
-            for (Element th : rdoc.select(".rTable_div thead tr th")) {
-                if (th.text().contains("Bis")) {
-                    colmap.put("expirationdate", i);
-                }
-                if (th.text().contains("Ausgabeort")) {
-                    colmap.put("branch", i);
-                }
-                if (th.text().contains("Titel")) {
-                    colmap.put("title", i);
-                }
-                if (th.text().contains("Hinweis")) {
-                    colmap.put("status", i);
-                }
-                i++;
-
-            }
-            for (Element tr : rdoc.select(".rTable_div tbody tr")) {
-                if (tr.children().size() >= colmap.size()) {
-                    ReservedItem item = new ReservedItem();
-                    String text = tr.child(colmap.get("title")).html();
-                    text = Jsoup.parse(text.replaceAll("(?i)<br[^>]*>", ";")).text();
-                    if (split_title_author) {
-                        String[] split = text.split("[:/;\n]");
-                        item.setTitle(split[0].replaceFirst("([^:;\n]+)[:;\n](.*)$", "$1").trim());
-                        if (split.length > 1) {
-                            item.setAuthor(
-                                    split[1].replaceFirst("([^:;\n]+)[:;\n](.*)$", "$1").trim());
-                        }
-                    } else {
-                        item.setTitle(text);
-                    }
-
-                    String branch = tr.child(colmap.get("branch")).text().trim();
-                    if (interlib) {
-                        branch = stringProvider
-                                .getFormattedString(StringProvider.INTERLIB_BRANCH, branch);
-                    } else if (stacks) {
-                        branch = stringProvider
-                                .getFormattedString(StringProvider.STACKS_BRANCH, branch);
-                    } else if (provision) {
-                        branch = stringProvider
-                                .getFormattedString(StringProvider.PROVISION_BRANCH, branch);
-                    }
-                    item.setBranch(branch);
-
-                    if (rlink[0].contains("Abholbereit")) {
-                        // Abholbereite Bestellungen
-                        item.setStatus("bereit");
-                        if (tr.child(0).text().trim().length() >= 10) {
-                            item.setExpirationDate(fmt.parseLocalDate(
-                                    tr.child(colmap.get("expirationdate")).text().trim()
-                                      .substring(0, 10)));
-                        }
-                    } else {
-                        // Nicht abholbereite
-                        if (tr.select("input[type=checkbox]").size() > 0
-                                && (rlink[1].toUpperCase(Locale.GERMAN).contains(
-                                "SP=SZM") || rlink[1].toUpperCase(
-                                Locale.GERMAN).contains("SP=SZW") || rlink[1].toUpperCase(
-                                Locale.GERMAN).contains("SP=SZB"))) {
-                            item.setCancelData(
-                                    tr.select("input[type=checkbox]").attr("name") + "|" +
-                                            rlink[1]);
-                        }
-                    }
-                    res.add(item);
-                } else {
-                    // This is a strange bug where sometimes there is only three
-                    // columns
-                    error = true;
-                }
-            }
             if (error) {
                 // Maybe we should send a bug report here, but using ACRA breaks
                 // the unit tests
@@ -1578,7 +1458,7 @@ public class Adis extends ApacheBaseApi implements OpacApi {
             htmlPostCancel(rdoc);
         }
 
-        assert (res.size() == rnum);
+        assert (res.size() == apr.rnum);
 
         adata.setReservations(res);
 
@@ -1649,10 +1529,95 @@ public class Adis extends ApacheBaseApi implements OpacApi {
         return false;
     }
 
-    static void parseMediaList(Document adoc, String alink, List<LentItem> lent,
-            boolean split_title_author) {
+    /**
+     * Class for return-Info from parseAccount-method
+     */
+    class AccountPageReturn {
+
+        /**
+         * für Link auf die Ausleih-Seite
+         */
+        String alink;
+
+        /**
+         * Anzahl Ausleihen laut Kontoseite
+         */
+        int anum;
+
+        /**
+         * für Links auf Reservations-Seiten
+         */
+        List<String[]> rlinks;
+
+        /**
+         * Anzahl Vormerkungen laut Kontoseite
+         */
+        int rnum;
+
+        AccountPageReturn() {
+            rlinks = new ArrayList<String[]>();
+        }
+    }
+
+    /**
+     * Parses die Account-Page, collects Links und num-Information
+     *
+     * @param doc the Accout-Page
+     * @return Links and num's
+     */
+    AccountPageReturn parseAccount(Document doc) {
+
+        // Mein-Konto-/Übersichtseite nach Links durchsuchen und einsammeln
+        AccountPageReturn apr = new AccountPageReturn();
+        List<LentItem> lent = new ArrayList<>();
+        for (Element tr : doc.select(".rTable_div tr")) {
+            Elements as = tr.select("a");
+            if (as.size() == 1) {
+                String href = as.first().absUrl("href");
+                if (href.contains("sp=SZA")) {
+                    // Link auf die Ausleihen-Seite
+                    apr.alink = href;
+                    apr.anum = Integer.parseInt(tr.child(0).text().trim());
+                } else if ((tr.text().contains("Reservationen")
+                        || tr.text().contains("Vormerkung")
+                        || tr.text().contains("Fernleihbestellung")
+                        || tr.text().contains("Bereitstellung")
+                        || tr.text().contains("Bestellw")
+                        || tr.text().contains("Magazin"))
+                        && !tr.child(0).text().trim().equals("")) {
+
+                    // Link eine Reservations-Sseite
+                    apr.rlinks.add(new String[]{
+                            tr.select("a").text(),
+                            href,
+                    });
+                    apr.rnum += Integer.parseInt(tr.child(0).text().trim());
+                } else if (href.contains("sp=SZM")) {
+                    // auch Link auf Reservations-Seite,
+                    // in StB Stuttgart = tr.text().contains("Vormerkung")
+                    apr.rlinks.add(new String[]{
+                            as.first().text(),
+                            href,
+                    });
+                    apr.rnum += Integer.parseInt(tr.child(0).text().trim());
+                }
+            }
+        }
+        return apr;
+    }
+
+    /**
+     * Parses the (lent-) Medialist-Page
+     *
+     * @param doc                the (lent-) Medialist-page as Document
+     * @param link               link/href for Medialist-page
+     * @param split_title_author switch whether to split title and author
+     * @param lent               (initialized) list of LentItem's, for adding the found media
+     */
+    static void parseMediaList(Document doc, final String link, boolean split_title_author,
+            List<LentItem> lent) {
         DateTimeFormatter fmt = DateTimeFormat.forPattern("dd.MM.yyyy").withLocale(Locale.GERMAN);
-        for (Element tr : adoc.select(".rTable_div tbody tr")) {
+        for (Element tr : doc.select(".rTable_div tbody tr")) {
             LentItem item = new LentItem();
             String text = Jsoup.parse(tr.child(3).html().replaceAll("(?i)<br[^>]*>", "#"))
                                .text();
@@ -1708,11 +1673,108 @@ public class Adis extends ApacheBaseApi implements OpacApi {
 
                 }
                 item.setProlongData(
-                        tr.select("input[type=checkbox]").attr("name") + "|" + alink);
+                        tr.select("input[type=checkbox]").attr("name") + "|" + link);
             }
 
             lent.add(item);
         }
+    }
+
+    /**
+     * Parses a reservation-Page
+     *
+     * @param rdoc               the reservation-page to parse as Document
+     * @param rlink              links/href for all reservation-pages
+     * @param split_title_author switch whether to split title and author
+     * @param res                list of ReservedItem's, for adding the found media
+     * @param fmt                formatter to parse the expirationdate
+     * @return true if a media-row doesnot have enough columns, otherwise false
+     */
+    boolean parseReservationList(Document rdoc, String[] rlink,
+            boolean split_title_author, List<ReservedItem> res, DateTimeFormatter fmt) {
+        boolean error = false;
+        boolean interlib = rdoc.html().contains("Ihre Fernleih-Bestellung");
+        boolean stacks = rdoc.html().contains("aus dem Magazin");
+        boolean provision = rdoc.html().contains("Ihre Bereitstellung");
+
+        Map<String, Integer> colmap = new HashMap<>();
+        colmap.put("title", 2);
+        colmap.put("branch", 1);
+        colmap.put("expirationdate", 0);
+        int i = 0;
+        for (Element th : rdoc.select(".rTable_div thead tr th")) {
+            if (th.text().contains("Bis")) {
+                colmap.put("expirationdate", i);
+            }
+            if (th.text().contains("Ausgabeort")) {
+                colmap.put("branch", i);
+            }
+            if (th.text().contains("Titel")) {
+                colmap.put("title", i);
+            }
+            if (th.text().contains("Hinweis")) {
+                colmap.put("status", i);
+            }
+            i++;
+
+        }
+        for (Element tr : rdoc.select(".rTable_div tbody tr")) {
+            if (tr.children().size() >= colmap.size()) {
+                ReservedItem item = new ReservedItem();
+                String text = tr.child(colmap.get("title")).html();
+                text = Jsoup.parse(text.replaceAll("(?i)<br[^>]*>", ";")).text();
+                if (split_title_author) {
+                    String[] split = text.split("[:/;\n]");
+                    item.setTitle(split[0].replaceFirst("([^:;\n]+)[:;\n](.*)$", "$1").trim());
+                    if (split.length > 1) {
+                        item.setAuthor(
+                                split[1].replaceFirst("([^:;\n]+)[:;\n](.*)$", "$1").trim());
+                    }
+                } else {
+                    item.setTitle(text);
+                }
+
+                String branch = tr.child(colmap.get("branch")).text().trim();
+                if (interlib) {
+                    branch = stringProvider
+                            .getFormattedString(StringProvider.INTERLIB_BRANCH, branch);
+                } else if (stacks) {
+                    branch = stringProvider
+                            .getFormattedString(StringProvider.STACKS_BRANCH, branch);
+                } else if (provision) {
+                    branch = stringProvider
+                            .getFormattedString(StringProvider.PROVISION_BRANCH, branch);
+                }
+                item.setBranch(branch);
+
+                if (rlink[0].contains("Abholbereit")) {
+                    // Abholbereite Bestellungen
+                    item.setStatus("bereit");
+                    if (tr.child(0).text().trim().length() >= 10) {
+                        item.setExpirationDate(fmt.parseLocalDate(
+                                tr.child(colmap.get("expirationdate")).text().trim()
+                                  .substring(0, 10)));
+                    }
+                } else {
+                    // Nicht abholbereite
+                    if (tr.select("input[type=checkbox]").size() > 0
+                            && (rlink[1].toUpperCase(Locale.GERMAN).contains(
+                            "SP=SZM") || rlink[1].toUpperCase(
+                            Locale.GERMAN).contains("SP=SZW") || rlink[1].toUpperCase(
+                            Locale.GERMAN).contains("SP=SZB"))) {
+                        item.setCancelData(
+                                tr.select("input[type=checkbox]").attr("name") + "|" +
+                                        rlink[1]);
+                    }
+                }
+                res.add(item);
+            } else {
+                // This is a strange bug where sometimes there is only three
+                // columns
+                error = true;
+            }
+        }
+        return error;
     }
 
     protected Document handleLoginForm(Document doc, Account account)
