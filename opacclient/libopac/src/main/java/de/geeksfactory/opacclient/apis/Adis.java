@@ -68,6 +68,7 @@ public class Adis extends ApacheBaseApi implements OpacApi {
         types.put("CD-ROM", MediaType.CD_SOFTWARE);
         types.put("Medienkombination", MediaType.PACKAGE);
         types.put("DVD-Video", MediaType.DVD);
+        types.put("DVD", MediaType.DVD);
         types.put("Noten", MediaType.SCORE_MUSIC);
         types.put("Konsolenspiel", MediaType.GAME_CONSOLE);
         types.put("Spielkonsole", MediaType.GAME_CONSOLE);
