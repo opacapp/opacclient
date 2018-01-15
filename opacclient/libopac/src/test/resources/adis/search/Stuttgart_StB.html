@@ -1,0 +1,486 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="de" lang="de">
+<head>
+    <style type="text/css">
+		@import url(css/aDISStandard.css);
+	</style>
+    <script src="js/aDISMain.min.js" type="text/javascript"></script>
+    <script src="js/fckeditor/fckeditor.js" type="text/javascript"></script>
+    <title> Stadtbibliothek_Stuttgart      </title>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0,shrink-to-fit=no">
+    <meta name="HandheldFriendly" content="true">
+    <title>Stadtbibliothek Stuttgart</title>
+    <!--
+  (c) Software: aDIS/BMS und aDIS/Archiv by |a|S|tec| GmbH Berlin und Muenchen - www.astec.de
+  HTML/CSS: Formulare, Tabellen, Inhalte, etc. werden automatisiert durch aDIS/BMS generiert
+  Anpassungen im aDIS-Rahmen durch ena Webstudio - www.ena-webstudio.com
+  Projekt: aDIS-85 Stuttgart, OPAC01, de
+  Letztes Update: 26.11.2017 - 19:43
+  //-->
+    <script src="/aDISWeb_kopac85/js/scripts-head.js"></script>
+    <link rel="stylesheet" href="/aDISWeb_kopac85/css/kopac_style.css">
+    <link rel="stylesheet" href="/aDISWeb_stu/css/kopac_diff.css">
+    <!--[if lte IE 8]><link rel="stylesheet" href="/aDISWeb_kopac85/css/kopac_ie-old.css"><![endif]-->
+    <!--[if lt IE 9]><script src="/aDISWeb_kopac85/js/html5shiv-printshiv.min.js"></script><script src="/aDISWeb_kopac85/js/css3-mediaqueries.js"></script><![endif]-->
+    <link rel="shortcut icon" type="image/x-icon" href="/aDISWeb_stu/images/favicon.ico">
+</head>
+<body class="opac01">
+<script type="text/javascript"><!--
+
+
+
+
+
+function sendRequest() {
+  location.href="/aDISWeb/app;jsessionid=828C691E5541FFE6A3B1ACEC638610B2?service=direct/1/POOLM02Q@@@@@@@@_44002000_349DAD80/$BrowserBack";
+  }
+
+
+
+
+
+
+function startIdleTimer() {
+  if (typeof idleId != 'undefined')
+    clearTimeout(idleId)
+  idleId = window.setTimeout("to('"+ idleLink + "')", idleTime);
+}
+function to(link) {
+  location.href=link;
+}
+
+
+
+
+
+function setupHandlers()  {
+  document.onmousedown = docOnEvent;
+  document.onkeydown = docOnEvent;
+  document.onkeypress = docOnEvent;
+  document.onhelp = cancelF1;
+
+  initFormElements();
+  initIframes();
+  initScrollPos();
+}
+function getDimensions()  {
+  document.forms[0].scrDim.value = screen.width + ";" + screen.height;
+  if (window.innerWidth)
+    document.forms[0].winDim.value = window.innerWidth + ";" + window.innerHeight;
+  else
+    document.forms[0].winDim.value = document.body.offsetWidth + ";" + document.body.offsetHeight;
+  node = document.getElementById("img_content");
+  if (node != undefined)
+    document.forms[0].imgDim.value = node.offsetWidth + ";" + node.offsetHeight;
+}
+
+
+
+
+aDIS.onLoad = function (e)
+{
+
+
+if (history.pushState && history.state == null) {
+  history.pushState({ action : 1 }, "", null);
+  history.pushState({ action : 2 }, "", null);
+  }
+
+window.onpopstate = function (e) {
+  if(e.state != null && e.state.action)
+      sendRequest();
+  }
+
+
+
+  idleTime=600000;
+  idleLink="/aDISWeb/app;jsessionid=828C691E5541FFE6A3B1ACEC638610B2?service=direct/1/POOLM02Q@@@@@@@@_44002000_349DAD80/$Timeout";
+  startIdleTimer();
+
+
+  if (!e) var e = window.event;
+  document.forms[0].scriptEnabled.value=true;
+  if (self.specialOnLoad != undefined)
+    specialOnLoad(e);
+  setupHandlers();
+  getDimensions();
+
+}
+
+aDIS.addListener('load', window, aDIS.onLoad);
+
+
+// --></script>
+<div class="aDISMaske">
+    <form method="post" name="Form0" action="/aDISWeb/app;jsessionid=828C691E5541FFE6A3B1ACEC638610B2" onsubmit="return formOnSubmit();">
+        <input type="hidden" name="service" value="direct/1/POOLM02Q@@@@@@@@_44002000_349DAD80/$Form.form">
+        <input type="hidden" name="sp" value="S0">
+        <input type="hidden" name="Form0" value="focus,keyCode,stz,source,selected,requestCount,scriptEnabled,scrollPos,scrDim,winDim,imgDim,select,$FormConditional,textButton,$FormConditional$0,textButton$0,select$0,$Textfield,$FormConditional$1,imageButton,select$1,select$2,$Textfield$0,$FormConditional$2,imageButton$0,select$3,select$4,$Textfield$1,$FormConditional$3,imageButton$1,select$5,select$6,select$7,select$8,$Textfield$2,$Textfield$3,select$9,select$10,$Textfield$4,$Textfield$5,$Textfield$6,$Textfield$7,$Textfield$8,$Textfield$9,$FormConditional$4,textButton$1">
+        <input type="hidden" name="focus" value="">
+        <input type="hidden" name="keyCode" value="0">
+        <input type="hidden" name="stz" value="">
+        <input type="hidden" name="source" value="">
+        <input type="hidden" name="selected" value="">
+        <input type="hidden" name="requestCount" value="1">
+        <input type="hidden" name="scriptEnabled" value="F">
+        <input type="hidden" name="scrollPos" value="0">
+        <input type="hidden" name="scrDim" value="">
+        <input type="hidden" name="winDim" value="">
+        <input type="hidden" name="imgDim" value="">
+        <input type="hidden" name="$FormConditional" value="T">
+        <input type="hidden" name="$FormConditional$0" value="T">
+        <input type="hidden" name="$FormConditional$1" value="T">
+        <input type="hidden" name="$FormConditional$2" value="T">
+        <input type="hidden" name="$FormConditional$3" value="T">
+        <input type="hidden" name="$FormConditional$4" value="T">
+        <div id="wrapper">
+            <div id="wrapper_inside">
+                <ul id="sprunglinks">
+                    <li><a class="sprung" href="#main">Zum Inhalt</a></li>
+                </ul>
+                <div id="header">
+                    <div class="inside">
+                        <div id="mhead" class="block">
+                            <div id="mhead-inside">
+                                <div id="logo" role="banner">
+                                    <a href="http://www1.stuttgart.de/stadtbibliothek/" title="Zur Homepage der Bibliothek"><img src="/aDISWeb_stu/images/logo.png" alt="Stuttgart-Logo"></a>
+                                </div>
+                                <ul id="mnav" class="mod_navigation block" role="navigation" aria-label="Service-Navigation">
+                                    <li id="sprache"></li>
+                                    <li id="navbox">
+                                        <div class="mod_navigation block" id="mnav" role="navigation" aria-label="Servicemenü">
+                                            <div class="tree_div">
+                                                <ul class="tree_ul">
+                                                    <li class="tree_leaf_li"> <a href="/aDISWeb/app;jsessionid=828C691E5541FFE6A3B1ACEC638610B2?service=direct/1/POOLM02Q@@@@@@@@_44002000_349DAD80/$Tree.treeNodes&amp;sp=SL1&amp;requestCount=1" class="tree_leaf_a">Anmelden</a></li>
+                                                    <li class="tree_leaf_li_sel"> <strong><span class="tree_strong">Abmelden</span></strong></li>
+                                                </ul>
+                                            </div>
+                                        </div> </li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div id="hnav" class="mod_navigation block" role="navigation" aria-label="Hauptnavigation">
+                            <!-- Mobile toggle -->
+                            <div id="hnav-toggle">
+                                <input id="main-menu-state" type="checkbox">
+                                <label class="main-menu-btn" for="main-menu-state"><span class="main-menu-btn-icon"></span> Navigation</label>
+                            </div>
+                            <!-- Menu -->
+                            <ul class="cssmenu_ul sm sm-style" id="main-menu">
+                                <li class="cssmenu_button"> <a href="/aDISWeb/app;jsessionid=828C691E5541FFE6A3B1ACEC638610B2?service=direct/1/POOLM02Q@@@@@@@@_44002000_349DAD80/$InternalLink.directlink&amp;sp=S%24%24GFBO_41&amp;sp=SS1&amp;requestCount=1" title="" fld="$$GFBO_41">Startseite</a> </li>
+                                <li class="cssmenu_button"> <a href="/aDISWeb/app;jsessionid=828C691E5541FFE6A3B1ACEC638610B2?service=direct/1/POOLM02Q@@@@@@@@_44002000_349DAD80/$InternalLink$0.directlink&amp;sp=S%24%24GFBO_42&amp;sp=SBK&amp;requestCount=1" title="" fld="$$GFBO_42">Mein Konto</a> </li>
+                                <li class="cssmenu_button"> <a href="/aDISWeb/app;jsessionid=828C691E5541FFE6A3B1ACEC638610B2?service=direct/1/POOLM02Q@@@@@@@@_44002000_349DAD80/$InternalLink$1.directlink&amp;sp=S%24%24GFBO_43&amp;sp=SAP&amp;requestCount=1" title="" fld="$$GFBO_43">Meine Suchen</a> </li>
+                                <li class="cssmenu_ul"><a href="#">Medienlisten</a>
+                                    <ul class="menufts">
+                                        <li class="cssmenu_button"> <a href="/aDISWeb/app;jsessionid=828C691E5541FFE6A3B1ACEC638610B2?service=direct/1/POOLM02Q@@@@@@@@_44002000_349DAD80/$InternalLink$2.directlink&amp;sp=S%24%24GFBO_44&amp;sp=SW1&amp;requestCount=1" title="" fld="$$GFBO_44">Neuerwerbungen</a> </li>
+                                        <li class="cssmenu_button"> <a href="/aDISWeb/app;jsessionid=828C691E5541FFE6A3B1ACEC638610B2?service=direct/1/POOLM02Q@@@@@@@@_44002000_349DAD80/$InternalLink$3.directlink&amp;sp=S%24%24GFBO_45&amp;sp=SW4&amp;requestCount=1" title="" fld="$$GFBO_45">Empfehlungen</a> </li>
+                                    </ul></li>
+                                <li class="cssmenu_button"> <a href="/aDISWeb/app;jsessionid=828C691E5541FFE6A3B1ACEC638610B2?service=direct/1/POOLM02Q@@@@@@@@_44002000_349DAD80/$InternalLink$4.directlink&amp;sp=S%24%24GFBO_46&amp;sp=SW2&amp;requestCount=1" title="" fld="$$GFBO_46">Digitale Angebote</a> </li>
+                                <li class="cssmenu_button"> <a href="/aDISWeb/app;jsessionid=828C691E5541FFE6A3B1ACEC638610B2?service=direct/1/POOLM02Q@@@@@@@@_44002000_349DAD80/$InternalLink$5.directlink&amp;sp=S%24%24GFBO_47&amp;sp=SW6&amp;requestCount=1" title="" fld="$$GFBO_47">Kontakt</a> </li>
+                                <li class="cssmenu_button"> <a href="/aDISWeb/app;jsessionid=828C691E5541FFE6A3B1ACEC638610B2?service=direct/1/POOLM02Q@@@@@@@@_44002000_349DAD80/$InternalLink$6.directlink&amp;sp=S%24%24GFBO_48&amp;sp=SW9&amp;requestCount=1" title="" fld="$$GFBO_48">Hilfe</a> </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <div id="container">
+                    <div id="container-inside">
+                        <div id="main" role="main" aria-label="Hauptbereich">
+                            <div class="inside">
+                                <!-- GRID SYSTEM START -->
+                                <div class="grid-wrapper">
+                                    <div class="grid-row">
+                                        <div class="grid-col col-xs-12 col-md-12 col-xl-12">
+                                            <div class="grid-inside">
+                                                <h1><span class="invisible">Aktuelle Seite: </span> <span class="txtinsert"> Erweiterte Suche </span> </h1>
+                                                <!-- R06=Gesucht wurde mit -->
+                                            </div>
+                                        </div>
+                                        <!-- START: HAUPTBEREICH-Spalte -->
+                                        <!-- ENDE: HAIPTBEREICH-Spalte-->
+                                        <!-- START: OPTIONEN-Spalte RECHTS -->
+                                        <!-- R14=Treffer direktwahl, R05=Sortierangaben,R08=Treffer einschr. -->
+                                        <!-- GFBO_100=Drill down.R09=Treffewreinschr. R16=Quellensuche       -->
+                                        <!--  -->
+                                        <!-- ENDE: OPTIONEN-Spalte RECHTS -->
+                                        <!-- START Erweiterte Suche -->
+                                        <!-- START Quellenhinweis - Erweiterte Suche -->
+                                        <div class="grid-col col-xs-12 col-md-8 col-xl-8">
+                                            <div class="grid-inside">
+                                                <div id="R05">
+                                                    <div class="grid-col col-xs-12 col-md-12">
+                                                        <div id="OPACLX" class="aDISListe">
+                                                            <div class="html_div" style="width:100%; height:100%;"></div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div id="R15">
+                                                    <p class="search-adv-source"> <label for="AUSGAB_1" id="AUSGAB_1l">Sie suchen in der Bibliothek: </label> <select name="select" id="AUSGAB_1" class="fb"> <option value="Alle">Alle</option> <option value="Stadtbibliothek am Mailänder Platz">Stadtbibliothek am Mailänder Platz</option> <option value="Bibliothek für Schlaflose">Bibliothek für Schlaflose</option> <option value="Bad Cannstatt">Bad Cannstatt</option> <option value="Degerloch">Degerloch</option> <option value="Kneippweg">Kneippweg</option> <option value="Botnang">Botnang</option> <option value="Feuerbach">Feuerbach</option> <option value="Freiberg">Freiberg</option> <option value="Möhringen">Möhringen</option> <option value="Münster">Münster</option> <option value="Neugereut">Neugereut</option> <option value="Ost">Ost</option> <option value="Plieningen">Plieningen</option> <option value="Stammheim">Stammheim</option> <option value="Untertürkheim">Untertürkheim</option> <option value="Vaihingen">Vaihingen</option> <option value="Weilimdorf">Weilimdorf</option> <option value="West">West</option> <option value="Zuffenhausen">Zuffenhausen</option> <option value="Fahrbibliothek">Fahrbibliothek</option> <option value="Mobile Geräte (Mailänder Platz)">Mobile Geräte (Mailänder Platz)</option> </select> <input type="submit" name="textButton" value="Suche wiederholen" class="buttong wichtig" fld="$$GFBO_2"> <input type="submit" name="textButton$0" value="Suche leeren" class="buttong" fld="$$GFBO_3"> </p>
+                                                </div>
+                                                <!-- STOP Quellenhinweis - Erweiterte Suche -->
+                                                <!-- START Felder - Erweiterte Suche -->
+                                                <div class="search-adv-fields">
+                                                    <fieldset id="FSET01" class="grp">
+                                                        <div id="F13">
+                                                            <label for="SUCH01_1" id="S21" class="invisible">Suchen in PLATZHALTER2:</label>
+                                                            <select name="select$0" style="position:absolute;  left:16.9%; width:22.0%;" id="SUCH01_1"> <option value="Autor / Verfasser / Person">Autor / Verfasser / Person</option> <option value="Autor / Verfasser / Person">Autor / Verfasser / Person</option> <option value="Freie Suche">Freie Suche</option> <option value="ISBN / ISSN / ISMN">ISBN / ISSN / ISMN</option> <option value="Musikgruppe / Orchester / Institution">Musikgruppe / Orchester / Institution</option> <option value="Notation">Notation</option> <option value="Quelle/Serie">Quelle/Serie</option> <option value="Schlagwort">Schlagwort</option> <option value="Signatur">Signatur</option> <option value="Thema">Thema</option> <option value="Titel / Reihe">Titel / Reihe</option> <option value="Titelanfang">Titelanfang</option> <option value="exakter Titel">exakter Titel</option> </select>
+                                                            <label for="FELD01_1" id="S31" class="invisible">Suchbegriff (in PLATZHALTER2):</label>
+                                                            <input type="text" name="$Textfield" fld="FELD01_1" value="" style="position:absolute;  left:40.3%; width:41.1%;" id="FELD01_1">
+                                                            <label for="PBNR01_1" id="S41"><span class="fbz-text" style="position:absolute;  left:83.6%; width:9.8%;overflow:hidden; max-width:9.8%;">Register</span><em class="invisible">(für PLATZHALTER2)</em></label>
+                                                            <input type="image" name="imageButton" src="/aDISWeb/images/POOLM02Q@@@@@@@@/gif/POOLM02Q@@@@@@@@_4B011F00_32851B00.gif" alt="Register (je nach Feldauswahl)" style="position:absolute;  left:94.1%; " id="PBNR01_1" title="Register (je nach Feldauswahl)" class="sbmt" fld="PBNR01_1">
+                                                        </div>
+                                                        <br>
+                                                        <span style="line-height:12px;">&nbsp;</span>
+                                                        <br>
+                                                        <div id="F27">
+                                                            <label for="LOP01_1" id="S11" class="invisible">Verknüpfung mit PLATZHALTER1:</label>
+                                                            <select name="select$1" style="position:absolute;  left:2.8%; width:12.9%;" id="LOP01_1"> <option value="UND">UND</option> <option value="NICHT">NICHT</option> <option value="ODER">ODER</option> <option value="UND">UND</option> </select>
+                                                            <label for="SUCH01_2" id="S22" class="invisible">Suchen in PLATZHALTER2:</label>
+                                                            <select name="select$2" style="position:absolute;  left:16.9%; width:22.0%;" id="SUCH01_2"> <option value="Titel / Reihe">Titel / Reihe</option> <option value="Autor / Verfasser / Person">Autor / Verfasser / Person</option> <option value="Freie Suche">Freie Suche</option> <option value="ISBN / ISSN / ISMN">ISBN / ISSN / ISMN</option> <option value="Musikgruppe / Orchester / Institution">Musikgruppe / Orchester / Institution</option> <option value="Notation">Notation</option> <option value="Quelle/Serie">Quelle/Serie</option> <option value="Schlagwort">Schlagwort</option> <option value="Signatur">Signatur</option> <option value="Thema">Thema</option> <option value="Titel / Reihe">Titel / Reihe</option> <option value="Titelanfang">Titelanfang</option> <option value="exakter Titel">exakter Titel</option> </select>
+                                                            <label for="FELD01_2" id="S32" class="invisible">Suchbegriff (in PLATZHALTER2):</label>
+                                                            <input type="text" name="$Textfield$0" fld="FELD01_2" style="position:absolute;  left:40.3%; width:41.1%;" id="FELD01_2">
+                                                            <label for="PBNR01_2" id="S42"><span class="fbz-text" style="position:absolute;  left:83.6%; width:9.8%;overflow:hidden; max-width:9.8%;">Register</span><em class="invisible">(für PLATZHALTER2)</em></label>
+                                                            <input type="image" name="imageButton$0" src="/aDISWeb/images/POOLM02Q@@@@@@@@/gif/POOLM02Q@@@@@@@@_4B011F00_32851B00.gif" alt="Register (je nach Feldauswahl)" style="position:absolute;  left:94.1%; " id="PBNR01_2" title="Register (je nach Feldauswahl)" class="sbmt" fld="PBNR01_2">
+                                                        </div>
+                                                        <br>
+                                                        <span style="line-height:12px;">&nbsp;</span>
+                                                        <br>
+                                                        <div id="F14">
+                                                            <label for="LOP01_2" id="S12" class="invisible">Verknüpfung mit PLATZHALTER1:</label>
+                                                            <select name="select$3" style="position:absolute;  left:2.8%; width:12.9%;" id="LOP01_2"> <option value="UND">UND</option> <option value="NICHT">NICHT</option> <option value="ODER">ODER</option> <option value="UND">UND</option> </select>
+                                                            <label for="SUCH01_3" id="S23" class="invisible">Suchen in PLATZHALTER2:</label>
+                                                            <select name="select$4" style="position:absolute;  left:16.9%; width:22.0%;" id="SUCH01_3"> <option value="ISBN / ISSN / ISMN">ISBN / ISSN / ISMN</option> <option value="Autor / Verfasser / Person">Autor / Verfasser / Person</option> <option value="Freie Suche">Freie Suche</option> <option value="ISBN / ISSN / ISMN">ISBN / ISSN / ISMN</option> <option value="Musikgruppe / Orchester / Institution">Musikgruppe / Orchester / Institution</option> <option value="Notation">Notation</option> <option value="Quelle/Serie">Quelle/Serie</option> <option value="Schlagwort">Schlagwort</option> <option value="Signatur">Signatur</option> <option value="Thema">Thema</option> <option value="Titel / Reihe">Titel / Reihe</option> <option value="Titelanfang">Titelanfang</option> <option value="exakter Titel">exakter Titel</option> </select>
+                                                            <label for="FELD01_3" id="S33" class="invisible">Suchbegriff (in PLATZHALTER2):</label>
+                                                            <input type="text" name="$Textfield$1" fld="FELD01_3" style="position:absolute;  left:40.3%; width:41.1%;" id="FELD01_3">
+                                                            <label for="PBNR01_3" id="S43"><span class="fbz-text" style="position:absolute;  left:83.6%; width:9.8%;overflow:hidden; max-width:9.8%;">Register</span><em class="invisible">(für PLATZHALTER2)</em></label>
+                                                            <input type="image" name="imageButton$1" src="/aDISWeb/images/POOLM02Q@@@@@@@@/gif/POOLM02Q@@@@@@@@_4B011F00_32851B00.gif" alt="Register (je nach Feldauswahl)" style="position:absolute;  left:94.1%; " id="PBNR01_3" title="Register (je nach Feldauswahl)" class="sbmt" fld="PBNR01_3">
+                                                        </div>
+                                                        <br>
+                                                        <span style="line-height:12px;">&nbsp;</span>
+                                                        <br>
+                                                        <div id="F49">
+                                                            <label for="MEDIUM_1"><span class="fbz-text" style="position:absolute;  left:16.9%; width:19.1%;overflow:hidden; max-width:19.1%;">Medientyp</span> </label>
+                                                            <select name="select$5" style="position:absolute;  left:40.4%; width:41.1%;" id="MEDIUM_1"> <option value="alle">alle</option> <option value="Blu-ray-Video">Blu-ray-Video</option> <option value="Buch">Buch</option> <option value="CD (auch Hörbücher)">CD (auch Hörbücher)</option> <option value="CD-ROM/DVD-ROM">CD-ROM/DVD-ROM</option> <option value="DVD-Video">DVD-Video</option> <option value="E-Audio">E-Audio</option> <option value="E-Book">E-Book</option> <option value="E-Medium">E-Medium</option> <option value="E-Music">E-Music</option> <option value="E-Video">E-Video</option> <option value="Gerät (Laptop u.a.)">Gerät (Laptop u.a.)</option> <option value="Grafik">Grafik</option> <option value="Karte">Karte</option> <option value="Konsolenspiel">Konsolenspiel</option> <option value="Konventionelles Spiel">Konventionelles Spiel</option> <option value="MC/Tonkassette">MC/Tonkassette</option> <option value="MP3">MP3</option> <option value="Noten">Noten</option> <option value="Videokassette">Videokassette</option> <option value="Zeitschrift/Zeitung/Reihe">Zeitschrift/Zeitung/Reihe</option> </select>
+                                                        </div>
+                                                        <br>
+                                                        <span style="line-height:12px;">&nbsp;</span>
+                                                        <br>
+                                                        <div id="F83">
+                                                            <label for="MEDIUM_2"><span class="fbz-text" style="position:absolute;  left:17.0%; width:19.1%;overflow:hidden; max-width:19.1%;">weiterer Medientyp</span> </label>
+                                                            <select name="select$6" style="position:absolute;  left:40.4%; width:41.1%;" id="MEDIUM_2"> <option value="alle">alle</option> <option value="Broschüre">Broschüre</option> <option value="CD-Player">CD-Player</option> <option value="Fiction">Fiction</option> <option value="Genios">Genios</option> <option value="Info- und Lehrprogramm">Info- und Lehrprogramm</option> <option value="Laptop">Laptop</option> <option value="Spiel">Spiel</option> </select>
+                                                        </div>
+                                                        <br>
+                                                        <span style="line-height:12px;">&nbsp;</span>
+                                                        <br>
+                                                        <div id="F64">
+                                                            <label for="A0712_1"><span class="fbz-text" style="position:absolute;  left:16.9%; width:17.6%;overflow:hidden; max-width:23.6%;">Interessenkreis</span> </label>
+                                                            <select name="select$7" style="position:absolute;  left:40.4%; width:41.1%;" id="A0712_1"> <option value="alle">alle</option> <option value="Abenteuer">Abenteuer</option> <option value="Action">Action</option> <option value="Affen">Affen</option> <option value="Afrika">Afrika</option> <option value="Aids">Aids</option> <option value="Albanisch">Albanisch</option> <option value="Allgemeines">Allgemeines</option> <option value="Alter">Alter</option> <option value="Altertum">Altertum</option> <option value="Amerika">Amerika</option> <option value="Andere Länder">Andere Länder</option> <option value="Anthologie">Anthologie</option> <option value="Antolin Klasse 1">Antolin Klasse 1</option> <option value="Antolin Klasse 2">Antolin Klasse 2</option> <option value="Antolin Klasse 3">Antolin Klasse 3</option> <option value="Antolin Klasse 4">Antolin Klasse 4</option> <option value="Antolin Klasse 5">Antolin Klasse 5</option> <option value="Antolin Klasse 6">Antolin Klasse 6</option> <option value="Antolin Klasse 7">Antolin Klasse 7</option> <option value="Antolin Klasse 7-10">Antolin Klasse 7-10</option> <option value="Antolin Klasse 9">Antolin Klasse 9</option> <option value="Antolin Klasse 9-10">Antolin Klasse 9-10</option> <option value="Arabisch">Arabisch</option> <option value="Arabische Welt">Arabische Welt</option> <option value="Arbeit/Beruf">Arbeit/Beruf</option> <option value="Arbeitswelt">Arbeitswelt</option> <option value="Architektur">Architektur</option> <option value="Archäologie">Archäologie</option> <option value="Armenisch">Armenisch</option> <option value="Arzt">Arzt</option> <option value="Asien">Asien</option> <option value="Aufklärung">Aufklärung</option> <option value="Ausländer">Ausländer</option> <option value="Australien">Australien</option> <option value="Autorenlesung">Autorenlesung</option> <option value="Autos">Autos</option> <option value="Außenseiter">Außenseiter</option> <option value="Baskisch">Baskisch</option> <option value="Basteln">Basteln</option> <option value="Bauernhof">Bauernhof</option> <option value="Behinderung">Behinderung</option> <option value="Beruf/Karriere">Beruf/Karriere</option> <option value="Berufe">Berufe</option> <option value="Bildwörterbuch">Bildwörterbuch</option> <option value="Biografie">Biografie</option> <option value="Biografien">Biografien</option> <option value="Biologie">Biologie</option> <option value="Bosnisch">Bosnisch</option> <option value="Buch zum Film">Buch zum Film</option> <option value="Buchstaben">Buchstaben</option> <option value="Buddhismus">Buddhismus</option> <option value="Bulgarisch">Bulgarisch</option> <option value="Cartoon">Cartoon</option> <option value="Chemie">Chemie</option> <option value="Chinesisch">Chinesisch</option> <option value="Christentum">Christentum</option> <option value="Comic">Comic</option> <option value="Computer">Computer</option> <option value="Cool-Chaos-Katastrophen">Cool-Chaos-Katastrophen</option> <option value="Crime">Crime</option> <option value="Cyberspace">Cyberspace</option> <option value="Deutsch">Deutsch</option> <option value="Deutschland">Deutschland</option> <option value="Dinosaurier">Dinosaurier</option> <option value="Drama/Schicksal">Drama/Schicksal</option> <option value="Dritte Welt">Dritte Welt</option> <option value="Drittes Reich">Drittes Reich</option> <option value="Drogen">Drogen</option> <option value="Dystopie">Dystopie</option> <option value="Dänisch">Dänisch</option> <option value="Easy reader">Easy reader</option> <option value="Easy reader mit CD">Easy reader mit CD</option> <option value="Easy reader mit CD-ROM">Easy reader mit CD-ROM</option> <option value="Ehe/Beziehung">Ehe/Beziehung</option> <option value="Eisenbahn">Eisenbahn</option> <option value="Emigration">Emigration</option> <option value="Energie">Energie</option> <option value="Englisch">Englisch</option> <option value="Entdeckung">Entdeckung</option> <option value="Entdeckungen">Entdeckungen</option> <option value="Entspannung">Entspannung</option> <option value="Erde">Erde</option> <option value="Erfindungen">Erfindungen</option> <option value="Ernährung">Ernährung</option> <option value="Erotik">Erotik</option> <option value="Erstes Lesealter">Erstes Lesealter</option> <option value="Erzählungen">Erzählungen</option> <option value="Esoterik">Esoterik</option> <option value="Essen und trinken">Essen und trinken</option> <option value="Estnisch">Estnisch</option> <option value="Europa">Europa</option> <option value="Experimente">Experimente</option> <option value="Fabeln">Fabeln</option> <option value="Fahrzeuge">Fahrzeuge</option> <option value="Familie">Familie</option> <option value="Fantastisches">Fantastisches</option> <option value="Fantasy">Fantasy</option> <option value="Farben/Formen">Farben/Formen</option> <option value="Faröisch">Faröisch</option> <option value="Feste">Feste</option> <option value="Film">Film</option> <option value="Finnisch">Finnisch</option> <option value="Fische">Fische</option> <option value="Flugobjekte">Flugobjekte</option> <option value="Foto/Film">Foto/Film</option> <option value="Fotografie">Fotografie</option> <option value="Französisch">Französisch</option> <option value="Frauen">Frauen</option> <option value="Freizeit">Freizeit</option> <option value="Freundschaft">Freundschaft</option> <option value="Freundschaft/Liebe">Freundschaft/Liebe</option> <option value="Fußball">Fußball</option> <option value="Für Jungs">Für Jungs</option> <option value="Galizisch">Galizisch</option> <option value="Garten">Garten</option> <option value="Gedanken">Gedanken</option> <option value="Gedichte">Gedichte</option> <option value="Gefühle">Gefühle</option> <option value="Gegenwart">Gegenwart</option> <option value="Generation X">Generation X</option> <option value="Geschichte">Geschichte</option> <option value="Gesellschaft">Gesellschaft</option> <option value="Gewalt">Gewalt</option> <option value="Graphic Novel">Graphic Novel</option> <option value="Griechen">Griechen</option> <option value="Griechisch">Griechisch</option> <option value="Großdruck">Großdruck</option> <option value="Gruseliges">Gruseliges</option> <option value="Gute-Nacht-Geschichten">Gute-Nacht-Geschichten</option> <option value="Handarbeiten">Handarbeiten</option> <option value="Haustiere">Haustiere</option> <option value="Hebräisch">Hebräisch</option> <option value="Heimat">Heimat</option> <option value="Heiteres">Heiteres</option> <option value="Herstellung">Herstellung</option> <option value="Hexen">Hexen</option> <option value="Hindi">Hindi</option> <option value="Hinduismus">Hinduismus</option> <option value="Historisches">Historisches</option> <option value="Homosexualität">Homosexualität</option> <option value="Horror">Horror</option> <option value="Humor/Satire">Humor/Satire</option> <option value="Hörspiel">Hörspiel</option> <option value="Hörspiel zum Film">Hörspiel zum Film</option> <option value="Indianer">Indianer</option> <option value="Indonesisch">Indonesisch</option> <option value="Insekten">Insekten</option> <option value="Instrumente">Instrumente</option> <option value="Interkulturell">Interkulturell</option> <option value="Internet">Internet</option> <option value="Irisch">Irisch</option> <option value="Islam">Islam</option> <option value="Isländisch">Isländisch</option> <option value="Italienisch">Italienisch</option> <option value="Jahreszeiten">Jahreszeiten</option> <option value="Japanisch">Japanisch</option> <option value="Judentum">Judentum</option> <option value="Junge Erwachsene">Junge Erwachsene</option> <option value="Jungen">Jungen</option> <option value="Justizthriller">Justizthriller</option> <option value="Kanada">Kanada</option> <option value="Kasachisch">Kasachisch</option> <option value="Katalanisch">Katalanisch</option> <option value="Katzen">Katzen</option> <option value="Kindergarten">Kindergarten</option> <option value="Kinderlieder">Kinderlieder</option> <option value="Kindheit/Jugend">Kindheit/Jugend</option> <option value="Klassiker">Klassiker</option> <option value="Kochen">Kochen</option> <option value="Komponisten">Komponisten</option> <option value="Komödie">Komödie</option> <option value="Koreanisch">Koreanisch</option> <option value="Krankheit">Krankheit</option> <option value="Kriechtiere">Kriechtiere</option> <option value="Krieg/Frieden">Krieg/Frieden</option> <option value="Krimi">Krimi</option> <option value="Krimi/Historisches">Krimi/Historisches</option> <option value="Kroatisch">Kroatisch</option> <option value="Kunst">Kunst</option> <option value="Kurdisch">Kurdisch</option> <option value="Körper">Körper</option> <option value="Latein">Latein</option> <option value="Lateinamerika">Lateinamerika</option> <option value="Leicht zu lesen">Leicht zu lesen</option> <option value="Leicht zu lesen mit CD">Leicht zu lesen mit CD</option> <option value="Leicht zu lesen mit CD-ROM">Leicht zu lesen mit CD-ROM</option> <option value="Lernen">Lernen</option> <option value="Lesben">Lesben</option> <option value="Leseförderung">Leseförderung</option> <option value="Lesung">Lesung</option> <option value="Lettisch">Lettisch</option> <option value="Lexikon">Lexikon</option> <option value="Liebe">Liebe</option> <option value="Liebe - Sex">Liebe - Sex</option> <option value="Lieder">Lieder</option> <option value="Litauisch">Litauisch</option> <option value="Literatur">Literatur</option> <option value="Lustiges">Lustiges</option> <option value="Lustiges/Witze">Lustiges/Witze</option> <option value="Lyrik">Lyrik</option> <option value="Malen">Malen</option> <option value="Manga">Manga</option> <option value="Marokko">Marokko</option> <option value="Maschinen">Maschinen</option> <option value="Mathematik">Mathematik</option> <option value="Medien">Medien</option> <option value="Meditation">Meditation</option> <option value="Medizin">Medizin</option> <option value="Migration">Migration</option> <option value="Missbrauch">Missbrauch</option> <option value="Miteinander leben">Miteinander leben</option> <option value="Mittel-/Südamerika">Mittel-/Südamerika</option> <option value="Mittelalter">Mittelalter</option> <option value="Moderne Klassiker">Moderne Klassiker</option> <option value="Musical">Musical</option> <option value="Musik">Musik</option> <option value="Musikinstrumente">Musikinstrumente</option> <option value="Mystery">Mystery</option> <option value="Mädchen">Mädchen</option> <option value="Mädchen-Frauen">Mädchen-Frauen</option> <option value="Männer">Männer</option> <option value="Märchen">Märchen</option> <option value="NS-Zeit">NS-Zeit</option> <option value="Naher Osten">Naher Osten</option> <option value="Nationalsozialismus">Nationalsozialismus</option> <option value="Natur">Natur</option> <option value="Natur/Umwelt">Natur/Umwelt</option> <option value="Neue Frau">Neue Frau</option> <option value="Neuseeland">Neuseeland</option> <option value="Neuzeit">Neuzeit</option> <option value="Niederländisch">Niederländisch</option> <option value="Nordamerika">Nordamerika</option> <option value="Norwegisch">Norwegisch</option> <option value="Ostern">Ostern</option> <option value="Osteuropa">Osteuropa</option> <option value="Persisch">Persisch</option> <option value="Pferde">Pferde</option> <option value="Pflanzen">Pflanzen</option> <option value="Philosophie">Philosophie</option> <option value="Physik">Physik</option> <option value="Piraten">Piraten</option> <option value="Poesie und Musik">Poesie und Musik</option> <option value="Poetry Slam">Poetry Slam</option> <option value="Polargebiete">Polargebiete</option> <option value="Politik">Politik</option> <option value="Politthriller">Politthriller</option> <option value="Polnisch">Polnisch</option> <option value="Portugiesisch">Portugiesisch</option> <option value="Powerfrauen">Powerfrauen</option> <option value="Psychologie">Psychologie</option> <option value="Psychologischer Roman">Psychologischer Roman</option> <option value="Psychothriller">Psychothriller</option> <option value="Rassismus">Rassismus</option> <option value="Raumfahrt">Raumfahrt</option> <option value="Rechte">Rechte</option> <option value="Regionalkrimi">Regionalkrimi</option> <option value="Reisen">Reisen</option> <option value="Religion">Religion</option> <option value="Religionen">Religionen</option> <option value="Ritter">Ritter</option> <option value="Rumänisch">Rumänisch</option> <option value="Russisch">Russisch</option> <option value="Rätsel">Rätsel</option> <option value="Römer">Römer</option> <option value="Sagen">Sagen</option> <option value="Satire">Satire</option> <option value="Scheidung">Scheidung</option> <option value="Schiffe">Schiffe</option> <option value="Schule">Schule</option> <option value="Schwangerschaft">Schwangerschaft</option> <option value="Schwedisch">Schwedisch</option> <option value="Schwule">Schwule</option> <option value="Science fiction">Science fiction</option> <option value="Seeabenteuer">Seeabenteuer</option> <option value="Sekten">Sekten</option> <option value="Serbisch">Serbisch</option> <option value="Sexuelle Orientierung">Sexuelle Orientierung</option> <option value="Sexueller Missbrauch">Sexueller Missbrauch</option> <option value="Short stories">Short stories</option> <option value="Slowakisch">Slowakisch</option> <option value="Slowenisch">Slowenisch</option> <option value="Spanien">Spanien</option> <option value="Spanisch">Spanisch</option> <option value="Spiele">Spiele</option> <option value="Spielen">Spielen</option> <option value="Spionage">Spionage</option> <option value="Sport">Sport</option> <option value="Sprache">Sprache</option> <option value="Sprachen">Sprachen</option> <option value="Sprechen">Sprechen</option> <option value="Stories">Stories</option> <option value="Streit">Streit</option> <option value="Sucht">Sucht</option> <option value="Säugetiere">Säugetiere</option> <option value="Tamil">Tamil</option> <option value="Tanz">Tanz</option> <option value="Technik">Technik</option> <option value="Thailändisch">Thailändisch</option> <option value="Theater">Theater</option> <option value="Thriller">Thriller</option> <option value="Tiere">Tiere</option> <option value="Tod">Tod</option> <option value="Tod/Trauer">Tod/Trauer</option> <option value="Trauer">Trauer</option> <option value="Tschechisch">Tschechisch</option> <option value="Türkisch">Türkisch</option> <option value="USA">USA</option> <option value="Uhr/Zeit">Uhr/Zeit</option> <option value="Ukrainisch">Ukrainisch</option> <option value="Umwelt">Umwelt</option> <option value="Ungarisch">Ungarisch</option> <option value="Urdu">Urdu</option> <option value="Urzeit">Urzeit</option> <option value="Urzeit/Vorzeit">Urzeit/Vorzeit</option> <option value="Vampire">Vampire</option> <option value="Verkehr">Verkehr</option> <option value="Verkehrserziehung">Verkehrserziehung</option> <option value="Vietnamesisch">Vietnamesisch</option> <option value="Volksglaube">Volksglaube</option> <option value="Vorzeit">Vorzeit</option> <option value="Vögel">Vögel</option> <option value="Völker">Völker</option> <option value="Wald">Wald</option> <option value="Wasser">Wasser</option> <option value="Weihnachten">Weihnachten</option> <option value="Weltall">Weltall</option> <option value="Weltreligionen">Weltreligionen</option> <option value="Western">Western</option> <option value="Wetter">Wetter</option> <option value="Wikinger">Wikinger</option> <option value="Wildwest">Wildwest</option> <option value="Wirbellose">Wirbellose</option> <option value="Wirtschaft">Wirtschaft</option> <option value="Wissenschaft">Wissenschaft</option> <option value="Witze">Witze</option> <option value="Wörterbuch">Wörterbuch</option> <option value="Zahlen">Zahlen</option> <option value="Zaubern">Zaubern</option> <option value="Zeichnen/Malen">Zeichnen/Malen</option> <option value="Zeitgeschichte">Zeitgeschichte</option> <option value="Zirkus">Zirkus</option> <option value="Zoo">Zoo</option> <option value="Zum Vorlesen">Zum Vorlesen</option> <option value="Zweisprachig">Zweisprachig</option> <option value="Zweiter Weltkrieg">Zweiter Weltkrieg</option> <option value="preisgekrönt">preisgekrönt</option> </select>
+                                                        </div>
+                                                        <br>
+                                                        <span style="line-height:12px;">&nbsp;</span>
+                                                        <br>
+                                                        <div id="F37">
+                                                            <label for="GHTSPR_1"><span class="fbz-text" style="position:absolute;  left:16.9%; width:17.6%;overflow:hidden; max-width:23.6%;">Textsprache</span> </label>
+                                                            <select name="select$8" style="position:absolute;  left:40.4%; width:41.1%;" id="GHTSPR_1"> <option value="alle">alle</option> <option value="Alt-Griechisch">Alt-Griechisch</option> <option value="Arabisch">Arabisch</option> <option value="Chinesisch">Chinesisch</option> <option value="Deutsch">Deutsch</option> <option value="Dänisch">Dänisch</option> <option value="Englisch">Englisch</option> <option value="Finnisch">Finnisch</option> <option value="Französisch">Französisch</option> <option value="Hebräisch">Hebräisch</option> <option value="Italienisch">Italienisch</option> <option value="Japanisch">Japanisch</option> <option value="Koreanisch">Koreanisch</option> <option value="Kroatisch">Kroatisch</option> <option value="Kurdisch">Kurdisch</option> <option value="Lateinisch">Lateinisch</option> <option value="Mehrere Sprachen">Mehrere Sprachen</option> <option value="Neu-Griechisch">Neu-Griechisch</option> <option value="Niederländisch">Niederländisch</option> <option value="Norwegisch">Norwegisch</option> <option value="Polnisch">Polnisch</option> <option value="Portugiesisch">Portugiesisch</option> <option value="Russisch">Russisch</option> <option value="Schwedisch">Schwedisch</option> <option value="Slowakisch">Slowakisch</option> <option value="Spanisch">Spanisch</option> <option value="Thailändisch">Thailändisch</option> <option value="Tschechisch">Tschechisch</option> <option value="Türkisch">Türkisch</option> <option value="Ukrainisch">Ukrainisch</option> </select>
+                                                        </div>
+                                                        <br>
+                                                        <span style="line-height:12px;">&nbsp;</span>
+                                                        <br>
+                                                        <br class="klar">
+                                                    </fieldset>
+                                                    <fieldset id="OPACGP" class="grp">
+                                                        <div class="accordion">
+                                                            <legend class="toggler" role="tab" id="accordion-OPACGP-toggler" aria-controls="accordion-OPACGP-content" aria-selected="false" aria-expanded="false"> <i class="accordion-icon icon-search-other" aria-hidden="true"></i> Weitere Suchaspekte </legend>
+                                                            <div class="accordion-content" id="accordion-OPACGP-content" aria-labelledby="accordion-OPACGP-toggler" role="tabpanel" aria-hidden="true">
+                                                                <div class="accordion-inner">
+                                                                    <div id="F42">
+                                                                        <label for="VERLAG_1"><span class="fbz-text" style="position:absolute;  left:1.9%; width:20.3%;overflow:hidden; max-width:20.3%;">Verlag / Drucker</span> </label>
+                                                                        <input type="text" name="$Textfield$2" fld="VERLAG_1" value="" style="position:absolute;  left:26.2%; width:16.4%;" id="VERLAG_1">
+                                                                        <label for="ORT_1"><span class="fbz-text" style="position:absolute;  left:44.9%; width:18.9%;overflow:hidden; max-width:18.9%;">Erscheinungsort</span> </label>
+                                                                        <input type="text" name="$Textfield$3" fld="ORT_1" value="" style="position:absolute;  left:65.1%; width:16.4%;" id="ORT_1">
+                                                                    </div>
+                                                                    <br>
+                                                                    <span style="line-height:12px;">&nbsp;</span>
+                                                                    <br>
+                                                                    <div id="F63">
+                                                                        <label for="AUVERF_1"><span class="fbz-text" style="position:absolute;  left:1.9%; width:22.0%;overflow:hidden; max-width:22.0%;">Verfügbarkeit</span> </label>
+                                                                        <select name="select$9" style="position:absolute;  left:26.2%; width:16.4%;" id="AUVERF_1"> <option value="alle">alle</option> <option value="Nur ausleihbare Medien">Nur ausleihbare Medien</option> </select>
+                                                                        <label for="NEUVON_1"><span class="fbz-text" style="position:absolute;  left:44.9%; width:18.9%;overflow:hidden; max-width:18.9%;">Neuerwerbungen</span> </label>
+                                                                        <select name="select$10" style="position:absolute;  left:65.1%; width:16.4%;" id="NEUVON_1"> <option value=""></option> <option value="1 Monat">1 Monat</option> <option value="2 Monate">2 Monate</option> <option value="4 Monate">4 Monate</option> <option value="6 Monate">6 Monate</option> </select>
+                                                                    </div>
+                                                                    <br>
+                                                                    <span style="line-height:12px;">&nbsp;</span>
+                                                                    <br>
+                                                                    <div id="F30">
+                                                                        <label for="GEJAHR_1"><span class="fbz-text" style="position:absolute;  left:1.9%; width:23.6%;overflow:hidden; max-width:23.6%;">Jahr genau</span> </label>
+                                                                        <input type="text" name="$Textfield$4" fld="GEJAHR_1" onkeypress="checkNumeric(event,this);" value="" style="position:absolute;  left:26.2%; width:7.6%;" id="GEJAHR_1">
+                                                                        <label for="GEJAHV_1"><span class="fbz-text" style="position:absolute;  left:35.3%; width:13.4%;overflow:hidden; max-width:13.4%;">Jahr von</span> </label>
+                                                                        <input type="text" name="$Textfield$5" fld="GEJAHV_1" onkeypress="checkNumeric(event,this);" value="" style="position:absolute;  left:49.9%; width:7.6%;" id="GEJAHV_1">
+                                                                        <label for="GEJAHB_1"><span class="fbz-text" style="position:absolute;  left:64.7%; width:13,4%;overflow:hidden; max-width:13.4%;">Jahr bis</span> </label>
+                                                                        <input type="text" name="$Textfield$6" fld="GEJAHB_1" onkeypress="checkNumeric(event,this);" value="" style="position:absolute;  left:74.4%; width:7.6%;" id="GEJAHB_1">
+                                                                    </div>
+                                                                    <br>
+                                                                    <span style="line-height:12px;">&nbsp;</span>
+                                                                    <br>
+                                                                    <div id="F31">
+                                                                        <label for="BANDNR_1"><span class="fbz-text" style="position:absolute;  left:1.9%; width:23.6%;overflow:hidden; max-width:23.6%;">Bandnummer</span> </label>
+                                                                        <input type="text" name="$Textfield$7" fld="BANDNR_1" onkeypress="checkNumeric(event,this);" value="" style="position:absolute;  left:26.2%; width:7.6%;" id="BANDNR_1">
+                                                                        <label for="HEFTNR_1"><span class="fbz-text" style="position:absolute;  left:35.3%; width:13.4%;overflow:hidden; max-width:13.4%;">Heftnummer</span> </label>
+                                                                        <input type="text" name="$Textfield$8" fld="HEFTNR_1" onkeypress="checkNumeric(event,this);" value="" style="position:absolute;  left:49.9%; width:7.6%;" id="HEFTNR_1">
+                                                                        <label for="A0400_1"><span class="fbz-text" style="position:absolute;  left:62.8%; width:10.0%;overflow:hidden; max-width:10.0%;">Auflage</span> </label>
+                                                                        <input type="text" name="$Textfield$9" fld="A0400_1" onkeypress="checkNumeric(event,this);" value="" style="position:absolute;  left:74.4%; width:7.6%;" id="A0400_1" maxlength="80">
+                                                                    </div>
+                                                                    <br>
+                                                                    <span style="line-height:12px;">&nbsp;</span>
+                                                                    <br>
+                                                                    <div id="F42"></div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <br class="klar">
+                                                    </fieldset>
+                                                    <div id="R08" class="search-adv-a">
+                                                        <p> <input type="submit" name="textButton$1" value="Suche starten" class="buttong wichtig" fld="$$GFBO_1"> </p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <!-- STOP Felder - Erweiterte Suche -->
+                                        <div class="grid-col col-xs-12 col-md-4 col-xl-4">
+                                            <!-- <div class="grid-inside border-left"> -->
+                                            <!-- START Merkliste - Erweiterte Suche -->
+                                            <div class="grid-inside search-adv-merkliste">
+                                                <section id="options" aria-label="Merklisten">
+                                                    <ul class="cssmenu_ul" id="Mainmenu">
+                                                        <li class="cssmenu_ul"><a href="#"> </a>
+                                                            <ul class="menufts">
+                                                                <li class="var_button"> <a href="/aDISWeb/app;jsessionid=828C691E5541FFE6A3B1ACEC638610B2?service=direct/1/POOLM02Q@@@@@@@@_44002000_349DAD80/$InternalLink$7.directlink&amp;sp=S%24%24GFBO_41&amp;sp=SML01&amp;requestCount=1" title="" data-ajax="$MLFLD_1" fld="$$GFBO_41"><span class="merkzettel status-inactive">Merkliste</span></a> </li>
+                                                                <li class="var_button"> <a href="/aDISWeb/app;jsessionid=828C691E5541FFE6A3B1ACEC638610B2?service=direct/1/POOLM02Q@@@@@@@@_44002000_349DAD80/$InternalLink$8.directlink&amp;sp=S%24%24GFBO_42&amp;sp=SML02&amp;requestCount=1" title="" data-ajax="$MLFLD_2" fld="$$GFBO_42"></a> </li>
+                                                                <li class="var_button"> <a href="/aDISWeb/app;jsessionid=828C691E5541FFE6A3B1ACEC638610B2?service=direct/1/POOLM02Q@@@@@@@@_44002000_349DAD80/$InternalLink$9.directlink&amp;sp=S%24%24GFBO_43&amp;sp=SML03&amp;requestCount=1" title="" data-ajax="$MLFLD_3" fld="$$GFBO_43"></a> </li>
+                                                                <li class="var_button"> <a href="/aDISWeb/app;jsessionid=828C691E5541FFE6A3B1ACEC638610B2?service=direct/1/POOLM02Q@@@@@@@@_44002000_349DAD80/$InternalLink$10.directlink&amp;sp=S%24%24GFBO_44&amp;sp=SML04&amp;requestCount=1" title="" data-ajax="$MLFLD_4" fld="$$GFBO_44"></a> </li>
+                                                                <li class="var_button"> <a href="/aDISWeb/app;jsessionid=828C691E5541FFE6A3B1ACEC638610B2?service=direct/1/POOLM02Q@@@@@@@@_44002000_349DAD80/$InternalLink$11.directlink&amp;sp=S%24%24GFBO_45&amp;sp=SML05&amp;requestCount=1" title="" data-ajax="$MLFLD_5" fld="$$GFBO_45"></a> </li>
+                                                                <li class="var_button"> <a href="/aDISWeb/app;jsessionid=828C691E5541FFE6A3B1ACEC638610B2?service=direct/1/POOLM02Q@@@@@@@@_44002000_349DAD80/$InternalLink$12.directlink&amp;sp=S%24%24GFBO_46&amp;sp=SML06&amp;requestCount=1" title="" data-ajax="$MLFLD_6" fld="$$GFBO_46"></a> </li>
+                                                                <li class="var_button"> <a href="/aDISWeb/app;jsessionid=828C691E5541FFE6A3B1ACEC638610B2?service=direct/1/POOLM02Q@@@@@@@@_44002000_349DAD80/$InternalLink$13.directlink&amp;sp=S%24%24GFBO_47&amp;sp=SML07&amp;requestCount=1" title="" data-ajax="$MLFLD_7" fld="$$GFBO_47"></a> </li>
+                                                                <li class="var_button"> <a href="/aDISWeb/app;jsessionid=828C691E5541FFE6A3B1ACEC638610B2?service=direct/1/POOLM02Q@@@@@@@@_44002000_349DAD80/$InternalLink$14.directlink&amp;sp=S%24%24GFBO_48&amp;sp=SML08&amp;requestCount=1" title="" data-ajax="$MLFLD_8" fld="$$GFBO_48"></a> </li>
+                                                            </ul></li>
+                                                    </ul>
+                                                </section>
+                                                <!-- START Hilfebereich - Erweiterte Suche -->
+                                                <section class="helptext">
+                                                    <h2 class="headline-midi">So funktionieren…</h2>
+                                                    <!-- START Hilfetext 6 -->
+                                                    <div class="accordion">
+                                                        <h3 class="toggler" role="tab" id="accordion-help-6-toggler" aria-controls="accordion-help-6-content" aria-selected="false" aria-expanded="false"> <i class="accordion-icon icon-help" aria-hidden="true"></i>Freie Suche und Schnellsuche </h3>
+                                                        <div class="accordion-content" id="accordion-help-6-content" aria-labelledby="accordion-help-1-toggler" role="tabpanel" aria-hidden="true">
+                                                            <div class="accordion-inner">
+                                                                <div class="html_div">
+                                                                    Suche über alle Felder. Beugungs- und Pluralformen zum Suchbegriff werden gefunden: Mutter findet auch Mütter, wald findet auch waldes, Kanzler findet auch Kanzlerin. Kanzlerin mit Hochkommata, also "Kanzlerin", findet nur Kanzlerin.
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <!-- STOP Hilfetext 6 -->
+                                                    <!-- START Hilfetext 1 -->
+                                                    <div class="accordion">
+                                                        <h3 class="toggler" role="tab" id="accordion-help-1-toggler" aria-controls="accordion-help-1-content" aria-selected="false" aria-expanded="false"> <i class="accordion-icon icon-help" aria-hidden="true"></i>Verknüpfte Suchen mit logischen Operatoren (UND, NICHT, ODER) </h3>
+                                                        <div class="accordion-content" id="accordion-help-1-content" aria-labelledby="accordion-help-1-toggler" role="tabpanel" aria-hidden="true">
+                                                            <div class="accordion-inner">
+                                                                <div class="html_div">
+                                                                    Über das Pulldown-Menü haben Sie die Möglichkeit, die voreingestellte UND-Logik für kombinierte Suchkategorien zu verändern und z.B. einzelne Begriffe von der Suche auszuschließen.
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <!-- STOP Hilfetext 1 -->
+                                                    <!-- START Hilfetext 2 -->
+                                                    <div class="accordion">
+                                                        <h3 class="toggler" role="tab" id="accordion-help-2-toggler" aria-controls="accordion-help-2-content" aria-selected="false" aria-expanded="false"> <i class="accordion-icon icon-help" aria-hidden="true"></i>Suchen mit Titelanfängen </h3>
+                                                        <div class="accordion-content" id="accordion-help-2-content" aria-labelledby="accordion-help-2-toggler" role="tabpanel" aria-hidden="true">
+                                                            <div class="accordion-inner">
+                                                                <div class="html_div">
+                                                                    Bei Auswahl der Suchkategorie "Titelanfang" genügen Titelanfänge: "goeth" findet zum Beispiel "Goethes Wahlverwandtschaften".
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <!-- STOP Hilfetext 2 -->
+                                                    <!-- START Hilfetext 3 -->
+                                                    <div class="accordion">
+                                                        <h3 class="toggler" role="tab" id="accordion-help-3-toggler" aria-controls="accordion-help-3-content" aria-selected="false" aria-expanded="false"> <i class="accordion-icon icon-help" aria-hidden="true"></i>Suchen mit Wortanfängen, z.B. <em>Sozial(*)</em> </h3>
+                                                        <div class="accordion-content" id="accordion-help-3-content" aria-labelledby="accordion-help-3-toggler" role="tabpanel" aria-hidden="true">
+                                                            <div class="accordion-inner">
+                                                                <div class="html_div">
+                                                                    Einzelne Wörter können mit * rechts trunkiert werden ab 3 Zeichen. Bsp.: Kla* findet Klavier oder Klavierkonzert oder Klatsch.
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <!-- STOP Hilfetext 3 -->
+                                                    <!-- START Hilfetext 4 -->
+                                                    <div class="accordion">
+                                                        <h3 class="toggler" role="tab" id="accordion-help-4-toggler" aria-controls="accordion-help-4-content" aria-selected="false" aria-expanded="false"> <i class="accordion-icon icon-help" aria-hidden="true"></i>Exakte Suchen, z.B. <em>Die Kunst</em> </h3>
+                                                        <div class="accordion-content" id="accordion-help-4-content" aria-labelledby="accordion-help-4-toggler" role="tabpanel" aria-hidden="true">
+                                                            <div class="accordion-inner">
+                                                                <div class="html_div">
+                                                                    Mit Suchkategorie "Titel präzis" wird der Titel exakt so wie geschrieben gesucht, z.B. "Es": hier wird der Roman "Es" gefunden oder "Der Spiegel". Achtung: "Spiegel" ohne Artikel würde keinen Treffer der Zeitschrift liefern.
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <!-- STOP Hilfetext 4 -->
+                                                    <!-- START Hilfetext 5 -->
+                                                    <div class="accordion">
+                                                        <h3 class="toggler" role="tab" id="accordion-help-5-toggler" aria-controls="accordion-help-5-content" aria-selected="false" aria-expanded="false"> <i class="accordion-icon icon-help" aria-hidden="true"></i>Register/Indizes </h3>
+                                                        <div class="accordion-content" id="accordion-help-5-content" aria-labelledby="accordion-help-5-toggler" role="tabpanel" aria-hidden="true">
+                                                            <div class="accordion-inner">
+                                                                <div class="html_div">
+                                                                    Im Register/Index werden je nach Suchkategorie die suchbaren Einträge alphabetisch aufgelistet. Nach Markieren einzelner Einträge kann man sich diese als Trefferliste anzeigen lassen oder auf die Suchmaske übernehmen.
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <!-- STOP Hilfetext 5 -->
+                                                    <!-- STOP Hilfebereich - Erweiterte Suche -->
+                                                    <!-- ENDE Erweiterte Suche -->
+                                                    <div class="grid-col col-xs-12 col-md-12 col-xl-12">
+                                                        <div class="grid-inside">
+                                                        </div>
+                                                    </div>
+                                                </section>
+                                            </div>
+                                        </div>
+                                        <!-- GRID SYSTEM STOP -->
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div id="footer">
+                            <div class="inside">
+                                <div class="grid-wrapper">
+                                    <div class="grid-row">
+                                        <div class="grid-col col-xs-12 col-md-6">
+                                            <p id="legal"> <a href="http://www.stuttgart.de/stadtbibliothek/bvs/actions/profile/view.php?id=67" target="_blank">Impressum</a> | <a href="http://www.stuttgart.de/item/show/339312/1" target="_blank">Datenschutz</a> | <a href="http://www1.stuttgart.de/stadtbibliothek/bvs/actions/profile/view.php?id=172" target="_blank">Benutzungs- und Gebührenordnung</a> | <a href="mailto:ebibliothek@stuttgart.de">E-Mail eBibliothek Webmaster</a> </p>
+                                        </div>
+                                        <div class="grid-col col-xs-12 col-md-6">
+                                            <p class="block" id="goingup"> <a href="#wrapper">Seitenanfang</a> </p>
+                                        </div>
+                                        <div class="grid-col col-xs-12">
+                                            <p id="credits"> <a href="http://www.astec.de" target="_blank">Barrierefreie Bibliothekssoftware der |a|S|tec| GmbH</a> - <a href="http://www.ena-webstudio.com" title="ena Webstudio - Webdesign" rel="nofollow" target="_blank">ena Webstudio</a> </p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="clear"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- /wrapper_inside -->
+                </div>
+                <!-- /wrapper -->
+                <script src="/aDISWeb_kopac85/js/scripts-main.js"></script>
+            </div>
+        </div>
+    </form>
+</div>
+</body>
+</html>
