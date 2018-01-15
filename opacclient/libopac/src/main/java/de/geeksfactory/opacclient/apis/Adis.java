@@ -211,7 +211,7 @@ public class Adis extends ApacheBaseApi implements OpacApi {
         return -1;
     }
 
-    protected void updateRequestCount(Document doc) {
+    protected void updateRequestCount(final String methodName, Document doc) {
         int requestCount = getRequestCount(doc);
         if (requestCount >= 0) {
             if (s_requestCount == requestCount) {
@@ -274,7 +274,7 @@ public class Adis extends ApacheBaseApi implements OpacApi {
         }
 
         updateFormatSearch(doc);
-        updateRequestCount(doc);
+        updateRequestCount(methodName, doc);
 
         doc.setBaseUri(url);
         logInfo("%s < requestCount = %d, url  = %s", methodName, s_requestCount, url);
@@ -1619,8 +1619,10 @@ public class Adis extends ApacheBaseApi implements OpacApi {
         DateTimeFormatter fmt = DateTimeFormat.forPattern("dd.MM.yyyy").withLocale(Locale.GERMAN);
         for (Element tr : doc.select(".rTable_div tbody tr")) {
             LentItem item = new LentItem();
-            String text = Jsoup.parse(tr.child(3).html().replaceAll("(?i)<br[^>]*>", "#"))
-                               .text();
+            String text = tr.child(3).html();
+            // <br/> durch # ersetzen, html-parsen und text() geben lassen
+            // (?i) --> matching case-insensitiv:
+            text = Jsoup.parse(text.replaceAll("(?i)<br[^>]*>", "#")).text();
             if (text.contains(" / ")) {
                 // Format "Titel / Autor #Sig#Nr", z.B. normale Ausleihe in Berlin
                 String[] split = text.split("[/#\n]");
@@ -1722,6 +1724,8 @@ public class Adis extends ApacheBaseApi implements OpacApi {
             if (tr.children().size() >= colmap.size()) {
                 ReservedItem item = new ReservedItem();
                 String text = tr.child(colmap.get("title")).html();
+                // <br/> durch ; ersetzen, html-parsen und text() geben lassen
+                // (?i) --> matching case-insensitiv:
                 text = Jsoup.parse(text.replaceAll("(?i)<br[^>]*>", ";")).text();
                 if (split_title_author) {
                     String[] split = text.split("[:/;\n]");
@@ -1835,11 +1839,19 @@ public class Adis extends ApacheBaseApi implements OpacApi {
     @Override
     public List<SearchField> parseSearchFields() throws IOException,
             JSONException {
-        if (!initialised) {
-            start();
-        }
+
+        // in Stuttgart_StB besser immer start(), falls man schon als letztes die
+        // SearchPage aufgerufen hat, dann kommt beim nächsten mal (mit requestCount+1)
+        // eine SearchPage mit fast leere Branch-Select-Liste
+        start();
 
         Document doc = getSearchPage();
+
+        return parseSearchFields(doc);
+    }
+
+    static List<SearchField> parseSearchFields(Document doc) throws IOException,
+            JSONException {
 
         List<SearchField> fields = new ArrayList<>();
         // dropdown to select which field you want to search in
