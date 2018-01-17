@@ -264,7 +264,7 @@ public class Adis extends ApacheBaseApi implements OpacApi {
             Pattern padSid = Pattern
                     .compile(".*;jsessionid=([0-9A-Fa-f]+)[^0-9A-Fa-f].*");
             for (Element navitem : doc
-                    .select("#unav li a, #hnav li a, .tree_ul li a, .search-adv-repeat")) {
+                    .select("#unav li a, #hnav li a, .tree_ul li a, .search-adv")) {
                 // Düsseldorf uses a custom layout where the navbar is .tree_ul
                 // in Stuttgart, the navbar is #hnav and advanced search is linked outside the
                 // navbar as .search-adv-repeat
@@ -693,7 +693,9 @@ public class Adis extends ApacheBaseApi implements OpacApi {
             }
         }
 
-        if (doc.select("input[value*=Reservieren], input[value*=Vormerken]")
+        if (doc.select(
+                "input[value*=Reservieren], input[value*=Vormerken], " +
+                        "input[value*=Einzelbestellung]")
                .size() > 0 && id != null) {
             res.setReservable(true);
             res.setReservation_info(id);
@@ -800,8 +802,9 @@ public class Adis extends ApacheBaseApi implements OpacApi {
         for (Element input : doc.select("input, select")) {
             if (!"image".equals(input.attr("type"))
                     && (!"submit".equals(input.attr("type"))
-                    || input.val().contains("Reservieren") || input
-                    .val().contains("Vormerken"))
+                    || input.val().contains("Reservieren")
+                    || input.val().contains("Einzelbestellung")
+                    || input.val().contains("Vormerken"))
                     && !"checkbox".equals(input.attr("type"))
                     && !"".equals(input.attr("name"))) {
                 form.add(new BasicNameValuePair(input.attr("name"), input
@@ -1615,11 +1618,22 @@ public class Adis extends ApacheBaseApi implements OpacApi {
                                .select("option");
         }
         for (Element opt : searchoptions) {
-            TextSearchField field = new TextSearchField();
-            field.setId(opt.attr("value"));
-            field.setDisplayName(opt.text());
-            field.setHint("");
-            fields.add(field);
+            // Damit doppelte Optionen nicht mehrfach auftauchen
+            // (bei Stadtbücherei Stuttgart der Fall)
+            boolean found = false;
+            for (SearchField f : fields) {
+                if (f.getDisplayName().equals(opt.text())) {
+                    found = true;
+                    break;
+                }
+            }
+            if (!found) {
+                TextSearchField field = new TextSearchField();
+                field.setId(opt.attr("value"));
+                field.setDisplayName(opt.text());
+                field.setHint("");
+                fields.add(field);
+            }
         }
 
         // Save data so that the search() function knows that this
