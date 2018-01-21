@@ -1,0 +1,447 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="de" lang="de"><head>
+	<style type="text/css">
+		@import url(css/aDISStandard.css);
+	</style>
+	<script src="js/aDISMain.min.js" type="text/javascript"></script>
+	<script src="js/fckeditor/fckeditor.js" type="text/javascript"></script>
+	<title> Stadtbibliothek im Bildungscampus N&#252;rnberg </title>
+<!--
+(c) Software: aDIS/BMS und aDIS/Archiv by |a|S|tec| GmbH Berlin und Muenchen - www.astec.de
+HTML-/CSS: Formulare, Tabellen, Inhalte, etc. werden automatisiert durch aDIS/BMS und aDIS/Archiv generiert
+HTML-/CSS: Framework basiert lose auf Contao 2 (c) Leo Feyer www.contao.org
+HTML-/CSS: Anpassungen im aDIS-Rahmen durch ena Webstudio - www.ena-webstudio.com
+Projekt: NBG, OPAC03, de
+Letztes Update: 07.07.2016 - 11:10
+//-->
+<meta http-equiv="x-ua-compatible" content="ie=edge" />
+<meta http-equiv="cache-control" content="no-cache" />
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+<meta http-equiv="content-style-type" content="text/css" />
+<meta http-equiv="content-script-type" content="text/javascript" />
+<meta http-equiv="content-language" content="de" />
+<meta name="language" content="de" />
+<meta name="viewport" content="width=device-width; initial-scale=1.0" />
+<meta name="description" content="Die &auml;lteste Stadtbibliothek Deutschlands informiert &uuml;ber ihre Zweigstellen und &uuml;ber aktuelle Termine und Veranstaltungen." />
+<link rel="stylesheet" href="/aDISWeb_kopac/css/kopac_style.css" type="text/css" />
+<link rel="stylesheet" href="/aDISWeb_nbg/css/kopac_diff.css" type="text/css" />
+<link rel="shortcut icon" type="image/x-icon" href="/aDISWeb_nbg/images/favicon.ico" />
+</head>
+<body class="zweier deutsch">
+<script type="text/javascript"><!--
+
+
+
+
+function startIdleTimer() {
+  if (typeof idleId != 'undefined')
+    clearTimeout(idleId)
+  idleId = window.setTimeout("to('"+ idleLink + "')", idleTime);
+  }			
+function to(link) {
+  location.href=link;
+  }
+
+
+
+
+
+function EventTarget() {
+	this.handlers = [];
+	}
+EventTarget.prototype = {
+	constructor : EventTarget,
+	addhandler: function (type, handler) {
+		if (typeof this.handlers[type] == "undefined")
+			this.handlers[type] = [];
+		this.handlers[type].push(handler);
+		},
+	fire : function (event) {
+		if (this.handlers[event.type] instanceof Array) {
+			var handlers = this.handlers[event.type];
+			for (var i = 0; i < handlers.length; i++)
+				handlers[i](event);
+			}
+		}
+	};
+var eventHandler = new EventTarget();
+
+function setupHandlers()  {
+	document.onmousedown = docOnEvent;		
+	document.onkeydown = docOnEvent;	
+	document.onkeypress = docOnEvent;
+	document.onhelp = cancelF1;
+	
+	initFormElements();
+	initIframes();
+	initScrollPos();
+	}
+function getDimensions()  {
+	document.forms[0].scrDim.value = screen.width + ";" + screen.height;
+	if (window.innerWidth)
+		document.forms[0].winDim.value = window.innerWidth + ";" + window.innerHeight;
+	else
+		document.forms[0].winDim.value = document.body.offsetWidth + ";" + document.body.offsetHeight;
+	node = document.getElementById("img_content");
+	if (node != undefined)
+		document.forms[0].imgDim.value = node.offsetWidth + ";" + node.offsetHeight;
+	}
+
+
+
+
+
+	window.onpopstate = function (e) {
+	  if(e.state != null && e.state.action){
+	  var button = document.getElementById("Toolbar_1");
+      	if(button) button.click();
+      }
+    }
+    if(history.pushState && history.state == null){
+		history.pushState({ action : 1 }, "", null);
+		history.pushState({ action : 2 }, "", null);
+	}
+
+
+
+
+
+
+aDIS.onLoad = function (e)
+{
+
+  idleTime=900000;
+  idleLink="/aDISWeb/app;jsessionid=EAA935910964CD55A63FCAA69D9D41AC?service=direct/1/POOLNBGPNBGPROD@_44001800_32CD9D80/$Timeout";
+  startIdleTimer();
+
+
+if (!e) var e = window.event;
+document.forms[0].scriptEnabled.value=true;
+if (self.specialOnLoad != undefined)
+	specialOnLoad(e);
+setupHandlers();
+getDimensions();
+
+
+
+
+  var UserAgent = navigator.userAgent.toLowerCase();
+  if (UserAgent.search(/(iphone|ipod|ipad|opera mini|fennec|palm|blackberry|android|symbian|series60)/) == -1)
+    document.Form0.$Textfield.focus();
+
+}
+
+aDIS.addListener('load', window, aDIS.onLoad);
+
+
+// --></script>
+<div class="aDISMaske"><form method="post" name="Form0" action="/aDISWeb/app;jsessionid=EAA935910964CD55A63FCAA69D9D41AC" onsubmit="return formOnSubmit();">
+<input type="hidden" name="service" value="direct/1/POOLNBGPNBGPROD@_44001800_32CD9D80/$Form.form"/>
+<input type="hidden" name="sp" value="S0"/>
+<input type="hidden" name="Form0" value="focus,keyCode,stz,source,selected,requestCount,scriptEnabled,scrollPos,scrDim,winDim,imgDim,$Toolbar,select,$Textfield,select$0,$FormConditional,textButton,$Toolbar$0"/>
+<input type="hidden" name="focus" value=""/>
+<input type="hidden" name="keyCode" value="0"/>
+<input type="hidden" name="stz" value=""/>
+<input type="hidden" name="source" value=""/>
+<input type="hidden" name="selected" value=""/>
+<input type="hidden" name="requestCount" value="0"/>
+<input type="hidden" name="scriptEnabled" value="F"/>
+<input type="hidden" name="scrollPos" value="0"/>
+<input type="hidden" name="scrDim" value=""/>
+<input type="hidden" name="winDim" value=""/>
+<input type="hidden" name="imgDim" value=""/>
+<input type="hidden" name="$FormConditional" value="T"/>
+				
+<script type="text/javascript">
+// <![CDATA[
+  if (efa_fontSize) efa_fontSize.efaInit();
+// ]]>
+</script>
+
+<div id="wrapper">
+  <div id="wrapper_inside">
+
+    <div id="header" role="banner">
+      <div class="inside">
+
+        <ul id="sprunglinks">
+          <li><a class="sprung" href="#main">Zum Hauptinhalt</a></li>
+          <li><a class="sprung" href="#left">Zur Navigation</a></li>
+        </ul>
+
+        <div class="block" id="spruch"><a href="/aDISWeb/app;jsessionid=EAA935910964CD55A63FCAA69D9D41AC?service=direct/1/POOLNBGPNBGPROD@_44001800_32CD9D80/$InternalLink.directlink&amp;sp=S%24%24GFNV_1&amp;sp=SStartseite%3DCW00&amp;requestCount=0" fld="$$GFNV_1" title="Zur Startseite"><span>Stadtbibliothek im Bildungscampus N&#252;rnberg</span></a>	<span class="outside">.</span></div>
+
+        <p id="logo"><a href="http://www.nuernberg.de/index.html" title="Zu den Internetseiten der Stadt Nürnberg"><img src="/aDISWeb_nbg/images/logo.png" width="128" height="80" alt="Stadt Nürnberg" /></a></p>
+
+        <script type="text/javascript">
+        // <![CDATA[
+          if (efa_fontSize) document.write(efa_fontSize.allLinks);
+        // ]]>
+        </script>
+
+      </div>
+    </div>
+
+    <div id="container">
+      <div id="container_inside">
+
+        <div id="left">
+          <div class="inside">
+
+            <div class="block" id="navbox">
+            <div id="R20"><span class="bnzeig"></span><span class="mmzeig">Sie sind nicht angemeldet.</span>
+</div>
+            </div>
+
+            <h1 class="invisible">Navigation</h1>
+            <div class="mod_navigation block" id="unav" role="navigation"><div class="tree_div">
+<ul class="tree_ul">
+<li class="tree_leaf_li">
+<span class="tree_disabled">Abmelden</span>
+<span class="outside">.</span></li>
+<li class="tree_leaf_li">
+<a href="/aDISWeb/app;jsessionid=EAA935910964CD55A63FCAA69D9D41AC?service=direct/1/POOLNBGPNBGPROD@_44001800_32CD9D80/$Tree.treeNodes&amp;sp=SL1&amp;requestCount=0" class="tree_leaf_a"><span>Anmelden</span></a><span class="outside">.</span></li>
+<li class="tree_leaf_li_sel">
+<strong><span class="tree_strong">Startseite / Schnellsuche</span></strong></li>
+<li class="tree_leaf_li">
+<a href="/aDISWeb/app;jsessionid=EAA935910964CD55A63FCAA69D9D41AC?service=direct/1/POOLNBGPNBGPROD@_44001800_32CD9D80/$Tree.treeNodes&amp;sp=SS6&amp;requestCount=0" class="tree_leaf_a"><span>Erweiterte Suche</span></a><span class="outside">.</span></li>
+<li class="tree_leaf_li">
+<a href="/aDISWeb/app;jsessionid=EAA935910964CD55A63FCAA69D9D41AC?service=direct/1/POOLNBGPNBGPROD@_44001800_32CD9D80/$Tree.treeNodes&amp;sp=SBK&amp;requestCount=0" class="tree_leaf_a"><span>Benutzerkonto</span></a><span class="outside">.</span></li>
+<li class="tree_leaf_li">
+<a href="/aDISWeb/app;jsessionid=EAA935910964CD55A63FCAA69D9D41AC?service=direct/1/POOLNBGPNBGPROD@_44001800_32CD9D80/$Tree.treeNodes&amp;sp=SAP&amp;requestCount=0" class="tree_leaf_a"><span>Meine Suchen</span></a><span class="outside">.</span></li>
+<li class="tree_leaf_li">
+<a href="/aDISWeb/app;jsessionid=EAA935910964CD55A63FCAA69D9D41AC?service=direct/1/POOLNBGPNBGPROD@_44001800_32CD9D80/$Tree.treeNodes&amp;sp=SAT&amp;requestCount=0" class="tree_leaf_a"><span>Medienlisten</span></a><span class="outside">.</span></li>
+<li class="tree_leaf_li">
+<a href="/aDISWeb/app;jsessionid=EAA935910964CD55A63FCAA69D9D41AC?service=direct/1/POOLNBGPNBGPROD@_44001800_32CD9D80/$Tree.treeNodes&amp;sp=SK2&amp;requestCount=0" class="tree_leaf_a"><span>Bibliotheksadressen</span></a><span class="outside">.</span></li>
+<li class="tree_leaf_li">
+<a href="/aDISWeb/app;jsessionid=EAA935910964CD55A63FCAA69D9D41AC?service=direct/1/POOLNBGPNBGPROD@_44001800_32CD9D80/$Tree.treeNodes&amp;sp=SKV&amp;requestCount=0" class="tree_leaf_a"><span>Kontakt</span></a><span class="outside">.</span></li>
+<li class="tree_leaf_li">
+<a href="https://www.nuernberg.de/internet/stadtbibliothek/impressum.html" class="tree_leaf_a"><span>Impressum</span></a><span class="outside">.</span></li>
+<li class="tree_leaf_li">
+<a href="https://online-service.nuernberg.de/cipac/catalog/toc" class="tree_leaf_a"><span>Link zum CIPAC</span></a><span class="outside">.</span></li>
+<li class="tree_leaf_li">
+<a href="http://www.onleihe.de/nuernberg" class="tree_leaf_a"><span>Link zur Onleihe</span></a><span class="outside">.</span></li>
+<li class="tree_leaf_li">
+<a href="https://www.munzinger.de/search/login?portalid=50342" target="&quot;_blank&quot;" class="tree_leaf_a"><span>Link zu Munzinger Online</span></a><span class="outside">.</span></li>
+<li class="tree_leaf_li">
+<a href="https://online-service2.nuernberg.de/intelliform/forms/n/420_bcn/420_bcn_d_fernleihe/index" class="tree_leaf_a"><span>Link zur Fernleihbestellung</span></a><span class="outside">.</span></li>
+</ul></div>
+ </div>
+            <div class="clear"></div>
+
+          </div>
+        </div>
+
+        <div id="main" role="main">
+          <div class="inside">
+
+            <div class="block">
+
+              <div class="block" id="topleiste">
+                
+                
+                
+                
+                
+                <!--aDIS Drucksschalter-->
+                
+                
+                
+                <div class="clear"></div>
+              </div>
+
+              <h1><span class="invisible">Aktuelle Seite: </span> <span class="txtinsert">Schnellsuche</span> </h1><div class="toolbar_div">
+<ul class="toolbar_ul">
+<li class="toolbar_li">
+<input type="image" src="/aDISWeb/images/POOLNBGPNBGPROD@/gif/POOLNBGPNBGPROD@_53002700_31169A00.gif;jsessionid=EAA935910964CD55A63FCAA69D9D41AC" alt="Die Suche wird gestartet" id="Toolbar_0" name="$Toolbar_0" title="Die Suche wird gestartet" onmouseover="self.status='Die Suche wird gestartet';return true;" onmouseout="self.status='';" class="toolbar_img"/><label for="Toolbar_0"><span class="toolbar_txt">Suche starten</span></label></li>
+<li class="toolbar_li">
+<input type="image" src="/aDISWeb/images/POOLNBGPNBGPROD@/gif/POOLNBGPNBGPROD@_5300AC00_327BE080.gif;jsessionid=EAA935910964CD55A63FCAA69D9D41AC" alt="Eingaben des Suchformulars l&#246;schen" id="Toolbar_1" name="$Toolbar_1" title="Eingaben des Suchformulars l&#246;schen" onmouseover="self.status='Eingaben des Suchformulars l&#246;schen';return true;" onmouseout="self.status='';" class="toolbar_img"/><label for="Toolbar_1"><span class="toolbar_txt">Leeren</span></label></li>
+<li class="toolbar_li">
+<input type="image" src="/aDISWeb/images/POOLNBGPNBGPROD@/gif/POOLNBGPNBGPROD@_53002B00_31169A00.gif;jsessionid=EAA935910964CD55A63FCAA69D9D41AC" alt="Wiederherstellung der letzten Sucheingaben" id="Toolbar_2" name="$Toolbar_2" title="Wiederherstellung der letzten Sucheingaben" onmouseover="self.status='Wiederherstellung der letzten Sucheingaben';return true;" onmouseout="self.status='';" class="toolbar_img"/><label for="Toolbar_2"><span class="toolbar_txt">Wiederholen</span></label></li>
+<li class="toolbar_li">
+<input type="image" src="/aDISWeb/images/POOLNBGPNBGPROD@/gif/POOLNBGPNBGPROD@_53002400_31169A00.gif;jsessionid=EAA935910964CD55A63FCAA69D9D41AC" alt="Beenden der Recherche" id="Toolbar_3" name="$Toolbar_3" title="Beenden der Recherche" onmouseover="self.status='Beenden der Recherche';return true;" onmouseout="self.status='';" class="toolbar_img"/><label for="Toolbar_3"><span class="toolbar_txt">Beenden</span></label></li>
+<li class="toolbar_li">
+<input type="image" src="/aDISWeb/images/POOLNBGPNBGPROD@/gif/POOLNBGPNBGPROD@_53001D00_31169A00.gif;jsessionid=EAA935910964CD55A63FCAA69D9D41AC" alt="Hilfe zur Suchmaske" id="Toolbar_4" name="$Toolbar_4" title="Hilfe zur Suchmaske" onmouseover="self.status='Hilfe zur Suchmaske';return true;" onmouseout="self.status='';" class="toolbar_img"/><label for="Toolbar_4"><span class="toolbar_txt">Hilfe</span></label></li></ul><div style="clear:both"></div></div> <div class="fsgrp">
+                
+                
+                
+                <div id="R03"><class="aDISListe"><div class="html_div" style="width:100%; height:100%;"></div>
+</div>
+                
+                
+                
+                
+                <fieldset id="FSET01" class="grp" ><legend class="leg">Bitte wählen Sie aus, wo Sie suchen möchten</legend>    
+<div id="F13">
+<label for="AUSGAB_1"><span class="fbz-text" style="position:absolute;  left:2.1%; width:17.8%;overflow:hidden; max-width:17.8%;">Bibliotheksort</span>
+</label><select name="select" id="AUSGAB_1" class="fb" style="position:absolute;  left:23.2%; width:66.4%;" onChange="javascript:sprr('s1');">
+<option value=" --  Alle --"> --  Alle --</option>
+<option value="Zentrum">Zentrum</option>
+<option value="Zentrum - Magazin">Zentrum - Magazin</option>
+<option value="St. Leonhard">St. Leonhard</option>
+<option value="Fahrbibliothek 1">Fahrbibliothek 1</option>
+<option value="Fahrbibliothek 2">Fahrbibliothek 2</option>
+<option value="Gostenhof">Gostenhof</option>
+<option value="Langwasser">Langwasser</option>
+<option value="Maxfeld">Maxfeld</option>
+<option value="Schoppershof">Schoppershof</option>
+<option value="S&#252;dstadt">S&#252;dstadt</option>
+<option value="SB Bertolt-Brecht-Schule">SB Bertolt-Brecht-Schule</option>
+<option value="SB Berufsbildungszentrum">SB Berufsbildungszentrum</option>
+<option value="SB J.-Scharrer-Gymnasium">SB J.-Scharrer-Gymnasium</option>
+<option value="SB Peter-Vischer-Schule">SB Peter-Vischer-Schule</option>
+</select>
+</div><br/><span style="line-height:12px;">&nbsp;</span><br/>
+<br class="klar"/></fieldset><fieldset id="OPACG1" class="grp" ><legend class="leg">Suchfelder</legend>    
+<div id="F08">
+<label for="THEMA2_1"><span class="fbz-text" style="position:absolute;  left:1.8%; width:20.2%;overflow:hidden; max-width:20.2%;">Freie Suche</span>
+</label><input type="text" name="$Textfield" fld="THEMA2_1" value="" id="THEMA2_1" style="position:absolute;  left:23.2%; width:66.4%;"/>
+</div><br/><span style="line-height:12px;">&nbsp;</span><br/>
+<div id="F21">
+<label for="MEDIUM_1"><span class="fbz-text" style="position:absolute;  left:1.8%; width:20.2%;overflow:hidden; max-width:20.2%;">Medienart</span>
+</label><select name="select$0" id="MEDIUM_1" style="position:absolute;  left:23.2%; width:66.4%;">
+<option value=" --  Alle --"> --  Alle --</option>
+<option value="Blu-ray Disc">Blu-ray Disc</option>
+<option value="Buch">Buch</option>
+<option value="CD">CD</option>
+<option value="CD-ROM">CD-ROM</option>
+<option value="DVD-ROM">DVD-ROM</option>
+<option value="DVD-Video/-Audio">DVD-Video/-Audio</option>
+<option value="E-Audio">E-Audio</option>
+<option value="E-Book">E-Book</option>
+<option value="E-Medium">E-Medium</option>
+<option value="E-Video">E-Video</option>
+<option value="Konsolenspiel">Konsolenspiel</option>
+<option value="Medienkombination">Medienkombination</option>
+<option value="Noten">Noten</option>
+<option value="Sonstige Medien">Sonstige Medien</option>
+<option value="Spiel">Spiel</option>
+<option value="Tonkassette (MC)">Tonkassette (MC)</option>
+<option value="Video (VHS)">Video (VHS)</option>
+<option value="Zeitschrift">Zeitschrift</option>
+<option value="Zeitung">Zeitung</option>
+</select>
+</div><br/><span style="line-height:12px;">&nbsp;</span><br/>
+<br class="klar"/></fieldset><div id="R06" class="links"><input type="submit" name="textButton" value="Suche starten" class="buttong_l" fld="$$GFBO_1" style="   "/>
+</div><br/><span style="line-height:12px;">&nbsp;</span><br/>
+              </div>
+
+              <div class="fsgrp">
+                
+                
+                
+                
+                <div id="OPACLI" " class="aDISListe"><div class="html_div" style="width:100%; height:100%;"><br>&nbsp;<div>
+<fieldset id="OPACGP" class="grp"><legend class="leg">Hinweise zur Benutzung</legend> 
+<div id="F14">
+<p style="margin-left:25px;"><b>Bitte beachten Sie:</b></p>
+<ul style="margin-left:50px;">
+<li>11.05.2017: <b>Der für mobile Endgeräte extra ausgerichtete mOPAC steht nun zur Verfügung.</b><br>
+     <a href="https://online-service2.nuernberg.de/aDISWeb/app?service=direct/0/Home/$DirectLink&sp=SMOPAC"target="_blank">Mobiler OPAC</a></li>  
+<li>Seit 20.12.2016 wendet die Stadtbibliothek im Bildungscampus Nürnberg die international gültigen Regeln zur Datenerfassung <b>"Resource Description and Access (RDA)"</b> an. Bei Rückfragen wenden Sie sich bitte an unsere bibliothekarische Auskunft.</li> <li> <b>Integration der ONLEIHE-Titeldaten in den Online-Katalog (OPAC)</b>. Leider sind unsere Recherchemöglichkeiten für diesen Bestand nur eingeschränkt nutzbar, da der Fremdanbieter weniger Daten erfasst.</li>
+	<li>Die Bestände Zentrum-Magazin sind im <b>Online-Katalog (OPAC)</b> nur teilweise erfasst.</li>
+	<li>Die Bestände der Schulbibliotheken sind ebenfalls im <b>OPAC</b> verzeichnet, können aber nur nach Rücksprache an schulfremde Personen verliehen werden. Der schulische Bedarf hat Vorrang.</li>
+	<li>Der <a href="https://online-service.nuernberg.de/cipac/catalog/toc" name="CIPAC" target="_self">CIPAC (Digitale Zettelkataloge)</a> beinhaltet die Bibliotheksbestände, die noch nicht in unserem <b>OPAC</b> erfasst sind.<br>Folgende Kataloge können Sie im <b>CIPAC</b> nutzen:<br>
+	* Alphabetischer Autorenkatalog<br>
+	* Alphabetischer Schlagwortkatalog<br>
+	* Alphabetischer Schlagwortkatalog zur Nürnberg-Literatur</li>
+</ul>
+<p style="margin-left:25px;">
+<a href="http://www.nuernberg.de/internet/stadtbibliothek/benutz_bed.html" target="_blank">Benutzungsbedingungen für den Online-Katalog der Stadtbibliothek Nürnberg</a><br>&nbsp;
+</p>
+</div>
+</fieldset>
+<br>
+<fieldset id="OPACGP" class="grp"><legend class="leg">Externe Datenbanken</legend>    
+<div id="F14">
+	<p style="margin-left:25px;">Weitere Nachweise von Handschriften und alten Drucken der Stadtbibliothek Nürnberg und von Nürnberg-Literatur:<br>
+	<a href="http://www.nuernberg.de/internet/stadtbibliothek/datenbanken.html" target="_blank">Verzeichnis der externen Datenbanken</a><br>&nbsp;</p>
+</div>
+</fieldset>
+<br>
+<fieldset id="OPACGP" class="grp"><legend class="leg">Fernleihe</legend>
+<div id="F14">
+	<p style="margin-left:25px;">Literatur für Forschung, Aus- und Weiterbildung, die nicht in Nürnberger Bibliotheken 
+	erhältlich ist, kann über die Fernleihe bestellt werden.<br>Auswärtige Benutzer wenden sich bitte an Ihre Bibliothek vor Ort.&nbsp;
+	<a href="http://www.nuernberg.de/internet/stadtbibliothek/fernleihe.html" target="_blank">[mehr ...]</a><br>&nbsp;</p>
+</div>
+</fieldset>
+<p>&nbsp;</p>
+</div></div></div>
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+              </div>
+              <div class="clear"></div><div class="toolbar_div">
+<ul class="toolbar_ul">
+<li class="toolbar_li">
+<input type="image" src="/aDISWeb/images/POOLNBGPNBGPROD@/gif/POOLNBGPNBGPROD@_53002700_31169A00.gif;jsessionid=EAA935910964CD55A63FCAA69D9D41AC" alt="Die Suche wird gestartet" id="Toolbar$0_0" name="$Toolbar$0_0" title="Die Suche wird gestartet" onmouseover="self.status='Die Suche wird gestartet';return true;" onmouseout="self.status='';" class="toolbar_img"/><label for="Toolbar$0_0"><span class="toolbar_txt">Suche starten</span></label></li>
+<li class="toolbar_li">
+<input type="image" src="/aDISWeb/images/POOLNBGPNBGPROD@/gif/POOLNBGPNBGPROD@_5300AC00_327BE080.gif;jsessionid=EAA935910964CD55A63FCAA69D9D41AC" alt="Eingaben des Suchformulars l&#246;schen" id="Toolbar$0_1" name="$Toolbar$0_1" title="Eingaben des Suchformulars l&#246;schen" onmouseover="self.status='Eingaben des Suchformulars l&#246;schen';return true;" onmouseout="self.status='';" class="toolbar_img"/><label for="Toolbar$0_1"><span class="toolbar_txt">Leeren</span></label></li>
+<li class="toolbar_li">
+<input type="image" src="/aDISWeb/images/POOLNBGPNBGPROD@/gif/POOLNBGPNBGPROD@_53002B00_31169A00.gif;jsessionid=EAA935910964CD55A63FCAA69D9D41AC" alt="Wiederherstellung der letzten Sucheingaben" id="Toolbar$0_2" name="$Toolbar$0_2" title="Wiederherstellung der letzten Sucheingaben" onmouseover="self.status='Wiederherstellung der letzten Sucheingaben';return true;" onmouseout="self.status='';" class="toolbar_img"/><label for="Toolbar$0_2"><span class="toolbar_txt">Wiederholen</span></label></li>
+<li class="toolbar_li">
+<input type="image" src="/aDISWeb/images/POOLNBGPNBGPROD@/gif/POOLNBGPNBGPROD@_53002400_31169A00.gif;jsessionid=EAA935910964CD55A63FCAA69D9D41AC" alt="Beenden der Recherche" id="Toolbar$0_3" name="$Toolbar$0_3" title="Beenden der Recherche" onmouseover="self.status='Beenden der Recherche';return true;" onmouseout="self.status='';" class="toolbar_img"/><label for="Toolbar$0_3"><span class="toolbar_txt">Beenden</span></label></li>
+<li class="toolbar_li">
+<input type="image" src="/aDISWeb/images/POOLNBGPNBGPROD@/gif/POOLNBGPNBGPROD@_53001D00_31169A00.gif;jsessionid=EAA935910964CD55A63FCAA69D9D41AC" alt="Hilfe zur Suchmaske" id="Toolbar$0_4" name="$Toolbar$0_4" title="Hilfe zur Suchmaske" onmouseover="self.status='Hilfe zur Suchmaske';return true;" onmouseout="self.status='';" class="toolbar_img"/><label for="Toolbar$0_4"><span class="toolbar_txt">Hilfe</span></label></li></ul><div style="clear:both"></div></div> </div>
+            <div class="clear"></div>
+
+          </div>
+          <div id="clear"></div>
+
+        </div>
+      </div>
+    </div>
+
+    <div id="footer">
+      <div class="inside">
+
+        <p class="block" id="goingup">
+          <a href="#wrapper">Seitenanfang</a>
+        </p>
+
+        <p id="copyright">
+          &copy; Stadtbibliothek im Bildungscampus N&uuml;rnberg
+        </p>
+        <div class="clear"></div>
+
+        <p id="credits">
+          <a href="http://www.astec.de">Barrierefreie Bibliothekssoftware - OPAC der |a|S|tec| GmbH</a> und
+          <a href="http://www.ena-webstudio.com">ena Webdesign Berlin</a>
+        </p>
+        <div class="clear"></div>
+
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script src="/aDISWeb_nbg/js/yaml-focusfix.js" type="text/javascript"></script></form>
+</div></body>
+</html>

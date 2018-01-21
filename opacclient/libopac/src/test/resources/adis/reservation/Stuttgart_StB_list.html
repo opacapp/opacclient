@@ -1,0 +1,716 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="de" lang="de">
+<head>
+	<style type="text/css">
+		@import url(css/aDISStandard.css);
+	</style>
+	<script src="js/aDISMain.min.js" type="text/javascript"></script>
+	<script src="js/fckeditor/fckeditor.js" type="text/javascript"></script>
+	<title> Stadtbibliothek_Stuttgart      </title>
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,shrink-to-fit=no">
+<meta name="HandheldFriendly" content="true">
+<title>Stadtbibliothek Stuttgart</title>
+<!--
+(c) Software: aDIS/BMS und aDIS/Archiv by |a|S|tec| GmbH Berlin und Muenchen - www.astec.de
+HTML/CSS: Formulare, Tabellen, Inhalte, etc. werden automatisiert durch aDIS/BMS generiert
+Anpassungen im aDIS-Rahmen durch ena Webstudio - www.ena-webstudio.com
+Projekt: aDIS-85 Stuttgart, OPAC01, de
+Letztes Update: 26.11.2017 - 19:43
+//-->
+<script src="/aDISWeb_kopac85/js/scripts-head.js"></script>
+<link rel="stylesheet" href="/aDISWeb_kopac85/css/kopac_style.css">
+<link rel="stylesheet" href="/aDISWeb_stu/css/kopac_diff.css">
+<!--[if lte IE 8]><link rel="stylesheet" href="/aDISWeb_kopac85/css/kopac_ie-old.css"><![endif]-->
+<!--[if lt IE 9]><script src="/aDISWeb_kopac85/js/html5shiv-printshiv.min.js"></script><script src="/aDISWeb_kopac85/js/css3-mediaqueries.js"></script><![endif]-->
+<link rel="shortcut icon" type="image/x-icon" href="/aDISWeb_stu/images/favicon.ico">
+</head>
+
+<body class="opac01">
+<script type="text/javascript"><!--
+
+
+
+
+
+function sendRequest() {
+  location.href="/aDISWeb/app;jsessionid=ED36F43D497E60D9CE243C8CB88B386B?service=direct/1/POOLM02Q@@@@@@@@_4B033800_349DAD80/$BrowserBack";
+  }
+
+
+
+
+
+
+function startIdleTimer() {
+  if (typeof idleId != 'undefined')
+    clearTimeout(idleId)
+  idleId = window.setTimeout("to('"+ idleLink + "')", idleTime);
+}			
+function to(link) {
+  location.href=link;
+}
+
+
+
+
+
+function setupHandlers()  {
+  document.onmousedown = docOnEvent;		
+  document.onkeydown = docOnEvent;	
+  document.onkeypress = docOnEvent;
+  document.onhelp = cancelF1;
+
+  initFormElements();
+  initIframes();
+  initScrollPos();
+}
+function getDimensions()  {
+  document.forms[0].scrDim.value = screen.width + ";" + screen.height;
+  if (window.innerWidth)
+    document.forms[0].winDim.value = window.innerWidth + ";" + window.innerHeight;
+  else
+    document.forms[0].winDim.value = document.body.offsetWidth + ";" + document.body.offsetHeight;
+  node = document.getElementById("img_content");
+  if (node != undefined)
+    document.forms[0].imgDim.value = node.offsetWidth + ";" + node.offsetHeight;
+}
+
+
+
+
+aDIS.onLoad = function (e)
+{
+
+
+if (history.pushState && history.state == null) {
+  history.pushState({ action : 1 }, "", null);
+  history.pushState({ action : 2 }, "", null);
+  }         
+         
+window.onpopstate = function (e) {
+  if(e.state != null && e.state.action)
+      sendRequest();
+  }
+
+
+
+  idleTime=600000;
+  idleLink="/aDISWeb/app;jsessionid=ED36F43D497E60D9CE243C8CB88B386B?service=direct/1/POOLM02Q@@@@@@@@_4B033800_349DAD80/$Timeout";
+  startIdleTimer();
+
+
+  if (!e) var e = window.event;
+  document.forms[0].scriptEnabled.value=true;
+  if (self.specialOnLoad != undefined)
+    specialOnLoad(e);
+  setupHandlers();
+  getDimensions();
+
+}
+
+aDIS.addListener('load', window, aDIS.onLoad);
+
+
+// --></script>
+
+
+<div class="aDISMaske">
+<form method="post" name="Form0" action="/aDISWeb/app;jsessionid=ED36F43D497E60D9CE243C8CB88B386B" onsubmit="return formOnSubmit();">
+<input type="hidden" name="service" value="direct/1/POOLM02Q@@@@@@@@_4B033800_349DAD80/$Form.form"/>
+<input type="hidden" name="sp" value="S0"/>
+<input type="hidden" name="Form0" value="focus,keyCode,stz,source,selected,requestCount,scriptEnabled,scrollPos,scrDim,winDim,imgDim,$FormConditional,textButton,$FormConditional$0,$FormConditional$1,$FormConditional$2,$FormConditional$3,$FormConditional$4,$FormConditional$5,textButton$0,cellCheck,cellCheck$0,cellCheck$1,cellCheck$2,$FormConditional$6,textButton$1,$FormConditional$7,$FormConditional$8,$FormConditional$9,$FormConditional$10,$FormConditional$11,$FormConditional$12,textButton$2"/>
+<input type="hidden" name="focus" value=""/>
+<input type="hidden" name="keyCode" value="0"/>
+<input type="hidden" name="stz" value=""/>
+<input type="hidden" name="source" value=""/>
+<input type="hidden" name="selected" value=""/>
+<input type="hidden" name="requestCount" value="3"/>
+<input type="hidden" name="scriptEnabled" value="T"/>
+<input type="hidden" name="scrollPos" value="0"/>
+<input type="hidden" name="scrDim" value=""/>
+<input type="hidden" name="winDim" value=""/>
+<input type="hidden" name="imgDim" value=""/>
+<input type="hidden" name="$FormConditional" value="T"/>
+<input type="hidden" name="$FormConditional$0" value="F"/>
+<input type="hidden" name="$FormConditional$1" value="F"/>
+<input type="hidden" name="$FormConditional$2" value="F"/>
+<input type="hidden" name="$FormConditional$3" value="F"/>
+<input type="hidden" name="$FormConditional$4" value="F"/>
+<input type="hidden" name="$FormConditional$5" value="T"/>
+<input type="hidden" name="$FormConditional$6" value="T"/>
+<input type="hidden" name="$FormConditional$7" value="F"/>
+<input type="hidden" name="$FormConditional$8" value="F"/>
+<input type="hidden" name="$FormConditional$9" value="F"/>
+<input type="hidden" name="$FormConditional$10" value="F"/>
+<input type="hidden" name="$FormConditional$11" value="F"/>
+<input type="hidden" name="$FormConditional$12" value="T"/>
+
+
+
+
+
+		
+	
+
+
+
+	
+<div id="wrapper">
+  <div id="wrapper_inside">
+
+    <ul id="sprunglinks">
+      <li><a class="sprung" href="#main">Zum Inhalt</a></li>
+    </ul>
+
+    <div id="header">
+      <div class="inside">
+
+          <div id="mhead" class="block">
+            <div id="mhead-inside">
+              <div id="logo" role="banner"><a href="http://www1.stuttgart.de/stadtbibliothek/" title="Zur Homepage der Bibliothek"><img src="/aDISWeb_stu/images/logo.png" alt="Stuttgart-Logo"></a></div>
+              <ul id="mnav" class="mod_navigation block" role="navigation" aria-label="Service-Navigation">
+               
+               <li id="navbox">
+               <div class="mod_navigation block" id="mnav" role="navigation" aria-label="Servicemen&uuml;">
+<div class="tree_div">
+<ul class="tree_ul">
+<li class="tree_leaf_li_sel">
+<strong><span class="tree_strong">Anmelden</span></strong></li>
+<li class="tree_leaf_li">
+<a href="/aDISWeb/app;jsessionid=ED36F43D497E60D9CE243C8CB88B386B?service=direct/1/POOLM02Q@@@@@@@@_4B033800_349DAD80/$Tree.treeNodes&amp;sp=SL2&amp;requestCount=3" class="tree_leaf_a">Abmelden</a></li>
+</ul></div>
+
+ </div>
+
+               </li>
+             </ul>
+            </div>
+          </div>
+
+          <div id="hnav" class="mod_navigation block" role="navigation" aria-label="Hauptnavigation">
+            <!-- Mobile toggle -->
+            <div id="hnav-toggle">
+            <input id="main-menu-state" type="checkbox">
+            <label class="main-menu-btn" for="main-menu-state"><span class="main-menu-btn-icon"></span> Navigation</label>
+            </div>
+
+            <!-- Menu -->
+            <ul class="cssmenu_ul sm sm-style" id="main-menu">
+<li class="cssmenu_button">
+<a href="/aDISWeb/app;jsessionid=ED36F43D497E60D9CE243C8CB88B386B?service=direct/1/POOLM02Q@@@@@@@@_4B033800_349DAD80/$InternalLink.directlink&amp;sp=S%24%24GFBO_41&amp;sp=SS1&amp;requestCount=3" title="" fld="$$GFBO_41">Startseite</a>
+</li>
+<li class="cssmenu_button">
+<a href="/aDISWeb/app;jsessionid=ED36F43D497E60D9CE243C8CB88B386B?service=direct/1/POOLM02Q@@@@@@@@_4B033800_349DAD80/$InternalLink$0.directlink&amp;sp=S%24%24GFBO_42&amp;sp=SBK&amp;requestCount=3" title="" fld="$$GFBO_42">Mein Konto</a>
+</li>
+<li class="cssmenu_button">
+<a href="/aDISWeb/app;jsessionid=ED36F43D497E60D9CE243C8CB88B386B?service=direct/1/POOLM02Q@@@@@@@@_4B033800_349DAD80/$InternalLink$1.directlink&amp;sp=S%24%24GFBO_43&amp;sp=SAP&amp;requestCount=3" title="" fld="$$GFBO_43">Meine Suchen</a>
+</li>
+<li class="cssmenu_ul"><a href="#">Medienlisten</a>
+<ul class="menufts">
+<li class="cssmenu_button">
+<a href="/aDISWeb/app;jsessionid=ED36F43D497E60D9CE243C8CB88B386B?service=direct/1/POOLM02Q@@@@@@@@_4B033800_349DAD80/$InternalLink$2.directlink&amp;sp=S%24%24GFBO_44&amp;sp=SW1&amp;requestCount=3" title="" fld="$$GFBO_44">Neuerwerbungen</a>
+</li>
+<li class="cssmenu_button">
+<a href="/aDISWeb/app;jsessionid=ED36F43D497E60D9CE243C8CB88B386B?service=direct/1/POOLM02Q@@@@@@@@_4B033800_349DAD80/$InternalLink$3.directlink&amp;sp=S%24%24GFBO_45&amp;sp=SW4&amp;requestCount=3" title="" fld="$$GFBO_45">Empfehlungen</a>
+</li>
+</ul></li>
+<li class="cssmenu_button">
+<a href="/aDISWeb/app;jsessionid=ED36F43D497E60D9CE243C8CB88B386B?service=direct/1/POOLM02Q@@@@@@@@_4B033800_349DAD80/$InternalLink$4.directlink&amp;sp=S%24%24GFBO_46&amp;sp=SW2&amp;requestCount=3" title="" fld="$$GFBO_46">Digitale Angebote</a>
+</li>
+<li class="cssmenu_button">
+<a href="/aDISWeb/app;jsessionid=ED36F43D497E60D9CE243C8CB88B386B?service=direct/1/POOLM02Q@@@@@@@@_4B033800_349DAD80/$InternalLink$5.directlink&amp;sp=S%24%24GFBO_47&amp;sp=SW6&amp;requestCount=3" title="" fld="$$GFBO_47">Kontakt</a>
+</li>
+<li class="cssmenu_button">
+<a href="/aDISWeb/app;jsessionid=ED36F43D497E60D9CE243C8CB88B386B?service=direct/1/POOLM02Q@@@@@@@@_4B033800_349DAD80/$InternalLink$6.directlink&amp;sp=S%24%24GFBO_48&amp;sp=SW9&amp;requestCount=3" title="" fld="$$GFBO_48">Hilfe</a>
+</li>
+</ul>
+          </div>
+      </div>
+    </div>
+
+    
+
+    <div id="container">
+      <div id="container-inside">
+
+        <div id="main" role="main" aria-label="Hauptbereich">
+          <div class="inside">
+
+            <!-- GRID SYSTEM START -->
+            <div class="grid-wrapper">
+              <div class="grid-row">
+                <div class="grid-col col-xs-12 col-md-12 col-xl-12">
+                  <div class="grid-inside">
+
+                    <h1><span class="invisible">Aktuelle Seite: </span>
+
+<span class="txtinsert">
+Mein Konto / Vormerkungen
+</span>
+ </h1>
+                    
+                    
+                    
+
+                    
+                    
+                    
+
+
+                    
+                      
+                      <!-- R06=Gesucht wurde mit -->
+
+                        
+                        
+                        
+
+                      
+                      
+
+                        
+
+                      
+                    
+
+                    
+
+                  </div>
+                </div>
+
+               <!-- START: HAUPTBEREICH-Spalte -->
+                
+                  
+                    
+
+                      
+                      
+                      
+                      
+                      
+                      
+
+                    
+                  
+                
+               <!-- ENDE: HAIPTBEREICH-Spalte-->
+
+               <!-- START: OPTIONEN-Spalte RECHTS -->
+                
+                  
+                    
+                      <!-- R14=Treffer direktwahl, R05=Sortierangaben,R08=Treffer einschr. -->
+                      <!-- GFBO_100=Drill down.R09=Treffewreinschr. R16=Quellensuche       -->
+
+                      <!--  -->
+
+                      
+                      
+
+                      
+                      
+                      
+                      
+
+                      
+
+                      
+                      
+
+
+                      
+                      
+                      
+
+                    
+                  
+                
+               <!-- ENDE: OPTIONEN-Spalte RECHTS -->
+
+<!-- START Erweiterte Suche -->
+                <!-- START Quellenhinweis - Erweiterte Suche -->
+                
+                  
+                    
+                <!-- STOP Quellenhinweis - Erweiterte Suche -->
+
+                <!-- START Felder - Erweiterte Suche -->
+                    
+                      
+                      
+                      
+                    
+
+                  
+                
+                <!-- STOP Felder - Erweiterte Suche -->
+
+
+                
+
+                  <!--  -->
+
+                  <!-- START Merkliste - Erweiterte Suche -->
+                    
+                      
+                        
+                      
+
+                <!-- START Hilfebereich - Erweiterte Suche -->
+
+                    
+                    
+                    <!-- START Hilfetext 6 -->
+                    
+                      
+                      
+                      
+                      
+                      
+                      
+                      
+                    <!-- STOP Hilfetext 6 -->
+
+                    <!-- START Hilfetext 1 -->
+                    
+                      
+                      
+                      
+                      
+                      
+                      
+                      
+                    <!-- STOP Hilfetext 1 -->
+
+                    <!-- START Hilfetext 2 -->
+                      
+                      
+                      
+                      
+                      
+                      
+                      
+                      
+                    <!-- STOP Hilfetext 2 -->
+
+                    <!-- START Hilfetext 3 -->
+                      
+                      
+                      
+                      
+                      
+                      
+                      
+                      
+                    <!-- STOP Hilfetext 3 -->
+
+
+                    <!-- START Hilfetext 4 -->
+                      
+                      
+                      
+                      
+                      
+                      
+                      
+                      
+                    <!-- STOP Hilfetext 4 -->
+
+                    <!-- START Hilfetext 5 -->
+                      
+                      
+                      
+                      
+                      
+                      
+                      
+                      
+                    <!-- STOP Hilfetext 5 -->
+
+                <!-- STOP Hilfebereich - Erweiterte Suche -->
+
+
+
+<!-- ENDE Erweiterte Suche -->
+
+                <div class="grid-col col-xs-12 col-md-12 col-xl-12">
+                  <div class="grid-inside">
+                    
+                    
+                    
+                    
+                    
+                    <div id="OPACLI" style="   width:99%;" class="aDISListe"><div class="html_div" style="width:99%; height:100%;"><p>Ihre Vormerkungen: Zur Zeit gibt es keine verfügbaren Exemplare für diese Titel.<br/>Wenn ein verfügbares Exemplar vorhanden ist, wird Ihnen dieses am gewählten Ausgabeort bereitgestellt - siehe "Bereitstellungen" in Ihrem Konto.</p><p>Konto - Vormerkungen für Herrn Another, Justy - Abholcode: AAXXXX</p></div></div>
+
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    <div id="R04">
+<p class="block">
+
+
+<input type="submit" name="textButton" value="Markierte Titel l&#246;schen" class="buttong" fld="$$GFBO_2"/>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<input type="submit" name="textButton$0" value="Abbrechen" class="buttong" fld="$$GFBO_11"/>
+
+
+
+</p>
+</div>
+<div id="R05"><div style="   width:99%; ">	<div class="rTable_div">
+<table colDisable="[true, true, true, true, true]" width="100%" colCase="[, , , , ]" class="rTable_table">
+	<colgroup>
+<col width="04%"></col><col width="14%"></col><col width="19%"></col><col width="34%"></col><col width="29%"></col>	</colgroup>
+	<thead class="rTable_thead">
+				<tr>
+<th scope="col" class="rTable_th"></th><th scope="col" class="rTable_th">Bis</th><th scope="col" class="rTable_th">Ausgabeort</th><th scope="col" class="rTable_th">Titel</th><th scope="col" class="rTable_th">Vorgemerkt am</th>	</tr>	
+			</thead>
+			<tbody>
+
+<tr class="rTable_tr_even">
+
+<td class="">
+<input type="checkbox" name="cellCheck" fld="###CHK_1" id="cellCheck"/><label for="cellCheck"><span class="invisible">Markieren</span></label>
+</td>
+
+<td class="">
+10.12.2018
+</td>
+
+<td class="">
+Vaihingen
+</td>
+
+<td class="">
+[DVD-Video] Arlo & Spot [DVD]
+</td>
+
+<td class="">
+Vorgemerkt am: 10.12.2017<br/>Vormerkerposition: 001
+</td>
+
+</tr>
+
+<tr class="rTable_tr_odd">
+
+<td class="rTable_td_check">
+<input type="checkbox" name="cellCheck$0" fld="###CHK_2" id="cellCheck_0"/><label for="cellCheck_0"><span class="invisible">Markieren</span></label>
+</td>
+
+<td class="rTable_td_text">
+11.12.2018
+</td>
+
+<td class="rTable_td_text">
+Vaihingen
+</td>
+
+<td class="rTable_td_text">
+[DVD-Video] Phantastische Tierwesen und wo sie zu finden sind [DVD]
+</td>
+
+<td class="rTable_td_text">
+Vorgemerkt am: 11.12.2017<br/>Vormerkerposition: 003
+</td>
+
+</tr>
+
+<tr class="rTable_tr_even">
+
+<td class="rTable_td_check">
+<input type="checkbox" name="cellCheck$1" fld="###CHK_3" id="cellCheck_1"/><label for="cellCheck_1"><span class="invisible">Markieren</span></label>
+</td>
+
+<td class="rTable_td_text">
+02.01.2019
+</td>
+
+<td class="rTable_td_text">
+Stadtbibliothek am Mailänder Platz
+</td>
+
+<td class="rTable_td_text">
+[DVD-Video] Prisoners of War - Season 1  [DVD]
+</td>
+
+<td class="rTable_td_text">
+Vorgemerkt am: 02.01.2018<br/>Vormerkerposition: 001
+</td>
+
+</tr>
+
+<tr class="rTable_tr_odd">
+
+<td class="rTable_td_check">
+<input type="checkbox" name="cellCheck$2" fld="###CHK_4" id="cellCheck_2"/><label for="cellCheck_2"><span class="invisible">Markieren</span></label>
+</td>
+
+<td class="rTable_td_text">
+07.01.2019
+</td>
+
+<td class="rTable_td_text">
+Vaihingen
+</td>
+
+<td class="rTable_td_text">
+[DVD-Video] Homeland ; 3 [DVD] : die komplette Season 3
+</td>
+
+<td class="rTable_td_text">
+Vorgemerkt am: 06.01.2018<br/>Vormerkerposition: 002
+</td>
+
+</tr>
+	</tbody>
+</table>	</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+</div>
+
+
+<object width="0" id="$Plugin" type="application/x-aStec-aDISPrint" data="/aDISWeb/app;jsessionid=ED36F43D497E60D9CE243C8CB88B386B?service=aDISPrint/POOLM02Q@@@@@@@@_4B033800_349DAD80/$Plugin" height="0"></object>
+</div>
+<div id="R06">
+<p class="block">
+
+
+<input type="submit" name="textButton$1" value="Markierte Titel l&#246;schen" class="buttong" fld="$$GFBO_12"/>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<input type="submit" name="textButton$2" value="Abbrechen" class="buttong" fld="$$GFBO_21"/>
+
+
+
+</p>
+</div>
+
+                    
+                    
+                    
+                    
+                    
+                  </div>
+                </div>
+
+              </div>
+            </div>
+            <!-- GRID SYSTEM STOP -->
+
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <div id="footer">
+      <div class="inside">
+
+            <div class="grid-wrapper">
+              <div class="grid-row">
+
+                <div class="grid-col col-xs-12 col-md-6">
+                  <p id="legal">
+                    <a href="http://www.stuttgart.de/stadtbibliothek/bvs/actions/profile/view.php?id=67" target="_blank">Impressum</a> |
+                    <a href="http://www.stuttgart.de/item/show/339312/1" target="_blank">Datenschutz</a> |
+                    <a href="http://www1.stuttgart.de/stadtbibliothek/bvs/actions/profile/view.php?id=172" target="_blank">Benutzungs- und Geb&uuml;hrenordnung</a> |
+                    <a href="mailto:ebibliothek@stuttgart.de">E-Mail eBibliothek Webmaster</a>
+                  </p>
+                </div>
+
+                <div class="grid-col col-xs-12 col-md-6">
+                  <p class="block" id="goingup">
+                    <a href="#wrapper">Seitenanfang</a>
+                  </p>
+                </div>
+
+                <div class="grid-col col-xs-12">
+                  <p id="credits">
+                  <a href="http://www.astec.de" target="_blank">Barrierefreie Bibliothekssoftware der |a|S|tec| GmbH</a> - 
+                  <a href="http://www.ena-webstudio.com" title="ena Webstudio - Webdesign" rel="nofollow" target="_blank">ena Webstudio</a>
+                  </p>
+                </div>
+
+              </div>
+            </div>
+
+        <div class="clear"></div>
+
+      </div>
+    </div>
+
+  </div><!-- /wrapper_inside -->
+</div><!-- /wrapper -->
+
+<script src="/aDISWeb_kopac85/js/scripts-main.js"></script>
+
+</form>
+</div>
+</body>
+</html>

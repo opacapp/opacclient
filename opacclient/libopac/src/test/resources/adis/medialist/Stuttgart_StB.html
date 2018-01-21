@@ -1,0 +1,966 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="de" lang="de">
+<head>
+    <style type="text/css">
+		@import url(css/aDISStandard.css);
+	</style>
+    <script src="js/aDISMain.min.js" type="text/javascript"></script>
+    <script src="js/fckeditor/fckeditor.js" type="text/javascript"></script>
+    <title> Stadtbibliothek_Stuttgart      </title>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0,shrink-to-fit=no">
+    <meta name="HandheldFriendly" content="true">
+    <title>Stadtbibliothek Stuttgart</title>
+    <!--
+    (c) Software: aDIS/BMS und aDIS/Archiv by |a|S|tec| GmbH Berlin und Muenchen - www.astec.de
+    HTML/CSS: Formulare, Tabellen, Inhalte, etc. werden automatisiert durch aDIS/BMS generiert
+    Anpassungen im aDIS-Rahmen durch ena Webstudio - www.ena-webstudio.com
+    Projekt: aDIS-85 Stuttgart, OPAC01, de
+    Letztes Update: 26.11.2017 - 19:43
+    //-->
+    <script src="/aDISWeb_kopac85/js/scripts-head.js"></script>
+    <link rel="stylesheet" href="/aDISWeb_kopac85/css/kopac_style.css">
+    <link rel="stylesheet" href="/aDISWeb_stu/css/kopac_diff.css">
+    <!--[if lte IE 8]><link rel="stylesheet" href="/aDISWeb_kopac85/css/kopac_ie-old.css"><![endif]-->
+    <!--[if lt IE 9]><script src="/aDISWeb_kopac85/js/html5shiv-printshiv.min.js"></script><script src="/aDISWeb_kopac85/js/css3-mediaqueries.js"></script><![endif]-->
+    <link rel="shortcut icon" type="image/x-icon" href="/aDISWeb_stu/images/favicon.ico">
+</head>
+
+<body class="opac01">
+<script type="text/javascript"><!--
+
+
+
+
+
+function sendRequest() {
+  location.href="/aDISWeb/app;jsessionid=5857D6AED39DEF0C37ABDD67CD89DC19?service=direct/1/POOLM02Q@@@@@@@@_4B033800_349DAD80/$BrowserBack";
+  }
+
+
+
+
+
+
+function startIdleTimer() {
+  if (typeof idleId != 'undefined')
+    clearTimeout(idleId)
+  idleId = window.setTimeout("to('"+ idleLink + "')", idleTime);
+}
+function to(link) {
+  location.href=link;
+}
+
+
+
+
+
+function setupHandlers()  {
+  document.onmousedown = docOnEvent;
+  document.onkeydown = docOnEvent;
+  document.onkeypress = docOnEvent;
+  document.onhelp = cancelF1;
+
+  initFormElements();
+  initIframes();
+  initScrollPos();
+}
+function getDimensions()  {
+  document.forms[0].scrDim.value = screen.width + ";" + screen.height;
+  if (window.innerWidth)
+    document.forms[0].winDim.value = window.innerWidth + ";" + window.innerHeight;
+  else
+    document.forms[0].winDim.value = document.body.offsetWidth + ";" + document.body.offsetHeight;
+  node = document.getElementById("img_content");
+  if (node != undefined)
+    document.forms[0].imgDim.value = node.offsetWidth + ";" + node.offsetHeight;
+}
+
+
+
+
+aDIS.onLoad = function (e)
+{
+
+
+if (history.pushState && history.state == null) {
+  history.pushState({ action : 1 }, "", null);
+  history.pushState({ action : 2 }, "", null);
+  }
+
+window.onpopstate = function (e) {
+  if(e.state != null && e.state.action)
+      sendRequest();
+  }
+
+
+
+  idleTime=600000;
+  idleLink="/aDISWeb/app;jsessionid=5857D6AED39DEF0C37ABDD67CD89DC19?service=direct/1/POOLM02Q@@@@@@@@_4B033800_349DAD80/$Timeout";
+  startIdleTimer();
+
+
+  if (!e) var e = window.event;
+  document.forms[0].scriptEnabled.value=true;
+  if (self.specialOnLoad != undefined)
+    specialOnLoad(e);
+  setupHandlers();
+  getDimensions();
+
+}
+
+aDIS.addListener('load', window, aDIS.onLoad);
+
+
+// --></script>
+
+
+<div class="aDISMaske">
+    <form method="post" name="Form0" action="/aDISWeb/app;jsessionid=5857D6AED39DEF0C37ABDD67CD89DC19" onsubmit="return formOnSubmit();">
+        <input type="hidden" name="service" value="direct/1/POOLM02Q@@@@@@@@_4B033800_349DAD80/$Form.form"/>
+        <input type="hidden" name="sp" value="S0"/>
+        <input type="hidden" name="Form0" value="focus,keyCode,stz,source,selected,requestCount,scriptEnabled,scrollPos,scrDim,winDim,imgDim,$FormConditional,$FormConditional$0,textButton,$FormConditional$1,textButton$0,$FormConditional$2,$FormConditional$3,$FormConditional$4,$FormConditional$5,textButton$1,cellCheck,cellCheck$0,cellCheck$1,cellCheck$2,cellCheck$3,cellCheck$4,cellCheck$5,cellCheck$6,cellCheck$7,cellCheck$8,cellCheck$9,cellCheck$10,cellCheck$11,cellCheck$12,$FormConditional$6,$FormConditional$7,textButton$2,$FormConditional$8,textButton$3,$FormConditional$9,$FormConditional$10,$FormConditional$11,$FormConditional$12,textButton$4"/>
+        <input type="hidden" name="focus" value=""/>
+        <input type="hidden" name="keyCode" value="0"/>
+        <input type="hidden" name="stz" value=""/>
+        <input type="hidden" name="source" value=""/>
+        <input type="hidden" name="selected" value=""/>
+        <input type="hidden" name="requestCount" value="3"/>
+        <input type="hidden" name="scriptEnabled" value="T"/>
+        <input type="hidden" name="scrollPos" value="0"/>
+        <input type="hidden" name="scrDim" value=""/>
+        <input type="hidden" name="winDim" value=""/>
+        <input type="hidden" name="imgDim" value=""/>
+        <input type="hidden" name="$FormConditional" value="F"/>
+        <input type="hidden" name="$FormConditional$0" value="T"/>
+        <input type="hidden" name="$FormConditional$1" value="T"/>
+        <input type="hidden" name="$FormConditional$2" value="F"/>
+        <input type="hidden" name="$FormConditional$3" value="F"/>
+        <input type="hidden" name="$FormConditional$4" value="F"/>
+        <input type="hidden" name="$FormConditional$5" value="T"/>
+        <input type="hidden" name="$FormConditional$6" value="F"/>
+        <input type="hidden" name="$FormConditional$7" value="T"/>
+        <input type="hidden" name="$FormConditional$8" value="T"/>
+        <input type="hidden" name="$FormConditional$9" value="F"/>
+        <input type="hidden" name="$FormConditional$10" value="F"/>
+        <input type="hidden" name="$FormConditional$11" value="F"/>
+        <input type="hidden" name="$FormConditional$12" value="T"/>
+
+
+
+
+
+
+
+
+
+
+
+        <div id="wrapper">
+            <div id="wrapper_inside">
+
+                <ul id="sprunglinks">
+                    <li><a class="sprung" href="#main">Zum Inhalt</a></li>
+                </ul>
+
+                <div id="header">
+                    <div class="inside">
+
+                        <div id="mhead" class="block">
+                            <div id="mhead-inside">
+                                <div id="logo" role="banner"><a href="http://www1.stuttgart.de/stadtbibliothek/" title="Zur Homepage der Bibliothek"><img src="/aDISWeb_stu/images/logo.png" alt="Stuttgart-Logo"></a></div>
+                                <ul id="mnav" class="mod_navigation block" role="navigation" aria-label="Service-Navigation">
+
+                                    <li id="navbox">
+                                        <div class="mod_navigation block" id="mnav" role="navigation" aria-label="Servicemen&uuml;">
+                                            <div class="tree_div">
+                                                <ul class="tree_ul">
+                                                    <li class="tree_leaf_li_sel">
+                                                        <strong><span class="tree_strong">Anmelden</span></strong></li>
+                                                    <li class="tree_leaf_li">
+                                                        <a href="/aDISWeb/app;jsessionid=5857D6AED39DEF0C37ABDD67CD89DC19?service=direct/1/POOLM02Q@@@@@@@@_4B033800_349DAD80/$Tree.treeNodes&amp;sp=SL2&amp;requestCount=3" class="tree_leaf_a">Abmelden</a></li>
+                                                </ul></div>
+
+                                        </div>
+
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+
+                        <div id="hnav" class="mod_navigation block" role="navigation" aria-label="Hauptnavigation">
+                            <!-- Mobile toggle -->
+                            <div id="hnav-toggle">
+                                <input id="main-menu-state" type="checkbox">
+                                <label class="main-menu-btn" for="main-menu-state"><span class="main-menu-btn-icon"></span> Navigation</label>
+                            </div>
+
+                            <!-- Menu -->
+                            <ul class="cssmenu_ul sm sm-style" id="main-menu">
+                                <li class="cssmenu_button">
+                                    <a href="/aDISWeb/app;jsessionid=5857D6AED39DEF0C37ABDD67CD89DC19?service=direct/1/POOLM02Q@@@@@@@@_4B033800_349DAD80/$InternalLink.directlink&amp;sp=S%24%24GFBO_41&amp;sp=SS1&amp;requestCount=3" title="" fld="$$GFBO_41">Startseite</a>
+                                </li>
+                                <li class="cssmenu_button">
+                                    <a href="/aDISWeb/app;jsessionid=5857D6AED39DEF0C37ABDD67CD89DC19?service=direct/1/POOLM02Q@@@@@@@@_4B033800_349DAD80/$InternalLink$0.directlink&amp;sp=S%24%24GFBO_42&amp;sp=SBK&amp;requestCount=3" title="" fld="$$GFBO_42">Mein Konto</a>
+                                </li>
+                                <li class="cssmenu_button">
+                                    <a href="/aDISWeb/app;jsessionid=5857D6AED39DEF0C37ABDD67CD89DC19?service=direct/1/POOLM02Q@@@@@@@@_4B033800_349DAD80/$InternalLink$1.directlink&amp;sp=S%24%24GFBO_43&amp;sp=SAP&amp;requestCount=3" title="" fld="$$GFBO_43">Meine Suchen</a>
+                                </li>
+                                <li class="cssmenu_ul"><a href="#">Medienlisten</a>
+                                    <ul class="menufts">
+                                        <li class="cssmenu_button">
+                                            <a href="/aDISWeb/app;jsessionid=5857D6AED39DEF0C37ABDD67CD89DC19?service=direct/1/POOLM02Q@@@@@@@@_4B033800_349DAD80/$InternalLink$2.directlink&amp;sp=S%24%24GFBO_44&amp;sp=SW1&amp;requestCount=3" title="" fld="$$GFBO_44">Neuerwerbungen</a>
+                                        </li>
+                                        <li class="cssmenu_button">
+                                            <a href="/aDISWeb/app;jsessionid=5857D6AED39DEF0C37ABDD67CD89DC19?service=direct/1/POOLM02Q@@@@@@@@_4B033800_349DAD80/$InternalLink$3.directlink&amp;sp=S%24%24GFBO_45&amp;sp=SW4&amp;requestCount=3" title="" fld="$$GFBO_45">Empfehlungen</a>
+                                        </li>
+                                    </ul></li>
+                                <li class="cssmenu_button">
+                                    <a href="/aDISWeb/app;jsessionid=5857D6AED39DEF0C37ABDD67CD89DC19?service=direct/1/POOLM02Q@@@@@@@@_4B033800_349DAD80/$InternalLink$4.directlink&amp;sp=S%24%24GFBO_46&amp;sp=SW2&amp;requestCount=3" title="" fld="$$GFBO_46">Digitale Angebote</a>
+                                </li>
+                                <li class="cssmenu_button">
+                                    <a href="/aDISWeb/app;jsessionid=5857D6AED39DEF0C37ABDD67CD89DC19?service=direct/1/POOLM02Q@@@@@@@@_4B033800_349DAD80/$InternalLink$5.directlink&amp;sp=S%24%24GFBO_47&amp;sp=SW6&amp;requestCount=3" title="" fld="$$GFBO_47">Kontakt</a>
+                                </li>
+                                <li class="cssmenu_button">
+                                    <a href="/aDISWeb/app;jsessionid=5857D6AED39DEF0C37ABDD67CD89DC19?service=direct/1/POOLM02Q@@@@@@@@_4B033800_349DAD80/$InternalLink$6.directlink&amp;sp=S%24%24GFBO_48&amp;sp=SW9&amp;requestCount=3" title="" fld="$$GFBO_48">Hilfe</a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+
+
+                <div id="container">
+                    <div id="container-inside">
+
+                        <div id="main" role="main" aria-label="Hauptbereich">
+                            <div class="inside">
+
+                                <!-- GRID SYSTEM START -->
+                                <div class="grid-wrapper">
+                                    <div class="grid-row">
+                                        <div class="grid-col col-xs-12 col-md-12 col-xl-12">
+                                            <div class="grid-inside">
+
+                                                <h1><span class="invisible">Aktuelle Seite: </span>
+
+                                                    <span class="txtinsert">
+Mein Konto / Ausleihen
+</span>
+                                                </h1>
+
+
+
+
+
+
+
+
+
+
+
+                                                <!-- R06=Gesucht wurde mit -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                                            </div>
+                                        </div>
+
+                                        <!-- START: HAUPTBEREICH-Spalte -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                                        <!-- ENDE: HAIPTBEREICH-Spalte-->
+
+                                        <!-- START: OPTIONEN-Spalte RECHTS -->
+
+
+
+                                        <!-- R14=Treffer direktwahl, R05=Sortierangaben,R08=Treffer einschr. -->
+                                        <!-- GFBO_100=Drill down.R09=Treffewreinschr. R16=Quellensuche       -->
+
+                                        <!--  -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                                        <!-- ENDE: OPTIONEN-Spalte RECHTS -->
+
+                                        <!-- START Erweiterte Suche -->
+                                        <!-- START Quellenhinweis - Erweiterte Suche -->
+
+
+
+                                        <!-- STOP Quellenhinweis - Erweiterte Suche -->
+
+                                        <!-- START Felder - Erweiterte Suche -->
+
+
+
+
+
+
+
+
+                                        <!-- STOP Felder - Erweiterte Suche -->
+
+
+
+
+                                        <!--  -->
+
+                                        <!-- START Merkliste - Erweiterte Suche -->
+
+
+
+
+
+                                        <!-- START Hilfebereich - Erweiterte Suche -->
+
+
+
+                                        <!-- START Hilfetext 6 -->
+
+
+
+
+
+
+
+
+                                        <!-- STOP Hilfetext 6 -->
+
+                                        <!-- START Hilfetext 1 -->
+
+
+
+
+
+
+
+
+                                        <!-- STOP Hilfetext 1 -->
+
+                                        <!-- START Hilfetext 2 -->
+
+
+
+
+
+
+
+
+                                        <!-- STOP Hilfetext 2 -->
+
+                                        <!-- START Hilfetext 3 -->
+
+
+
+
+
+
+
+
+                                        <!-- STOP Hilfetext 3 -->
+
+
+                                        <!-- START Hilfetext 4 -->
+
+
+
+
+
+
+
+
+                                        <!-- STOP Hilfetext 4 -->
+
+                                        <!-- START Hilfetext 5 -->
+
+
+
+
+
+
+
+
+                                        <!-- STOP Hilfetext 5 -->
+
+                                        <!-- STOP Hilfebereich - Erweiterte Suche -->
+
+
+
+                                        <!-- ENDE Erweiterte Suche -->
+
+                                        <div class="grid-col col-xs-12 col-md-12 col-xl-12">
+                                            <div class="grid-inside">
+
+
+
+
+
+                                                <div id="OPACLI" style="   width:99%;" class="aDISListe"><div class="html_div" style="width:99%; height:100%;">Ihre ausgeliehenen Titel: Bitte beachten Sie das Fälligkeitsdatum. Bei verspäteter Rückgabe entstehen Ihnen Kosten!<br>Nutzen Sie rechtzeitig das Verlängerungsangebot. <b>Zur Verlängerung gebührenpflichtiger Medien markieren Sie diese bitte einzeln und klicken dann auf "Markierte Titel verlängern".</b><p>Konto - Ausleihen für Herrn Justy Another - Abholcode: Mi7259</p></div></div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                                                <div id="R04">
+                                                    <p class="block">
+
+
+
+
+                                                        <input type="submit" name="textButton" value="Alle verl&#228;ngern" class="buttong" fld="$$GFBO_3"/>
+
+
+
+
+
+
+                                                        <input type="submit" name="textButton$0" value="Markierte Titel verl&#228;ngern" class="buttong" fld="$$GFBO_4"/>
+
+
+
+
+
+
+
+
+
+
+
+
+                                                        <input type="submit" name="textButton$1" value="Abbrechen" class="buttong" fld="$$GFBO_11"/>
+
+
+
+                                                    </p>
+                                                </div>
+                                                <div id="R05"><div style="   width:99%; ">	<div class="rTable_div">
+                                                    <table colDisable="[true, true, true, true, true]" width="100%" colCase="[, , , , ]" class="rTable_table">
+                                                        <colgroup>
+                                                            <col width="04%"></col><col width="14%"></col><col width="19%"></col><col width="34%"></col><col width="29%"></col>	</colgroup>
+                                                        <thead class="rTable_thead">
+                                                        <tr>
+                                                            <th scope="col" class="rTable_th"></th><th scope="col" class="rTable_th">Fällig am</th><th scope="col" class="rTable_th">Bibliothek</th><th scope="col" class="rTable_th">Titel</th><th scope="col" class="rTable_th">Hinweis</th>	</tr>
+                                                        </thead>
+                                                        <tbody>
+
+                                                        <tr class="rTable_tr_even">
+
+                                                            <td class="rTable_td_check">
+                                                                <input type="checkbox" name="cellCheck" fld="###CHK_1" id="cellCheck"/><label for="cellCheck"><span class="invisible">Markieren</span></label>
+                                                            </td>
+
+                                                            <td class="rTable_td_text">
+                                                                25.01.2018
+                                                            </td>
+
+                                                            <td class="rTable_td_text">
+                                                                Stadtbibliothek am Mailänder Platz
+                                                            </td>
+
+                                                            <td class="rTable_td_text">
+                                                                Android 7 : das Praxisbuch für Entwickler / Thomas Künneth<br/>Wcm 2 Android-SDK<br/>15991468
+                                                            </td>
+
+                                                            <td class="rTable_td_text">
+                                                                2 Verlängerungen
+                                                            </td>
+
+                                                        </tr>
+
+                                                        <tr class="rTable_tr_odd">
+
+                                                            <td class="rTable_td_check">
+                                                                <input type="checkbox" name="cellCheck$0" fld="###CHK_2" id="cellCheck_0"/><label for="cellCheck_0"><span class="invisible">Markieren</span></label>
+                                                            </td>
+
+                                                            <td class="rTable_td_text">
+                                                                25.01.2018
+                                                            </td>
+
+                                                            <td class="rTable_td_text">
+                                                                Stadtbibliothek am Mailänder Platz
+                                                            </td>
+
+                                                            <td class="rTable_td_text">
+                                                                Blitzlichtgewitter : Roman / Christian Linker<br/>5.2 Link<br/>15167448
+                                                            </td>
+
+                                                            <td class="rTable_td_text">
+                                                                1 Verlängerung
+                                                            </td>
+
+                                                        </tr>
+
+                                                        <tr class="rTable_tr_even">
+
+                                                            <td class="rTable_td_check">
+                                                                <input type="checkbox" name="cellCheck$1" fld="###CHK_3" id="cellCheck_1"/><label for="cellCheck_1"><span class="invisible">Markieren</span></label>
+                                                            </td>
+
+                                                            <td class="rTable_td_text">
+                                                                25.01.2018
+                                                            </td>
+
+                                                            <td class="rTable_td_text">
+                                                                Vaihingen
+                                                            </td>
+
+                                                            <td class="rTable_td_text">
+                                                                [CD] Some kind of trouble [CD] / James Blunt<br/>TR Pop/Rock B<br/>15332436
+                                                            </td>
+
+                                                            <td class="rTable_td_text">
+                                                                3 Verlängerungen
+                                                            </td>
+
+                                                        </tr>
+
+                                                        <tr class="rTable_tr_odd">
+
+                                                            <td class="rTable_td_check">
+                                                                <input type="checkbox" name="cellCheck$2" fld="###CHK_4" id="cellCheck_2"/><label for="cellCheck_2"><span class="invisible">Markieren</span></label>
+                                                            </td>
+
+                                                            <td class="rTable_td_text">
+                                                                25.01.2018
+                                                            </td>
+
+                                                            <td class="rTable_td_text">
+                                                                Stadtbibliothek am Mailänder Platz
+                                                            </td>
+
+                                                            <td class="rTable_td_text">
+                                                                [DVD-Video] Micmacs - Uns gehört Paris! [DVD] / Regie: Jean-Pierre Jeunet. Drehb.: Guillaume Laurant ... Musik: Raphaël Beau. Darst.: Dany Boon ; André Dussollier ; Nicolas Marié ...<br/>Micm<br/>15389439
+                                                            </td>
+
+                                                            <td class="rTable_td_text">
+                                                                1 Verlängerung
+                                                            </td>
+
+                                                        </tr>
+
+                                                        <tr class="rTable_tr_even">
+
+                                                            <td class="rTable_td_check">
+                                                                <input type="checkbox" name="cellCheck$3" fld="###CHK_5" id="cellCheck_3"/><label for="cellCheck_3"><span class="invisible">Markieren</span></label>
+                                                            </td>
+
+                                                            <td class="rTable_td_text">
+                                                                25.01.2018
+                                                            </td>
+
+                                                            <td class="rTable_td_text">
+                                                                Stadtbibliothek am Mailänder Platz
+                                                            </td>
+
+                                                            <td class="rTable_td_text">
+                                                                [DVD-Video] Stadt der Engel [DVD] / Regie: Brad Silberling. Drehb.: Dana Stevens. Musik: Gabriel Yared. Darst.: Nicolas Cage ; Meg Ryan ; Dennis Franz ...<br/>Stadt<br/>15322559
+                                                            </td>
+
+                                                            <td class="rTable_td_text">
+                                                                1 Verlängerung
+                                                            </td>
+
+                                                        </tr>
+
+                                                        <tr class="rTable_tr_odd">
+
+                                                            <td class="rTable_td_check">
+                                                                <input type="checkbox" name="cellCheck$4" fld="###CHK_6" id="cellCheck_4"/><label for="cellCheck_4"><span class="invisible">Markieren</span></label>
+                                                            </td>
+
+                                                            <td class="rTable_td_text">
+                                                                30.01.2018
+                                                            </td>
+
+                                                            <td class="rTable_td_text">
+                                                                Möhringen
+                                                            </td>
+
+                                                            <td class="rTable_td_text">
+                                                                [DVD-Video] ¬La¬ boum 2 - die Fete geht weiter [DVD] / Regie: Claude Pinoteau. Drehb.: Danièle Thompson. Musik: Vladimir Cosma. Darst.: Sophie Marceau ; Claude Brasseur ; Brigitte Fossey<br/>Boum<br/>14897134
+                                                            </td>
+
+                                                            <td class="rTable_td_text">
+
+                                                            </td>
+
+                                                        </tr>
+
+                                                        <tr class="rTable_tr_even">
+
+                                                            <td class="rTable_td_check">
+                                                                <input type="checkbox" name="cellCheck$5" fld="###CHK_7" id="cellCheck_5"/><label for="cellCheck_5"><span class="invisible">Markieren</span></label>
+                                                            </td>
+
+                                                            <td class="rTable_td_text">
+                                                                30.01.2018
+                                                            </td>
+
+                                                            <td class="rTable_td_text">
+                                                                Degerloch
+                                                            </td>
+
+                                                            <td class="rTable_td_text">
+                                                                [DVD-Video] Pirates of the Caribbean - Am Ende der Welt [DVD] / Regie: Gore Verbinski. Drehb.: Ted Elliott ... Musik: Hans Zimmer. Darst.: Johnny Depp ; Orlando Bloom ; Keira Knightley ... Prod.: Walt Disney<br/>Pira<br/>14927090
+                                                            </td>
+
+                                                            <td class="rTable_td_text">
+
+                                                            </td>
+
+                                                        </tr>
+
+                                                        <tr class="rTable_tr_odd">
+
+                                                            <td class="rTable_td_check">
+                                                                <input type="checkbox" name="cellCheck$6" fld="###CHK_8" id="cellCheck_6"/><label for="cellCheck_6"><span class="invisible">Markieren</span></label>
+                                                            </td>
+
+                                                            <td class="rTable_td_text">
+                                                                30.01.2018
+                                                            </td>
+
+                                                            <td class="rTable_td_text">
+                                                                Möhringen
+                                                            </td>
+
+                                                            <td class="rTable_td_text">
+                                                                [CD] ¬The¬ afterlove [CD] / James Blunt<br/>TR Pop/Rock<br/>16023340
+                                                            </td>
+
+                                                            <td class="rTable_td_text">
+                                                                2 Verlängerungen
+                                                            </td>
+
+                                                        </tr>
+
+                                                        <tr class="rTable_tr_even">
+
+                                                            <td class="rTable_td_check">
+                                                                <input type="checkbox" name="cellCheck$7" fld="###CHK_9" id="cellCheck_7"/><label for="cellCheck_7"><span class="invisible">Markieren</span></label>
+                                                            </td>
+
+                                                            <td class="rTable_td_text">
+                                                                02.02.2018
+                                                            </td>
+
+                                                            <td class="rTable_td_text">
+                                                                Vaihingen
+                                                            </td>
+
+                                                            <td class="rTable_td_text">
+                                                                Vor allem eins: Dir selbst sei treu : die Schauspielerin Channa Maron / Barbara Yelin<br/>R Yel<br/>16064611
+                                                            </td>
+
+                                                            <td class="rTable_td_text">
+
+                                                            </td>
+
+                                                        </tr>
+
+                                                        <tr class="rTable_tr_odd">
+
+                                                            <td class="rTable_td_check">
+                                                                <input type="checkbox" name="cellCheck$8" fld="###CHK_10" id="cellCheck_8"/><label for="cellCheck_8"><span class="invisible">Markieren</span></label>
+                                                            </td>
+
+                                                            <td class="rTable_td_text">
+                                                                02.02.2018
+                                                            </td>
+
+                                                            <td class="rTable_td_text">
+                                                                Vaihingen
+                                                            </td>
+
+                                                            <td class="rTable_td_text">
+                                                                ¬Der¬ Weltraum : von Urknall, Schwarzen Löchern und fremden Welten / John Gribbin<br/>Ubk Wel<br/>14077383
+                                                            </td>
+
+                                                            <td class="rTable_td_text">
+
+                                                            </td>
+
+                                                        </tr>
+
+                                                        <tr class="rTable_tr_even">
+
+                                                            <td class="rTable_td_check">
+                                                                <input type="checkbox" name="cellCheck$9" fld="###CHK_11" id="cellCheck_9"/><label for="cellCheck_9"><span class="invisible">Markieren</span></label>
+                                                            </td>
+
+                                                            <td class="rTable_td_text">
+                                                                02.02.2018
+                                                            </td>
+
+                                                            <td class="rTable_td_text">
+                                                                Vaihingen
+                                                            </td>
+
+                                                            <td class="rTable_td_text">
+                                                                Doitscha : eine jüdische Mutter packt aus / Adriana Altaras<br/>Byk Altaras, A.<br/>15762953
+                                                            </td>
+
+                                                            <td class="rTable_td_text">
+
+                                                            </td>
+
+                                                        </tr>
+
+                                                        <tr class="rTable_tr_odd">
+
+                                                            <td class="rTable_td_check">
+                                                                <input type="checkbox" name="cellCheck$10" fld="###CHK_12" id="cellCheck_10"/><label for="cellCheck_10"><span class="invisible">Markieren</span></label>
+                                                            </td>
+
+                                                            <td class="rTable_td_text">
+                                                                02.02.2018
+                                                            </td>
+
+                                                            <td class="rTable_td_text">
+                                                                Vaihingen
+                                                            </td>
+
+                                                            <td class="rTable_td_text">
+                                                                [DVD-Video] Passengers [DVD] / Regie: Morten Tyldum ; Drehbuch: Jon Spaihts ; Musik: Thomas Newman ; Schauspieler: Chris Pratt, Jennifer Lawrence, Michael Sheen ...<br/>Pass<br/>16024467
+                                                            </td>
+
+                                                            <td class="rTable_td_text">
+
+                                                            </td>
+
+                                                        </tr>
+
+                                                        <tr class="rTable_tr_even">
+
+                                                            <td class="rTable_td_check">
+                                                                <input type="checkbox" name="cellCheck$11" fld="###CHK_13" id="cellCheck_11"/><label for="cellCheck_11"><span class="invisible">Markieren</span></label>
+                                                            </td>
+
+                                                            <td class="rTable_td_text">
+                                                                02.02.2018
+                                                            </td>
+
+                                                            <td class="rTable_td_text">
+                                                                Vaihingen
+                                                            </td>
+
+                                                            <td class="rTable_td_text">
+                                                                Grabenkrieg / Tardi. Übersetzung: Michael Hein<br/>R  Tar<br/>12284691
+                                                            </td>
+
+                                                            <td class="rTable_td_text">
+
+                                                            </td>
+
+                                                        </tr>
+
+                                                        <tr class="rTable_tr_odd">
+
+                                                            <td class="zellgb">
+                                                                <input type="checkbox" name="cellCheck$12" fld="###CHK_14" id="cellCheck_12" disabled="disabled"/><label for="cellCheck_12"><span class="invisible">Markieren</span></label>
+                                                            </td>
+
+                                                            <td class="zellgb">
+                                                                05.02.2018
+                                                            </td>
+
+                                                            <td class="zellgb">
+                                                                Stadtbibliothek am Mailänder Platz
+                                                            </td>
+
+                                                            <td class="zellgb">
+                                                                [DVD-Video] ¬The¬ Sound of Music [DVD] : Meine Lieder, meine Träume / Regie: Robert Wise. Drehb.: Ernest Lehman. Darst.: Julie Andrews ; Christopher Plummer ; Richard Haydn<br/>TD4 Sou<br/>15813637
+                                                            </td>
+
+                                                            <td class="zellgb">
+                                                                Heute verlängert<br/>2 Verlängerungen
+                                                            </td>
+
+                                                        </tr>
+                                                        </tbody>
+                                                    </table>	</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+                                                </div>
+
+
+                                                    <object width="0" id="$Plugin" type="application/x-aStec-aDISPrint" data="/aDISWeb/app;jsessionid=5857D6AED39DEF0C37ABDD67CD89DC19?service=aDISPrint/POOLM02Q@@@@@@@@_4B033800_349DAD80/$Plugin" height="0"></object>
+                                                </div>
+                                                <div id="R06">
+                                                    <p class="block">
+
+
+
+
+                                                        <input type="submit" name="textButton$2" value="Alle verl&#228;ngern" class="buttong" fld="$$GFBO_13"/>
+
+
+
+
+
+
+                                                        <input type="submit" name="textButton$3" value="Markierte Titel verl&#228;ngern" class="buttong" fld="$$GFBO_14"/>
+
+
+
+
+
+
+
+
+
+
+
+
+                                                        <input type="submit" name="textButton$4" value="Abbrechen" class="buttong" fld="$$GFBO_21"/>
+
+
+
+                                                    </p>
+                                                </div>
+
+
+
+
+
+
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                </div>
+                                <!-- GRID SYSTEM STOP -->
+
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+                <div id="footer">
+                    <div class="inside">
+
+                        <div class="grid-wrapper">
+                            <div class="grid-row">
+
+                                <div class="grid-col col-xs-12 col-md-6">
+                                    <p id="legal">
+                                        <a href="http://www.stuttgart.de/stadtbibliothek/bvs/actions/profile/view.php?id=67" target="_blank">Impressum</a> |
+                                        <a href="http://www.stuttgart.de/item/show/339312/1" target="_blank">Datenschutz</a> |
+                                        <a href="http://www1.stuttgart.de/stadtbibliothek/bvs/actions/profile/view.php?id=172" target="_blank">Benutzungs- und Geb&uuml;hrenordnung</a> |
+                                        <a href="mailto:ebibliothek@stuttgart.de">E-Mail eBibliothek Webmaster</a>
+                                    </p>
+                                </div>
+
+                                <div class="grid-col col-xs-12 col-md-6">
+                                    <p class="block" id="goingup">
+                                        <a href="#wrapper">Seitenanfang</a>
+                                    </p>
+                                </div>
+
+                                <div class="grid-col col-xs-12">
+                                    <p id="credits">
+                                        <a href="http://www.astec.de" target="_blank">Barrierefreie Bibliothekssoftware der |a|S|tec| GmbH</a> -
+                                        <a href="http://www.ena-webstudio.com" title="ena Webstudio - Webdesign" rel="nofollow" target="_blank">ena Webstudio</a>
+                                    </p>
+                                </div>
+
+                            </div>
+                        </div>
+
+                        <div class="clear"></div>
+
+                    </div>
+                </div>
+
+            </div><!-- /wrapper_inside -->
+        </div><!-- /wrapper -->
+
+        <script src="/aDISWeb_kopac85/js/scripts-main.js"></script>
+
+    </form>
+</div>
+</body>
+</html>

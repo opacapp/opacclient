@@ -3,6 +3,7 @@ package de.geeksfactory.opacclient.apis;
 import org.joda.time.LocalDate;
 import org.json.JSONException;
 import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
@@ -25,7 +26,7 @@ public class AdisAccountTest extends BaseHtmlTest {
     }
 
     private static final String[] FILES =
-            new String[]{"tuebingen.html"};
+            new String[]{"tuebingen.html", "Stuttgart_StB.html"};
 
     @Parameterized.Parameters(name = "{0}")
     public static Collection<String[]> files() {
@@ -41,12 +42,28 @@ public class AdisAccountTest extends BaseHtmlTest {
         String html = readResource("/adis/medialist/" + file);
         //if (html == null) return; // we may not have all files for all libraries
         List<LentItem> media = new ArrayList<>();
-        Adis.parseMediaList(Jsoup.parse(html), "", media, false);
+        Adis.parseMediaList(Jsoup.parse(html), "", false, media);
         assertTrue(media.size() > 0);
         for (LentItem item : media) {
             assertNotNull(item.getDeadline());
             assertTrue(item.getDeadline().isAfter(new LocalDate(2010, 1, 1))); // sensible dates
             assertNotNull(item.getId());
+        }
+    }
+
+    @Test
+    public void testAccountPage() throws OpacApi.OpacErrorException, JSONException {
+        String html = readResource("/adis/account/" + file);
+        if (html == null) return; // we may not have all files for all libraries
+        Adis adis = new Adis();
+        Document doc = Jsoup.parse(html);
+        final String url = "file:///.";
+        doc.setBaseUri(url);
+        Adis.AccountPageReturn apr = adis.parseAccount(doc);
+        System.out.printf("alink = %s%n", apr.alink);
+        for (String[] rlink : apr.rlinks) {
+            assertTrue(rlink.length == 2);
+            System.out.printf("rlink: %s = %s%n", rlink[0], rlink[1]);
         }
     }
 }
