@@ -1,6 +1,8 @@
 package de.geeksfactory.opacclient.apis;
 
 import org.joda.time.LocalDate;
+import org.joda.time.format.DateTimeFormat;
+import org.joda.time.format.DateTimeFormatter;
 import org.json.JSONException;
 import org.jsoup.Jsoup;
 import org.junit.Test;
@@ -10,8 +12,10 @@ import org.junit.runners.Parameterized;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Locale;
 
 import de.geeksfactory.opacclient.objects.LentItem;
+import de.geeksfactory.opacclient.objects.ReservedItem;
 
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
@@ -25,7 +29,7 @@ public class AdisAccountTest extends BaseHtmlTest {
     }
 
     private static final String[] FILES =
-            new String[]{"tuebingen.html"};
+            new String[]{"tuebingen.html", "stuttgart.html"};
 
     @Parameterized.Parameters(name = "{0}")
     public static Collection<String[]> files() {
@@ -39,7 +43,7 @@ public class AdisAccountTest extends BaseHtmlTest {
     @Test
     public void testParseMediaList() throws OpacApi.OpacErrorException, JSONException {
         String html = readResource("/adis/medialist/" + file);
-        //if (html == null) return; // we may not have all files for all libraries
+        if (html == null) return; // we may not have all files for all libraries
         List<LentItem> media = new ArrayList<>();
         Adis.parseMediaList(Jsoup.parse(html), "", media, false);
         assertTrue(media.size() > 0);
@@ -47,6 +51,24 @@ public class AdisAccountTest extends BaseHtmlTest {
             assertNotNull(item.getDeadline());
             assertTrue(item.getDeadline().isAfter(new LocalDate(2010, 1, 1))); // sensible dates
             assertNotNull(item.getId());
+        }
+    }
+
+    @Test
+    public void testParseReservationList() throws OpacApi.OpacErrorException, JSONException {
+        String html = readResource("/adis/reslist/" + file);
+        if (html == null) return; // we may not have all files for all libraries
+        List<ReservedItem> res = new ArrayList<>();
+        DateTimeFormatter fmt = DateTimeFormat.forPattern("dd.MM.yyyy").withLocale(Locale.GERMAN);
+        String[] rlink = new String[]{"Vormerkungen zeigen oder löschen",
+                "https://opac.sbs.stuttgart.de/aDISWeb/app;" +
+                        "jsessionid=98AAE50B33FC5A0C191319D406D1564E?service=direct/1/POOLM02Q" +
+                        "@@@@@@@@_4B032E00_349DAD80/Tabelle_Z1LW01.cellInternalLink" +
+                        ".directlink&sp=SRGLINK_3&sp=SZM&requestCount=2"};
+        Adis.parseReservationList(Jsoup.parse(html), rlink, true, res, fmt, null);
+        assertTrue(res.size() > 0);
+        for (ReservedItem item : res) {
+            assertNotNull(item.getTitle());
         }
     }
 }
