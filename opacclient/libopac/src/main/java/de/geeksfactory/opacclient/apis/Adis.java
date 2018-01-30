@@ -1336,6 +1336,7 @@ public class Adis extends ApacheBaseApi implements OpacApi {
             parseMediaList(adoc, alink, lent, split_title_author);
             assert (lent.size() == anum);
             form = new ArrayList<>();
+            boolean cancelButton = false;
             for (Element input : adoc.select("input, select")) {
                 if (!"image".equals(input.attr("type"))
                         && !"submit".equals(input.attr("type"))
@@ -1344,9 +1345,17 @@ public class Adis extends ApacheBaseApi implements OpacApi {
                     form.add(new BasicNameValuePair(input.attr("name"), input
                             .attr("value")));
                 }
+                if ("submit".equals(input.attr("type")) &&
+                        "Abbrechen".equals(input.attr("value")) && !cancelButton) {
+                    // Stuttgart: Cancel button instead of toolbar back button
+                    form.add(new BasicNameValuePair(input.attr("name"), input.attr("value")));
+                    cancelButton = true;
+                }
             }
-            form.add(new BasicNameValuePair("$Toolbar_0.x", "1"));
-            form.add(new BasicNameValuePair("$Toolbar_0.y", "1"));
+            if (!cancelButton) {
+                form.add(new BasicNameValuePair("$Toolbar_0.x", "1"));
+                form.add(new BasicNameValuePair("$Toolbar_0.y", "1"));
+            }
             doc = htmlPost(opac_url + ";jsessionid=" + s_sid, form);
         } else {
             assert (anum == 0);
