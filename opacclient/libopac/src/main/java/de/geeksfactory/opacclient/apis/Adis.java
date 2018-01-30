@@ -1103,7 +1103,9 @@ public class Adis extends ApacheBaseApi implements OpacApi {
             }
         }
         form.add(new BasicNameValuePair(media.split("\\|")[0], "on"));
-        form.add(new BasicNameValuePair("textButton$1",
+        // Stuttgart: textButton$0, others: textButton$1
+        form.add(new BasicNameValuePair(
+                doc.select("input[value=Markierte Titel verlängern]").attr("name"),
                 "Markierte Titel verlängern"));
         doc = htmlPost(opac_url + ";jsessionid=" + s_sid, form);
 
@@ -1165,7 +1167,9 @@ public class Adis extends ApacheBaseApi implements OpacApi {
                 form.add(new BasicNameValuePair(input.attr("name"), "on"));
             }
         }
-        form.add(new BasicNameValuePair("textButton$1",
+        // Stuttgart: textButton$0, others: textButton$1
+        form.add(new BasicNameValuePair(
+                doc.select("input[value=Markierte Titel verlängern]").attr("name"),
                 "Markierte Titel verlängern"));
         doc = htmlPost(opac_url + ";jsessionid=" + s_sid, form);
 
