@@ -1638,23 +1638,20 @@ public class Adis extends ApacheBaseApi implements OpacApi {
             searchoptions = doc.select("input[fld=FELD01_1]").first().previousElementSibling()
                                .select("option");
         }
+
+        Set<String> fieldIds = new HashSet<>();
         for (Element opt : searchoptions) {
             // Damit doppelte Optionen nicht mehrfach auftauchen
             // (bei Stadtbücherei Stuttgart der Fall)
-            boolean found = false;
-            for (SearchField f : fields) {
-                if (f.getDisplayName().equals(opt.text())) {
-                    found = true;
-                    break;
-                }
-            }
-            if (!found) {
-                TextSearchField field = new TextSearchField();
-                field.setId(opt.attr("value"));
-                field.setDisplayName(opt.text());
-                field.setHint("");
-                fields.add(field);
-            }
+            if (fieldIds.contains(opt.attr("value"))) continue;
+            
+            TextSearchField field = new TextSearchField();
+            field.setId(opt.attr("value"));
+            field.setDisplayName(opt.text());
+            field.setHint("");
+            fields.add(field);
+
+            fieldIds.add(field.getId());
         }
 
         // Save data so that the search() function knows that this
