@@ -47,6 +47,7 @@
     "Number": "barcode",
     "Number of renewals": "status",
     "R\u00fcckgabe": "returndate",
+    "R\u00fcckgabedatum": "returndate",
     "Status": "status",
     "Strichcode": "barcode",
     "S\u00e4umnisgeb\u00fchr": null,
