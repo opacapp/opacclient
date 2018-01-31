@@ -1252,7 +1252,9 @@ public class Adis extends ApacheBaseApi implements OpacApi {
             }
         }
         form.add(new BasicNameValuePair(media.split("\\|")[0], "on"));
-        form.add(new BasicNameValuePair("textButton$0",
+        // Stuttgart: textButton, others: textButton$0
+        String buttonName = doc.select("input[value=Markierte Titel löschen]").attr("name");
+        form.add(new BasicNameValuePair(!"".equals(buttonName) ? buttonName : "textButton$0",
                 "Markierte Titel löschen"));
         doc = htmlPost(opac_url + ";jsessionid=" + s_sid, form);
 
