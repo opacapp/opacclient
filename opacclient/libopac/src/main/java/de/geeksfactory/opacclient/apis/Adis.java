@@ -105,6 +105,8 @@ public class Adis extends ApacheBaseApi implements OpacApi {
     protected List<NameValuePair> s_pageform;
     protected int s_lastpage;
     protected Document s_reusedoc;
+    protected String s_nextbutton = "$Toolbar_5";
+    protected String s_previousbutton = "$Toolbar_4";
 
     public static Map<String, List<String>> getQueryParams(String url) {
         try {
@@ -541,6 +543,13 @@ public class Adis extends ApacheBaseApi implements OpacApi {
         updatePageform(doc);
         s_lastpage = page;
 
+        String nextButton =
+                doc.select("input[title=nächster], input[title=Vorwärts blättern]").attr("name");
+        String previousButton =
+                doc.select("input[title=nächster], input[title=Rückwärts blättern]").attr("name");
+        if (!nextButton.equals("")) s_nextbutton = nextButton;
+        if (!previousButton.equals("")) s_previousbutton = previousButton;
+
         return new SearchRequestResult(results, total_result_count, page);
     }
 
@@ -581,12 +590,12 @@ public class Adis extends ApacheBaseApi implements OpacApi {
             }
             int p;
             if (page > s_lastpage) {
-                nvpairs.add(new BasicNameValuePair("$Toolbar_5.x", "1"));
-                nvpairs.add(new BasicNameValuePair("$Toolbar_5.y", "1"));
+                nvpairs.add(new BasicNameValuePair(s_nextbutton + ".x", "1"));
+                nvpairs.add(new BasicNameValuePair(s_nextbutton + ".y", "1"));
                 p = s_lastpage + 1;
             } else {
-                nvpairs.add(new BasicNameValuePair("$Toolbar_4.x", "1"));
-                nvpairs.add(new BasicNameValuePair("$Toolbar_4.y", "1"));
+                nvpairs.add(new BasicNameValuePair(s_previousbutton + ".x", "1"));
+                nvpairs.add(new BasicNameValuePair(s_previousbutton + ".y", "1"));
                 p = s_lastpage - 1;
             }
 
