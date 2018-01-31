@@ -14,6 +14,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Locale;
 
+import de.geeksfactory.opacclient.i18n.DummyStringProvider;
 import de.geeksfactory.opacclient.objects.LentItem;
 import de.geeksfactory.opacclient.objects.ReservedItem;
 
@@ -29,7 +30,7 @@ public class AdisAccountTest extends BaseHtmlTest {
     }
 
     private static final String[] FILES =
-            new String[]{"tuebingen.html", "stuttgart.html"};
+            new String[]{"tuebingen.html", "stuttgart.html", "muenchen.html"};
 
     @Parameterized.Parameters(name = "{0}")
     public static Collection<String[]> files() {
@@ -65,7 +66,8 @@ public class AdisAccountTest extends BaseHtmlTest {
                         "jsessionid=98AAE50B33FC5A0C191319D406D1564E?service=direct/1/POOLM02Q" +
                         "@@@@@@@@_4B032E00_349DAD80/Tabelle_Z1LW01.cellInternalLink" +
                         ".directlink&sp=SRGLINK_3&sp=SZM&requestCount=2"};
-        Adis.parseReservationList(Jsoup.parse(html), rlink, true, res, fmt, null);
+        Adis.parseReservationList(Jsoup.parse(html), rlink, true, res, fmt,
+                new DummyStringProvider());
         assertTrue(res.size() > 0);
         for (ReservedItem item : res) {
             assertNotNull(item.getTitle());

@@ -1486,7 +1486,12 @@ public class Adis extends ApacheBaseApi implements OpacApi {
                 }
                 item.setBranch(branch);
 
-                if (rlink[0].contains("Abholbereit")) {
+                if (colmap.containsKey("status")) {
+                    String status = tr.child(colmap.get("status")).text().trim();
+                    if (!"".equals(status)) item.setStatus(status);
+                }
+
+                if (rlink[0].contains("Abholbereit") || rlink[0].contains("Bereitstellung")) {
                     // Abholbereite Bestellungen
                     item.setStatus("bereit");
                     if (tr.child(0).text().trim().length() >= 10) {
