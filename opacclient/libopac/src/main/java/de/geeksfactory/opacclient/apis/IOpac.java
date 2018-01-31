@@ -293,7 +293,7 @@ public class IOpac extends ApacheBaseApi implements OpacApi {
             String additionalInfo = "";
             if (colmap.get("info") != null) {
                 Element info = tr.select("td").get(colmap.get("info"));
-                title = info.select("a[title=Details-Info]").text().trim();
+                title = info.select("a[title=Details-Info], a[title=Details-Info1]").text().trim();
                 String authorIn = info.text().substring(0,
                         info.text().indexOf(title));
                 if (authorIn.contains(":")) {
