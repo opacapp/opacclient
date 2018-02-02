@@ -470,11 +470,24 @@ public class IOpac extends ApacheBaseApi implements OpacApi {
         // GET INFORMATION
         Copy copy = new Copy();
 
-        for (Element element : table) {
-            String detail = element.select("td").text().trim()
-                                   .replace("\u00a0", "");
-            String title = element.select("th").text().trim()
-                                  .replace("\u00a0", "");
+        for (Element row : table) {
+            Element titleElem;
+            Element detailElem;
+            if (row.select("> th").size() > 0) {
+                // iOpac < 2.87
+                titleElem = row.select("th").first();
+                detailElem = row.select("td").first();
+            } else if (row.select("> td").size() >= 2) {
+                // iOpac >= 2.87
+                titleElem = row.select("> td").first();
+                detailElem = row.select("> td").get(1);
+            } else {
+                // we don't know what to do
+                continue;
+            }
+
+            String detail = detailElem.text().trim().replace("\u00a0", "");
+            String title = titleElem.text().trim().replace("\u00a0", "");
 
             if (!title.equals("")) {
 
