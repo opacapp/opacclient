@@ -39,7 +39,6 @@ import org.jsoup.select.Elements;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
-import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
@@ -487,20 +486,7 @@ public class TouchPoint extends ApacheBaseApi implements OpacApi {
             // and loan status of the item
 
             // get cover
-            if (tr.select(".cover script").size() > 0) {
-                String js = tr.select(".cover script").first().html();
-                String isbn = matchJSVariable(js, "isbn");
-                String ajaxUrl = matchJSVariable(js, "ajaxUrl");
-                if (!"".equals(isbn) && !"".equals(ajaxUrl)) {
-                    String url = new URL(new URL(opac_url + "/"), ajaxUrl)
-                            .toString();
-                    String coverUrl = httpGet(url + "?isbn=" + isbn
-                            + "&size=small", ENCODING);
-                    if (!"".equals(coverUrl)) {
-                        sr.setCover(coverUrl.replace("\r\n", "").trim());
-                    }
-                }
-            }
+            sr.setCover(findCoverUrl(tr, true));
             // get loan status and media ID
             if (tr.select("div[id^=loanstatus] + script").size() > 0) {
                 String js = tr.select("div[id^=loanstatus] + script").first()
@@ -587,7 +573,7 @@ public class TouchPoint extends ApacheBaseApi implements OpacApi {
 
     private String matchJSVariable(String js, String varName) {
         Pattern patternVar = Pattern.compile("var \\s*" + varName
-                + "\\s*=\\s*\"([^\"]*)\"\\s*;");
+                + "\\s*=\\s*[\"']([^\"']*)[\"']\\s*;");
         Matcher matcher = patternVar.matcher(js);
         if (matcher.find()) {
             return matcher.group(1);
@@ -665,32 +651,7 @@ public class TouchPoint extends ApacheBaseApi implements OpacApi {
 
         DetailedItem result = new DetailedItem();
 
-        if (doc.select("#cover script").size() > 0) {
-            String js = doc.select("#cover script").first().html();
-            String isbn = matchJSVariable(js, "isbn");
-            String ajaxUrl = matchJSVariable(js, "ajaxUrl");
-            if (ajaxUrl == null) {
-                ajaxUrl = matchJSParameter(js, "url");
-            }
-            if (ajaxUrl != null && !"".equals(ajaxUrl)) {
-                if (!"".equals(isbn) && isbn != null) {
-                    String url = new URL(new URL(opac_url + "/"), ajaxUrl)
-                            .toString();
-                    String coverUrl = httpGet(url + "?isbn=" + isbn
-                            + "&size=medium", ENCODING);
-                    if (!"".equals(coverUrl)) {
-                        result.setCover(coverUrl.replace("\r\n", "").trim());
-                    }
-                } else {
-                    String url = new URL(new URL(opac_url + "/"), ajaxUrl)
-                            .toString();
-                    String coverJs = httpGet(url, ENCODING);
-                    result.setCover(matchHTMLAttr(coverJs, "src"));
-                }
-            }
-        }
-
-        result.setTitle(doc.select("h1").first().text());
+        result.setCover(findCoverUrl(doc, false));
 
         if (doc.select("#permalink-link").size() > 0) {
             String href = doc.select("#permalink-link").first().attr("href");
@@ -706,10 +667,16 @@ public class TouchPoint extends ApacheBaseApi implements OpacApi {
         for (Element tr : doc.select(".titleinfo tr")) {
             // Sometimes there is one th and one td, sometimes two tds
             String detailName = tr.select("th, td").first().text().trim();
+            if (detailName.endsWith(":")) {
+                detailName = detailName.substring(0, detailName.length() - 1);
+            }
             String detailValue = tr.select("td").last().text().trim();
             result.addDetail(new Detail(detailName, detailValue));
             if (detailName.contains("ID in diesem Katalog") && result.getId() == null) {
                 result.setId(detailValue);
+            }
+            if (detailName.equals("Titel")) {
+                result.setTitle(detailValue);
             }
         }
         if (result.getDetails().size() == 0 && doc.select("#details").size() > 0) {
@@ -722,6 +689,9 @@ public class TouchPoint extends ApacheBaseApi implements OpacApi {
                     if (in_value) {
                         if (dname.length() > 0 && dval.length() > 0) {
                             result.addDetail(new Detail(dname, dval));
+                            if (dname.equals("Titel")) {
+                                result.setTitle(dval);
+                            }
                         }
                         dname = ((Element) n).text();
                         in_value = false;
@@ -746,6 +716,10 @@ public class TouchPoint extends ApacheBaseApi implements OpacApi {
                 }
             }
 
+        }
+
+        if (result.getTitle() == null) {
+            result.setTitle(doc.select("h1").first().text());
         }
 
         // Copies
@@ -831,6 +805,40 @@ public class TouchPoint extends ApacheBaseApi implements OpacApi {
         }
 
         return result;
+    }
+
+    private String findCoverUrl(Element elem, boolean small) throws IOException {
+        String cover = null;
+        if (elem.select("#cover script, .cover script, .results script").size() > 0) {
+            String js = elem.select("#cover script, .cover script, .results script").first().html();
+            String isbn = matchJSVariable(js, "isbn");
+            String ajaxUrl = matchJSVariable(js, "ajaxUrl");
+            if (ajaxUrl == null) {
+                ajaxUrl = matchJSParameter(js, "url");
+            }
+            if (ajaxUrl != null && !"".equals(ajaxUrl)) {
+                if (!"".equals(isbn) && isbn != null) {
+                    String url = new URL(new URL(opac_url + "/"), ajaxUrl)
+                            .toString();
+                    String coverUrl = httpGet(url + "?isbn=" + isbn
+                            + "&size=" + (small ? "small" : "medium"), ENCODING);
+                    if (!"".equals(coverUrl)) {
+                        cover = coverUrl.replace("\r\n", "").trim();
+                    }
+                } else {
+                    String url = new URL(new URL(opac_url + "/"), ajaxUrl).toString();
+                    String coverJs = httpGet(url, ENCODING);
+                    String coverUrl = matchJSVariable(coverJs, "imgSrc"); // seen in Chemnitz
+                    if (coverUrl != null) {
+                        coverUrl = new URL(new URL(opac_url + "/"), coverUrl).toString();
+                        cover = coverUrl;
+                    } else {
+                        cover = matchHTMLAttr(coverJs, "src");
+                    }
+                }
+            }
+        }
+        return cover;
     }
 
     @Override
