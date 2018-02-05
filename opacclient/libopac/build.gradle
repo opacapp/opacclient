@@ -53,7 +53,7 @@ ext {
     siteUrl = 'https://github.com/opacapp/opacclient'
     gitUrl = 'https://github.com/opacapp/opacclient.git'
 
-    libraryVersion = '5.2.5'
+    libraryVersion = '5.3.0'
 
     developerId = 'opacapp'
     developerName = 'Web Opac App'

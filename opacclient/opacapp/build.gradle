@@ -8,8 +8,8 @@ android {
     defaultConfig {
         minSdkVersion 14
         targetSdkVersion 27
-        versionCode 184
-        versionName "5.2.6"
+        versionCode 185
+        versionName "5.3.0"
         vectorDrawables.useSupportLibrary = true
     }
 
@@ -67,7 +67,7 @@ dependencies {
     compile 'org.joda:joda-convert:1.8'
     compile 'su.j2e:rv-joiner:1.0.6'
     compile 'joda-time:joda-time:2.8.2'
-    compile 'com.squareup.okhttp3:okhttp:3.9.0'
+    compile files("libs/okhttp-3.10.0-SNAPSHOT.jar")
     compile "com.squareup.okhttp3:okhttp-urlconnection:3.9.0"
     compile 'com.squareup.retrofit2:retrofit:2.2.0'
     compile 'com.squareup.retrofit2:converter-moshi:2.1.0'
@@ -86,9 +86,15 @@ dependencies {
     testCompile 'com.squareup.retrofit2:retrofit-mock:2.1.0'
     testCompile 'commons-io:commons-io:2.5'
 
+    compile 'com.squareup.okio:okio:+'
+
     // We don't want to rely on the CommonsWare Maven repo, so we include these libraries as JARs
     compile files('libs/adapter-1.0.1.jar')
     compile files('libs/endless-1.2.3.jar')
+
+    configurations {
+        all*.exclude group: 'com.squareup.okhttp3', module: 'okhttp'
+    }
 }
 
 jacoco {

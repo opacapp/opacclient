@@ -925,7 +925,8 @@ public class SISIS extends ApacheBaseApi implements OpacApi {
         copy_columnmap.put("barcode", 1);
         copy_columnmap.put("branch", 3);
         copy_columnmap.put("status", 4);
-        Elements copy_columns = doc.select("#tab-content .data tr#bg2 th");
+        Element table = doc.select("#tab-content .data").first();
+        Elements copy_columns = table != null ? table.select("tr#bg2 th") : new Elements();
         for (int i = 0; i < copy_columns.size(); i++) {
             Element th = copy_columns.get(i);
             String head = th.text().trim();
@@ -952,7 +953,7 @@ public class SISIS extends ApacheBaseApi implements OpacApi {
                                 "4}) \\(gesamte Vormerkungen: ([0-9]+)\\)$");
         Pattern status_and_barcode = Pattern.compile("^(.*) ([0-9A-Za-z]+)$");
 
-        Elements exemplartrs = doc.select("#tab-content .data tr").not("#bg2");
+        Elements exemplartrs = table != null ? table.select("tr").not("#bg2") : new Elements();
         DateTimeFormatter fmt =
                 DateTimeFormat.forPattern("dd.MM.yyyy").withLocale(Locale.GERMAN);
         for (Element tr : exemplartrs) {

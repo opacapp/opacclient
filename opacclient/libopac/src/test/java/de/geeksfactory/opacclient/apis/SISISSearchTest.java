@@ -30,7 +30,7 @@ public class SISISSearchTest extends BaseHtmlTest {
     }
 
     private static final String[] FILES =
-            new String[]{"berlin_htw.html"};
+            new String[]{"berlin_htw.html", "bremen.html"};
 
     @Parameterized.Parameters(name = "{0}")
     public static Collection<String[]> files() {
@@ -53,6 +53,7 @@ public class SISISSearchTest extends BaseHtmlTest {
         }
         DetailedItem result = SISIS.parseDetail(html1, html2, html3, coverJs, new JSONObject(),
                 new DummyStringProvider());
+        assertTrue(result.getCopies().size() > 0);
         for (Copy copy : result.getCopies()) {
             assertContainsData(copy.getStatus());
             assertNullOrNotEmpty(copy.getBarcode());
@@ -80,6 +81,8 @@ public class SISISSearchTest extends BaseHtmlTest {
         switch (file) {
             case "berlin_htw.html":
                 return "Agile business intelligence";
+            case "bremen.html":
+                return "100% Scooter";
         }
         return null;
     }

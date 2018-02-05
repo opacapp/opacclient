@@ -53,6 +53,7 @@
     "Vorbstellzeitraum": null,
     "Vormerkung bereit bis": "expirationdate",
     "Zweigstelle": "branch",
+    "Zur\u00fcckgelegt bis": "expirationdate",
     "available since:": "availability",
     "bereit bis": "expirationdate",
     "bereit seit": "availability",

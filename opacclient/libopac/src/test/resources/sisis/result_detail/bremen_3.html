@@ -1,0 +1,656 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!-- START jsp/common/metaHeader.jsp -->
+
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xml:lang="de"
+      lang="de"
+>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <meta http-equiv="pragma" content="no-cache"/>
+    <meta http-equiv="expires" content="0"/>
+    <meta http-equiv="cache-control" content="no-cache"/>
+    <link rel="stylesheet" href="/webOPACClient/jsp/common/infoguide.css" type="text/css"/>
+    <link rel="shortcut icon" href="/webOPACClient/images/OCLC.ico"/>
+
+    <!--[if IE 7]>
+    <style type="text/css">
+      #tab-content{margin-top:5px;}
+      select {height:auto;}
+      #searchfield input#f1 {width:10em;}
+
+    </style>
+    <![endif]-->
+
+    <title>
+
+        Stadtbibliothek Bremen - Online-Katalog
+
+    </title>
+
+</head>
+<!-- END of jsp/common/metaHeader.jsp -->
+
+<!-- START jsp/result/HitLayout.jsp -->
+
+
+<body>
+<div id="pageContainer">
+
+
+    <!-- START jsp/common/header.jsp -->
+
+
+    <div id="branding">
+  <span id="logo">
+
+
+
+
+      <img src="/webOPACClient/images/Bremen/logo_stabi.gif" width="160" height="64"
+           alt="Online-Katalog der Stadtbibliothek Bremen"
+           title="Online-Katalog der Stadtbibliothek Bremen"/>
+
+
+  </span>
+        <div class="info">
+            <div>
+                Diese Seite verwendet Cookies.
+                <a href="#" onclick="return cookieHelp('/webOPACClient');">
+                    Weitere Informationen..</a>
+            </div>
+            <div id="timer" class="textrot">&nbsp;</div>
+        </div>
+    </div>
+
+
+    <!-- START jsp/common/timer.jsp -->
+
+
+    <script type="text/javascript" language="javascript">
+
+var timeout=(5 * 60 * 1000)  + new Date().getTime();
+timeout-=2000;
+
+var mesg="Diese Sitzung läuft in %VAR% Sek. ab!";
+var toFront=false;
+
+if(mesg.length <= 0 || mesg.indexOf("???") >= 0)
+	mesg="Diese Sitzung läuft in %VAR% Sek. ab!";
+ticker();
+
+function ticker()
+{
+  var timeoutID;
+  var s;
+  var t=timeout - new Date().getTime();
+  t=(t<0)?0:Math.round(t/1000);
+  s=""+ ((t>60)?"":t.toFixed(0));
+ 	if(t <= 60)
+ 	{
+ 		if(toFront == false)
+ 		{
+ 			toFront=true;
+ 			window.focus();
+ 		}
+ 		var msg = mesg.replace("%VAR%", s);
+    document.getElementById("timer").innerHTML = msg;
+ 	}
+  if(t == 0)
+  {
+    window.clearTimeout(timeoutID);
+    window.location.replace("/webOPACClient/jsp/common/timeout.jsp");
+  }
+  else
+    timeoutID = window.setTimeout("ticker()",(t>60) ? 6000 : 1000);
+}
+
+    </script>
+
+
+    <!-- END of jsp/common/timer.jsp -->
+    <!-- END of jsp/common/header.jsp -->
+
+
+    <div id="mainnav">
+
+
+        <!-- START jsp/navigation/mainNavi.jsp -->
+
+
+        <!-- Actual Tiles Context 755 -->
+
+        <ul>
+
+
+            <li id="current">
+                <div id="active">Suche</div>
+                <ul>
+
+
+                    <li>
+                        <a href="/webOPACClient/search.do?methodToCall=switchSearchPage&amp;SearchType=1"
+                           title="Einfache Suche">Einfache Suche</a>
+                    </li>
+
+
+                    <li>
+                        <a href="/webOPACClient/search.do?methodToCall=switchSearchPage&amp;SearchType=2"
+                           title="Erweiterte Suche">Erweiterte Suche</a>
+                    </li>
+
+
+                    <li>
+                        <a href="/webOPACClient/searchHistory.do?methodToCall=showHistory"
+                           title="Suchhistorie">Suchhistorie</a>
+                    </li>
+
+
+                    <li>
+                        <a href="/webOPACClient/hitList.do?methodToCall=backToPrimaryHitList"
+                           title="Suchergebnis">Suchergebnis</a>
+                    </li>
+
+
+                    <li id="current2">Detailanzeige</li>
+
+
+                </ul>
+            </li>
+
+
+            <li><a href="/webOPACClient/memorizelist.do?methodToCall=show"
+                   title="Merkliste">Merkliste</a></li>
+
+
+            <li><a href="/webOPACClient/userAccount.do?methodToCall=show&amp;type=1"
+                   title="Mein Konto">Mein Konto</a></li>
+
+
+            <li><a href="/webOPACClient/additional.do?methodToCall=show"
+                   title="weitere Angebote">weitere Angebote</a></li>
+
+
+        </ul>
+        <!-- END of jsp/navigation/mainNavi.jsp -->
+
+
+        <!-- START jsp/navigation/loginnavi.jsp -->
+
+        <div id="login">
+
+            <style type="text/css">#login {margin-top:-1.4em;}</style>
+
+
+            <a href="https://opac.stadtbibliothek-bremen.de/webOPACClient/loginpage.do?methodToCall=showLogin"
+               title="Anmelden">Anmelden</a>
+            <div>(auch am eMedien-Portal)</div>
+
+
+        </div>
+        <!-- END of jsp/navigation/loginnavi.jsp -->
+    </div>
+    <br class="cleaner"/>
+
+
+    <!-- START jsp/navigation/bgnavi.jsp -->
+    <script language="javascript" type="text/javascript"
+            src="/webOPACClient/help/help.js">
+    </script>
+
+    <div id="bgmainnav">
+        <div id="nav2">
+            <ul>
+
+
+                <li>
+                    <a href="/webOPACClient/acqrequest.do?methodToCall=show"
+                       title=" Medien vorschlagen">Medien vorschlagen</a>
+                </li>
+
+
+                <li>
+                    <a href="#" onclick="return openHelp('/webOPACClient');"
+                       title="Hilfe">
+                        Hilfe</a>
+                </li>
+
+
+                <li><a href="/webOPACClient/actual.do?methodToCall=show"
+                       title="Neu im Bestand">Neu im Bestand</a></li>
+
+
+            </ul>
+        </div>
+    </div>
+    <!-- END of jsp/navigation/bgnavi.jsp -->
+
+    <br class="cleaner"/>
+
+
+    <!-- START jsp/result/searchinfo.jsp -->
+    <div id="info1">
+
+
+        <strong class="c1">Ihre Suchanfrage</strong>
+        Freie Suche = hello
+
+
+    </div>
+    <!-- END of jsp/result/searchinfo.jsp -->
+
+
+    <br class="cleaner"/>
+    <div id="main">
+        <div id="SOWrap">
+            <div id="middle">
+                <div class="box">
+
+
+                    <!-- START jsp/result/hit.jsp -->
+
+
+                    <div class="box-header">
+
+                        <div class="box-right">
+                            |&#171;
+                            &lt;
+                            <a href="/webOPACClient/singleHit.do?methodToCall=showHit&amp;identifier=-1_S_IG.107.4935&amp;curPos=2">&gt;</a>
+                            <a href="/webOPACClient/singleHit.do?methodToCall=showHit&amp;identifier=-1_S_IG.107.4935&amp;curPos=170">&#187;|</a>
+
+                        </div>
+
+
+                        <h2>lokale Datenbank (1/170)</h2>
+
+
+                    </div>
+                    <div class="box-container">
+
+
+                        <!-- START jsp/result/teaser.jsp -->
+                        <table class="data" style="width:100%">
+
+
+                            <tr>
+                                <td>
+
+
+                                    <strong>100% Scooter
+
+                                    </strong><br/>
+
+
+                                    25 years wild & wicked'<br/><br/>
+
+
+                                    <strong class="c2">Verlagsort, Verlag, Jahr:</strong> Hamburg, Sheffield Tunes/Kontor Records GmbH, [2018]<br/>
+
+
+                                    <strong class="c2">Umfang:</strong>
+                                    3 CDs<br/>
+
+
+                                    <strong class="c2">Signatur:</strong>
+                                    CD Pop Scoo<br/>
+
+
+                                    <strong class="c2">Interessenkreis:</strong>
+                                    <a href='/webOPACClient/search.do?methodToCall=quickSearch&amp;Kateg=1001&amp;Content=Popmusik'>Popmusik</a><br/>
+
+
+                                    <div id="bibtip_id" style="display:none">
+                                        952774807
+                                    </div>
+
+
+                                    <div id="bibtip_shorttitle" style="display:none">
+                                        100% Scooter ([2018])
+                                    </div>
+
+                                    <div style="display:none" id="bibtip_reclist"></div>
+
+
+                                    <!-- START jsp/result/ncipitemstatus.jsp -->
+
+
+                                    <p>&nbsp;</p>
+
+
+                                    <a href="/webOPACClient/memorizeHitList.do?methodToCall=addToMemorizeList&amp;curPos=1&amp;forward=singlehit&amp;identifier=-1_S_IG.107.4935"
+                                       title="in die Merkliste">in die Merkliste</a>
+
+
+                                </td>
+
+                                <td>
+                                    <div id="cover">
+
+
+                                        <div id="-1_1" class="cover">
+                                            &nbsp;
+                                        </div>
+
+
+                                    </div>
+                                </td>
+
+                            </tr>
+                        </table>
+
+                        <!-- END of jsp/result/teaser.jsp -->
+
+                    </div>
+                    <script language="javascript" type="text/javascript">
+ setHelp("trefferliste", "");
+
+                    </script>
+
+                    <!-- END of jsp/result/hit.jsp -->
+                </div>
+                <br/>
+
+
+                <!-- START jsp/result/singleHitTabNavi.jsp -->
+                <div id="tab">
+                    <ul>
+
+
+                        <li id="tabExemplare">
+                            <div id="labelExemplare">
+
+
+                                <a href="/webOPACClient/singleHit.do?methodToCall=activateTab&amp;tab=showExemplarActive"
+                                   title="Exemplare">
+                                    Exemplare
+                                </a>
+
+                            </div>
+                        </li>
+
+
+                        <li id="tabAvailability">
+                            <div id="labelAvailability">
+
+
+                                <a href="/webOPACClient/singleHit.do?methodToCall=activateTab&amp;tab=showAvailabilityActive"
+                                   title="Vormerkung (1,- Euro)">
+                                    Vormerkung (1,- Euro)
+                                </a>
+
+                            </div>
+                        </li>
+
+
+                        <li id="tabTitle">
+                            <div id="labelTitle">
+
+
+                                <a href="/webOPACClient/singleHit.do?methodToCall=activateTab&amp;tab=showTitleActive"
+                                   title="mehr zum Titel">
+                                    mehr zum Titel
+                                </a>
+
+                            </div>
+                        </li>
+
+
+                    </ul>
+                </div>
+                <!-- END of jsp/result/singleHitTabNavi.jsp -->
+
+                <div class="cleaner"></div>
+
+
+                <!-- START jsp/result/exemplarinfo.jsp -->
+
+                <script language="javascript" type="text/javascript">
+  m_id=document.getElementById("labelExemplare");
+  if(m_id != null)
+  {
+    m_id.innerHTML='Exemplare';
+    m_id.id="active1";
+
+    m_id=document.getElementById("tabExemplare");
+    m_id.id="current1";
+  }
+
+                </script>
+                <div id="tab-content">
+
+                    <table class="data" style="width:100%">
+                        <tr id="bg2">
+                            <th></th>
+                            <th scope="col" class="left">
+                                Signatur
+                                <br/>
+
+                            </th>
+                            <th scope="col" class="left">
+                                Zweigstelle
+                                <br/>
+
+                            </th>
+                            <th scope="col" class="left">
+                                Mediennummer
+                                <br/>
+
+                            </th>
+                            <th scope="col" class="left">
+                                Status
+                            </th>
+                        </tr>
+
+
+                        <tr>
+                            <td>
+
+                            </td>
+                            <td>
+                                J CD Pop Scoo
+                                <br/>
+
+                            </td>
+                            <td>
+                                10-Zentralbibliothek / 3.OG Kinder/Multimedia
+                                <br/>
+
+                            </td>
+                            <td>
+                                1698403478
+                                <br/>
+
+                            </td>
+                            <td>
+                                <div><a class="tt"
+                                        href="/webOPACClient/availability.do?methodToCall=doVormerkung&amp;mednr=1698403478&amp;katkey=952774807&amp;title=100%25+Scooter&amp;author=&amp;context=null"><b>entliehen bis 30.01.2018 (gesamte Vormerkungen: 0)</b><span>Sie k&ouml;nnen genau dieses Exemplar vormerken.</span></a>
+                                </div>
+
+                            </td>
+                        </tr>
+
+                    </table>
+
+
+                    <br/>
+
+                    <table class="data" style="width:100%">
+                        <tr>
+                            <th colspan="3" class="left">Neuanschaffungen</th>
+                        </tr>
+                        <tr id="bg2">
+                            <th class="left" scope="col">
+                                Status
+                            </th>
+                            <th scope="col" class="left">
+
+                            </th>
+                            <th scope="col" class="left">
+                                Zweigstelle
+                            </th>
+                        </tr>
+
+                        <!--         <tr>
+                            <td>bestellt beim Lieferanten</td>
+                            <td></td>
+                            <td>10-Zentralbibliothek</td>
+                          </tr>
+
+                   -->
+                        <tr>
+                            <td>bestellt beim Lieferanten</td>
+                            <td>
+
+                            </td>
+                            <td>10-Zentralbibliothek</td>
+                        </tr>
+
+                    </table>
+
+
+                </div>
+
+                <!-- END of jsp/result/exemplarinfo.jsp -->
+            </div>
+        </div>
+        <!-- SOWrap -->
+
+        <div id="right">
+
+
+            <!-- START jsp/result/rechtsoben.jsp -->
+
+
+            <div class="box3">
+                <div class="box3-header">
+                    <div class="box3-img"><img src="images/box3-right.gif" width="8" height="8"
+                                               alt=""/></div>
+                    <h2>weitere Optionen</h2>
+                </div>
+                <div class="box3-content">
+                    <p><strong>Suchanfrage</strong><br/>
+                        <a href="/webOPACClient/search.do?methodToCall=start"
+                           title="Suchanfrage &auml;ndern">&auml;ndern</a>
+                    </p>
+
+
+                    <p><strong>Ausgabe</strong><br/>
+
+                        <a href="/webOPACClient/hitOutput.do?methodToCall=show&amp;caller=singlehit"
+                           title="Treffer ausgeben">Treffer ausgeben</a>
+
+
+                    </p>
+
+
+                </div> <!-- box3-content -->
+            </div><!-- box3 -->
+
+            <!-- END of jsp/result/rechtsoben.jsp -->
+
+            <br class="space"/>
+            <!-- filler /jsp/common/empty.jsp -->
+            <br class="space"/>
+
+
+            <!-- START jsp/common/news.jsp -->
+
+
+            <!-- START jsp/news+info/de_755_4.jsp -->
+            <div class="box3">
+                <div class="box3-header">
+                    <div class="box3-img"><img src="images/box3-right.gif" width="8" height="8"
+                                               alt=""/></div>
+                    <h2>Thematische Suche</h2>
+                </div>
+                <p>
+                <div class="box3-content">
+                    Unter <a
+                        href="./singleHit.do?methodToCall=activateTab&tab=showTitleActive">"Mehr zum Titel"</a> können Sie über die Felder Notation, Schlagwort oder Interessenkreis weitere Medien zum Thema finden.
+                </div>
+                </p>
+            </div>
+            <!-- END of jsp/news+info/de_755_4.jsp -->
+            <br class="space"/>
+
+
+            <!-- START jsp/news+info/de_755_1.jsp -->
+            <div class="box3">
+                <div class="box3-header">
+                    <div class="box3-img"><img src="images/box3-right.gif" width="8" height="8"
+                                               alt=""/></div>
+                    <h2>Suchhistorie</h2>
+                </div>
+                <p>
+                <div class="box3-content">
+                    <a href="/webOPACClient/searchHistory.do?methodToCall=showHistory">Die letzten Suchergebnisse anzeigen</a>
+                </div>
+                </p>
+            </div>
+            <!-- END of jsp/news+info/de_755_1.jsp -->
+            <br class="space"/>
+
+
+            <!-- START jsp/news+info/de_755_9.jsp -->
+            <div class="box3">
+                <div class="box3-header">
+                    <div class="box3-img"><img src="images/box3-right.gif" width="8" height="8"
+                                               alt=""/></div>
+                    <h2>Digitale Bibliothek</h2>
+                </div>
+                <p>
+                <div class="box3-content">Die Digitale Bibliothek beinhaltet mehr als 1000 Datenbanken, die zu einem großen Teil frei recherchierbar sind.
+                    <br/><a href="https://www.digibib.net/Digibib?SERVICE=SESSION&SUBSERVICE=GUESTLOGIN&LOCATION=478"
+                            target="_blank"><img src="images/infobox/digibib1.png"
+                                                 alt="Hier geht es zur DigiBIB"/></a></div>
+                </p>
+            </div>
+            <!-- END of jsp/news+info/de_755_9.jsp -->
+            <br class="space"/>
+
+
+            <!-- END of jsp/common/news.jsp -->
+        </div>
+
+
+        <!-- right -->
+        <br class="cleaner"/>
+    </div>
+
+
+    <!-- START jsp/common/footer.jsp -->
+
+    <div id="footer">
+
+
+        &nbsp;
+
+
+        <div id="copyright">
+
+            <a href="https://www.stabi-hb.de/Impressum" title="Impressum"
+               target="_blank">Impressum</a>
+            <a href="https://www.stabi-hb.de/Impressum" title="Datenschutzerkl&auml;rung"
+               target="_blank">Datenschutz</a>
+
+
+            Copyright &copy; 2015.&nbsp;Alle Rechte vorbehalten.
+            <img src="/webOPACClient/images/OCLC.jpg" alt="OCLC" title="OCLC" width="54"
+                 height="19"/>
+        </div>
+        <div class="cleaner"></div>
+
+    </div>
+
+    <script type="text/javascript" src="https://recommender.bibtip.de/js/bibtip_stb_hb.js"></script>
+
+    <!-- END of jsp/common/footer.jsp -->
+
+</div>
+</body>
+<!-- END of jsp/result/HitLayout.jsp -->
+<!-- START jsp/common/metaFooter.jsp -->
+</html>
+<!-- END of jsp/common/metaFooter.jsp -->
