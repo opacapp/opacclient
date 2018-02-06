@@ -315,4 +315,11 @@
     <string name="intro_title_2">1000+ Bibliotheken</string>
     <string name="intro_description_2">Diese App unterstützt mehr als 1.000 Bibliotheken im deutschsprachigen Raum und auf der ganzen Welt. Wählen Sie Ihre Bibliothek aus oder schlagen Sie sie vor, falls sie noch nicht auf der Liste ist!</string>
     <string name="no_title">(kein Titel)</string>
+    <string name="info_different_library">Diese Merkliste gehört zu einer anderen Bibliothek! Bitte wechsle zur richtigen Bibliothek.</string>
+    <string name="info_starred_updated">Import abgeschlossen.</string>
+    <string name="export_starred_to_storage">Exportieren</string>
+    <string name="import_starred_from_storage">Importieren</string>
+    <string name="failed_exporting_file">Beim Exportieren der Merkliste ist ein Fehler aufgetreten.</string>
+    <string name="failed_importing_file">Beim Importieren der Merkliste ist ein Fehler aufgetreten.</string>
+    <string name="failed_importing_file_picker_app">Um eine Datei zum Importieren auswählen zu können, muss eine kompatible Dateiexplorer-App installiert sein.</string>
 </resources>
