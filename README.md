@@ -81,4 +81,4 @@ Many thanks go to our contributors, including:
 * [Caroline Ho](https://github.com/carolineh101)
 * [Ceasar Jimenez](https://github.com/ceasarj)
 * [Nico Puhlmann](https://github.com/NPuhlmann)
-* [JustyAnyOther](https://github.com/JustyAnOther)
+* [JustyAnOther](https://github.com/JustyAnOther)
