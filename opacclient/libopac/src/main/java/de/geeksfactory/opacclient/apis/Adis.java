@@ -615,6 +615,8 @@ public class Adis extends ApacheBaseApi implements OpacApi {
 
         if (id == null && s_reusedoc != null) {
             doc = s_reusedoc;
+        } else if (id.startsWith("http")) {
+            return parseResult(id, htmlGet(id));
         } else {
             nvpairs = s_pageform;
             int i = 0;
@@ -758,8 +760,12 @@ public class Adis extends ApacheBaseApi implements OpacApi {
             }
         }
 
-        res.setId(""); // null would be overridden by the UI, because there _is_
-        // an id,< we just can not use it.
+        if (doc.select("a:contains(Zitierlink)").size() > 0) {
+            res.setId(doc.select("a:contains(Zitierlink)").attr("href"));
+        } else {
+            res.setId(""); // null would be overridden by the UI, because there _is_
+            // an id,< we just can not use it.
+        }
         return res;
     }
 
@@ -1770,8 +1776,11 @@ public class Adis extends ApacheBaseApi implements OpacApi {
 
     @Override
     public String getShareUrl(String id, String title) {
-        // TODO Auto-generated method stub
-        return null;
+        if (id.startsWith("http")) {
+            return id;
+        } else {
+            return null;
+        }
     }
 
     @Override
