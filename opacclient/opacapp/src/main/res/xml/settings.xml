@@ -21,6 +21,11 @@
             android:key="email"
             android:summary="@string/email_address_description"
             android:title="@string/email_address"/>
+
+        <CheckBoxPreference
+            android:defaultValue="true"
+            android:key="on_data_load_covers"
+            android:title="Load covers while on mobile data"/>
     </PreferenceCategory>
     <PreferenceCategory android:title="@string/notifications">
         <CheckBoxPreference

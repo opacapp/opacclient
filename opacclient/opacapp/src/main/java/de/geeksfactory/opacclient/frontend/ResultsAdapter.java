@@ -22,7 +22,9 @@
 package de.geeksfactory.opacclient.frontend;
 
 import android.content.Context;
+import android.net.ConnectivityManager;
 import android.support.annotation.DrawableRes;
+import android.support.v4.net.ConnectivityManagerCompat;
 import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -44,6 +46,7 @@ import de.geeksfactory.opacclient.networking.CoverDownloadTask;
 import de.geeksfactory.opacclient.objects.CoverHolder;
 import de.geeksfactory.opacclient.objects.SearchResult;
 import de.geeksfactory.opacclient.objects.SearchResult.MediaType;
+import de.geeksfactory.opacclient.storage.PreferenceDataSource;
 import de.geeksfactory.opacclient.utils.BitmapUtils;
 
 public class ResultsAdapter extends ArrayAdapter<SearchResult> {
@@ -150,10 +153,16 @@ public class ResultsAdapter extends ArrayAdapter<SearchResult> {
 
         ImageView ivType = (ImageView) view.findViewById(R.id.ivType);
 
+        PreferenceDataSource pds = new PreferenceDataSource(getContext());
+        ConnectivityManager connMgr =
+                (ConnectivityManager) getContext().getSystemService(Context.CONNECTIVITY_SERVICE);
+
         if (item.getCoverBitmap() != null) {
             ivType.setImageBitmap(BitmapUtils.bitmapFromBytes(item.getCoverBitmap()));
             ivType.setVisibility(View.VISIBLE);
-        } else if (item.getCover() != null) {
+        } else if ((pds.isLoadCoversOnDataPreferenceSet()
+                || !ConnectivityManagerCompat.isActiveNetworkMetered(connMgr))
+                && item.getCover() != null) {
             LoadCoverTask lct = new LoadCoverTask(ivType, item);
             lct.execute();
             ivType.setImageResource(R.drawable.ic_loading);
