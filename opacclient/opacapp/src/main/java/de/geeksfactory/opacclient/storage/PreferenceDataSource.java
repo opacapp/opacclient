@@ -20,8 +20,12 @@ package de.geeksfactory.opacclient.storage;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.net.ConnectivityManager;
+import android.preference.Preference;
 import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
+import android.support.v7.preference.CheckBoxPreference;
+
 
 import org.joda.time.DateTime;
 
@@ -95,5 +99,9 @@ public class PreferenceDataSource {
 
     public void setLastLibraryConfigUpdateVersion(int lastUpdateVersion) {
         sp.edit().putInt(LAST_LIBRARY_CONFIG_UPDATE_VERSION, lastUpdateVersion).apply();
+    }
+
+    public boolean isLoadCoversOnDataPreferenceSet() {
+        return sp.getBoolean("on_data_load_covers", true);
     }
 }

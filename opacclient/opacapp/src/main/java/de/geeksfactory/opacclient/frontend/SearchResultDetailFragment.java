@@ -9,6 +9,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.Color;
+import android.net.ConnectivityManager;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
@@ -18,6 +19,7 @@ import android.print.PrintDocumentAdapter;
 import android.print.PrintManager;
 import android.support.design.widget.AppBarLayout;
 import android.support.v4.app.Fragment;
+import android.support.v4.net.ConnectivityManagerCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.graphics.Palette;
 import android.support.v7.widget.LinearLayoutManager;
@@ -75,6 +77,7 @@ import de.geeksfactory.opacclient.objects.Detail;
 import de.geeksfactory.opacclient.objects.DetailedItem;
 import de.geeksfactory.opacclient.objects.SearchResult;
 import de.geeksfactory.opacclient.storage.AccountDataSource;
+import de.geeksfactory.opacclient.storage.PreferenceDataSource;
 import de.geeksfactory.opacclient.storage.StarDataSource;
 import de.geeksfactory.opacclient.ui.AppCompatProgressDialog;
 import de.geeksfactory.opacclient.ui.WhitenessUtils;
@@ -1295,8 +1298,17 @@ public class SearchResultDetailFragment extends Fragment
 
             item = result;
 
+            PreferenceDataSource pds = new PreferenceDataSource(getContext());
+            ConnectivityManager connMgr =
+                    (ConnectivityManager) getContext().getSystemService(Context.CONNECTIVITY_SERVICE);
+
             if (item.getCover() != null && item.getCoverBitmap() == null) {
-                new LoadCoverTask(item, collapsingToolbar.getWidth(), collapsingToolbar.getHeight()).execute();
+                if ((pds.isLoadCoversOnDataPreferenceSet()
+                        || !ConnectivityManagerCompat.isActiveNetworkMetered(connMgr))) {
+                    new LoadCoverTask(item, collapsingToolbar.getWidth(),
+                            collapsingToolbar.getHeight()).execute();
+                }
+
             } else {
                 displayCover();
             }
