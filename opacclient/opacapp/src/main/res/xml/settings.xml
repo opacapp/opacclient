@@ -25,7 +25,9 @@
         <CheckBoxPreference
             android:defaultValue="true"
             android:key="on_data_load_covers"
-            android:title="Load covers while on mobile data"/>
+            android:title="@string/load_covers_mobile_data"
+            android:summaryOn="@string/load_covers_mobile_data_on"
+            android:summaryOff="@string/load_covers_mobile_data_off"/>
     </PreferenceCategory>
     <PreferenceCategory android:title="@string/notifications">
         <CheckBoxPreference
