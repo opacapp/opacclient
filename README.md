@@ -1,6 +1,7 @@
 ![Screenshot](https://raw.githubusercontent.com/opacapp/opacclient/master/img/github_banner.png)
 
 Web Opac App [![Build Status](https://travis-ci.org/opacapp/opacclient.svg?branch=master)](https://travis-ci.org/opacapp/opacclient)
+[![Open Source Helpers](https://www.codetriage.com/opacapp/opacclient/badges/users.svg)](https://www.codetriage.com/opacapp/opacclient)
 ============
 
 Android client for public libraries. See [opacapp.net](http://opacapp.net) for details.
@@ -29,9 +30,9 @@ Supports web catalogues of different library system vendors, see our [website](h
 
 Java Library (`libopac`)
 ------------------------
-The underlying code that the app uses to connect to the different supported OPAC software systems and parse 
-data from them is available as a separate library called `libopac`. It can also be used in ordinary Java 
-projects because it does not depend on Android APIs. More information about the library can be found in 
+The underlying code that the app uses to connect to the different supported OPAC software systems and parse
+data from them is available as a separate library called `libopac`. It can also be used in ordinary Java
+projects because it does not depend on Android APIs. More information about the library can be found in
 [its own README file](https://github.com/opacapp/opacclient/blob/master/opacclient/libopac/README.md).
 
 Library configuration files
