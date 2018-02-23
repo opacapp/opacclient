@@ -1509,21 +1509,14 @@ public class SISIS extends ApacheBaseApi implements OpacApi {
         Document doc = Jsoup.parse(html);
         doc.setBaseUri(opac_url);
         parse_medialist(medien, doc, 1, data);
-        if (doc.select(".box-right").size() > 0) {
-            for (Element link : doc.select(".box-right").first().select("a")) {
-                String href = link.attr("abs:href");
-                Map<String, String> hrefq = getQueryParamsFirst(href);
-                if (hrefq == null || hrefq.get("methodToCall") == null) {
-                    continue;
-                }
-                if (hrefq.get("methodToCall").equals("pos")
-                        && !"1".equals(hrefq.get("anzPos"))) {
-                    html = httpGet(href, ENCODING);
-                    parse_medialist(medien, Jsoup.parse(html),
-                            Integer.parseInt(hrefq.get("anzPos")), data);
-                }
-            }
+
+        // additional pages
+        Map<String, Integer> links = getAccountPageLinks(doc);
+        for (Map.Entry<String, Integer> link : links.entrySet()) {
+            html = httpGet(link.getKey(), ENCODING);
+            parse_medialist(medien, Jsoup.parse(html), link.getValue(), data);
         }
+
         if (doc.select("#label1").size() > 0) {
             resultNum = 0;
             String rNum = doc.select("#label1").first().text().trim()
@@ -1542,20 +1535,12 @@ public class SISIS extends ApacheBaseApi implements OpacApi {
         doc.setBaseUri(opac_url);
         parse_reslist("6", reserved, doc, 1);
         Elements label6 = doc.select("#label6");
-        if (doc.select(".box-right").size() > 0) {
-            for (Element link : doc.select(".box-right").first().select("a")) {
-                String href = link.attr("abs:href");
-                Map<String, String> hrefq = getQueryParamsFirst(href);
-                if (hrefq == null || hrefq.get("methodToCall") == null) {
-                    break;
-                }
-                if (hrefq.get("methodToCall").equals("pos")
-                        && !"1".equals(hrefq.get("anzPos"))) {
-                    html = httpGet(href, ENCODING);
-                    parse_reslist("6", reserved, Jsoup.parse(html),
-                            Integer.parseInt(hrefq.get("anzPos")));
-                }
-            }
+
+        // additional pages
+        links = getAccountPageLinks(doc);
+        for (Map.Entry<String, Integer> link : links.entrySet()) {
+            html = httpGet(link.getKey(), ENCODING);
+            parse_reslist("6", reserved, Jsoup.parse(html), link.getValue());
         }
 
         // Prebooked media ("Vormerkungen")
@@ -1564,21 +1549,14 @@ public class SISIS extends ApacheBaseApi implements OpacApi {
         doc = Jsoup.parse(html);
         doc.setBaseUri(opac_url);
         parse_reslist("7", reserved, doc, 1);
-        if (doc.select(".box-right").size() > 0) {
-            for (Element link : doc.select(".box-right").first().select("a")) {
-                String href = link.attr("abs:href");
-                Map<String, String> hrefq = getQueryParamsFirst(href);
-                if (hrefq == null || hrefq.get("methodToCall") == null) {
-                    break;
-                }
-                if (hrefq.get("methodToCall").equals("pos")
-                        && !"1".equals(hrefq.get("anzPos"))) {
-                    html = httpGet(href, ENCODING);
-                    parse_reslist("7", reserved, Jsoup.parse(html),
-                            Integer.parseInt(hrefq.get("anzPos")));
-                }
-            }
+
+        // additional pages
+        links = getAccountPageLinks(doc);
+        for (Map.Entry<String, Integer> link : links.entrySet()) {
+            html = httpGet(link.getKey(), ENCODING);
+            parse_reslist("7", reserved, Jsoup.parse(html), link.getValue());
         }
+
         if (label6.size() > 0 && doc.select("#label7").size() > 0) {
             resultNum = 0;
             String rNum = label6.text().trim()
@@ -1624,6 +1602,24 @@ public class SISIS extends ApacheBaseApi implements OpacApi {
         res.setLent(medien);
         res.setReservations(reserved);
         return res;
+    }
+
+    static Map<String, Integer> getAccountPageLinks(Document doc) {
+        Map<String, Integer> links = new HashMap<>();
+        if (doc.select(".box-right").size() > 0) {
+            for (Element link : doc.select(".box-right").first().select("a")) {
+                String href = link.attr("abs:href");
+                Map<String, String> hrefq = getQueryParamsFirst(href);
+                if (hrefq == null || hrefq.get("methodToCall") == null) {
+                    break;
+                }
+                if (hrefq.get("methodToCall").equals("pos")
+                        && !"1".equals(hrefq.get("anzPos"))) {
+                    links.put(href, Integer.parseInt(hrefq.get("anzPos")));
+                }
+            }
+        }
+        return links;
     }
 
     @Override

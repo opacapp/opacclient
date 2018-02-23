@@ -84,7 +84,7 @@ public class ReminderHelper {
                 // this case.
                 continue;
             }
-            if (item.getDownloadData() != null && item.getDownloadData().startsWith("http")) {
+            if (item.getDownloadData() != null && item.getDownloadData().contains(":")) {
                 // Don't remind people of bringing back ebooks, because ... uhm...
                 continue;
             }

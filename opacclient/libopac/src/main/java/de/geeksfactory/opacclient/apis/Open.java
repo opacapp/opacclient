@@ -710,6 +710,9 @@ public class Open extends OkHttpBaseApi implements OpacApi {
                 }
             } else {
                 value = detail.select("span, a").get(1).text();
+                if (value.contains("hier klicken") && detail.select("a").size() > 0) {
+                    value = value + " " + detail.select("a").first().attr("href");
+                }
             }
             item.addDetail(new Detail(name, value));
         }

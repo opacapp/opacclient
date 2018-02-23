@@ -412,10 +412,11 @@ public class StarredFragment extends Fragment implements
                     JSONArray items = savedList.getJSONArray(JSON_STARRED_LIST);
                     for (int i = 0; i < items.length(); i++) {
                         JSONObject entry = items.getJSONObject(i);
-                        if (!dataSource
-                                .isStarred(bib,
-                                        entry.getString(JSON_ITEM_MNR))) { //disallow dupes
-                            dataSource.star(entry.getString(JSON_ITEM_MNR),
+                        if (entry.has(JSON_ITEM_MNR) &&
+                                !dataSource.isStarred(bib, entry.getString(JSON_ITEM_MNR)) ||
+                                !entry.has(JSON_ITEM_MNR) && !dataSource.isStarredTitle(bib,
+                                        entry.getString(JSON_ITEM_TITLE))) { //disallow dupes
+                            dataSource.star(entry.optString(JSON_ITEM_MNR),
                                     entry.getString(JSON_ITEM_TITLE), bib,
                                     SearchResult.MediaType
                                             .valueOf(entry.getString(JSON_ITEM_MEDIATYPE)));

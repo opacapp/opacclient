@@ -2,6 +2,7 @@ package de.geeksfactory.opacclient.apis;
 
 import org.json.JSONObject;
 import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
@@ -9,6 +10,7 @@ import org.junit.runners.Parameterized;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 
 import de.geeksfactory.opacclient.objects.LentItem;
 
@@ -24,7 +26,7 @@ public class SISISAccountTest extends BaseHtmlTest {
     }
 
     private static final String[] FILES =
-            new String[]{"dresden.html", "witten.html"};
+            new String[]{"dresden.html", "witten.html", "erfurt.html"};
 
     @Parameterized.Parameters(name = "{0}")
     public static Collection<String[]> files() {
@@ -41,7 +43,8 @@ public class SISISAccountTest extends BaseHtmlTest {
         if (html == null) return; // we may not have all files for all libraries
 
         List<LentItem> media = new ArrayList<LentItem>();
-        SISIS.parse_medialist(media, Jsoup.parse(html), 0, new JSONObject());
+        Document doc = Jsoup.parse(html);
+        SISIS.parse_medialist(media, doc, 0, new JSONObject());
         if (!file.equals("dresden.html")) {
             assertTrue(media.size() > 0);
         }
@@ -50,6 +53,16 @@ public class SISISAccountTest extends BaseHtmlTest {
         for (LentItem item : media) {
             assertNotNull(item.getTitle());
             assertNotNull(item.getDeadline());
+        }
+
+        Map<String, Integer> links = SISIS.getAccountPageLinks(doc);
+        if (file.equals("erfurt.html")) {
+            // here we have two pages
+            assertTrue(links.size() == 1);
+            assertTrue(links.get(
+                    "https://opac.erfurt.de/webOPACClient/userAccount" +
+                            ".do?methodToCall=pos&accountTyp=AUSLEIHEN&anzPos=11")
+                            .equals(11));
         }
     }
 }

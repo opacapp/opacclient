@@ -72,7 +72,10 @@ public class LentAdapter extends AccountAdapter<LentItem, LentAdapter.ViewHolder
 
             // Color codes for return dates
             if (item.getDeadline() != null) {
-                if (item.getDeadline().equals(LocalDate.now()) ||
+                if (item.getDownloadData() != null) {
+                    vStatusColor.setBackgroundColor(
+                            ContextCompat.getColor(context, R.color.account_downloadable));
+                } else if (item.getDeadline().equals(LocalDate.now()) ||
                         item.getDeadline().isBefore(LocalDate.now())) {
                     vStatusColor.setBackgroundColor(
                             ContextCompat.getColor(context, R.color.date_overdue));
@@ -80,9 +83,6 @@ public class LentAdapter extends AccountAdapter<LentItem, LentAdapter.ViewHolder
                         tolerance) {
                     vStatusColor.setBackgroundColor(
                             ContextCompat.getColor(context, R.color.date_warning));
-                } else if (item.getDownloadData() != null) {
-                    vStatusColor.setBackgroundColor(
-                            ContextCompat.getColor(context, R.color.account_downloadable));
                 } else {
                     vStatusColor.setBackgroundResource(0);
                 }
