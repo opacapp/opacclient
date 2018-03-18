@@ -24,6 +24,7 @@ package de.geeksfactory.opacclient.storage;
 import android.app.Activity;
 import android.content.ContentValues;
 import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -33,14 +34,18 @@ import java.util.Map.Entry;
 import de.geeksfactory.opacclient.OpacClient;
 import de.geeksfactory.opacclient.objects.SearchResult;
 import de.geeksfactory.opacclient.objects.Starred;
+import de.geeksfactory.opacclient.objects.Tag;
 import de.geeksfactory.opacclient.searchfields.SearchField;
 
 public class StarDataSource {
 
+    private SQLiteDatabase database;
     private Activity context;
 
     public StarDataSource(Activity context) {
         this.context = context;
+        StarDatabase dbHelper = StarDatabase.getInstance(context);
+        database = dbHelper.getWritableDatabase();
     }
 
     public static Starred cursorToItem(Cursor cursor) {
@@ -200,6 +205,44 @@ public class StarDataSource {
                                    .getStarProviderStarUri(),
                            cv, StarDatabase.STAR_WHERE_LIB,
                            new String[]{entry.getKey()});
+        }
+    }
+
+    public static Tag cursorToTag(Cursor cursor) {
+        Tag tag = new Tag();
+        tag.setId(cursor.getInt(0));
+        tag.setTagName(cursor.getString(1));
+        return tag;
+    }
+
+    public long addTag(Starred item, Tag tag) {
+        ContentValues values = new ContentValues();
+        values.put("tag", tag.getTagName());
+        database.insert(StarDatabase.TAGS_TABLE, null, values);
+        values = new ContentValues();
+        values.put("tag", tag.getId());
+        values.put("item", item.getId());
+        return database.insert(StarDatabase.STAR_TAGS_TABLE, null, values);
+    }
+
+    public boolean hasTag(Tag tag) {
+        if (tag == null) {
+            return false;
+        }
+        String[] selA = {tag.getTagName()};
+        Cursor cursor = database.query(StarDatabase.STAR_TAGS_TABLE, null, null,
+                selA, null, null, null);
+        int c = cursor.getCount();
+        cursor.close();
+        return (c > 0);
+    }
+
+    public void removeTag(Tag tag) {
+        String[] selA = {"" + tag.getId()};
+        database.delete(StarDatabase.STAR_TAGS_TABLE, "id=?", selA);
+        if (!hasTag(tag)) {
+            selA = new String[]{"" + tag.getTagName()};
+            database.delete(StarDatabase.TAGS_TABLE, "tag=?", selA);
         }
     }
 }

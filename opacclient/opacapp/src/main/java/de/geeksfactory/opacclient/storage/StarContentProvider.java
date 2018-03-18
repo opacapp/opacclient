@@ -73,7 +73,7 @@ public class StarContentProvider extends ContentProvider {
 
     @Override
     public boolean onCreate() {
-        database = new StarDatabase(getContext());
+        database = StarDatabase.getInstance(getContext());
         return true;
     }
 
