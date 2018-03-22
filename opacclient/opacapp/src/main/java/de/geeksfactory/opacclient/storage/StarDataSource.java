@@ -215,12 +215,13 @@ public class StarDataSource {
         return tag;
     }
 
-    public long addTag(Starred item, Tag tag) {
+    public long addTag(Starred item, String tagName) {
         ContentValues values = new ContentValues();
-        values.put("tag", tag.getTagName());
+        values.put("tag", tagName);
         database.insert(StarDatabase.TAGS_TABLE, null, values);
+
         values = new ContentValues();
-        values.put("tag", tag.getId());
+        values.put("tag", getTagByTagName(tagName).getId());
         values.put("item", item.getId());
         return database.insert(StarDatabase.STAR_TAGS_TABLE, null, values);
     }
@@ -244,5 +245,20 @@ public class StarDataSource {
             selA = new String[]{"" + tag.getTagName()};
             database.delete(StarDatabase.TAGS_TABLE, "tag=?", selA);
         }
+    }
+
+    public Tag getTagByTagName(String tagName) {
+        String[] selA = {tagName};
+        Cursor cursor = database.query(StarDatabase.TAGS_TABLE, StarDatabase.TAGS_COLUMNS, "tag = ?",
+                selA, null, null, null);
+        Tag item = null;
+        cursor.moveToFirst();
+        if (!cursor.isAfterLast()) {
+            item = cursorToTag(cursor);
+            cursor.moveToNext();
+        }
+        // Make sure to close the cursor
+        cursor.close();
+        return item;
     }
 }

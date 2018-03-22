@@ -48,7 +48,7 @@ public class StarDatabase extends SQLiteOpenHelper {
     public static final String STAR_WHERE_NR_LIB = "bib = ? AND medianr = ?";
     public static final String[] COLUMNS = {"id AS _id", "medianr", "bib",
             "title", "mediatype"};
-    public static final String[] TAGS_COLUMNS = {"id", "tags"};
+    public static final String[] TAGS_COLUMNS = {"id", "tag"};
     public static final String[] STAR_TAGS_COLUMNS = {"tag", "item"};
     private static final String DATABASE_NAME = "starred.db";
     private static final int DATABASE_VERSION = 7; // REPLACE ONUPGRADE IF YOU

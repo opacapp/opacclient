@@ -126,6 +126,7 @@
     <string name="account_city">Library</string>
     <string name="account_delete_confirm">Really delete account?</string>
     <string name="account_select">Select Account</string>
+    <string name="tag_add">Add tag</string>
     <string name="privacy">Privacy</string>
     <string name="nav_hl_library">Library</string>
     <string name="nav_search">Search</string>

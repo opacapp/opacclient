@@ -22,8 +22,10 @@
 package de.geeksfactory.opacclient.frontend;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.ActivityNotFoundException;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
@@ -37,6 +39,7 @@ import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.support.v4.widget.SimpleCursorAdapter;
 import android.text.Html;
+import android.text.InputType;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuInflater;
@@ -46,6 +49,7 @@ import android.view.ViewGroup;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -99,6 +103,7 @@ public class StarredFragment extends Fragment implements
     private int activatedPosition = ListView.INVALID_POSITION;
     private TextView tvWelcome;
     private Starred sItem;
+    private String tagName = "";
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -473,6 +478,13 @@ public class StarredFragment extends Fragment implements
         activatedPosition = position;
     }
 
+    private void addTag(Starred item, String tagName, Cursor cursor) {
+        StarDataSource data = new StarDataSource(getActivity());
+        sItem = item;
+        data.addTag(item, tagName);
+        item.setTag(data.getTagByTagName(tagName));
+    }
+
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
@@ -499,6 +511,7 @@ public class StarredFragment extends Fragment implements
         public void bindView(View view, Context context, Cursor cursor) {
             Starred item = StarDataSource.cursorToItem(cursor);
 
+
             TextView tv = (TextView) view.findViewById(R.id.tvTitle);
             if (item.getTitle() != null) {
                 tv.setText(Html.fromHtml(item.getTitle()));
@@ -512,6 +525,47 @@ public class StarredFragment extends Fragment implements
             } else {
                 ivType.setImageBitmap(null);
             }
+
+            TextView tagView = (TextView) view.findViewById(R.id.tvTag);
+
+//            EditText et = (EditText) view.findViewById(R.id.etvAddTagText);
+            ImageView ivAddTag = (ImageView) view.findViewById(R.id.ivAddTag);
+            ivAddTag.setFocusableInTouchMode(false);
+            ivAddTag.setFocusable(false);
+            ivAddTag.setTag(item);
+
+            ivAddTag.setOnClickListener((View arg0) -> {
+                // Create alert dialog box for entering of tag
+                AlertDialog.Builder builder = new AlertDialog.Builder(context);
+                builder.setTitle("Add tag to " + item.getTitle());
+
+                // Set up the input
+                final EditText input = new EditText(context);
+
+                // Specify the type of input expected
+                input.setInputType(InputType.TYPE_CLASS_TEXT);
+                builder.setView(input);
+
+                // Set up the buttons
+                builder.setPositiveButton("OK",
+                        (dialog, which) -> {
+                            tagName = input.getText().toString();
+                            System.out.println(tagName);
+                            Starred item1 = (Starred) arg0.getTag();
+                            addTag(item1, tagName, cursor);
+                            if (item1.getTag() != null) {
+                                System.out.println(item1.getTag().getTagName());
+                                tagView.setText(Html.fromHtml(item1.getTag().getTagName()));
+                            } else {
+                                tagView.setText("");
+                            }
+                        });
+
+                builder.setNegativeButton("Cancel", (dialog, which) -> dialog.cancel());
+
+                builder.show();
+
+            });
 
             ImageView ivDelete = (ImageView) view.findViewById(R.id.ivDelete);
             ivDelete.setFocusableInTouchMode(false);

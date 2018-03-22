@@ -32,6 +32,7 @@ public class Starred {
     private String mnr;
     private String title;
     private SearchResult.MediaType mediaType;
+    private Tag tag;
 
     @Override
     public String toString() {
@@ -93,5 +94,19 @@ public class Starred {
      */
     public void setMediaType(SearchResult.MediaType mediaType) {
         this.mediaType = mediaType;
+    }
+
+    /**
+     * Get this item's tag
+     */
+    public Tag getTag() {
+        return tag;
+    }
+
+    /**
+     * Set this item's tag
+     */
+    public void setTag(Tag tag) {
+        this.tag = tag;
     }
 }

@@ -36,4 +36,24 @@
         android:padding="5dp"
         android:textAppearance="?android:attr/textAppearanceMedium"/>
 
+    <TextView
+        android:id="@+id/tvTag"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/ivMediaType"
+        android:padding="5dp"
+        android:textAppearance="?android:attr/textAppearanceSmall"/>
+
+    <ImageView
+        android:id="@+id/ivAddTag"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@+id/tvTitle"
+        android:layout_centerVertical="true"
+        android:layout_marginEnd="14dp"
+        android:layout_marginRight="14dp"
+        android:layout_toLeftOf="@+id/ivDelete"
+        android:layout_toStartOf="@+id/ivDelete"
+        android:contentDescription="@string/tag_add"
+        app:srcCompat="@drawable/ic_add_24dp"/>
 </RelativeLayout>
