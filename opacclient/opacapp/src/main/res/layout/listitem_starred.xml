@@ -56,4 +56,17 @@
         android:layout_toStartOf="@+id/ivDelete"
         android:contentDescription="@string/tag_add"
         app:srcCompat="@drawable/ic_add_24dp"/>
+
+    <ImageView
+        android:id="@+id/ivRemoveTag"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@+id/tvTitle"
+        android:layout_centerVertical="true"
+        android:layout_marginEnd="14dp"
+        android:layout_marginRight="14dp"
+        android:layout_toLeftOf="@+id/ivAddTag"
+        android:layout_toStartOf="@+id/ivDelete"
+        android:contentDescription="@string/tag_remove"
+        app:srcCompat="@drawable/ic_cancel_24dp"/>
 </RelativeLayout>

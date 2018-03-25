@@ -68,6 +68,7 @@ import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import de.geeksfactory.opacclient.OpacClient;
 import de.geeksfactory.opacclient.R;
@@ -75,6 +76,7 @@ import de.geeksfactory.opacclient.frontend.OpacActivity.AccountSelectedListener;
 import de.geeksfactory.opacclient.objects.Account;
 import de.geeksfactory.opacclient.objects.SearchResult;
 import de.geeksfactory.opacclient.objects.Starred;
+import de.geeksfactory.opacclient.objects.Tag;
 import de.geeksfactory.opacclient.searchfields.SearchField;
 import de.geeksfactory.opacclient.searchfields.SearchField.Meaning;
 import de.geeksfactory.opacclient.searchfields.SearchQuery;
@@ -478,11 +480,42 @@ public class StarredFragment extends Fragment implements
         activatedPosition = position;
     }
 
-    private void addTag(Starred item, String tagName, Cursor cursor) {
+    /**
+     * Adds tag to the database and the starred item.
+     * @param item
+     * @param tagName
+     * @return updated tag list
+     */
+    private List<Tag> addTag(Starred item, String tagName) {
         StarDataSource data = new StarDataSource(getActivity());
         sItem = item;
         data.addTag(item, tagName);
-        item.setTag(data.getTagByTagName(tagName));
+        item.addTag(data.getTagByTagName(tagName));
+        return data.getAllTags(item);
+    }
+
+    /**
+     * Removes tag from the database and the starred item.
+     * @param item
+     * @param tagName
+     * @return updated tag list
+     */
+    private List<Tag> removeTag(Starred item, String tagName) {
+        StarDataSource data = new StarDataSource(getActivity());
+        sItem = item;
+        data.removeTag(data.getTagByTagName(tagName));
+        item.removeTag(data.getTagByTagName(tagName));
+        return data.getAllTags(item);
+    }
+
+    /**
+     * Returns latest the tag list from the database.
+     * @param item
+     * @return the updated tag list
+     */
+    private List<Tag> getTags(Starred item) {
+        StarDataSource data = new StarDataSource(getActivity());
+        return data.getAllTags(item);
     }
 
     @Override
@@ -527,14 +560,74 @@ public class StarredFragment extends Fragment implements
             }
 
             TextView tagView = (TextView) view.findViewById(R.id.tvTag);
+            List<Tag> currentTags = getTags(item);
 
-//            EditText et = (EditText) view.findViewById(R.id.etvAddTagText);
+            ImageView ivRemoveTag = (ImageView) view.findViewById(R.id.ivRemoveTag);
+            ivRemoveTag.setFocusableInTouchMode(false);
+            ivRemoveTag.setFocusable(false);
+            ivRemoveTag.setTag(item);
+
+            ivRemoveTag.setOnClickListener(arg0 -> {
+                // Create alert dialog box for removing of tags
+                AlertDialog.Builder builder = new AlertDialog.Builder(context);
+                builder.setTitle("Choose tags to remove from " + item.getTitle());
+
+                // add a checkbox list from the current tags list
+                String[] tagsList = new String[currentTags.size()];
+                for (int i = 0; i < currentTags.size(); i++) {
+                    tagsList[i] = currentTags.get(i).getTagName();
+                }
+                boolean[] checkedItems = new boolean[tagsList.length];
+
+                builder.setMultiChoiceItems(tagsList, null, (dialog, which, isChecked) -> {
+                    // user checked or unchecked a box
+                    checkedItems[which] = true;
+                });
+
+                // Set up the buttons
+                builder.setPositiveButton("OK", (dialog, which) -> {
+                    // Iterate through each tag name in the tag list and remove those that have
+                    // been checked
+                    for (int i = 0; i < tagsList.length; i++) {
+                        if (checkedItems[i]) {
+                            List<Tag> tags = removeTag(item, tagsList[i]);
+                            // Update the tags text view
+                            if (tags.size() > 0) {
+                                StringBuilder tagsBuilder = new StringBuilder();
+                                for (Tag t : tags) {
+                                    tagsBuilder.append(t.getTagName()).append(" | ");
+                                }
+                                System.out.println(tagsBuilder.toString());
+                                tagView.setText(Html.fromHtml(tagsBuilder.toString()));
+                            } else {
+                                tagView.setText("");
+                            }
+                        }
+                    }
+                });
+
+                builder.setNegativeButton("Cancel", (dialog, which) -> dialog.cancel());
+
+                AlertDialog dialog = builder.create();
+                dialog.show();
+            });
+
             ImageView ivAddTag = (ImageView) view.findViewById(R.id.ivAddTag);
             ivAddTag.setFocusableInTouchMode(false);
             ivAddTag.setFocusable(false);
             ivAddTag.setTag(item);
 
-            ivAddTag.setOnClickListener((View arg0) -> {
+            if (currentTags.size() > 0) {
+                StringBuilder tagsBuilder = new StringBuilder();
+                for (Tag t : currentTags) {
+                    tagsBuilder.append(t.getTagName()).append(" | ");
+                }
+                tagView.setText(Html.fromHtml(tagsBuilder.toString()));
+            } else {
+                tagView.setText("");
+            }
+
+            ivAddTag.setOnClickListener(arg0 -> {
                 // Create alert dialog box for entering of tag
                 AlertDialog.Builder builder = new AlertDialog.Builder(context);
                 builder.setTitle("Add tag to " + item.getTitle());
@@ -550,12 +643,14 @@ public class StarredFragment extends Fragment implements
                 builder.setPositiveButton("OK",
                         (dialog, which) -> {
                             tagName = input.getText().toString();
-                            System.out.println(tagName);
-                            Starred item1 = (Starred) arg0.getTag();
-                            addTag(item1, tagName, cursor);
-                            if (item1.getTag() != null) {
-                                System.out.println(item1.getTag().getTagName());
-                                tagView.setText(Html.fromHtml(item1.getTag().getTagName()));
+                            List<Tag> tags = addTag(item, tagName);
+                            // Create a string from updated tag list and update the view
+                            if (tags.size() > 0) {
+                                StringBuilder tagsBuilder = new StringBuilder();
+                                for (Tag t : tags) {
+                                    tagsBuilder.append(t.getTagName()).append(" | ");
+                                }
+                                tagView.setText(Html.fromHtml(tagsBuilder.toString()));
                             } else {
                                 tagView.setText("");
                             }

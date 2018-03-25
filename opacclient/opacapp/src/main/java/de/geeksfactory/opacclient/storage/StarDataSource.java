@@ -24,6 +24,7 @@ package de.geeksfactory.opacclient.storage;
 import android.app.Activity;
 import android.content.ContentValues;
 import android.database.Cursor;
+import android.database.sqlite.SQLiteConstraintException;
 import android.database.sqlite.SQLiteDatabase;
 
 import java.util.ArrayList;
@@ -215,6 +216,9 @@ public class StarDataSource {
         return tag;
     }
 
+    /**
+     * Add given tag to the tags database and the starred-tag database
+     */
     public long addTag(Starred item, String tagName) {
         ContentValues values = new ContentValues();
         values.put("tag", tagName);
@@ -223,28 +227,24 @@ public class StarDataSource {
         values = new ContentValues();
         values.put("tag", getTagByTagName(tagName).getId());
         values.put("item", item.getId());
-        return database.insert(StarDatabase.STAR_TAGS_TABLE, null, values);
-    }
-
-    public boolean hasTag(Tag tag) {
-        if (tag == null) {
-            return false;
+        try {
+            return database.insert(StarDatabase.STAR_TAGS_TABLE, null, values);
+        } catch (SQLiteConstraintException e) {
+            return -1;
         }
-        String[] selA = {tag.getTagName()};
-        Cursor cursor = database.query(StarDatabase.STAR_TAGS_TABLE, null, null,
-                selA, null, null, null);
-        int c = cursor.getCount();
-        cursor.close();
-        return (c > 0);
+
     }
 
+    /**
+     * Remove given tag from the starred-tag database and the tags database
+     */
     public void removeTag(Tag tag) {
         String[] selA = {"" + tag.getId()};
-        database.delete(StarDatabase.STAR_TAGS_TABLE, "id=?", selA);
-        if (!hasTag(tag)) {
-            selA = new String[]{"" + tag.getTagName()};
-            database.delete(StarDatabase.TAGS_TABLE, "tag=?", selA);
-        }
+        database.delete(StarDatabase.STAR_TAGS_TABLE, "tag=?", selA);
+
+        selA = new String[]{"" + tag.getTagName()};
+        database.delete(StarDatabase.TAGS_TABLE, "tag=?", selA);
+
     }
 
     public Tag getTagByTagName(String tagName) {
@@ -260,5 +260,43 @@ public class StarDataSource {
         // Make sure to close the cursor
         cursor.close();
         return item;
+    }
+
+    public Tag getTagById(long id) {
+        String[] selA = {String.valueOf(id)};
+        Cursor cursor = database.query(StarDatabase.TAGS_TABLE, StarDatabase.TAGS_COLUMNS, "id = ?",
+                selA, null, null, null);
+        Tag item = null;
+        cursor.moveToFirst();
+        if (!cursor.isAfterLast()) {
+            item = cursorToTag(cursor);
+            cursor.moveToNext();
+        }
+        // Make sure to close the cursor
+        cursor.close();
+        return item;
+    }
+
+    public static int cursorToStarAndTagId(Cursor cursor) {
+        return(cursor.getInt(0));
+    }
+
+    /**
+     * Get all tags that belong to this Starred item
+     */
+    public List<Tag> getAllTags(Starred item) {
+        List<Tag> tags = new ArrayList<>();
+        String[] selA = {Integer.toString(item.getId())};
+        Cursor cursor = database.query(StarDatabase.STAR_TAGS_TABLE, StarDatabase.STAR_TAGS_COLUMNS, "item = ?", selA, null, null, null);
+
+        cursor.moveToFirst();
+        while (!cursor.isAfterLast()) {
+            int tagId = cursorToStarAndTagId(cursor);
+            tags.add(getTagById(tagId));
+            cursor.moveToNext();
+        }
+        // Make sure to close the cursor
+        cursor.close();
+        return tags;
     }
 }
