@@ -67,7 +67,7 @@ dependencies {
     compile 'org.joda:joda-convert:1.8'
     compile 'su.j2e:rv-joiner:1.0.6'
     compile 'joda-time:joda-time:2.8.2'
-    compile 'com.squareup.okhttp3:okhttp:3.9.0'
+    compile 'com.squareup.okhttp3:okhttp:3.10.0'
     compile "com.squareup.okhttp3:okhttp-urlconnection:3.9.0"
     compile 'com.squareup.retrofit2:retrofit:2.2.0'
     compile 'com.squareup.retrofit2:converter-moshi:2.1.0'
