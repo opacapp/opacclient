@@ -36,7 +36,6 @@ import de.geeksfactory.opacclient.OpacClient;
 import de.geeksfactory.opacclient.objects.SearchResult;
 import de.geeksfactory.opacclient.objects.Starred;
 import de.geeksfactory.opacclient.objects.Tag;
-import de.geeksfactory.opacclient.searchfields.SearchField;
 
 public class StarDataSource {
 
@@ -216,13 +215,36 @@ public class StarDataSource {
         return tag;
     }
 
+    public boolean hasTagNameInTagTable(String tagName) {
+        if (tagName == null) {
+            return false;
+        }
+        String[] selA = {tagName};
+        Cursor cursor = database.query(StarDatabase.TAGS_TABLE, null, "tag = ?",
+                selA, null, null, null);
+        int c = cursor.getCount();
+        cursor.close();
+        return (c > 0);
+    }
+
+    public boolean hasTagIdInStarTagTable(long tagId) {
+        String[] selA = {"" + tagId};
+        Cursor cursor = database.query(StarDatabase.STAR_TAGS_TABLE, null, "tag = ?",
+                selA, null, null, null);
+        int c = cursor.getCount();
+        cursor.close();
+        return (c > 0);
+    }
+
     /**
      * Add given tag to the tags database and the starred-tag database
      */
     public long addTag(Starred item, String tagName) {
         ContentValues values = new ContentValues();
         values.put("tag", tagName);
-        database.insert(StarDatabase.TAGS_TABLE, null, values);
+        if (!hasTagNameInTagTable(tagName)) {
+            database.insert(StarDatabase.TAGS_TABLE, null, values);
+        }
 
         values = new ContentValues();
         values.put("tag", getTagByTagName(tagName).getId());
@@ -241,10 +263,10 @@ public class StarDataSource {
     public void removeTag(Tag tag) {
         String[] selA = {"" + tag.getId()};
         database.delete(StarDatabase.STAR_TAGS_TABLE, "tag=?", selA);
-
-        selA = new String[]{"" + tag.getTagName()};
-        database.delete(StarDatabase.TAGS_TABLE, "tag=?", selA);
-
+        if (!hasTagIdInStarTagTable(tag.getId())) {
+            selA = new String[]{"" + tag.getTagName()};
+            database.delete(StarDatabase.TAGS_TABLE, "tag=?", selA);
+        }
     }
 
     public Tag getTagByTagName(String tagName) {
@@ -299,4 +321,44 @@ public class StarDataSource {
         cursor.close();
         return tags;
     }
+
+    /**
+     * Get all tag names that belong to this Starred item
+     */
+    public List<String> getAllTagNames(Starred item) {
+        List<String> tags = new ArrayList<>();
+        String[] selA = {Integer.toString(item.getId())};
+        Cursor cursor = database.query(StarDatabase.STAR_TAGS_TABLE, StarDatabase.STAR_TAGS_COLUMNS, "item = ?", selA, null, null, null);
+
+        cursor.moveToFirst();
+        while (!cursor.isAfterLast()) {
+            int tagId = cursorToStarAndTagId(cursor);
+            tags.add(getTagById(tagId).getTagName());
+            cursor.moveToNext();
+        }
+        // Make sure to close the cursor
+        cursor.close();
+        return tags;
+    }
+
+//    /**
+//     * Get all tags that do not belong to this Starred item
+//     */
+//    public List<String> getAllTagNamesExceptThisItem(Starred item) {
+//        List<String> listOfTagNames = new ArrayList<>();
+//        Cursor cursor = database.rawQuery("select * from " + StarDatabase.STAR_TAGS_TABLE, null);
+//
+//        cursor.moveToFirst();
+//        while (!cursor.isAfterLast()) {
+//            if (cursor.getInt(1) != item.getId()) {
+//                int tagId = cursorToStarAndTagId(cursor);
+//                listOfTagNames.add(getTagById(tagId).getTagName());
+//                cursor.moveToNext();
+//            }
+//
+//        }
+//        // Make sure to close the cursor
+//        cursor.close();
+//        return listOfTagNames;
+//    }
 }

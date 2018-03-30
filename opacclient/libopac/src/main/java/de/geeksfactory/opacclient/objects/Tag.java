@@ -8,6 +8,7 @@ public class Tag {
 
     private int id;
     private String tagName;
+    private int starredItemRefId;
 
     @Override
     public String toString() {
@@ -40,5 +41,19 @@ public class Tag {
      */
     public void setTagName(String tagName) {
         this.tagName = tagName;
+    }
+
+    /**
+     * Get this tag's reference ID to the starred item it is attached to
+     */
+    public int getStarredItemRefId() {
+        return starredItemRefId;
+    }
+
+    /**
+     * Set this tag's reference ID to the starred item it is attached to
+     */
+    public void setStarredItemRefId(int starredItemRefId) {
+        this.starredItemRefId = starredItemRefId;
     }
 }

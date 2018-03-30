@@ -117,6 +117,9 @@ public class Starred {
      * Remove a tag from this item's tag list
      */
     public void removeTag(Tag tag) {
-        this.tags.remove(tag);
+        if (tags.contains(tag)) {
+            this.tags.remove(tag);
+        }
+
     }
 }

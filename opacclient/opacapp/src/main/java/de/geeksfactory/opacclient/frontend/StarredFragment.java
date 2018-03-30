@@ -25,13 +25,14 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.ActivityNotFoundException;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager.LoaderCallbacks;
@@ -39,16 +40,20 @@ import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.support.v4.widget.SimpleCursorAdapter;
 import android.text.Html;
-import android.text.InputType;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.view.inputmethod.EditorInfo;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
+import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
@@ -68,7 +73,6 @@ import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import de.geeksfactory.opacclient.OpacClient;
 import de.geeksfactory.opacclient.R;
@@ -105,7 +109,6 @@ public class StarredFragment extends Fragment implements
     private int activatedPosition = ListView.INVALID_POSITION;
     private TextView tvWelcome;
     private Starred sItem;
-    private String tagName = "";
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -486,26 +489,22 @@ public class StarredFragment extends Fragment implements
      * @param tagName
      * @return updated tag list
      */
-    private List<Tag> addTag(Starred item, String tagName) {
+    private Tag addTag(Starred item, String tagName) {
         StarDataSource data = new StarDataSource(getActivity());
         sItem = item;
         data.addTag(item, tagName);
-        item.addTag(data.getTagByTagName(tagName));
-        return data.getAllTags(item);
+        Tag tagFromDatabase = data.getTagByTagName(tagName);
+        item.addTag(tagFromDatabase);
+        return tagFromDatabase;
     }
 
     /**
      * Removes tag from the database and the starred item.
-     * @param item
-     * @param tagName
-     * @return updated tag list
+     * @param tag
      */
-    private List<Tag> removeTag(Starred item, String tagName) {
+    private void removeTag(Tag tag) {
         StarDataSource data = new StarDataSource(getActivity());
-        sItem = item;
-        data.removeTag(data.getTagByTagName(tagName));
-        item.removeTag(data.getTagByTagName(tagName));
-        return data.getAllTags(item);
+        data.removeTag(data.getTagByTagName(tag.getTagName()));
     }
 
     /**
@@ -517,6 +516,16 @@ public class StarredFragment extends Fragment implements
         StarDataSource data = new StarDataSource(getActivity());
         return data.getAllTags(item);
     }
+
+    private List<String> getTagNames(Starred item) {
+        StarDataSource data = new StarDataSource(getActivity());
+        return data.getAllTagNames(item);
+    }
+
+//    private List<String> getAllTagNamesExceptThisItem(Starred item) {
+//        StarDataSource data = new StarDataSource(getActivity());
+//        return data.getAllTagNamesExceptThisItem(item);
+//    }
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
@@ -559,108 +568,58 @@ public class StarredFragment extends Fragment implements
                 ivType.setImageBitmap(null);
             }
 
-            TextView tagView = (TextView) view.findViewById(R.id.tvTag);
-            List<Tag> currentTags = getTags(item);
+            ImageView ivTagMenu = (ImageView) view.findViewById(R.id.ivTagMenu);
+            ivTagMenu.setFocusableInTouchMode(false);
+            ivTagMenu.setFocusable(false);
+            ivTagMenu.setTag(item);
+            List<Tag> currentTagList = getTags(item);
+            List<String> currentTagListNames = getTagNames(item);
 
-            ImageView ivRemoveTag = (ImageView) view.findViewById(R.id.ivRemoveTag);
-            ivRemoveTag.setFocusableInTouchMode(false);
-            ivRemoveTag.setFocusable(false);
-            ivRemoveTag.setTag(item);
 
-            ivRemoveTag.setOnClickListener(arg0 -> {
+            ivTagMenu.setOnClickListener(arg0 -> {
                 // Create alert dialog box for removing of tags
                 AlertDialog.Builder builder = new AlertDialog.Builder(context);
-                builder.setTitle("Choose tags to remove from " + item.getTitle());
+                builder.setTitle(item.getTitle() + " tags list");
 
-                // add a checkbox list from the current tags list
-                String[] tagsList = new String[currentTags.size()];
-                for (int i = 0; i < currentTags.size(); i++) {
-                    tagsList[i] = currentTags.get(i).getTagName();
-                }
-                boolean[] checkedItems = new boolean[tagsList.length];
+                // set the custom layout
+                final View customLayout = getLayoutInflater().inflate(R.layout.tag_menu, null);
+                builder.setView(customLayout);
 
-                builder.setMultiChoiceItems(tagsList, null, (dialog, which, isChecked) -> {
-                    // user checked or unchecked a box
-                    checkedItems[which] = true;
-                });
+                // create list view
+                ListView tagsListView = (ListView) customLayout.findViewById(R.id.lvTags);
+                ArrayAdapter<Tag> tagAdapter = new TagListAdapter(context, currentTagList);
+                tagsListView.setAdapter(tagAdapter);
 
-                // Set up the buttons
-                builder.setPositiveButton("OK", (dialog, which) -> {
-                    // Iterate through each tag name in the tag list and remove those that have
-                    // been checked
-                    for (int i = 0; i < tagsList.length; i++) {
-                        if (checkedItems[i]) {
-                            List<Tag> tags = removeTag(item, tagsList[i]);
-                            // Update the tags text view
-                            if (tags.size() > 0) {
-                                StringBuilder tagsBuilder = new StringBuilder();
-                                for (Tag t : tags) {
-                                    tagsBuilder.append(t.getTagName()).append(" | ");
-                                }
-                                System.out.println(tagsBuilder.toString());
-                                tagView.setText(Html.fromHtml(tagsBuilder.toString()));
-                            } else {
-                                tagView.setText("");
-                            }
-                        }
+                EditText editText = (EditText) customLayout.findViewById(R.id.autoCompleteTextView);
+//                ArrayAdapter<String> allTagNamesAdapter = new ArrayAdapter<>(context, android.R.layout.select_dialog_item, getAllTagNamesExceptThisItem(item));
+//                autocomplete.setThreshold(2);
+//                autocomplete.setAdapter(allTagNamesAdapter);
+
+                Button addTagButton = (Button) customLayout.findViewById(R.id.addTag);
+                addTagButton.setOnClickListener(view1 -> {
+                    String tagName = editText.getText().toString();
+                    // prevent an empty tag or an exisiting tag from being added
+                    if (!tagName.equals("") && !currentTagListNames.contains(tagName)) {
+                        Tag tagToAdd = addTag(item, tagName);
+                        currentTagList.add(tagToAdd);
+                        tagAdapter.notifyDataSetChanged();
+                        currentTagListNames.add(tagName);
+                        editText.setText("");
+                        Toast.makeText(context, "Added tag \"" + tagName + "\" to " + item.getTitle(), Toast.LENGTH_SHORT).show();
+                    } else {
+                        Toast.makeText(context, "Please enter a nonempty tag name that already isn't on the list", Toast.LENGTH_LONG).show();
                     }
+                    // hide keyboard once done so as to see toast messages
+                    editText.onEditorAction(EditorInfo.IME_ACTION_DONE);
+
                 });
 
-                builder.setNegativeButton("Cancel", (dialog, which) -> dialog.cancel());
+                builder.setNegativeButton("Back", (dialog, which) -> dialog.cancel());
 
                 AlertDialog dialog = builder.create();
                 dialog.show();
             });
 
-            ImageView ivAddTag = (ImageView) view.findViewById(R.id.ivAddTag);
-            ivAddTag.setFocusableInTouchMode(false);
-            ivAddTag.setFocusable(false);
-            ivAddTag.setTag(item);
-
-            if (currentTags.size() > 0) {
-                StringBuilder tagsBuilder = new StringBuilder();
-                for (Tag t : currentTags) {
-                    tagsBuilder.append(t.getTagName()).append(" | ");
-                }
-                tagView.setText(Html.fromHtml(tagsBuilder.toString()));
-            } else {
-                tagView.setText("");
-            }
-
-            ivAddTag.setOnClickListener(arg0 -> {
-                // Create alert dialog box for entering of tag
-                AlertDialog.Builder builder = new AlertDialog.Builder(context);
-                builder.setTitle("Add tag to " + item.getTitle());
-
-                // Set up the input
-                final EditText input = new EditText(context);
-
-                // Specify the type of input expected
-                input.setInputType(InputType.TYPE_CLASS_TEXT);
-                builder.setView(input);
-
-                // Set up the buttons
-                builder.setPositiveButton("OK",
-                        (dialog, which) -> {
-                            tagName = input.getText().toString();
-                            List<Tag> tags = addTag(item, tagName);
-                            // Create a string from updated tag list and update the view
-                            if (tags.size() > 0) {
-                                StringBuilder tagsBuilder = new StringBuilder();
-                                for (Tag t : tags) {
-                                    tagsBuilder.append(t.getTagName()).append(" | ");
-                                }
-                                tagView.setText(Html.fromHtml(tagsBuilder.toString()));
-                            } else {
-                                tagView.setText("");
-                            }
-                        });
-
-                builder.setNegativeButton("Cancel", (dialog, which) -> dialog.cancel());
-
-                builder.show();
-
-            });
 
             ImageView ivDelete = (ImageView) view.findViewById(R.id.ivDelete);
             ivDelete.setFocusableInTouchMode(false);
@@ -674,6 +633,54 @@ public class StarredFragment extends Fragment implements
                     callback.removeFragment();
                 }
             });
+        }
+    }
+
+    private class TagListAdapter extends ArrayAdapter<Tag> {
+
+        public TagListAdapter(Context context, List<Tag> tagList) {
+            super(getActivity(), R.layout.listitem_tag, tagList);
+        }
+
+        @NonNull
+        @Override
+        public View getView(int position, View convertView, @NonNull ViewGroup parent) {
+            View itemView = convertView;
+            if (itemView == null) {
+                itemView = getLayoutInflater().inflate(R.layout.listitem_tag, parent, false);
+            }
+
+            Tag currentTag = getItem(position);
+
+            TextView tv = (TextView) itemView.findViewById(R.id.tvTitle);
+            tv.setText(currentTag.getTagName());
+
+            ImageView ivDelete = (ImageView) itemView.findViewById(R.id.ivDelete);
+            ivDelete.setFocusableInTouchMode(false);
+            ivDelete.setFocusable(false);
+            ivDelete.setTag(currentTag);
+            ivDelete.setOnClickListener(arg0 -> {
+                Tag item = (Tag) arg0.getTag();
+                removeTag(item);
+                Toast.makeText(getContext(), "Removed tag \"" + item.getTagName() + "\"", Toast.LENGTH_SHORT).show();
+            });
+
+            return itemView;
+        }
+
+        @Override
+        public void notifyDataSetChanged() {
+            super.notifyDataSetChanged();
+        }
+
+        @Override
+        public void add(Tag object) {
+            super.add(object);
+        }
+
+        public void removeTag(Tag object) {
+            super.remove(object);
+            StarredFragment.this.removeTag(object);
         }
     }
 }
