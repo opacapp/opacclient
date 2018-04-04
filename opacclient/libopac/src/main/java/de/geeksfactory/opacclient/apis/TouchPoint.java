@@ -1383,7 +1383,7 @@ public class TouchPoint extends ApacheBaseApi implements OpacApi {
         return null;
     }
 
-    private class LoginResponse {
+    class LoginResponse {
         public boolean success;
         public String warning;
 
