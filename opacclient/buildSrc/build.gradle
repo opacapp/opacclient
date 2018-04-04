@@ -5,7 +5,7 @@ repositories {
 }
 
 dependencies {
-    compile gradleApi()
-    compile localGroovy()
-    compile 'org.json:json:20090211'
+    implementation gradleApi()
+    implementation localGroovy()
+    implementation 'org.json:json:20090211'
 }
