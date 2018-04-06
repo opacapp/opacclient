@@ -44,6 +44,7 @@ public class Library implements Comparable<Library> {
     private String state;
     private String replacedby;
     private boolean active = true;
+    private long library_id;
 
     private String information;
     private double[] geo;
@@ -74,6 +75,7 @@ public class Library implements Comparable<Library> {
         lib.setAccountSupported(input.getBoolean("account_supported"));
         lib.setNfcSupported(input.optBoolean("nfc_supported", false));
         lib.setSuppressFeeWarnings(lib.getData().optBoolean("suppress_fee_warnings", false));
+        lib.setLibraryId(input.optLong("library_id", 0));
 
         lib.setInformation(input.optString("information"));
         if (lib.getInformation() == null && lib.getData().has("information")) {
@@ -117,6 +119,7 @@ public class Library implements Comparable<Library> {
         json.put("account_supported", account_supported);
         json.put("nfc_supported", nfcSupported);
         json.put("information", information);
+        json.put("library_id", library_id);
         if (displayName != null) json.put("displayname", displayName);
         json.put("_plus_store_url", replacedby);
         if (geo != null) {
@@ -379,6 +382,14 @@ public class Library implements Comparable<Library> {
      */
     public void setActive(boolean active) {
         this.active = active;
+    }
+
+    public long getLibraryId() {
+        return library_id;
+    }
+
+    public void setLibraryId(long library_id) {
+        this.library_id = library_id;
     }
 
     public boolean isSuppressFeeWarnings() {
