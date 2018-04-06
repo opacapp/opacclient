@@ -17,6 +17,7 @@ dependencies {
     implementation 'junit:junit:4.12'
     unitTestImplementation "junit:junit:4.+"
     implementation 'org.bouncycastle:bcprov-jdk15on:1.51'
+    implementation 'org.jsoup:jsoup:1.8.3'
 }
 
 task unitTest(type:Test, dependsOn: assemble) {

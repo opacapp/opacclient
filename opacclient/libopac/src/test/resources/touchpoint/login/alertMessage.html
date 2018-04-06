@@ -1,0 +1,537 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<!--START of /WEB-INF/tags/metaHeader.tag-->
+
+
+<html xmlns="http://www.w3.org/1999/xhtml" lang="de" xml:lang="de">
+
+
+<!--START of /default/login/Layout.jsp-->
+
+
+<head>
+
+
+    <!--START of /default/common/commonHeader.jsp-->
+
+
+    <meta content="text/html; charset=UTF-8" http-equiv="Content-Type"/>
+    <meta content="no-cache" http-equiv="Pragma"/>
+    <meta content="0" http-equiv="Expires"/>
+    <meta content="no-cache" http-equiv="Cache-Control"/>
+    <link href="/TouchPoint/default/common/touchpoint.css" type="text/css" rel="stylesheet"/>
+    <link href="default/images/favicon.ico" rel="shortcut icon"/>
+    <link href="js/jquery/jquery.all.css" rel="stylesheet"/>
+    <link href="default/common/alerts.css" rel="stylesheet"/>
+    <script type="text/javascript" src="js/jquery/jquery-1.4.2_min.js"></script>
+    <script type="text/javascript" src="js/rvkvisual.min.js"></script>
+    <script type="text/javascript" src="js/jquery/jquery-1.8.3_min.js"></script>
+    <script type="text/javascript" language="javascript">
+var my_$ = jQuery.noConflict(true);
+function tagRvkNotations() {
+  $('th:contains("RVK") ~ td,th:contains("RVK-Notation:") ~ td').
+    each(function(index) {
+    var sRVK = $(this).text();
+    $(this).html('<span class="rvklink">' + sRVK + '</span>')
+  });
+}
+
+$(document).ready(function(){
+  tagRvkNotations();
+  var rvkVisual = new RvkVisual('toggle');
+  rvkVisual.fetchRvkData();
+});
+
+    </script>
+    <script type="text/javascript" src="js/jquery/jquery-ui-1.7.2.js"></script>
+    <script type="text/javascript" src="js/jquery/extensions/jquery.bgiframe.js"></script>
+    <script type="text/javascript" src="js/jquery/extensions/jquery.autocomplete.js"></script>
+    <script type="text/javascript"
+            src="js/jquery/extensions/jquery.support.css-detection.js"></script>
+    <script type="text/javascript" src="js/jquery.ajaxq-0.0.1.js"></script>
+    <script src="./default/common/BsbGlobalFunctions.js" type="text/javascript"></script>
+    <script type="text/javascript" src="./default/common/colorbox/jquery.colorbox.js"></script>
+    <link href="./default/common/colorbox/colorbox.css" rel="stylesheet" media="screen"
+          type="text/css"/>
+    <link href="./default/common/colorbox/colorbox-custom.css" rel="stylesheet" media="screen"
+          type="text/css"/>
+    <script type="text/javascript"
+            src="default/common/dickerfisch/optional/jq.cleanCSSanim.js"></script>
+    <script type="text/javascript"
+            src="default/common/dickerfisch/jq_dickerfisch_menue.js"></script>
+    <script type="text/javascript" src="js/jquery/extensions/jquery.touchpoint.js"></script>
+    <script type="text/javascript" src="js/tp.utils.js"></script>
+    <script type="text/javascript" src="js/jstorage.js"></script>
+    <script type="text/javascript" src="js/common.js"></script>
+    <script type="text/javascript">/* <![CDATA[ */
+if (!(typeof globalSettings == "object" && globalSettings instanceof Map)) globalSettings = new Map();
+globalSettings.add({
+"imagePath": "/TouchPoint/default/images"
+});
+if (!(typeof i18n == "object" && i18n instanceof Map)) i18n = new Map();
+i18n.add({
+"common.header.loading.icon.alt": "Laden",
+"search.searchfield.suggestion.hits": "Treffer"
+});
+/* ]]> */
+    </script>
+    <title>TouchPoint</title>
+
+
+    <!--END of /default/common/commonHeader.jsp-->
+
+
+    <script type="text/javascript" src="/TouchPoint/default/common/stdButton.js"><!-- --></script>
+</head>
+
+<body onunload="unBlockAction()">
+<div id="pageContainer">
+
+    <div id="branding">
+
+
+        <!--START of /default/common/header.jsp-->
+
+
+        <a href="#main" class="skiplink">Springe zum Inhalt... (mit Enter-Taste)</a>
+        <a href="#nav" class="skiplink">Springe zur Navigation... (mit Enter-Taste)</a>
+
+        <span id="logo">
+  <a href="/TouchPoint/search.do?methodToCall=start" tabindex="-1" title="Home"><img
+          src="/TouchPoint/default/images/TouchPoint.gif" width="96" height="16" alt="TouchPoint"
+          title="TouchPoint"/></a>
+</span>
+
+        <table border="0" cellspacing="10" cellpadding="4" width="100%">
+            <tr>
+                <td align="right">
+                    <a href="http://www.alpenverein.de/Kultur/Bibliothek-Archiv/"
+                       target="_blank"><img src="/TouchPoint/default/images/DAV.jpg"
+                                            alt="DAV-Bibliothek M&uuml;nchen"
+                                            title="Bibliothek des Deutschen Alpenvereins M&uuml;nchen"
+                                            border=0/></a>
+                </td>
+            </tr>
+        </table>
+
+
+        <div id="ajaxAutoCompletion">solr</div>
+
+        <div id="ajaxUrlSolrAutoCompletion">SolrQueryCompletionProxy</div>
+        <div id="ajaxUrlFastAutoCompletion">QueryCompletionProxy</div>
+
+
+        <div id="ajaxAutoCompletionDatabases" style="display:none">
+
+            2,
+
+            3
+
+        </div>
+
+
+        <!--END of /default/common/header.jsp-->
+
+
+        <!--START of /default/navigation/headNavi.jsp-->
+
+
+        <div id="nav2" class="floatcon">
+            <ul class="language">
+                <li>
+
+                </li>
+            </ul>
+            <ul>
+                <!-- home is a suggestion for SwissBib -->
+                <li>
+                    <a href="/TouchPoint/search.do?methodToCall=start" title="Home">Home</a>
+                </li>
+
+                <li><a href="/TouchPoint/actual.do?methodToCall=show"
+                       title="Aktuelles">Aktuelles</a></li>
+
+                <li>
+                    <a href="/TouchPoint/help.do?helpContext=login&amp;helpSubContext=&amp;helpApplicationContext=\#"
+                       target="tphelpwindow" title="Hilfe">Hilfe</a>
+                </li>
+
+
+                <li>
+                    <a href="/TouchPoint/information.do?methodToCall=show"
+                       title="Auskunft">Auskunft</a>
+                </li>
+
+
+            </ul>
+
+            <div id="timer"><span>&nbsp;</span></div>
+
+        </div>
+
+        <script type="text/javascript">
+    $(document).ready(function() {
+      $(".dropdown-language dt a").click(function() {
+        $(".dropdown-language dd ul").toggle();
+      });
+
+      $(".dropdown-language dd ul li a").click(function() {
+        $(".dropdown-language dd ul").hide();
+      });
+    });
+
+    function switchLanguage(url) {
+
+      var location = window.location.href;
+      var myLocation;
+      if (location.substring(location.length - 1, location.length) == "#") {
+        myLocation = location.substr(0, location.length - 1);
+      } else {
+        myLocation = location;
+      }
+      if (myLocation.indexOf("loginpage.do") != -1
+          || myLocation.indexOf("userData.do") != -1
+          || myLocation.indexOf("login.do") != -1) {
+        $.post(url);
+        $.post(myLocation, function() {
+          window.location.reload();
+        });
+        return false;
+      }
+    }
+
+        </script>
+
+
+        <script type="text/javascript" language="javascript">
+//<![CDATA[
+
+
+
+var timeout=(20 * 60 * 1000)  + new Date().getTime();
+timeout=timeout - 5000;
+var mesg="Diese Sitzung läuft in %VAR% Sek. ab!";
+var toFront=false;
+
+if(mesg.length <= 0 || mesg.indexOf("???") >= 0)
+  mesg="Diese Sitzung läuft in %VAR% Sek. ab!";
+
+ticker();
+
+function ticker()
+{
+  var timeoutID;
+  var s;
+  var t=timeout - new Date().getTime();
+  t=(t<0)?0:Math.round(t/1000);
+  s=""+ ((t>60)?"":t.toFixed(0));
+  if(t <= 60)
+  {
+    if(toFront == false)
+    {
+      toFront=true;
+      window.focus();
+    }
+    var msg = mesg.replace("%VAR%", s);
+    document.getElementById("timer").innerHTML = msg;
+  }
+  if(t <= 0)
+  {
+    window.clearTimeout(timeoutID);
+    window.location.replace("/TouchPoint/default/common/timeout.jsp");
+  }
+  else
+    timeoutID = window.setTimeout("ticker()",(t>60) ? 6000 : 1000);
+}
+//]]>
+
+        </script>
+
+
+        <!--END of /default/navigation/headNavi.jsp-->
+
+
+    </div>
+
+
+    <!--START of /default/navigation/mainNavi.jsp-->
+
+
+    <script type="text/javascript" src="./default/common/wz_tooltip.js"></script>
+
+    <script language="JavaScript" type="text/javascript">
+<!--
+/* <![CDATA[ */
+
+
+$(document).ready(function() {
+
+    $(".qrcode")
+      .colorbox({
+        title:  "QR-Code",
+        initialWidth:  "300",
+        initialHeight: "300",
+        fixedWidth:    "340",
+        fixedHeight:   "370",
+        iframe:        true,
+        transition:    "elastic",
+        bgOpacity:     "0.45",
+        modalClose:    "Close"
+      });
+$("[tip]").hover(
+    function () {
+      $(this).removeAttr("title");
+      Tip( $(this).attr("tip"), WIDTH, -400 );
+    },
+    function () {
+      UnTip();
+    }
+  );
+});
+
+/* ]]> */
+//-->
+
+    </script>
+
+
+    <!-- Actual Tiles Context 757 -->
+    <!-- Actual View Context dav -->
+    <script type="text/javascript">
+$(document).ready(function() {
+  //Funktion starten, wenn DOM-ready  (warte 250ms bevor sich das menu schließt, wenn maus weg ist)
+  var samp = new DickerFisch('#nav',{NavTimeout: 250,Fit2ViewportClass:'leftover',LimitLinks:0, FitIfViewportSmaller:1111, FirstLevelLayoutHorizontal:true});
+});
+
+    </script>
+    <div id="nav">
+        <ul>
+            <li class="parentNav">
+                <a href="/TouchPoint/search.do?methodToCall=start"
+                   class="daddy"><strong>Suche</strong></a>
+                <ul id="mainnavigation_searchoptions"><!-- 2nd level search -->
+
+                    <li><span class="sbh">. </span>
+                        <a href="/TouchPoint/search.do?methodToCall=switchSearchPage&amp;SearchType=1&amp;emptyFields=true">Einfache Suche</a>
+                    </li>
+
+
+                    <li><span class="sbh">. </span>
+                        <a href="/TouchPoint/search.do?methodToCall=switchSearchPage&amp;SearchType=2&amp;emptyFields=true">Erweiterte Suche</a>
+                    </li>
+
+
+                    <li><span class="sbh">. </span>
+                        <a href="/TouchPoint/searchHistory.do?methodToCall=showHistory">Suchhistorie</a>
+                    </li>
+
+
+                </ul><!-- End 2nd level search-->
+            </li>
+            <li><span class="sbh">. </span>
+                <a href="/TouchPoint/memorizelist.do?methodToCall=show"
+                   class="empty"><strong>Merkliste</strong></a>
+            </li>
+            <li class="parentNav"><span class="sbh">. </span>
+
+
+                <a href="/TouchPoint/userAccount.do?methodToCall=start"
+                   class="daddy"><strong>Meine Daten</strong></a>
+
+
+                <ul><!-- 2nd level  myaccount-->
+
+
+                    <li><span class="sbh">. </span><a
+                            href="/TouchPoint/userAccount.do?methodToCall=start">Konto</a></li>
+
+
+                    <li><span class="sbh">. </span><a
+                            href="/TouchPoint/userData.do?methodToCall=show">Benutzerdaten</a></li>
+
+
+                    <li><span class="sbh">. </span><a
+                            href="/TouchPoint/account.do?methodToCall=show">Sucheinstellungen</a>
+                    </li>
+
+
+                    <li><span class="sbh">. </span><a
+                            href="/TouchPoint/userAlerts.do?methodToCall=showAlerts">Suchdienste</a>
+                    </li>
+
+
+                </ul><!-- End 2nd level myaccount-->
+            </li>
+
+
+            <li>
+                <span class="sbh">. </span><a href="/TouchPoint/additional.do?methodToCall=show"
+                                              class="empty"><strong>Weitere Angebote</strong></a>
+            </li>
+
+        </ul>
+        <!-- Login / Logout -->
+
+
+        <span id="account">
+
+	   Benutzernummer&nbsp;XXXXXXXXXXX&nbsp;
+
+
+      <a href="/TouchPoint/login.do?methodToCall=logout"
+         style="background-color:transparent;">Abmelden</a></span>
+
+
+        <!-- End Login / Logout -->
+        <div class="cleanNav">&nbsp;</div>
+    </div>
+
+
+    <!--END of /default/navigation/mainNavi.jsp-->
+
+
+    <!--START of /default/search/searchfield.jsp-->
+
+
+    <div id="div-search">
+        <form id="AdvancedSearchForm" method="get" action="/TouchPoint/search.do">
+            <input type="hidden" name="methodToCall" value="submitButtonCall"/>
+            <input type="hidden" name="methodToCallParameter" value="submitSearch"/>
+            <input type="hidden" name="searchCategories[0]" value="-1"/>
+            <input type="hidden" name="searchHistory" value=""/>
+            <input type="hidden" name="refine" value="false"/>
+            <input type="hidden" name="CSId"
+                   value="414N71S97b9e1cd42e77c5c331e63a568801009f84662ef"/>
+            <input type="hidden" name="tab" value="tab1"/>
+            <input type="hidden" name="View" value="dav"/>
+
+
+            <input type="hidden" name="searchString[1]" value=""/>
+
+
+            <input type="hidden" name="searchString[2]" value=""/>
+
+
+            <input type="hidden" name="searchString[3]" value=""/>
+
+
+            <input type="hidden" name="searchString[4]" value=""/>
+
+
+            <span class="search-for">
+        <label for="searchString_0">Suche nach:</label>
+      </span>
+            <span class="search-query">
+        <input type="text" name="searchString[0]" value="" id="searchString_0" class="query"/>
+      </span>
+            <input name="submitButtonCall_submitSearch" type="submit" value="Suchen" class="dbutton"
+                   id="submitSearch"/>
+
+            <span class="search-advanced">
+          <a href="/TouchPoint/search.do?methodToCall=switchSearchPage&amp;SearchType=2&amp;emptyFields=false"
+             title="Erweiterte Suche">Erweiterte Suche</a>
+        </span>
+
+
+        </form>
+    </div><!-- END div-search -->
+
+
+    <!--END of /default/search/searchfield.jsp-->
+
+
+    <!-- filler /default/common/info-empty.jsp -->
+    <div id="info1">&nbsp;</div>
+    <div id="main" class="mainnosides">
+
+
+        <!-- START jsp/login/logininformation.jsp -->
+
+        <div id="SOWrap">
+            <div id="middle">
+                <div class="box">
+                    <h2>Login</h2>
+                    <div class="box-container">
+
+
+                        <div class="alert message-info"><p
+                                class="first">In Ihrer persönlichen Datenbankauswahl sind Datenbanken enthalten, die aktuell nicht verfügbar sind.</p>
+                            <ul>
+                                <li>Alpinbücherei Innsbruck (Suchanfrage neu eingeben)<!-- login.information.dbselectionnull--></li>
+                                <li>Bayerischer Verbundkatalog<!-- login.information.dbselectionnull--></li>
+                            </ul>
+                        </div>
+                        <br/>
+
+
+                        <a href="/TouchPoint/login.do?methodToCall=done"
+                           class="text"><strong>Weiter</strong></a>
+                    </div>
+                </div>
+            </div>
+            <!-- middle -->
+        </div>
+        <!-- END of jsp/login/logininformation.jsp -->
+
+
+        <br class="cleaner"/>
+    </div>
+
+
+    <!--START of /default/common/footer.jsp-->
+
+
+    <div id="footer" class="floatcon">
+
+
+        <div>
+            OPAC-Ansicht:&nbsp;
+
+
+            <span>  Klassisch </span>
+            &nbsp;|&nbsp;
+            <script language="javascript" type="text/javascript">
+                if (window.location.href.indexOf("device") == -1){
+                   document.write("<a title=\"OPAC-Ansicht:&nbsp;Mobil\" href=\""+window.location.href+"&device=mobile\">");
+                }
+                else {
+                   document.write("<a title=\"OPAC-Ansicht:&nbsp;Klassisch\" href=\""+window.location.href.replace('non-mobile','mobile')+"\">");
+                }
+
+            </script>
+            Mobil</a>
+
+        </div>
+
+
+        Bitte verwenden Sie die Funktion
+        <a href="/TouchPoint/login.do?methodToCall=logout"
+           title="Abmelden">Abmelden</a> , um den versehentlichen Zugriff auf Ihre persönlichen Daten zu vermeiden.
+
+
+        <div id="copyright">
+            <span class="nowrap">Copyright © 2013. Alle Rechte vorbehalten.</span>
+            <img height="19" width="54" alt="OCLC" title="OCLC"
+                 src="/TouchPoint/default/images/OCLC.jpg"/>
+        </div>
+    </div>
+
+
+    <!--END of /default/common/footer.jsp-->
+
+
+</div>
+</body>
+
+
+<!--END of /default/login/Layout.jsp-->
+
+
+</html>
+
+
+<!--END of /WEB-INF/tags/metaHeader.tag-->
+
+

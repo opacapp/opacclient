@@ -1288,14 +1288,17 @@ public class TouchPoint extends ApacheBaseApi implements OpacApi {
         Document doc = Jsoup.parse(html);
 
         if (doc.getElementsByClass("alert").size() > 0) {
-            if (doc.select(".alert").text().contains("Nutzungseinschr") &&
+            String message = doc.select(".alert").get(0).text();
+            if ((message.contains("Nutzungseinschr") || message.contains("Datenbankauswahl")) &&
                     doc.select("a[href*=methodToCall=done]").size() > 0) {
                 // This is a warning that we need to acknowledge, it will be shown in the account
                 // view
                 httpGet(opac_url + "/login.do?methodToCall=done", ENCODING);
                 logged_in = System.currentTimeMillis();
                 logged_in_as = acc;
-                return new LoginResponse(true, doc.getElementsByClass("alert").get(0).text());
+
+                boolean showMessage = message.contains("Nutzungseinschr");
+                return new LoginResponse(true, showMessage ? message : null);
             } else {
                 throw new OpacErrorException(doc.getElementsByClass("alert").get(0).text());
             }
@@ -1383,7 +1386,7 @@ public class TouchPoint extends ApacheBaseApi implements OpacApi {
         return null;
     }
 
-    private class LoginResponse {
+    class LoginResponse {
         public boolean success;
         public String warning;
 
