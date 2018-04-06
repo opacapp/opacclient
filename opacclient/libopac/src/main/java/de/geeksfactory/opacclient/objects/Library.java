@@ -45,6 +45,7 @@ public class Library implements Comparable<Library> {
     private String replacedby;
     private boolean active = true;
     private long library_id;
+    private String notice_text;
 
     private String information;
     private double[] geo;
@@ -87,6 +88,10 @@ public class Library implements Comparable<Library> {
             lib.setDisplayName(input.getString("displayname"));
         }
 
+        if (input.has("_notice_text") && !input.isNull("_notice_text")) {
+            lib.setNoticeText(input.getString("_notice_text"));
+        }
+
         if (input.has("_plus_store_url") && !input.isNull("_plus_store_url")) {
             lib.setReplacedBy(input.getString("_plus_store_url"));
         }
@@ -122,6 +127,7 @@ public class Library implements Comparable<Library> {
         json.put("library_id", library_id);
         if (displayName != null) json.put("displayname", displayName);
         json.put("_plus_store_url", replacedby);
+        json.put("_notice_text", notice_text);
         if (geo != null) {
             JSONArray geoJson = new JSONArray();
             geoJson.put(geo[0]);
@@ -390,6 +396,14 @@ public class Library implements Comparable<Library> {
 
     public void setLibraryId(long library_id) {
         this.library_id = library_id;
+    }
+
+    public String getNoticeText() {
+        return notice_text;
+    }
+
+    public void setNoticeText(String notice_text) {
+        this.notice_text = notice_text;
     }
 
     public boolean isSuppressFeeWarnings() {
