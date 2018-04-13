@@ -330,7 +330,7 @@ public interface OpacApi {
 
     /**
      * Get pending fees on the account. The result of calling this should be fully equivalent
-     * to calling account(account().getPendingFees(), but on some implementations this method
+     * to calling account(account()).getPendingFees(), but on some implementations this method
      * might be faster if you only need the fees, but not the full account data.
      *
      * This function is always called from a background thread, you can use blocking network

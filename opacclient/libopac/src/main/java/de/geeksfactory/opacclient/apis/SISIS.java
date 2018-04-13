@@ -1490,6 +1490,38 @@ public class SISIS extends ApacheBaseApi implements OpacApi {
         assert (reservations.size() == trs - 1);
     }
 
+    protected void parse_fees(Document doc, AccountData res) {
+        if (doc.select("#label8").size() > 0) {
+            String text = doc.select("#label8").first().text().trim();
+            if (text.matches("Geb.+hren[^\\(]+\\(([0-9.,]+)[^0-9€A-Z]*(€|EUR|CHF|Fr)\\)")) {
+                text = text
+                        .replaceAll(
+                                "Geb.+hren[^\\(]+\\(([0-9.,]+)[^0-9€A-Z]*(€|EUR|CHF|Fr)\\)",
+                                "$1 $2");
+                res.setPendingFees(text);
+            }
+        }
+    }
+
+    @Override
+    public String getPendingAccountFees(Account account)
+            throws IOException, JSONException, OpacErrorException {
+        start(); // TODO: Is this necessary?
+
+        if (!login(account)) {
+            return null;
+        }
+
+        String html = httpGet(opac_url
+                + "/userAccount.do?methodToCall=showAccount&typ=1", ENCODING);
+        Document doc = Jsoup.parse(html);
+        doc.setBaseUri(opac_url);
+
+        AccountData res = new AccountData(account.getId());
+        parse_fees(doc, res);
+        return res.getPendingFees();
+    }
+
     @Override
     public AccountData account(Account acc) throws IOException,
             JSONException,
@@ -1573,17 +1605,7 @@ public class SISIS extends ApacheBaseApi implements OpacApi {
         }
 
         AccountData res = new AccountData(acc.getId());
-
-        if (doc.select("#label8").size() > 0) {
-            String text = doc.select("#label8").first().text().trim();
-            if (text.matches("Geb.+hren[^\\(]+\\(([0-9.,]+)[^0-9€A-Z]*(€|EUR|CHF|Fr)\\)")) {
-                text = text
-                        .replaceAll(
-                                "Geb.+hren[^\\(]+\\(([0-9.,]+)[^0-9€A-Z]*(€|EUR|CHF|Fr)\\)",
-                                "$1 $2");
-                res.setPendingFees(text);
-            }
-        }
+        parse_fees(doc, res);
         Pattern p = Pattern.compile("[^0-9.]*", Pattern.MULTILINE);
         if (doc.select(".box3").size() > 0) {
             for (Element box : doc.select(".box3")) {
