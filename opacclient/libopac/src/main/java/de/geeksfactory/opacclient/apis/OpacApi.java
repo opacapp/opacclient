@@ -329,6 +329,20 @@ public interface OpacApi {
             JSONException, OpacErrorException;
 
     /**
+     * Get pending fees on the account. The result of calling this should be fully equivalent
+     * to calling account(account()).getPendingFees(), but on some implementations this method
+     * might be faster if you only need the fees, but not the full account data.
+     *
+     * This function is always called from a background thread, you can use blocking network
+     * operations in it.
+     *
+     * @param account The account to display
+     * @return Outstanding fees, as formatted by the library system
+     */
+    String getPendingAccountFees(Account account) throws IOException,
+            JSONException, OpacErrorException;
+
+    /**
      * Check the validity of given account data. This is separate from the {@link #account(Account)}
      * function because just checking the login can be much faster than retrieving all the account
      * data.
