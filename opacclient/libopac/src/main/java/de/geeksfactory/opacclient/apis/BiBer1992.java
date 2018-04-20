@@ -795,6 +795,7 @@ public class BiBer1992 extends OkHttpBaseApi {
             formData.add("LANG", "de");
             formData.add("BENUTZER", account.getName());
             formData.add("PASSWORD", account.getPassword());
+            formData.add("ID1", selection.split(":")[0]); // Order of this parameter matters
             formData.add("FUNC", "vors");
             if (opacDir.contains("opax")) {
                 formData.add(resinfo.replace(
@@ -805,7 +806,6 @@ public class BiBer1992 extends OkHttpBaseApi {
             if (newStyleReservations) {
                 formData.addEncoded("ID11", selection.split(":")[1]);
             }
-            formData.add("ID1", selection.split(":")[0]);
 
             String html = httpPost(
                     opacUrl + "/" + opacDir + "/setreserv" + opacSuffix,
