@@ -10,6 +10,7 @@ import java.io.IOException;
 import de.geeksfactory.opacclient.i18n.DummyStringProvider;
 import de.geeksfactory.opacclient.objects.Account;
 import de.geeksfactory.opacclient.objects.AccountData;
+import de.geeksfactory.opacclient.objects.DetailedItem;
 import de.geeksfactory.opacclient.objects.LentItem;
 import okhttp3.RequestBody;
 
@@ -77,7 +78,7 @@ public class WebOpacNetAccountTest extends BaseHtmlTest {
 
         OpacApi.ProlongResult result = api.prolong("abc", new Account(), 0, null);
         assertEquals(OpacApi.MultiStepResult.Status.CONFIRMATION_NEEDED, result.status);
-        assertEquals("fee_confirmation 1.00", result.message);
+        assertEquals("fee_confirmation 1.00", result.getDetails().get(0)[0]);
 
         result = api.prolong("abc", new Account(), OpacApi.MultiStepResult.ACTION_CONFIRMATION,
                 null);
@@ -94,6 +95,33 @@ public class WebOpacNetAccountTest extends BaseHtmlTest {
         assertEquals(
                 "Die Medien können nicht verlängert werden.",
                 result.message);
+    }
+
+    @Test
+    public void testCancelSuccess() throws IOException {
+        String json = readResource("/webopac.net/cancel_success.json");
+        doReturn(json).when(api).httpPost(anyString(), any(RequestBody.class), anyString());
+
+        OpacApi.CancelResult result = api.cancel("abcZ123", new Account(), 0, null);
+        assertEquals(OpacApi.MultiStepResult.Status.OK, result.status);
+    }
+
+    @Test
+    public void testReservationFee() throws IOException {
+        String json = readResource("/webopac.net/reservation_fee.json");
+        String json2 = readResource("/webopac.net/reservation_success.json");
+        doReturn(json).doReturn(json2).when(api)
+                      .httpPost(anyString(), any(RequestBody.class), anyString());
+
+        DetailedItem item = new DetailedItem();
+        item.setId("abc");
+        OpacApi.ReservationResult result = api.reservation(item, new Account(), 0, null);
+        assertEquals(OpacApi.MultiStepResult.Status.CONFIRMATION_NEEDED, result.status);
+        assertEquals("Gebühr: Fr. 1.00", result.getDetails().get(0)[0]);
+
+        result = api.reservation(item, new Account(), OpacApi.MultiStepResult.ACTION_CONFIRMATION,
+                null);
+        assertEquals(OpacApi.MultiStepResult.Status.OK, result.status);
     }
 
 }
