@@ -1,0 +1,16 @@
+{
+  "possible": "False",
+  "message": "Diese Ausleihe darf erst ab 7 Tage vor Ablauf der Ausleihfrist verlängert werden.",
+  "gebuehr": "",
+  "trmgebuehr": "",
+  "hasgebuehr": "",
+  "hastermres": "",
+  "weitereres": "",
+  "resvon": "",
+  "resbis": "",
+  "closeddays": "",
+  "disableddays": "",
+  "frist": "",
+  "zweigstellen": "",
+  "zweigstelletitel": ""
+}
