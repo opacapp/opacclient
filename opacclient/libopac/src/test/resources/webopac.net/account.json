@@ -1,0 +1,174 @@
+{
+  "sessionid": "XXX",
+  "success": "1",
+  "errorstate": "",
+  "username": "Eliane Testapp",
+  "zweigstelleid": "0",
+  "berechtigungen": "1389",
+  "gebuehren": "2.00",
+  "guthaben": "0.00",
+  "gueltigbis": "",
+  "ausleihenlabels": "",
+  "children": "",
+  "ausleihen": [
+    {
+      "medienid": "",
+      "exemplarid": "86aa063020e03b1aed10d56c88334eceZ-2147443712",
+      "exemplarnr": "172091.01",
+      "felder": [
+        {
+          "display": "Ausgabe: 23.04.2018",
+          "farbe": "",
+          "schriftfarbe": ""
+        },
+        {
+          "display": "Leihfrist: 24.04.2018",
+          "farbe": "LightCoral",
+          "schriftfarbe": "#000"
+        },
+        {
+          "display": "Sachbuch",
+          "farbe": "",
+          "schriftfarbe": ""
+        },
+        {
+          "display": "Erwachsene",
+          "farbe": "",
+          "schriftfarbe": ""
+        }
+      ],
+      "titelkurz": "Ackermann, Lea : In Freiheit leben, das war lange nur ein Traum",
+      "hinweis": "",
+      "imageurl": "http://images-eu.amazon.com/images/P/346630878X.03.THUMBZZZ.jpg",
+      "iconurl": "icon.ashx?m=1",
+      "urheber": "Ackermann, Lea",
+      "extid": ""
+    },
+    {
+      "medienid": "",
+      "exemplarid": "2ddd0630bc0addf0e52ad56c86ce1ed6Z-2147443713",
+      "exemplarnr": "121679.01",
+      "felder": [
+        {
+          "display": "Ausgabe: 23.04.2018",
+          "farbe": "",
+          "schriftfarbe": ""
+        },
+        {
+          "display": "Leihfrist: 24.04.2018",
+          "farbe": "LightCoral",
+          "schriftfarbe": "#000"
+        },
+        {
+          "display": "Sachbuch",
+          "farbe": "",
+          "schriftfarbe": ""
+        },
+        {
+          "display": "Erwachsene",
+          "farbe": "",
+          "schriftfarbe": ""
+        }
+      ],
+      "titelkurz": "Zeyen, Wolfgang : Moderne Fahrwerkstechnik",
+      "hinweis": "",
+      "imageurl": "http://images-eu.amazon.com/images/P/361302313X.03.THUMBZZZ.jpg",
+      "iconurl": "icon.ashx?m=1",
+      "urheber": "Zeyen, Wolfgang",
+      "extid": ""
+    },
+    {
+      "medienid": "",
+      "exemplarid": "ba1b0630dd44cdbfcf2ed56c85a90f56Z-2147443711",
+      "exemplarnr": "068818.01",
+      "felder": [
+        {
+          "display": "Ausgabe: 23.04.2018",
+          "farbe": "",
+          "schriftfarbe": ""
+        },
+        {
+          "display": "Leihfrist: 22.05.2018",
+          "farbe": "LightGreen",
+          "schriftfarbe": "#000"
+        },
+        {
+          "display": "Sachbuch",
+          "farbe": "",
+          "schriftfarbe": ""
+        },
+        {
+          "display": "Erwachsene",
+          "farbe": "",
+          "schriftfarbe": ""
+        }
+      ],
+      "titelkurz": "Holl, Sieglinde : Riesenfensterbilder zu Ostern",
+      "hinweis": "",
+      "imageurl": "http://images-eu.amazon.com/images/P/3804304052.03.THUMBZZZ.jpg",
+      "iconurl": "icon.ashx?m=1",
+      "urheber": "Holl, Sieglinde",
+      "extid": ""
+    },
+    {
+      "medienid": "",
+      "exemplarid": "e5ed0630ad63ec7495a0d56c878ee397Z-2147443714",
+      "exemplarnr": "151951.01",
+      "felder": [
+        {
+          "display": "Ausgabe: 23.04.2018",
+          "farbe": "",
+          "schriftfarbe": ""
+        },
+        {
+          "display": "Leihfrist: 22.05.2018",
+          "farbe": "LightGreen",
+          "schriftfarbe": "#000"
+        },
+        {
+          "display": "Sachbuch",
+          "farbe": "",
+          "schriftfarbe": ""
+        },
+        {
+          "display": "Erwachsene",
+          "farbe": "",
+          "schriftfarbe": ""
+        }
+      ],
+      "titelkurz": "Sommer, Ulli : Roboter selbst bauen",
+      "hinweis": "",
+      "imageurl": "http://images-eu.amazon.com/images/P/3772341098.03.THUMBZZZ.jpg",
+      "iconurl": "icon.ashx?m=1",
+      "urheber": "Sommer, Ulli",
+      "extid": ""
+    }
+  ],
+  "reservationen": [
+    {
+      "exemplarid": "be3806306e8e706b9dd7d56c89b16aa1Z-2147483248",
+      "medienid": "",
+      "mediennr": "224680",
+      "titelkurz": "Rowling, Joanne K. : Harry Potter und der Stein der Weisen",
+      "medienart": "Belletristik",
+      "abholdat": "",
+      "abholfarbe": "",
+      "status": "1",
+      "resdat": "25.04.2018",
+      "imageurl": "http://images-eu.amazon.com/images/P/3551551677.03.THUMBZZZ.jpg",
+      "iconurl": "icon.ashx?m=1",
+      "urheber": "Rowling, Joanne K.<img src='../../mobile/images/Antolin_32.png' width='15px' style='margin-left: 5px;'>",
+      "zweig": "",
+      "resvon": "",
+      "resbis": "",
+      "brief": "",
+      "zfarbe": "",
+      "zschriftfarbe": "",
+      "extid": "",
+      "hinweis": ""
+    }
+  ],
+  "bibliopassids": "",
+  "activebibid": "0",
+  "mail": "carla.biasini@ur.ch"
+}

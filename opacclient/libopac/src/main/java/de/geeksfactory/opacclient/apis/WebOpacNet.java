@@ -194,7 +194,7 @@ public class WebOpacNet extends OkHttpBaseApi implements OpacApi {
 
     }
 
-    private MediaType getMediaType(String iconurl) {
+    private static MediaType getMediaType(String iconurl) {
         String number = iconurl.substring(12, 13);
         return defaulttypes.get(number);
     }
@@ -398,10 +398,6 @@ public class WebOpacNet extends OkHttpBaseApi implements OpacApi {
             JSONException, OpacErrorException {
         login(account);
 
-        DateTimeFormatter format = DateTimeFormat.forPattern("dd.MM.yyyy");
-
-        AccountData data = new AccountData(account.getId());
-
         FormBody.Builder formData = new FormBody.Builder(Charset.forName(getDefaultEncoding()));
         formData.add("art", "7");
         formData.add("rsa", "");
@@ -410,9 +406,17 @@ public class WebOpacNet extends OkHttpBaseApi implements OpacApi {
                 httpPost(opac_url + "/de/mobile/Konto.ashx", formData.build(),
                         getDefaultEncoding()));
 
+        AccountData data = new AccountData(account.getId());
+        parseAccount(response, data);
+
+        return data;
+    }
+
+    static void parseAccount(JSONObject response, AccountData data) throws JSONException {
         data.setValidUntil(ifNotEmpty(response.getString("gueltigbis")));
         data.setPendingFees(ifNotEmpty(response.getString("gebuehren")));
 
+        DateTimeFormatter format = DateTimeFormat.forPattern("dd.MM.yyyy");
         List<LentItem> lent = new ArrayList<>();
         JSONArray ausleihen = response.getJSONArray("ausleihen");
         for (int i = 0; i < ausleihen.length(); i++) {
@@ -460,11 +464,9 @@ public class WebOpacNet extends OkHttpBaseApi implements OpacApi {
         }
         data.setLent(lent);
         data.setReservations(reservations);
-
-        return data;
     }
 
-    private String ifNotEmpty(String value) {
+    private static String ifNotEmpty(String value) {
         if (value == null || value.equals("")) {
             return null;
         } else {
