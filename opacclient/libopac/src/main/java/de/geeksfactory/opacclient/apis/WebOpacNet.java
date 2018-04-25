@@ -75,6 +75,9 @@ import de.geeksfactory.opacclient.searchfields.SearchQuery;
 import de.geeksfactory.opacclient.searchfields.TextSearchField;
 import de.geeksfactory.opacclient.utils.Base64;
 import okhttp3.FormBody;
+import okhttp3.RequestBody;
+import okio.Buffer;
+import okio.BufferedSink;
 
 /**
  * @author Johan von Forstner, 06.04.2014
@@ -384,17 +387,20 @@ public class WebOpacNet extends OkHttpBaseApi implements OpacApi {
 
         try {
             if (useraction == MultiStepResult.ACTION_CONFIRMATION) {
-                return reservationDo(item.getId());
+                return reservationDo(item.getId(), account);
             } else {
-                return reservationCheck(item.getId());
+                return reservationCheck(item.getId(), account);
             }
         } catch (JSONException e) {
             throw new IOException(e);
+        } catch (OpacErrorException e) {
+            return new ReservationResult(MultiStepResult.Status.ERROR, e.getMessage());
         }
     }
 
-    private ReservationResult reservationCheck(String media) throws JSONException, IOException {
-        JSONObject response = res(media, "3");
+    private ReservationResult reservationCheck(String media, Account acc)
+            throws JSONException, IOException, OpacErrorException {
+        JSONObject response = res(media, "3", acc);
         if (response.getString("possible").equals("True")) {
             if (response.getString("hasgebuehr").equals("1")) {
                 ReservationResult res =
@@ -403,7 +409,7 @@ public class WebOpacNet extends OkHttpBaseApi implements OpacApi {
                         Collections.singletonList(new String[]{response.getString("gebuehr")}));
                 return res;
             } else {
-                return reservationDo(media);
+                return reservationDo(media, acc);
             }
         } else {
             return new ReservationResult(MultiStepResult.Status.ERROR,
@@ -411,8 +417,9 @@ public class WebOpacNet extends OkHttpBaseApi implements OpacApi {
         }
     }
 
-    private ReservationResult reservationDo(String media) throws IOException, JSONException {
-        JSONObject response = res(media, "1");
+    private ReservationResult reservationDo(String media, Account acc)
+            throws IOException, JSONException, OpacErrorException {
+        JSONObject response = res(media, "1", acc);
         if (response.getString("success").equals("True")) {
             return new ReservationResult(MultiStepResult.Status.OK);
         } else {
@@ -435,17 +442,20 @@ public class WebOpacNet extends OkHttpBaseApi implements OpacApi {
 
         try {
             if (useraction == MultiStepResult.ACTION_CONFIRMATION) {
-                return prolongDo(media);
+                return prolongDo(media, account);
             } else {
-                return prolongCheck(media);
+                return prolongCheck(media, account);
             }
         } catch (JSONException e) {
             throw new IOException(e);
+        } catch (OpacErrorException e) {
+            return new ProlongResult(MultiStepResult.Status.ERROR, e.getMessage());
         }
     }
 
-    private ProlongResult prolongCheck(String media) throws JSONException, IOException {
-        JSONObject response = ausleihe(media, "3");
+    private ProlongResult prolongCheck(String media, Account acc)
+            throws JSONException, IOException, OpacErrorException {
+        JSONObject response = ausleihe(media, "3", acc);
 
         if (response.getString("possible").equals("True")) {
             if (!response.getString("gebuehr").equals("0.00")) {
@@ -456,15 +466,16 @@ public class WebOpacNet extends OkHttpBaseApi implements OpacApi {
                 res.setDetails(Collections.singletonList(new String[]{fee}));
                 return res;
             } else {
-                return prolongDo(media);
+                return prolongDo(media, acc);
             }
         } else {
             return new ProlongResult(MultiStepResult.Status.ERROR, response.getString("message"));
         }
     }
 
-    private ProlongResult prolongDo(String media) throws IOException, JSONException {
-        JSONObject response = ausleihe(media, "4");
+    private ProlongResult prolongDo(String media, Account acc)
+            throws IOException, JSONException, OpacErrorException {
+        JSONObject response = ausleihe(media, "4", acc);
         if (response.getString("success").equals("True")) {
             return new ProlongResult(MultiStepResult.Status.OK);
         } else {
@@ -487,17 +498,20 @@ public class WebOpacNet extends OkHttpBaseApi implements OpacApi {
 
         try {
             if (useraction == MultiStepResult.ACTION_CONFIRMATION) {
-                return prolongAllDo();
+                return prolongAllDo(account);
             } else {
-                return prolongAllCheck();
+                return prolongAllCheck(account);
             }
         } catch (JSONException e) {
             throw new IOException(e);
+        } catch (OpacErrorException e) {
+            return new ProlongAllResult(MultiStepResult.Status.ERROR, e.getMessage());
         }
     }
 
-    private ProlongAllResult prolongAllCheck() throws IOException, JSONException {
-        JSONObject response = ausleihe(null, "7");
+    private ProlongAllResult prolongAllCheck(Account acc)
+            throws IOException, JSONException, OpacErrorException {
+        JSONObject response = ausleihe(null, "7", acc);
         if (response.getString("possible").equals("True")) {
             if (!response.getString("gebuehr").equals("0.00")) {
                 ProlongAllResult res =
@@ -507,7 +521,7 @@ public class WebOpacNet extends OkHttpBaseApi implements OpacApi {
                 res.setDetails(Collections.singletonList(new String[]{fee}));
                 return res;
             } else {
-                return prolongAllDo();
+                return prolongAllDo(acc);
             }
         } else {
             return new ProlongAllResult(MultiStepResult.Status.ERROR,
@@ -515,8 +529,9 @@ public class WebOpacNet extends OkHttpBaseApi implements OpacApi {
         }
     }
 
-    private ProlongAllResult prolongAllDo() throws JSONException, IOException {
-        JSONObject response = ausleihe(null, "8");
+    private ProlongAllResult prolongAllDo(Account acc)
+            throws JSONException, IOException, OpacErrorException {
+        JSONObject response = ausleihe(null, "8", acc);
         if (response.getString("success").equals("True")) {
             return new ProlongAllResult(MultiStepResult.Status.OK);
         } else {
@@ -524,20 +539,51 @@ public class WebOpacNet extends OkHttpBaseApi implements OpacApi {
         }
     }
 
-    private JSONObject ausleihe(String media, String aktion) throws JSONException, IOException {
+    private JSONObject ausleihe(String media, String aktion, Account acc)
+            throws JSONException, IOException, OpacErrorException {
         // aktion:
         // 3 = check prolong, 4 = prolong
         // 7 = check prolong all, 8 = prolong all
         FormBody.Builder formData = new FormBody.Builder(Charset.forName(getDefaultEncoding()));
         formData.add("aktion", aktion);
-        if (media != null) formData.add("zugid", media);
+        formData.add("zugid", media != null ? media : "");
         formData.add("biblNr", "0");
         formData.add("aid", "");
         formData.add("sessionid", sessionId);
 
-        return new JSONObject(
-                httpPost(opac_url + "/de/mobile/Ausleihe.ashx", formData.build(),
-                        getDefaultEncoding()));
+        return httpPostAccount(opac_url + "/de/mobile/Ausleihe.ashx", formData.build(), acc);
+    }
+
+    /**
+     * Executes a HTTP POST. When the response is empty, the request is retried after login.
+     */
+    private JSONObject httpPostAccount(String url, FormBody body, Account acc)
+            throws IOException, OpacErrorException, JSONException {
+        String s = httpPost(url, body, getDefaultEncoding());
+        if (s.equals("")) {
+            login(acc);
+            String newBody =
+                    bodyToString(body).replaceAll("sessionid=[^&]*", "sessionid=" + sessionId);
+            s = httpPost(url, new RequestBody() {
+
+                @Override
+                public okhttp3.MediaType contentType() {
+                    return okhttp3.MediaType.parse("application/x-www-form-urlencoded");
+                }
+
+                @Override
+                public void writeTo(BufferedSink sink) throws IOException {
+                    sink.write(newBody.getBytes(getDefaultEncoding()));
+                }
+            }, getDefaultEncoding());
+        }
+        return new JSONObject(s);
+    }
+
+    private String bodyToString(FormBody body) throws IOException {
+        Buffer buffer = new Buffer();
+        body.writeTo(buffer);
+        return buffer.readUtf8();
     }
 
     @Override
@@ -554,7 +600,7 @@ public class WebOpacNet extends OkHttpBaseApi implements OpacApi {
         }
 
         try {
-            JSONObject response = res(media, "2");
+            JSONObject response = res(media, "2", account);
             if (response.getString("success").equals("True")) {
                 return new CancelResult(MultiStepResult.Status.OK);
             } else {
@@ -562,10 +608,13 @@ public class WebOpacNet extends OkHttpBaseApi implements OpacApi {
             }
         } catch (JSONException e) {
             throw new IOException(e);
+        } catch (OpacErrorException e) {
+            return new CancelResult(MultiStepResult.Status.ERROR, e.getMessage());
         }
     }
 
-    private JSONObject res(String media, String aktion) throws JSONException, IOException {
+    private JSONObject res(String media, String aktion, Account acc)
+            throws JSONException, IOException, OpacErrorException {
         // aktion:
         // 1 = make reservation
         // 2 = cancel reservation
@@ -587,23 +636,20 @@ public class WebOpacNet extends OkHttpBaseApi implements OpacApi {
         formData.add("biblNr", "0");
         formData.add("sessionid", sessionId);
 
-        return new JSONObject(
-                httpPost(opac_url + "/de/mobile/Res.ashx", formData.build(),
-                        getDefaultEncoding()));
+        return httpPostAccount(opac_url + "/de/mobile/Res.ashx", formData.build(), acc);
     }
 
     @Override
     public AccountData account(Account account) throws IOException,
             JSONException, OpacErrorException {
-        login(account);
+        if (sessionId == null) login(account);
 
         FormBody.Builder formData = new FormBody.Builder(Charset.forName(getDefaultEncoding()));
         formData.add("art", "7");
         formData.add("rsa", "");
         formData.add("sessionId", sessionId);
-        JSONObject response = new JSONObject(
-                httpPost(opac_url + "/de/mobile/Konto.ashx", formData.build(),
-                        getDefaultEncoding()));
+        JSONObject response =
+                httpPostAccount(opac_url + "/de/mobile/Konto.ashx", formData.build(), account);
 
         AccountData data = new AccountData(account.getId());
         parseAccount(response, data);
