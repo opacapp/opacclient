@@ -397,16 +397,7 @@ public class WebOpacNet extends OkHttpBaseApi implements OpacApi {
     }
 
     private ProlongResult prolongCheck(String media) throws JSONException, IOException {
-        FormBody.Builder formData = new FormBody.Builder(Charset.forName(getDefaultEncoding()));
-        formData.add("aktion", "3");
-        formData.add("zugid", media);
-        formData.add("biblNr", "0");
-        formData.add("aid", "");
-        formData.add("sessionid", sessionId);
-
-        JSONObject response = new JSONObject(
-                httpPost(opac_url + "/de/mobile/Ausleihe.ashx", formData.build(),
-                        getDefaultEncoding()));
+        JSONObject response = ausleihe(media, "3");
 
         if (response.getString("possible").equals("True")) {
             if (!response.getString("gebuehr").equals("0.00")) {
@@ -424,16 +415,7 @@ public class WebOpacNet extends OkHttpBaseApi implements OpacApi {
     }
 
     private ProlongResult prolongDo(String media) throws IOException, JSONException {
-        FormBody.Builder formData = new FormBody.Builder(Charset.forName(getDefaultEncoding()));
-        formData.add("aktion", "4");
-        formData.add("zugid", media);
-        formData.add("biblNr", "0");
-        formData.add("aid", "");
-        formData.add("sessionid", sessionId);
-
-        JSONObject response = new JSONObject(
-                httpPost(opac_url + "/de/mobile/Ausleihe.ashx", formData.build(),
-                        getDefaultEncoding()));
+        JSONObject response = ausleihe(media, "4");
         if (response.getString("success").equals("True")) {
             return new ProlongResult(MultiStepResult.Status.OK);
         } else {
@@ -444,8 +426,82 @@ public class WebOpacNet extends OkHttpBaseApi implements OpacApi {
     @Override
     public ProlongAllResult prolongAll(Account account, int useraction,
             String selection) throws IOException {
-        // TODO Auto-generated method stub
-        return null;
+        if (sessionId == null) {
+            try {
+                login(account);
+            } catch (JSONException e) {
+                throw new IOException(e);
+            } catch (OpacErrorException e) {
+                return new ProlongAllResult(MultiStepResult.Status.ERROR, e.getMessage());
+            }
+        }
+
+        try {
+            if (useraction == MultiStepResult.ACTION_CONFIRMATION) {
+                return prolongAllDo();
+            } else {
+                return prolongAllCheck();
+            }
+        } catch (JSONException e) {
+            throw new IOException(e);
+        }
+    }
+
+    private ProlongAllResult prolongAllCheck() throws IOException, JSONException {
+        FormBody.Builder formData = new FormBody.Builder(Charset.forName(getDefaultEncoding()));
+        formData.add("aktion", "7");
+        formData.add("biblNr", "0");
+        formData.add("aid", "");
+        formData.add("sessionid", sessionId);
+
+        JSONObject response = new JSONObject(
+                httpPost(opac_url + "/de/mobile/Ausleihe.ashx", formData.build(),
+                        getDefaultEncoding()));
+
+        if (response.getString("possible").equals("True")) {
+            if (!response.getString("gebuehr").equals("0.00")) {
+                return new ProlongAllResult(MultiStepResult.Status.CONFIRMATION_NEEDED,
+                        stringProvider.getFormattedString(
+
+
+                                StringProvider.FEE_CONFIRMATION, response.getString("gebuehr")));
+            } else {
+                return prolongAllDo();
+            }
+        } else {
+            return new ProlongAllResult(MultiStepResult.Status.ERROR,
+                    response.getString("message"));
+        }
+    }
+
+    private ProlongAllResult prolongAllDo() throws JSONException, IOException {
+        FormBody.Builder formData = new FormBody.Builder(Charset.forName(getDefaultEncoding()));
+        formData.add("aktion", "8");
+        formData.add("biblNr", "0");
+        formData.add("aid", "");
+        formData.add("sessionid", sessionId);
+
+        JSONObject response = new JSONObject(
+                httpPost(opac_url + "/de/mobile/Ausleihe.ashx", formData.build(),
+                        getDefaultEncoding()));
+        if (response.getString("success").equals("True")) {
+            return new ProlongAllResult(MultiStepResult.Status.OK);
+        } else {
+            return new ProlongAllResult(MultiStepResult.Status.ERROR, response.getString("error"));
+        }
+    }
+
+    private JSONObject ausleihe(String media, String aktion) throws JSONException, IOException {
+        FormBody.Builder formData = new FormBody.Builder(Charset.forName(getDefaultEncoding()));
+        formData.add("aktion", aktion);
+        if (media != null) formData.add("zugid", media);
+        formData.add("biblNr", "0");
+        formData.add("aid", "");
+        formData.add("sessionid", sessionId);
+
+        return new JSONObject(
+                httpPost(opac_url + "/de/mobile/Ausleihe.ashx", formData.build(),
+                        getDefaultEncoding()));
     }
 
     @Override

@@ -84,4 +84,16 @@ public class WebOpacNetAccountTest extends BaseHtmlTest {
         assertEquals(OpacApi.MultiStepResult.Status.OK, result.status);
     }
 
+    @Test
+    public void testProlongAllImpossible() throws IOException {
+        String json = readResource("/webopac.net/prolong_all_impossible.json");
+        doReturn(json).when(api).httpPost(anyString(), any(RequestBody.class), anyString());
+
+        OpacApi.ProlongAllResult result = api.prolongAll(new Account(), 0, null);
+        assertEquals(OpacApi.MultiStepResult.Status.ERROR, result.status);
+        assertEquals(
+                "Die Medien können nicht verlängert werden.",
+                result.message);
+    }
+
 }
