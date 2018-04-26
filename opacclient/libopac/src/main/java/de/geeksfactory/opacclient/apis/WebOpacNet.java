@@ -37,6 +37,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Set;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import de.geeksfactory.opacclient.i18n.StringProvider;
 import de.geeksfactory.opacclient.networking.HttpClientFactory;
@@ -256,7 +258,8 @@ public class WebOpacNet extends ApacheBaseApi implements OpacApi {
             DetailedItem result = new DetailedItem();
             JSONObject json = new JSONObject(text);
 
-            result.setTitle(json.getString("titel"));
+            String title = json.getString("titel");
+            setTitleAndSubtitle(result, title);
             result.setCover(json.getString("imageurl"));
             result.setId(json.getString("medid"));
 
@@ -332,6 +335,20 @@ public class WebOpacNet extends ApacheBaseApi implements OpacApi {
                     e.getMessage()));
         }
 
+    }
+
+    private void setTitleAndSubtitle(DetailedItem result, String title) {
+        Matcher titleMatcher = Pattern.compile("<\u00ac1>([^<]*)</\u00ac1>").matcher(title);
+        Matcher subtitleMatcher = Pattern.compile("<\u00ac2>([^<]*)</\u00ac2>").matcher(title);
+        if (titleMatcher.find()) {
+            result.setTitle(Jsoup.parse(titleMatcher.group(1)).text());
+            if (subtitleMatcher.find()) {
+                result.addDetail(new Detail(stringProvider.getString(
+                        StringProvider.SUBTITLE), Jsoup.parse(subtitleMatcher.group(1)).text()));
+            }
+        } else {
+            result.setTitle(title);
+        }
     }
 
     @Override
