@@ -34,7 +34,7 @@ task jacocoRootReport(type: JacocoReport) {
 
     def fileFilter = ['**/R.class', '**/R$*.class', '**/BuildConfig.*', '**/Manifest*.*', '**/*Test*.*', 'android/**/*.*']
     def debugTree = fileTree(dir: "opacapp/build/intermediates/classes/debug", excludes: fileFilter)
-    def libopacDebugTree = fileTree(dir: "libopac/build/classes/main")
+    def libopacDebugTree = fileTree(dir: "libopac/build/classes/java/main")
     classDirectories = files([debugTree, libopacDebugTree])
     jacocoClasspath = configurations.jacocoAnt
     reports {
