@@ -98,6 +98,18 @@ public class WebOpacNetAccountTest extends BaseHtmlTest {
     }
 
     @Test
+    public void testProlongAllPartialSuccess() throws IOException {
+        String json = readResource("/webopac.net/prolong_all_possible.json");
+        String json2 = readResource("/webopac.net/prolong_all_partial_success.json");
+        doReturn(json).doReturn(json2).when(api)
+                      .httpPost(anyString(), any(RequestBody.class), anyString());
+
+        OpacApi.ProlongAllResult result = api.prolongAll(new Account(), 0, null);
+        assertEquals(OpacApi.MultiStepResult.Status.OK, result.status);
+        assertEquals("Es konnten 6 von 10 Medien verlängert werden.", result.message);
+    }
+
+    @Test
     public void testCancelSuccess() throws IOException {
         String json = readResource("/webopac.net/cancel_success.json");
         doReturn(json).when(api).httpPost(anyString(), any(RequestBody.class), anyString());

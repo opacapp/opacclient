@@ -534,6 +534,10 @@ public class WebOpacNet extends OkHttpBaseApi implements OpacApi {
         JSONObject response = ausleihe(null, "8", acc);
         if (response.getString("success").equals("True")) {
             return new ProlongAllResult(MultiStepResult.Status.OK);
+        } else if (response.getString("success").equals("False") && response.getString("error")
+                                                                            .matches(
+                                                                                    "Es konnten \\d+ von \\d+ Medien verlängert werden.")) {
+            return new ProlongAllResult(MultiStepResult.Status.OK, response.getString("error"));
         } else {
             return new ProlongAllResult(MultiStepResult.Status.ERROR, response.getString("error"));
         }
