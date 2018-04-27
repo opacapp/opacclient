@@ -39,5 +39,6 @@
     <color name="simple_search_bg">#505050</color>
     <color name="simple_search_fg">#F3F3F3</color>
     <color name="simple_search_hint">#ffcacaca</color>
+    <color name="adaptive_icon_bg">#171d28</color>
 
 </resources>
