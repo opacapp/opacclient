@@ -1,0 +1,16 @@
+{
+  "possible": "True",
+  "message": "<strong>Soll Ihre Reservation vorgenommen werden?</strong>",
+  "gebuehr": "Gebühr: Fr. 1.00",
+  "trmgebuehr": "",
+  "hasgebuehr": "1",
+  "hastermres": "0",
+  "weitereres": "",
+  "resvon": "",
+  "resbis": "",
+  "closeddays": "",
+  "disableddays": "",
+  "frist": "",
+  "zweigstellen": "",
+  "zweigstelletitel": ""
+}
