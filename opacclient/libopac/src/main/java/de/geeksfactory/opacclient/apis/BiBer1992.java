@@ -35,6 +35,7 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
 import java.io.IOException;
+import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -69,11 +70,12 @@ import de.geeksfactory.opacclient.searchfields.DropdownSearchField;
 import de.geeksfactory.opacclient.searchfields.SearchField;
 import de.geeksfactory.opacclient.searchfields.SearchQuery;
 import de.geeksfactory.opacclient.searchfields.TextSearchField;
+import okhttp3.FormBody;
 
 /**
  * @author Ruediger Wurth
  */
-public class BiBer1992 extends ApacheBaseApi {
+public class BiBer1992 extends OkHttpBaseApi {
 
     protected static HashMap<String, MediaType> defaulttypes = new HashMap<>();
 
@@ -92,7 +94,19 @@ public class BiBer1992 extends ApacheBaseApi {
     // private int m_resultcount = 10;
     // private long logged_in;
     // private Account logged_in_as;
-    private List<NameValuePair> nameValuePairs = new ArrayList<>(2);
+    List<String[]> formData = new ArrayList<>();
+
+    private void addFormData(String k, String v) {
+        formData.add(new String[] {k, v});
+    }
+
+    private FormBody buildFormData() {
+        FormBody.Builder fb = new FormBody.Builder(Charset.forName(getDefaultEncoding()));
+        for (String[] li : formData) {
+            fb.add(li[0], li[1]);
+        }
+        return fb.build();
+    }
 
     /*
      * ----- media types ----- Example Wuerzburg: <td ...><input type="checkbox"
@@ -124,23 +138,12 @@ public class BiBer1992 extends ApacheBaseApi {
     public List<SearchField> parseSearchFields() throws IOException {
         List<SearchField> fields = new ArrayList<>();
 
-        HttpGet httpget;
+        String html;
         if (opacDir.contains("opax")) {
-            httpget = new HttpGet(opacUrl + "/" + opacDir
-                    + "/de/qsel.html.S");
+            html = httpGet(opacUrl + "/" + opacDir + "/de/qsel.html.S", getDefaultEncoding());
         } else {
-            httpget = new HttpGet(opacUrl + "/" + opacDir
-                    + "/de/qsel_main.S");
+            html= httpGet(opacUrl + "/" + opacDir + "/de/qsel_main.S", getDefaultEncoding());
         }
-
-        HttpResponse response = http_client.execute(httpget);
-
-        if (response.getStatusLine().getStatusCode() == 500) {
-            throw new NotReachableException(response.getStatusLine().getReasonPhrase());
-        }
-        String html = convertStreamToString(response.getEntity().getContent());
-        HttpUtils.consume(response.getEntity());
-
         Document doc = Jsoup.parse(html);
 
         // get text fields
@@ -324,32 +327,26 @@ public class BiBer1992 extends ApacheBaseApi {
             start();
         }
 
-        nameValuePairs.clear();
+        formData.clear();
         int count = 1;
         for (SearchQuery query : queryList) {
             if ((query.getSearchField() instanceof TextSearchField || query
                     .getSearchField() instanceof BarcodeSearchField)
                     && !query.getValue().equals("")) {
-                nameValuePairs.add(new BasicNameValuePair("CNN" + count,
-                        "AND"));
-                nameValuePairs.add(new BasicNameValuePair("FLD" + count,
-                        query.getValue()));
-                nameValuePairs.add(new BasicNameValuePair("REG" + count,
-                        query.getKey()));
+                addFormData("CNN" + count, "AND");
+                addFormData("FLD" + count, query.getValue());
+                addFormData("REG" + count, query.getKey());
                 count++;
             } else if (query.getSearchField() instanceof DropdownSearchField) {
-                nameValuePairs.add(new BasicNameValuePair(query.getKey(),
-                        query.getValue()));
+                addFormData(query.getKey(), query.getValue());
             }
         }
 
-        nameValuePairs.add(new BasicNameValuePair("FUNC", "qsel"));
-        nameValuePairs.add(new BasicNameValuePair("LANG", "de"));
-        nameValuePairs.add(new BasicNameValuePair("SHOW", "20")); // but
-        // result
-        // gives 50
-        nameValuePairs.add(new BasicNameValuePair("SHOWSTAT", "N"));
-        nameValuePairs.add(new BasicNameValuePair("FROMPOS", "1"));
+        addFormData("FUNC", "qsel");
+        addFormData("LANG", "de");
+        addFormData("SHOW", "20"); // but result gives 50
+        addFormData("SHOWSTAT", "N");
+        addFormData("FROMPOS", "1");
 
         return searchGetPage(1);
     }
@@ -365,13 +362,12 @@ public class BiBer1992 extends ApacheBaseApi {
         int startNum = (page - 1) * numOfResultsPerPage + 1;
 
         // remove last element = "FROMPOS", and add a new one
-        nameValuePairs.remove(nameValuePairs.size() - 1);
-        nameValuePairs.add(new BasicNameValuePair("FROMPOS", String
-                .valueOf(startNum)));
+
+        formData.remove(formData.size() - 1);
+        addFormData("FROMPOS", String.valueOf(startNum));
 
         String html = httpPost(opacUrl + "/" + opacDir + "/query" + opacSuffix,
-                new UrlEncodedFormEntity(nameValuePairs),
-                getDefaultEncoding());
+                buildFormData(), getDefaultEncoding());
         return parse_search(html, page);
     }
 
@@ -542,13 +538,7 @@ public class BiBer1992 extends ApacheBaseApi {
         }
 
 
-        HttpGet httpget = new HttpGet(opacUrl + id);
-
-        HttpResponse response = http_client.execute(httpget);
-
-        String html = convertStreamToString(response.getEntity().getContent());
-        HttpUtils.consume(response.getEntity());
-
+        String html = httpGet(opacUrl + id, getDefaultEncoding());
         return parse_result(html);
     }
 
@@ -801,29 +791,27 @@ public class BiBer1992 extends ApacheBaseApi {
             }
         } else {
             // STEP 2: Reserve
-            List<NameValuePair> nameValuePairs = new ArrayList<>();
-            nameValuePairs.add(new BasicNameValuePair("LANG", "de"));
-            nameValuePairs.add(new BasicNameValuePair("BENUTZER", account
-                    .getName()));
-            nameValuePairs.add(new BasicNameValuePair("PASSWORD", account
-                    .getPassword()));
-            nameValuePairs.add(new BasicNameValuePair("FUNC", "vors"));
+            FormBody.Builder formData = new FormBody.Builder(Charset.forName(getDefaultEncoding()));
+            formData.add("LANG", "de");
+            formData.add("BENUTZER", account.getName());
+            formData.add("PASSWORD", account.getPassword());
+            formData.add("ID1", selection.split(":")[0]); // Order of this parameter matters
+            formData.add("FUNC", "vors");
             if (opacDir.contains("opax")) {
-                nameValuePairs.add(new BasicNameValuePair(resinfo.replace(
+                formData.add(resinfo.replace(
                         "resF_", ""), "vors"
                         + (newStyleReservations ? resinfo.replace("resF_", "")
-                        : "")));
+                        : ""));
             }
             if (newStyleReservations) {
-                nameValuePairs.add(new BasicNameValuePair("ID11", selection
-                        .split(":")[1]));
+                formData.addEncoded("ID11", selection.split(":")[1]);
             }
-            nameValuePairs.add(new BasicNameValuePair("ID1", selection
-                    .split(":")[0]));
 
-            String html = httpPost(opacUrl + "/" + opacDir
-                            + "/setreserv" + opacSuffix, new UrlEncodedFormEntity(nameValuePairs),
-                    getDefaultEncoding());
+            String html = httpPost(
+                    opacUrl + "/" + opacDir + "/setreserv" + opacSuffix,
+                    formData.build(),
+                    getDefaultEncoding()
+            );
 
             Document doc = Jsoup.parse(html);
             if (doc.select(".tab21 .p44b, .p2").text().contains("eingetragen")) {
@@ -871,21 +859,19 @@ public class BiBer1992 extends ApacheBaseApi {
             command = "/verl" + opacSuffix;
         }
 
-        List<NameValuePair> nameValuePairs = new ArrayList<>(2);
-        nameValuePairs.add(new BasicNameValuePair(media, "YES"));
-        nameValuePairs
-                .add(new BasicNameValuePair("BENUTZER", account.getName()));
-        nameValuePairs.add(new BasicNameValuePair("FUNC", "verl"));
-        nameValuePairs.add(new BasicNameValuePair("LANG", "de"));
-        nameValuePairs.add(new BasicNameValuePair("PASSWORD", account
-                .getPassword()));
+        FormBody.Builder formData = new FormBody.Builder(Charset.forName(getDefaultEncoding()));
+        formData.add(media, "YES");
+        formData.add("BENUTZER", account.getName());
+        formData.add("FUNC", "verl");
+        formData.add("LANG", "de");
+        formData.add("PASSWORD", account.getPassword());
 
         String html = httpPost(opacUrl + "/" + opacDir + command,
-                new UrlEncodedFormEntity(nameValuePairs), getDefaultEncoding());
+                formData.build(), getDefaultEncoding());
         if (html.contains("no such key")) {
             html = httpPost(
                     opacUrl + "/" + opacDir + command.replace(".C", ".S"),
-                    new UrlEncodedFormEntity(nameValuePairs),
+                    formData.build(),
                     getDefaultEncoding());
         }
 
@@ -945,22 +931,20 @@ public class BiBer1992 extends ApacheBaseApi {
     @Override
     public CancelResult cancel(String media, Account account, int useraction,
             String selection) throws IOException, OpacErrorException {
-        List<NameValuePair> nameValuePairs = new ArrayList<>();
-        nameValuePairs.add(new BasicNameValuePair("LANG", "de"));
-        nameValuePairs.add(new BasicNameValuePair("FUNC", "vorl"));
+        FormBody.Builder formData = new FormBody.Builder(Charset.forName(getDefaultEncoding()));
+        formData.add("LANG", "de");
+        formData.add("FUNC", "vorl");
         if (opacDir.contains("opax")) {
-            nameValuePairs.add(new BasicNameValuePair("BENUTZER", account
-                    .getName()));
-            nameValuePairs.add(new BasicNameValuePair("PASSWORD", account
-                    .getPassword()));
+            formData.add("BENUTZER", account.getName());
+            formData.add("PASSWORD", account.getPassword());
         }
-        nameValuePairs.add(new BasicNameValuePair(media, "YES"));
+        formData.add(media, "YES");
 
         String action =
                 opacDir.contains("opax") ? "/delreserv" + opacSuffix : "/vorml" + opacSuffix;
 
         String html = httpPost(opacUrl + "/" + opacDir + action,
-                new UrlEncodedFormEntity(nameValuePairs), getDefaultEncoding());
+                formData.build(), getDefaultEncoding());
 
         Document doc = Jsoup.parse(html);
         if (doc.select(".tab21 .p44b, .p2").text().contains("Vormerkung wurde")) {
@@ -1310,16 +1294,14 @@ public class BiBer1992 extends ApacheBaseApi {
     private Document accountHttpPost(Account account, String func)
             throws IOException, OpacErrorException {
         // get media list via http POST
-        List<NameValuePair> nameValuePairs = new ArrayList<>(2);
-        nameValuePairs.add(new BasicNameValuePair("FUNC", func));
-        nameValuePairs.add(new BasicNameValuePair("LANG", "de"));
-        nameValuePairs
-                .add(new BasicNameValuePair("BENUTZER", account.getName()));
-        nameValuePairs.add(new BasicNameValuePair("PASSWORD", account
-                .getPassword()));
+        FormBody.Builder formData = new FormBody.Builder(Charset.forName(getDefaultEncoding()));
+        formData.add("FUNC", func);
+        formData.add("LANG", "de");
+        formData.add("BENUTZER", account.getName());
+        formData.add("PASSWORD", account.getPassword());
 
         String html = httpPost(opacUrl + "/" + opacDir + "/user.C",
-                new UrlEncodedFormEntity(nameValuePairs), getDefaultEncoding());
+                formData.build(), getDefaultEncoding());
 
         Document doc = Jsoup.parse(html);
 

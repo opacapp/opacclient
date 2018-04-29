@@ -29,6 +29,7 @@ import java.security.cert.CertificateException;
 import de.geeksfactory.opacclient.OpacClient;
 import de.geeksfactory.opacclient.R;
 import de.geeksfactory.opacclient.utils.DebugTools;
+import okhttp3.Cache;
 import okhttp3.OkHttpClient;
 
 public class AndroidHttpClientFactory extends HttpClientFactory {
@@ -69,6 +70,8 @@ public class AndroidHttpClientFactory extends HttpClientFactory {
             boolean allCipherSuites) {
         OkHttpClient.Builder client =
                 super.getOkHttpClientBuilder(customssl, tls_only, allCipherSuites);
+        int cacheSize = 50 * 1024 * 1024; // 50MB
+        client.cache(new Cache(OpacClient.context.getCacheDir(), cacheSize));
         return DebugTools.prepareHttpClient(client).build();
     }
 }

@@ -80,6 +80,7 @@ public interface StringProvider {
     String RESERVATIONS_NUMBER = "reservations_number";
     String RESERVED_AT_DATE = "reserved_at_date";
     String LINK = "link";
+    String FEE_CONFIRMATION = "fee_confirmation";
 
     /**
      * Returns the translated string identified by identifier
