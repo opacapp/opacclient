@@ -236,7 +236,10 @@ public class WebOpacNet extends OkHttpBaseApi implements OpacApi {
         for (SearchQuery query : queryList) {
             if (query.getSearchField().getData().getBoolean("filter")
                     && !query.getValue().equals("")) {
-                queries.append("&").append(query.getKey()).append("=").append(query.getValue());
+                if (index > 0) {
+                    queries.append("&");
+                }
+                queries.append(query.getKey()).append("=").append(query.getValue());
                 if (query.getKey().equals("QS")) {
                     index++;
                 }
