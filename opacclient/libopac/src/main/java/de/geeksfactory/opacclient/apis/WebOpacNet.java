@@ -221,7 +221,7 @@ public class WebOpacNet extends OkHttpBaseApi implements OpacApi {
         return parse_search(json, page);
     }
 
-    private String buildParams(List<SearchQuery> queryList, int page)
+    protected String buildParams(List<SearchQuery> queryList, int page)
             throws JSONException, OpacErrorException {
         int index = 0;
 
