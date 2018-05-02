@@ -151,7 +151,7 @@ public class WebOpacNet extends OkHttpBaseApi implements OpacApi {
         return index + 1;
     }
 
-    protected SearchRequestResult parse_search(String text, int page)
+    private SearchRequestResult parse_search(String text, int page)
             throws OpacErrorException {
         if (!text.equals("")) {
             try {
@@ -237,6 +237,9 @@ public class WebOpacNet extends OkHttpBaseApi implements OpacApi {
             if (query.getSearchField().getData().getBoolean("filter")
                     && !query.getValue().equals("")) {
                 queries.append("&").append(query.getKey()).append("=").append(query.getValue());
+                if (query.getKey().equals("QS")) {
+                    index++;
+                }
             }
         }
 
