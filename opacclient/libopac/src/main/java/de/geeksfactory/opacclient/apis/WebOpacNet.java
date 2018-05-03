@@ -167,14 +167,20 @@ public class WebOpacNet extends OkHttpBaseApi implements OpacApi {
                     result.setId(resultJson.getString("medid"));
 
                     String title = resultJson.getString("titel");
+                    String[] titleAndSubtitle = getTitleAndSubtitle(title);
+
                     String publisher = resultJson.getString("verlag");
                     String series = resultJson.getString("reihe");
-                    String html = "<b>" + title + "</b><br />" + publisher
-                            + ", " + series;
+                    StringBuilder html = new StringBuilder();
+                    html.append("<b>").append(titleAndSubtitle[0]).append("</b><br />");
+                    if (titleAndSubtitle.length == 2) {
+                        html.append("<i>").append(titleAndSubtitle[1]).append("</i><br />");
+                    }
+                    html.append(publisher).append(", ").append(series);
 
                     result.setType(getMediaType(resultJson.getString("iconurl")));
 
-                    result.setInnerhtml(html);
+                    result.setInnerhtml(html.toString());
 
                     if (resultJson.getString("imageurl").length() > 0) {
                         result.setCover(resultJson.getString("imageurl"));
@@ -278,7 +284,12 @@ public class WebOpacNet extends OkHttpBaseApi implements OpacApi {
             JSONObject json = new JSONObject(text);
 
             String title = json.getString("titel");
-            setTitleAndSubtitle(result, title, stringProvider);
+            String[] titleAndSubtitle = getTitleAndSubtitle(title);
+            result.setTitle(titleAndSubtitle[0]);
+            if (titleAndSubtitle.length == 2) {
+                result.addDetail(new Detail(stringProvider.getString(StringProvider.SUBTITLE),
+                        titleAndSubtitle[1]));
+            }
             result.setCover(json.getString("imageurl"));
             result.setId(json.getString("medid"));
 
@@ -361,17 +372,19 @@ public class WebOpacNet extends OkHttpBaseApi implements OpacApi {
 
     }
 
-    static void setTitleAndSubtitle(DetailedItem result, String title, StringProvider sp) {
+    static String[] getTitleAndSubtitle(String title) {
         Matcher titleMatcher = Pattern.compile("<\u00ac1>([^<]*)</\u00ac1>").matcher(title);
         Matcher subtitleMatcher = Pattern.compile("<\u00ac2>([^<]*)</\u00ac2>").matcher(title);
         if (titleMatcher.find()) {
-            result.setTitle(Jsoup.parse(titleMatcher.group(1)).text());
+            String theTitle = Jsoup.parse(titleMatcher.group(1)).text();
             if (subtitleMatcher.find()) {
-                result.addDetail(new Detail(sp.getString(
-                        StringProvider.SUBTITLE), Jsoup.parse(subtitleMatcher.group(1)).text()));
+                String subtitle = Jsoup.parse(subtitleMatcher.group(1)).text();
+                return new String[]{theTitle, subtitle};
+            } else {
+                return new String[]{theTitle};
             }
         } else {
-            result.setTitle(title);
+            return new String[]{title};
         }
     }
 
