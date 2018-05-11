@@ -13,22 +13,35 @@
         android:layout_height="wrap_content">
     </ListView>
 
-    <EditText
-        android:id="@+id/autoCompleteTextView"
-        style="@style/Widget.AppCompat.EditText"
+    <RelativeLayout
         android:layout_width="fill_parent"
-        android:layout_height="0dp"
-        android:layout_marginTop="10dp"
-        android:layout_weight="1"
-        android:ems="10"
-        android:hint="Tag Name"
-        android:inputType="text"
-        android:singleLine="false"/>
+        android:layout_height="wrap_content">
 
-    <Button
-        android:id="@+id/addTag"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/tag_add"/>
+        <EditText
+            android:id="@+id/autoCompleteTextView"
+            style="@style/Widget.AppCompat.EditText"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:layout_weight="1"
+            android:ems="10"
+            android:hint="Tag Name"
+            android:inputType="text"
+            android:singleLine="false"/>
+
+        <ImageButton
+            android:id="@+id/addTag"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:contentDescription="Add"
+            app:srcCompat="@drawable/ic_add_24dp"
+            tools:src="@drawable/ic_add_24dp"
+            android:layout_margin="5dp"/>
+    </RelativeLayout>
+
+
+
 
 </LinearLayout>

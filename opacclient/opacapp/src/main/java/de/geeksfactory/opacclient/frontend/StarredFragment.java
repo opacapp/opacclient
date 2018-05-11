@@ -39,7 +39,9 @@ import android.support.v4.app.LoaderManager.LoaderCallbacks;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.support.v4.widget.SimpleCursorAdapter;
+import android.text.Editable;
 import android.text.Html;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuInflater;
@@ -55,6 +57,9 @@ import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Filter;
+import android.widget.Filterable;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -72,7 +77,9 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import de.geeksfactory.opacclient.OpacClient;
 import de.geeksfactory.opacclient.R;
@@ -120,6 +127,8 @@ public class StarredFragment extends Fragment implements
         app = (OpacClient) getActivity().getApplication();
 
         adapter = new ItemListAdapter();
+
+        EditText tagFilter = (EditText) view.findViewById(R.id.searchFilter);
 
         listView = (ListView) view.findViewById(R.id.lvStarred);
         tvWelcome = (TextView) view.findViewById(R.id.tvWelcome);
@@ -175,6 +184,23 @@ public class StarredFragment extends Fragment implements
         getActivity().getSupportLoaderManager()
                      .initLoader(0, null, this);
         listView.setAdapter(adapter);
+
+        tagFilter.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                adapter.getFilter().filter(s);
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
 
         // Restore the previously serialized activated item position.
         if (savedInstanceState != null
@@ -542,7 +568,10 @@ public class StarredFragment extends Fragment implements
         public void removeFragment();
     }
 
-    private class ItemListAdapter extends SimpleCursorAdapter {
+    private class ItemListAdapter extends SimpleCursorAdapter implements Filterable {
+
+        List<String> itemNames;
+        List<Starred> items = new ArrayList<>();
 
         public ItemListAdapter() {
             super(getActivity(), R.layout.listitem_starred, null,
@@ -552,7 +581,7 @@ public class StarredFragment extends Fragment implements
         @Override
         public void bindView(View view, Context context, Cursor cursor) {
             Starred item = StarDataSource.cursorToItem(cursor);
-
+            items.add(item);
 
             TextView tv = (TextView) view.findViewById(R.id.tvTitle);
             if (item.getTitle() != null) {
@@ -595,7 +624,7 @@ public class StarredFragment extends Fragment implements
 //                autocomplete.setThreshold(2);
 //                autocomplete.setAdapter(allTagNamesAdapter);
 
-                Button addTagButton = (Button) customLayout.findViewById(R.id.addTag);
+                ImageButton addTagButton = (ImageButton) customLayout.findViewById(R.id.addTag);
                 addTagButton.setOnClickListener(view1 -> {
                     String tagName = editText.getText().toString();
                     // prevent an empty tag or an exisiting tag from being added
@@ -633,6 +662,47 @@ public class StarredFragment extends Fragment implements
                     callback.removeFragment();
                 }
             });
+        }
+
+        @Override
+        public Filter getFilter() {
+
+            return new Filter() {
+
+                @SuppressWarnings("unchecked")
+                @Override
+                protected void publishResults(CharSequence constraint, FilterResults results) {
+
+                    itemNames = (List<String>) results.values;
+                    notifyDataSetChanged();
+                }
+
+                @Override
+                protected FilterResults performFiltering(CharSequence constraint) {
+
+                    FilterResults results = new FilterResults();
+                    Set<String> FilteredArrayNames = new HashSet<>();
+
+                    // perform search here using the searchConstraint String. For each starred item
+                    // in the list, get its tags and filter based on that
+
+                    constraint = constraint.toString().toLowerCase();
+                    for (int i = 0; i < items.size(); i++) {
+                        List<Tag> dataNames = getTags(items.get(i));
+                        for (Tag t : dataNames) {
+                            if (t.getTagName().toLowerCase().contains(constraint.toString())) {
+                                FilteredArrayNames.add(items.get(i).getTitle());
+                            }
+                        }
+                    }
+
+                    results.count = FilteredArrayNames.size();
+                    results.values = new ArrayList<>(FilteredArrayNames);
+                    Log.e("VALUES", results.values.toString());
+
+                    return results;
+                }
+            };
         }
     }
 
