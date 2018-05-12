@@ -41,7 +41,6 @@ import android.widget.SectionIndexer;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import org.acra.ACRA;
 import org.joda.time.DateTime;
 import org.joda.time.Duration;
 import org.json.JSONException;
@@ -71,6 +70,7 @@ import de.geeksfactory.opacclient.utils.ErrorReporter;
 import de.geeksfactory.opacclient.webservice.LibraryConfigUpdateService;
 import de.geeksfactory.opacclient.webservice.WebService;
 import de.geeksfactory.opacclient.webservice.WebServiceManager;
+import io.sentry.Sentry;
 
 public class LibraryListActivity extends AppCompatActivity
         implements ActivityCompat.OnRequestPermissionsResultCallback {
@@ -830,7 +830,7 @@ public class LibraryListActivity extends AppCompatActivity
                             "updated config for " + String.valueOf(count) + " libraries");
                     ((OpacClient) getApplication()).resetCache();
                     if (!BuildConfig.DEBUG) {
-                        ACRA.getErrorReporter().putCustomData("data_version",
+                        Sentry.getContext().addExtra(OpacClient.SENTRY_DATA_VERSION,
                                 prefs.getLastLibraryConfigUpdate().toString());
                     }
                 } catch (IOException | JSONException ignore) {

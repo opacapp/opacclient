@@ -17,6 +17,7 @@ build/
 # Local configuration file (sdk path, etc)
 local.properties
 ant.properties
+sentry.properties
 
 web/
 testproject/
