@@ -18,11 +18,6 @@
  */
 package de.geeksfactory.opacclient.apis;
 
-import org.apache.http.HttpResponse;
-import org.apache.http.NameValuePair;
-import org.apache.http.client.entity.UrlEncodedFormEntity;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.message.BasicNameValuePair;
 import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
@@ -47,7 +42,6 @@ import java.util.regex.Pattern;
 
 import de.geeksfactory.opacclient.i18n.StringProvider;
 import de.geeksfactory.opacclient.networking.HttpClientFactory;
-import de.geeksfactory.opacclient.networking.HttpUtils;
 import de.geeksfactory.opacclient.networking.NotReachableException;
 import de.geeksfactory.opacclient.objects.Account;
 import de.geeksfactory.opacclient.objects.AccountData;
@@ -86,6 +80,7 @@ public class BiBer1992 extends OkHttpBaseApi {
     // number of results is always 50 which is too much
     final private int numOfResultsPerPage = 20;
     protected boolean newStyleReservations = false;
+    protected boolean reservationsId1First = false;
     private String opacUrl = "";
     private String opacDir = "opac"; // sometimes also "opax"
     private String opacSuffix = ".C"; // sometimes also ".S"
@@ -762,6 +757,17 @@ public class BiBer1992 extends OkHttpBaseApi {
             newStyleReservations = doc
                     .select("input[name=" + resinfo.replace("resF_", "") + "]")
                     .val().length() > 4;
+
+            for (Element input : doc.select("input, select")) {
+                if ("ID1".equals(input.attr("name"))) {
+                    reservationsId1First = true;
+                    break;
+                } else if ("FUNC".equals(input.attr("name"))) {
+                    reservationsId1First = false;
+                    break;
+                }
+            }
+
             Elements optionsElements = doc.select("select[name=ID1] option");
             if (optionsElements.size() > 0) {
                 List<Map<String, String>> options = new ArrayList<>();
@@ -795,7 +801,7 @@ public class BiBer1992 extends OkHttpBaseApi {
             formData.add("LANG", "de");
             formData.add("BENUTZER", account.getName());
             formData.add("PASSWORD", account.getPassword());
-            formData.add("ID1", selection.split(":")[0]); // Order of this parameter matters
+            if (reservationsId1First) formData.add("ID1", selection.split(":")[0]);
             formData.add("FUNC", "vors");
             if (opacDir.contains("opax")) {
                 formData.add(resinfo.replace(
@@ -806,6 +812,7 @@ public class BiBer1992 extends OkHttpBaseApi {
             if (newStyleReservations) {
                 formData.addEncoded("ID11", selection.split(":")[1]);
             }
+            if (!reservationsId1First) formData.add("ID1", selection.split(":")[0]);
 
             String html = httpPost(
                     opacUrl + "/" + opacDir + "/setreserv" + opacSuffix,
