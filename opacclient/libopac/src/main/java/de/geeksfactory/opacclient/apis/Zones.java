@@ -312,9 +312,9 @@ public class Zones extends ApacheBaseApi {
             }
         }
 
-        if (doc.select(".pageNavLink").size() > 0) {
+        if (doc.select("a.pageNavLink").size() > 0) {
             // Zones 2.2
-            searchobj = doc.select(".pageNavLink").first().attr("href").split("\\?")[0];
+            searchobj = doc.select("a.pageNavLink").first().attr("href").split("\\?")[0];
         } else if (doc.select("div[targetObject]").size() > 0) {
             // Zones 1.8 - search
             searchobj = doc.select("div[targetObject]").attr("targetObject").split("\\?")[0];
