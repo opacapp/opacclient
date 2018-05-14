@@ -32,7 +32,6 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager.LoaderCallbacks;
@@ -49,13 +48,11 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Filter;
 import android.widget.Filterable;
@@ -548,10 +545,10 @@ public class StarredFragment extends Fragment implements
         return data.getAllTagNames(item);
     }
 
-//    private List<String> getAllTagNamesExceptThisItem(Starred item) {
-//        StarDataSource data = new StarDataSource(getActivity());
-//        return data.getAllTagNamesExceptThisItem(item);
-//    }
+    private List<String> getAllTagNamesExceptThisItem(Starred item) {
+        StarDataSource data = new StarDataSource(getActivity());
+        return data.getAllTagNamesExceptThisItem(item);
+    }
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
@@ -619,27 +616,30 @@ public class StarredFragment extends Fragment implements
                 ArrayAdapter<Tag> tagAdapter = new TagListAdapter(context, currentTagList);
                 tagsListView.setAdapter(tagAdapter);
 
-                EditText editText = (EditText) customLayout.findViewById(R.id.autoCompleteTextView);
-//                ArrayAdapter<String> allTagNamesAdapter = new ArrayAdapter<>(context, android.R.layout.select_dialog_item, getAllTagNamesExceptThisItem(item));
-//                autocomplete.setThreshold(2);
-//                autocomplete.setAdapter(allTagNamesAdapter);
+                AutoCompleteTextView autocomplete =
+                        customLayout.findViewById(R.id.autoCompleteTextView);
+                ArrayAdapter<String> allTagNamesAdapter =
+                        new ArrayAdapter<>(context, android.R.layout.select_dialog_item,
+                                getAllTagNamesExceptThisItem(item));
+                autocomplete.setThreshold(2);
+                autocomplete.setAdapter(allTagNamesAdapter);
 
                 ImageButton addTagButton = (ImageButton) customLayout.findViewById(R.id.addTag);
                 addTagButton.setOnClickListener(view1 -> {
-                    String tagName = editText.getText().toString();
+                    String tagName = autocomplete.getText().toString();
                     // prevent an empty tag or an exisiting tag from being added
                     if (!tagName.equals("") && !currentTagListNames.contains(tagName)) {
                         Tag tagToAdd = addTag(item, tagName);
                         currentTagList.add(tagToAdd);
                         tagAdapter.notifyDataSetChanged();
                         currentTagListNames.add(tagName);
-                        editText.setText("");
+                        autocomplete.setText("");
                         Toast.makeText(context, "Added tag \"" + tagName + "\" to " + item.getTitle(), Toast.LENGTH_SHORT).show();
                     } else {
                         Toast.makeText(context, "Please enter a nonempty tag name that already isn't on the list", Toast.LENGTH_LONG).show();
                     }
                     // hide keyboard once done so as to see toast messages
-                    editText.onEditorAction(EditorInfo.IME_ACTION_DONE);
+                    autocomplete.onEditorAction(EditorInfo.IME_ACTION_DONE);
 
                 });
 

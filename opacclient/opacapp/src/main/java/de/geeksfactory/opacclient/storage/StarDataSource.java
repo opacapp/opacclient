@@ -341,24 +341,23 @@ public class StarDataSource {
         return tags;
     }
 
-//    /**
-//     * Get all tags that do not belong to this Starred item
-//     */
-//    public List<String> getAllTagNamesExceptThisItem(Starred item) {
-//        List<String> listOfTagNames = new ArrayList<>();
-//        Cursor cursor = database.rawQuery("select * from " + StarDatabase.STAR_TAGS_TABLE, null);
-//
-//        cursor.moveToFirst();
-//        while (!cursor.isAfterLast()) {
-//            if (cursor.getInt(1) != item.getId()) {
-//                int tagId = cursorToStarAndTagId(cursor);
-//                listOfTagNames.add(getTagById(tagId).getTagName());
-//                cursor.moveToNext();
-//            }
-//
-//        }
-//        // Make sure to close the cursor
-//        cursor.close();
-//        return listOfTagNames;
-//    }
+    /**
+     * Get all tags that do not belong to this Starred item
+     */
+    public List<String> getAllTagNamesExceptThisItem(Starred item) {
+        List<String> listOfTagNames = new ArrayList<>();
+        Cursor cursor = database.rawQuery("select * from " + StarDatabase.STAR_TAGS_TABLE, null);
+
+        cursor.moveToFirst();
+        while (!cursor.isAfterLast()) {
+            if (cursor.getInt(1) != item.getId()) {
+                int tagId = cursorToStarAndTagId(cursor);
+                listOfTagNames.add(getTagById(tagId).getTagName());
+            }
+            cursor.moveToNext();
+        }
+        // Make sure to close the cursor
+        cursor.close();
+        return listOfTagNames;
+    }
 }
