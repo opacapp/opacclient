@@ -26,7 +26,7 @@ public class SISISAccountTest extends BaseHtmlTest {
     }
 
     private static final String[] FILES =
-            new String[]{"dresden.html", "witten.html", "erfurt.html"};
+            new String[]{"dresden.html", "dresden2.html", "witten.html", "erfurt.html"};
 
     @Parameterized.Parameters(name = "{0}")
     public static Collection<String[]> files() {
@@ -51,8 +51,9 @@ public class SISISAccountTest extends BaseHtmlTest {
         // The dresden file is actually empty, so we can't even assert this; but before 4.5.9.
         // The test is still useful: Before 4.5.10 we actually had a bug with empty accounts.
         for (LentItem item : media) {
-            assertNotNull(item.getTitle());
+            assertContainsData(item.getTitle());
             assertNotNull(item.getDeadline());
+            assertContainsData(item.getBarcode());
         }
 
         Map<String, Integer> links = SISIS.getAccountPageLinks(doc);
