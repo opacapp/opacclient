@@ -333,6 +333,18 @@ public class WebOpacNet extends OkHttpBaseApi implements OpacApi {
                 result.addDetail(detail);
             }
 
+            if (json.has("divibib") && json.getString("divibib").length() > 1) {
+                Pattern s = Pattern.compile(
+                        "^.*(https?://[^\"']*)[\"'].*$"
+                );
+                Detail detail = new Detail("Onleihe",
+                        json.getString("divibib").replaceAll(
+                                "^.*(https?://[^\"']*)[\"'].*$",
+                                "$1"
+                        ));
+                result.addDetail(detail);
+            }
+
             // Copies
             JSONArray copies = json.getJSONArray("exemplare");
             for (int i = 0; i < copies.length(); i++) {
