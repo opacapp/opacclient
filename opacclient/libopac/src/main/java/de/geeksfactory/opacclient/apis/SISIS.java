@@ -1408,7 +1408,16 @@ public class SISIS extends ApacheBaseApi implements OpacApi {
 
             item.setTitle(tr.child(1).select("strong").text().trim());
             try {
-                item.setAuthor(tr.child(1).html().split("<br[ /]*>")[1].trim());
+                String[] col1split = tr.child(1).html().split("<br[ /]*>");
+                item.setAuthor(col1split[1].trim());
+
+                if (col1split.length > 2 && col1split[2].contains("&nbsp;/&nbsp;")) {
+                    String[] barcodeAndJournalIssue = col1split[2].split("&nbsp;/&nbsp;");
+                    item.setBarcode(barcodeAndJournalIssue[0].trim());
+                    if (item.getTitle() == null || item.getTitle().equals("")) {
+                        item.setTitle(barcodeAndJournalIssue[1].trim());
+                    }
+                }
 
                 String[] col2split = tr.child(2).html().split("<br[ /]*>");
                 String deadline = col2split[0].trim();

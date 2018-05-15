@@ -111,6 +111,7 @@ public class WebOpacNet extends OkHttpBaseApi implements OpacApi {
     protected String opac_url = "";
     protected JSONObject data;
     protected List<SearchQuery> query;
+    protected JSONObject config;
 
     protected String sessionId;
 
@@ -127,11 +128,22 @@ public class WebOpacNet extends OkHttpBaseApi implements OpacApi {
     }
 
     @Override
+    public void start() throws IOException {
+        super.start();
+        try {
+            config = new JSONObject(
+                    httpGet(opac_url + "/de/mobile/GetConfig.ashx", getDefaultEncoding()));
+        } catch (JSONException e) {
+            throw new IOException(e);
+        }
+    }
+
+    @Override
     public SearchRequestResult search(List<SearchQuery> query)
             throws IOException, OpacErrorException,
             JSONException {
         this.query = query;
-        start();
+        if (!initialised) start();
 
         String json = httpGet(opac_url + "/de/mobile/GetMedien.ashx?"
                 + buildParams(query, 1), getDefaultEncoding());
@@ -219,7 +231,7 @@ public class WebOpacNet extends OkHttpBaseApi implements OpacApi {
     @Override
     public SearchRequestResult searchGetPage(int page) throws IOException,
             OpacErrorException, JSONException {
-        start();
+        if (!initialised) start();
 
         String json = httpGet(opac_url + "/de/mobile/GetMedien.ashx?"
                 + buildParams(query, page), getDefaultEncoding());
@@ -258,6 +270,12 @@ public class WebOpacNet extends OkHttpBaseApi implements OpacApi {
         try {
             params.append("q=").append(URLEncoder.encode(queries.toString(), "UTF-8"));
             params.append("&p=").append(String.valueOf(page - 1));
+
+            // Divibib (Onleihe)
+            if ("True".equals(config.optString("displaydivibib"))) {
+                params.append("&nodibi=0");
+            }
+            
             params.append("&t=1");
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
@@ -792,6 +810,8 @@ public class WebOpacNet extends OkHttpBaseApi implements OpacApi {
     @Override
     public List<SearchField> parseSearchFields() throws IOException,
             JSONException {
+        if (!initialised) start();
+
         List<SearchField> fields = new ArrayList<>();
 
         // Text fields
