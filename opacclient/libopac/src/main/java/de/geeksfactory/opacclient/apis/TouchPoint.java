@@ -496,6 +496,7 @@ public class TouchPoint extends ApacheBaseApi implements OpacApi {
                         "hitlistPosition", "duplicateHitlistIdentifier",
                         "itemType", "titleStatus", "typeofHit", "context"};
                 String ajaxUrl = matchJSVariable(js, "ajaxUrl");
+                if (ajaxUrl == null) ajaxUrl = matchJSVariable(js, "currentUrl");
                 if (!"".equals(ajaxUrl)) {
                     JSONObject id = new JSONObject();
                     List<NameValuePair> map = new ArrayList<>();
