@@ -327,6 +327,12 @@ public class StarredFragment extends Fragment implements
                 Snackbar.LENGTH_SHORT).show();
     }
 
+
+    private void showImportWrongFormatError() {
+        Snackbar.make(getView(), R.string.failed_importing_file_format,
+                Snackbar.LENGTH_SHORT).show();
+    }
+
     private JSONObject getEncodedStarredObjects() {
         JSONObject starred = new JSONObject();
         try {
@@ -354,11 +360,11 @@ public class StarredFragment extends Fragment implements
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.KITKAT) {
             intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
             intent.addCategory(Intent.CATEGORY_OPENABLE);
-            intent.setType("application/json");
+            intent.setType("*/*");
         } else {    //let user use a custom picker
             intent = new Intent(Intent.ACTION_GET_CONTENT);
             intent.addCategory(Intent.CATEGORY_OPENABLE);
-            intent.setType("application/json");
+            intent.setType("*/*");
         }
         try {
             startActivityForResult(intent, REQUEST_CODE_IMPORT);
@@ -390,16 +396,26 @@ public class StarredFragment extends Fragment implements
             }
         } else if (requestCode == REQUEST_CODE_IMPORT && resultCode == Activity.RESULT_OK) {
             Uri uri = data.getData();
+            InputStream is = null;
             try {
                 StarDataSource dataSource = new StarDataSource(getActivity());
-                InputStream is = getActivity().getContentResolver().openInputStream(uri);
+                is = getActivity().getContentResolver().openInputStream(uri);
                 if (is != null) {
                     BufferedReader reader = new BufferedReader(new InputStreamReader(is, "UTF-8"));
                     StringBuilder builder = new StringBuilder();
                     String line = "";
+
+                    char[] chars = new char[1];
+                    reader.read(chars);
+                    if (chars[0] != '{') {
+                        throw new WrongFileFormatException();
+                    }
+                    builder.append(chars);
+
                     while ((line = reader.readLine()) != null) {
                         builder.append(line);
                     }
+
                     String list = builder.toString();
                     JSONObject savedList = new JSONObject(list);
                     String bib = savedList.getString(JSON_LIBRARY_NAME);
@@ -430,6 +446,15 @@ public class StarredFragment extends Fragment implements
                 }
             } catch (JSONException | IOException e) {
                 showImportError();
+            } catch (WrongFileFormatException e) {
+                showImportWrongFormatError();
+            } finally {
+                if (is != null) {
+                    try {
+                        is.close();
+                    } catch (IOException e) {
+                    }
+                }
             }
         }
 
@@ -526,5 +551,8 @@ public class StarredFragment extends Fragment implements
                 }
             });
         }
+    }
+
+    private class WrongFileFormatException extends Exception {
     }
 }
