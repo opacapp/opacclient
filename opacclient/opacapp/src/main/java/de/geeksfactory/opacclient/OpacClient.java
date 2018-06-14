@@ -36,11 +36,6 @@ import android.util.Log;
 
 import com.evernote.android.job.JobManager;
 
-import org.acra.ACRA;
-import org.acra.annotation.ReportsCrashes;
-import org.acra.config.ACRAConfiguration;
-import org.acra.config.ACRAConfigurationException;
-import org.acra.config.ConfigurationBuilder;
 import org.joda.time.DateTime;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -82,16 +77,17 @@ import de.geeksfactory.opacclient.utils.Utils;
 import de.geeksfactory.opacclient.webservice.LibraryConfigUpdateService;
 import de.geeksfactory.opacclient.webservice.UpdateHandler;
 import de.geeksfactory.opacclient.webservice.WebserviceReportHandler;
+import io.sentry.Sentry;
+import io.sentry.SentryUncaughtExceptionHandler;
+import io.sentry.android.AndroidSentryClientFactory;
 
-@ReportsCrashes(mailTo = "info@opacapp.de",
-        mode = org.acra.ReportingInteractionMode.NOTIFICATION,
-        sendReportsInDevMode = false,
-        resToastText = R.string.crash_toast_text)
 public class OpacClient extends Application {
 
     public static final String PREF_SELECTED_ACCOUNT = "selectedAccount";
     public static final String PREF_HOME_BRANCH_PREFIX = "homeBranch_";
     public static final String ASSETS_BIBSDIR = "bibs";
+    public static final String SENTRY_LIBRARY = "library";
+    public static final String SENTRY_DATA_VERSION = "data_version";
     public static int NOTIF_ID = 1;
     public static int BROADCAST_REMINDER = 2;
     public static Context context;
@@ -252,8 +248,7 @@ public class OpacClient extends Application {
         sp.edit().putLong(OpacClient.PREF_SELECTED_ACCOUNT, id).apply();
         resetCache();
         if (getLibrary() != null && !BuildConfig.DEBUG) {
-            ACRA.getErrorReporter().putCustomData("library",
-                    getLibrary().getIdent());
+            Sentry.getContext().addTag(SENTRY_LIBRARY, getLibrary().getIdent());
         }
     }
 
@@ -371,31 +366,17 @@ public class OpacClient extends Application {
         sp = PreferenceManager.getDefaultSharedPreferences(this);
 
         if (!BuildConfig.DEBUG) {
-            try {
-                final ACRAConfiguration config = new ConfigurationBuilder(this)
-                        .setResToastText(R.string.crash_toast_text)
-                        .setResDialogText(R.string.crash_dialog_text)
-                        .setResToastText(R.string.crash_toast_text)
-                        .setResNotifTickerText(R.string.crash_notif_ticker_text)
-                        .setResNotifTitle(R.string.crash_notif_title)
-                        .setResNotifText(R.string.crash_notif_text)
-                        .setResNotifIcon(android.R.drawable.stat_notify_error)
-                        .setResDialogText(R.string.crash_dialog_text)
-                        .build();
-                ACRA.init(this, config);
-
-                if (getLibrary() != null) {
-                    ACRA.getErrorReporter().putCustomData("library",
-                            getLibrary().getIdent());
-                }
-                DateTime lastUpdate = new PreferenceDataSource(getApplicationContext())
-                        .getLastLibraryConfigUpdate();
-                ACRA.getErrorReporter().putCustomData("data_version",
-                        lastUpdate != null ? lastUpdate.toString() : "null");
-            } catch (ACRAConfigurationException e) {
-                e.printStackTrace();
+            Sentry.init(new AndroidSentryClientFactory(this));
+            if (getLibrary() != null) {
+                Sentry.getContext().addTag(SENTRY_LIBRARY, getLibrary().getIdent());
             }
+            DateTime lastUpdate = new PreferenceDataSource(getApplicationContext())
+                    .getLastLibraryConfigUpdate();
+            Sentry.getContext().addExtra(
+                    SENTRY_DATA_VERSION, lastUpdate != null ? lastUpdate.toString() : "null");
+            SentryUncaughtExceptionHandler.setup();
         }
+
         DebugTools.init(this);
 
         OpacClient.context = getApplicationContext();
