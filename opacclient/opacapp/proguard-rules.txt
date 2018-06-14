@@ -25,10 +25,10 @@
 -dontwarn android.support.v4.app.NotificationCompat$*
 -dontwarn android.support.v4.app.NotificationCompatGingerbread
 
-# ACRA specifics, See also: https://github.com/ACRA/acra/wiki/ProGuard
--keepattributes SourceFile,LineNumberTable
--keepattributes *Annotation*
--keep class org.acra.** { *; }
+# sentry, see https://github.com/getsentry/sentry-java/issues/353
+-keepattributes LineNumberTable,SourceFile
+-dontwarn org.slf4j.**
+-dontwarn javax.**
 
 # Joda Time
 -dontwarn com.google.**
