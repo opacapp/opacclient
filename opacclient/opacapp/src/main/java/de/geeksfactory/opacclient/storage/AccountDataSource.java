@@ -176,7 +176,7 @@ public class AccountDataSource {
         List<LentItem> lent = new ArrayList<>();
         String[] selectionArgs = {"" + account.getId()};
         Cursor cursor = database.query(AccountDatabase.TABLENAME_LENT, AccountDatabase.COLUMNS_LENT,
-                "account = ?", selectionArgs, null, null, null);
+                "account = ?", selectionArgs, null, null, "deadline ASC");
         cursor.moveToFirst();
         while (!cursor.isAfterLast()) {
             LentItem entry = cursorToLentItem(cursor);
@@ -373,7 +373,7 @@ public class AccountDataSource {
         List<LentItem> items = new ArrayList<>();
         Cursor cursor = database
                 .query(AccountDatabase.TABLENAME_LENT, AccountDatabase.COLUMNS_LENT, null, null,
-                        null, null, null);
+                        null, null, "deadline ASC");
         cursor.moveToFirst();
         while (!cursor.isAfterLast()) {
             LentItem item = cursorToLentItem(cursor);
