@@ -1404,15 +1404,23 @@ public class AccountFragment extends Fragment implements
             AccountData data;
             try {
                 data = app.getApi().account(account);
+
                 Collections.sort(data.getLent(), (a, b) -> {
-                    if (a.getDeadline() == null && b.getDeadline() == null) {
-                        return 0;
-                    } else if (a.getDeadline() == null) {
-                        return -1;
-                    } else if (b.getDeadline() == null) {
+                    if (a.isEbook() == b.isEbook()) {
+                        if (a.getDeadline() == null && b.getDeadline() == null) {
+                            return 0;
+                        } else if (a.getDeadline() == null) {
+                            return -1;
+                        } else if (b.getDeadline() == null) {
+                            return 1;
+                        } else {
+                            return a.getDeadline().compareTo(b.getDeadline());
+                        }
+                    } else if (a.isEbook()) {
                         return 1;
                     } else {
-                        return a.getDeadline().compareTo(b.getDeadline());
+                        // b.isEbook
+                        return -1;
                     }
                 });
 
