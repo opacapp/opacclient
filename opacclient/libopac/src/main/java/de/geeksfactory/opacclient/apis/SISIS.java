@@ -790,9 +790,10 @@ public class SISIS extends ApacheBaseApi implements OpacApi {
             result.setCover(doc.select(".data td img").first().attr("abs:src"));
         }
 
-        if (doc.select(".aw_teaser_title").size() == 1) {
-            result.setTitle(doc.select(".aw_teaser_title").first().text()
-                               .trim());
+        if (doc.select(".aw_teaser_title, .results-teaser > tbody > tr > td > h1").size() == 1) {
+            result.setTitle(
+                    doc.select(".aw_teaser_title, .results-teaser > tbody > tr > td > h1").first()
+                       .text().trim());
         } else if (doc.select(".data td strong").size() > 0) {
             result.setTitle(doc.select(".data td strong").first().text().trim());
         } else {
