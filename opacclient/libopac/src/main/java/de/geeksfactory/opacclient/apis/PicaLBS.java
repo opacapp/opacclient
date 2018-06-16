@@ -26,6 +26,7 @@ import de.geeksfactory.opacclient.objects.DetailedItem;
 import de.geeksfactory.opacclient.objects.LentItem;
 import de.geeksfactory.opacclient.objects.Library;
 import de.geeksfactory.opacclient.objects.ReservedItem;
+import java8.util.function.Consumer;
 
 /**
  * API for the PICA OPAC by OCLC combined with LBS account functions Tested with LBS 4 in TU
@@ -146,7 +147,7 @@ public class PicaLBS extends Pica {
     }
 
     @Override
-    public AccountData account(Account account)
+    public AccountData account(Account account, Consumer<AccountData> preliminaryResultHandler)
             throws IOException, JSONException, OpacErrorException {
         if (!initialised) {
             start();

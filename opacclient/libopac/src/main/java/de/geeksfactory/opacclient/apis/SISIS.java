@@ -69,6 +69,7 @@ import de.geeksfactory.opacclient.searchfields.DropdownSearchField;
 import de.geeksfactory.opacclient.searchfields.SearchField;
 import de.geeksfactory.opacclient.searchfields.SearchQuery;
 import de.geeksfactory.opacclient.searchfields.TextSearchField;
+import java8.util.function.Consumer;
 import okhttp3.FormBody;
 
 /**
@@ -1518,9 +1519,8 @@ public class SISIS extends OkHttpBaseApi implements OpacApi {
     }
 
     @Override
-    public AccountData account(Account acc) throws IOException,
-            JSONException,
-            OpacErrorException {
+    public AccountData account(Account acc, Consumer<AccountData> preliminaryResultHandler)
+            throws IOException, JSONException, OpacErrorException {
         start(); // TODO: Is this necessary?
 
         int resultNum;

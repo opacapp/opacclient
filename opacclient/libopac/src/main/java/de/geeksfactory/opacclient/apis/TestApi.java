@@ -27,6 +27,7 @@ import de.geeksfactory.opacclient.objects.SearchResult;
 import de.geeksfactory.opacclient.searchfields.SearchField;
 import de.geeksfactory.opacclient.searchfields.SearchQuery;
 import de.geeksfactory.opacclient.searchfields.TextSearchField;
+import java8.util.function.Consumer;
 
 public class TestApi extends ApacheBaseApi {
     private Library library;
@@ -179,7 +180,7 @@ public class TestApi extends ApacheBaseApi {
     }
 
     @Override
-    public AccountData account(Account account)
+    public AccountData account(Account account, Consumer<AccountData> preliminaryResultHandler)
             throws IOException, JSONException, OpacErrorException {
         AccountData data = new AccountData(account.getId());
         List<LentItem> lent = new ArrayList<>();

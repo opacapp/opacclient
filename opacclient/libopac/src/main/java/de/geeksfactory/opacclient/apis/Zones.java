@@ -64,6 +64,7 @@ import de.geeksfactory.opacclient.searchfields.DropdownSearchField;
 import de.geeksfactory.opacclient.searchfields.SearchField;
 import de.geeksfactory.opacclient.searchfields.SearchQuery;
 import de.geeksfactory.opacclient.searchfields.TextSearchField;
+import java8.util.function.Consumer;
 
 /**
  * API für Web-Opacs von Zones mit dem Hinweis "Zones.2.2.45.xx" oder "ZONES v1.8.1" im Footer.
@@ -801,9 +802,8 @@ public class Zones extends ApacheBaseApi {
     }
 
     @Override
-    public AccountData account(Account acc) throws IOException,
-            JSONException,
-            OpacErrorException {
+    public AccountData account(Account acc, Consumer<AccountData> preliminaryResultHandler)
+            throws IOException, JSONException, OpacErrorException {
         Document login = login(acc);
         if (login == null) {
             return null;

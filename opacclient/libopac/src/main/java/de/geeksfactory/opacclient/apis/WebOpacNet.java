@@ -74,6 +74,7 @@ import de.geeksfactory.opacclient.searchfields.SearchField;
 import de.geeksfactory.opacclient.searchfields.SearchQuery;
 import de.geeksfactory.opacclient.searchfields.TextSearchField;
 import de.geeksfactory.opacclient.utils.Base64;
+import java8.util.function.Consumer;
 import okhttp3.FormBody;
 import okhttp3.RequestBody;
 import okio.Buffer;
@@ -692,8 +693,8 @@ public class WebOpacNet extends OkHttpBaseApi implements OpacApi {
     }
 
     @Override
-    public AccountData account(Account account) throws IOException,
-            JSONException, OpacErrorException {
+    public AccountData account(Account account, Consumer<AccountData> preliminaryResultHandler)
+            throws IOException, JSONException, OpacErrorException {
         if (sessionId == null) login(account);
 
         FormBody.Builder formData = new FormBody.Builder(Charset.forName(getDefaultEncoding()));

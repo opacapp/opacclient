@@ -69,6 +69,7 @@ import de.geeksfactory.opacclient.searchfields.DropdownSearchField;
 import de.geeksfactory.opacclient.searchfields.SearchField;
 import de.geeksfactory.opacclient.searchfields.SearchQuery;
 import de.geeksfactory.opacclient.searchfields.TextSearchField;
+import java8.util.function.Consumer;
 
 /**
  * Implementation of Fleischmann iOpac, including account support Seems to work in all the libraries
@@ -705,8 +706,8 @@ public class IOpac extends ApacheBaseApi implements OpacApi {
     }
 
     @Override
-    public AccountData account(Account account) throws IOException,
-            JSONException, OpacErrorException {
+    public AccountData account(Account account, Consumer<AccountData> preliminaryResultHandler)
+            throws IOException, JSONException, OpacErrorException {
         if (!initialised) {
             start();
         }

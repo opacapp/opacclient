@@ -62,6 +62,7 @@ import de.geeksfactory.opacclient.searchfields.SearchField;
 import de.geeksfactory.opacclient.searchfields.SearchQuery;
 import de.geeksfactory.opacclient.searchfields.TextSearchField;
 import java8.util.concurrent.CompletableFuture;
+import java8.util.function.Consumer;
 import okhttp3.Headers;
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
@@ -853,7 +854,7 @@ public class Open extends OkHttpBaseApi implements OpacApi {
     }
 
     @Override
-    public AccountData account(Account account)
+    public AccountData account(Account account, Consumer<AccountData> preliminaryResultHandler)
             throws IOException, JSONException, OpacErrorException {
         return null;
     }

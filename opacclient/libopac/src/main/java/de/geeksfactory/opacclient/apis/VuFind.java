@@ -43,6 +43,7 @@ import de.geeksfactory.opacclient.searchfields.DropdownSearchField;
 import de.geeksfactory.opacclient.searchfields.SearchField;
 import de.geeksfactory.opacclient.searchfields.SearchQuery;
 import de.geeksfactory.opacclient.searchfields.TextSearchField;
+import java8.util.function.Consumer;
 
 public class VuFind extends ApacheBaseApi {
     protected static final Pattern idPattern = Pattern.compile("\\/(?:Opacrl)?Record\\/([^/]+)");
@@ -622,7 +623,7 @@ public class VuFind extends ApacheBaseApi {
     }
 
     @Override
-    public AccountData account(Account account)
+    public AccountData account(Account account, Consumer<AccountData> preliminaryResultHandler)
             throws IOException, JSONException, OpacErrorException {
         return null;
     }

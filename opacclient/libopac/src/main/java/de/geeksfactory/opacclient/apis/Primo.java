@@ -42,6 +42,7 @@ import de.geeksfactory.opacclient.searchfields.DropdownSearchField;
 import de.geeksfactory.opacclient.searchfields.SearchField;
 import de.geeksfactory.opacclient.searchfields.SearchQuery;
 import de.geeksfactory.opacclient.searchfields.TextSearchField;
+import java8.util.function.Consumer;
 
 import static java.net.URLDecoder.decode;
 
@@ -605,7 +606,7 @@ public class Primo extends ApacheBaseApi {
     }
 
     @Override
-    public AccountData account(Account account)
+    public AccountData account(Account account, Consumer<AccountData> preliminaryResultHandler)
             throws IOException, JSONException, OpacErrorException {
         return null;
     }

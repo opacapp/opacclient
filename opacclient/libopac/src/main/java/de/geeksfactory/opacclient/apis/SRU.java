@@ -35,6 +35,7 @@ import de.geeksfactory.opacclient.searchfields.SearchField.Meaning;
 import de.geeksfactory.opacclient.searchfields.SearchQuery;
 import de.geeksfactory.opacclient.searchfields.TextSearchField;
 import de.geeksfactory.opacclient.utils.ISBNTools;
+import java8.util.function.Consumer;
 
 public class SRU extends ApacheBaseApi implements OpacApi {
 
@@ -296,8 +297,8 @@ public class SRU extends ApacheBaseApi implements OpacApi {
     }
 
     @Override
-    public AccountData account(Account account) throws IOException,
-            JSONException, OpacErrorException {
+    public AccountData account(Account account, Consumer<AccountData> preliminaryResultHandler)
+            throws IOException, JSONException, OpacErrorException {
         return null;
     }
 

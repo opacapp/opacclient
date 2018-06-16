@@ -21,13 +21,8 @@
  */
 package de.geeksfactory.opacclient.apis;
 
-import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
-import org.apache.http.client.entity.UrlEncodedFormEntity;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.utils.URLEncodedUtils;
-import org.apache.http.message.BasicNameValuePair;
 import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
@@ -59,7 +54,6 @@ import java.util.regex.Pattern;
 
 import de.geeksfactory.opacclient.i18n.StringProvider;
 import de.geeksfactory.opacclient.networking.HttpClientFactory;
-import de.geeksfactory.opacclient.networking.HttpUtils;
 import de.geeksfactory.opacclient.networking.NotReachableException;
 import de.geeksfactory.opacclient.objects.Account;
 import de.geeksfactory.opacclient.objects.AccountData;
@@ -83,6 +77,7 @@ import de.geeksfactory.opacclient.searchfields.SearchField.Meaning;
 import de.geeksfactory.opacclient.searchfields.SearchQuery;
 import de.geeksfactory.opacclient.searchfields.TextSearchField;
 import de.geeksfactory.opacclient.utils.JsonKeyIterator;
+import java8.util.function.Consumer;
 import okhttp3.FormBody;
 
 /**
@@ -992,9 +987,8 @@ public class Bibliotheca extends OkHttpBaseApi {
     }
 
     @Override
-    public AccountData account(Account acc) throws IOException,
-            JSONException,
-            OpacErrorException {
+    public AccountData account(Account acc, Consumer<AccountData> preliminaryResultHandler)
+            throws IOException, JSONException, OpacErrorException {
         if (!initialised) {
             start();
         }

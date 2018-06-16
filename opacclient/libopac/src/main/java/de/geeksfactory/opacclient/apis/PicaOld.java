@@ -32,6 +32,7 @@ import de.geeksfactory.opacclient.objects.AccountData;
 import de.geeksfactory.opacclient.objects.DetailedItem;
 import de.geeksfactory.opacclient.objects.LentItem;
 import de.geeksfactory.opacclient.objects.ReservedItem;
+import java8.util.function.Consumer;
 
 /**
  * API for the PICA OPAC by OCLC with the old default PICA account functions
@@ -323,8 +324,8 @@ public class PicaOld extends Pica {
     }
 
     @Override
-    public AccountData account(Account account) throws IOException,
-            JSONException, OpacErrorException {
+    public AccountData account(Account account, Consumer<AccountData> preliminaryResultHandler)
+            throws IOException, JSONException, OpacErrorException {
         if (!initialised) {
             start();
         }

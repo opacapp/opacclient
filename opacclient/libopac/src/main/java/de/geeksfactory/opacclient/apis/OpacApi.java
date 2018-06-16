@@ -40,6 +40,7 @@ import de.geeksfactory.opacclient.objects.SearchRequestResult;
 import de.geeksfactory.opacclient.reporting.ReportHandler;
 import de.geeksfactory.opacclient.searchfields.SearchField;
 import de.geeksfactory.opacclient.searchfields.SearchQuery;
+import java8.util.function.Consumer;
 
 /**
  * Generic interface for accessing online library catalogues.
@@ -314,6 +315,25 @@ public interface OpacApi {
      */
     CancelResult cancel(String media, Account account, int useraction,
             String selection) throws IOException, OpacErrorException;
+
+    /**
+     * Load account view (borrowed and reserved items, see <code>AccountData</code>)
+     *
+     * This function is always called from a background thread, you can use blocking network
+     * operations in it.
+     *
+     * @param account                  The account to display
+     * @param preliminaryResultHandler If loading some details of the account might take a
+     *                                 longtime, this allows the API user to receive preliminary
+     *                                 results while loading the account. For example, some items
+     *                                 in the list of lent/reserved items might be missing, or
+     *                                 not include all detailed status information
+     * @return Account details
+     * @see de.geeksfactory.opacclient.objects.AccountData
+     */
+    AccountData account(Account account, Consumer<AccountData> preliminaryResultHandler)
+            throws IOException,
+            JSONException, OpacErrorException;
 
     /**
      * Load account view (borrowed and reserved items, see <code>AccountData</code>)

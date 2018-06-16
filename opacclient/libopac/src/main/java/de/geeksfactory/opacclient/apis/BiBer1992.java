@@ -64,6 +64,7 @@ import de.geeksfactory.opacclient.searchfields.DropdownSearchField;
 import de.geeksfactory.opacclient.searchfields.SearchField;
 import de.geeksfactory.opacclient.searchfields.SearchQuery;
 import de.geeksfactory.opacclient.searchfields.TextSearchField;
+import java8.util.function.Consumer;
 import okhttp3.FormBody;
 
 /**
@@ -971,8 +972,8 @@ public class BiBer1992 extends OkHttpBaseApi {
      * POST-format: BENUTZER xxxxxxxxx FUNC medk LANG de PASSWORD ddmmyyyy
      */
     @Override
-    public AccountData account(Account account) throws IOException,
-            JSONException, OpacErrorException {
+    public AccountData account(Account account, Consumer<AccountData> preliminaryResultHandler)
+            throws IOException, JSONException, OpacErrorException {
 
         AccountData res = new AccountData(account.getId());
 

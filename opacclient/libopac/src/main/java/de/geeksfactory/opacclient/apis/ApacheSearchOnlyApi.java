@@ -7,6 +7,7 @@ import java.io.IOException;
 import de.geeksfactory.opacclient.objects.Account;
 import de.geeksfactory.opacclient.objects.AccountData;
 import de.geeksfactory.opacclient.objects.DetailedItem;
+import java8.util.function.Consumer;
 
 /**
  * For search-only API implementations, i.e. without account support, some abstract method
@@ -39,7 +40,8 @@ public abstract class ApacheSearchOnlyApi extends ApacheBaseApi {
     }
 
     @Override
-    public final AccountData account(Account account)
+    public final AccountData account(Account account,
+            Consumer<AccountData> preliminaryResultHandler)
             throws IOException, JSONException, OpacErrorException {
         return null;
     }

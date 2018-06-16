@@ -72,6 +72,7 @@ import de.geeksfactory.opacclient.searchfields.DropdownSearchField;
 import de.geeksfactory.opacclient.searchfields.SearchField;
 import de.geeksfactory.opacclient.searchfields.SearchQuery;
 import de.geeksfactory.opacclient.searchfields.TextSearchField;
+import java8.util.function.Consumer;
 
 /**
  * OpacApi implementation for Web Opacs of the TouchPoint product, developed by OCLC.
@@ -999,9 +1000,8 @@ public class TouchPoint extends ApacheBaseApi implements OpacApi {
     }
 
     @Override
-    public AccountData account(Account acc) throws IOException,
-            JSONException,
-            OpacErrorException {
+    public AccountData account(Account acc, Consumer<AccountData> preliminaryResultHandler)
+            throws IOException, JSONException, OpacErrorException {
         start();
         LoginResponse login = login(acc);
         if (!login.success) {

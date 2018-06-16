@@ -55,6 +55,7 @@ import de.geeksfactory.opacclient.searchfields.DropdownSearchField;
 import de.geeksfactory.opacclient.searchfields.SearchField;
 import de.geeksfactory.opacclient.searchfields.SearchQuery;
 import de.geeksfactory.opacclient.searchfields.TextSearchField;
+import java8.util.function.Consumer;
 
 public class Adis extends ApacheBaseApi implements OpacApi {
 
@@ -1291,8 +1292,8 @@ public class Adis extends ApacheBaseApi implements OpacApi {
     }
 
     @Override
-    public AccountData account(Account account) throws IOException,
-            JSONException, OpacErrorException {
+    public AccountData account(Account account, Consumer<AccountData> preliminaryResultHandler)
+            throws IOException, JSONException, OpacErrorException {
         start();
 
         Document doc = htmlGet(opac_url + ";jsessionid=" + s_sid + "?service="
