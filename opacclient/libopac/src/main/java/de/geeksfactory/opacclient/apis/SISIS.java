@@ -20,7 +20,6 @@ package de.geeksfactory.opacclient.apis;
 
 import org.apache.http.NameValuePair;
 import org.apache.http.client.ClientProtocolException;
-import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.utils.URLEncodedUtils;
 import org.apache.http.message.BasicNameValuePair;
 import org.joda.time.format.DateTimeFormat;
@@ -39,6 +38,7 @@ import java.io.UnsupportedEncodingException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URLEncoder;
+import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -69,13 +69,14 @@ import de.geeksfactory.opacclient.searchfields.DropdownSearchField;
 import de.geeksfactory.opacclient.searchfields.SearchField;
 import de.geeksfactory.opacclient.searchfields.SearchQuery;
 import de.geeksfactory.opacclient.searchfields.TextSearchField;
+import okhttp3.FormBody;
 
 /**
  * OpacApi implementation for Web Opacs of the SISIS SunRise product, developed by OCLC.
  *
  * Restrictions: Bookmarks are only constantly supported if the library uses the BibTip extension.
  */
-public class SISIS extends ApacheBaseApi implements OpacApi {
+public class SISIS extends OkHttpBaseApi implements OpacApi {
     protected static HashMap<String, MediaType> defaulttypes = new HashMap<>();
 
     static {
@@ -1063,11 +1064,10 @@ public class SISIS extends ApacheBaseApi implements OpacApi {
         }
 
         if (useraction == MultiStepResult.ACTION_CONFIRMATION) {
-            List<NameValuePair> nameValuePairs = new ArrayList<>(2);
-            nameValuePairs.add(new BasicNameValuePair("methodToCall", action));
-            nameValuePairs.add(new BasicNameValuePair("CSId", CSId));
-            String html = httpPost(opac_url + "/" + action + ".do",
-                    new UrlEncodedFormEntity(nameValuePairs), ENCODING);
+            FormBody.Builder fb = new FormBody.Builder(Charset.forName(getDefaultEncoding()))
+                    .add("methodToCall", action)
+                    .add("CSId", CSId);
+            String html = httpPost(opac_url + "/" + action + ".do", fb.build(), ENCODING);
             doc = Jsoup.parse(html);
         } else if (selection == null || useraction == 0) {
             String html = httpGet(opac_url + "/availability.do?"
@@ -1077,20 +1077,14 @@ public class SISIS extends ApacheBaseApi implements OpacApi {
             if (doc.select("input[name=username]").size() > 0) {
                 // Login vonnöten
                 CSId = doc.select("input[name=CSId]").val();
-                List<NameValuePair> nameValuePairs = new ArrayList<>(
-                        2);
-                nameValuePairs.add(new BasicNameValuePair("username", acc
-                        .getName()));
-                nameValuePairs.add(new BasicNameValuePair("password", acc
-                        .getPassword()));
-                nameValuePairs.add(new BasicNameValuePair("methodToCall",
-                        "submit"));
-                nameValuePairs.add(new BasicNameValuePair("CSId", CSId));
-                nameValuePairs.add(new BasicNameValuePair("login_action",
-                        "Login"));
+                FormBody.Builder fb = new FormBody.Builder(Charset.forName(getDefaultEncoding()))
+                        .add("username", acc.getName())
+                        .add("password", acc.getPassword())
+                        .add("methodToCall", "submit")
+                        .add("CSId", CSId)
+                        .add("login_action", "Login");
 
-                html = handleLoginMessage(httpPost(opac_url + "/login.do",
-                        new UrlEncodedFormEntity(nameValuePairs), ENCODING));
+                html = handleLoginMessage(httpPost(opac_url + "/login.do", fb.build(), ENCODING));
                 doc = Jsoup.parse(html);
 
                 if (doc.getElementsByClass("error").size() == 0) {
@@ -1099,16 +1093,12 @@ public class SISIS extends ApacheBaseApi implements OpacApi {
                 }
             }
             if (doc.select("input[name=expressorder]").size() > 0) {
-                List<NameValuePair> nameValuePairs = new ArrayList<>(
-                        2);
-                nameValuePairs.add(new BasicNameValuePair(branch_inputfield,
-                        selection));
-                nameValuePairs.add(new BasicNameValuePair("methodToCall",
-                        action));
-                nameValuePairs.add(new BasicNameValuePair("CSId", CSId));
-                nameValuePairs.add(new BasicNameValuePair("expressorder", " "));
-                html = httpPost(opac_url + "/" + action + ".do",
-                        new UrlEncodedFormEntity(nameValuePairs), ENCODING);
+                FormBody.Builder fb = new FormBody.Builder(Charset.forName(getDefaultEncoding()))
+                        .add(branch_inputfield, selection)
+                        .add("methodToCall", action)
+                        .add("CSId", CSId)
+                        .add("expressorder", " ");
+                html = httpPost(opac_url + "/" + action + ".do", fb.build(), ENCODING);
                 doc = Jsoup.parse(html);
             }
             if (doc.select("input[name=" + branch_inputfield + "]").size() > 0) {
@@ -1133,14 +1123,12 @@ public class SISIS extends ApacheBaseApi implements OpacApi {
                 return result;
             }
         } else if (useraction == ReservationResult.ACTION_BRANCH) {
-            List<NameValuePair> nameValuePairs = new ArrayList<>(2);
-            nameValuePairs.add(new BasicNameValuePair(branch_inputfield,
-                    selection));
-            nameValuePairs.add(new BasicNameValuePair("methodToCall", action));
-            nameValuePairs.add(new BasicNameValuePair("CSId", CSId));
+            FormBody.Builder fb = new FormBody.Builder(Charset.forName(getDefaultEncoding()))
+                    .add(branch_inputfield, selection)
+                    .add("methodToCall", action)
+                    .add("CSId", CSId);
 
-            String html = httpPost(opac_url + "/" + action + ".do",
-                    new UrlEncodedFormEntity(nameValuePairs), ENCODING);
+            String html = httpPost(opac_url + "/" + action + ".do", fb.build(), ENCODING);
             doc = Jsoup.parse(html);
         }
 
@@ -1337,7 +1325,7 @@ public class SISIS extends ApacheBaseApi implements OpacApi {
     protected boolean login(Account acc) throws OpacErrorException {
         String html;
 
-        List<NameValuePair> nameValuePairs = new ArrayList<>(2);
+        FormBody.Builder fb = new FormBody.Builder(Charset.forName(getDefaultEncoding()));
 
         try {
             String loginPage;
@@ -1345,23 +1333,20 @@ public class SISIS extends ApacheBaseApi implements OpacApi {
                     + "/userAccount.do?methodToCall=show&type=1", ENCODING);
             Document loginPageDoc = Jsoup.parse(loginPage);
             if (loginPageDoc.select("input[name=as_fid]").size() > 0) {
-                nameValuePairs.add(new BasicNameValuePair("as_fid",
-                        loginPageDoc.select("input[name=as_fid]").first()
-                                    .attr("value")));
+                fb.add("as_fid", loginPageDoc.select("input[name=as_fid]").first().attr("value"));
             }
             CSId = loginPageDoc.select("input[name=CSId]").val();
         } catch (IOException e1) {
             e1.printStackTrace();
         }
 
-        nameValuePairs.add(new BasicNameValuePair("username", acc.getName()));
-        nameValuePairs
-                .add(new BasicNameValuePair("password", acc.getPassword()));
-        nameValuePairs.add(new BasicNameValuePair("CSId", CSId));
-        nameValuePairs.add(new BasicNameValuePair("methodToCall", "submit"));
+        fb.add("username", acc.getName())
+          .add("password", acc.getPassword())
+          .add("CSId", CSId)
+          .add("methodToCall", "submit");
         try {
             html = handleLoginMessage(httpPost(opac_url + "/login.do",
-                    new UrlEncodedFormEntity(nameValuePairs, ENCODING), ENCODING));
+                    fb.build(), ENCODING));
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
             return false;
