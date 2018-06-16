@@ -1,0 +1,1237 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!-- START jsp/common/metaHeader.jsp -->
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="de" lang="de">
+<head>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge">
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta http-equiv="pragma" content="no-cache">
+    <meta http-equiv="expires" content="0">
+    <meta http-equiv="cache-control" content="no-cache">
+
+    <link rel="stylesheet" href="Katalog%20StuRB%20Erfurt-Dateien/infoguide.css" type="text/css">
+    <link rel="shortcut icon" href="https://opac.erfurt.de/webOPACClient/images/OCLC.ico">
+    <link rel="stylesheet" href="Katalog%20StuRB%20Erfurt-Dateien/jquery.css">
+    <link rel="stylesheet" href="Katalog%20StuRB%20Erfurt-Dateien/alerts.css">
+
+    <script src="Katalog%20StuRB%20Erfurt-Dateien/jquery-1.js" type="text/javascript"><!-- -->
+
+    </script>
+    <!-- AjaxQ is a jQuery plugin that implements AJAX request queueing mechanism.  -->
+    <script src="Katalog%20StuRB%20Erfurt-Dateien/jquery_002.js" type="text/javascript"><!-- -->
+
+    </script>
+    <script src="Katalog%20StuRB%20Erfurt-Dateien/jquery-ui-1.js" type="text/javascript"><!--  -->
+
+    </script>
+    <script src="Katalog%20StuRB%20Erfurt-Dateien/jquery.js" type="text/javascript"><!-- -->
+
+    </script>
+    <script src="Katalog%20StuRB%20Erfurt-Dateien/ig.js" type="text/javascript"><!-- --></script>
+    <script src="Katalog%20StuRB%20Erfurt-Dateien/jquery_003.js" type="text/javascript"><!-- -->
+
+    </script>
+    <script src="Katalog%20StuRB%20Erfurt-Dateien/jstorage.js" type="text/javascript"><!-- -->
+
+    </script>
+    <script src="Katalog%20StuRB%20Erfurt-Dateien/common.js" type="text/javascript"><!-- -->
+
+    </script>
+
+
+    <script type="text/javascript">/* <![CDATA[ */
+if (!(typeof globalSettings == "object" && globalSettings instanceof Map)) globalSettings = new Map();
+globalSettings.add({
+"imagePath": "/webOPACClient/images"
+});
+if (!(typeof i18n == "object" && i18n instanceof Map)) i18n = new Map();
+i18n.add({
+"common.header.loading.icon.alt": "Laden",
+"search.searchfield.suggestion.hits": "???de.search.searchfield.suggestion.hits???"
+});
+/* ]]> */
+
+    </script>
+
+    <!--[if IE 7]>
+    <style type="text/css">
+      #tab-content{margin-top:5px;}
+      select {height:auto;}
+      #searchfield input#f1 {width:10em;}
+
+
+    </style>
+    <![endif]-->
+
+    <title>
+
+        Katalog StuRB Erfurt
+
+    </title>
+    <style type="text/css">.text-color--pb-blue-100 {
+  color: #0046aa;
+}
+
+.text-color--pb-grey-75 {
+  color: #78787a;
+}
+
+.text-color--pb-red-100 {
+  color: #c1002b;
+}
+
+.text-color--pb-green-100 {
+  color: #7ab51d;
+}
+
+.text-color--pb-yellow-100 {
+  color: #ffdd00;
+}
+
+.white-bg {
+  background-color: white;
+}
+
+.background-color--pb-blue-10 {
+  background-color: #e5ecf6 !important;
+}
+
+.background-color--pb-blue-25 {
+  background-color: #bfd1e9 !important;
+}
+
+.background-color--pb-blue-35 {
+  background-color: #a6bfe2 !important;
+}
+
+.background-color--pb-blue-5 {
+  background-color: #f2f6fb !important;
+}
+
+.background-color--pb-green-10 {
+  background-color: #f4f8ec !important;
+}
+
+.background-color--pb-red-10 {
+  background-color: #fdf5f7 !important;
+}
+
+.background-color--pb-yellow-10 {
+  background-color: #fffae6 !important;
+}
+
+.text-color--pb-blue-100 {
+  color: #0046aa;
+}
+
+.text-color--pb-grey-75 {
+  color: #78787a;
+}
+
+.text-color--pb-red-100 {
+  color: #c1002b;
+}
+
+.text-color--pb-green-100 {
+  color: #7ab51d;
+}
+
+.text-color--pb-yellow-100 {
+  color: #ffdd00;
+}
+
+.white-bg {
+  background-color: white;
+}
+
+.background-color--pb-blue-10 {
+  background-color: #e5ecf6 !important;
+}
+
+.background-color--pb-blue-25 {
+  background-color: #bfd1e9 !important;
+}
+
+.background-color--pb-blue-35 {
+  background-color: #a6bfe2 !important;
+}
+
+.background-color--pb-blue-5 {
+  background-color: #f2f6fb !important;
+}
+
+.background-color--pb-green-10 {
+  background-color: #f4f8ec !important;
+}
+
+.background-color--pb-red-10 {
+  background-color: #fdf5f7 !important;
+}
+
+.background-color--pb-yellow-10 {
+  background-color: #fffae6 !important;
+}
+
+/* The error modal zIndex must be higher than any other modal, see $zindex-modal */
+
+/* coupon sizes */
+
+/**
+ * Note :
+ * These mixins are a minimum solution for a flex grid system and meant to be used
+ * until bootstrap 4 will be released (given that at the moment is in alpha state).
+ * The new grid system from v4 uses flex, but is pron to change
+ */
+
+/*------------------------------------*    TEXT COLORS
+\*------------------------------------*/
+
+/*------------------------------------*    TEXT MIXINS
+\*------------------------------------*/
+
+/**
+  * Do NOT use anymore@mixin  Use an H3@mixin
+ **/
+
+/**
+  * Do NOT use@mixin  Use an H2
+ **/
+
+/**
+  * Use an H6
+ **/
+
+/**
+  * Use an H5
+ **/
+
+/**
+  * Formerly known as textC2
+  **/
+
+/**
+  * Formerly known as textC1@mixin  Use an paragraph
+ **/
+
+.middled.centered {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  -webkit-transform: translate(-50%, -50%);
+  -ms-transform: translate(-50%, -50%);
+  -o-transform: translate(-50%, -50%);
+  transform: translate(-50%, -50%);
+}
+
+/*------------------------------------*    #RELATIVEPOSITIONING
+\*------------------------------------*/
+
+.position-relative {
+  position: relative;
+}
+
+.img-centered {
+  display: block;
+  margin: auto;
+}
+
+.line-element-vertically-centered {
+  display: inline-block;
+  vertical-align: middle;
+}
+
+.pb-sidebar-frame-container {
+  position: fixed;
+  z-index: 2147483647;
+  top: 0;
+  background-color: transparent;
+  width: 380px;
+  height: 100%;
+  right: -380px;
+}
+
+.pb-sidebar-frame-container > iframe {
+  width: 100%;
+  height: 100%;
+  border-width: 0;
+  border-style: initial !important;
+  border-color: initial !important;
+  border-image: initial !important;
+}
+
+@keyframes showSidebar {
+  from {
+    right: -380px;
+  }
+
+  to {
+    right: 0;
+  }
+}
+
+.pb-sidebar-frame-container.in {
+  animation: showSidebar 0.5s forwards;
+  -webkit-animation-iteration-count: 1;
+  animation-iteration-count: 1;
+  animation-delay: 0.1s;
+  -webkit-animation-delay: 0.1s;
+}
+
+.pb-notification-frame-container {
+  position: fixed;
+  z-index: 2147483647;
+  top: 0;
+  background-color: transparent;
+  width: 363px;
+  height: 78px;
+  z-index: 2147483646;
+  right: -370px;
+}
+
+.pb-notification-frame-container > iframe {
+  width: 100%;
+  height: 100%;
+  border-width: 0;
+  border-style: initial !important;
+  border-color: initial !important;
+  border-image: initial !important;
+}
+
+@keyframes showNotification {
+  from {
+    right: -370px;
+  }
+
+  to {
+    right: 0px;
+  }
+}
+
+@keyframes hideNotification {
+  from {
+    right: 0px;
+  }
+
+  to {
+    right: -380px;
+  }
+}
+
+@keyframes collapseNotification {
+  from {
+    left: 370px;
+  }
+
+  to {
+    right: 0px;
+  }
+}
+
+.pb-notification-frame-container.in {
+  animation: showNotification 0.5s forwards;
+  animation-delay: 0s;
+  -webkit-animation-delay: 0s;
+  -webkit-animation-iteration-count: 1;
+  animation-iteration-count: 1;
+}
+
+.pb-notification-frame-container.out {
+  animation: hideNotification 0.5s forwards;
+  animation-delay: 0s;
+  -webkit-animation-delay: 0s;
+  -webkit-animation-iteration-count: 1;
+  animation-iteration-count: 1;
+}
+
+.hidden {
+  display: none;
+}
+
+
+
+    </style>
+</head>
+<!-- END of jsp/common/metaHeader.jsp -->
+<!-- START jsp/useraccount/accountdata/Layout.jsp -->
+
+
+<body onunload="unBlockAction();">
+
+<script language="javascript" type="text/javascript"
+        src="Katalog%20StuRB%20Erfurt-Dateien/stdButton.js">
+</script>
+
+<div id="pageContainer">
+
+
+    <!-- START jsp/common/header.jsp -->
+
+
+    <div id="branding">
+  <span id="logo">
+
+
+      <img src="Katalog%20StuRB%20Erfurt-Dateien/OPAC.gif" alt="webOPAC" title="webOPAC" width="543"
+           height="31">
+      <!--  <h1>webOPAC</h1> -->
+
+  </span>
+        <div class="info">
+            <div>
+                Diese Seite verwendet Cookies.
+                <a href="#" onclick="return cookieHelp('/webOPACClient');">
+                    Weitere Informationen..</a>
+            </div>
+            <div id="timer" class="textrot">&nbsp;</div>
+        </div>
+    </div>
+
+    <!-- #ot -->
+    <div id="ajaxAutoCompletion">solr</div>
+
+    <div id="ajaxUrlSolrAutoCompletion">SolrQueryCompletionProxy</div>
+
+
+    <!-- START jsp/common/timer.jsp -->
+
+
+    <script type="text/javascript" language="javascript">
+
+var timeout=(10 * 60 * 1000)  + new Date().getTime();
+timeout-=2000;
+
+var mesg="Diese Sitzung läuft in %VAR% Sek. ab!";
+var toFront=false;
+
+if(mesg.length <= 0 || mesg.indexOf("???") >= 0)
+	mesg="Diese Sitzung läuft in %VAR% Sek. ab!";
+ticker();
+
+function ticker()
+{
+  var timeoutID;
+  var s;
+  var t=timeout - new Date().getTime();
+  t=(t<0)?0:Math.round(t/1000);
+  s=""+ ((t>60)?"":t.toFixed(0));
+ 	if(t <= 60)
+ 	{
+ 		if(toFront == false)
+ 		{
+ 			toFront=true;
+ 			window.focus();
+ 		}
+ 		var msg = mesg.replace("%VAR%", s);
+    document.getElementById("timer").innerHTML = msg;
+ 	}
+  if(t == 0)
+  {
+    window.clearTimeout(timeoutID);
+    window.location.replace("/webOPACClient/jsp/common/timeout.jsp");
+  }
+  else
+    timeoutID = window.setTimeout("ticker()",(t>60) ? 6000 : 1000);
+}
+
+
+    </script>
+
+
+    <!-- END of jsp/common/timer.jsp -->
+    <!-- END of jsp/common/header.jsp -->
+
+
+    <div id="mainnav">
+
+
+        <!-- START jsp/navigation/mainNavi.jsp -->
+
+
+        <!-- Actual Tiles Context 756 -->
+
+        <ul>
+
+
+            <li>
+                <a href="https://opac.erfurt.de/webOPACClient/search.do?methodToCall=start">Suche</a>
+
+            </li>
+
+
+            <li>
+                <a href="https://opac.erfurt.de/webOPACClient/memorizelist.do?methodToCall=show">Merkliste</a>
+            </li>
+
+
+            <li id="current">
+                <div id="active">Konto</div>
+
+                <ul>
+
+                    <li id="current2">Kontostand</li>
+
+
+                    <li>
+                        <a href="https://opac.erfurt.de/webOPACClient/userdata.do?methodToCall=showUserData">Benutzerdaten</a>
+                    </li>
+
+
+                    <li>
+                        <a href="https://opac.erfurt.de/webOPACClient/searchpreferences.do?methodToCall=showSearchpreferences">Sucheinstellungen</a>
+                    </li>
+
+
+                </ul>
+
+            </li>
+
+
+        </ul>
+        <!-- END of jsp/navigation/mainNavi.jsp -->
+
+
+        <!-- START jsp/navigation/loginnavi.jsp -->
+
+        <div id="login">
+
+
+            <a href="https://opac.erfurt.de/webOPACClient/login.do?methodToCall=logout">Abmelden</a>
+            <div id="username">
+                <strong class="c1">Benutzernummer</strong> 000XXXXXXXX
+            </div>
+
+        </div>
+        <!-- END of jsp/navigation/loginnavi.jsp -->
+    </div>
+    <br class="cleaner">
+
+
+    <!-- START jsp/navigation/bgnavi.jsp -->
+    <script language="javascript" type="text/javascript"
+            src="Katalog%20StuRB%20Erfurt-Dateien/help.js">
+    </script>
+
+    <div id="bgmainnav">
+        <div>
+            <div id="nav2">
+                <ul>
+
+
+                    <li>
+                        <a href="https://opac.erfurt.de/webOPACClient/asklibrary.do?methodToCall=show">Kontakt</a>
+                    </li>
+
+
+                    <li>
+                        <a href="#" title="Hilfe&nbsp;(neuer Tab)"
+                           onclick="return openHelp('/webOPACClient');">
+                            Hilfe</a>
+                    </li>
+
+
+                    <li>
+                        <a href="https://opac.erfurt.de/webOPACClient/actual.do?methodToCall=show">Neuerwerbungen</a>
+                    </li>
+
+
+                </ul>
+            </div>
+        </div>
+    </div>
+    <!-- END of jsp/navigation/bgnavi.jsp -->
+
+    <br class="cleaner">
+
+
+    <!-- START jsp/search/searchbar.jsp -->
+
+    <div id="searchfield">
+        <form id="AdvancedSearchForm" method="post" action="/webOPACClient/search.do">
+            <input name="methodToCall" value="submit" type="hidden">
+            <input name="searchCategories[0]" value="-1" type="hidden">
+            <input name="CSId" value="13970N8Sd52b5db7f915094317db81ad5286cdbec3497d7d"
+                   type="hidden">
+            <input name="searchHistory" value="" type="hidden">
+            <input name="queryString" value="" type="hidden">
+
+
+            <input name="searchString[1]" value="" type="hidden">
+
+
+            <input name="searchString[2]" value="" type="hidden">
+
+
+            <input name="searchString[3]" value="" type="hidden">
+
+
+            <input name="searchString[4]" value="" type="hidden">
+
+
+            <legend class="hide-content">Sucheingabe</legend>
+            <div class="input-group">
+                <input class="form-control" placeholder="Sucheingabe" id="f1" name="searchString[0]"
+                       type="text">
+                <a href="#" onclick="document.forms['AdvancedSearchForm'].submit();return false;"
+                   class="input-group-addon"><i class="ig-ico ig-ico-search" aria-hidden="true"></i></a>
+            </div>
+        </form>
+    </div>
+
+    <!-- END of jsp/search/searchbar.jsp -->
+
+
+    <!-- START jsp/useraccount/accountdata/actionbar.jsp -->
+
+
+    <div id="outputActions">
+        <form id="UserAccountForm" method="post" action="/webOPACClient/userAccount.do">
+            <input name="methodToCall" value="showaccount" type="hidden">
+            <input name="CSId" value="13970N8Sd52b5db7f915094317db81ad5286cdbec3497d7d"
+                   type="hidden">
+
+
+            <a href="#" id="print" title="Einträge drucken" onclick="return printSubmit();"><i
+                    class="ig-ico ig-ico-print" aria-hidden="true"></i>drucken</a>
+
+
+            <a href="#" id="save" title="Einträge lokal speichern" onclick="return saveSubmit();"><i
+                    class="ig-ico ig-ico-save" aria-hidden="true"></i>speichern</a>
+
+
+            <a href="https://opac.erfurt.de/webOPACClient/userAccount.do?methodToCall=mail"
+               id="mail_userAccount" title="Einträge versenden"><i class="ig-ico ig-ico-send"
+                                                                   aria-hidden="true"></i>versenden</a>
+
+
+            <a href="https://opac.erfurt.de/webOPACClient/userAccount.do?methodToCall=renewalPossible&amp;renewal=account"
+               id="renewal" title="Konto verlängern" onclick="return blockAction();"><i
+                    class="ig-ico ig-ico-ca" aria-hidden="true"></i>verlängern</a>
+
+
+        </form>
+    </div>
+
+    <br class="cleaner">
+    <script src="Katalog%20StuRB%20Erfurt-Dateien/exportdialogs.js"
+            type="text/javascript"><!--  -->
+
+    </script>
+
+    <script language="javascript" type="text/javascript">
+/* <![CDATA[ */
+
+
+if(1 == 10)
+{
+	document.forms['UserAccountForm'].action="/webOPACClient/userNCIPAccount.do";
+}
+
+function allowFunction()
+{
+	if((true) ||
+		 (false) ||
+		 (false) ||
+		 (false) ||
+		 (false))
+		return true;
+	return false;
+}
+
+function printSubmit()
+{
+	if(!allowFunction())
+		return false;
+   document.forms['UserAccountForm'].methodToCall.value="print";
+   document.forms['UserAccountForm'].target="_blank";
+   document.forms['UserAccountForm'].submit();
+   return false;
+ }
+
+function saveSubmit()
+{
+	  if(!allowFunction())
+		    return false;
+   document.forms['UserAccountForm'].methodToCall.value="save";
+   document.forms['UserAccountForm'].submit();
+   return false;
+ }
+
+function deleteHistory()
+{
+	  if(!allowFunction())
+		    return false;
+
+
+	   deleteList = confirm("Soll die Ausleihhistorie wirklich gelöscht werden?");
+	   if (deleteList == false)
+	       return false;
+
+       document.forms['UserAccountForm'].methodToCall.value="deleteHistory";
+       document.forms['UserAccountForm'].submit();
+       return false;
+ }
+/* ]]> */
+
+
+    </script>
+    <!-- END of jsp/useraccount/actionbar.jsp -->
+
+    <div id="main">
+        <div id="SOWrap">
+            <div id="middle">
+
+
+                <style type="text/css">
+#bgtab {width:auto;/*44.9em*/ height:2em;border-top: 1px solid #bbbcbc;}
+* html #bgtab {margin-top:-1px;}
+/* wichtig bei Angabe in em: width:44.9em und nicht 45em, da sonst Verschiebungen (Abstand zw.Hauptnavi und Unternavi!) im Firefox!, zusätzlich keine einheitliche re border */
+#tab-content {border-top:0;}
+table.data {width:100%; border-top:0;}
+
+
+                </style>
+
+                <!--[if IE 7]>
+                <style type="text/css">#bgtab {margin-top:5px;}</style>
+                <![endif]-->
+
+                <!-- START jsp/useraccount/accountdata/accountNavi.jsp -->
+
+
+                <div id="tab">
+                    <ul>
+
+                        <li id="current1">
+                            <div id="active1">Ausleihen&nbsp;(15)</div>
+
+                            <ul>
+                                <li id="current2">Übersicht</li>
+                                <li id="typ2">
+                                    <a href="https://opac.erfurt.de/webOPACClient/userAccount.do?methodToCall=showAccount&amp;typ=2">Gemahnte Medien</a>
+                                </li>
+                                <li id="typ3">
+                                    <a href="https://opac.erfurt.de/webOPACClient/userAccount.do?methodToCall=showAccount&amp;typ=3">Rückgeforderte Medien</a>
+                                </li>
+                                <li id="typ4">
+                                    <a href="https://opac.erfurt.de/webOPACClient/userAccount.do?methodToCall=showAccount&amp;typ=4">Verlängerte Medien</a>
+                                </li>
+                                <li id="typ5">
+                                    <a href="https://opac.erfurt.de/webOPACClient/userAccount.do?methodToCall=showAccount&amp;typ=5">Fernleihen</a>
+                                </li>
+                            </ul>
+
+                        </li>
+
+
+                        <li id="tab6">
+                            <div id="label6">
+                                <a href="https://opac.erfurt.de/webOPACClient/userAccount.do?methodToCall=showAccount&amp;typ=6">Bestellungen
+                                    (0)</a>
+                            </div>
+                        </li>
+
+
+                        <li id="tab7">
+                            <div id="label7">
+                                <a href="https://opac.erfurt.de/webOPACClient/userAccount.do?methodToCall=showAccount&amp;typ=7">Vormerkungen
+                                    (0)</a>
+                            </div>
+                        </li>
+
+
+                        <li id="tab8">
+                            <div id="label8">
+                                <a href="https://opac.erfurt.de/webOPACClient/userAccount.do?methodToCall=showAccount&amp;typ=8">Gebühren
+                                    &nbsp;(0,00&nbsp;EUR)</a>
+                            </div>
+                        </li>
+
+
+                    </ul>
+
+                </div> <!-- tab -->
+                <div class="cleaner"></div>
+                <div id="bgtab"></div>
+
+                <script language="javascript" type="text/javascript">
+/* <![CDATA[ */
+var typ=1;
+
+if(typ >= 1 && typ <= 5)
+{
+
+  var m_id;
+  var m_TypLabels = new Array();
+
+  m_TypLabels[1]='Übersicht';
+  m_TypLabels[2]='Gemahnte Medien';
+  m_TypLabels[3]='Rückgeforderte Medien';
+  m_TypLabels[4]='Verlängerte Medien';
+  m_TypLabels[5]='Fernleihen';
+
+  m_id=document.getElementById("typ" + typ);
+  if(m_id != null)
+  {
+    m_id.innerHTML=m_TypLabels[typ];
+    m_id.id="current2";
+
+    m_id=document.getElementById("label1");
+    m_id.innerHTML='Ausleihen' +
+                   '&nbsp;(15)';
+    m_id.id="active1";
+
+    m_id=document.getElementById("tab1");
+    m_id.id="current1";
+  }
+}
+else
+{
+  var m_id;
+  var m_TabLabels = new Array();
+
+  m_TabLabels[6]='Bestellungen' +
+		        '&nbsp;(0)';
+  m_TabLabels[7]='Vormerkungen' +
+        		'&nbsp;(0)';
+  m_TabLabels[8]='Gebühren' +
+      		       '&nbsp;(0,00&nbsp;EUR)';
+  m_TabLabels[10]='eMedien' +
+                 '&nbsp;(/)';
+  m_TabLabels[9]='Historie' +
+         		'&nbsp;(0)';
+
+  m_id=document.getElementById("label" + typ);
+  if(m_id != null)
+  {
+    m_id.innerHTML=m_TabLabels[typ];
+    m_id.id="active1";
+
+    m_id=document.getElementById("tab" + typ);
+    m_id.id="current1";
+  }
+}
+/* ]]> */
+
+
+                </script>
+                <!-- END of jsp/useraccount/accountdata/accountNavi.jsp -->
+
+                <div class="cleaner"></div>
+
+
+                <!-- START jsp/useraccount/accountdata/accountData.jsp -->
+
+
+                <div id="tab-content">
+                    <div class="box">
+                        <div class="box-header">
+                            <div class="box-right">
+                                <div class="pagination">
+                                    <span class="selectedlink" aria-label="Erste Seite"
+                                          title="Erste Seite"><i
+                                            class="ig-ico ig-ico-arrow-step-backward"
+                                            aria-hidden="true"></i></span>
+                                    <span class="selectedlink" aria-label="Vorherige Seite"
+                                          title="Vorherige Seite"><i
+                                            class="ig-ico ig-ico-arrow-left" aria-hidden="true"></i></span>
+                                    <a href="https://opac.erfurt.de/webOPACClient/userAccount.do?methodToCall=pos&amp;accountTyp=AUSLEIHEN&amp;anzPos=1">1</a>
+                                    <span class="selectedlink selecteditem"
+                                          aria-label="Aktuelle Seite"
+                                          title="Aktuelle Seite">2</span>
+                                    <a href="https://opac.erfurt.de/webOPACClient/userAccount.do?methodToCall=pos&amp;accountTyp=AUSLEIHEN&amp;anzPos=21">3</a>
+                                    <a href="https://opac.erfurt.de/webOPACClient/userAccount.do?methodToCall=pos&amp;accountTyp=AUSLEIHEN&amp;anzPos=21"
+                                       aria-label="Nächste Seite" title="Nächste Seite"><i
+                                            class="ig-ico ig-ico-arrow-right"
+                                            aria-hidden="true"></i></a>
+                                    <a href="https://opac.erfurt.de/webOPACClient/userAccount.do?methodToCall=pos&amp;accountTyp=AUSLEIHEN&amp;anzPos=21"
+                                       aria-label="Letzte Seite" title="Letzte Seite"><i
+                                            class="ig-ico ig-ico-arrow-step-forward"
+                                            aria-hidden="true"></i></a>
+
+                                </div>
+                            </div>
+                            <h2>Ausleihen</h2>
+                        </div>
+                    </div>
+                    <table class="data" width="100%">
+                        <tbody>
+                        <tr>
+                            <th scope="col" style="width:2%"><abbr title="Nummer">Nr.</abbr></th>
+                            <th scope="col" class="left" style="width:65%">Titel,&nbsp;Verfasser
+                            </th>
+
+
+                            <th scope="col" class="left"
+                                style="width:33%">Leihfrist,&nbsp;Zweigstelle
+                            </th>
+
+
+                        </tr>
+
+
+                        <tr>
+                            <th scope="row">1.<br>
+                                <img src="Katalog%20StuRB%20Erfurt-Dateien/buch01.gif" alt=""
+                                     title="Buch" width="32" height="32" border="0">
+                            </th>
+                            <td>
+                                <strong>Antonio im Wunderland</strong><br>
+                                Weiler, Jan<br>
+                                005429981 &nbsp;/&nbsp;R 11<br>
+                                <a href="https://opac.erfurt.de/webOPACClient/userAccount.do?methodToCall=renewalPossible&amp;actPos=0"
+                                   onclick="return blockAction();"><span
+                                        class="textgruen">Eine Verlängerung ist möglich.</span></a>
+
+                            </td>
+                            <td>
+
+                                16.01.2018 - 20.02.2018<br>
+                                Bibl. Domplatz (Tel. 6551577)&nbsp;/&nbsp;Bibl. Domplatz
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <th scope="row">2.<br>
+                                <img src="Katalog%20StuRB%20Erfurt-Dateien/4.gif" alt=""
+                                     title="???de.alt.img.label.4???" width="32" height="32"
+                                     border="0">
+                            </th>
+                            <td>
+                                <strong>Dork diaries - Nikkis (nicht ganz so) bezauberndes Märchen</strong><br>
+                                Russell, Rachel Renée<br>
+                                008571504 &nbsp;/&nbsp;III J 0 Cool-Chaos-Katastrophen<br>
+                                <a href="https://opac.erfurt.de/webOPACClient/userAccount.do?methodToCall=renewalPossible&amp;actPos=1"
+                                   onclick="return blockAction();"><span
+                                        class="textgruen">Eine Verlängerung ist möglich.</span></a>
+
+                            </td>
+                            <td>
+
+                                16.01.2018 - 20.02.2018<br>
+                                Kinder-u. Jugendbibl. (Tel.6551595)&nbsp;/&nbsp;Kinder- und Jugendbibliothek
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <th scope="row">3.<br>
+                                <img src="Katalog%20StuRB%20Erfurt-Dateien/4.gif" alt=""
+                                     title="???de.alt.img.label.4???" width="32" height="32"
+                                     border="0">
+                            </th>
+                            <td>
+                                <strong>Dork diaries - Nikkis (nicht ganz so) geheimes Tagebuch</strong><br>
+                                Russell, Rachel Renée<br>
+                                00857158X &nbsp;/&nbsp;III J 0 Cool-Chaos-Katastrophen<br>
+                                <a href="https://opac.erfurt.de/webOPACClient/userAccount.do?methodToCall=renewalPossible&amp;actPos=2"
+                                   onclick="return blockAction();"><span
+                                        class="textgruen">Eine Verlängerung ist möglich.</span></a>
+
+                            </td>
+                            <td>
+
+                                16.01.2018 - 20.02.2018<br>
+                                Kinder-u. Jugendbibl. (Tel.6551595)&nbsp;/&nbsp;Kinder- und Jugendbibliothek
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <th scope="row">4.<br>
+                                <img src="Katalog%20StuRB%20Erfurt-Dateien/buch01.gif" alt=""
+                                     title="Buch" width="32" height="32" border="0">
+                            </th>
+                            <td>
+                                <strong>Maria, ihm schmeckt's nicht!</strong><br>
+                                Weiler, Jan<br>
+                                005199708 &nbsp;/&nbsp;R 11<br>
+                                <a href="https://opac.erfurt.de/webOPACClient/userAccount.do?methodToCall=renewalPossible&amp;actPos=3"
+                                   onclick="return blockAction();"><span
+                                        class="textgruen">Eine Verlängerung ist möglich.</span></a>
+
+                            </td>
+                            <td>
+
+                                16.01.2018 - 20.02.2018<br>
+                                Bibl. Domplatz (Tel. 6551577)&nbsp;/&nbsp;Bibl. Domplatz
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <th scope="row">5.<br>
+                                <img src="Katalog%20StuRB%20Erfurt-Dateien/buch01.gif" alt=""
+                                     title="Buch" width="32" height="32" border="0">
+                            </th>
+                            <td>
+                                <strong>Im Reich der Pubertiere</strong><br>
+                                Weiler, Jan<br>
+                                008058838 &nbsp;/&nbsp;Heiteres<br>
+                                <a href="https://opac.erfurt.de/webOPACClient/userAccount.do?methodToCall=renewalPossible&amp;actPos=4"
+                                   onclick="return blockAction();"><span
+                                        class="textgruen">Eine Verlängerung ist möglich.</span></a>
+
+                            </td>
+                            <td>
+
+                                06.02.2018 - 06.03.2018<br>
+                                Bibl. Domplatz (Tel. 6551577)&nbsp;/&nbsp;Bibl. Domplatz
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <th scope="row">6.<br>
+                                <img src="Katalog%20StuRB%20Erfurt-Dateien/buch01.gif" alt=""
+                                     title="Buch" width="32" height="32" border="0">
+                            </th>
+                            <td>
+                                <strong>In meinem kleinen Land</strong><br>
+                                Weiler, Jan<br>
+                                004971798 &nbsp;/&nbsp;Reisebericht / Deutschland<br>
+                                <a href="https://opac.erfurt.de/webOPACClient/userAccount.do?methodToCall=renewalPossible&amp;actPos=5"
+                                   onclick="return blockAction();"><span
+                                        class="textgruen">Eine Verlängerung ist möglich.</span></a>
+
+                            </td>
+                            <td>
+
+                                06.02.2018 - 06.03.2018<br>
+                                Bibl. Domplatz (Tel. 6551577)&nbsp;/&nbsp;Bibl. Domplatz
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <th scope="row">7.<br>
+                                <img src="Katalog%20StuRB%20Erfurt-Dateien/buch01.gif" alt=""
+                                     title="Buch" width="32" height="32" border="0">
+                            </th>
+                            <td>
+                                <strong>Mein Leben als Mensch</strong><br>
+                                Weiler, Jan<br>
+                                004963463 &nbsp;/&nbsp;Heiteres<br>
+                                <a href="https://opac.erfurt.de/webOPACClient/userAccount.do?methodToCall=renewalPossible&amp;actPos=6"
+                                   onclick="return blockAction();"><span
+                                        class="textgruen">Eine Verlängerung ist möglich.</span></a>
+
+                            </td>
+                            <td>
+
+                                06.02.2018 - 06.03.2018<br>
+                                Bibl. Domplatz (Tel. 6551577)&nbsp;/&nbsp;Bibl. Domplatz
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <th scope="row">8.<br>
+                                <img src="Katalog%20StuRB%20Erfurt-Dateien/buch01.gif" alt=""
+                                     title="Buch" width="32" height="32" border="0">
+                            </th>
+                            <td>
+                                <strong>Mein neues Leben als Mensch</strong><br>
+                                Weiler, Jan<br>
+                                006075125 &nbsp;/&nbsp;Heiteres<br>
+                                <a href="https://opac.erfurt.de/webOPACClient/userAccount.do?methodToCall=renewalPossible&amp;actPos=7"
+                                   onclick="return blockAction();"><span
+                                        class="textgruen">Eine Verlängerung ist möglich.</span></a>
+
+                            </td>
+                            <td>
+
+                                06.02.2018 - 06.03.2018<br>
+                                Bibl. Domplatz (Tel. 6551577)&nbsp;/&nbsp;Bibl. Domplatz
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <th scope="row">9.<br>
+                                <img src="Katalog%20StuRB%20Erfurt-Dateien/buch01.gif" alt=""
+                                     title="Buch" width="32" height="32" border="0">
+                            </th>
+                            <td>
+                                <strong>My dear Krauts</strong><br>
+                                Boyes, Roger<br>
+                                008046681 &nbsp;/&nbsp;Heiteres<br>
+                                <a href="https://opac.erfurt.de/webOPACClient/userAccount.do?methodToCall=renewalPossible&amp;actPos=8"
+                                   onclick="return blockAction();"><span
+                                        class="textgruen">Eine Verlängerung ist möglich.</span></a>
+
+                            </td>
+                            <td>
+
+                                06.02.2018 - 06.03.2018<br>
+                                Bibl. Domplatz (Tel. 6551577)&nbsp;/&nbsp;Bibl. Domplatz
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <th scope="row">10.<br>
+                                <img src="Katalog%20StuRB%20Erfurt-Dateien/buch01.gif" alt=""
+                                     title="Buch" width="32" height="32" border="0">
+                            </th>
+                            <td>
+                                <strong>Und ewig schläft das Pubertier</strong><br>
+                                Weiler, Jan<br>
+                                007553870 &nbsp;/&nbsp;Heiteres<br>
+                                <a href="https://opac.erfurt.de/webOPACClient/userAccount.do?methodToCall=renewalPossible&amp;actPos=9"
+                                   onclick="return blockAction();"><span
+                                        class="textgruen">Eine Verlängerung ist möglich.</span></a>
+
+                            </td>
+                            <td>
+
+                                06.02.2018 - 06.03.2018<br>
+                                Bibl. Domplatz (Tel. 6551577)&nbsp;/&nbsp;Bibl. Domplatz
+                            </td>
+                        </tr>
+
+
+                        </tbody>
+                    </table>
+
+                    <div class="box">
+                        <div class="box-right">
+                            <div class="pagination">
+                                <span class="selectedlink" aria-label="Erste Seite"
+                                      title="Erste Seite"><i
+                                        class="ig-ico ig-ico-arrow-step-backward"
+                                        aria-hidden="true"></i></span>
+                                <span class="selectedlink" aria-label="Vorherige Seite"
+                                      title="Vorherige Seite"><i class="ig-ico ig-ico-arrow-left"
+                                                                 aria-hidden="true"></i></span>
+                                <span class="selectedlink selecteditem" aria-label="Aktuelle Seite"
+                                      title="Aktuelle Seite">1</span>
+                                <a href="https://opac.erfurt.de/webOPACClient/userAccount.do?methodToCall=pos&amp;accountTyp=AUSLEIHEN&amp;anzPos=11">2</a>
+                                <a href="https://opac.erfurt.de/webOPACClient/userAccount.do?methodToCall=pos&amp;accountTyp=AUSLEIHEN&amp;anzPos=11"
+                                   aria-label="Nächste Seite" title="Nächste Seite"><i
+                                        class="ig-ico ig-ico-arrow-right"
+                                        aria-hidden="true"></i></a>
+                                <a href="https://opac.erfurt.de/webOPACClient/userAccount.do?methodToCall=pos&amp;accountTyp=AUSLEIHEN&amp;anzPos=11"
+                                   aria-label="Letzte Seite" title="Letzte Seite"><i
+                                        class="ig-ico ig-ico-arrow-step-forward"
+                                        aria-hidden="true"></i></a>
+
+                            </div>
+                        </div>
+                    </div>
+
+                </div><!-- tab-content -->
+
+                <script language="javascript" type="text/javascript">
+/* <![CDATA[ */
+ setHelp("konto", "");
+/* ]]> */
+
+
+                </script>
+
+                <!-- END of jsp/useraccount/accountdata/accountData.jsp -->
+
+
+            </div> <!-- middle -->
+        </div> <!-- SOWrap -->
+        <div id="right">
+
+
+            <!-- START jsp/useraccount/information.jsp -->
+
+
+            <div class="box3">
+                <div class="box3-header">
+
+                    <h2>Benutzerkonto</h2>
+                </div>
+                <div class="box3-content">
+
+
+                    <p>
+                        <strong>Jahresgebühren</strong>
+                        <br>
+                        fällig am
+                        13.08.2018
+                    </p>
+
+
+                </div>
+            </div>
+
+            <!-- END of jsp/useraccount/information.jsp -->
+
+
+            <!-- START jsp/common/news.jsp -->
+
+
+            <!-- START jsp/news_info/de_756_9.jsp -->
+            <div class="box3">
+                <div class="box3-header">
+                    <h2>Unsere Standorte</h2>
+                </div>
+                <p>
+                </p>
+                <div class="box3-content">
+                    Sie wollen uns nicht nur virtuell besuchen? Alle Adressen, Öffnungszeiten und Telefonnummern finden Sie
+                    <a href="http://www.erfurt.de/ef/de/leben/bildung/sturb/standorte/index.html"
+                       target="_">hier.</a>
+                </div>
+                <p></p>
+            </div>
+            <!-- END of jsp/news_info/de_756_9.jsp -->
+
+
+            <!-- START jsp/news_info/de_756_1.jsp -->
+            <div class="box3">
+                <div class="box3-header">
+                    <h2>Veranstaltungen</h2>
+                </div>
+                <p>
+                </p>
+                <div class="box3-content">
+                    Sie interessieren sich für unsere Veranstaltungen? Hier finden Sie den aktuellen
+                    <a href="http://www.erfurt.de/mam/ef/leben/bildung_und_wissenschaft/sturb/veroeffentlichungen/veranstaltungskalender_sturb.pdf"
+                       target="_">Veranstaltungsflyer.</a>
+                </div>
+
+                <!-- END of jsp/news_info/de_756_1.jsp -->
+
+
+                <!-- END of jsp/common/news.jsp -->
+            </div> <!-- right -->
+            <br class="cleaner">
+        </div> <!-- main -->
+
+
+        <!-- START jsp/common/footer.jsp -->
+
+        <div id="footer">
+
+
+            Bitte verwenden Sie die Funktion
+            <a href="https://opac.erfurt.de/webOPACClient/login.do?methodToCall=logout"
+               title="Abmelden">Abmelden</a>, um den versehentlichen Zugriff auf Ihre persönlichen Daten zu vermeiden.
+
+            <div id="copyright">
+                Copyright © 2017.&nbsp;Alle Rechte vorbehalten.
+                <img src="Katalog%20StuRB%20Erfurt-Dateien/OCLC.jpg" alt="OCLC" title="OCLC"
+                     width="54" height="19">
+            </div>
+            <div class="cleaner"></div>
+
+
+            <script src="Katalog%20StuRB%20Erfurt-Dateien/bibtip_stb_erfurt.js"
+                    type="text/javascript" language="javascript"></script>
+
+        </div>
+        <!-- END of jsp/common/footer.jsp -->
+
+
+    </div>
+
+
+</div>
+<pb-pia-extension-container>
+    <pb-sidebar-frame-container
+            class="pb-sidebar-frame-container hidden"></pb-sidebar-frame-container>
+    <pb-notification-frame-container class="pb-notification-frame-container hidden">
+        <iframe style="display: block !important;"
+                src="Katalog%20StuRB%20Erfurt-Dateien/index.html"></iframe>
+    </pb-notification-frame-container>
+</pb-pia-extension-container>
+</body><!-- END of jsp/useraccount/accountdata/Layout.jsp --><!-- START jsp/common/metaFooter.jsp -->
+</html>
+<!-- END of jsp/common/metaFooter.jsp -->
