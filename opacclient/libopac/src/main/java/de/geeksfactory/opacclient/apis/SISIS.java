@@ -41,6 +41,7 @@ import java.net.URLEncoder;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -54,6 +55,7 @@ import de.geeksfactory.opacclient.networking.HttpClientFactory;
 import de.geeksfactory.opacclient.networking.NotReachableException;
 import de.geeksfactory.opacclient.objects.Account;
 import de.geeksfactory.opacclient.objects.AccountData;
+import de.geeksfactory.opacclient.objects.AccountItem;
 import de.geeksfactory.opacclient.objects.Copy;
 import de.geeksfactory.opacclient.objects.Detail;
 import de.geeksfactory.opacclient.objects.DetailedItem;
@@ -1371,6 +1373,11 @@ public class SISIS extends OkHttpBaseApi implements OpacApi {
         return true;
     }
 
+    @FunctionalInterface
+    protected interface ParseAccountListFunction<T extends AccountItem> {
+        void apply(List<T> items, Document doc, int offset, JSONObject data);
+    }
+
     public static void parse_medialist(List<LentItem> media, Document doc, int offset,
             JSONObject data) {
         Elements copytrs = doc.select(".data tr");
@@ -1443,14 +1450,22 @@ public class SISIS extends OkHttpBaseApi implements OpacApi {
 
             media.add(item);
         }
-        assert (media.size() == trs - 1);
-
     }
 
-    protected void parse_reslist(String type,
-            List<ReservedItem> reservations, Document doc, int offset) {
+    public static void parse_reslist6(List<ReservedItem> reservations, Document doc, int offset,
+            JSONObject data) {
+        parse_reslist("6", reservations, doc, offset, data);
+    }
+
+    public static void parse_reslist7(List<ReservedItem> reservations, Document doc, int offset,
+            JSONObject data) {
+        parse_reslist("7", reservations, doc, offset, data);
+    }
+
+    protected static void parse_reslist(String type,
+            List<ReservedItem> reservations, Document doc, int offset, JSONObject data) {
         Elements copytrs = doc.select(".data tr");
-        doc.setBaseUri(opac_url);
+        doc.setBaseUri(data.optString("baseurl"));
         int trs = copytrs.size();
         if (trs == 1) {
             return;
@@ -1538,11 +1553,9 @@ public class SISIS extends OkHttpBaseApi implements OpacApi {
         parse_medialist(medien, doc, 1, data);
 
         // additional pages
-        Map<String, Integer> links = getAccountPageLinks(doc);
-        for (Map.Entry<String, Integer> link : links.entrySet()) {
-            html = httpGet(link.getKey(), ENCODING);
-            parse_medialist(medien, Jsoup.parse(html), link.getValue(), data);
-        }
+        loadPages(medien, doc, SISIS::parse_medialist);
+
+        Map<String, Integer> links;
 
         if (doc.select("#label1").size() > 0) {
             resultNum = 0;
@@ -1560,29 +1573,21 @@ public class SISIS extends OkHttpBaseApi implements OpacApi {
         List<ReservedItem> reserved = new ArrayList<>();
         doc = Jsoup.parse(html);
         doc.setBaseUri(opac_url);
-        parse_reslist("6", reserved, doc, 1);
+        parse_reslist("6", reserved, doc, 1, data);
         Elements label6 = doc.select("#label6");
 
         // additional pages
-        links = getAccountPageLinks(doc);
-        for (Map.Entry<String, Integer> link : links.entrySet()) {
-            html = httpGet(link.getKey(), ENCODING);
-            parse_reslist("6", reserved, Jsoup.parse(html), link.getValue());
-        }
+        loadPages(reserved, doc, SISIS::parse_reslist6);
 
         // Prebooked media ("Vormerkungen")
         html = httpGet(opac_url
                 + "/userAccount.do?methodToCall=showAccount&typ=7", ENCODING);
         doc = Jsoup.parse(html);
         doc.setBaseUri(opac_url);
-        parse_reslist("7", reserved, doc, 1);
+        parse_reslist("7", reserved, doc, 1, data);
 
         // additional pages
-        links = getAccountPageLinks(doc);
-        for (Map.Entry<String, Integer> link : links.entrySet()) {
-            html = httpGet(link.getKey(), ENCODING);
-            parse_reslist("7", reserved, Jsoup.parse(html), link.getValue());
-        }
+        loadPages(reserved, doc, SISIS::parse_reslist7);
 
         if (label6.size() > 0 && doc.select("#label7").size() > 0) {
             resultNum = 0;
@@ -1619,6 +1624,26 @@ public class SISIS extends OkHttpBaseApi implements OpacApi {
         res.setLent(medien);
         res.setReservations(reserved);
         return res;
+    }
+
+    <I extends AccountItem> void loadPages(List<I> media, Document doc,
+            ParseAccountListFunction<I> func) throws IOException {
+        HashSet<Integer> pagesLoaded = new HashSet<>();
+        pagesLoaded.add(1);
+        loadPages(media, doc, pagesLoaded, func);
+    }
+
+    <I extends AccountItem> void loadPages(List<I> media, Document doc, Set<Integer> pagesLoaded,
+            ParseAccountListFunction<I> func) throws IOException {
+        Map<String, Integer> links = getAccountPageLinks(doc);
+        for (Map.Entry<String, Integer> link : links.entrySet()) {
+            if (!pagesLoaded.contains(link.getValue())) {
+                String html = httpGet(link.getKey(), ENCODING);
+                func.apply(media, Jsoup.parse(html), link.getValue(), data);
+                pagesLoaded.add(link.getValue());
+                loadPages(media, Jsoup.parse(html), pagesLoaded, func);
+            }
+        }
     }
 
     static Map<String, Integer> getAccountPageLinks(Document doc) {
