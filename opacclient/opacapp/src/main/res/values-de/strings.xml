@@ -321,6 +321,7 @@
     <string name="import_starred_from_storage">Importieren</string>
     <string name="failed_exporting_file">Beim Exportieren der Merkliste ist ein Fehler aufgetreten.</string>
     <string name="failed_importing_file">Beim Importieren der Merkliste ist ein Fehler aufgetreten.</string>
+    <string name="failed_importing_file_format">Dateien zum Import müssen im .json-Format sein.</string>
     <string name="failed_importing_file_picker_app">Um eine Datei zum Importieren auswählen zu können, muss eine kompatible Dateiexplorer-App installiert sein.</string>
     <string name="load_covers_mobile_data">Buchcover über mobiles Netzwerk laden</string>
     <string name="load_covers_mobile_data_on">Buchcover werden geladen und angezeigt, wenn verfügbar</string>

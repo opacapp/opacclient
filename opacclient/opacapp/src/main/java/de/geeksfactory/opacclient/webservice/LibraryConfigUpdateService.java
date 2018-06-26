@@ -24,7 +24,6 @@ import android.content.Intent;
 import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 
-import org.acra.ACRA;
 import org.joda.time.DateTime;
 import org.json.JSONException;
 
@@ -37,6 +36,7 @@ import de.geeksfactory.opacclient.OpacClient;
 import de.geeksfactory.opacclient.storage.JsonSearchFieldDataSource;
 import de.geeksfactory.opacclient.storage.PreferenceDataSource;
 import de.geeksfactory.opacclient.utils.ErrorReporter;
+import io.sentry.Sentry;
 
 public class LibraryConfigUpdateService extends IntentService {
     private static final String NAME = "LibraryConfigUpdateService";
@@ -60,7 +60,7 @@ public class LibraryConfigUpdateService extends IntentService {
                     service, prefs, new FileOutput(filesDir), new JsonSearchFieldDataSource(this));
             if (!BuildConfig.DEBUG) {
                 DateTime lastUpdate = prefs.getLastLibraryConfigUpdate();
-                ACRA.getErrorReporter().putCustomData("data_version", lastUpdate != null ?
+                Sentry.getContext().addExtra(OpacClient.SENTRY_DATA_VERSION, lastUpdate != null ?
                         lastUpdate.toString() : "null");
             }
             if (BuildConfig.DEBUG) {

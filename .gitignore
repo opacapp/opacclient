@@ -17,6 +17,7 @@ build/
 # Local configuration file (sdk path, etc)
 local.properties
 ant.properties
+sentry.properties
 
 web/
 testproject/
@@ -54,3 +55,5 @@ opacclient/tmp/
 
 opacclient/opacapp/src/main/assets/bibs/*.json
 opacclient/opacapp/src/main/assets/last_library_config_update.txt
+opacclient/opacapp/src/main/resources/sentry.properties
+

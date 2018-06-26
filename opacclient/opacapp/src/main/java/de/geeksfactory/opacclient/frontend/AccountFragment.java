@@ -63,6 +63,7 @@ import org.joda.time.format.DateTimeFormatter;
 import org.json.JSONException;
 
 import java.io.IOException;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -1403,6 +1404,25 @@ public class AccountFragment extends Fragment implements
             AccountData data;
             try {
                 data = app.getApi().account(account);
+
+                Collections.sort(data.getLent(), (a, b) -> {
+                    if (a.isEbook() == b.isEbook()) {
+                        if (a.getDeadline() == null && b.getDeadline() == null) {
+                            return 0;
+                        } else if (a.getDeadline() == null) {
+                            return -1;
+                        } else if (b.getDeadline() == null) {
+                            return 1;
+                        } else {
+                            return a.getDeadline().compareTo(b.getDeadline());
+                        }
+                    } else if (a.isEbook()) {
+                        return 1;
+                    } else {
+                        // b.isEbook
+                        return -1;
+                    }
+                });
 
                 if (data == null) {
                     return null;

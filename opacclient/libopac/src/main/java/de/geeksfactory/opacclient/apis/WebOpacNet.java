@@ -334,9 +334,6 @@ public class WebOpacNet extends OkHttpBaseApi implements OpacApi {
             }
 
             if (json.has("divibib") && json.getString("divibib").length() > 1) {
-                Pattern s = Pattern.compile(
-                        "^.*(https?://[^\"']*)[\"'].*$"
-                );
                 Detail detail = new Detail("Onleihe",
                         json.getString("divibib").replaceAll(
                                 "^.*(https?://[^\"']*)[\"'].*$",

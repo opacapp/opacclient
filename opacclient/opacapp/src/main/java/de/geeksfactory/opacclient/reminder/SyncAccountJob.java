@@ -28,7 +28,6 @@ import android.util.Log;
 import com.evernote.android.job.Job;
 import com.evernote.android.job.JobRequest;
 
-import org.acra.ACRA;
 import org.joda.time.DateTime;
 import org.joda.time.Hours;
 import org.json.JSONException;
@@ -50,6 +49,7 @@ import de.geeksfactory.opacclient.storage.PreferenceDataSource;
 import de.geeksfactory.opacclient.webservice.LibraryConfigUpdateService;
 import de.geeksfactory.opacclient.webservice.WebService;
 import de.geeksfactory.opacclient.webservice.WebServiceManager;
+import io.sentry.Sentry;
 
 public class SyncAccountJob extends Job {
 
@@ -165,7 +165,7 @@ public class SyncAccountJob extends Job {
             Log.d(TAG, "updated config for " + String.valueOf(count) + " libraries");
             getApp().resetCache();
             if (!BuildConfig.DEBUG) {
-                ACRA.getErrorReporter().putCustomData("data_version",
+                Sentry.getContext().addExtra(OpacClient.SENTRY_DATA_VERSION,
                         prefs.getLastLibraryConfigUpdate().toString());
             }
         } catch (IOException | JSONException ignore) {

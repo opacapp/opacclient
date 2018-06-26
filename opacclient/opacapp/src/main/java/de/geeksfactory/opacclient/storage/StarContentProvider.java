@@ -128,8 +128,8 @@ public class StarContentProvider extends ContentProvider {
         switch (getTypeMime(uri)) {
             case STAR_DIR:
                 id = insertIntoDatabase(StarDatabase.STAR_TABLE, values);
-                itemUri = ContentUris.withAppendedId(STAR_URI, id);
-                notifyUri(STAR_URI);
+                itemUri = ContentUris.withAppendedId(uri, id);
+                notifyUri(uri);
                 break;
             case STAR_ITEM:
             default:

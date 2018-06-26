@@ -176,6 +176,7 @@
     <string name="export_account">Share as text</string>
     <string name="failed_exporting_file">An error occurred during export. Please try again later.</string>
     <string name="failed_importing_file">An error occurred during import.</string>
+    <string name="failed_importing_file_format">Files to import must be in .json format.</string>
     <string name="failed_importing_file_picker_app">For selecting a file to import, you need to install a compatible file explorer app.</string>
     <string name="geolocate">Find nearby libraries</string>
     <string name="geolocate_progress">Locating you…</string>
