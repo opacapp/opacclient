@@ -88,6 +88,7 @@ public class OpacClient extends Application {
     public static final String ASSETS_BIBSDIR = "bibs";
     public static final String SENTRY_LIBRARY = "library";
     public static final String SENTRY_DATA_VERSION = "data_version";
+    public static final String SENTRY_PACKAGE = "package";
     public static int NOTIF_ID = 1;
     public static int BROADCAST_REMINDER = 2;
     public static Context context;
@@ -374,6 +375,9 @@ public class OpacClient extends Application {
                     .getLastLibraryConfigUpdate();
             Sentry.getContext().addExtra(
                     SENTRY_DATA_VERSION, lastUpdate != null ? lastUpdate.toString() : "null");
+            Sentry.getContext().addExtra(
+                    SENTRY_PACKAGE, getPackageName()
+            );
             SentryUncaughtExceptionHandler.setup();
         }
 
