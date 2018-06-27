@@ -762,7 +762,8 @@ public class BiBer1992 extends OkHttpBaseApi {
                 if ("ID1".equals(input.attr("name"))) {
                     reservationsId1First = true;
                     break;
-                } else if ("FUNC".equals(input.attr("name"))) {
+                } else if ("FUNC".equals(input.attr("name")) ||
+                        "vors".equals(input.attr("value"))) {
                     reservationsId1First = false;
                     break;
                 }
