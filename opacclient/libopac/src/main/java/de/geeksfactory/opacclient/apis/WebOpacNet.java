@@ -242,6 +242,7 @@ public class WebOpacNet extends OkHttpBaseApi implements OpacApi {
     protected String buildParams(List<SearchQuery> queryList, int page)
             throws JSONException, OpacErrorException {
         int index = 0;
+        boolean noParamsSet = true;
 
         StringBuilder queries = new StringBuilder();
         if (!(queryList.size() == 1 && queryList.get(0).getKey().equals("QS"))) {
@@ -249,6 +250,7 @@ public class WebOpacNet extends OkHttpBaseApi implements OpacApi {
         }
         for (SearchQuery query : queryList) {
             if (!query.getSearchField().getData().getBoolean("filter")) {
+                noParamsSet = false;
                 index = addParameters(query, queries, index);
             }
         }
@@ -256,10 +258,8 @@ public class WebOpacNet extends OkHttpBaseApi implements OpacApi {
         for (SearchQuery query : queryList) {
             if (query.getSearchField().getData().getBoolean("filter")
                     && !query.getValue().equals("")) {
-                if (index > 0) {
-                    queries.append("&");
-                }
-                queries.append(query.getKey()).append("=").append(query.getValue());
+                noParamsSet = false;
+                queries.append("&").append(query.getKey()).append("=").append(query.getValue());
                 if (query.getKey().equals("QS")) {
                     index++;
                 }
@@ -281,7 +281,7 @@ public class WebOpacNet extends OkHttpBaseApi implements OpacApi {
             e.printStackTrace();
         }
 
-        if (index == 0) {
+        if (noParamsSet) {
             throw new OpacErrorException(
                     stringProvider.getString(StringProvider.NO_CRITERIA_INPUT));
         }
