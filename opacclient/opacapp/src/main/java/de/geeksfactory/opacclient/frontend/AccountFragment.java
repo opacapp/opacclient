@@ -38,6 +38,8 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.Html;
+import android.text.method.LinkMovementMethod;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -64,13 +66,16 @@ import org.json.JSONException;
 
 import java.io.IOException;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import de.geeksfactory.opacclient.OpacClient;
 import de.geeksfactory.opacclient.R;
 import de.geeksfactory.opacclient.apis.EbookServiceApi;
 import de.geeksfactory.opacclient.apis.EbookServiceApi.BookingResult;
+import de.geeksfactory.opacclient.apis.Littera;
 import de.geeksfactory.opacclient.apis.OpacApi;
 import de.geeksfactory.opacclient.apis.OpacApi.CancelResult;
 import de.geeksfactory.opacclient.apis.OpacApi.MultiStepResult;
@@ -78,6 +83,9 @@ import de.geeksfactory.opacclient.apis.OpacApi.OpacErrorException;
 import de.geeksfactory.opacclient.apis.OpacApi.ProlongAllResult;
 import de.geeksfactory.opacclient.apis.OpacApi.ProlongResult;
 import de.geeksfactory.opacclient.apis.OpacApi.ReservationResult;
+import de.geeksfactory.opacclient.apis.Primo;
+import de.geeksfactory.opacclient.apis.VuFind;
+import de.geeksfactory.opacclient.apis.Zones;
 import de.geeksfactory.opacclient.frontend.MultiStepResultHelper.Callback;
 import de.geeksfactory.opacclient.frontend.MultiStepResultHelper.StepTask;
 import de.geeksfactory.opacclient.frontend.OpacActivity.AccountSelectedListener;
@@ -135,6 +143,14 @@ public class AccountFragment extends Fragment implements
     private JoinableLayout reservationsEmpty;
     private TextView tvLentEmpty;
     private TextView tvReservationsEmpty;
+    protected static Set<Class<? extends OpacApi>> HELP_WANTED_APIS = new HashSet<>();
+
+    static {
+        HELP_WANTED_APIS.add(Littera.class);
+        HELP_WANTED_APIS.add(Primo.class);
+        HELP_WANTED_APIS.add(VuFind.class);
+        HELP_WANTED_APIS.add(Zones.class); // Zones 1.8
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -480,10 +496,14 @@ public class AccountFragment extends Fragment implements
             supported = false;
             // Not supported with this api at all
             llLoading.setVisibility(View.GONE);
-            unsupportedErrorView.setVisibility(
-                    View.VISIBLE);
-            tvErrBodyU.setText(R.string.account_unsupported_api);
-
+            unsupportedErrorView.setVisibility(View.VISIBLE);
+            if (HELP_WANTED_APIS.contains(api.getClass())) {
+                tvErrBodyU.setText(
+                        Html.fromHtml(getString(R.string.account_unsupported_api_opensource)));
+                tvErrBodyU.setMovementMethod(new LinkMovementMethod());
+            } else {
+                tvErrBodyU.setText(R.string.account_unsupported_api);
+            }
         } else if (account.getPassword() == null
                 || account.getPassword().equals("null")
                 || account.getPassword().equals("")

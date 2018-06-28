@@ -103,7 +103,8 @@
     <string name="share_wait">Bitte warten, bis die Details geladen wurden</string>
     <string name="share_notsupported">In dieser Bibliothek nicht unterstützt</string>
     <string name="unsupported">Funktion nicht unterstützt</string>
-    <string name="account_unsupported_api">Diese Funktion wird in deiner Bibliothek noch nicht unterstützt. Tut uns leid :(</string>
+    <string name="account_unsupported_api">Diese Funktion wird in deiner Bibliothek noch nicht unterstützt. Tut uns leid 😞</string>
+    <string name="account_unsupported_api_opensource"><![CDATA[Diese Funktion wird in deiner Bibliothek noch nicht unterstützt. Tut uns leid 😞<br><br>Wenn du programmieren kannst und etwas Zeit hast, kannst du uns vielleicht helfen, diese Funktion zu implementieren. Weitere Informationen bekommst du bei <a href="https://github.com/opacapp/opacclient">GitHub</a> unter von uns per <a href="mailto:info@opacapp.net">E-Mail</a>]]>.</string>
     <string name="write_mail">E-Mail schreiben</string>
     <string name="info_error">Die zusätzlichen Informationen der Bibliothek konnten nicht abgerufen werden.</string>
     <string name="info_unsupported">Deine Bücherei stellt keine zusätzlichen Informationen bereit, die wir dir anzeigen könnten.</string>
