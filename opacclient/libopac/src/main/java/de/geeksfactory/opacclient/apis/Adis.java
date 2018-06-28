@@ -23,7 +23,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -58,8 +57,9 @@ import de.geeksfactory.opacclient.searchfields.TextSearchField;
 
 public class Adis extends ApacheBaseApi implements OpacApi {
 
+    protected static final String DATA_DISABLE_WHEN_SELECTED = "disableWhenSelected";
+    protected static final String DATA_GROUP = "group";
     protected static HashMap<String, MediaType> types = new HashMap<>();
-    protected static HashSet<String> ignoredFieldNames = new HashSet<>();
 
     static {
         types.put("Buch", MediaType.BOOK);
@@ -84,14 +84,6 @@ public class Adis extends ApacheBaseApi implements OpacApi {
         types.put("Munzinger", MediaType.EBOOK);
         types.put("E-Audio", MediaType.EAUDIO);
         types.put("Blu-Ray", MediaType.BLURAY);
-
-        // TODO: The following fields from Berlin make no sense and don't work
-        // when they are displayed alone.
-        // We can only include them if we automatically deselect the "Verbund"
-        // checkbox
-        // when one of these dropdowns has a value other than "".
-        ignoredFieldNames.add("oder Bezirk");
-        ignoredFieldNames.add("oder Bibliothek");
     }
 
     protected String opac_url = "";
@@ -310,19 +302,35 @@ public class Adis extends ApacheBaseApi implements OpacApi {
         int dropdownTextCount = 0;
         int totalCount = 0;
         List<NameValuePair> nvpairs = new ArrayList<>();
+        Set<String> groups = new HashSet<>();
         for (SearchQuery query : queries) {
             if (!query.getValue().equals("")) {
                 totalCount++;
 
-                if (query.getSearchField() instanceof DropdownSearchField) {
+                SearchField field = query.getSearchField();
+                if (field instanceof DropdownSearchField) {
                     doc.select("select#" + query.getKey())
                        .val(query.getValue());
+                    if (field.getData() != null) {
+                        if (field.getData().has(DATA_DISABLE_WHEN_SELECTED)) {
+                            String id = field.getData().optString(DATA_DISABLE_WHEN_SELECTED);
+                            doc.select("#" + id).removeAttr("checked");
+                        }
+                        if (field.getData().has(DATA_GROUP)) {
+                            String group = field.getData().optString(DATA_GROUP);
+                            if (groups.contains(group)) {
+                                throw new OpacErrorException(stringProvider
+                                        .getString(StringProvider.COMBINATION_NOT_SUPPORTED));
+                            } else {
+                                groups.add(group);
+                            }
+                        }
+                    }
                     continue;
                 }
 
-                if (query.getSearchField() instanceof TextSearchField &&
-                        query.getSearchField().getData() != null &&
-                        !query.getSearchField().getData().optBoolean("selectable", true) &&
+                if (field instanceof TextSearchField && field.getData() != null &&
+                        !field.getData().optBoolean("selectable", true) &&
                         doc.select("#" + query.getKey()).size() > 0) {
                     doc.select("#" + query.getKey())
                        .val(query.getValue());
@@ -331,10 +339,8 @@ public class Adis extends ApacheBaseApi implements OpacApi {
 
                 dropdownTextCount++;
 
-                if (s_exts.get(0).equals("SS2")
-                        || (query.getSearchField().getData() != null && !query
-                        .getSearchField().getData()
-                        .optBoolean("selectable", true))) {
+                if (s_exts.get(0).equals("SS2") || (field.getData() != null &&
+                        !field.getData().optBoolean("selectable", true))) {
                     doc.select("input#" + query.getKey()).val(query.getValue());
                 } else {
                     if (doc.select("select#SUCH01_1").size() == 0 &&
@@ -360,6 +366,7 @@ public class Adis extends ApacheBaseApi implements OpacApi {
         for (Element input : doc.select("input, select")) {
             if (!"image".equals(input.attr("type"))
                     && !"submit".equals(input.attr("type"))
+                    && !("checkbox".equals(input.attr("type")) && !input.hasAttr("checked"))
                     && !"".equals(input.attr("name"))) {
                 nvpairs.add(new BasicNameValuePair(input.attr("name"), input
                         .attr("value")));
@@ -1703,6 +1710,21 @@ public class Adis extends ApacheBaseApi implements OpacApi {
                 for (Element opt : select.select("option")) {
                     field.addDropdownValue(opt.attr("value"), opt.text());
                 }
+
+                if (field.getDisplayName().equals("oder Bezirk") ||
+                        field.getDisplayName().equals("oder Bibliothek")) {
+                    // VOeBB: Suche im Verbund oder Bezirk oder Bibliothek
+                    if (doc.select("#SUCHIN_3").size() == 1) {
+                        field.setDisplayName(field.getDisplayName().replace("oder ", ""));
+                        JSONObject data = new JSONObject();
+                        data.put(DATA_DISABLE_WHEN_SELECTED, "SUCHIN_3");
+                        data.put(DATA_GROUP, "verbund");
+                        field.setData(data);
+                    } else {
+                        continue;
+                    }
+                }
+
                 fields.add(field);
             } else if (row.select("select").size() == 0
                     && row.select("input[type=text]").size() == 3
@@ -1760,14 +1782,6 @@ public class Adis extends ApacheBaseApi implements OpacApi {
                     field3.setData(selectableData);
                     fields.add(field3);
                 }
-            }
-        }
-
-        for (Iterator<SearchField> iterator = fields.iterator(); iterator
-                .hasNext(); ) {
-            SearchField field = iterator.next();
-            if (ignoredFieldNames.contains(field.getDisplayName())) {
-                iterator.remove();
             }
         }
 
