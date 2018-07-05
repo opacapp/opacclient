@@ -103,8 +103,8 @@
     <string name="share_wait">Please wait for the details to load.</string>
     <string name="share_notsupported">Not supported in this library.</string>
     <string name="unsupported">Not supported</string>
-    <string name="account_unsupported_api">This feature is not yet supported in your library. Sorry 😞</string>
-    <string name="account_unsupported_api_opensource"><![CDATA[This feature is not yet supported in your library. Sorry 😞<br><br>If you have experience in programming and some spare time, you might be able to help us to implement it. You can find more information about this on <a href="https://github.com/opacapp/opacclient">GitHub</a> or ask us via <a href="mailto:info@opacapp.net">email</a>]]>.</string>
+    <string name="account_unsupported_api">This feature is not yet supported in your library. Sorry \uD83D\uDE1E</string>
+    <string name="account_unsupported_api_opensource"><![CDATA[This feature is not yet supported in your library. Sorry \uD83D\uDE1E<br><br>If you have experience in programming and some spare time, you might be able to help us to implement it. You can find more information about this on <a href="https://github.com/opacapp/opacclient">GitHub</a> or ask us via <a href="mailto:info@opacapp.net">email</a>]]>.</string>
     <string name="write_mail">Write e-mail</string>
     <string name="info_error">Could not load additional information for this library.</string>
     <string name="info_unsupported">We don\'t have any information about this library to show.</string>
