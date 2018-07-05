@@ -45,6 +45,7 @@ import de.geeksfactory.opacclient.i18n.DummyStringProvider;
 import de.geeksfactory.opacclient.i18n.StringProvider;
 import de.geeksfactory.opacclient.networking.HttpClientFactory;
 import de.geeksfactory.opacclient.objects.Account;
+import de.geeksfactory.opacclient.objects.AccountData;
 import de.geeksfactory.opacclient.objects.Library;
 import de.geeksfactory.opacclient.objects.SearchRequestResult;
 import de.geeksfactory.opacclient.reporting.ReportHandler;
@@ -408,7 +409,11 @@ public abstract class BaseApi implements OpacApi {
     @Override
     public String getPendingAccountFees(Account account)
             throws IOException, JSONException, OpacErrorException {
-        return account(account).getPendingFees();
+        AccountData data = account(account);
+        if (data == null) {
+            return null;
+        }
+        return data.getPendingFees();
     }
 
     /**
