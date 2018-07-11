@@ -164,7 +164,6 @@
         <item quantity="one">%d resultados de búsqueda</item>
         <item quantity="other">%d resultados de búsqueda</item>
     </plurals>
-    <string name="export_starred">Exportar</string>
     <string name="export_account">Compartir en forma de texto</string>
     <string name="geolocate">Encontrar bibliotecas cercanas</string>
     <string name="geolocate_progress">Localizando…</string>
