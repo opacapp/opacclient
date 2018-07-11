@@ -23,7 +23,7 @@
     <string name="reserve">Réserve</string>
     <string name="lendebook">Prêter E-book</string>
     <string name="doing_res">Effectuer la réservation</string>
-    <string name="opac_error_email">S\'il-vous plait, configurer votre adresse dans les paramètres de l\'application.</string>
+    <string name="opac_error_email">Veuillez configurer votre adresse dans les paramètres de l\'application.</string>
     <string name="doing_booking">Prêt...</string>
     <string name="status_nouser">Vous n\'avez pas spécifié de paramètres de connexion pour ce compte dans les réglages.</string>
     <string name="pending_fees">Amendes dues :</string>
@@ -164,7 +164,7 @@
         <item quantity="one">Un résultat de recherche</item>
         <item quantity="other">%d résultats de recherche</item>
     </plurals>
-    <string name="share_starred">Exporter</string>
+    <string name="export_starred">Exporter</string>
     <string name="export_account">Partager en tant que texte</string>
     <string name="geolocate">Trouver les bibliothèques à proximité</string>
     <string name="geolocate_progress">Localisation...</string>
@@ -266,6 +266,8 @@ les frais de votre bibliothèque.</string>
     <string name="do_not_ask_again">Ne plus afficher</string>
     <string name="reservation_fee_continue">Continuer</string>
     <string name="notification_repeat">Répéter les notifications</string>
+    <string name="update_info_title">Politique de confidentialité</string>
+    <string name="update_info_text">Avec cette mise à jour, l\'application commence automatiquement à signaler les informations de diagnostic à notre serveur en cas d\'erreurs. Dans l\'une des prochaines mises à jour, l\'application commencera à extraire périodiquement des informations sur les bibliothèques de notre serveur. Cela nous aide à répondre aux changements des bibliothèques plus rapidement et plus facilement. Nous continuerons à NE JAMAIS transmettre ou stocker des données personnelles sur nos serveurs.</string>
     <string name="accountdata_export_header">Données de compte de %1$s le %2$s</string>
     <string name="accountdata_title">Titre</string>
     <string name="accountdata_author">Auteur</string>
@@ -293,6 +295,7 @@ les frais de votre bibliothèque.</string>
     <string name="library_config_update_success">Données mises à jour pour %d bibliothèques.</string>
     <string name="library_config_update_failure">Impossible de mettre à jour les données de bibliothèque.</string>
     <string name="library_config_last_update">Dernière mise à jour %s</string>
+    <string name="library_config_last_update_never">Aucune donnée téléchargée pour l\'instant</string>
     <string name="library_config_reset">Restaurer les données de bibliothèque à partir de la dernière mise à jour de l\'application.</string>
     <string name="library_removed_error">Malheureusement, la bibliothèque que vous utilisez a été supprimée de l\'application. La raison peut être que la bibliothèque est passée à un nouveau système logiciel avec lequel l\'application n\'est pas compatible, ou que la bibliothèque nous a contacté et a déclaré explicitement qu\'elle souhaitait être retirée de l\'application. Vous pouvez nous contacter à info@opacapp.net pour en savoir plus.</string>
     <string name="account_anonymous">anonyme (recherche uniquement)</string>
