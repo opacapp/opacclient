@@ -499,7 +499,7 @@ public class SISIS extends OkHttpBaseApi implements OpacApi {
                            .not("#hlrightblock,.bestellfunktionen").size() == 1) {
                 Element indiv = middlething.select("div")
                                            .not("#hlrightblock,.bestellfunktionen").first();
-                if (indiv.select("a").size() > 0 && indiv.children().size() > 1) {
+                if (indiv.select("a[href*=Hit]").size() > 0 && indiv.children().size() > 1) {
                     children = indiv.childNodes();
                 }
             } else if (middlething.select("span.titleData").size() == 1) {
