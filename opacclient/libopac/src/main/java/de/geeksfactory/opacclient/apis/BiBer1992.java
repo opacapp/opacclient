@@ -1301,6 +1301,11 @@ public class BiBer1992 extends OkHttpBaseApi {
 
     private Document accountHttpPost(Account account, String func)
             throws IOException, OpacErrorException {
+        return accountHttpPost(account, func, "user.C");
+    }
+
+    private Document accountHttpPost(Account account, String func, String page)
+            throws IOException, OpacErrorException {
         // get media list via http POST
         FormBody.Builder formData = new FormBody.Builder(Charset.forName(getDefaultEncoding()));
         formData.add("FUNC", func);
@@ -1308,7 +1313,7 @@ public class BiBer1992 extends OkHttpBaseApi {
         formData.add("BENUTZER", account.getName());
         formData.add("PASSWORD", account.getPassword());
 
-        String html = httpPost(opacUrl + "/" + opacDir + "/user.C",
+        String html = httpPost(opacUrl + "/" + opacDir + "/" + page,
                 formData.build(), getDefaultEncoding());
 
         Document doc = Jsoup.parse(html);
@@ -1325,11 +1330,15 @@ public class BiBer1992 extends OkHttpBaseApi {
             }
             throw new OpacErrorException(errText);
         }
-        if (doc.select("tr td font[color=red]").size() == 1) {
+        if (doc.title().contains("Server error")) {
+            // seen in Minden, real error message is only shown on login
+            accountHttpPost(account, "login", "login.C");
+        }
+        if (doc.select("tr td font[color=red], tr td .p02b").size() == 1) {
             // Jena: Onleihe advertisement recognized as error message
-            if (!doc.select("tr td font[color=red]").text()
-                    .contains("Ausleihe per Download rund um die Uhr")) {
-                throw new OpacErrorException(doc.select("font[color=red]").text());
+            String text = doc.select("tr td font[color=red], tr td .p02b").text();
+            if (!text.contains("Ausleihe per Download rund um die Uhr")) {
+                throw new OpacErrorException(text);
             }
         }
         if (doc.text().contains("No html file set")

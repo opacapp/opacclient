@@ -34,6 +34,7 @@
     <string name="lent_none">Nada prestado</string>
     <string name="reservations_none">Nada reservado</string>
     <string name="cancel_confirm">¿Desea cancelar reservación?</string>
+    <string name="prolong_confirm">¿Quieres renovar el artículo?</string>
     <string name="yes">Sí</string>
     <string name="no">No</string>
     <string name="cancel">Cancelar</string>
@@ -59,6 +60,7 @@
     <string name="notification_service">Artículos expirados</string>
     <string name="notification_service_desc">Aviso cuando un artículo esté a punto de expirar (sin garantía)</string>
     <string name="notification_service_wifionly">Consulta sólo con Wifi</string>
+    <string name="notification_service_wifionly_desc">No se descarga información a través de red móvil. Es posible que te pierdas algunas notificaciones si vas sin Wi-Fi durante mucho tiempo.</string>
     <string-array name="warning">
         <item>El día mismo</item>
         <item>1 día antes</item>
@@ -83,11 +85,17 @@
     <string name="notification_warning_desc">¿Cuánto tiempo antes de la fecha de vencimiento quieres recibir un aviso?</string>
     <string name="notif_ticker">¡%d artículos están a punto de expirar!</string>
     <string name="notif_title">Artículos están a punto de expirar</string>
+    <string name="notif_ticker_expired">¡%d artículos han expirado!</string>
+    <string name="notif_title_expired">Los artículos han expirado.</string>
+    <string name="notif_plus_more">+%d más</string>
+    <string name="notif_snooze">Más tarde</string>
+    <string name="notif_dont_remind_again">Descartar</string>
     <string name="volumes">Volúmenes</string>
     <string name="volumesearch">Muestra volúmenes</string>
     <string name="star">Añadir a favoritos</string>
     <string name="starred">El artículo ya está en tu lista de favoritos.</string>
     <string name="star_wait">Por favor, espera la carga de los detalles.</string>
+    <string name="star_unsupported">No pudimos obtener suficiente información sobre ese artículo para añadirlo a tu lista. </string>
     <string name="starred_welcome">Eso es tu lista de favoritos. Puedes añadir artículos al pinchar el asterisco en una página detallada. Se guarda una lista separada para cada biblioteca que utilizas. </string>
     <string name="share">Compartir</string>
     <string name="share_wait">Por favor, espera la carga de los detalles.</string>
@@ -156,9 +164,10 @@
         <item quantity="one">%d resultados de búsqueda</item>
         <item quantity="other">%d resultados de búsqueda</item>
     </plurals>
-    <string name="share_starred">Exportar</string>
+    <string name="export_account">Compartir en forma de texto</string>
     <string name="geolocate">Encontrar bibliotecas cercanas</string>
     <string name="geolocate_progress">Localizando…</string>
+    <string name="geolocate_not_available">Ubicación no está disponible en este dispositivo. Quizás tengas que activarlo en los ajustes.</string>
     <string name="alphabetic_list">Mostrar lista entera</string>
     <string name="setting_nfc">Buscar a través de etiquetas NFC</string>
     <string name="setting_nfc_desc">Fase experimental. Sólo compatible con algunos dispositivos y algunas bibliotecas.</string>
@@ -207,6 +216,7 @@
     <string name="support_search">Sólo buscar</string>
     <string name="meta_clear_title">Limpiar memoria </string>
     <string name="meta_clear">Borrar metadatos guardados en la memoria caché</string>
+    <string name="meta_run_check">Servicio de sincronización en curso</string>
     <string name="version">Versión</string>
     <string name="website">Página web</string>
     <string name="website_url">www.opacapp.net</string>
@@ -217,10 +227,82 @@
     <string name="source">Código fuente</string>
     <string name="loading">Cargando…</string>
     <string name="loading_libraries">Cargando lista de bibliotecas…</string>
+    <string name="updating_libraries">Cargando lista de bibliotecas actualizada…</string>
     <string name="shelfmark">Marcapáginas</string>
+    <string name="url">URL</string>
     <string name="return_date">Fecha de devolución</string>
     <string name="location">Posición</string>
     <string name="department">Departamento</string>
     <string name="reservations">Reservas</string>
+    <string name="barcode">Código de barras</string>
     <string name="clear_search">Limpiar búsqueda</string>
+    <string name="title">Título</string>
+    <string name="author">Autor</string>
+    <string name="title_and_author">Título y autor</string>
+    <string name="reservation_expire_until">hasta</string>
+    <string name="go_to_details">Ir a detalles</string>
+    <string name="nfc_title">Búsqueda con etiquetas NFC disponible</string>
+    <string name="nfc_intro">Esa biblioteca soporta la búsqueda con etiquetas NFC. Con la página de inicio
+de la aplicación abierta, se puede pinchar la parte trasera del dispositivo sobre uno de los libros
+de la biblioteca (u otro material) y la aplicación enseñará directamente sus detalles.
+Esa función utiliza pegatinas pequeñas con tecnología NFC en la parte trasera del libro o en la parta baja de la cubierta.
+La función puede estar afectada por la manera de poner el dispositivo o por complementos como fundas para el móvil,
+además puede que no sea disponible para todos los materiales en la biblioteca.</string>
+    <string name="nfc_question">¿Quieres activar la búsqueda con etiquetas NFC?</string>
+    <string name="no_thanks">No gracias</string>
+    <string name="nfc_activated">Búsqueda con etiquetas NFC activada. Puedes cambiarlo en los ajustes
+en cualquier momento.</string>
+    <string name="nfc_not_activated">Puedes activar la búsqueda con etiquetas NFC en los ajustes en cualquier momento.</string>
+    <string name="content_description_nfc_logo">Ícono de NFC</string>
+    <string name="reservation_fee_warning">Por favor, tenga en cuenta que, dependiente de los condiciones de uso de tu biblioteca,
+se podrían aplicar tasas para reservas. Si tienes dudas, por favor consulta las tarifas de tu biblioteca.</string>
+    <string name="prolong_fee_warning">Por favor, tenga en cuenta que, dependiente de los condiciones de uso de tu biblioteca,
+se podrían aplicar tasas para la renovación de artículos. Si tienes dudas,
+por favor consulta las tarifas de tu biblioteca.</string>
+    <string name="do_not_ask_again">No enseñar otra vez</string>
+    <string name="reservation_fee_continue">Continuar</string>
+    <string name="notification_repeat">Repetir notificaciones</string>
+    <string name="update_info_title">Noticia de privacidad</string>
+    <string name="update_info_text">Con esa actualización la aplicación empieza a reportar automáticamente información diagnóstica de errores ocurridos a nuestros servidores. En una de las siguientes actualizaciones la aplicación empezará a traer información sobre las bibliotecas de nuestro servidor. Eso nos ayuda a mantener respondiendo más rápido y con menos esfuerzo a cambios por las bibliotecas. Seguimos a NUNCA transmitir o guardar ningúnos datos personales en nuestros servidores.</string>
+    <string name="accountdata_export_header">Datos de cuenta de %1$s a %2$s</string>
+    <string name="accountdata_title">Título</string>
+    <string name="accountdata_author">Autor</string>
+    <string name="accountdata_format">Material</string>
+    <string name="accountdata_status">Estado</string>
+    <string name="accountdata_lent_barcode">Código de barras</string>
+    <string name="accountdata_lent_deadline">Fecha de devolución</string>
+    <string name="accountdata_lent_home_branch">Sucursal local</string>
+    <string name="accountdata_lent_lending_branch">Sucursal prestando</string>
+    <string name="accountdata_reserved_ready_date">Fecha de reserva</string>
+    <string name="accountdata_reserved_expiration_date">Fecha de vencimiento</string>
+    <string name="accountdata_reserved_branch">Sucursal</string>
+    <string name="toggle_notice">Pincha la flecha de arriba para cambiar entre varias cuentas.</string>
+    <string name="toggle_notice_button">Entendido</string>
+    <string name="starred_removed">Eliminado de favoritos</string>
+    <string name="starred_removed_undo">Deshacer</string>
+    <string name="print">Imprimir</string>
+    <string name="print_wait">Por favor, espera la carga de los detalles.</string>
+    <string name="preference_category_library_config">Ajustes de biblioteca</string>
+    <string name="preference_update_library_config">Actualizar ajustes de biblioteca</string>
+    <string name="preference_reset_library_config">Reinicializar ajustes de biblioteca</string>
+    <string name="preference_reset_library_config_desc">al estado de la última actualización de la aplicación</string>
+    <string name="updating_library_config">Actualizando ajustes de biblioteca</string>
+    <string name="library_config_no_updates">No se encontraron ajustes actualizados de biblioteca.</string>
+    <string name="library_config_update_success">Ajustes actualizados de %d bibliotecas.</string>
+    <string name="library_config_update_failure">No fue posible actualizar los ajustes de biblioteca.</string>
+    <string name="library_config_last_update">Última actualización %s</string>
+    <string name="library_config_last_update_never">Todavía no se descargaron ajustes.</string>
+    <string name="library_config_reset"> Ajustes de biblioteca restablecidos de la última actualización. </string>
+    <string name="library_removed_error">Lamentablemente, la biblioteca que estás utilizando fue borrado de la aplicación. Puede que la biblioteca haya cambiado a un nuevo sistema de software que ya no es compatible o puede que la biblioteca nos haya contactado para exponer que se los borre de la aplicación. Escríbenos a info@opacapp.net para saber más detalles.</string>
+    <string name="account_anonymous">anónimo (sólo búsqueda)</string>
+    <string name="account_with_credentials">con credenciales (búsqueda y cuenta)</string>
+    <string name="please_enter_password">Por favor, introduzca tu contraseña.</string>
+    <string name="please_enter_username">Por favor, introduzca el número de tu tarjeta de lector.</string>
+    <string name="intro_title_0">Bienvenido a Web Opac App!</string>
+    <string name="intro_description_0">Pasa a la izquierda para obtener más información.</string>
+    <string name="intro_title_1">Notificaciones</string>
+    <string name="intro_description_1">Puedes activar notificaciones en los ajustes de la aplicación para recibir una alerta cuando se acerque la fecha de vencimiento de tus libros prestados. </string>
+    <string name="intro_title_2">1000+ bibliotecas</string>
+    <string name="intro_description_2">Esa aplicación soporta más de 1000 bibliotecas de todo el mundo. Escoge la tuya o ¡haz una propuesta si todavía no está en la lista!</string>
+    <string name="no_title">(sin título)</string>
 </resources>

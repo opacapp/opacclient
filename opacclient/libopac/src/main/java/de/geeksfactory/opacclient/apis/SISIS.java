@@ -72,6 +72,7 @@ import de.geeksfactory.opacclient.searchfields.SearchField;
 import de.geeksfactory.opacclient.searchfields.SearchQuery;
 import de.geeksfactory.opacclient.searchfields.TextSearchField;
 import okhttp3.FormBody;
+import java8.util.concurrent.CompletableFuture;
 
 /**
  * OpacApi implementation for Web Opacs of the SISIS SunRise product, developed by OCLC.
@@ -135,6 +136,7 @@ public class SISIS extends OkHttpBaseApi implements OpacApi {
         defaulttypes.put("46", MediaType.GAME_CONSOLE_NINTENDO);
         defaulttypes.put("52", MediaType.EBOOK);
         defaulttypes.put("56", MediaType.EBOOK);
+        defaulttypes.put("62", MediaType.CD_SOFTWARE);
         defaulttypes.put("96", MediaType.EBOOK);
         defaulttypes.put("97", MediaType.EBOOK);
         defaulttypes.put("99", MediaType.EBOOK);
@@ -362,7 +364,7 @@ public class SISIS extends OkHttpBaseApi implements OpacApi {
     }
 
     public SearchRequestResult parse_search(String html, int page)
-            throws OpacErrorException, SingleResultFound {
+            throws OpacErrorException, SingleResultFound, IOException {
         Document doc = Jsoup.parse(html);
         doc.setBaseUri(opac_url + "/searchfoo");
 
@@ -417,6 +419,7 @@ public class SISIS extends OkHttpBaseApi implements OpacApi {
         }
 
         List<SearchResult> results = new ArrayList<>();
+        List<CompletableFuture<Void>> futures = new ArrayList<>();
         for (int i = 0; i < table.size(); i++) {
             Element tr = table.get(i);
             SearchResult sr = new SearchResult();
@@ -453,12 +456,34 @@ public class SISIS extends OkHttpBaseApi implements OpacApi {
                 sr.setType(MediaType.EDOC);
             }
 
+            // static covers
             if (tr.children().size() > 3
                     && tr.child(3).select("img[title*=cover]").size() == 1) {
                 sr.setCover(tr.child(3).select("img[title*=cover]")
                               .attr("abs:src"));
                 if (sr.getCover().contains("showCover.do")) {
                     downloadCover(sr);
+                }
+            }
+
+            // covers loaded with AJAX (seen in Wuppertal)
+            if (tr.children().size() > 3 && tr.child(3).html().contains("jsp/result/cover.jsp")) {
+                Pattern pattern = Pattern.compile(
+                        "\\$\\.ajax\\(\\{\\s*url:\\s*'(jsp/result/cover.jsp\\?[^']+)',");
+                Matcher matcher = pattern.matcher(tr.child(3).html());
+                if (matcher.find()) {
+                    String url = opac_url + "/" + matcher.group(1);
+                    futures.add(CompletableFuture.runAsync(() -> {
+                        try {
+                            String result = httpGet(url, getDefaultEncoding());
+                            sr.setCover(parseCoverJs(result, opac_url));
+                            if (sr.getCover() != null && !sr.getCover().contains("amazon")) {
+                                downloadCover(sr);
+                            }
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                    }));
                 }
             }
 
@@ -474,7 +499,7 @@ public class SISIS extends OkHttpBaseApi implements OpacApi {
                            .not("#hlrightblock,.bestellfunktionen").size() == 1) {
                 Element indiv = middlething.select("div")
                                            .not("#hlrightblock,.bestellfunktionen").first();
-                if (indiv.select("a").size() > 0 && indiv.children().size() > 1) {
+                if (indiv.select("a[href*=Hit]").size() > 0 && indiv.children().size() > 1) {
                     children = indiv.childNodes();
                 }
             } else if (middlething.select("span.titleData").size() == 1) {
@@ -658,6 +683,11 @@ public class SISIS extends OkHttpBaseApi implements OpacApi {
             sr.setId(null);
             results.add(sr);
         }
+
+        CompletableFuture
+                .allOf(futures.toArray(new CompletableFuture[futures.size()]))
+                .join();
+
         resultcount = results.size();
         return new SearchRequestResult(results, results_total, page);
     }
@@ -721,7 +751,9 @@ public class SISIS extends OkHttpBaseApi implements OpacApi {
 
         DetailedItem result = parseDetail(html, html2, html3, coverJs, data, stringProvider);
         try {
-            if (!result.getCover().contains("amazon")) downloadCover(result);
+            if (result.getCover() != null && !result.getCover().contains("amazon")) {
+                downloadCover(result);
+            }
         } catch (Exception e) {
 
         }
@@ -784,11 +816,7 @@ public class SISIS extends OkHttpBaseApi implements OpacApi {
         }
 
         if (coverJs != null) {
-            Pattern srcPattern = Pattern.compile("<img .* src=\"([^\"]+)\">");
-            Matcher matcher = srcPattern.matcher(coverJs);
-            if (matcher.find()) {
-                result.setCover(matcher.group(1));
-            }
+            result.setCover(parseCoverJs(coverJs, opac_url));
         } else if (doc.select(".data td img").size() == 1) {
             result.setCover(doc.select(".data td img").first().attr("abs:src"));
         }
@@ -1050,6 +1078,22 @@ public class SISIS extends OkHttpBaseApi implements OpacApi {
         }
 
         return result;
+    }
+
+    private static String parseCoverJs(String coverJs, String opac_url) {
+        Pattern imgSrcPattern = Pattern.compile("var imgSrc = '([^']+)'");
+        Matcher matcher = imgSrcPattern.matcher(coverJs);
+        if (!matcher.find()) {
+            Pattern srcPattern = Pattern.compile("<img .* src=\"([^\"]+)\">");
+            matcher = srcPattern.matcher(coverJs);
+            if (!matcher.find()) return null;
+        }
+
+        try {
+            return new URI(opac_url + "/").resolve(matcher.group(1)).toString();
+        } catch (URISyntaxException e) {
+            return null;
+        }
     }
 
     @Override

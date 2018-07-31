@@ -380,9 +380,17 @@ public class Bibliotheca extends OkHttpBaseApi {
             }
         }
 
-        String html = httpPost(opac_url + "/index.asp", formData.build(), getDefaultEncoding());
+        String html;
+        if (data.has("db")) {
+            html = httpPost(opac_url + "/index.asp?DB=" + data.getString("db"), formData.build(), getDefaultEncoding());
+        } else {
+            html = httpPost(opac_url + "/index.asp", formData.build(), getDefaultEncoding());
+        }
         if (html.contains("<a href=\"index.asp?order=" + order + "\">")) {
             html = httpGet(opac_url + "/index.asp?order=" + order, getDefaultEncoding());
+        }
+        if (html.contains("document.location.href='index.asp?alle=1';")) {
+            html = httpGet(opac_url + "/index.asp?alle=1", getDefaultEncoding());
         }
         return parseSearch(html, 1, data);
     }
