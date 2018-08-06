@@ -24,6 +24,8 @@ package de.geeksfactory.opacclient.storage;
 import android.app.Activity;
 import android.content.ContentValues;
 import android.database.Cursor;
+import android.database.sqlite.SQLiteConstraintException;
+import android.database.sqlite.SQLiteDatabase;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -33,14 +35,17 @@ import java.util.Map.Entry;
 import de.geeksfactory.opacclient.OpacClient;
 import de.geeksfactory.opacclient.objects.SearchResult;
 import de.geeksfactory.opacclient.objects.Starred;
-import de.geeksfactory.opacclient.searchfields.SearchField;
+import de.geeksfactory.opacclient.objects.Tag;
 
 public class StarDataSource {
 
+    private SQLiteDatabase database;
     private Activity context;
 
     public StarDataSource(Activity context) {
         this.context = context;
+        StarDatabase dbHelper = StarDatabase.getInstance(context);
+        database = dbHelper.getWritableDatabase();
     }
 
     public static Starred cursorToItem(Cursor cursor) {
@@ -201,5 +206,158 @@ public class StarDataSource {
                            cv, StarDatabase.STAR_WHERE_LIB,
                            new String[]{entry.getKey()});
         }
+    }
+
+    public static Tag cursorToTag(Cursor cursor) {
+        Tag tag = new Tag();
+        tag.setId(cursor.getInt(0));
+        tag.setTagName(cursor.getString(1));
+        return tag;
+    }
+
+    public boolean hasTagNameInTagTable(String tagName) {
+        if (tagName == null) {
+            return false;
+        }
+        String[] selA = {tagName};
+        Cursor cursor = database.query(StarDatabase.TAGS_TABLE, null, "tag = ?",
+                selA, null, null, null);
+        int c = cursor.getCount();
+        cursor.close();
+        return (c > 0);
+    }
+
+    public boolean hasTagIdInStarTagTable(long tagId) {
+        String[] selA = {"" + tagId};
+        Cursor cursor = database.query(StarDatabase.STAR_TAGS_TABLE, null, "tag = ?",
+                selA, null, null, null);
+        int c = cursor.getCount();
+        cursor.close();
+        return (c > 0);
+    }
+
+    /**
+     * Add given tag to the tags database and the starred-tag database
+     */
+    public long addTag(Starred item, String tagName) {
+        ContentValues values = new ContentValues();
+        values.put("tag", tagName);
+        if (!hasTagNameInTagTable(tagName)) {
+            database.insert(StarDatabase.TAGS_TABLE, null, values);
+        }
+
+        values = new ContentValues();
+        values.put("tag", getTagByTagName(tagName).getId());
+        values.put("item", item.getId());
+        try {
+            return database.insert(StarDatabase.STAR_TAGS_TABLE, null, values);
+        } catch (SQLiteConstraintException e) {
+            return -1;
+        }
+
+    }
+
+    /**
+     * Remove given tag from the starred-tag database and the tags database
+     */
+    public void removeTag(Tag tag) {
+        String[] selA = {"" + tag.getId()};
+        database.delete(StarDatabase.STAR_TAGS_TABLE, "tag=?", selA);
+        if (!hasTagIdInStarTagTable(tag.getId())) {
+            selA = new String[]{"" + tag.getTagName()};
+            database.delete(StarDatabase.TAGS_TABLE, "tag=?", selA);
+        }
+    }
+
+    public Tag getTagByTagName(String tagName) {
+        String[] selA = {tagName};
+        Cursor cursor = database.query(StarDatabase.TAGS_TABLE, StarDatabase.TAGS_COLUMNS, "tag = ?",
+                selA, null, null, null);
+        Tag item = null;
+        cursor.moveToFirst();
+        if (!cursor.isAfterLast()) {
+            item = cursorToTag(cursor);
+            cursor.moveToNext();
+        }
+        // Make sure to close the cursor
+        cursor.close();
+        return item;
+    }
+
+    public Tag getTagById(long id) {
+        String[] selA = {String.valueOf(id)};
+        Cursor cursor = database.query(StarDatabase.TAGS_TABLE, StarDatabase.TAGS_COLUMNS, "id = ?",
+                selA, null, null, null);
+        Tag item = null;
+        cursor.moveToFirst();
+        if (!cursor.isAfterLast()) {
+            item = cursorToTag(cursor);
+            cursor.moveToNext();
+        }
+        // Make sure to close the cursor
+        cursor.close();
+        return item;
+    }
+
+    public static int cursorToStarAndTagId(Cursor cursor) {
+        return(cursor.getInt(0));
+    }
+
+    /**
+     * Get all tags that belong to this Starred item
+     */
+    public List<Tag> getAllTags(Starred item) {
+        List<Tag> tags = new ArrayList<>();
+        String[] selA = {Integer.toString(item.getId())};
+        Cursor cursor = database.query(StarDatabase.STAR_TAGS_TABLE, StarDatabase.STAR_TAGS_COLUMNS, "item = ?", selA, null, null, null);
+
+        cursor.moveToFirst();
+        while (!cursor.isAfterLast()) {
+            int tagId = cursorToStarAndTagId(cursor);
+            tags.add(getTagById(tagId));
+            cursor.moveToNext();
+        }
+        // Make sure to close the cursor
+        cursor.close();
+        return tags;
+    }
+
+    /**
+     * Get all tag names that belong to this Starred item
+     */
+    public List<String> getAllTagNames(Starred item) {
+        List<String> tags = new ArrayList<>();
+        String[] selA = {Integer.toString(item.getId())};
+        Cursor cursor = database.query(StarDatabase.STAR_TAGS_TABLE, StarDatabase.STAR_TAGS_COLUMNS, "item = ?", selA, null, null, null);
+
+        cursor.moveToFirst();
+        while (!cursor.isAfterLast()) {
+            int tagId = cursorToStarAndTagId(cursor);
+            tags.add(getTagById(tagId).getTagName());
+            cursor.moveToNext();
+        }
+        // Make sure to close the cursor
+        cursor.close();
+        return tags;
+    }
+
+    /**
+     * Get all tags that do not belong to this Starred item
+     */
+    public List<String> getAllTagNamesExceptThisItem(Starred item) {
+        List<String> listOfTagNames = new ArrayList<>();
+        Cursor cursor = database.rawQuery("select * from " + StarDatabase.STAR_TAGS_TABLE, null);
+
+        cursor.moveToFirst();
+        while (!cursor.isAfterLast()) {
+            if (cursor.getInt(1) != item.getId()) {
+                int tagId = cursorToStarAndTagId(cursor);
+                listOfTagNames.add(getTagById(tagId).getTagName());
+            }
+            cursor.moveToNext();
+        }
+        // Make sure to close the cursor
+        cursor.close();
+        return listOfTagNames;
     }
 }

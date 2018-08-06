@@ -22,6 +22,7 @@
 package de.geeksfactory.opacclient.frontend;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
@@ -30,22 +31,32 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager.LoaderCallbacks;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.support.v4.widget.SimpleCursorAdapter;
+import android.text.Editable;
 import android.text.Html;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.view.inputmethod.EditorInfo;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
+import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
+import android.widget.EditText;
+import android.widget.Filter;
+import android.widget.Filterable;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -63,7 +74,9 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import de.geeksfactory.opacclient.OpacClient;
 import de.geeksfactory.opacclient.R;
@@ -71,6 +84,7 @@ import de.geeksfactory.opacclient.frontend.OpacActivity.AccountSelectedListener;
 import de.geeksfactory.opacclient.objects.Account;
 import de.geeksfactory.opacclient.objects.SearchResult;
 import de.geeksfactory.opacclient.objects.Starred;
+import de.geeksfactory.opacclient.objects.Tag;
 import de.geeksfactory.opacclient.searchfields.SearchField;
 import de.geeksfactory.opacclient.searchfields.SearchField.Meaning;
 import de.geeksfactory.opacclient.searchfields.SearchQuery;
@@ -110,6 +124,8 @@ public class StarredFragment extends Fragment implements
         app = (OpacClient) getActivity().getApplication();
 
         adapter = new ItemListAdapter();
+
+        EditText tagFilter = (EditText) view.findViewById(R.id.searchFilter);
 
         listView = (ListView) view.findViewById(R.id.lvStarred);
         tvWelcome = (TextView) view.findViewById(R.id.tvWelcome);
@@ -165,6 +181,23 @@ public class StarredFragment extends Fragment implements
         getActivity().getSupportLoaderManager()
                      .initLoader(0, null, this);
         listView.setAdapter(adapter);
+
+        tagFilter.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                adapter.getFilter().filter(s);
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
 
         // Restore the previously serialized activated item position.
         if (savedInstanceState != null
@@ -498,6 +531,50 @@ public class StarredFragment extends Fragment implements
         activatedPosition = position;
     }
 
+    /**
+     * Adds tag to the database and the starred item.
+     * @param item
+     * @param tagName
+     * @return updated tag list
+     */
+    private Tag addTag(Starred item, String tagName) {
+        StarDataSource data = new StarDataSource(getActivity());
+        sItem = item;
+        data.addTag(item, tagName);
+        Tag tagFromDatabase = data.getTagByTagName(tagName);
+        item.addTag(tagFromDatabase);
+        return tagFromDatabase;
+    }
+
+    /**
+     * Removes tag from the database and the starred item.
+     * @param tag
+     */
+    private void removeTag(Tag tag) {
+        StarDataSource data = new StarDataSource(getActivity());
+        data.removeTag(data.getTagByTagName(tag.getTagName()));
+    }
+
+    /**
+     * Returns latest the tag list from the database.
+     * @param item
+     * @return the updated tag list
+     */
+    private List<Tag> getTags(Starred item) {
+        StarDataSource data = new StarDataSource(getActivity());
+        return data.getAllTags(item);
+    }
+
+    private List<String> getTagNames(Starred item) {
+        StarDataSource data = new StarDataSource(getActivity());
+        return data.getAllTagNames(item);
+    }
+
+    private List<String> getAllTagNamesExceptThisItem(Starred item) {
+        StarDataSource data = new StarDataSource(getActivity());
+        return data.getAllTagNamesExceptThisItem(item);
+    }
+
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
@@ -513,7 +590,10 @@ public class StarredFragment extends Fragment implements
         public void removeFragment();
     }
 
-    private class ItemListAdapter extends SimpleCursorAdapter {
+    private class ItemListAdapter extends SimpleCursorAdapter implements Filterable {
+
+        List<String> itemNames;
+        List<Starred> items = new ArrayList<>();
 
         public ItemListAdapter() {
             super(getActivity(), R.layout.listitem_starred, null,
@@ -523,6 +603,7 @@ public class StarredFragment extends Fragment implements
         @Override
         public void bindView(View view, Context context, Cursor cursor) {
             Starred item = StarDataSource.cursorToItem(cursor);
+            items.add(item);
 
             TextView tv = (TextView) view.findViewById(R.id.tvTitle);
             if (item.getTitle() != null) {
@@ -538,6 +619,62 @@ public class StarredFragment extends Fragment implements
                 ivType.setImageBitmap(null);
             }
 
+            ImageView ivTagMenu = (ImageView) view.findViewById(R.id.ivTagMenu);
+            ivTagMenu.setFocusableInTouchMode(false);
+            ivTagMenu.setFocusable(false);
+            ivTagMenu.setTag(item);
+            List<Tag> currentTagList = getTags(item);
+            List<String> currentTagListNames = getTagNames(item);
+
+
+            ivTagMenu.setOnClickListener(arg0 -> {
+                // Create alert dialog box for removing of tags
+                AlertDialog.Builder builder = new AlertDialog.Builder(context);
+                builder.setTitle(item.getTitle() + " tags list");
+
+                // set the custom layout
+                final View customLayout = getLayoutInflater().inflate(R.layout.tag_menu, null);
+                builder.setView(customLayout);
+
+                // create list view
+                ListView tagsListView = (ListView) customLayout.findViewById(R.id.lvTags);
+                ArrayAdapter<Tag> tagAdapter = new TagListAdapter(context, currentTagList);
+                tagsListView.setAdapter(tagAdapter);
+
+                AutoCompleteTextView autocomplete =
+                        customLayout.findViewById(R.id.autoCompleteTextView);
+                ArrayAdapter<String> allTagNamesAdapter =
+                        new ArrayAdapter<>(context, android.R.layout.select_dialog_item,
+                                getAllTagNamesExceptThisItem(item));
+                autocomplete.setThreshold(2);
+                autocomplete.setAdapter(allTagNamesAdapter);
+
+                ImageButton addTagButton = (ImageButton) customLayout.findViewById(R.id.addTag);
+                addTagButton.setOnClickListener(view1 -> {
+                    String tagName = autocomplete.getText().toString();
+                    // prevent an empty tag or an exisiting tag from being added
+                    if (!tagName.equals("") && !currentTagListNames.contains(tagName)) {
+                        Tag tagToAdd = addTag(item, tagName);
+                        currentTagList.add(tagToAdd);
+                        tagAdapter.notifyDataSetChanged();
+                        currentTagListNames.add(tagName);
+                        autocomplete.setText("");
+                        Toast.makeText(context, "Added tag \"" + tagName + "\" to " + item.getTitle(), Toast.LENGTH_SHORT).show();
+                    } else {
+                        Toast.makeText(context, "Please enter a nonempty tag name that already isn't on the list", Toast.LENGTH_LONG).show();
+                    }
+                    // hide keyboard once done so as to see toast messages
+                    autocomplete.onEditorAction(EditorInfo.IME_ACTION_DONE);
+
+                });
+
+                builder.setNegativeButton("Back", (dialog, which) -> dialog.cancel());
+
+                AlertDialog dialog = builder.create();
+                dialog.show();
+            });
+
+
             ImageView ivDelete = (ImageView) view.findViewById(R.id.ivDelete);
             ivDelete.setFocusableInTouchMode(false);
             ivDelete.setFocusable(false);
@@ -550,6 +687,95 @@ public class StarredFragment extends Fragment implements
                     callback.removeFragment();
                 }
             });
+        }
+
+        @Override
+        public Filter getFilter() {
+
+            return new Filter() {
+
+                @SuppressWarnings("unchecked")
+                @Override
+                protected void publishResults(CharSequence constraint, FilterResults results) {
+
+                    itemNames = (List<String>) results.values;
+                    notifyDataSetChanged();
+                }
+
+                @Override
+                protected FilterResults performFiltering(CharSequence constraint) {
+
+                    FilterResults results = new FilterResults();
+                    Set<String> FilteredArrayNames = new HashSet<>();
+
+                    // perform search here using the searchConstraint String. For each starred item
+                    // in the list, get its tags and filter based on that
+
+                    constraint = constraint.toString().toLowerCase();
+                    for (int i = 0; i < items.size(); i++) {
+                        List<Tag> dataNames = getTags(items.get(i));
+                        for (Tag t : dataNames) {
+                            if (t.getTagName().toLowerCase().contains(constraint.toString())) {
+                                FilteredArrayNames.add(items.get(i).getTitle());
+                            }
+                        }
+                    }
+
+                    results.count = FilteredArrayNames.size();
+                    results.values = new ArrayList<>(FilteredArrayNames);
+                    Log.e("VALUES", results.values.toString());
+
+                    return results;
+                }
+            };
+        }
+    }
+
+    private class TagListAdapter extends ArrayAdapter<Tag> {
+
+        public TagListAdapter(Context context, List<Tag> tagList) {
+            super(getActivity(), R.layout.listitem_tag, tagList);
+        }
+
+        @NonNull
+        @Override
+        public View getView(int position, View convertView, @NonNull ViewGroup parent) {
+            View itemView = convertView;
+            if (itemView == null) {
+                itemView = getLayoutInflater().inflate(R.layout.listitem_tag, parent, false);
+            }
+
+            Tag currentTag = getItem(position);
+
+            TextView tv = (TextView) itemView.findViewById(R.id.tvTitle);
+            tv.setText(currentTag.getTagName());
+
+            ImageView ivDelete = (ImageView) itemView.findViewById(R.id.ivDelete);
+            ivDelete.setFocusableInTouchMode(false);
+            ivDelete.setFocusable(false);
+            ivDelete.setTag(currentTag);
+            ivDelete.setOnClickListener(arg0 -> {
+                Tag item = (Tag) arg0.getTag();
+                removeTag(item);
+                Toast.makeText(getContext(), "Removed tag \"" + item.getTagName() + "\"", Toast.LENGTH_SHORT).show();
+            });
+
+            return itemView;
+        }
+
+        @Override
+        public void notifyDataSetChanged() {
+            super.notifyDataSetChanged();
+        }
+
+        @Override
+        public void add(Tag object) {
+            super.add(object);
+        }
+
+        public void removeTag(Tag object) {
+            super.remove(object);
+            StarredFragment.this.removeTag(object);
         }
     }
 

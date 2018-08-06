@@ -21,6 +21,9 @@
  */
 package de.geeksfactory.opacclient.objects;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Object representing a bookmarked item. Not part of the API you are interested
  * in if you want to implement a library system.
@@ -32,6 +35,7 @@ public class Starred {
     private String mnr;
     private String title;
     private SearchResult.MediaType mediaType;
+    private List<Tag> tags = new ArrayList<>();
 
     @Override
     public String toString() {
@@ -93,5 +97,29 @@ public class Starred {
      */
     public void setMediaType(SearchResult.MediaType mediaType) {
         this.mediaType = mediaType;
+    }
+
+    /**
+     * Get this item's tag list
+     */
+    public List<Tag> getTags() {
+        return tags;
+    }
+
+    /**
+     * Add a tag to this item's tag list
+     */
+    public void addTag(Tag tag) {
+        this.tags.add(tag);
+    }
+
+    /**
+     * Remove a tag from this item's tag list
+     */
+    public void removeTag(Tag tag) {
+        if (tags.contains(tag)) {
+            this.tags.remove(tag);
+        }
+
     }
 }

@@ -18,36 +18,12 @@
         tools:ignore="MissingPrefix"
         tools:src="@drawable/ic_delete_24dp"/>
 
-    <ImageView
-        android:id="@+id/ivMediaType"
-        android:layout_width="48dp"
-        android:layout_height="48dp"
-        android:layout_alignParentLeft="true"
-        android:layout_centerVertical="true"
-        android:contentDescription="@string/mediatype"/>
-
     <TextView
         android:id="@+id/tvTitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerVertical="true"
-        android:layout_toLeftOf="@id/ivTagMenu"
-        android:layout_toRightOf="@id/ivMediaType"
         android:padding="5dp"
         android:textAppearance="?android:attr/textAppearanceMedium"/>
-
-    <ImageView
-        android:id="@+id/ivTagMenu"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignTop="@+id/tvTitle"
-        android:layout_centerVertical="true"
-        android:layout_marginEnd="14dp"
-        android:layout_marginRight="14dp"
-        android:layout_toLeftOf="@+id/ivDelete"
-        android:layout_toStartOf="@+id/ivDelete"
-        android:contentDescription="@string/tag_menu"
-        app:srcCompat="@drawable/ic_local_offer_black_24dp"
-        tools:src="@drawable/ic_local_offer_black_24dp"/>
 
 </RelativeLayout>

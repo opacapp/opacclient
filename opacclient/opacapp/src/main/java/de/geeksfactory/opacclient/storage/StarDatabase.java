@@ -28,10 +28,19 @@ import android.util.Log;
 
 public class StarDatabase extends SQLiteOpenHelper {
 
+    private static StarDatabase instance;
     public static final String STAR_TABLE = "starred";
+    public static final String TAGS_TABLE = "tags";
+    public static final String STAR_TAGS_TABLE = "starred_tags";
     private static final String DATABASE_CREATE = "create table " + STAR_TABLE
             + " ( id integer primary key autoincrement," + " medianr text,"
             + " bib text," + " title text," + " mediatype text" + ");";
+    public static final String TAGS_DATABASE_CREATE = "create table " + TAGS_TABLE
+            + " ( id integer primary key autoincrement," +" tag text unique);";
+    public static final String STAR_TAGS_DATABASE_CREATE = "create table " + STAR_TAGS_TABLE
+            + " ( tag integer references tags (id)," + " item integer references starred (id),"
+            + " primary key (tag, item)"
+            + "foreign key (item) references starred (id) on delete cascade" + ");";
     // CHANGE THIS
     public static final String STAR_WHERE_ID = "id = ?";
     public static final String STAR_WHERE_LIB = "bib = ?";
@@ -39,16 +48,25 @@ public class StarDatabase extends SQLiteOpenHelper {
     public static final String STAR_WHERE_NR_LIB = "bib = ? AND medianr = ?";
     public static final String[] COLUMNS = {"id AS _id", "medianr", "bib",
             "title", "mediatype"};
+    public static final String[] TAGS_COLUMNS = {"id", "tag"};
+    public static final String[] STAR_TAGS_COLUMNS = {"tag", "item"};
     private static final String DATABASE_NAME = "starred.db";
-    private static final int DATABASE_VERSION = 6; // REPLACE ONUPGRADE IF YOU
+    private static final int DATABASE_VERSION = 7; // REPLACE ONUPGRADE IF YOU
 
-    public StarDatabase(Context context) {
+    private StarDatabase(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
     }
+    public static synchronized StarDatabase getInstance(Context context) {
+        if (instance == null) instance = new StarDatabase(context);
+        return instance;
+    }
+
 
     @Override
     public void onCreate(SQLiteDatabase db) {
         db.execSQL(DATABASE_CREATE);
+        db.execSQL(TAGS_DATABASE_CREATE);
+        db.execSQL(STAR_TAGS_DATABASE_CREATE);
     }
 
     @Override
@@ -58,6 +76,10 @@ public class StarDatabase extends SQLiteOpenHelper {
             if (oldVersion < 6) {
                 // Add column for media type
                 db.execSQL("alter table " + STAR_TABLE + " add column mediatype text");
+            }
+            if (oldVersion < 7) {
+                db.execSQL(TAGS_DATABASE_CREATE);
+                db.execSQL(STAR_TAGS_DATABASE_CREATE);
             }
         } else {
             Log.w(StarDatabase.class.getName(), "Upgrading database from version "
