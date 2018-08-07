@@ -36,11 +36,11 @@ public class StarDatabase extends SQLiteOpenHelper {
             + " ( id integer primary key autoincrement," + " medianr text,"
             + " bib text," + " title text," + " mediatype text" + ");";
     public static final String TAGS_DATABASE_CREATE = "create table " + TAGS_TABLE
-            + " ( id integer primary key autoincrement," +" tag text unique);";
+            + " ( id integer primary key autoincrement," + " tag text unique);";
     public static final String STAR_TAGS_DATABASE_CREATE = "create table " + STAR_TAGS_TABLE
             + " ( tag integer references tags (id)," + " item integer references starred (id),"
             + " primary key (tag, item)"
-            + "foreign key (item) references starred (id) on delete cascade" + ");";
+            + " foreign key (item) references starred (id) on delete cascade" + ");";
     // CHANGE THIS
     public static final String STAR_WHERE_ID = "id = ?";
     public static final String STAR_WHERE_LIB = "bib = ?";

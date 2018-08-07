@@ -128,6 +128,7 @@
     <string name="account_select">Select Account</string>
     <string name="tag_add">Add</string>
     <string name="tag_menu">Tag Menu</string>
+    <string name="filter_by_tags">Filter By Tags</string>
     <string name="privacy">Privacy</string>
     <string name="nav_hl_library">Library</string>
     <string name="nav_search">Search</string>

@@ -303,6 +303,25 @@ public class StarDataSource {
         return(cursor.getInt(0));
     }
 
+
+    /**
+     * Get all tags
+     */
+    public List<Tag> getAllTagsInDatabase() {
+        List<Tag> tags = new ArrayList<>();
+        Cursor cursor = database.query(StarDatabase.TAGS_TABLE, StarDatabase.TAGS_COLUMNS, null, null, null, null, null);
+
+        cursor.moveToFirst();
+        while (!cursor.isAfterLast()) {
+            int tagId = cursorToStarAndTagId(cursor);
+            tags.add(getTagById(tagId));
+            cursor.moveToNext();
+        }
+        // Make sure to close the cursor
+        cursor.close();
+        return tags;
+    }
+
     /**
      * Get all tags that belong to this Starred item
      */

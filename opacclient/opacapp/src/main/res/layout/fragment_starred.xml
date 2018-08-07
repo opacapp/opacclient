@@ -15,12 +15,6 @@
         android:text="@string/starred_welcome"
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:visibility="gone"/>
-    
-    <EditText
-        android:id="@+id/searchFilter"
-        android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:hint="Filter by Tags"/>
 
     <ListView
         android:id="@+id/lvStarred"

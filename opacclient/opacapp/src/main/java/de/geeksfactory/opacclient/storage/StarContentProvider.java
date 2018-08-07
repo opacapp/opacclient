@@ -43,6 +43,8 @@ public class StarContentProvider extends ContentProvider {
             + STAR_MIME_POSTFIX;
     private static final String STAR_ITEM_MIME = MIME_PREFIX + "item"
             + STAR_MIME_POSTFIX;
+    private static final String STAR_DIR_WITH_TAGS_MIME = MIME_PREFIX + "tags"
+            + STAR_MIME_POSTFIX;
     private StarDatabase database;
 
     private static Mime getTypeMime(Uri uri) {
@@ -62,6 +64,9 @@ public class StarContentProvider extends ContentProvider {
                 case 1:
                     return Mime.STAR_DIR;
                 case 2:
+                    if (segments.get(1).equals("withTags")) {
+                        return Mime.STAR_DIR_WITH_TAGS;
+                    }
                     return Mime.STAR_ITEM;
                 default:
                     return null;
@@ -84,6 +89,8 @@ public class StarContentProvider extends ContentProvider {
                 return STAR_DIR_MIME;
             case STAR_ITEM:
                 return STAR_ITEM_MIME;
+            case STAR_DIR_WITH_TAGS:
+                return STAR_DIR_WITH_TAGS_MIME;
             default:
                 return null;
         }
@@ -163,6 +170,9 @@ public class StarContentProvider extends ContentProvider {
                         StarDatabase.STAR_WHERE_ID, selectionForUri(uri), null,
                         null, sortOrder);
                 break;
+            case STAR_DIR_WITH_TAGS:
+                cursor = joinWithLibraryAndTagName(selectionArgs);
+                break;
             default:
                 return null;
         }
@@ -200,6 +210,28 @@ public class StarContentProvider extends ContentProvider {
         return rowsAffected;
     }
 
+    public Cursor joinWithLibraryAndTagName(String[] selectionArgs) {
+        String joinQuery = "SELECT DISTINCT " + "starred.id AS _id, medianr, bib, title, mediatype" + " FROM " + StarDatabase.STAR_TABLE
+                + " INNER JOIN " + StarDatabase.STAR_TAGS_TABLE
+                + " ON " + StarDatabase.STAR_TABLE + ".id = " + StarDatabase.STAR_TAGS_TABLE + ".item"
+                + " WHERE " + StarDatabase.STAR_WHERE_LIB + " AND " + StarDatabase.STAR_TAGS_TABLE + ".tag in (" + makePlaceHolders(selectionArgs.length - 1) + ")";
+        return database.getReadableDatabase().rawQuery(joinQuery, selectionArgs);
+    }
+
+    /* This method takes in an integer variable length and returns that many "?" so as to support
+     * SQL queries that take in a list of parameters. So an input of 3 would return, "?,?,?".
+     */
+    public String makePlaceHolders(int length) {
+        int i = 1;
+        StringBuilder sb =  new StringBuilder();
+        while (i < length) {
+            sb.append("?,");
+            i++;
+        }
+        sb.append("?");
+        return sb.toString();
+    }
+
     private void notifyUri(Uri uri) {
         getContext().getContentResolver().notifyChange(uri, null);
     }
@@ -209,6 +241,6 @@ public class StarContentProvider extends ContentProvider {
     }
 
     private enum Mime {
-        STAR_ITEM, STAR_DIR
+        STAR_ITEM, STAR_DIR, STAR_DIR_WITH_TAGS
     }
 }

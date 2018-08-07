@@ -25,6 +25,7 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.ActivityNotFoundException;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
@@ -53,6 +54,7 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
+import android.widget.CheckedTextView;
 import android.widget.EditText;
 import android.widget.Filter;
 import android.widget.Filterable;
@@ -61,6 +63,11 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.hootsuite.nachos.NachoTextView;
+import com.hootsuite.nachos.chip.Chip;
+import com.hootsuite.nachos.terminator.ChipTerminatorHandler;
+import com.hootsuite.nachos.validator.ChipifyingNachoValidator;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -74,9 +81,7 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 import de.geeksfactory.opacclient.OpacClient;
 import de.geeksfactory.opacclient.R;
@@ -125,7 +130,7 @@ public class StarredFragment extends Fragment implements
 
         adapter = new ItemListAdapter();
 
-        EditText tagFilter = (EditText) view.findViewById(R.id.searchFilter);
+//        NachoTextView tagFilter = (NachoTextView) view.findViewById(R.id.searchFilter);
 
         listView = (ListView) view.findViewById(R.id.lvStarred);
         tvWelcome = (TextView) view.findViewById(R.id.tvWelcome);
@@ -182,22 +187,12 @@ public class StarredFragment extends Fragment implements
                      .initLoader(0, null, this);
         listView.setAdapter(adapter);
 
-        tagFilter.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-                adapter.getFilter().filter(s);
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-
-            }
-        });
+//        ArrayAdapter<String> nachoTextViewadapter = new ArrayAdapter<>(getContext(),
+//                android.R.layout.simple_dropdown_item_1line, getAllTagNames());
+//        tagFilter.setThreshold(0);
+//        tagFilter.setAdapter(nachoTextViewadapter);
+//        List<String> tagSearchInput = tagFilter.getChipValues();
 
         // Restore the previously serialized activated item position.
         if (savedInstanceState != null
@@ -228,6 +223,9 @@ public class StarredFragment extends Fragment implements
             return true;
         } else if (item.getItemId() == R.id.action_import_from_storage) {
             importFromStorage();
+            return true;
+        } else if (item.getItemId() == R.id.action_filter_by_tags) {
+            filterByTags();
             return true;
         }
         return super.onOptionsItemSelected(item);
@@ -263,7 +261,13 @@ public class StarredFragment extends Fragment implements
 
     @Override
     public Loader<Cursor> onCreateLoader(int arg0, Bundle arg1) {
-        if (app.getLibrary() != null) {
+        if (app.getLibrary() != null && arg1 != null) {
+            List<String> selectionArgsList = arg1.getStringArrayList("listOfTagIds");
+            selectionArgsList.add(0, app.getLibrary().getIdent());
+            String[] selectionArgs = selectionArgsList.toArray(new String[0]);
+            Uri uri = Uri.parse(app.getStarProviderStarUri() + "/withTags");
+            return new CursorLoader(getActivity(), uri, StarDatabase.COLUMNS, null, selectionArgs, null);
+        } else if(app.getLibrary() != null) {
             return new CursorLoader(getActivity(),
                     app.getStarProviderStarUri(), StarDatabase.COLUMNS,
                     StarDatabase.STAR_WHERE_LIB, new String[]{app
@@ -398,6 +402,57 @@ public class StarredFragment extends Fragment implements
         } catch (ActivityNotFoundException e) {
             showImportErrorNoPickerApp();//No picker app installed!
         }
+    }
+
+    private void filterByTags() {
+        List<Tag> listOfAllTags = this.getAllTags();
+        ArrayList<String> listOfSelectedTagIds = new ArrayList<>();
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+        builder.setTitle("Filter By Tags");
+
+        // set the custom layout
+        final View customLayout = getLayoutInflater().inflate(R.layout.tag_menu, null);
+        builder.setView(customLayout);
+
+        // create list view
+        ListView tagsListView = (ListView) customLayout.findViewById(R.id.lvTags);
+        ArrayAdapter<Tag> tagAdapter = new ArrayAdapter<>(getContext(), android.R.layout.select_dialog_multichoice,
+                listOfAllTags);
+        tagsListView.setAdapter(tagAdapter);
+
+        tagsListView.setOnItemClickListener((parent, view, position, id) -> {
+            // When clicked, toggle checkbox and add it to list of
+            Tag currentTag = (Tag) parent.getItemAtPosition(position);
+            String currentTagId = Integer.toString(currentTag.getId());
+            CheckedTextView ctv = ((CheckedTextView) view);
+            ctv.toggle();
+            if (ctv.isChecked()) {
+                listOfSelectedTagIds.add(currentTagId);
+            } else {
+                listOfSelectedTagIds.remove(currentTagId);
+            }
+        });
+
+        builder.setNegativeButton("Back", (dialog, which) -> dialog.cancel());
+        builder.setPositiveButton("Filter", (dialog, which) -> {
+            // Initialize button and then override it so as to add the click listener
+        });
+
+        AlertDialog dialog = builder.create();
+        dialog.show();
+
+        dialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener(v -> {
+            Bundle b = new Bundle();
+            if (listOfSelectedTagIds == null || listOfSelectedTagIds.isEmpty()) {
+                b = null;
+            } else {
+                b.putStringArrayList("listOfTagIds", listOfSelectedTagIds);
+            }
+
+            getActivity().getSupportLoaderManager().restartLoader(0, b, StarredFragment.this);
+            dialog.dismiss();
+        });
     }
 
     @Override
@@ -550,6 +605,11 @@ public class StarredFragment extends Fragment implements
         return data.getAllTagNamesExceptThisItem(item);
     }
 
+    private List<Tag> getAllTags() {
+        StarDataSource data = new StarDataSource(getActivity());
+        return data.getAllTagsInDatabase();
+    }
+
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
@@ -662,47 +722,6 @@ public class StarredFragment extends Fragment implements
                     callback.removeFragment();
                 }
             });
-        }
-
-        @Override
-        public Filter getFilter() {
-
-            return new Filter() {
-
-                @SuppressWarnings("unchecked")
-                @Override
-                protected void publishResults(CharSequence constraint, FilterResults results) {
-
-                    itemNames = (List<String>) results.values;
-                    notifyDataSetChanged();
-                }
-
-                @Override
-                protected FilterResults performFiltering(CharSequence constraint) {
-
-                    FilterResults results = new FilterResults();
-                    Set<String> FilteredArrayNames = new HashSet<>();
-
-                    // perform search here using the searchConstraint String. For each starred item
-                    // in the list, get its tags and filter based on that
-
-                    constraint = constraint.toString().toLowerCase();
-                    for (int i = 0; i < items.size(); i++) {
-                        List<Tag> dataNames = getTags(items.get(i));
-                        for (Tag t : dataNames) {
-                            if (t.getTagName().toLowerCase().contains(constraint.toString())) {
-                                FilteredArrayNames.add(items.get(i).getTitle());
-                            }
-                        }
-                    }
-
-                    results.count = FilteredArrayNames.size();
-                    results.values = new ArrayList<>(FilteredArrayNames);
-                    Log.e("VALUES", results.values.toString());
-
-                    return results;
-                }
-            };
         }
     }
 

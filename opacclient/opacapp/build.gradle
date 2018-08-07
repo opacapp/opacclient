@@ -106,6 +106,7 @@ dependencies {
     testImplementation 'com.squareup.okhttp3:okhttp:3.10.0'
     testImplementation 'com.squareup.retrofit2:retrofit-mock:2.3.0'
     testImplementation 'commons-io:commons-io:2.5'
+    implementation "com.hootsuite.android:nachos:1.1.1"
 
     // We don't want to rely on the CommonsWare Maven repo, so we include these libraries as JARs
     implementation files('libs/adapter-1.0.1.jar')
