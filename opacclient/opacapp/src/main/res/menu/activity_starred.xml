@@ -10,8 +10,8 @@
     </item>
     <item
         android:id="@+id/action_filter_by_tags"
-        android:icon="@drawable/ic_search_24dp"
-        app:showAsAction="never"
+        android:icon="@drawable/ic_filter_list_white_24dp"
+        app:showAsAction="ifRoom"
         android:title="@string/filter_by_tags">
     </item>
     <item
