@@ -1425,6 +1425,10 @@ public class AccountFragment extends Fragment implements
             try {
                 data = app.getApi().account(account);
 
+                if (data == null) {
+                    return null;
+                }
+
                 Collections.sort(data.getLent(), (a, b) -> {
                     if (a.isEbook() == b.isEbook()) {
                         if (a.getDeadline() == null && b.getDeadline() == null) {
@@ -1443,10 +1447,6 @@ public class AccountFragment extends Fragment implements
                         return -1;
                     }
                 });
-
-                if (data == null) {
-                    return null;
-                }
             } catch (IOException | OpacErrorException | OpacClient.LibraryRemovedException e) {
                 exception = e;
                 return null;
