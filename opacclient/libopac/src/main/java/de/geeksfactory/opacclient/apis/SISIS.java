@@ -1618,8 +1618,6 @@ public class SISIS extends OkHttpBaseApi implements OpacApi {
         // additional pages
         loadPages(medien, doc, SISIS::parse_medialist);
 
-        Map<String, Integer> links;
-
         if (doc.select("#label1").size() > 0) {
             resultNum = 0;
             String rNum = doc.select("#label1").first().text().trim()
