@@ -1700,9 +1700,11 @@ public class SISIS extends OkHttpBaseApi implements OpacApi {
         for (Map.Entry<String, Integer> link : links.entrySet()) {
             if (!pagesLoaded.contains(link.getValue())) {
                 String html = httpGet(link.getKey(), ENCODING);
-                func.apply(media, Jsoup.parse(html), link.getValue(), data);
+                Document page = Jsoup.parse(html);
+                page.setBaseUri(link.getKey());
+                func.apply(media, page, link.getValue(), data);
                 pagesLoaded.add(link.getValue());
-                loadPages(media, Jsoup.parse(html), pagesLoaded, func);
+                loadPages(media, page, pagesLoaded, func);
             }
         }
     }
