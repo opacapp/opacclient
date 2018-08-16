@@ -1,8 +1,8 @@
-package androidx.core.app;
+package androidx.fragment.app;
 
 import android.view.View;
 
-import androidx.fragment.app.ListFragment;import de.geeksfactory.opacclient.R;
+import de.geeksfactory.opacclient.R;
 
 public class CustomListFragment extends ListFragment {
     @SuppressWarnings("ResourceType")
