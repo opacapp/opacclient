@@ -23,8 +23,8 @@ import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.preference.Preference;
 import android.preference.PreferenceManager;
-import android.support.annotation.Nullable;
-import android.support.v7.preference.CheckBoxPreference;
+import androidx.annotation.Nullable;
+import androidx.preference.CheckBoxPreference;
 
 
 import org.joda.time.DateTime;

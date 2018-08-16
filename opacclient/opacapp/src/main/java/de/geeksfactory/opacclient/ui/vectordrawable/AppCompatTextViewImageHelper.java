@@ -2,8 +2,8 @@ package de.geeksfactory.opacclient.ui.vectordrawable;
 
 import android.annotation.SuppressLint;
 import android.graphics.drawable.Drawable;
-import android.support.v7.widget.AppCompatDrawableManager;
-import android.support.v7.widget.TintTypedArray;
+import androidx.appcompat.widget.AppCompatDrawableManager;
+import androidx.appcompat.widget.TintTypedArray;
 import android.util.AttributeSet;
 import android.widget.TextView;
 

@@ -16,7 +16,7 @@
     http://developer.android.com/training/multiscreen/screensizes.html#TaskUseAliasFilters
     -->
 
-    <android.support.v7.widget.Toolbar
+    <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbar"
         android:layout_height="168dp"
         android:layout_width="match_parent"

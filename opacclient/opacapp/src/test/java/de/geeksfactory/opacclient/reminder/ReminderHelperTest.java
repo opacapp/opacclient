@@ -5,7 +5,7 @@ import android.app.AlarmManager;
 import android.app.NotificationManager;
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 
 import org.joda.time.DateTime;
 import org.joda.time.Days;

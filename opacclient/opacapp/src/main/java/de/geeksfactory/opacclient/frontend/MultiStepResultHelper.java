@@ -9,7 +9,7 @@ import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.preference.PreferenceManager;
-import android.support.v7.app.AlertDialog;
+import androidx.appcompat.app.AlertDialog;
 import android.text.Html;
 import android.text.TextUtils.TruncateAt;
 import android.view.LayoutInflater;

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.percent.PercentRelativeLayout
+<androidx.percentlayout.widget.PercentRelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/outside"
@@ -7,7 +7,7 @@
     android:layout_width="match_parent"
     android:gravity="center">
 
-    <android.support.v7.widget.CardView
+    <androidx.cardview.widget.CardView
         android:id="@+id/background"
         app:layout_widthPercent="@dimen/dialog_width"
         android:layout_height="wrap_content"
@@ -19,5 +19,5 @@
         android:transitionName="@string/transition_background">
 
         <include layout="@layout/content_accountitem_detail"/>
-    </android.support.v7.widget.CardView>
-</android.support.percent.PercentRelativeLayout>
+    </androidx.cardview.widget.CardView>
+</androidx.percentlayout.widget.PercentRelativeLayout>

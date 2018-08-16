@@ -2,8 +2,8 @@ package de.geeksfactory.opacclient.frontend.adapter;
 
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
-import android.support.v4.content.ContextCompat;
-import android.support.v4.view.ViewCompat;
+import androidx.core.content.ContextCompat;
+import androidx.core.view.ViewCompat;
 import android.text.Html;
 import android.text.SpannableStringBuilder;
 import android.text.style.ForegroundColorSpan;

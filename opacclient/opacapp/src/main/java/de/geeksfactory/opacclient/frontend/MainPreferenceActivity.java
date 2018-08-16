@@ -1,9 +1,9 @@
 package de.geeksfactory.opacclient.frontend;
 
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.preference.PreferenceFragmentCompat;
-import android.support.v7.widget.Toolbar;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.preference.PreferenceFragmentCompat;
+import androidx.appcompat.widget.Toolbar;
 
 import de.geeksfactory.opacclient.R;
 

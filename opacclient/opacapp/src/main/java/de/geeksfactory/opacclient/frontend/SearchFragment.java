@@ -9,7 +9,7 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.support.v4.app.Fragment;
+import androidx.fragment.app.Fragment;
 import android.text.InputType;
 import android.util.Log;
 import android.view.LayoutInflater;
