@@ -258,7 +258,12 @@ public class Littera extends ApacheSearchOnlyApi {
     }
 
     private static String getCover(Element doc) {
-        return doc.select(".coverimage img").first().attr("src").replaceFirst("&width=\\d+", "");
+        Element coverimage = doc.select(".coverimage img").first();
+        if (coverimage != null) {
+            return coverimage.attr("src").replaceFirst("&width=\\d+", "");
+        } else {
+            return null;
+        }
     }
 
     static LocalDate parseCopyReturn(String str) {
