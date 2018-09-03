@@ -1334,9 +1334,9 @@ public class BiBer1992 extends OkHttpBaseApi {
             // seen in Minden, real error message is only shown on login
             accountHttpPost(account, "login", "login.C");
         }
-        if (doc.select("tr td font[color=red], tr td .p02b").size() == 1) {
+        if (doc.select("tr td font[color=red], tr:eq(1) td:eq(0) .p02b").size() == 1) {
             // Jena: Onleihe advertisement recognized as error message
-            String text = doc.select("tr td font[color=red], tr td .p02b").text();
+            String text = doc.select("tr td font[color=red], tr:eq(1) td:eq(0) .p02b").text();
             if (!text.contains("Ausleihe per Download rund um die Uhr")) {
                 throw new OpacErrorException(text);
             }

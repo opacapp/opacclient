@@ -71,8 +71,8 @@ import de.geeksfactory.opacclient.searchfields.DropdownSearchField;
 import de.geeksfactory.opacclient.searchfields.SearchField;
 import de.geeksfactory.opacclient.searchfields.SearchQuery;
 import de.geeksfactory.opacclient.searchfields.TextSearchField;
-import okhttp3.FormBody;
 import java8.util.concurrent.CompletableFuture;
+import okhttp3.FormBody;
 
 /**
  * OpacApi implementation for Web Opacs of the SISIS SunRise product, developed by OCLC.
@@ -1080,17 +1080,36 @@ public class SISIS extends OkHttpBaseApi implements OpacApi {
         return result;
     }
 
-    private static String parseCoverJs(String coverJs, String opac_url) {
+    static String parseCoverJs(String coverJs, String opac_url) {
+        String url;
         Pattern imgSrcPattern = Pattern.compile("var imgSrc = '([^']+)'");
         Matcher matcher = imgSrcPattern.matcher(coverJs);
-        if (!matcher.find()) {
-            Pattern srcPattern = Pattern.compile("<img .* src=\"([^\"]+)\">");
-            matcher = srcPattern.matcher(coverJs);
-            if (!matcher.find()) return null;
+        if (matcher.find()) {
+            url = matcher.group(1);
+        } else {
+            Pattern bookInfoPattern = Pattern.compile("var bookInfo = JSON\\.parse\\('([^']+)'\\)");
+            matcher = bookInfoPattern.matcher(coverJs);
+            if (matcher.find()) {
+                try {
+                    JSONObject bookInfo = new JSONObject(matcher.group(1));
+                    url = bookInfo.getJSONObject((String) bookInfo.keys().next())
+                                  .getString("thumbnail_url");
+                } catch (JSONException e) {
+                    return null;
+                }
+            } else {
+                Pattern srcPattern = Pattern.compile("<img .* src=\"([^\"]+)\">");
+                matcher = srcPattern.matcher(coverJs);
+                if (matcher.find()) {
+                    url = matcher.group(1);
+                } else {
+                    return null;
+                }
+            }
         }
 
         try {
-            return new URI(opac_url + "/").resolve(matcher.group(1)).toString();
+            return new URI(opac_url + "/").resolve(url).toString();
         } catch (URISyntaxException e) {
             return null;
         }
@@ -1599,8 +1618,6 @@ public class SISIS extends OkHttpBaseApi implements OpacApi {
         // additional pages
         loadPages(medien, doc, SISIS::parse_medialist);
 
-        Map<String, Integer> links;
-
         if (doc.select("#label1").size() > 0) {
             resultNum = 0;
             String rNum = doc.select("#label1").first().text().trim()
@@ -1683,9 +1700,11 @@ public class SISIS extends OkHttpBaseApi implements OpacApi {
         for (Map.Entry<String, Integer> link : links.entrySet()) {
             if (!pagesLoaded.contains(link.getValue())) {
                 String html = httpGet(link.getKey(), ENCODING);
-                func.apply(media, Jsoup.parse(html), link.getValue(), data);
+                Document page = Jsoup.parse(html);
+                page.setBaseUri(link.getKey());
+                func.apply(media, page, link.getValue(), data);
                 pagesLoaded.add(link.getValue());
-                loadPages(media, Jsoup.parse(html), pagesLoaded, func);
+                loadPages(media, page, pagesLoaded, func);
             }
         }
     }
