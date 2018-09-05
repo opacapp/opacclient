@@ -80,5 +80,6 @@
   <string name="mediatype_evideo">eVideo</string>
   <string name="mediatype_edoc">eDoc</string>
   <string name="mediatype_eaudio">eAudio</string>
-    <string name="fee_confirmation">Gebühr: %s</string>
+  <string name="fee_confirmation">Gebühr: %s</string>
+  <string name="all">Alle</string>
 </resources>

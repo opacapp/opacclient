@@ -28,6 +28,7 @@ import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import de.geeksfactory.opacclient.i18n.StringProvider;
 import de.geeksfactory.opacclient.networking.HttpClientFactory;
 import de.geeksfactory.opacclient.objects.Account;
 import de.geeksfactory.opacclient.objects.AccountData;
@@ -44,8 +45,19 @@ import de.geeksfactory.opacclient.searchfields.SearchField;
 import de.geeksfactory.opacclient.searchfields.SearchQuery;
 import de.geeksfactory.opacclient.searchfields.TextSearchField;
 
+/**
+ * OpacApi implementation for hte open source VuFind discovery system (https://vufind.org/),
+ * developed by Villanova University.
+ *
+ * It includes special cases to account for changes in the "smartBib" variant
+ * (https://www.subkom.de/smartbib/) developed by subkom GmbH. Account features were only tested
+ * with smartBib.
+ */
 public class VuFind extends ApacheBaseApi {
     protected static final Pattern idPattern = Pattern.compile("\\/(?:Opacrl)?Record\\/([^/]+)");
+    protected static final Pattern buildingCollectionPattern = Pattern.compile("~(?:building|collection):\"([^\"]+)\"");
+
+    public static final String OPTION_ALL = "_ALL";
     protected static HashMap<String, String> languageCodes = new HashMap<>();
     protected static HashMap<String, SearchResult.MediaType> mediaTypeSelectors = new HashMap<>();
 
@@ -62,7 +74,7 @@ public class VuFind extends ApacheBaseApi {
                 .put(".cd, .audio, .musicrecording, .record, .soundrecordingmedium, " +
                                 ".soundrecording",
                         SearchResult.MediaType.CD_MUSIC);
-        mediaTypeSelectors.put(".audiotape, .cassette, .soundcassette",
+        mediaTypeSelectors.put(".audiotape, .cassette, .soundcassette, .kassette",
                 SearchResult.MediaType.AUDIO_CASSETTE);
         mediaTypeSelectors.put(".dvdaudio, .sounddisc", SearchResult.MediaType.CD_MUSIC);
         mediaTypeSelectors.put(".dvd, .dvdvideo", SearchResult.MediaType.DVD);
@@ -76,27 +88,29 @@ public class VuFind extends ApacheBaseApi {
         mediaTypeSelectors.put(
                 ".microfilm, .video, .videodisc, .vhs, .video, .videotape, .videocassette, " +
                         ".videocartridge, .audiovisualmedia, .filmstrip, .motionpicture, " +
-                        ".videoreel",
+                        ".videoreel, .dvdbluray",
                 SearchResult.MediaType.MOVIE);
         mediaTypeSelectors.put(".kit, .sets", SearchResult.MediaType.PACKAGE);
         mediaTypeSelectors.put(".musicalscore, .notatedmusic, .electronicmusicalscore",
                 SearchResult.MediaType.SCORE_MUSIC);
-        mediaTypeSelectors.put(".manuscript, .book, .articles", SearchResult.MediaType.BOOK);
-        mediaTypeSelectors
-                .put(".journal, .journalnewspaper, .serial", SearchResult.MediaType.MAGAZINE);
+        mediaTypeSelectors.put(".manuscript, .book, .articles, .sachbuch, .kinderjugendbuch, " +
+                ".roman, .bestseller, .comics", SearchResult.MediaType.BOOK);
+        mediaTypeSelectors.put(".journal, .journalnewspaper, .serial, " +
+                ".zeitschrift", SearchResult.MediaType.MAGAZINE);
         mediaTypeSelectors.put(".newspaper, .newspaperarticle", SearchResult.MediaType.NEWSPAPER);
         mediaTypeSelectors.put(".software, .cdrom, .chipcartridge, .disccartridge, .dvdrom",
                 SearchResult.MediaType.CD_SOFTWARE);
-        mediaTypeSelectors.put(".newspaper", SearchResult.MediaType.NEWSPAPER);
         mediaTypeSelectors
                 .put(".electronicnewspaper, .electronic, .electronicarticle, " +
-                                "electronicresourcedatacarrier, .electronicresourceremoteaccess, " +
-                                ".electronicserial, .electronicjournal, .electronicthesis",
-                        SearchResult.MediaType.EDOC);
-        mediaTypeSelectors.put(".newspaper", SearchResult.MediaType.NEWSPAPER);
-        mediaTypeSelectors.put(".newspaper", SearchResult.MediaType.NEWSPAPER);
-        mediaTypeSelectors.put(".unknown", SearchResult.MediaType.UNKNOWN);
-
+                        "electronicresourcedatacarrier, .electronicresourceremoteaccess, " +
+                        ".electronicserial, .electronicjournal, .electronicthesis, " +
+                        ".edokument", SearchResult.MediaType.EDOC);
+        mediaTypeSelectors.put(".unknown, .sonstiges, .tonies", SearchResult.MediaType.UNKNOWN);
+        mediaTypeSelectors.put(".medienpaket", SearchResult.MediaType.PACKAGE);
+        mediaTypeSelectors.put(".eaudio", SearchResult.MediaType.EAUDIO);
+        mediaTypeSelectors.put(".konsolenspiel", SearchResult.MediaType.GAME_CONSOLE);
+        mediaTypeSelectors.put(".karte", SearchResult.MediaType.MAP);
+        mediaTypeSelectors.put(".spiel", SearchResult.MediaType.BOARDGAME);
     }
 
     protected String languageCode = "en";
@@ -125,15 +139,33 @@ public class VuFind extends ApacheBaseApi {
         params.add(new BasicNameValuePair("join", "AND"));
 
         for (SearchQuery singleQuery : query) {
-            if (singleQuery.getValue().equals("")) continue;
             if (singleQuery.getKey().contains("filter[]")) {
-                params.add(new BasicNameValuePair("filter[]", singleQuery.getValue()));
+                String type = singleQuery.getKey().replace("filter[]", "");
+                if (data.has("library") && singleQuery.getValue().equals(OPTION_ALL)) {
+                    if (type.equals("limit_collection")) {
+                        // add all values of search field to filter by books in the library
+                        DropdownSearchField sf = (DropdownSearchField) singleQuery.getSearchField();
+                        for (DropdownSearchField.Option option : sf.getDropdownValues()) {
+                            if (!option.getKey().equals(OPTION_ALL)) {
+                                params.add(new BasicNameValuePair("filter[]", option.getKey()));
+                            }
+                        }
+                    } else if (!type.equals("limit_building")) {
+                        // don't add any options for branches (if not a specific branch was
+                        // selected)
+                        params.add(new BasicNameValuePair("filter[]", singleQuery.getValue()));
+                    }
+                } else {
+                    params.add(new BasicNameValuePair("filter[]", singleQuery.getValue()));
+                }
             } else {
+                if (singleQuery.getValue().equals("")) continue;
                 params.add(new BasicNameValuePair("type0[]", singleQuery.getKey()));
                 params.add(new BasicNameValuePair("bool0[]", "AND"));
                 params.add(new BasicNameValuePair("lookfor0[]", singleQuery.getValue()));
             }
         }
+
         return params;
     }
 
@@ -170,10 +202,10 @@ public class VuFind extends ApacheBaseApi {
             SearchResult res = new SearchResult();
             Element z3988el = null;
             if (row.select("span.Z3988").size() == 1) {
-                z3988el = row.select("span.3988").first();
+                z3988el = row.select("span.Z3988").first();
             } else if (row.parent().tagName().equals("li") &&
                     row.parent().select("span.Z3988").size() > 0) {
-                z3988el = row.parent().select("span.3988").first();
+                z3988el = row.parent().select("span.Z3988").first();
             }
             if (z3988el != null) {
                 List<NameValuePair> z3988data;
@@ -181,21 +213,31 @@ public class VuFind extends ApacheBaseApi {
                     StringBuilder description = new StringBuilder();
                     z3988data = URLEncodedUtils.parse(new URI("http://dummy/?"
                             + z3988el.select("span.Z3988").attr("title")), "UTF-8");
+                    String title = null;
+                    String year = null;
+                    String author = null;
                     for (NameValuePair nv : z3988data) {
                         if (nv.getValue() != null) {
                             if (!nv.getValue().trim().equals("")) {
-                                if (nv.getName().equals("rft.btitle")) {
-                                    description.append("<b>").append(nv.getValue()).append("</b>");
-                                } else if (nv.getName().equals("rft.atitle")) {
-                                    description.append("<b>").append(nv.getValue()).append("</b>");
-                                } else if (nv.getName().equals("rft.au")) {
-                                    description.append("<br />").append(nv.getValue());
-                                } else if (nv.getName().equals("rft.date")) {
-                                    description.append("<br />").append(nv.getValue());
+                                switch (nv.getName()) {
+                                    case "rft.btitle":
+                                    case "rft.atitle":
+                                    case "rft.title":
+                                        title = nv.getValue();
+                                        break;
+                                    case "rft.au":
+                                        author = nv.getValue();
+                                        break;
+                                    case "rft.date":
+                                        year = nv.getValue();
+                                        break;
                                 }
                             }
                         }
                     }
+                    if (title != null) description.append("<b>").append(title).append("</b>");
+                    if (author != null) description.append("<br />").append(author);
+                    if (year != null) description.append("<br />").append(year);
                     res.setInnerhtml(description.toString());
                 } catch (URISyntaxException e) {
                     e.printStackTrace();
@@ -285,14 +327,25 @@ public class VuFind extends ApacheBaseApi {
         String html = httpGet(url, getDefaultEncoding());
         Document doc = Jsoup.parse(html);
         doc.setBaseUri(url);
+
+        Document detailsDoc = null;
+        if (doc.select("a[href$=Description#tabnav]").size() == 1) {
+            // smartBib description on separate page
+            String detailsUrl =
+                    httpGet(doc.select("a[href$=Description#tabnav]").first().absUrl("href"),
+                            getDefaultEncoding());
+            detailsDoc = Jsoup.parse(detailsUrl);
+            detailsDoc.setBaseUri(detailsUrl);
+        }
+
         try {
-            return parseDetail(id, doc, data);
+            return parseDetail(id, doc, data, detailsDoc);
         } catch (JSONException e) {
             throw new RuntimeException(e);
         }
     }
 
-    static DetailedItem parseDetail(String id, Document doc, JSONObject data)
+    static DetailedItem parseDetail(String id, Document doc, JSONObject data, Document detailsDoc)
             throws OpacErrorException, JSONException {
         if (doc.select("p.error, p.errorMsg, .alert-error").size() > 0) {
             throw new OpacErrorException(doc.select("p.error, p.errorMsg, .alert-error").text());
@@ -343,7 +396,7 @@ public class VuFind extends ApacheBaseApi {
         if (head != null) res.addDetail(new Detail(head, value.toString()));
 
         try {
-            if (doc.select("#Volumes").size() > 0) {
+            if (doc.select("#Volumes, .volumes").size() > 0) {
                 parseVolumes(res, doc, data);
             } else {
                 parseCopies(res, doc, data);
@@ -352,13 +405,24 @@ public class VuFind extends ApacheBaseApi {
             e.printStackTrace();
         }
 
+        if (detailsDoc != null) {
+            // smartBib details
+            Elements rows = detailsDoc.select(".description-tab table tr");
+            for (Element row : rows) {
+                res.addDetail(new Detail(row.select("th").text(),
+                        row.select("td").text()));
+            }
+        }
+
         return res;
     }
 
     private static void parseVolumes(DetailedItem res, Document doc, JSONObject data) {
         // only tested in Münster
         // e.g. https://www.stadt-muenster.de/opac2/Record/0900944
-        Element table = doc.select(".recordsubcontent, .tab-container").first()
+        // and Kreis Recklinghausen
+        // e.g. https://www.bib-kreisre.de/Record/HERT.0564417
+        Element table = doc.select(".recordsubcontent, .tab-container, .volumes-tab").first()
                            .select("table").first();
         for (Element link : table.select("tr a")) {
             Volume volume = new Volume();
@@ -370,7 +434,8 @@ public class VuFind extends ApacheBaseApi {
     }
 
     static void parseCopies(DetailedItem res, Document doc, JSONObject data) throws JSONException {
-        if ("doublestacked".equals(data.optString("copystyle"))) {
+        String copystyle = data.optString("copystyle");
+        if ("doublestacked".equals(copystyle)) {
             // e.g. http://vopac.nlg.gr/Record/393668/Holdings#tabnav
             // for Athens_GreekNationalLibrary
             Element container = doc.select(".tab-container").first();
@@ -397,7 +462,7 @@ public class VuFind extends ApacheBaseApi {
                 }
             }
 
-        } else if ("stackedtable".equals(data.optString("copystyle"))) {
+        } else if ("stackedtable".equals(copystyle)) {
             // e.g. http://search.lib.auth.gr/Record/376356
             // or https://katalog.ub.uni-leipzig.de/Record/0000196115
             // or https://www.stadt-muenster.de/opac2/Record/0367968
@@ -465,6 +530,19 @@ public class VuFind extends ApacheBaseApi {
                     }
                 }
             }
+        } else if ("smartbib".equals(copystyle)) {
+            Element table = doc.select(".holdings-tab table").first();
+            for (Element tr : table.select("tr")) {
+                Elements columns = tr.select("td");
+                if (columns.size() == 0) continue; // header
+                Copy copy = new Copy();
+                copy.setBranch(columns.get(0).text());
+                copy.setLocation(columns.get(1).text());
+                copy.setShelfmark(columns.get(2).text());
+                copy.setStatus(columns.get(3).text());
+                copy.setReservations(columns.get(4).text());
+                res.addCopy(copy);
+            }
         }
     }
 
@@ -491,7 +569,7 @@ public class VuFind extends ApacheBaseApi {
 
         List<SearchField> fields = new ArrayList<>();
 
-        Elements options = doc.select("select#search_type0_0 option");
+        Elements options = doc.select("select#search_type0_0, select[name=type0[]]").first().select("option");
         for (Element option : options) {
             TextSearchField field = new TextSearchField();
             field.setDisplayName(option.text());
@@ -522,9 +600,15 @@ public class VuFind extends ApacheBaseApi {
             }
         }
 
+        String library = null;
+        if (data.has("library")) {
+            library = data.getString("library");
+        }
+
         Elements selects = doc.select("select");
         for (Element select : selects) {
             if (!select.attr("name").equals("filter[]")) continue;
+
             DropdownSearchField field = new DropdownSearchField();
             if (select.parent().select("label").size() > 0) {
                 field.setDisplayName(select.parent().select("label").first()
@@ -533,10 +617,33 @@ public class VuFind extends ApacheBaseApi {
                 field.setDisplayName(select.parent().parent().select("label").first()
                                            .text());
             }
-            field.setId(select.attr("name") + select.attr("id"));
-            String meaning = select.attr("id");
-            field.addDropdownValue("", "");
+            String id = select.attr("id");
+            field.setId(select.attr("name") + id);
+            String meaning = id;
+            if (library != null &&
+                    (meaning.equals("limit_collection") || meaning.equals("limit_building"))) {
+                field.addDropdownValue(OPTION_ALL, stringProvider.getString(StringProvider.ALL));
+            } else {
+                field.addDropdownValue("", "");
+            }
             for (Element option : select.select("option")) {
+                if (library != null && id.equals("limit_collection")) {
+                    // smartBib: only collections that either belong to the selected library or are shared for all
+                    Matcher matcher = buildingCollectionPattern.matcher(option.val());
+                    if (matcher.matches()) {
+                        String collection = matcher.group(1);
+                        if (collection.contains(".") && !collection.startsWith(library + "."))
+                            continue;
+                    }
+                } else if (library != null && id.equals("limit_building")) {
+                    // smartBib: only branches that belong to the selected library
+                    Matcher matcher = buildingCollectionPattern.matcher(option.val());
+                    if (matcher.matches()) {
+                        String branch = matcher.group(1);
+                        if (!branch.startsWith(library + ".")) continue;
+                    }
+                }
+
                 if (option.val().contains(":")) {
                     meaning = option.val().split(":")[0];
                 }

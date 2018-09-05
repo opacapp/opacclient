@@ -1,7 +1,6 @@
 package de.geeksfactory.opacclient.networking;
 
 import android.content.Context;
-import android.net.http.AndroidHttpClient;
 import android.os.AsyncTask;
 import android.util.Log;
 
@@ -44,6 +43,32 @@ public abstract class CoverDownloadTask extends AsyncTask<Void, Integer, CoverHo
                 "R0lGODlhOwBLAIABALy8vf///yH+EUNyZWF0ZWQgd2l0aCBHSU1QACH5BAEKAAEA" +
                         "LAAAAAA7AEsAAAJHjI+py+0Po5y02ouz3rz7D4biSJbmiabqyrbuC8fyTNf2jef6z" +
                         "vf+DwwKh8Si8YhMKpfMpvMJjUqn1Kr1is1qt9yu9wsO6woAOw==");
+        rejectImages.add(
+                "R0lGODlhOwBLANUtAAEBAYmXsWd6mt3h6fXd38zMzNJobvru77zE0tyJjhISEkVchLu7uyQ" +
+                        "/beu8vhMwYrkUHchGTpmZme7u7kVFRe7w9L4lLaqqqiMjIzVNeVZrj1ZWVjQ0NMM1PY" +
+                        "iIiGdnZ/DNz9d5fs1XXt3d3czT3XiJpeGannh4eKu1x5qmvOarrrQDDQIhV////wAAA" +
+                        "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" +
+                        "ACH5BAEAAC0ALAAAAAA7AEsAAAb/wJZwSCwaj8ikcslsOp/QqHRKrVqv2Kx2y+16v+C" +
+                        "weEwum8/oJIuVKaLWAaiAFZ/Hr2sWiaiBy+ktdlh5JUMVeXdOghUDFYNrDUNvfkIBDy" +
+                        "wPiRUalxkZgIItA31sey1rApcNKUdrl6YLmIAtJWufs7EPsX6LDSwNvg8Dp5C+ekZrf" +
+                        "YWHLH1xA2vDCGsV08It06CAtQtCfRrEAkKfiUNr05EpzYIBLOJCsSi14PDacZ8IQtAP" +
+                        "xKahRNHwxRM0Jw+ifwQBGTTIbFigWQBZDGiX62GdXwsyZpTnbogziy06aczYUMg/cxK" +
+                        "hJQOprpu3BgjePHBU4dLFOLFYiWrQJppJ/4goh93K14tNgFyOfGUoYexmi0kCmHb0Cb" +
+                        "KIz3b8qg4w9ivfzjw2q6rLo8ER1ZNCEHitZmoAAodCSCAwRUTuALfD8BpSC1ftEL1pA" +
+                        "gseTLgwGgIiIKxYYSHEASqLCWwhoBhChA6LI0BeIVmLgRUdHrdwsNjBlMhbIqwIQUTE" +
+                        "igQtULf4DLsFCNWMay9OzNjEEMSLO4Bw8nn18CKyabegzBjz69iLLVhYPPzAdOkrIHR" +
+                        "ecsB58BDHkz//rLmFiezQDQjBDDvEivKuRTxRYcD7Ct/iYU83LcSECujHKYcZfwSgx8" +
+                        "QBBIg2Gm4H5AfddkM4uNiEEyqYxGesDdHgCqRxJv+Ea7ApdtwBCSSwYWfKKdZBBCyya" +
+                        "CES52k3BAiRUdfCAYrBppp6LaiAnoOq+bacBR00YV12BiRQnGaqNeYcbD6uIEIIirHm" +
+                        "YJQGhDAdjwe6NiEEjtmmWHTPmUchjw6aOaEIL3LngAPHEfEmgg5sd8CcQ7z5W50avgm" +
+                        "hYYAGKuighBZq6KGIclEAABIgsWijSEywAQAAYMCAFxIAUECkHkwQKQYYXMCAAgB4cU" +
+                        "KpFADAwKQAXNDCBwDASuoGRMC6aQsecFAAqx+0AACtHmjKqquTKsBBEhQYq0ABHyhwA" +
+                        "QcKtEABBhwwOikRClBQRLIXwHoBtS1k2+yz0Vb7wa1HYEC26QUjAHBCC6e2gEGqtMI6" +
+                        "RLvvClHAoh60wIC1CmSa6bvxAqBtEhMAUO0GmVJKacKT9jvtEIv22kLC67aQKQOnckB" +
+                        "Bww7zq8S/F6SaqQejUkCyquHSOoQCy46Q7MAjKICBxpQycHLKF7CcRKYF9PxBtZWOcD" +
+                        "IAIyTc7xCjUmqptE6P4K/BFxONwQjBeorwrQxIva8QExQQthAMaE0EA+i28DXTZq89d" +
+                        "qJwxy333HTXbffdeOcdRhAAOw=="
+        );
     }
 
     protected CoverHolder item;
