@@ -2,6 +2,7 @@ package de.geeksfactory.opacclient.apis;
 
 import org.apache.http.NameValuePair;
 import org.apache.http.client.utils.URLEncodedUtils;
+import org.joda.time.format.DateTimeFormat;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.jsoup.Jsoup;
@@ -23,18 +24,22 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.ExecutionException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import de.geeksfactory.opacclient.i18n.StringProvider;
 import de.geeksfactory.opacclient.networking.HttpClientFactory;
+import de.geeksfactory.opacclient.networking.NotReachableException;
 import de.geeksfactory.opacclient.objects.Account;
 import de.geeksfactory.opacclient.objects.AccountData;
 import de.geeksfactory.opacclient.objects.Copy;
 import de.geeksfactory.opacclient.objects.Detail;
 import de.geeksfactory.opacclient.objects.DetailedItem;
 import de.geeksfactory.opacclient.objects.Filter;
+import de.geeksfactory.opacclient.objects.LentItem;
 import de.geeksfactory.opacclient.objects.Library;
+import de.geeksfactory.opacclient.objects.ReservedItem;
 import de.geeksfactory.opacclient.objects.SearchRequestResult;
 import de.geeksfactory.opacclient.objects.SearchResult;
 import de.geeksfactory.opacclient.objects.Volume;
@@ -42,8 +47,11 @@ import de.geeksfactory.opacclient.searchfields.DropdownSearchField;
 import de.geeksfactory.opacclient.searchfields.SearchField;
 import de.geeksfactory.opacclient.searchfields.SearchQuery;
 import de.geeksfactory.opacclient.searchfields.TextSearchField;
+import java8.util.concurrent.CompletableFuture;
+import java8.util.function.Function;
 import okhttp3.FormBody;
 import okhttp3.HttpUrl;
+import okhttp3.Response;
 
 /**
  * OpacApi implementation for hte open source VuFind discovery system (https://vufind.org/),
@@ -60,6 +68,8 @@ public class VuFind extends OkHttpBaseApi {
     public static final String OPTION_ALL = "_ALL";
     protected static HashMap<String, String> languageCodes = new HashMap<>();
     protected static HashMap<String, SearchResult.MediaType> mediaTypeSelectors = new HashMap<>();
+
+    protected static final String NO_PROLONG = "NOT_PROLONGABLE";
 
     static {
         languageCodes.put("de", "de");
@@ -709,6 +719,10 @@ public class VuFind extends OkHttpBaseApi {
     @Override
     public ProlongResult prolong(String media, Account account, int useraction,
             String selection) throws IOException {
+        if (media.startsWith(NO_PROLONG)) {
+            return new ProlongResult(MultiStepResult.Status.ERROR,
+                    media.substring(NO_PROLONG.length()));
+        }
         return null;
     }
 
@@ -727,11 +741,186 @@ public class VuFind extends OkHttpBaseApi {
     @Override
     public AccountData account(Account account)
             throws IOException, JSONException, OpacErrorException {
-        return null;
+        login(account);
+
+        AccountData data = new AccountData(account.getId());
+
+        Function<Response, Document> parse = r -> {
+            try {
+                return Jsoup.parse(r.body().string());
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        };
+        CompletableFuture<List<LentItem>> lentFuture =
+                asyncGet(opac_url + "/MyResearch/CheckedOut", false)
+                        .thenApplyAsync(parse).thenApplyAsync(VuFind::parse_lent);
+        CompletableFuture<List<ReservedItem>> reservationsFuture =
+                asyncGet(opac_url + "/MyResearch/Holds", false)
+                        .thenApplyAsync(parse).thenApplyAsync(VuFind::parse_reservations);
+        CompletableFuture<Void> finesFuture =
+                asyncGet(opac_url + "/MyResearch/Fines", false)
+                        .thenApplyAsync(parse).thenAccept(doc -> {
+                    Element table = doc.select("#content table").first();
+                    if (table != null) {
+                        Element fees = table.select("tr").last().select("td").last();
+                        data.setPendingFees(fees.text().trim());
+                    }
+                    String validUntil = doc.select(
+                            ".list-group-item:contains(Valid until), " +
+                                    ".list-group-item:contains(Gültig bis)").text();
+                    validUntil = validUntil.replaceAll("Valid until\\s*:", "")
+                                           .replaceAll("Gültig bis\\s*:", "").trim();
+                    data.setValidUntil(!validUntil.equals("") ? validUntil : null);
+                });
+
+        try {
+            data.setLent(lentFuture.get());
+            data.setReservations(reservationsFuture.get());
+            finesFuture.get();
+        } catch (InterruptedException ignored) {
+
+        } catch (ExecutionException e) {
+            if (e.getCause() != null) {
+                if (e.getCause() instanceof IOException) {
+                    throw (IOException) e.getCause();
+                } else if (e.getCause() instanceof RuntimeException) {
+                    throw (RuntimeException) e.getCause();
+                } else {
+                    throw new NotReachableException();
+                }
+            } else {
+                throw new NotReachableException();
+            }
+        }
+
+        return data;
+    }
+
+    private static List<LentItem> parse_lent(Document doc) {
+        List<LentItem> lent = new ArrayList<>();
+        for (Element record : doc.select("#record")) {
+            LentItem item = new LentItem();
+            String type = null;
+            boolean title = true;
+            boolean statusAfter = false;
+            Element dataColumn = record.children().get(1);
+            for (Node node : dataColumn.childNodes()) {
+                if (node instanceof Element && ((Element) node).tagName().equals("strong")) {
+                    Element el = (Element) node;
+                    if (title) {
+                        item.setTitle(el.text());
+                        title = false;
+                    } else if (statusAfter) {
+                        // return date
+                        String text = el.text().replace("Bis", "").replace("Until", "").trim();
+                        item.setDeadline(
+                                DateTimeFormat.forPattern("dd.MM.yyyy").parseLocalDate(text));
+                    } else {
+                        type = el.text().replace(":", "").trim();
+                        String nextText = el.nextElementSibling().text();
+                        if (nextText.startsWith("Bis") || nextText.startsWith("Until")) {
+                            statusAfter = true;
+                        }
+                    }
+                } else if (node instanceof TextNode) {
+                    String text = ((TextNode) node).text().trim();
+                    if (text.equals("")) continue;
+                    if (text.endsWith(",")) text = text.substring(0, text.length() - 1).trim();
+
+                    if (statusAfter) {
+                        String[] split = text.split(",");
+                        text = split[0].trim();
+                        item.setStatus(split[1].trim());
+                    }
+
+                    if (type == null) {
+                        item.setAuthor(text.replaceFirst("\\[([^\\]]*)\\]", "$1"));
+                    } else {
+                        switch (type) {
+                            case "Zweigstelle":
+                            case "Borrowing Location":
+                                item.setLendingBranch(text);
+                                break;
+                            case "Medientyp":
+                            case "Media type":
+                                item.setFormat(text);
+                                break;
+                            case "Buchungsnummer":
+                            case "barcode":
+                                item.setBarcode(text);
+                                break;
+                        }
+                    }
+                }
+            }
+
+            Element checkbox = record.select("input[type=checkbox]").first();
+            if (checkbox.hasAttr("disabled")) {
+                item.setRenewable(false);
+                item.setProlongData(NO_PROLONG + record.select(".alert-renew").text());
+            } else {
+                item.setRenewable(true);
+                item.setProlongData(checkbox.val());
+            }
+
+            lent.add(item);
+        }
+        return lent;
+    }
+
+    private static List<ReservedItem> parse_reservations(Document doc) {
+        List<ReservedItem> reserved = new ArrayList<>();
+        for (Element record : doc.select("div[id^=record]")) {
+            ReservedItem item = new ReservedItem();
+            item.setTitle(record.select(".title").text());
+            item.setAuthor(record.select("a[href*=Author]").text());
+            item.setFormat(record.select(".format").text());
+            // we could also recognize the format through mediaTypeSelectors here
+
+            Node branch =
+                    record.select("strong:contains(Zweigstelle), strong:contains(Pickup library)")
+                          .first().nextSibling();
+            if (branch instanceof TextNode) {
+                item.setBranch(((TextNode) branch).text().trim());
+            }
+
+            //Element checkbox = record.select("input[type=checkbox]").first();
+            // checkbox for cancelling seems to always be disabled
+            reserved.add(item);
+        }
+        return reserved;
+    }
+
+    private void login(Account account) throws IOException, OpacErrorException {
+        Document doc = Jsoup.parse(httpGet(opac_url + "/MyResearch/Home", getDefaultEncoding()));
+        Element loginForm = doc.select("form[name=loginForm]").first();
+
+        if (loginForm == null) return;
+
+        FormBody.Builder builder = new FormBody.Builder()
+                .add("username", account.getName())
+                .add("password", account.getPassword());
+
+        for (Element hidden : loginForm.select("input[type=hidden]")) {
+            builder.add(hidden.attr("name"), hidden.val());
+        }
+
+        if (data.has("library")) {
+            builder.add("library_select", data.optString("library"));
+        }
+
+        doc = Jsoup.parse(
+                httpPost(opac_url + "/MyResearch/Home", builder.build(), getDefaultEncoding()));
+        if (doc.select(".flash-message").size() > 0 &&
+                doc.select("form[name=loginForm]").size() > 0) {
+            throw new OpacErrorException(doc.select(".flash-message").text());
+        }
     }
 
     @Override
     public void checkAccountData(Account account)
             throws IOException, JSONException, OpacErrorException {
+        login(account);
     }
 }
