@@ -1,9 +1,7 @@
 package de.geeksfactory.opacclient.apis;
 
 import org.apache.http.NameValuePair;
-import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.utils.URLEncodedUtils;
-import org.apache.http.message.BasicNameValuePair;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.jsoup.Jsoup;
@@ -44,6 +42,8 @@ import de.geeksfactory.opacclient.searchfields.DropdownSearchField;
 import de.geeksfactory.opacclient.searchfields.SearchField;
 import de.geeksfactory.opacclient.searchfields.SearchQuery;
 import de.geeksfactory.opacclient.searchfields.TextSearchField;
+import okhttp3.FormBody;
+import okhttp3.HttpUrl;
 
 /**
  * OpacApi implementation for hte open source VuFind discovery system (https://vufind.org/),
@@ -53,7 +53,7 @@ import de.geeksfactory.opacclient.searchfields.TextSearchField;
  * (https://www.subkom.de/smartbib/) developed by subkom GmbH. Account features were only tested
  * with smartBib.
  */
-public class VuFind extends ApacheBaseApi {
+public class VuFind extends OkHttpBaseApi {
     protected static final Pattern idPattern = Pattern.compile("\\/(?:Opacrl)?Record\\/([^/]+)");
     protected static final Pattern buildingCollectionPattern = Pattern.compile("~(?:building|collection):\"([^\"]+)\"");
 
@@ -132,11 +132,9 @@ public class VuFind extends ApacheBaseApi {
         }
     }
 
-    protected List<NameValuePair> buildSearchParams(List<SearchQuery> query) {
-        List<NameValuePair> params = new ArrayList<>();
-
-        params.add(new BasicNameValuePair("sort", "relevance"));
-        params.add(new BasicNameValuePair("join", "AND"));
+    protected HttpUrl.Builder buildSearchParams(List<SearchQuery> query, HttpUrl.Builder builder) {
+        builder.addQueryParameter("sort", "relevance");
+        builder.addQueryParameter("join", "AND");
 
         for (SearchQuery singleQuery : query) {
             if (singleQuery.getKey().contains("filter[]")) {
@@ -147,26 +145,26 @@ public class VuFind extends ApacheBaseApi {
                         DropdownSearchField sf = (DropdownSearchField) singleQuery.getSearchField();
                         for (DropdownSearchField.Option option : sf.getDropdownValues()) {
                             if (!option.getKey().equals(OPTION_ALL)) {
-                                params.add(new BasicNameValuePair("filter[]", option.getKey()));
+                                builder.addQueryParameter("filter[]", option.getKey());
                             }
                         }
                     } else if (!type.equals("limit_building")) {
                         // don't add any options for branches (if not a specific branch was
                         // selected)
-                        params.add(new BasicNameValuePair("filter[]", singleQuery.getValue()));
+                        builder.addQueryParameter("filter[]", singleQuery.getValue());
                     }
                 } else {
-                    params.add(new BasicNameValuePair("filter[]", singleQuery.getValue()));
+                    builder.addQueryParameter("filter[]", singleQuery.getValue());
                 }
             } else {
                 if (singleQuery.getValue().equals("")) continue;
-                params.add(new BasicNameValuePair("type0[]", singleQuery.getKey()));
-                params.add(new BasicNameValuePair("bool0[]", "AND"));
-                params.add(new BasicNameValuePair("lookfor0[]", singleQuery.getValue()));
+                builder.addQueryParameter("type0[]", singleQuery.getKey());
+                builder.addQueryParameter("bool0[]", "AND");
+                builder.addQueryParameter("lookfor0[]", singleQuery.getValue());
             }
         }
 
-        return params;
+        return builder;
     }
 
     @Override
@@ -174,8 +172,9 @@ public class VuFind extends ApacheBaseApi {
             throws IOException, OpacErrorException, JSONException {
         if (!initialised) start();
         last_query = query;
-        String html = httpGet(opac_url + "/Search/Results" +
-                        buildHttpGetParams(buildSearchParams(query)),
+
+        HttpUrl.Builder builder = HttpUrl.parse(opac_url + "/Search/Results").newBuilder();
+        String html = httpGet(buildSearchParams(query, builder).build().toString(),
                 getDefaultEncoding());
         Document doc = Jsoup.parse(html);
         return parse_search(doc, 1);
@@ -310,11 +309,10 @@ public class VuFind extends ApacheBaseApi {
     @Override
     public SearchRequestResult searchGetPage(int page)
             throws IOException, OpacErrorException, JSONException {
-        List<NameValuePair> params = buildSearchParams(last_query);
-        params.add(new BasicNameValuePair("page", String.valueOf(page)));
-        String html = httpGet(opac_url + "/Search/Results" +
-                        buildHttpGetParams(params),
-                getDefaultEncoding());
+        HttpUrl.Builder builder = HttpUrl.parse(opac_url + "/Search/Results").newBuilder();
+        buildSearchParams(last_query, builder);
+        builder.addQueryParameter("page", String.valueOf(page));
+        String html = httpGet(builder.build().toString(), getDefaultEncoding());
         Document doc = Jsoup.parse(html);
         return parse_search(doc, page);
     }
@@ -553,10 +551,8 @@ public class VuFind extends ApacheBaseApi {
 
     public void start() throws IOException {
         super.start();
-        List<NameValuePair> params = new ArrayList<>();
-        params.add(new BasicNameValuePair("mylang", languageCode));
-        httpPost(opac_url + "/Search/Advanced", new UrlEncodedFormEntity(params),
-                getDefaultEncoding());
+        FormBody body = new FormBody.Builder().add("mylang", languageCode).build();
+        httpPost(opac_url + "/Search/Advanced", body, getDefaultEncoding());
     }
 
     @Override
