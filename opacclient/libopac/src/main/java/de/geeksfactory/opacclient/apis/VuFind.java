@@ -71,6 +71,9 @@ public class VuFind extends OkHttpBaseApi {
 
     protected static final String NO_PROLONG = "NOT_PROLONGABLE";
 
+    protected String res_branch;
+    protected String res_url;
+
     static {
         languageCodes.put("de", "de");
         languageCodes.put("en", "en");
@@ -422,6 +425,17 @@ public class VuFind extends OkHttpBaseApi {
             }
         }
 
+        if (doc.select(".placehold").size() > 0) {
+            res.setReservable(true);
+            res.setReservation_info(
+                    doc.select(".placehold").first().absUrl("href").replace("#tabnav", ""));
+        } else if (doc.select(
+                ".alert:contains(zum Vormerken), .alert:contains(For hold and recall information)")
+                      .size() > 0) {
+            res.setReservable(true);
+            res.setReservation_info(null);
+        }
+
         return res;
     }
 
@@ -675,7 +689,7 @@ public class VuFind extends OkHttpBaseApi {
 
     @Override
     public int getSupportFlags() {
-        return SUPPORT_FLAG_ENDLESS_SCROLLING | SUPPORT_FLAG_CHANGE_ACCOUNT;
+        return SUPPORT_FLAG_ENDLESS_SCROLLING | SUPPORT_FLAG_WARN_RESERVATION_FEES;
     }
 
     @Override
@@ -713,6 +727,87 @@ public class VuFind extends OkHttpBaseApi {
     @Override
     public ReservationResult reservation(DetailedItem item, Account account,
             int useraction, String selection) throws IOException {
+        if (res_url == null || !res_url.contains(item.getId())) {
+            res_url = item.getReservation_info();
+            if (res_url == null) { // not yet logged in
+                try {
+                    login(account);
+                } catch (OpacErrorException e) {
+                    res_branch = null;
+                    res_url = null;
+                    return new ReservationResult(MultiStepResult.Status.ERROR, e.getMessage());
+                }
+                String shareUrl = getShareUrl(item.getId(), null);
+                Document doc = Jsoup.parse(httpGet(shareUrl, getDefaultEncoding()));
+                doc.setBaseUri(shareUrl);
+                if (doc.select(".placehold").size() > 0) {
+                    res_url =
+                            doc.select(".placehold").first().absUrl("href").replace("#tabnav", "");
+                } else {
+                    res_branch = null;
+                    res_url = null;
+                    return new ReservationResult(MultiStepResult.Status.ERROR,
+                            stringProvider.getString(StringProvider.NO_COPY_RESERVABLE));
+                }
+            }
+            //res_url = res_url.replace("&layout=lightbox&lbreferer=false", "");
+        }
+
+        if (useraction == 0) {
+            Document doc = Jsoup.parse(httpGet(res_url, getDefaultEncoding()));
+            Element pickup = doc.select("#pickUpLocation").first();
+
+            // does a pickup branch need to be selected?
+            if (pickup != null) {
+                List<Map<String, String>> options = new ArrayList<>();
+                for (Element option : pickup.select("option")) {
+                    Map<String, String> opt = new HashMap<>();
+                    opt.put("key", option.val());
+                    opt.put("value", option.text());
+                    options.add(opt);
+                }
+
+                if (options.size() == 1) {
+                    return reservation(item, account, ReservationResult.ACTION_BRANCH,
+                            options.get(0).get("key"));
+                } else {
+                    ReservationResult res =
+                            new ReservationResult(MultiStepResult.Status.SELECTION_NEEDED);
+                    res.setSelection(options);
+                    res.setActionIdentifier(ReservationResult.ACTION_BRANCH);
+                    return res;
+                }
+            } else {
+                return reservation(item, account, ReservationResult.ACTION_BRANCH, null);
+            }
+        } else if (useraction == 1) {
+            res_branch = selection;
+
+            FormBody.Builder form = new FormBody.Builder();
+            form.add("confirmed", "false");
+            if (res_branch != null) form.add("gatheredDetails[pickUpLocation]", res_branch);
+            form.add("placeHold", "Confirm");
+            Document doc = Jsoup.parse(httpPost(res_url, form.build(), getDefaultEncoding()));
+
+            ReservationResult res =
+                    new ReservationResult(MultiStepResult.Status.CONFIRMATION_NEEDED);
+            List<String[]> details = new ArrayList<>();
+            details.add(new String[]{doc.select(".alert").text()});
+            res.setDetails(details);
+            return res;
+        } else if (useraction == MultiStepResult.ACTION_CONFIRMATION) {
+            FormBody.Builder form = new FormBody.Builder();
+            form.add("confirmed-checkbox", "true");
+            form.add("confirmed", "true");
+            if (res_branch != null) form.add("gatheredDetails[pickUpLocation]", res_branch);
+            form.add("placeHold", "Confirm");
+            Document doc = Jsoup.parse(httpPost(res_url, form.build(), getDefaultEncoding()));
+
+            res_branch = null;
+            res_url = null;
+
+            return new ReservationResult(MultiStepResult.Status.OK);
+        }
         return null;
     }
 
