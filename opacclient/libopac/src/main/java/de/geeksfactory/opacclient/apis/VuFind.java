@@ -69,8 +69,6 @@ public class VuFind extends OkHttpBaseApi {
     protected static HashMap<String, String> languageCodes = new HashMap<>();
     protected static HashMap<String, SearchResult.MediaType> mediaTypeSelectors = new HashMap<>();
 
-    protected static final String NO_PROLONG = "NOT_PROLONGABLE";
-
     protected String res_branch;
     protected String res_url;
 
@@ -689,7 +687,8 @@ public class VuFind extends OkHttpBaseApi {
 
     @Override
     public int getSupportFlags() {
-        return SUPPORT_FLAG_ENDLESS_SCROLLING | SUPPORT_FLAG_WARN_RESERVATION_FEES;
+        return SUPPORT_FLAG_ENDLESS_SCROLLING | SUPPORT_FLAG_WARN_RESERVATION_FEES |
+                SUPPORT_FLAG_ACCOUNT_PROLONG_ALL;
     }
 
     @Override
@@ -814,17 +813,64 @@ public class VuFind extends OkHttpBaseApi {
     @Override
     public ProlongResult prolong(String media, Account account, int useraction,
             String selection) throws IOException {
-        if (media.startsWith(NO_PROLONG)) {
-            return new ProlongResult(MultiStepResult.Status.ERROR,
-                    media.substring(NO_PROLONG.length()));
+
+        try {
+            login(account);
+        } catch (OpacErrorException e) {
+            return new ProlongResult(MultiStepResult.Status.ERROR, e.getMessage());
         }
-        return null;
+
+        FormBody.Builder builder = new FormBody.Builder();
+        builder.add("renewSelected", "Verlängern");
+        builder.add("renewSelectedIDS[]", media);
+        Document doc = Jsoup.parse(httpPost(opac_url + "/MyResearch/CheckedOut", builder.build(),
+                getDefaultEncoding()));
+
+        Element record =
+                doc.select("input[type=checkbox][value=" + media + "]").first().parent().parent();
+        if (record.select(".alert-success").size() == 1) {
+            return new ProlongResult(MultiStepResult.Status.OK);
+        } else {
+            return new ProlongResult(MultiStepResult.Status.ERROR,
+                    record.select(".alert-renew").text());
+        }
     }
 
     @Override
     public ProlongAllResult prolongAll(Account account, int useraction, String selection)
             throws IOException {
-        return null;
+        try {
+            login(account);
+        } catch (OpacErrorException e) {
+            return new ProlongAllResult(MultiStepResult.Status.ERROR, e.getMessage());
+        }
+
+        Document doc =
+                Jsoup.parse(httpGet(opac_url + "/MyResearch/CheckedOut", getDefaultEncoding()));
+
+        FormBody.Builder builder = new FormBody.Builder();
+        builder.add("renewSelected", "Verlängern");
+        builder.add("selectAll", "on");
+
+        for (Element input : doc.select("#renewals input[type=hidden]")) {
+            builder.add(input.attr("name"), input.val());
+        }
+
+        doc = Jsoup.parse(httpPost(opac_url + "/MyResearch/CheckedOut", builder.build(),
+                getDefaultEncoding()));
+
+        List<Map<String, String>> results = new ArrayList<>();
+        for (Element record : doc.select("#record")) {
+            Map<String, String> data = new HashMap<>();
+            data.put(ProlongAllResult.KEY_LINE_TITLE,
+                    record.children().get(1).select("strong").first().text());
+            String result = record.select(".alert-success").size() > 0 ?
+                    record.select(".alert-success").text() : record.select(".alert-renew").text();
+            data.put(ProlongAllResult.KEY_LINE_MESSAGE, result);
+            results.add(data);
+        }
+
+        return new ProlongAllResult(MultiStepResult.Status.OK, results);
     }
 
     @Override
@@ -951,13 +997,8 @@ public class VuFind extends OkHttpBaseApi {
             }
 
             Element checkbox = record.select("input[type=checkbox]").first();
-            if (checkbox.hasAttr("disabled")) {
-                item.setRenewable(false);
-                item.setProlongData(NO_PROLONG + record.select(".alert-renew").text());
-            } else {
-                item.setRenewable(true);
-                item.setProlongData(checkbox.val());
-            }
+            item.setProlongData(checkbox.val());
+            item.setRenewable(!checkbox.hasAttr("disabled"));
 
             lent.add(item);
         }
