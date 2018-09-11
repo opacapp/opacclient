@@ -813,7 +813,6 @@ public class VuFind extends OkHttpBaseApi {
     @Override
     public ProlongResult prolong(String media, Account account, int useraction,
             String selection) throws IOException {
-
         try {
             login(account);
         } catch (OpacErrorException e) {
@@ -876,7 +875,26 @@ public class VuFind extends OkHttpBaseApi {
     @Override
     public CancelResult cancel(String media, Account account, int useraction,
             String selection) throws IOException, OpacErrorException {
-        return null;
+        try {
+            login(account);
+        } catch (OpacErrorException e) {
+            return new CancelResult(MultiStepResult.Status.ERROR, e.getMessage());
+        }
+
+        FormBody.Builder builder = new FormBody.Builder();
+        builder.add("cancelSelected", "Ausgewählte Vorbestellungen löschen");
+        builder.add("cancelSelectedIDS[]", media);
+        Document doc = Jsoup.parse(httpPost(opac_url + "/MyResearch/Holds", builder.build(),
+                getDefaultEncoding()));
+
+        Elements record =
+                doc.select("input[type=checkbox][value=" + media + "]");
+        if (record.size() == 0) {
+            return new CancelResult(MultiStepResult.Status.OK);
+        } else {
+            return new CancelResult(MultiStepResult.Status.ERROR,
+                    doc.select(".flash-message.alert").text());
+        }
     }
 
     @Override
@@ -1021,8 +1039,17 @@ public class VuFind extends OkHttpBaseApi {
                 item.setBranch(((TextNode) branch).text().trim());
             }
 
-            //Element checkbox = record.select("input[type=checkbox]").first();
-            // checkbox for cancelling seems to always be disabled
+            Elements available = record.select(
+                    "strong:contains(Abholbereit), strong:contains(Available for pickup)");
+            if (available.size() > 0) {
+                item.setStatus(available.first().text().replace(":", "").trim());
+            }
+
+            Element checkbox = record.select("input[type=checkbox]").first();
+            if (!checkbox.hasAttr("disabled")) {
+                item.setCancelData(checkbox.val());
+            }
+
             reserved.add(item);
         }
         return reserved;
