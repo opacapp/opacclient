@@ -956,7 +956,7 @@ public class VuFind extends OkHttpBaseApi {
         return data;
     }
 
-    private static List<LentItem> parse_lent(Document doc) {
+    static List<LentItem> parse_lent(Document doc) {
         List<LentItem> lent = new ArrayList<>();
         for (Element record : doc.select("#record")) {
             LentItem item = new LentItem();
@@ -1023,7 +1023,7 @@ public class VuFind extends OkHttpBaseApi {
         return lent;
     }
 
-    private static List<ReservedItem> parse_reservations(Document doc) {
+    static List<ReservedItem> parse_reservations(Document doc) {
         List<ReservedItem> reserved = new ArrayList<>();
         for (Element record : doc.select("div[id^=record]")) {
             ReservedItem item = new ReservedItem();
