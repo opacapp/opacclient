@@ -26,6 +26,7 @@ import de.geeksfactory.opacclient.apis.IOpac;
 import de.geeksfactory.opacclient.apis.Littera;
 import de.geeksfactory.opacclient.apis.OpacApi;
 import de.geeksfactory.opacclient.apis.Open;
+import de.geeksfactory.opacclient.apis.Patron;
 import de.geeksfactory.opacclient.apis.PicaLBS;
 import de.geeksfactory.opacclient.apis.PicaOld;
 import de.geeksfactory.opacclient.apis.Primo;
@@ -127,6 +128,8 @@ public class OpacApiFactory {
             newApiInstance = new TouchPoint();
         } else if (lib.getApi().equals("open")) {
             newApiInstance = new Open();
+        } else if (lib.getApi().equals("patron")) {
+            newApiInstance = new Patron();
         } else if (lib.getApi().equals("test")) {
             newApiInstance = new TestApi();
         } else {

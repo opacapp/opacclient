@@ -1,0 +1,15 @@
+{
+  "account_supported": false,
+  "api": "patron",
+  "city": "Tczew",
+  "country": "Polska",
+  "data": {
+    "baseurl": "http://mbp.tczew.pl:8080/Opac4/"
+  },
+  "geo": [
+    54.092192, 18.777331
+  ],
+  "information": "http://mbp.tczew.pl",
+  "state": "pomorskie",
+  "title": "Miejska Biblioteka Publiczna w Tczewie"
+}
