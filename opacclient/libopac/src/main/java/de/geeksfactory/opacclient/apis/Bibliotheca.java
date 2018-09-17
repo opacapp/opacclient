@@ -21,13 +21,8 @@
  */
 package de.geeksfactory.opacclient.apis;
 
-import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
-import org.apache.http.client.entity.UrlEncodedFormEntity;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.utils.URLEncodedUtils;
-import org.apache.http.message.BasicNameValuePair;
 import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
@@ -59,7 +54,6 @@ import java.util.regex.Pattern;
 
 import de.geeksfactory.opacclient.i18n.StringProvider;
 import de.geeksfactory.opacclient.networking.HttpClientFactory;
-import de.geeksfactory.opacclient.networking.HttpUtils;
 import de.geeksfactory.opacclient.networking.NotReachableException;
 import de.geeksfactory.opacclient.objects.Account;
 import de.geeksfactory.opacclient.objects.AccountData;
@@ -380,12 +374,7 @@ public class Bibliotheca extends OkHttpBaseApi {
             }
         }
 
-        String html;
-        if (data.has("db")) {
-            html = httpPost(opac_url + "/index.asp?DB=" + data.getString("db"), formData.build(), getDefaultEncoding());
-        } else {
-            html = httpPost(opac_url + "/index.asp", formData.build(), getDefaultEncoding());
-        }
+        String html = httpPost(opac_url + "/index.asp", formData.build(), getDefaultEncoding());
         if (html.contains("<a href=\"index.asp?order=" + order + "\">")) {
             html = httpGet(opac_url + "/index.asp?order=" + order, getDefaultEncoding());
         }
