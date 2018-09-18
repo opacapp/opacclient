@@ -64,6 +64,7 @@ import okhttp3.Response;
 public class VuFind extends OkHttpBaseApi {
     protected static final Pattern idPattern = Pattern.compile("\\/(?:Opacrl)?Record\\/([^/]+)");
     protected static final Pattern buildingCollectionPattern = Pattern.compile("~(?:building|collection):\"([^\"]+)\"");
+    protected static final Pattern bibliothecaIdPattern = Pattern.compile("&detmediennr=([^&]*)(?:&detDB=[^&]*)");
 
     public static final String OPTION_ALL = "_ALL";
     protected static HashMap<String, String> languageCodes = new HashMap<>();
@@ -332,6 +333,17 @@ public class VuFind extends OkHttpBaseApi {
     public DetailedItem getResultById(String id, String homebranch)
             throws IOException, OpacErrorException {
         if (!initialised) start();
+
+        if (data.has("library")) {
+            // Migration from Bibliotheca IDs to smartBib IDs (implemented for Kreis Recklinghausen)
+            // does not always work for e-books, as their IDs have changed
+            Matcher matcher = bibliothecaIdPattern.matcher(id);
+            if (matcher.matches()) {
+                String library = data.optString("library");
+                id = library + "." + matcher.group(1);
+            }
+        }
+
         String url = getShareUrl(id, null);
         String html = httpGet(url, getDefaultEncoding());
         Document doc = Jsoup.parse(html);
