@@ -1,9 +1,8 @@
 package de.geeksfactory.opacclient.apis;
 
 import org.apache.http.NameValuePair;
-import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.utils.URLEncodedUtils;
-import org.apache.http.message.BasicNameValuePair;
+import org.joda.time.format.DateTimeFormat;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.jsoup.Jsoup;
@@ -25,17 +24,22 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.ExecutionException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import de.geeksfactory.opacclient.i18n.StringProvider;
 import de.geeksfactory.opacclient.networking.HttpClientFactory;
+import de.geeksfactory.opacclient.networking.NotReachableException;
 import de.geeksfactory.opacclient.objects.Account;
 import de.geeksfactory.opacclient.objects.AccountData;
 import de.geeksfactory.opacclient.objects.Copy;
 import de.geeksfactory.opacclient.objects.Detail;
 import de.geeksfactory.opacclient.objects.DetailedItem;
 import de.geeksfactory.opacclient.objects.Filter;
+import de.geeksfactory.opacclient.objects.LentItem;
 import de.geeksfactory.opacclient.objects.Library;
+import de.geeksfactory.opacclient.objects.ReservedItem;
 import de.geeksfactory.opacclient.objects.SearchRequestResult;
 import de.geeksfactory.opacclient.objects.SearchResult;
 import de.geeksfactory.opacclient.objects.Volume;
@@ -43,11 +47,31 @@ import de.geeksfactory.opacclient.searchfields.DropdownSearchField;
 import de.geeksfactory.opacclient.searchfields.SearchField;
 import de.geeksfactory.opacclient.searchfields.SearchQuery;
 import de.geeksfactory.opacclient.searchfields.TextSearchField;
+import java8.util.concurrent.CompletableFuture;
+import java8.util.function.Function;
+import okhttp3.FormBody;
+import okhttp3.HttpUrl;
+import okhttp3.Response;
 
-public class VuFind extends ApacheBaseApi {
+/**
+ * OpacApi implementation for hte open source VuFind discovery system (https://vufind.org/),
+ * developed by Villanova University.
+ *
+ * It includes special cases to account for changes in the "smartBib" variant
+ * (https://www.subkom.de/smartbib/) developed by subkom GmbH. Account features were only tested
+ * with smartBib.
+ */
+public class VuFind extends OkHttpBaseApi {
     protected static final Pattern idPattern = Pattern.compile("\\/(?:Opacrl)?Record\\/([^/]+)");
+    protected static final Pattern buildingCollectionPattern = Pattern.compile("~(?:building|collection):\"([^\"]+)\"");
+    protected static final Pattern bibliothecaIdPattern = Pattern.compile("&detmediennr=([^&]*)(?:&detDB=[^&]*)");
+
+    public static final String OPTION_ALL = "_ALL";
     protected static HashMap<String, String> languageCodes = new HashMap<>();
     protected static HashMap<String, SearchResult.MediaType> mediaTypeSelectors = new HashMap<>();
+
+    protected String res_branch;
+    protected String res_url;
 
     static {
         languageCodes.put("de", "de");
@@ -62,7 +86,7 @@ public class VuFind extends ApacheBaseApi {
                 .put(".cd, .audio, .musicrecording, .record, .soundrecordingmedium, " +
                                 ".soundrecording",
                         SearchResult.MediaType.CD_MUSIC);
-        mediaTypeSelectors.put(".audiotape, .cassette, .soundcassette",
+        mediaTypeSelectors.put(".audiotape, .cassette, .soundcassette, .kassette",
                 SearchResult.MediaType.AUDIO_CASSETTE);
         mediaTypeSelectors.put(".dvdaudio, .sounddisc", SearchResult.MediaType.CD_MUSIC);
         mediaTypeSelectors.put(".dvd, .dvdvideo", SearchResult.MediaType.DVD);
@@ -76,27 +100,29 @@ public class VuFind extends ApacheBaseApi {
         mediaTypeSelectors.put(
                 ".microfilm, .video, .videodisc, .vhs, .video, .videotape, .videocassette, " +
                         ".videocartridge, .audiovisualmedia, .filmstrip, .motionpicture, " +
-                        ".videoreel",
+                        ".videoreel, .dvdbluray",
                 SearchResult.MediaType.MOVIE);
         mediaTypeSelectors.put(".kit, .sets", SearchResult.MediaType.PACKAGE);
         mediaTypeSelectors.put(".musicalscore, .notatedmusic, .electronicmusicalscore",
                 SearchResult.MediaType.SCORE_MUSIC);
-        mediaTypeSelectors.put(".manuscript, .book, .articles", SearchResult.MediaType.BOOK);
-        mediaTypeSelectors
-                .put(".journal, .journalnewspaper, .serial", SearchResult.MediaType.MAGAZINE);
+        mediaTypeSelectors.put(".manuscript, .book, .articles, .sachbuch, .kinderjugendbuch, " +
+                ".roman, .bestseller, .comics", SearchResult.MediaType.BOOK);
+        mediaTypeSelectors.put(".journal, .journalnewspaper, .serial, " +
+                ".zeitschrift", SearchResult.MediaType.MAGAZINE);
         mediaTypeSelectors.put(".newspaper, .newspaperarticle", SearchResult.MediaType.NEWSPAPER);
         mediaTypeSelectors.put(".software, .cdrom, .chipcartridge, .disccartridge, .dvdrom",
                 SearchResult.MediaType.CD_SOFTWARE);
-        mediaTypeSelectors.put(".newspaper", SearchResult.MediaType.NEWSPAPER);
         mediaTypeSelectors
                 .put(".electronicnewspaper, .electronic, .electronicarticle, " +
-                                "electronicresourcedatacarrier, .electronicresourceremoteaccess, " +
-                                ".electronicserial, .electronicjournal, .electronicthesis",
-                        SearchResult.MediaType.EDOC);
-        mediaTypeSelectors.put(".newspaper", SearchResult.MediaType.NEWSPAPER);
-        mediaTypeSelectors.put(".newspaper", SearchResult.MediaType.NEWSPAPER);
-        mediaTypeSelectors.put(".unknown", SearchResult.MediaType.UNKNOWN);
-
+                        "electronicresourcedatacarrier, .electronicresourceremoteaccess, " +
+                        ".electronicserial, .electronicjournal, .electronicthesis, " +
+                        ".edokument", SearchResult.MediaType.EDOC);
+        mediaTypeSelectors.put(".unknown, .sonstiges, .tonies", SearchResult.MediaType.UNKNOWN);
+        mediaTypeSelectors.put(".medienpaket", SearchResult.MediaType.PACKAGE);
+        mediaTypeSelectors.put(".eaudio", SearchResult.MediaType.EAUDIO);
+        mediaTypeSelectors.put(".konsolenspiel", SearchResult.MediaType.GAME_CONSOLE);
+        mediaTypeSelectors.put(".karte", SearchResult.MediaType.MAP);
+        mediaTypeSelectors.put(".spiel", SearchResult.MediaType.BOARDGAME);
     }
 
     protected String languageCode = "en";
@@ -118,23 +144,39 @@ public class VuFind extends ApacheBaseApi {
         }
     }
 
-    protected List<NameValuePair> buildSearchParams(List<SearchQuery> query) {
-        List<NameValuePair> params = new ArrayList<>();
-
-        params.add(new BasicNameValuePair("sort", "relevance"));
-        params.add(new BasicNameValuePair("join", "AND"));
+    protected HttpUrl.Builder buildSearchParams(List<SearchQuery> query, HttpUrl.Builder builder) {
+        builder.addQueryParameter("sort", "relevance");
+        builder.addQueryParameter("join", "AND");
 
         for (SearchQuery singleQuery : query) {
-            if (singleQuery.getValue().equals("")) continue;
             if (singleQuery.getKey().contains("filter[]")) {
-                params.add(new BasicNameValuePair("filter[]", singleQuery.getValue()));
+                String type = singleQuery.getKey().replace("filter[]", "");
+                if (data.has("library") && singleQuery.getValue().equals(OPTION_ALL)) {
+                    if (type.equals("limit_collection")) {
+                        // add all values of search field to filter by books in the library
+                        DropdownSearchField sf = (DropdownSearchField) singleQuery.getSearchField();
+                        for (DropdownSearchField.Option option : sf.getDropdownValues()) {
+                            if (!option.getKey().equals(OPTION_ALL)) {
+                                builder.addQueryParameter("filter[]", option.getKey());
+                            }
+                        }
+                    } else if (!type.equals("limit_building")) {
+                        // don't add any options for branches (if not a specific branch was
+                        // selected)
+                        builder.addQueryParameter("filter[]", singleQuery.getValue());
+                    }
+                } else {
+                    builder.addQueryParameter("filter[]", singleQuery.getValue());
+                }
             } else {
-                params.add(new BasicNameValuePair("type0[]", singleQuery.getKey()));
-                params.add(new BasicNameValuePair("bool0[]", "AND"));
-                params.add(new BasicNameValuePair("lookfor0[]", singleQuery.getValue()));
+                if (singleQuery.getValue().equals("")) continue;
+                builder.addQueryParameter("type0[]", singleQuery.getKey());
+                builder.addQueryParameter("bool0[]", "AND");
+                builder.addQueryParameter("lookfor0[]", singleQuery.getValue());
             }
         }
-        return params;
+
+        return builder;
     }
 
     @Override
@@ -142,8 +184,9 @@ public class VuFind extends ApacheBaseApi {
             throws IOException, OpacErrorException, JSONException {
         if (!initialised) start();
         last_query = query;
-        String html = httpGet(opac_url + "/Search/Results" +
-                        buildHttpGetParams(buildSearchParams(query)),
+
+        HttpUrl.Builder builder = HttpUrl.parse(opac_url + "/Search/Results").newBuilder();
+        String html = httpGet(buildSearchParams(query, builder).build().toString(),
                 getDefaultEncoding());
         Document doc = Jsoup.parse(html);
         return parse_search(doc, 1);
@@ -170,10 +213,10 @@ public class VuFind extends ApacheBaseApi {
             SearchResult res = new SearchResult();
             Element z3988el = null;
             if (row.select("span.Z3988").size() == 1) {
-                z3988el = row.select("span.3988").first();
+                z3988el = row.select("span.Z3988").first();
             } else if (row.parent().tagName().equals("li") &&
                     row.parent().select("span.Z3988").size() > 0) {
-                z3988el = row.parent().select("span.3988").first();
+                z3988el = row.parent().select("span.Z3988").first();
             }
             if (z3988el != null) {
                 List<NameValuePair> z3988data;
@@ -181,21 +224,31 @@ public class VuFind extends ApacheBaseApi {
                     StringBuilder description = new StringBuilder();
                     z3988data = URLEncodedUtils.parse(new URI("http://dummy/?"
                             + z3988el.select("span.Z3988").attr("title")), "UTF-8");
+                    String title = null;
+                    String year = null;
+                    String author = null;
                     for (NameValuePair nv : z3988data) {
                         if (nv.getValue() != null) {
                             if (!nv.getValue().trim().equals("")) {
-                                if (nv.getName().equals("rft.btitle")) {
-                                    description.append("<b>").append(nv.getValue()).append("</b>");
-                                } else if (nv.getName().equals("rft.atitle")) {
-                                    description.append("<b>").append(nv.getValue()).append("</b>");
-                                } else if (nv.getName().equals("rft.au")) {
-                                    description.append("<br />").append(nv.getValue());
-                                } else if (nv.getName().equals("rft.date")) {
-                                    description.append("<br />").append(nv.getValue());
+                                switch (nv.getName()) {
+                                    case "rft.btitle":
+                                    case "rft.atitle":
+                                    case "rft.title":
+                                        title = nv.getValue();
+                                        break;
+                                    case "rft.au":
+                                        author = nv.getValue();
+                                        break;
+                                    case "rft.date":
+                                        year = nv.getValue();
+                                        break;
                                 }
                             }
                         }
                     }
+                    if (title != null) description.append("<b>").append(title).append("</b>");
+                    if (author != null) description.append("<br />").append(author);
+                    if (year != null) description.append("<br />").append(year);
                     res.setInnerhtml(description.toString());
                 } catch (URISyntaxException e) {
                     e.printStackTrace();
@@ -268,11 +321,10 @@ public class VuFind extends ApacheBaseApi {
     @Override
     public SearchRequestResult searchGetPage(int page)
             throws IOException, OpacErrorException, JSONException {
-        List<NameValuePair> params = buildSearchParams(last_query);
-        params.add(new BasicNameValuePair("page", String.valueOf(page)));
-        String html = httpGet(opac_url + "/Search/Results" +
-                        buildHttpGetParams(params),
-                getDefaultEncoding());
+        HttpUrl.Builder builder = HttpUrl.parse(opac_url + "/Search/Results").newBuilder();
+        buildSearchParams(last_query, builder);
+        builder.addQueryParameter("page", String.valueOf(page));
+        String html = httpGet(builder.build().toString(), getDefaultEncoding());
         Document doc = Jsoup.parse(html);
         return parse_search(doc, page);
     }
@@ -281,18 +333,40 @@ public class VuFind extends ApacheBaseApi {
     public DetailedItem getResultById(String id, String homebranch)
             throws IOException, OpacErrorException {
         if (!initialised) start();
+
+        if (data.has("library")) {
+            // Migration from Bibliotheca IDs to smartBib IDs (implemented for Kreis Recklinghausen)
+            // does not always work for e-books, as their IDs have changed
+            Matcher matcher = bibliothecaIdPattern.matcher(id);
+            if (matcher.matches()) {
+                String library = data.optString("library");
+                id = library + "." + matcher.group(1);
+            }
+        }
+
         String url = getShareUrl(id, null);
         String html = httpGet(url, getDefaultEncoding());
         Document doc = Jsoup.parse(html);
         doc.setBaseUri(url);
+
+        Document detailsDoc = null;
+        if (doc.select("a[href$=Description#tabnav]").size() == 1) {
+            // smartBib description on separate page
+            String detailsUrl =
+                    httpGet(doc.select("a[href$=Description#tabnav]").first().absUrl("href"),
+                            getDefaultEncoding());
+            detailsDoc = Jsoup.parse(detailsUrl);
+            detailsDoc.setBaseUri(detailsUrl);
+        }
+
         try {
-            return parseDetail(id, doc, data);
+            return parseDetail(id, doc, data, detailsDoc);
         } catch (JSONException e) {
             throw new RuntimeException(e);
         }
     }
 
-    static DetailedItem parseDetail(String id, Document doc, JSONObject data)
+    static DetailedItem parseDetail(String id, Document doc, JSONObject data, Document detailsDoc)
             throws OpacErrorException, JSONException {
         if (doc.select("p.error, p.errorMsg, .alert-error").size() > 0) {
             throw new OpacErrorException(doc.select("p.error, p.errorMsg, .alert-error").text());
@@ -343,7 +417,7 @@ public class VuFind extends ApacheBaseApi {
         if (head != null) res.addDetail(new Detail(head, value.toString()));
 
         try {
-            if (doc.select("#Volumes").size() > 0) {
+            if (doc.select("#Volumes, .volumes").size() > 0) {
                 parseVolumes(res, doc, data);
             } else {
                 parseCopies(res, doc, data);
@@ -352,13 +426,35 @@ public class VuFind extends ApacheBaseApi {
             e.printStackTrace();
         }
 
+        if (detailsDoc != null) {
+            // smartBib details
+            Elements rows = detailsDoc.select(".description-tab table tr");
+            for (Element row : rows) {
+                res.addDetail(new Detail(row.select("th").text(),
+                        row.select("td").text()));
+            }
+        }
+
+        if (doc.select(".placehold").size() > 0) {
+            res.setReservable(true);
+            res.setReservation_info(
+                    doc.select(".placehold").first().absUrl("href").replace("#tabnav", ""));
+        } else if (doc.select(
+                ".alert:contains(zum Vormerken), .alert:contains(For hold and recall information)")
+                      .size() > 0) {
+            res.setReservable(true);
+            res.setReservation_info(null);
+        }
+
         return res;
     }
 
     private static void parseVolumes(DetailedItem res, Document doc, JSONObject data) {
         // only tested in Münster
         // e.g. https://www.stadt-muenster.de/opac2/Record/0900944
-        Element table = doc.select(".recordsubcontent, .tab-container").first()
+        // and Kreis Recklinghausen
+        // e.g. https://www.bib-kreisre.de/Record/HERT.0564417
+        Element table = doc.select(".recordsubcontent, .tab-container, .volumes-tab").first()
                            .select("table").first();
         for (Element link : table.select("tr a")) {
             Volume volume = new Volume();
@@ -370,7 +466,8 @@ public class VuFind extends ApacheBaseApi {
     }
 
     static void parseCopies(DetailedItem res, Document doc, JSONObject data) throws JSONException {
-        if ("doublestacked".equals(data.optString("copystyle"))) {
+        String copystyle = data.optString("copystyle");
+        if ("doublestacked".equals(copystyle)) {
             // e.g. http://vopac.nlg.gr/Record/393668/Holdings#tabnav
             // for Athens_GreekNationalLibrary
             Element container = doc.select(".tab-container").first();
@@ -397,7 +494,7 @@ public class VuFind extends ApacheBaseApi {
                 }
             }
 
-        } else if ("stackedtable".equals(data.optString("copystyle"))) {
+        } else if ("stackedtable".equals(copystyle)) {
             // e.g. http://search.lib.auth.gr/Record/376356
             // or https://katalog.ub.uni-leipzig.de/Record/0000196115
             // or https://www.stadt-muenster.de/opac2/Record/0367968
@@ -465,6 +562,19 @@ public class VuFind extends ApacheBaseApi {
                     }
                 }
             }
+        } else if ("smartbib".equals(copystyle)) {
+            Element table = doc.select(".holdings-tab table").first();
+            for (Element tr : table.select("tr")) {
+                Elements columns = tr.select("td");
+                if (columns.size() == 0) continue; // header
+                Copy copy = new Copy();
+                copy.setBranch(columns.get(0).text());
+                copy.setLocation(columns.get(1).text());
+                copy.setShelfmark(columns.get(2).text());
+                copy.setStatus(columns.get(3).text());
+                copy.setReservations(columns.get(4).text());
+                res.addCopy(copy);
+            }
         }
     }
 
@@ -475,10 +585,8 @@ public class VuFind extends ApacheBaseApi {
 
     public void start() throws IOException {
         super.start();
-        List<NameValuePair> params = new ArrayList<>();
-        params.add(new BasicNameValuePair("mylang", languageCode));
-        httpPost(opac_url + "/Search/Advanced", new UrlEncodedFormEntity(params),
-                getDefaultEncoding());
+        FormBody body = new FormBody.Builder().add("mylang", languageCode).build();
+        httpPost(opac_url + "/Search/Advanced", body, getDefaultEncoding());
     }
 
     @Override
@@ -491,7 +599,7 @@ public class VuFind extends ApacheBaseApi {
 
         List<SearchField> fields = new ArrayList<>();
 
-        Elements options = doc.select("select#search_type0_0 option");
+        Elements options = doc.select("select#search_type0_0, select[name=type0[]]").first().select("option");
         for (Element option : options) {
             TextSearchField field = new TextSearchField();
             field.setDisplayName(option.text());
@@ -522,9 +630,15 @@ public class VuFind extends ApacheBaseApi {
             }
         }
 
+        String library = null;
+        if (data.has("library")) {
+            library = data.getString("library");
+        }
+
         Elements selects = doc.select("select");
         for (Element select : selects) {
             if (!select.attr("name").equals("filter[]")) continue;
+
             DropdownSearchField field = new DropdownSearchField();
             if (select.parent().select("label").size() > 0) {
                 field.setDisplayName(select.parent().select("label").first()
@@ -533,10 +647,33 @@ public class VuFind extends ApacheBaseApi {
                 field.setDisplayName(select.parent().parent().select("label").first()
                                            .text());
             }
-            field.setId(select.attr("name") + select.attr("id"));
-            String meaning = select.attr("id");
-            field.addDropdownValue("", "");
+            String id = select.attr("id");
+            field.setId(select.attr("name") + id);
+            String meaning = id;
+            if (library != null &&
+                    (meaning.equals("limit_collection") || meaning.equals("limit_building"))) {
+                field.addDropdownValue(OPTION_ALL, stringProvider.getString(StringProvider.ALL));
+            } else {
+                field.addDropdownValue("", "");
+            }
             for (Element option : select.select("option")) {
+                if (library != null && id.equals("limit_collection")) {
+                    // smartBib: only collections that either belong to the selected library or are shared for all
+                    Matcher matcher = buildingCollectionPattern.matcher(option.val());
+                    if (matcher.matches()) {
+                        String collection = matcher.group(1);
+                        if (collection.contains(".") && !collection.startsWith(library + "."))
+                            continue;
+                    }
+                } else if (library != null && id.equals("limit_building")) {
+                    // smartBib: only branches that belong to the selected library
+                    Matcher matcher = buildingCollectionPattern.matcher(option.val());
+                    if (matcher.matches()) {
+                        String branch = matcher.group(1);
+                        if (!branch.startsWith(library + ".")) continue;
+                    }
+                }
+
                 if (option.val().contains(":")) {
                     meaning = option.val().split(":")[0];
                 }
@@ -562,7 +699,8 @@ public class VuFind extends ApacheBaseApi {
 
     @Override
     public int getSupportFlags() {
-        return SUPPORT_FLAG_ENDLESS_SCROLLING | SUPPORT_FLAG_CHANGE_ACCOUNT;
+        return SUPPORT_FLAG_ENDLESS_SCROLLING | SUPPORT_FLAG_WARN_RESERVATION_FEES |
+                SUPPORT_FLAG_ACCOUNT_PROLONG_ALL;
     }
 
     @Override
@@ -600,35 +738,364 @@ public class VuFind extends ApacheBaseApi {
     @Override
     public ReservationResult reservation(DetailedItem item, Account account,
             int useraction, String selection) throws IOException {
+        if (res_url == null || !res_url.contains(item.getId())) {
+            res_url = item.getReservation_info();
+            if (res_url == null) { // not yet logged in
+                try {
+                    login(account);
+                } catch (OpacErrorException e) {
+                    res_branch = null;
+                    res_url = null;
+                    return new ReservationResult(MultiStepResult.Status.ERROR, e.getMessage());
+                }
+                String shareUrl = getShareUrl(item.getId(), null);
+                Document doc = Jsoup.parse(httpGet(shareUrl, getDefaultEncoding()));
+                doc.setBaseUri(shareUrl);
+                if (doc.select(".placehold").size() > 0) {
+                    res_url =
+                            doc.select(".placehold").first().absUrl("href").replace("#tabnav", "");
+                } else {
+                    res_branch = null;
+                    res_url = null;
+                    return new ReservationResult(MultiStepResult.Status.ERROR,
+                            stringProvider.getString(StringProvider.NO_COPY_RESERVABLE));
+                }
+            }
+            //res_url = res_url.replace("&layout=lightbox&lbreferer=false", "");
+        }
+
+        if (useraction == 0) {
+            Document doc = Jsoup.parse(httpGet(res_url, getDefaultEncoding()));
+            Element pickup = doc.select("#pickUpLocation").first();
+
+            // does a pickup branch need to be selected?
+            if (pickup != null) {
+                List<Map<String, String>> options = new ArrayList<>();
+                for (Element option : pickup.select("option")) {
+                    Map<String, String> opt = new HashMap<>();
+                    opt.put("key", option.val());
+                    opt.put("value", option.text());
+                    options.add(opt);
+                }
+
+                if (options.size() == 1) {
+                    return reservation(item, account, ReservationResult.ACTION_BRANCH,
+                            options.get(0).get("key"));
+                } else {
+                    ReservationResult res =
+                            new ReservationResult(MultiStepResult.Status.SELECTION_NEEDED);
+                    res.setSelection(options);
+                    res.setActionIdentifier(ReservationResult.ACTION_BRANCH);
+                    return res;
+                }
+            } else {
+                return reservation(item, account, ReservationResult.ACTION_BRANCH, null);
+            }
+        } else if (useraction == 1) {
+            res_branch = selection;
+
+            FormBody.Builder form = new FormBody.Builder();
+            form.add("confirmed", "false");
+            if (res_branch != null) form.add("gatheredDetails[pickUpLocation]", res_branch);
+            form.add("placeHold", "Confirm");
+            Document doc = Jsoup.parse(httpPost(res_url, form.build(), getDefaultEncoding()));
+
+            ReservationResult res =
+                    new ReservationResult(MultiStepResult.Status.CONFIRMATION_NEEDED);
+            List<String[]> details = new ArrayList<>();
+            details.add(new String[]{doc.select(".alert").text()});
+            res.setDetails(details);
+            return res;
+        } else if (useraction == MultiStepResult.ACTION_CONFIRMATION) {
+            FormBody.Builder form = new FormBody.Builder();
+            form.add("confirmed-checkbox", "true");
+            form.add("confirmed", "true");
+            if (res_branch != null) form.add("gatheredDetails[pickUpLocation]", res_branch);
+            form.add("placeHold", "Confirm");
+            Document doc = Jsoup.parse(httpPost(res_url, form.build(), getDefaultEncoding()));
+
+            res_branch = null;
+            res_url = null;
+
+            return new ReservationResult(MultiStepResult.Status.OK);
+        }
         return null;
     }
 
     @Override
     public ProlongResult prolong(String media, Account account, int useraction,
             String selection) throws IOException {
-        return null;
+        try {
+            login(account);
+        } catch (OpacErrorException e) {
+            return new ProlongResult(MultiStepResult.Status.ERROR, e.getMessage());
+        }
+
+        FormBody.Builder builder = new FormBody.Builder();
+        builder.add("renewSelected", "Verlängern");
+        builder.add("renewSelectedIDS[]", media);
+        Document doc = Jsoup.parse(httpPost(opac_url + "/MyResearch/CheckedOut", builder.build(),
+                getDefaultEncoding()));
+
+        Element record =
+                doc.select("input[type=checkbox][value=" + media + "]").first().parent().parent();
+        if (record.select(".alert-success").size() == 1) {
+            return new ProlongResult(MultiStepResult.Status.OK);
+        } else {
+            return new ProlongResult(MultiStepResult.Status.ERROR,
+                    record.select(".alert-renew").text());
+        }
     }
 
     @Override
     public ProlongAllResult prolongAll(Account account, int useraction, String selection)
             throws IOException {
-        return null;
+        try {
+            login(account);
+        } catch (OpacErrorException e) {
+            return new ProlongAllResult(MultiStepResult.Status.ERROR, e.getMessage());
+        }
+
+        Document doc =
+                Jsoup.parse(httpGet(opac_url + "/MyResearch/CheckedOut", getDefaultEncoding()));
+
+        FormBody.Builder builder = new FormBody.Builder();
+        builder.add("renewSelected", "Verlängern");
+        builder.add("selectAll", "on");
+
+        for (Element input : doc.select("#renewals input[type=hidden]")) {
+            builder.add(input.attr("name"), input.val());
+        }
+
+        doc = Jsoup.parse(httpPost(opac_url + "/MyResearch/CheckedOut", builder.build(),
+                getDefaultEncoding()));
+
+        List<Map<String, String>> results = new ArrayList<>();
+        for (Element record : doc.select("#record")) {
+            Map<String, String> data = new HashMap<>();
+            data.put(ProlongAllResult.KEY_LINE_TITLE,
+                    record.children().get(1).select("strong").first().text());
+            String result = record.select(".alert-success").size() > 0 ?
+                    record.select(".alert-success").text() : record.select(".alert-renew").text();
+            data.put(ProlongAllResult.KEY_LINE_MESSAGE, result);
+            results.add(data);
+        }
+
+        return new ProlongAllResult(MultiStepResult.Status.OK, results);
     }
 
     @Override
     public CancelResult cancel(String media, Account account, int useraction,
             String selection) throws IOException, OpacErrorException {
-        return null;
+        try {
+            login(account);
+        } catch (OpacErrorException e) {
+            return new CancelResult(MultiStepResult.Status.ERROR, e.getMessage());
+        }
+
+        FormBody.Builder builder = new FormBody.Builder();
+        builder.add("cancelSelected", "Ausgewählte Vorbestellungen löschen");
+        builder.add("cancelSelectedIDS[]", media);
+        Document doc = Jsoup.parse(httpPost(opac_url + "/MyResearch/Holds", builder.build(),
+                getDefaultEncoding()));
+
+        Elements record =
+                doc.select("input[type=checkbox][value=" + media + "]");
+        if (record.size() == 0) {
+            return new CancelResult(MultiStepResult.Status.OK);
+        } else {
+            return new CancelResult(MultiStepResult.Status.ERROR,
+                    doc.select(".flash-message.alert").text());
+        }
     }
 
     @Override
     public AccountData account(Account account)
             throws IOException, JSONException, OpacErrorException {
-        return null;
+        login(account);
+
+        AccountData data = new AccountData(account.getId());
+
+        Function<Response, Document> parse = r -> {
+            try {
+                return Jsoup.parse(r.body().string());
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        };
+        CompletableFuture<List<LentItem>> lentFuture =
+                asyncGet(opac_url + "/MyResearch/CheckedOut", false)
+                        .thenApplyAsync(parse).thenApplyAsync(VuFind::parse_lent);
+        CompletableFuture<List<ReservedItem>> reservationsFuture =
+                asyncGet(opac_url + "/MyResearch/Holds", false)
+                        .thenApplyAsync(parse).thenApplyAsync(VuFind::parse_reservations);
+        CompletableFuture<Void> finesFuture =
+                asyncGet(opac_url + "/MyResearch/Fines", false)
+                        .thenApplyAsync(parse).thenAccept(doc -> {
+                    Element table = doc.select("#content table").first();
+                    if (table != null) {
+                        Element fees = table.select("tr").last().select("td").last();
+                        data.setPendingFees(fees.text().trim());
+                    }
+                    String validUntil = doc.select(
+                            ".list-group-item:contains(Valid until), " +
+                                    ".list-group-item:contains(Gültig bis)").text();
+                    validUntil = validUntil.replaceAll("Valid until\\s*:", "")
+                                           .replaceAll("Gültig bis\\s*:", "").trim();
+                    data.setValidUntil(!validUntil.equals("") ? validUntil : null);
+                });
+
+        try {
+            data.setLent(lentFuture.get());
+            data.setReservations(reservationsFuture.get());
+            finesFuture.get();
+        } catch (InterruptedException ignored) {
+
+        } catch (ExecutionException e) {
+            if (e.getCause() != null) {
+                if (e.getCause() instanceof IOException) {
+                    throw (IOException) e.getCause();
+                } else if (e.getCause() instanceof RuntimeException) {
+                    throw (RuntimeException) e.getCause();
+                } else {
+                    throw new NotReachableException();
+                }
+            } else {
+                throw new NotReachableException();
+            }
+        }
+
+        return data;
+    }
+
+    static List<LentItem> parse_lent(Document doc) {
+        List<LentItem> lent = new ArrayList<>();
+        for (Element record : doc.select("#record")) {
+            LentItem item = new LentItem();
+            String type = null;
+            boolean title = true;
+            boolean statusAfter = false;
+            Element dataColumn = record.children().get(1);
+            for (Node node : dataColumn.childNodes()) {
+                if (node instanceof Element && ((Element) node).tagName().equals("strong")) {
+                    Element el = (Element) node;
+                    if (title) {
+                        item.setTitle(el.text());
+                        title = false;
+                    } else if (statusAfter) {
+                        // return date
+                        String text = el.text().replace("Bis", "").replace("Until", "").trim();
+                        item.setDeadline(
+                                DateTimeFormat.forPattern("dd.MM.yyyy").parseLocalDate(text));
+                    } else {
+                        type = el.text().replace(":", "").trim();
+                        String nextText = el.nextElementSibling().text();
+                        if (nextText.startsWith("Bis") || nextText.startsWith("Until")) {
+                            statusAfter = true;
+                        }
+                    }
+                } else if (node instanceof TextNode) {
+                    String text = ((TextNode) node).text().trim();
+                    if (text.equals("")) continue;
+                    if (text.endsWith(",")) text = text.substring(0, text.length() - 1).trim();
+
+                    if (statusAfter) {
+                        String[] split = text.split(",");
+                        text = split[0].trim();
+                        item.setStatus(split[1].trim());
+                    }
+
+                    if (type == null) {
+                        item.setAuthor(text.replaceFirst("\\[([^\\]]*)\\]", "$1"));
+                    } else {
+                        switch (type) {
+                            case "Zweigstelle":
+                            case "Borrowing Location":
+                                item.setLendingBranch(text);
+                                break;
+                            case "Medientyp":
+                            case "Media type":
+                                item.setFormat(text);
+                                break;
+                            case "Buchungsnummer":
+                            case "barcode":
+                                item.setBarcode(text);
+                                break;
+                        }
+                    }
+                }
+            }
+
+            Element checkbox = record.select("input[type=checkbox]").first();
+            item.setProlongData(checkbox.val());
+            item.setRenewable(!checkbox.hasAttr("disabled"));
+
+            lent.add(item);
+        }
+        return lent;
+    }
+
+    static List<ReservedItem> parse_reservations(Document doc) {
+        List<ReservedItem> reserved = new ArrayList<>();
+        for (Element record : doc.select("div[id^=record]")) {
+            ReservedItem item = new ReservedItem();
+            item.setTitle(record.select(".title").text());
+            item.setAuthor(record.select("a[href*=Author]").text());
+            item.setFormat(record.select(".format").text());
+            // we could also recognize the format through mediaTypeSelectors here
+
+            Node branch =
+                    record.select("strong:contains(Zweigstelle), strong:contains(Pickup library)")
+                          .first().nextSibling();
+            if (branch instanceof TextNode) {
+                item.setBranch(((TextNode) branch).text().trim());
+            }
+
+            Elements available = record.select(
+                    "strong:contains(Abholbereit), strong:contains(Available for pickup)");
+            if (available.size() > 0) {
+                item.setStatus(available.first().text().replace(":", "").trim());
+            }
+
+            Element checkbox = record.select("input[type=checkbox]").first();
+            if (!checkbox.hasAttr("disabled")) {
+                item.setCancelData(checkbox.val());
+            }
+
+            reserved.add(item);
+        }
+        return reserved;
+    }
+
+    private void login(Account account) throws IOException, OpacErrorException {
+        Document doc = Jsoup.parse(httpGet(opac_url + "/MyResearch/Home", getDefaultEncoding()));
+        Element loginForm = doc.select("form[name=loginForm]").first();
+
+        if (loginForm == null) return;
+
+        FormBody.Builder builder = new FormBody.Builder()
+                .add("username", account.getName())
+                .add("password", account.getPassword());
+
+        for (Element hidden : loginForm.select("input[type=hidden]")) {
+            builder.add(hidden.attr("name"), hidden.val());
+        }
+
+        if (data.has("library")) {
+            builder.add("library_select", data.optString("library"));
+        }
+
+        doc = Jsoup.parse(
+                httpPost(opac_url + "/MyResearch/Home", builder.build(), getDefaultEncoding()));
+        if (doc.select(".flash-message").size() > 0 &&
+                doc.select("form[name=loginForm]").size() > 0) {
+            throw new OpacErrorException(doc.select(".flash-message").text());
+        }
     }
 
     @Override
     public void checkAccountData(Account account)
             throws IOException, JSONException, OpacErrorException {
+        login(account);
     }
 }
