@@ -19,8 +19,9 @@ class JsonFilesTask extends DefaultTask {
     def downloadFiles() {
         String bibsDir = "${project.projectDir}/../opacapp/src/main/assets/bibs"
         String assetsDir = "${project.projectDir}/../opacapp/src/main/assets"
-    
-        HttpsURLConnection conn = (HttpsURLConnection) API_URL.toURL().openConnection()
+
+        String url = API_URL + "&app_version=${project.android.defaultConfig.versionCode}"
+        HttpsURLConnection conn = (HttpsURLConnection) url.toURL().openConnection()
         conn.setSSLSocketFactory(createSSLSocketFactory())
         String response = conn.inputStream.getText("UTF-8")
         JSONArray data = new JSONArray(response)
