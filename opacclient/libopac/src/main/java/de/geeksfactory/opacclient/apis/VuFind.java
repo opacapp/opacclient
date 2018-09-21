@@ -1041,16 +1041,41 @@ public class VuFind extends OkHttpBaseApi {
         List<ReservedItem> reserved = new ArrayList<>();
         for (Element record : doc.select("div[id^=record]")) {
             ReservedItem item = new ReservedItem();
-            item.setTitle(record.select(".title").text());
-            item.setAuthor(record.select("a[href*=Author]").text());
-            item.setFormat(record.select(".format").text());
-            // we could also recognize the format through mediaTypeSelectors here
 
-            Node branch =
-                    record.select("strong:contains(Zweigstelle), strong:contains(Pickup library)")
-                          .first().nextSibling();
-            if (branch instanceof TextNode) {
-                item.setBranch(((TextNode) branch).text().trim());
+            if (record.select("a.title").size() > 0) {
+                // smartBib, physical books
+                item.setTitle(record.select("a.title").text());
+                String[] urlParts = record.select("a.title").attr("href").split("/");
+                item.setId(urlParts[urlParts.length - 1]);
+            } else {
+                // smartBib, eBooks
+                Node firstNode = record.select("div").get(2).childNodes().get(0);
+                if (firstNode instanceof TextNode) {
+                    item.setTitle(((TextNode) firstNode).text());
+                }
+            }
+
+            if (record.select("a[href*=Author]").size() > 0) {
+                item.setAuthor(record.select("a[href*=Author]").text());
+            }
+
+            if (record.select(".format").size() > 0) {
+                // smartBib, physical books
+                item.setFormat(record.select(".format").text());
+                // we could also recognize the format through mediaTypeSelectors here
+            } else {
+                // smartBib, eBooks
+                List<Node> nodes = record.select("div").get(2).childNodes();
+                if (nodes.size() >= 3 && nodes.get(2) instanceof TextNode
+                        && ((TextNode) nodes.get(2)).text().contains("Mediengruppe:")) {
+                    item.setFormat(((TextNode) nodes.get(2)).text().replace("Mediengruppe:",
+                            "").trim());
+                }
+            }
+
+            Node branch = record.select("strong:contains(Zweigstelle), strong:contains(Pickup library)").first();
+            if (branch != null && branch.nextSibling() instanceof TextNode) {
+                item.setBranch(((TextNode) branch.nextSibling()).text().trim());
             }
 
             Elements available = record.select(

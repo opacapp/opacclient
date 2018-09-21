@@ -14,6 +14,7 @@ import de.geeksfactory.opacclient.objects.ReservedItem;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
 @RunWith(Parameterized.class)
@@ -62,7 +63,11 @@ public class VuFindAccountTest extends BaseHtmlTest {
         int i = 0;
         for (ReservedItem item : media) {
             assertContainsData(item.getTitle());
-            assertContainsData(item.getBranch());
+            assertContainsData(item.getFormat());
+            if (!item.getFormat().equals("eBook") && !item.getFormat().equals("eAudio")) {
+                assertContainsData(item.getBranch());
+            }
+
             if (file.equals("kreisre.html")) {
                 if (i == 1) {
                     assertEquals("Abholbereit", item.getStatus());
