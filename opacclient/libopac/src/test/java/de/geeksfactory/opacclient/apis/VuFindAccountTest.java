@@ -24,7 +24,7 @@ public class VuFindAccountTest extends BaseHtmlTest {
         this.file = file;
     }
 
-    private static final String[] FILES = new String[]{"kreisre.html"};
+    private static final String[] FILES = new String[]{"kreisre.html", "kreisre-ebook.html"};
 
     @Parameterized.Parameters(name = "{0}")
     public static Collection<String[]> files() {
@@ -45,8 +45,10 @@ public class VuFindAccountTest extends BaseHtmlTest {
             assertContainsData(item.getTitle());
             assertNotNull(item.getDeadline());
             assertContainsData(item.getFormat());
-            assertContainsData(item.getBarcode());
-            assertContainsData(item.getStatus());
+            if (!item.getFormat().equals("eBook") && !item.getFormat().equals("eAudio")) {
+                assertContainsData(item.getBarcode());
+                assertContainsData(item.getStatus());
+            }
         }
     }
 

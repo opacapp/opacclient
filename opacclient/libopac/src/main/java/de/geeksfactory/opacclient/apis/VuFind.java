@@ -1001,8 +1001,10 @@ public class VuFind extends OkHttpBaseApi {
 
                     if (statusAfter) {
                         String[] split = text.split(",");
-                        text = split[0].trim();
-                        item.setStatus(split[1].trim());
+                        if (split.length == 2) {
+                            text = split[0].trim();
+                            item.setStatus(split[1].trim());
+                        }
                     }
 
                     if (type == null) {
