@@ -4,8 +4,10 @@ import de.geeksfactory.opacclient.networking.HttpClientFactory
 import de.geeksfactory.opacclient.objects.*
 import de.geeksfactory.opacclient.searchfields.SearchField
 import de.geeksfactory.opacclient.searchfields.SearchQuery
+import okhttp3.FormBody
+import org.jsoup.Jsoup
 
-class Koha : BaseApi() {
+class Koha : OkHttpBaseApi() {
     protected lateinit var sru: SRU
     protected lateinit var baseurl: String
 
@@ -53,11 +55,24 @@ class Koha : BaseApi() {
     }
 
     override fun account(account: Account): AccountData {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        login(account)
+        return AccountData(account.id)
     }
 
-    override fun checkAccountData(account: Account?) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    override fun checkAccountData(account: Account) {
+        login(account)
+    }
+
+    private fun login(account: Account) {
+        val formBody = FormBody.Builder()
+                .add("koha_login_context", "opac")
+                .add("koha_login_context", "opac")  // sic! two times
+                .add("userid", account.name)
+                .add("password", account.password)
+        val doc = Jsoup.parse(httpPost("$baseurl/cgi-bin/koha/opac-user.pl", formBody.build(), "UTF-8"))
+        if (doc.select(".alert").size > 0) {
+            throw OpacApi.OpacErrorException(doc.select(".alert").text())
+        }
     }
 
     override fun getShareUrl(id: String?, title: String?): String {
@@ -65,15 +80,15 @@ class Koha : BaseApi() {
     }
 
     override fun getSupportFlags(): Int {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        return OpacApi.SUPPORT_FLAG_ENDLESS_SCROLLING
     }
 
-    override fun getSupportedLanguages(): Set<String> {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    override fun getSupportedLanguages(): Set<String>? {
+        return null
     }
 
     override fun setLanguage(language: String?) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+
     }
 
     override fun filterResults(filter: Filter?, option: Filter.Option?): SearchRequestResult {

@@ -70,6 +70,7 @@ dependencies {
     implementation(project(':libopac')) {
         transitive = false
     }
+    implementation "org.jetbrains.kotlin:kotlin-stdlib:1.2.71"
     implementation 'io.sentry:sentry-android:1.7.4'
     implementation 'org.jsoup:jsoup:1.8.3'
     implementation 'com.android.support:design:27.1.1'
