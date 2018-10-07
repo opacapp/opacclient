@@ -7,6 +7,7 @@ import de.geeksfactory.opacclient.searchfields.SearchQuery
 import okhttp3.FormBody
 import org.joda.time.LocalDate
 import org.joda.time.LocalDateTime
+import org.json.JSONObject
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
 import org.jsoup.nodes.Element
@@ -15,11 +16,19 @@ class Koha : OkHttpBaseApi() {
     protected lateinit var sru: SRU
     protected lateinit var baseurl: String
 
-    override fun init(library: Library, http_client_factory: HttpClientFactory) {
-        super.init(library, http_client_factory)
+    override fun init(library: Library, factory: HttpClientFactory) {
+        super.init(library, factory)
         baseurl = library.data.getString("baseurl")
         sru = SRU()
-        // TODO: initialize SRU
+        val sruLibrary = Library().apply {
+            api = "sru"
+            data = JSONObject().apply {
+                put("baseurl", library.data.optString("sru_url", "$baseurl:9999/biblios"))
+                put("sharelink", "{$baseurl}cgi-bin/koha/opac-detail.pl?biblionumber=%s")
+                put("idSearchQuery", "rec:id")
+            }
+        }
+        sru.init(library, factory)
     }
 
     override fun search(query: List<SearchQuery>): SearchRequestResult {
