@@ -1,5 +1,6 @@
 package de.geeksfactory.opacclient.apis
 
+import de.geeksfactory.opacclient.i18n.StringProvider
 import de.geeksfactory.opacclient.networking.HttpClientFactory
 import de.geeksfactory.opacclient.objects.*
 import de.geeksfactory.opacclient.searchfields.SearchField
@@ -15,6 +16,7 @@ import org.jsoup.nodes.Element
 class Koha : OkHttpBaseApi() {
     protected lateinit var sru: SRU
     protected lateinit var baseurl: String
+    protected val NOT_RENEWABLE = "NOT_RENEWABLE"
 
     override fun init(library: Library, factory: HttpClientFactory) {
         super.init(library, factory)
@@ -55,8 +57,22 @@ class Koha : OkHttpBaseApi() {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
-    override fun prolong(media: String?, account: Account, useraction: Int, selection: String?): OpacApi.ProlongResult {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    override fun prolong(media: String, account: Account, useraction: Int, selection: String?): OpacApi.ProlongResult {
+        if (media.startsWith(NOT_RENEWABLE)) {
+            return OpacApi.ProlongResult(OpacApi.MultiStepResult.Status.ERROR, media.substring(NOT_RENEWABLE.length))
+        }
+
+        var doc = login(account)
+        var borrowernumber = doc.select("input[name=borrowernumber]").first()?.attr("value")
+
+        doc = Jsoup.parse(httpGet("$baseurl/cgi-gin/koha/opac-renew.pl?from=opac_user&item=$media&borrowernumber=$borrowernumber", "UTF-8"))
+        val label = doc.select(".blabel").first()
+        if (label != null && label.hasClass("label-success")) {
+            return OpacApi.ProlongResult(OpacApi.MultiStepResult.Status.OK)
+        } else {
+            return OpacApi.ProlongResult(OpacApi.MultiStepResult.Status.ERROR, label?.text()
+                    ?: stringProvider.getString(StringProvider.ERROR))
+        }
     }
 
     override fun prolongAll(account: Account, useraction: Int, selection: String?): OpacApi.ProlongAllResult {
@@ -64,7 +80,20 @@ class Koha : OkHttpBaseApi() {
     }
 
     override fun cancel(media: String, account: Account, useraction: Int, selection: String?): OpacApi.CancelResult {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        login(account)
+
+        val (biblionumber, reserveId) = media.split(":")
+        val formBody = FormBody.Builder()
+                .add("biblionumber", biblionumber)
+                .add("reserve_id", reserveId)
+                .add("submit", "")
+        val doc = Jsoup.parse(httpPost("$baseurl/cgi-bin/koha/opac-modrequest.pl", formBody.build(), "UTF-8"))
+        val input = doc.select("input[name=reserve_id][value=$reserveId]").first()
+        if (input == null) {
+            return OpacApi.CancelResult(OpacApi.MultiStepResult.Status.OK)
+        } else {
+            return OpacApi.CancelResult(OpacApi.MultiStepResult.Status.ERROR, stringProvider.getString(StringProvider.ERROR))
+        }
     }
 
     override fun account(account: Account): AccountData {
@@ -95,7 +124,13 @@ class Koha : OkHttpBaseApi() {
                 val content = col.text()
                 when (type) {
                     "itype" -> item.format = content
-                    "title" -> item.title = content
+                    "title" -> {
+                        item.title = content
+                        val link = col.select("a[href]").first()?.attr("href")
+                        if (link != null) {
+                            item.id = BaseApi.getQueryParamsFirst(link)["biblionumber"]
+                        }
+                    }
                     "date_due" -> if (item is LentItem) item.deadline = parseDate(col)
                     "branch" -> if (item is LentItem) {
                         item.lendingBranch = content
@@ -105,7 +140,17 @@ class Koha : OkHttpBaseApi() {
                     "expirationdate" -> if (item is ReservedItem) item.expirationDate = parseDate(col)
                     "status" -> item.status = content
                     "modify" -> if (item is ReservedItem) {
-                        item.cancelData = col.select("input[name=reserve_id]").attr("value")
+                        item.cancelData = "${col.select("input[name=biblionumber]").attr("value")}:${col.select("input[name=reserve_id]").attr("value")}"
+                    }
+                    "renew" -> if (item is LentItem) {
+                        val input = col.select("input[name=item]").first()
+                        if (input != null) {
+                            item.prolongData = input.attr("value")
+                            item.isRenewable = true
+                        } else {
+                            item.prolongData = NOT_RENEWABLE + content
+                            item.isRenewable = false
+                        }
                     }
                     // "call_no" -> Signatur
                     // "fines" -> Gebühren (Ja/Nein)
