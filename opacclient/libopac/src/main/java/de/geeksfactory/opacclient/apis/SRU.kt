@@ -1,32 +1,22 @@
 package de.geeksfactory.opacclient.apis
 
+import de.geeksfactory.opacclient.i18n.StringProvider
+import de.geeksfactory.opacclient.networking.HttpClientFactory
+import de.geeksfactory.opacclient.objects.*
+import de.geeksfactory.opacclient.objects.Filter.Option
+import de.geeksfactory.opacclient.objects.SearchResult.MediaType
+import de.geeksfactory.opacclient.searchfields.SearchField
+import de.geeksfactory.opacclient.searchfields.SearchQuery
+import de.geeksfactory.opacclient.searchfields.TextSearchField
+import de.geeksfactory.opacclient.utils.ISBNTools
 import org.json.JSONException
 import org.json.JSONObject
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
 import org.jsoup.nodes.Element
 import org.jsoup.parser.Parser
-
 import java.io.IOException
-import java.util.ArrayList
-import java.util.HashMap
-
-import de.geeksfactory.opacclient.i18n.StringProvider
-import de.geeksfactory.opacclient.networking.HttpClientFactory
-import de.geeksfactory.opacclient.objects.Account
-import de.geeksfactory.opacclient.objects.AccountData
-import de.geeksfactory.opacclient.objects.Detail
-import de.geeksfactory.opacclient.objects.DetailedItem
-import de.geeksfactory.opacclient.objects.Filter
-import de.geeksfactory.opacclient.objects.Filter.Option
-import de.geeksfactory.opacclient.objects.Library
-import de.geeksfactory.opacclient.objects.SearchRequestResult
-import de.geeksfactory.opacclient.objects.SearchResult
-import de.geeksfactory.opacclient.objects.SearchResult.MediaType
-import de.geeksfactory.opacclient.searchfields.SearchField
-import de.geeksfactory.opacclient.searchfields.SearchQuery
-import de.geeksfactory.opacclient.searchfields.TextSearchField
-import de.geeksfactory.opacclient.utils.ISBNTools
+import java.util.*
 
 class SRU : ApacheBaseApi(), OpacApi {
 
@@ -237,7 +227,7 @@ class SRU : ApacheBaseApi(), OpacApi {
         return indices.map { index ->
             val title = index.select("> title").text()
             val idElem = index.select("map name[set]").first()
-            val fieldId = "${idElem.attr("set")}:${idElem.text()}"
+            val fieldId = "${idElem.attr("set")}.${idElem.text()}"
 
             val field = TextSearchField().apply {
                 id = fieldId

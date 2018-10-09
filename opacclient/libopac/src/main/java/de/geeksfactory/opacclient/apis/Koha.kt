@@ -28,7 +28,7 @@ class Koha : OkHttpBaseApi() {
                 put("idSearchQuery", "rec:id")
             }
         }
-        sru.init(library, factory)
+        sru.init(sruLibrary, factory)
     }
 
     override fun search(query: List<SearchQuery>): SearchRequestResult {
