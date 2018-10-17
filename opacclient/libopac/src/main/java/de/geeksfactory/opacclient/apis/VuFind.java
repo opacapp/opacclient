@@ -975,7 +975,7 @@ public class VuFind extends OkHttpBaseApi {
             String type = null;
             boolean title = true;
             boolean statusAfter = false;
-            Element dataColumn = record.children().get(1);
+            Element dataColumn = record.select("> div").last();
             for (Node node : dataColumn.childNodes()) {
                 if (node instanceof Element && ((Element) node).tagName().equals("strong")) {
                     Element el = (Element) node;
@@ -1029,8 +1029,12 @@ public class VuFind extends OkHttpBaseApi {
             }
 
             Element checkbox = record.select("input[type=checkbox]").first();
-            item.setProlongData(checkbox.val());
-            item.setRenewable(!checkbox.hasAttr("disabled"));
+            if (checkbox != null) {
+                item.setProlongData(checkbox.val());
+                item.setRenewable(!checkbox.hasAttr("disabled"));
+            } else {
+                item.setRenewable(false);
+            }
 
             lent.add(item);
         }

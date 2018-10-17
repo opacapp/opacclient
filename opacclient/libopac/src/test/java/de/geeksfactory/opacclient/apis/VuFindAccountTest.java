@@ -14,7 +14,6 @@ import de.geeksfactory.opacclient.objects.ReservedItem;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
 @RunWith(Parameterized.class)
@@ -25,7 +24,8 @@ public class VuFindAccountTest extends BaseHtmlTest {
         this.file = file;
     }
 
-    private static final String[] FILES = new String[]{"kreisre.html", "kreisre-ebook.html"};
+    private static final String[] FILES =
+            new String[]{"kreisre.html", "kreisre-ebook.html", "kreisre-ebookonly.html"};
 
     @Parameterized.Parameters(name = "{0}")
     public static Collection<String[]> files() {
