@@ -7,7 +7,7 @@
     <dimen name="card_side_margin_selected">0dp</dimen>
     <dimen name="card_topbottom_margin_default">4dp</dimen>
     <dimen name="card_topbottom_margin_selected">2dp</dimen>
-    <dimen name="navigation_drawer_header_height">120dp</dimen>
+    <dimen name="navigation_drawer_header_height">160dp</dimen>
     <dimen name="list_top_padding">8dp</dimen>
     <dimen name="simple_search_padding">8dp</dimen>
     <dimen name="advanced_search_header_mtop">8dp</dimen>
