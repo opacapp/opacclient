@@ -179,13 +179,13 @@ public class ResultsAdapter extends ArrayAdapter<SearchResult> {
             ivStatus.setVisibility(View.VISIBLE);
             switch (item.getStatus()) {
                 case GREEN:
-                    ivStatus.setImageResource(R.drawable.status_light_green);
+                    ivStatus.setImageResource(R.drawable.status_light_green_check);
                     break;
                 case RED:
-                    ivStatus.setImageResource(R.drawable.status_light_red);
+                    ivStatus.setImageResource(R.drawable.status_light_red_cross);
                     break;
                 case YELLOW:
-                    ivStatus.setImageResource(R.drawable.status_light_yellow);
+                    ivStatus.setImageResource(R.drawable.status_light_yellow_alert);
                     break;
                 case UNKNOWN:
                     ivStatus.setVisibility(View.INVISIBLE);
