@@ -1029,7 +1029,7 @@ public class VuFind extends OkHttpBaseApi {
             }
 
             Element checkbox = record.select("input[type=checkbox]").first();
-            if (checkbox != null) {
+            if (checkbox != null && !"".equals(checkbox.val())) {
                 item.setProlongData(checkbox.val());
                 item.setRenewable(!checkbox.hasAttr("disabled"));
             } else {
