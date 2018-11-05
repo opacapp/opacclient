@@ -1,0 +1,562 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name="Generator" content="VuFind 3.1.3">
+    <title>Ausgeliehene Medien</title>        <!-- RTL styling -->
+    <link href="/themes/bootstrap3/css/vendor/font-awesome.min.css?_=1496746712" media="all"
+          rel="stylesheet" type="text/css">
+    <link href="/themes/smartbib/css/compiled.css?_=1496746712" media="all" rel="stylesheet"
+          type="text/css">
+    <link href="/themes/bootstrap3/css/print.css?_=1496746712" media="print" rel="stylesheet"
+          type="text/css">
+    <link href="/themes/smartbib/css/styles.css?_=1500551910" media="screen, projection"
+          rel="stylesheet" type="text/css">
+    <link href="/themes/bibkreisrededup/css/style_bibkreisrededup.css?_=1527675314" media="all"
+          rel="stylesheet" type="text/css">
+    <link href="/themes/smartbib/images/fav.png" rel="shortcut icon" type="image/x-icon">
+    <link href="/Search/OpenSearch?method=describe" rel="search"
+          type="application/opensearchdescription+xml" title="Bibliothekskatalogsuche">
+    <!--[if lt IE 10]>
+    <script type="text/javascript"
+            src="/themes/bootstrap3/js/vendor/base64.js?_=1496746713"></script><![endif]-->
+    <script type="text/javascript"
+            src="/themes/bootstrap3/js/vendor/jquery.min.js?_=1496746713"></script>
+    <script type="text/javascript"
+            src="/themes/bootstrap3/js/vendor/bootstrap.min.js?_=1496746713"></script>
+    <script type="text/javascript"
+            src="/themes/bootstrap3/js/vendor/bootstrap-accessibility.min.js?_=1496746713"></script>
+    <script type="text/javascript"
+            src="/themes/bootstrap3/js/vendor/validator.min.js?_=1496746713"></script>
+    <script type="text/javascript"
+            src="/themes/bootstrap3/js/autocomplete.js?_=1496746713"></script>
+    <script type="text/javascript" src="/themes/bootstrap3/js/common.js?_=1496746713"></script>
+    <script type="text/javascript" src="/themes/bootstrap3/js/lightbox.js?_=1496746713"></script>
+    <script type="text/javascript"
+            src="/themes/smartbib/js/cookies/cookieconsent.js?_=1495609610"></script>
+    <script type="text/javascript">
+    //<!--
+    var userIsLoggedIn = true;
+    //-->
+
+    </script>
+    <script type="text/javascript">
+    //<!--
+    VuFind.path = '';
+VuFind.defaultSearchBackend = 'Solr';
+VuFind.addTranslations({"add_tag_success": "Schlagwörter gespeichert","bulk_email_success": "Ihre Auswahl wurde per E-Mail verschickt","bulk_noitems_advice": "Es wurde nichts ausgewählt. Klicken Sie bitte in eine Auswahlbox neben einem Eintrag und versuchen Sie es erneut.","bulk_save_success": "Ihre Auswahl wurde erfolgreich gespeichert","close": "schließen","collection_empty": "Keine Inhalte anzuzeigen","error_occurred": "Es ist ein Fehler aufgetreten","go_to_list": "Zurück zur Liste","libphonenumber_invalid": "Ungültige Telefonnummer","libphonenumber_invalidcountry": "Ungültige Landesvorwahl","libphonenumber_invalidregion": "Ungültige Vorwahl:","libphonenumber_notanumber": "Die Eingabe scheint keine Telefonnummer zu sein","libphonenumber_toolong": "Die Eingabe ist zu lang für eine Telefonnummer","libphonenumber_tooshort": "Die Eingabe ist zu kurz für eine Telefonnumer","libphonenumber_tooshortidd": "Die Telefonnumer nach der internationalen Direktwahl ist zu kurz","loading": "wird geladen...","more": "mehr","number_thousands_separator": ".","sms_success": "Nachricht gesendet","Phone number invalid": "Ungültige Telefonnummer","Invalid country calling code": "Ungültige Landesvorwahl","Invalid region code": "Ungültige Vorwahl:","The string supplied did not seem to be a phone number": "Die Eingabe scheint keine Telefonnummer zu sein","The string supplied is too long to be a phone number": "Die Eingabe ist zu lang für eine Telefonnummer","The string supplied is too short to be a phone number": "Die Eingabe ist zu kurz für eine Telefonnumer","Phone number too short after IDD": "Die Telefonnumer nach der internationalen Direktwahl ist zu kurz"});
+    //-->
+
+    </script>
+</head>
+<body class="offcanvas offcanvas-left flip">
+<header class="hidden-print">
+    <div class="container navbar">
+        <a class="sr-only" href="#content">Weiter zum Inhalt</a>
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse"
+                    data-target="#header-collapse">
+                <span class="sr-only">Toggle navigation</span>
+                <i class="fa fa-bars" aria-hidden="true"></i>
+            </button>
+            <!-- <img id="mediensuche" src="/themes/bibkreisrededup/images/OPAC_Skyline.png" width="800" height="60" frameborder="0" />-->
+            <!--a href="/"> <img id="mediensuche" src="/themes/bibkreisrededup/images/OPAC_Skyline.png" width="800" height="60" frameborder="0" /></a-->
+            <!--a class="navbar-brand lang-de" id="mediensuche" href="/"><img id="mediensuche" src="/themes/bibkreisrededup/images/OPAC_Mediensuche_Schriftzug_klein.png" width="200" height="60" frameborder="0" /></a-->
+            <a class="navbar-brand lang-de" id="mediensuche" href="/"><img id="mediensuche"
+                                                                           src="/themes/bibkreisrededup/images/OPAC_Mediensuche_Schriftzug_klein.png"
+                                                                           frameborder="0"/></a>
+        </div>
+
+        <div class="collapse navbar-collapse" id="header-collapse">
+            <nav>
+                <ul role="navigation" class="nav navbar-nav navbar-right flip">
+                    <li class="logoutOptions">
+                        <a href="/MyResearch/Home?redirect=0"><i class="fa fa-home"
+                                                                 aria-hidden="true"></i> Ihr Konto in Dorsten</a>
+                    </li>
+                    <li class="logoutOptions">
+                        <a class=btn-primary href="/MyResearch/Logout" class="logout"><i
+                                class="fa fa-sign-out" aria-hidden="true"></i> Abmelden</a>
+                    </li>
+                    <li id="loginOptions" class="hidden">
+                        <a class=btn-primary href="/MyResearch/UserLogin" data-lightbox><i
+                                class="fa fa-sign-in" aria-hidden="true"></i> Anmelden</a>
+                    </li>
+
+
+                    <li class="language dropdown">
+                        <form method="post" name="langForm" id="langForm">
+                            <input type="hidden" name="mylang"/>
+                        </form>
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">Deutsch <b
+                                class="caret"></b></a>
+                        <ul class="dropdown-menu">
+                            <li><a href="#"
+                                   onClick="document.langForm.mylang.value='en';document.langForm.submit()">English</a>
+                            </li>
+                            <li><a href="#"
+                                   onClick="document.langForm.mylang.value='es';document.langForm.submit()">Español</a>
+                            </li>
+                            <li><a href="#"
+                                   onClick="document.langForm.mylang.value='fr';document.langForm.submit()">Français</a>
+                            </li>
+                            <li><a href="#"
+                                   onClick="document.langForm.mylang.value='it';document.langForm.submit()">Italiano</a>
+                            </li>
+                            <li><a href="#"
+                                   onClick="document.langForm.mylang.value='ja';document.langForm.submit()">日本語</a>
+                            </li>
+                            <li><a href="#"
+                                   onClick="document.langForm.mylang.value='nl';document.langForm.submit()">Nederlands</a>
+                            </li>
+                            <li><a href="#"
+                                   onClick="document.langForm.mylang.value='pt';document.langForm.submit()">Português</a>
+                            </li>
+                            <li><a href="#"
+                                   onClick="document.langForm.mylang.value='pt-br';document.langForm.submit()">Português (Brasil)</a>
+                            </li>
+                            <li><a href="#"
+                                   onClick="document.langForm.mylang.value='zh-cn';document.langForm.submit()">中文(简体)</a>
+                            </li>
+                            <li><a href="#"
+                                   onClick="document.langForm.mylang.value='zh';document.langForm.submit()">中文（繁體）</a>
+                            </li>
+                            <li><a href="#"
+                                   onClick="document.langForm.mylang.value='tr';document.langForm.submit()">Türkçe</a>
+                            </li>
+                            <li><a href="#"
+                                   onClick="document.langForm.mylang.value='he';document.langForm.submit()">עברית</a>
+                            </li>
+                            <li><a href="#"
+                                   onClick="document.langForm.mylang.value='ga';document.langForm.submit()">Gaeilge</a>
+                            </li>
+                            <li><a href="#"
+                                   onClick="document.langForm.mylang.value='cy';document.langForm.submit()">Cymraeg</a>
+                            </li>
+                            <li><a href="#"
+                                   onClick="document.langForm.mylang.value='el';document.langForm.submit()">Ελληνικά</a>
+                            </li>
+                            <li><a href="#"
+                                   onClick="document.langForm.mylang.value='ca';document.langForm.submit()">Català</a>
+                            </li>
+                            <li><a href="#"
+                                   onClick="document.langForm.mylang.value='eu';document.langForm.submit()">Euskara</a>
+                            </li>
+                            <li><a href="#"
+                                   onClick="document.langForm.mylang.value='ru';document.langForm.submit()">Русский</a>
+                            </li>
+                            <li><a href="#"
+                                   onClick="document.langForm.mylang.value='cs';document.langForm.submit()">čeština</a>
+                            </li>
+                            <li><a href="#"
+                                   onClick="document.langForm.mylang.value='fi';document.langForm.submit()">Suomi</a>
+                            </li>
+                            <li><a href="#"
+                                   onClick="document.langForm.mylang.value='sv';document.langForm.submit()">Svenska</a>
+                            </li>
+                            <li><a href="#"
+                                   onClick="document.langForm.mylang.value='pl';document.langForm.submit()">polski</a>
+                            </li>
+                            <li><a href="#"
+                                   onClick="document.langForm.mylang.value='da';document.langForm.submit()">Dansk</a>
+                            </li>
+                            <li><a href="#"
+                                   onClick="document.langForm.mylang.value='sl';document.langForm.submit()">slovenščina</a>
+                            </li>
+                            <li><a href="#"
+                                   onClick="document.langForm.mylang.value='ar';document.langForm.submit()">اللغة العربية</a>
+                            </li>
+                            <li><a href="#"
+                                   onClick="document.langForm.mylang.value='bn';document.langForm.submit()">বাংলা</a>
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+        <section class="visible-lg">
+            <form class="searchForm navbar-form navbar-left flip" method="get"
+                  action="/Search/Results" name="searchForm" autocomplete="off">
+                <input class="searchForm_lookfor form-control search-query" type="text"
+                       name="lookfor" value=""/>
+                <select class="searchForm_type form-control" name="type" data-native-menu="false"
+                        onchange="this.form.submit()">
+
+                    <option value="AllLibraries">Alle Bibliotheken</option>
+
+                    <option value="CAST">Castrop-Rauxel</option>
+
+                    <option value="DATT">Datteln</option>
+
+                    <option value="DORS">Dorsten</option>
+
+                    <option value="GLAD">Gladbeck</option>
+
+                    <option value="VERB">Haltern Marl Recklinghausen</option>
+
+                    <option value="HERT">Herten</option>
+
+                    <option value="OERE">Oer-Erkenschwick</option>
+                </select>
+                <button type="submit" class="btn btn-primary"><i class="fa fa-search"
+                                                                 aria-hidden="true"></i> suchen
+                </button>
+                <a href="/Search/Advanced" class="btn btn-link" rel="nofollow">Profisuche</a>
+
+            </form>
+            <script type="text/javascript">$(".searchForm_lookfor:visible").focus()</script>
+        </section>
+    </div>
+    <div class="container">
+        <nav class="nav searchbox hidden-lg hidden-print">
+            <form class="searchForm navbar-form navbar-left flip" method="get"
+                  action="/Search/Results" name="searchForm" autocomplete="off">
+                <input class="searchForm_lookfor form-control search-query" type="text"
+                       name="lookfor" value=""/>
+                <select class="searchForm_type form-control" name="type" data-native-menu="false"
+                        onchange="this.form.submit()">
+
+                    <option value="AllLibraries">Alle Bibliotheken</option>
+
+                    <option value="CAST">Castrop-Rauxel</option>
+
+                    <option value="DATT">Datteln</option>
+
+                    <option value="DORS">Dorsten</option>
+
+                    <option value="GLAD">Gladbeck</option>
+
+                    <option value="VERB">Haltern Marl Recklinghausen</option>
+
+                    <option value="HERT">Herten</option>
+
+                    <option value="OERE">Oer-Erkenschwick</option>
+                </select>
+                <button type="submit" class="btn btn-primary"><i class="fa fa-search"
+                                                                 aria-hidden="true"></i> suchen
+                </button>
+                <a href="/Search/Advanced" class="btn btn-link" rel="nofollow">Profisuche</a>
+
+            </form>
+            <script type="text/javascript">$(".searchForm_lookfor:visible").focus()</script>
+        </nav>
+        <ul class="breadcrumb hidden-print">
+            <li><a href="/MyResearch/Home">Ihr Konto</a></li>
+            <li class="active">Ausgeliehene Medien</li>
+        </ul>
+    </div>
+</header>
+<div role="main" class="main template-dir-myresearch template-name-checkedout">
+    <div id="content" class="container">
+
+        <div class="row">
+            <div class="col-sm-9 col-sm-push-3">
+
+                <!-- displaying message in case the account not valid -->
+                <div style="background:white">
+                    <h3 style="color:red;">
+                        <center>
+                </div>
+
+                <h2>Ihre ausgeliehenen Medien</h2>
+                <p>Bitte beachten Sie, dass bei der Vorbestellung von Medien und bei der Verlängerung der Ausleihfrist von Medien Gebühren anfallen können</p>
+
+
+                <!--        --><!--        --><!--        --><!--        --><!--            <div class="alert alert-danger">--><!--</div>-->
+                <!--        --><!--            <div class="alert alert-danger">--><!--</div>-->
+                <!--        --><!--            <div class="alert alert-danger">--><!--</div>-->
+                <!--        -->
+
+                <form name="renewals" method="post" id="renewals">
+                    <div class="toolbar">
+                        <div class="checkbox">
+                            <label>
+                                <input type="checkbox" name="selectAll"
+                                       class="checkbox-select-all"/>
+                                Alles auswählen |
+                            </label>
+                            <input type="submit" class="btn btn-default" id="renewSelected"
+                                   name="renewSelected"
+                                   value="Verlängern"/>
+                            <!--input type="submit" class="btn btn-default" id="renewAll" name="renewAll"
+                                   value="?= $this->transEsc('renew_all') ?"/-->
+                        </div>
+                    </div>
+
+
+                    <br/>
+                    <hr style="margin:2px"/>
+                    <div id="record" class="row result">
+                        <div class="col-xs-1">
+                            <input class="checkbox-select-item" type="checkbox"
+                                   name="renewSelectedIDS[]"
+                                   value="0138266001"
+                                   id="checkbox_0138266001"/>
+                            <input type="hidden" name="selectAllIDS[]"
+                                   value="0138266001"/>
+                            <input type="hidden" name="renewAllIDS[]"
+                                   value="0138266001"/>
+                        </div>
+
+
+                        <div class="col-sm-9">
+
+                            <strong>Tischdekorationen - Frühling und Ostern</strong><br/>
+
+
+                            <!--2 mal branch_long statt branch-->
+                            <strong>Zweigstelle :</strong> Dorsten,
+
+                            <strong>Medientyp :</strong> Weihnachten/Ostern,
+
+                            <strong>Buchungsnummer :</strong> 33011288,
+
+
+                            Entliehen,
+
+
+                            <strong>Bis 18.09.2018</strong>
+
+                        </div>
+                    </div>
+                    <hr style="margin:2px"/>
+                    <div id="record" class="row result">
+                        <div class="col-xs-1">
+                            <input class="checkbox-select-item_disabled" type="checkbox"
+                                   name="renewSelectedIDS_disabled[]"
+                                   value="0172663002"
+                                   id="checkbox_0172663002" disabled="true"/>
+                            <input type="hidden" name="selectAllIDS_disabled[]"
+                                   value="0172663002"/>
+                            <input type="hidden" name="renewAllIDS_disabled[]"
+                                   value="0172663002"/>
+                        </div>
+
+
+                        <div class="col-sm-9">
+
+                            <strong>Stop the Clocks - Greatest Hits</strong> [Oasis]<br/>
+
+
+                            <!--2 mal branch_long statt branch-->
+                            <strong>Zweigstelle :</strong> Dorsten,
+
+                            <strong>Medientyp :</strong> Beilage Frist 14 Ta,
+
+                            <strong>Buchungsnummer :</strong> 47060923,
+
+
+                            Entliehen,
+
+
+                            <strong>Bis 25.09.2018</strong>
+
+                            <div class="alert-renew">Das Exemplar kann noch nicht verlängert werden! Das neue Abgabedatum würde das Alte nicht überschreiten.</div>
+                        </div>
+                    </div>
+                    <hr style="margin:2px"/>
+                    <div id="record" class="row result">
+                        <div class="col-xs-1">
+                            <input class="checkbox-select-item_disabled" type="checkbox"
+                                   name="renewSelectedIDS_disabled[]"
+                                   value="0170031001"
+                                   id="checkbox_0170031001" disabled="true"/>
+                            <input type="hidden" name="selectAllIDS_disabled[]"
+                                   value="0170031001"/>
+                            <input type="hidden" name="renewAllIDS_disabled[]"
+                                   value="0170031001"/>
+                        </div>
+
+
+                        <div class="col-sm-9">
+
+                            <strong>Hoppel-Ich</strong><br/>
+
+
+                            <!--2 mal branch_long statt branch-->
+                            <strong>Zweigstelle :</strong> Dorsten,
+
+                            <strong>Medientyp :</strong> Roman,
+
+                            <strong>Buchungsnummer :</strong> 37008834,
+
+
+                            Entliehen,
+
+
+                            <strong>Bis 09.10.2018</strong>
+
+                            <div class="alert-renew">Das Exemplar kann noch nicht verlängert werden! Das neue Abgabedatum würde das Alte nicht überschreiten.</div>
+                        </div>
+                    </div>
+                    <hr style="margin:2px"/>
+                    <div id="record" class="row result">
+                        <div class="col-xs-1">
+                            <input class="checkbox-select-item_disabled" type="checkbox"
+                                   name="renewSelectedIDS_disabled[]"
+                                   value="0236233001"
+                                   id="checkbox_0236233001" disabled="true"/>
+                            <input type="hidden" name="selectAllIDS_disabled[]"
+                                   value="0236233001"/>
+                            <input type="hidden" name="renewAllIDS_disabled[]"
+                                   value="0236233001"/>
+                        </div>
+
+
+                        <div class="col-sm-9">
+
+                            <strong>Wer legt das schönste Ei?</strong><br/>
+
+
+                            <!--2 mal branch_long statt branch-->
+                            <strong>Zweigstelle :</strong> Dorsten,
+
+                            <strong>Medientyp :</strong> Kinderliteratur,
+
+                            <strong>Buchungsnummer :</strong> 43019112,
+
+
+                            Entliehen,
+
+
+                            <strong>Bis 09.10.2018</strong>
+
+                            <div class="alert-renew">Das Exemplar kann noch nicht verlängert werden! Das neue Abgabedatum würde das Alte nicht überschreiten.</div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+
+            <div class="sidebar col-sm-3 col-sm-pull-9 hidden-print">
+                <h4>Ihr Konto</h4>
+                <div class="list-group">
+                    <a href="/MyResearch/CheckedOut" class="list-group-item active">
+                        <i class="fa fa-fw fa-book" aria-hidden="true"></i> Ausgeliehene Medien : 4
+                    </a>
+                    <a href="/MyResearch/Holds" class="list-group-item">
+                        <i class="fa fa-fw fa-flag" aria-hidden="true"></i> Vorbestellungen : 0 </a>
+                    <a href="/MyResearch/Fines" class="list-group-item">
+                        <i class="fa fa-fw fa-usd" aria-hidden="true"></i> Gebühren : 0,00 €
+                    </a>
+                    <a href="/MyResearch/Profile" class="list-group-item">
+                        <i class="fa fa-fw fa-user" aria-hidden="true"></i> Persönliche Angaben </a>
+                    <a href="/Search/History?require_login" class="list-group-item">
+                        <i class="fa fa-fw fa-search"
+                           aria-hidden="true"></i> Ihre gespeicherten Suchen </a>
+                    <a href="/MyResearch/Logout" class="list-group-item">
+                        <i class="fa fa-fw fa-sign-out" aria-hidden="true"></i> Abmelden </a>
+                </div>
+                <h4>Voreinstellungen</h4>
+                <div class="list-group">
+                    <a href="/MyResearch/ChangePassword" class="list-group-item">
+                        <i class="fa fa-fw fa-lock" aria-hidden="true"></i> Passwort ändern </a>
+                </div>
+                <h4>Ihre Listen</h4>
+                <div class="list-group">
+                    <a href="/MyResearch/Favorites" class="list-group-item">
+                        <i class="fa fa-fw fa-star" aria-hidden="true"></i> Ihre Favoriten </a>
+                    <a href="/MyResearch/MyList/20" class="list-group-item">
+                        Meine Favoriten <span class="badge">2</span>
+                    </a>
+                    <a href="/MyResearch/EditList/NEW" class="list-group-item">
+                        <i class="fa fa-fw fa-plus" aria-hidden="true"></i> Eine Liste erstellen
+                    </a>
+                </div>
+                <h4 class="list">Ausweisinformationen</h4>
+                <ul class="nav nav-list">
+                    <li><a class="list-group-item"> Ausweis : xxxxxxx </a></li>
+                    <li><a class="list-group-item"> Gültig bis : 31.12.2020 </a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+<footer class="hidden-print">
+    <div class="container">
+        <hr/>
+        <div class="row">
+            <div class="col-sm-3">
+                <ul>
+                    <li><a class="small"
+                           href="/Search/Results?filter[]=sta2:&quot;Neuerscheinungen&quot;">Neu in den Bibliotheken</a>
+                    </li>
+                    <li><a class="small" href="/Search/Advanced">Profisuche</a></li>
+                    <li><a class="small" href="/Help/Home?topic=search&amp;_=1536670142"
+                           data-lightbox class="help-link">Suchtipps</a></li>
+                    <li><a class="small" href="/Alphabrowse/Home">Alphabetisch suchen</a></li>
+                    <li><a class="small" href="/Search/History">Mein Suchverlauf</a></li>
+                </ul>
+            </div>
+
+            <div class="col-sm-3">
+                <ul>
+                    <li><a class="small" href="/">Startseite</a></li>
+                    <li><a class="small" href="/UeberUns/Home" title="Über uns">Über uns</a></li>
+                    <li><a class="small" href="/Homepages/Home"
+                           title="Homepages">Homepages Ihrer Bibliotheken</a></li>
+                    <li><a class="small"
+                           href="https://digiauskunft.digibib.net/onleihe/reckl/anfrage.html"
+                           target=blank>Kontakt</a></li>
+                    <li><a class="small" href="/Vorschlag/Home"
+                           title="Medien vorschlagen">Medien vorschlagen</a></li>
+                    <!-- <li><a class="small" href="/Browse/Home">Katalog durchsuchen</a></li> -->
+                    <!-- <li><a class="small" href="/Search/NewItem">Neu in den Bibliotheken</a></li>-->
+                </ul>
+            </div>
+
+            <div class="col-sm-3">
+                <ul>
+                    <!--<li><a class="small" href="https://www.bibliothek-digital.de/kreisre" >Onleihe im Kreis RE</a></li>-->
+                    <li><a class="small" href="http://www3.onleihe.de/kreisre"
+                           target=blank>Onleihe im Kreis RE</a></li>
+                    <!--li><a class="small" href="https://www.digibib.net/template/search?SID=MASTER:f3f3a036136edb939516134dd2e2cad4&LOCATION=RECKL" target=blank>DigiBib</a></li-->
+                    <li><a class="small" href="https://www.digibib.net/Digibib?LOCATION=RECKL"
+                           target=blank>DigiBib</a></li>
+                    <li><a class="small"
+                           href="https://edmond.edupool.de/home?pid=21i1khd34bb2mhcnr1qmmbkh41&standort=RE"
+                           target=blank>Medienzentrum Kreis RE</a></li>
+                    <li><a class="small" href="/Impressum/Home" title="Impressum">Impressum</a></li>
+                    <!--<li><a class="small" href="">Impressum</a></li>-->
+
+                    <li><a class="small"
+                           href="https://www.gkd-re.de/Inhalte/Start/Datenschutzerklaerung/index.asp"
+                           target=blank title="Datenschutzvereinbarung">Datenschutzvereinbarung</a>
+                    </li>
+                    <!--<li><a class="small" href="/Datenschutz/Home" title="Datenschutzvereinbarung">Datenschutzvereinbarung</a></li>-->
+                </ul>
+            </div>
+
+            <div class="col-sm-3">
+                <p>gefördert vom</p>
+                <img src="/themes/bibkreisrededup/images/MKW_AK_Farbig_RGB.png"/>
+                Hosted by </br><b id="gkdgreen">GKD</b> Recklinghausen
+            </div>
+
+        </div>
+
+        <br clear="all">
+        <div class="smartbib-footer"><a href="https://www.subkom.de/smartbib/" target="_new"
+                                        title="smartBib Discovery System"> <img
+                src="/themes/bibkreisrededup/images/smartBibklein.png" style="margin-top: -20px;"/></a> powered by VuFind and
+            <a href="https://www.subkom.de/" target="_new">subkom Software GmbH</a></div>
+    </div>
+</footer>
+<!-- MODAL IN CASE WE NEED ONE -->
+<div id="modal" class="modal fade hidden-print" tabindex="-1" role="dialog"
+     aria-labelledby="modalTitle" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;
+            </button>
+            <div class="modal-body">wird geladen......</div>
+        </div>
+    </div>
+</div>
+<div class="offcanvas-toggle" data-toggle="offcanvas"><i class="fa"
+                                                         title="Seitenleiste einblenden"></i></div>
+<div class="offcanvas-overlay" data-toggle="offcanvas"></div>
+</body>
+</html>

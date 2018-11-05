@@ -432,10 +432,11 @@ public class StarredFragment extends Fragment implements
                                 !dataSource.isStarred(bib, entry.getString(JSON_ITEM_MNR)) ||
                                 !entry.has(JSON_ITEM_MNR) && !dataSource.isStarredTitle(bib,
                                         entry.getString(JSON_ITEM_TITLE))) { //disallow dupes
+                            String mediatype = entry.optString(JSON_ITEM_MEDIATYPE, null);
                             dataSource.star(entry.optString(JSON_ITEM_MNR),
                                     entry.getString(JSON_ITEM_TITLE), bib,
-                                    SearchResult.MediaType
-                                            .valueOf(entry.getString(JSON_ITEM_MEDIATYPE)));
+                                    mediatype != null ? SearchResult.MediaType.valueOf(mediatype) :
+                                            null);
                         }
                     }
                     adapter.notifyDataSetChanged();

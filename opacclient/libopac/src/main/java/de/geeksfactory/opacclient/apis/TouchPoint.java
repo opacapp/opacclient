@@ -768,6 +768,15 @@ public class TouchPoint extends ApacheBaseApi implements OpacApi {
                     result.setReservable(true);
                     result.setReservation_info(reservationDoc.select("a")
                                                              .first().attr("abs:href"));
+                } else if (reservationDoc.select("form[action*=requestItem.do]").size() == 1) {
+                    // seen at UB Erlangen-Nürnberg
+                    result.setReservable(true);
+                    List<NameValuePair> nvps = new ArrayList<>();
+                    Element form = reservationDoc.select("form[action*=requestItem.do]").first();
+                    for (Element input : form.select("input[type=hidden]")) {
+                        nvps.add(new BasicNameValuePair(input.attr("name"), input.val()));
+                    }
+                    result.setReservation_info(form.absUrl("action") + buildHttpGetParams(nvps));
                 }
             } catch (Exception e) {
                 e.printStackTrace();

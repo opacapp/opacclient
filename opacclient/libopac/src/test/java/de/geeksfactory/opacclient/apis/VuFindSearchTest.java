@@ -28,7 +28,8 @@ public class VuFindSearchTest extends BaseHtmlTest {
     }
 
     private static final String[] FILES =
-            new String[]{"muenster_volumes.html", "muenster_copies.html"};
+            new String[]{"muenster_volumes.html", "muenster_copies.html", "kreisre_volumes.html",
+                    "kreisre_copies.html"};
 
     @Parameterized.Parameters(name = "{0}")
     public static Collection<String[]> files() {
@@ -43,8 +44,12 @@ public class VuFindSearchTest extends BaseHtmlTest {
     public void testParseDetail()
             throws OpacApi.OpacErrorException, JSONException, NotReachableException {
         String html = readResource("/vufind/result_detail/" + file);
+        String htmlDesc =
+                readResource("/vufind/result_detail/" + file.replace(".html", "_desc.html"));
+
         if (html == null) return; // we may not have all files for all libraries
-        DetailedItem result = VuFind.parseDetail("0", Jsoup.parse(html), getData(file));
+        DetailedItem result = VuFind.parseDetail("0", Jsoup.parse(html), getData(file),
+                htmlDesc != null ? Jsoup.parse(htmlDesc) : null);
         for (Copy copy : result.getCopies()) {
             assertContainsData(copy.getStatus());
             assertNullOrNotEmpty(copy.getBarcode());
@@ -77,6 +82,9 @@ public class VuFindSearchTest extends BaseHtmlTest {
                         "            \"status\": 4\n" +
                         "        }\n" +
                         "    }");
+            case "kreisre_volumes.html":
+            case "kreisre_copies.html":
+                return new JSONObject(("{\"copystyle\":\"smartbib\"}"));
         }
         return null;
     }
@@ -87,6 +95,10 @@ public class VuFindSearchTest extends BaseHtmlTest {
                 return "brand eins : 2014 ; Wirtschaftsmagazin";
             case "muenster_copies.html":
                 return "Brand : Roman";
+            case "kreisre_volumes.html":
+                return "Test 2017 :";
+            case "kreisre_copies.html":
+                return "Der 4-Farben-Mensch : der Weg zum inneren Gleichgewicht";
         }
         return null;
     }
