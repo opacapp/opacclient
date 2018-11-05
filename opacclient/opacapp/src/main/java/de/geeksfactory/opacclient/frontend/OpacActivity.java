@@ -32,18 +32,6 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.preference.PreferenceManager;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.android.material.navigation.NavigationView;
-import androidx.core.app.ActivityOptionsCompat;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentTransaction;
-import androidx.core.view.ViewCompat;
-import androidx.drawerlayout.widget.DrawerLayout;
-import androidx.appcompat.app.ActionBarDrawerToggle;
-import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
 import android.transition.TransitionInflater;
 import android.util.DisplayMetrics;
 import android.view.Gravity;
@@ -63,11 +51,24 @@ import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.navigation.NavigationView;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
 import java.util.Map;
 
+import androidx.appcompat.app.ActionBarDrawerToggle;
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import androidx.core.app.ActivityOptionsCompat;
+import androidx.core.view.ViewCompat;
+import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 import de.geeksfactory.opacclient.OpacClient;
 import de.geeksfactory.opacclient.R;
 import de.geeksfactory.opacclient.objects.Account;
@@ -663,8 +664,8 @@ public abstract class OpacActivity extends AppCompatActivity
     protected void setFabVisible(boolean visible) {
         fabVisible = visible;
         if (isTablet()) {
-            fab.setVisibility(visible ? View.VISIBLE : View.GONE);
             if (visible) {
+                fab.show();
                 DisplayMetrics displayMetrics = getResources().getDisplayMetrics();
 
                 float density = getResources().getDisplayMetrics().density;
@@ -684,6 +685,8 @@ public abstract class OpacActivity extends AppCompatActivity
                     ViewCompat.setElevation(fab, 12 * density);
                 }
                 fab.setLayoutParams(params);
+            } else {
+                fab.hide();
             }
         }
     }
