@@ -58,7 +58,9 @@
         "Code systematique",
         "Signatur(alt)",
         "Signatur UB",
-        "DK/Signatur"
+        "DK/Signatur",
+        "Call number",
+        "Cote"
     ],
     "PUBLISHER": [
         "Verlag",
@@ -95,7 +97,10 @@
         "Mediencode",
         "Identifikations-Nummer",
         "Buchungsnr.",
-        "ID-Nummer"
+        "ID-Nummer",
+        "Exemplarnr.",
+        "Item number",
+        "No d'exemplaire"
     ],
     "KEYWORD": [
         "Schlagwort",
@@ -127,7 +132,8 @@
         "Schlagwort lokal",
         "Thema (Schlagwortkette)",
         "schlagwort",
-        "Musik-Schlagwort"
+        "Musik-Schlagwort",
+        "Schlagwort/Stoffkreis"
     ],
     "AUTHOR": [
         "Autor",
@@ -171,6 +177,7 @@
         "Autor / Verfasser / Person",
         "AutorIn",
         "Person (nur 1)",
+        "Autor/Musikgruppe",
         "Auteur"
     ],
     "FREE": [
@@ -197,6 +204,7 @@
         "alle (außer Notation)",
         "Suchwort",
         "[ALW]",
+        "Suche über alle Felder",
         "Bibliothekskatalog"
     ],
     "AVAILABLE": [
