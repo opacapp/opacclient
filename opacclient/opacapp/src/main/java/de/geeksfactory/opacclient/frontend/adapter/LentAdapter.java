@@ -69,6 +69,9 @@ public class LentAdapter extends AccountAdapter<LentItem, LentAdapter.ViewHolder
                 builder.append(Html.fromHtml(item.getStatus()));
             }
             setTextOrHide(builder, tvStatus);
+            if (item.getHomeBranch() != null) {
+                setTextOrHide(Html.fromHtml(item.getHomeBranch()), tvBranch);
+            }
 
             // Color codes for return dates
             if (item.getDeadline() != null) {

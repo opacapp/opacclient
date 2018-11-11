@@ -71,6 +71,7 @@ public abstract class AccountAdapter<I extends AccountItem, VH extends AccountAd
         protected Context context;
         public TextView tvTitleAndAuthor;
         protected TextView tvStatus;
+        protected TextView tvBranch;
         protected View vStatusColor;
         protected ImageButton ivProlong;
         protected ImageButton ivDownload;
@@ -88,6 +89,7 @@ public abstract class AccountAdapter<I extends AccountItem, VH extends AccountAd
             this.context = itemView.getContext();
             tvTitleAndAuthor = (TextView) itemView.findViewById(R.id.tvTitleAndAuthor);
             tvStatus = (TextView) itemView.findViewById(R.id.tvStatus);
+            tvBranch = (TextView) itemView.findViewById(R.id.tvBranch);
             vStatusColor = itemView.findViewById(R.id.vStatusColor);
             ivProlong = (ImageButton) itemView.findViewById(R.id.ivProlong);
             ivDownload = (ImageButton) itemView.findViewById(R.id.ivDownload);
