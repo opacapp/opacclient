@@ -45,19 +45,24 @@ class Koha : OkHttpBaseApi() {
         val totalResults = Regex("\\d+").findAll(countText).last().value.toInt()
 
         val results = doc.select(".searchresults table tr").map { row ->
-            val titleA = row.select("a.title").first()
-            val title = titleA.ownText()
-            val biblionumber = Regex("biblionumber=([^&]+)").find(titleA["href"])!!.groupValues[1]
-            val author = row.select(".author").first()?.text
-            var summary = row.select(".results_summary").first()?.text
-            if (summary != null) {
-                summary = summary.split(" | ").dropLast(1).joinToString(" | ")
-            }
-            val mediatypeImg = row.select(".materialtype").first()?.attr("src")?.split("/")?.last()?.removeSuffix(".png")
+
+
             SearchResult().apply {
                 cover = row.select(".coverimages img").first()?.attr("src")
+
+                val titleA = row.select("a.title").first()
+                val biblionumber = Regex("biblionumber=([^&]+)").find(titleA["href"])!!.groupValues[1]
                 id = biblionumber
+
+                val title = titleA.ownText()
+                val author = row.select(".author").first()?.text
+                var summary = row.select(".results_summary").first()?.text
+                if (summary != null) {
+                    summary = summary.split(" | ").dropLast(1).joinToString(" | ")
+                }
                 innerhtml = "<b>$title</b><br>${author ?: ""}<br>${summary ?: ""}"
+
+                val mediatypeImg = row.select(".materialtype").first()?.attr("src")?.split("/")?.last()?.removeSuffix(".png")
                 type = mediatypes[mediatypeImg]
             }
         }
@@ -170,11 +175,30 @@ class Koha : OkHttpBaseApi() {
     }
 
     override fun getResultById(id: String, homebranch: String?): DetailedItem {
-        return DetailedItem()
+        val doc = httpGet("$baseurl/cgi-bin/koha/opac-detail.pl?biblionumber=$id", ENCODING).html
+
+        return DetailedItem().apply {
+            title = doc.select("h1.title").first().ownText()
+            this.id = id
+
+            doc.select("h5.author, span.results_summary").forEach { row ->
+                val title = row.text.split(":").first()
+                val value = row.text.split(":").drop(1).joinToString(":")
+                addDetail(Detail(title, value))
+            }
+
+            val mediatypeImg = doc.select(".materialtype").first()?.attr("src")?.split("/")?.last()?.removeSuffix(".png")
+            mediaType = mediatypes[mediatypeImg]
+
+            cover = doc.select("#bookcover img").first()?.attr("src")
+
+            //TODO: copies
+        }
     }
 
-    override fun getResult(position: Int): DetailedItem {
-        return DetailedItem()
+    override fun getResult(position: Int): DetailedItem? {
+        // Should not be called because every media has an ID
+        return null
     }
 
     override fun reservation(item: DetailedItem, account: Account, useraction: Int, selection: String?): OpacApi.ReservationResult {
@@ -310,7 +334,7 @@ class Koha : OkHttpBaseApi() {
     }
 
     override fun getShareUrl(id: String?, title: String?): String {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        return "$baseurl/cgi-bin/koha/opac-detail.pl?biblionumber=$id"
     }
 
     override fun getSupportFlags(): Int {
