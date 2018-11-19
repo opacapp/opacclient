@@ -1055,6 +1055,10 @@ public class Open extends OkHttpBaseApi implements OpacApi {
         // .getBytes is an implicit, undeclared UTF-8 conversion, this seems to work -- at least
         // in Bern
 
+        // Remove nested forms
+        form.select("form").remove();
+        form = ((FormElement) Jsoup.parse(form.outerHtml()).select("form").get(0));
+
         // iterate the form control elements and accumulate their values
         for (Element el : form.elements()) {
             if (!el.tag().isFormSubmittable()) {
