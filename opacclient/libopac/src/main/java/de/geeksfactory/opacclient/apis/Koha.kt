@@ -3,9 +3,12 @@ package de.geeksfactory.opacclient.apis
 import de.geeksfactory.opacclient.i18n.StringProvider
 import de.geeksfactory.opacclient.networking.HttpClientFactory
 import de.geeksfactory.opacclient.objects.*
-import de.geeksfactory.opacclient.searchfields.SearchField
-import de.geeksfactory.opacclient.searchfields.SearchQuery
+import de.geeksfactory.opacclient.searchfields.*
+import de.geeksfactory.opacclient.utils.get
+import de.geeksfactory.opacclient.utils.html
+import de.geeksfactory.opacclient.utils.text
 import okhttp3.FormBody
+import okhttp3.HttpUrl
 import org.joda.time.LocalDate
 import org.joda.time.LocalDateTime
 import org.json.JSONObject
@@ -14,43 +17,164 @@ import org.jsoup.nodes.Document
 import org.jsoup.nodes.Element
 
 class Koha : OkHttpBaseApi() {
-    protected lateinit var sru: SRU
     protected lateinit var baseurl: String
     protected val NOT_RENEWABLE = "NOT_RENEWABLE"
+    protected var searchQuery: List<SearchQuery>? = null
 
     override fun init(library: Library, factory: HttpClientFactory) {
         super.init(library, factory)
         baseurl = library.data.getString("baseurl")
-        sru = SRU()
-        val sruLibrary = Library().apply {
-            api = "sru"
-            data = JSONObject().apply {
-                put("baseurl", library.data.optString("sru_url", "$baseurl:9999/biblios"))
-                put("sharelink", "{$baseurl}cgi-bin/koha/opac-detail.pl?biblionumber=%s")
-                put("idSearchQuery", "rec:id")
-            }
-        }
-        sru.init(sruLibrary, factory)
     }
 
     override fun search(query: List<SearchQuery>): SearchRequestResult {
-        return sru.search(query)
+        this.searchQuery = query
+        val builder = searchUrl(query)
+        val doc = httpGet(builder.build().toString(), ENCODING).html
+        return parseSearch(doc, 1)
     }
 
+    private val mediatypes = mapOf(
+            "book" to SearchResult.MediaType.BOOK,
+            "film" to SearchResult.MediaType.MOVIE,
+            "sound" to SearchResult.MediaType.CD_MUSIC,
+            "newspaper" to SearchResult.MediaType.MAGAZINE
+    )
+
+    private fun parseSearch(doc: Document, page: Int): SearchRequestResult {
+        val countText = doc.select("#numresults").first().text
+        val totalResults = Regex("\\d+").findAll(countText).last().value.toInt()
+
+        val results = doc.select(".searchresults table tr").map { row ->
+            val titleA = row.select("a.title").first()
+            val title = titleA.ownText()
+            val biblionumber = Regex("biblionumber=([^&]+)").find(titleA["href"])!!.groupValues[1]
+            val author = row.select(".author").first()?.text
+            var summary = row.select(".results_summary").first()?.text
+            if (summary != null) {
+                summary = summary.split(" | ").dropLast(1).joinToString(" | ")
+            }
+            val mediatypeImg = row.select(".materialtype").first()?.attr("src")?.split("/")?.last()?.removeSuffix(".png")
+            SearchResult().apply {
+                cover = row.select(".coverimages img").first()?.attr("src")
+                id = biblionumber
+                innerhtml = "<b>$title</b><br>${author ?: ""}<br>${summary ?: ""}"
+                type = mediatypes[mediatypeImg]
+            }
+        }
+
+        return SearchRequestResult(results, totalResults, page)
+    }
+
+    private fun searchUrl(query: List<SearchQuery>): HttpUrl.Builder {
+        val builder = HttpUrl.parse("$baseurl/cgi-bin/koha/opac-search.pl")!!.newBuilder()
+        for (q in query) {
+            if (q.value.isBlank()) continue
+
+            if (q.searchField is TextSearchField) {
+                builder.addQueryParameter("idx", q.key)
+                builder.addQueryParameter("q", q.value)
+            } else if (q.searchField is DropdownSearchField) {
+                builder.addQueryParameter(q.searchField.data!!.getString("id"), q.value)
+            } else if (q.searchField is CheckboxSearchField) {
+                if (q.value!!.toBoolean()) {
+                    builder.addQueryParameter("limit", q.key)
+                }
+            }
+        }
+        return builder
+    }
+
+    private val ENCODING = "UTF-8"
+
     override fun parseSearchFields(): List<SearchField> {
-        return sru.parseSearchFields()
+        val doc = httpGet("$baseurl/cgi-bin/koha/opac-search.pl", ENCODING).html
+
+        // free search field
+        val freeSearchField = TextSearchField().apply {
+            id = "kw,wrdl"
+            displayName = "Bibliothekskatalog"
+        }
+
+        // text fields
+        val options = doc.select("#search-field_0").first().select("option")
+        val textFields = options.map { o ->
+            TextSearchField().apply {
+                id = o["value"]
+                displayName = o.text.trim()
+            }
+        }
+
+        // filter fields
+        val fieldsets = doc.select("#advsearches fieldset")
+        val tabs = doc.select("#advsearches .ui-tabs-nav li")
+        val filterFields = fieldsets.zip(tabs).map { (tab, fieldset) ->
+            val title = tab.text.trim()
+            val checkboxes = fieldset.select("input[type=checkbox]")
+            DropdownSearchField().apply {
+                id = title  // input["name"] is always "limit", so we can't use it as an ID
+                displayName = title
+                dropdownValues = listOf(DropdownSearchField.Option("", "")) +
+                        checkboxes.map { checkbox ->
+                            DropdownSearchField.Option(
+                                    checkbox["value"],
+                                    checkbox.nextElementSibling().text.trim())
+                        }
+                data = JSONObject().apply {
+                    put("id", checkboxes[0]["name"])
+                }
+            }
+        }
+
+        // dropdown fields
+        val dropdowns = doc.select("legend + label + select")
+        val dropdownFields = dropdowns.map { dropdown ->
+            val title = dropdown.previousElementSibling().previousElementSibling().text.removeSuffix(":")
+            DropdownSearchField().apply {
+                id = title  // input["name"] is almost testalways "limit", so we can't use it as an ID
+                displayName = title
+                dropdownValues = dropdown.select("option").map { option ->
+                    DropdownSearchField.Option(
+                            option["value"],
+                            option.text)
+                }
+                data = JSONObject().apply {
+                    put("id", dropdown["name"])
+                }
+            }
+        }
+
+        // available checkbox
+        val available = doc.select("#available-items").first()
+        var availableCheckbox = emptyList<SearchField>()
+        if (available != null) {
+            availableCheckbox = listOf(
+                    CheckboxSearchField().apply {
+                        id = available["value"]
+                        displayName = available.parent().text
+                    }
+            )
+        }
+
+        return listOf(freeSearchField) + textFields + filterFields + dropdownFields + availableCheckbox
     }
 
     override fun searchGetPage(page: Int): SearchRequestResult {
-        return sru.searchGetPage(page)
+        if (searchQuery == null) {
+            throw OpacApi.OpacErrorException(stringProvider.getString(StringProvider.INTERNAL_ERROR))
+        }
+
+        val builder = searchUrl(searchQuery!!)
+        builder.addQueryParameter("offset", (20 * page).toString())
+        val doc = httpGet(builder.build().toString(), ENCODING).html
+        return parseSearch(doc, 1)
     }
 
     override fun getResultById(id: String, homebranch: String?): DetailedItem {
-        return sru.getResultById(id, homebranch)
+        return DetailedItem()
     }
 
     override fun getResult(position: Int): DetailedItem {
-        return sru.getResult(position)
+        return DetailedItem()
     }
 
     override fun reservation(item: DetailedItem, account: Account, useraction: Int, selection: String?): OpacApi.ReservationResult {
@@ -65,7 +189,7 @@ class Koha : OkHttpBaseApi() {
         var doc = login(account)
         var borrowernumber = doc.select("input[name=borrowernumber]").first()?.attr("value")
 
-        doc = Jsoup.parse(httpGet("$baseurl/cgi-gin/koha/opac-renew.pl?from=opac_user&item=$media&borrowernumber=$borrowernumber", "UTF-8"))
+        doc = Jsoup.parse(httpGet("$baseurl/cgi-bin/koha/opac-renew.pl?from=opac_user&item=$media&borrowernumber=$borrowernumber", ENCODING))
         val label = doc.select(".blabel").first()
         if (label != null && label.hasClass("label-success")) {
             return OpacApi.ProlongResult(OpacApi.MultiStepResult.Status.OK)
@@ -87,7 +211,7 @@ class Koha : OkHttpBaseApi() {
                 .add("biblionumber", biblionumber)
                 .add("reserve_id", reserveId)
                 .add("submit", "")
-        val doc = Jsoup.parse(httpPost("$baseurl/cgi-bin/koha/opac-modrequest.pl", formBody.build(), "UTF-8"))
+        val doc = Jsoup.parse(httpPost("$baseurl/cgi-bin/koha/opac-modrequest.pl", formBody.build(), ENCODING))
         val input = doc.select("input[name=reserve_id][value=$reserveId]").first()
         if (input == null) {
             return OpacApi.CancelResult(OpacApi.MultiStepResult.Status.OK)
@@ -103,7 +227,7 @@ class Koha : OkHttpBaseApi() {
         accountData.lent = parseItems(doc, ::LentItem, "#checkoutst")
         accountData.reservations = parseItems(doc, ::ReservedItem, "#holdst")
 
-        val feesDoc = Jsoup.parse(httpGet("$baseurl/cgi-bin/koha/opac-account.pl", "UTF-8"))
+        val feesDoc = Jsoup.parse(httpGet("$baseurl/cgi-bin/koha/opac-account.pl", ENCODING))
         accountData.pendingFees = parseFees(feesDoc)
 
         return accountData
@@ -178,7 +302,7 @@ class Koha : OkHttpBaseApi() {
                 .add("koha_login_context", "opac")  // sic! two times
                 .add("userid", account.name)
                 .add("password", account.password)
-        val doc = Jsoup.parse(httpPost("$baseurl/cgi-bin/koha/opac-user.pl", formBody.build(), "UTF-8"))
+        val doc = Jsoup.parse(httpPost("$baseurl/cgi-bin/koha/opac-user.pl", formBody.build(), ENCODING))
         if (doc.select(".alert").size > 0) {
             throw OpacApi.OpacErrorException(doc.select(".alert").text())
         }
