@@ -16,10 +16,10 @@ Features
 * Make reservations
 * Bookmarks
 * Account view
-* extending lending periods
+* Extending lending periods
 * Notification for return dates
 * Search by ISBN using barcodes
-* much more cool stuff
+* Much more cool stuff
 
 Not all of the features are available for every library.
 
@@ -47,7 +47,7 @@ Checking out the project with Android Studio should be fairly straightforward, b
 also have a little bit of information in the [project wiki](https://github.com/opacapp/opacclient/wiki).
 Contributions are best submitted via GitHub pull requests.
 
-If you get stuck anywhere in the process, please do not hestitate to ask us anytime at info@opacapp.de.
+If you get stuck anywhere in the process, please do not hesitate to ask us anytime at info@opacapp.de.
 
 Please note that we have a [Code of Conduct](https://github.com/opacapp/opacclient/blob/master/CODE_OF_CONDUCT.md)
 in place that applies to all project-related communication.
