@@ -11,6 +11,7 @@ import okhttp3.FormBody
 import okhttp3.HttpUrl
 import org.joda.time.LocalDate
 import org.joda.time.LocalDateTime
+import org.joda.time.format.DateTimeFormat
 import org.json.JSONObject
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
@@ -97,7 +98,7 @@ class Koha : OkHttpBaseApi() {
         // free search field
         val freeSearchField = TextSearchField().apply {
             id = "kw,wrdl"
-            displayName = "Bibliothekskatalog"
+            displayName = "Freitext"
         }
 
         // text fields
@@ -192,7 +193,25 @@ class Koha : OkHttpBaseApi() {
 
             cover = doc.select("#bookcover img").first()?.attr("src")
 
-            //TODO: copies
+            val df = DateTimeFormat.forPattern("dd.MM.yyyy")
+            copies = doc.select(".holdingst > tbody > tr").map { row ->
+                Copy().apply {
+                    for (td in row.select("td")) {
+                        row.select(".branch-info-tooltip").remove()
+                        val text = if (td.text.isNotBlank()) td.text.trim() else null
+                        when {
+                            // td.classNames().contains("itype") -> media type
+                            td.classNames().contains("location") -> branch = text
+                            td.classNames().contains("collection") -> location = text
+                            td.classNames().contains("call_no") -> shelfmark = text
+                            td.classNames().contains("status") -> status = text
+                            td.classNames().contains("date_due") ->
+                                if (text != null) returnDate = df.parseLocalDate(text)
+                            td.classNames().contains("holds_count") -> reservations = text
+                        }
+                    }
+                }
+            }
         }
     }
 
