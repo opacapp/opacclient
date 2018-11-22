@@ -273,6 +273,10 @@ class Koha : OkHttpBaseApi() {
         val feesDoc = Jsoup.parse(httpGet("$baseurl/cgi-bin/koha/opac-account.pl", ENCODING))
         accountData.pendingFees = parseFees(feesDoc)
 
+        if (doc.select(".alert").size > 0) {
+            accountData.warning = doc.select(".alert").text
+        }
+
         return accountData
     }
 
@@ -330,8 +334,9 @@ class Koha : OkHttpBaseApi() {
 
     private fun parseDate(col: Element): LocalDate? {
         val select = col.select("span[title]").first() ?: return null
-        val isoformat = select.attr("title")
+        val isoformat = select.attr("title").replace(" ", "T")
         // example: <span title="2018-11-02T23:59:00">
+        // or <span title="2018-11-02 23:59:00">
         return LocalDateTime(isoformat).toLocalDate()
     }
 
@@ -346,7 +351,7 @@ class Koha : OkHttpBaseApi() {
                 .add("userid", account.name)
                 .add("password", account.password)
         val doc = Jsoup.parse(httpPost("$baseurl/cgi-bin/koha/opac-user.pl", formBody.build(), ENCODING))
-        if (doc.select(".alert").size > 0) {
+        if (doc.select(".alert").size > 0 && doc.select("#opac-auth").size > 0) {
             throw OpacApi.OpacErrorException(doc.select(".alert").text())
         }
         return doc
