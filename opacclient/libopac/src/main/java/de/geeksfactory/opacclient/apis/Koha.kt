@@ -65,6 +65,14 @@ class Koha : OkHttpBaseApi() {
 
                 val mediatypeImg = row.select(".materialtype").first()?.attr("src")?.split("/")?.last()?.removeSuffix(".png")
                 type = mediatypes[mediatypeImg]
+
+                status = if (row.select(".available").size > 0 && row.select(".unavailable").size > 0) {
+                    SearchResult.Status.YELLOW
+                } else if (row.select(".available").size > 0) {
+                    SearchResult.Status.GREEN
+                } else if (row.select(".unavailable").size > 0) {
+                    SearchResult.Status.RED
+                } else null
             }
         }
 
@@ -212,6 +220,8 @@ class Koha : OkHttpBaseApi() {
                     }
                 }
             }
+
+            isReservable = doc.select("a.reserve").size > 0
         }
     }
 
@@ -221,7 +231,34 @@ class Koha : OkHttpBaseApi() {
     }
 
     override fun reservation(item: DetailedItem, account: Account, useraction: Int, selection: String?): OpacApi.ReservationResult {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        try {
+            login(account)
+        } catch (e: OpacApi.OpacErrorException) {
+            return OpacApi.ReservationResult(OpacApi.MultiStepResult.Status.ERROR, e.message)
+        }
+
+        var doc = httpGet("$baseurl/cgi-bin/koha/opac-reserve.pl?biblionumber=${item.id}", ENCODING).html
+
+        if (doc.select(".alert").size > 0) {
+            return OpacApi.ReservationResult(OpacApi.MultiStepResult.Status.ERROR, doc.select(".alert").text())
+        }
+
+        val body = FormBody.Builder()
+        body.add("place_reserve", "1")
+        body.add("biblionumbers", "${item.id}/")
+        body.add("selecteditems", "${item.id}///")
+        body.add("reserve_mode", "multi")
+        body.add("single_bib", item.id)
+        body.add("expiration_date_${item.id}", "")
+        body.add("reqtype_${item.id}", "any")
+        body.add("checkitem_${item.id}", doc.select("input[name=checkitem_${item.id}]").first()["value"])
+        doc = httpPost("$baseurl/cgi-bin/koha/opac-reserve.pl", body.build(), ENCODING).html
+
+        if (doc.select("input[type=hidden][name=biblionumber][value=${item.id}]").size > 0) {
+            return OpacApi.ReservationResult(OpacApi.MultiStepResult.Status.OK)
+        } else {
+            return OpacApi.ReservationResult(OpacApi.MultiStepResult.Status.ERROR)
+        }
     }
 
     override fun prolong(media: String, account: Account, useraction: Int, selection: String?): OpacApi.ProlongResult {
@@ -337,7 +374,11 @@ class Koha : OkHttpBaseApi() {
         val isoformat = select.attr("title").replace(" ", "T")
         // example: <span title="2018-11-02T23:59:00">
         // or <span title="2018-11-02 23:59:00">
-        return LocalDateTime(isoformat).toLocalDate()
+        if (isoformat.startsWith("0000-00-00")) {
+            return null
+        } else {
+            return LocalDateTime(isoformat).toLocalDate()
+        }
     }
 
     override fun checkAccountData(account: Account) {
