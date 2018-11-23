@@ -1056,7 +1056,7 @@ public class Open extends OkHttpBaseApi implements OpacApi {
         // in Bern
 
         // Remove nested forms
-        form.select("form").remove();
+        form.select("form form").remove();
         form = ((FormElement) Jsoup.parse(form.outerHtml()).select("form").get(0));
 
         // iterate the form control elements and accumulate their values
