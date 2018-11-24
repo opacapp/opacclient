@@ -61,15 +61,21 @@
             android:textSize="16sp"
             android:textColor="?android:attr/textColorPrimary"/>
 
-        <LinearLayout
+        <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:columnCount="2">
+            <Space
+                android:id="@+id/centerHelper"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_alignParentTop="true"
+                android:layout_centerHorizontal="true"/>
 
             <TextView
                 android:id="@+id/tvStatus"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
                 android:contentDescription="@string/status"
                 android:ellipsize="end"
                 android:maxLines="1"
@@ -79,17 +85,17 @@
 
             <TextView
                 android:id="@+id/tvBranch"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
+                android:visibility="gone"
+                android:layout_toRightOf="@id/centerHelper"
                 android:contentDescription="@string/branch"
                 android:ellipsize="end"
                 android:maxLines="1"
                 android:textColor="?android:attr/textColorSecondary"
                 android:textSize="14sp"
                 tools:text="Branch" />
-
-        </LinearLayout>
+        </RelativeLayout>
     </LinearLayout>
 
     <LinearLayout
