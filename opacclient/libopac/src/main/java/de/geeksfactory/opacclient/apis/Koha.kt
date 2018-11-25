@@ -51,7 +51,10 @@ class Koha : OkHttpBaseApi() {
             SearchResult().apply {
                 cover = row.select(".coverimages img").first()?.attr("src")
 
-                val titleA = row.select("a.title").first()
+                var titleA = row.select("a.title").first()
+                if (titleA == null) {
+                    titleA = row.select("a[href*=opac-detail.pl]:not(:has(img, .no-image))").first()
+                }
                 val biblionumber = Regex("biblionumber=([^&]+)").find(titleA["href"])!!.groupValues[1]
                 id = biblionumber
 
@@ -187,13 +190,30 @@ class Koha : OkHttpBaseApi() {
         val doc = httpGet("$baseurl/cgi-bin/koha/opac-detail.pl?biblionumber=$id", ENCODING).html
 
         return DetailedItem().apply {
-            title = doc.select("h1.title").first().ownText()
+            val titleElem = doc.select("h1.title, #opacxslt h2").first()
+            title = titleElem.ownText()
             this.id = id
 
-            doc.select("h5.author, span.results_summary").forEach { row ->
-                val title = row.text.split(":").first()
-                val value = row.text.split(":").drop(1).joinToString(":")
-                addDetail(Detail(title, value))
+            if (doc.select("h5.author, span.results_summary").size > 0) {
+                // LMSCloud
+                doc.select("h5.author, span.results_summary").forEach { row ->
+                    val title = row.text.split(":").first()
+                    val value = row.text.split(":").drop(1).joinToString(":")
+                    addDetail(Detail(title, value))
+                }
+            } else if (doc.select("#opacxslt dt.labelxslt").size > 0) {
+                // seen at https://catalogue.univ-amu.fr
+                doc.select("#opacxslt dt.labelxslt").forEach { dt ->
+                    val title = dt.text
+                    var elem = dt
+                    var value = ""
+                    while (elem.nextElementSibling() != null && elem.nextElementSibling().tagName() == "dd") {
+                        elem = elem.nextElementSibling()
+                        if (!value.isBlank()) value += "\n"
+                        value += elem.text
+                    }
+                    addDetail(Detail(title, value))
+                }
             }
 
             val mediatypeImg = doc.select(".materialtype").first()?.attr("src")?.split("/")?.last()?.removeSuffix(".png")
