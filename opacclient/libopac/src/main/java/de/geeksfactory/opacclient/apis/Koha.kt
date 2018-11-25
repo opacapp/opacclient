@@ -39,7 +39,9 @@ open class Koha : OkHttpBaseApi() {
     override fun search(query: List<SearchQuery>): SearchRequestResult {
         this.searchQuery = query
         val builder = searchUrl(query)
-        val doc = httpGet(builder.build().toString(), ENCODING).html
+        val url = builder.build().toString()
+        val doc = httpGet(url, ENCODING).html
+        doc.setBaseUri(url)
         return parseSearch(doc, 1)
     }
 
@@ -50,7 +52,7 @@ open class Koha : OkHttpBaseApi() {
             "newspaper" to SearchResult.MediaType.MAGAZINE
     )
 
-    protected fun parseSearch(doc: Document, page: Int): SearchRequestResult {
+    protected open fun parseSearch(doc: Document, page: Int): SearchRequestResult {
         if (doc.select("#noresultsfound").first() != null) {
             return SearchRequestResult(emptyList(), 0, page)
         }
@@ -193,7 +195,9 @@ open class Koha : OkHttpBaseApi() {
 
         val builder = searchUrl(searchQuery!!)
         builder.addQueryParameter("offset", (20 * page).toString())
-        val doc = httpGet(builder.build().toString(), ENCODING).html
+        val url = builder.build().toString()
+        val doc = httpGet(url, ENCODING).html
+        doc.setBaseUri(url)
         return parseSearch(doc, 1)
     }
 
@@ -445,7 +449,7 @@ open class Koha : OkHttpBaseApi() {
 
     }
 
-    override fun filterResults(filter: Filter?, option: Filter.Option?): SearchRequestResult {
+    override fun filterResults(filter: Filter, option: Filter.Option): SearchRequestResult {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 }
