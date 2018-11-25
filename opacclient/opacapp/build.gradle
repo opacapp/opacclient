@@ -47,6 +47,7 @@ dependencies {
     api(project(':libopac')) {
         transitive = false
     }
+    implementation "org.jetbrains.kotlin:kotlin-stdlib:1.2.71"
     api 'io.sentry:sentry-android:1.7.4'
     api 'org.jsoup:jsoup:1.8.3'
     api 'com.android.support:design:27.1.1'
