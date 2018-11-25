@@ -169,7 +169,8 @@
         "Autor, Autorin/Hrsg.",
         "Autor / Verfasser / Person",
         "AutorIn",
-        "Person (nur 1)"
+        "Person (nur 1)",
+        "Auteur"
     ],
     "FREE": [
         "Freie Suche",
@@ -303,7 +304,8 @@
         "Zweigstelle für Vormerkungen und Bestellungen",
         "Abholen in Zweigstelle (bitte auswählen)",
         "Zur Vormerkung und Bestellung hier die gewünschte Zweigstelle auswählen",
-        "Standort und Verfügbarkeit"
+        "Standort und Verfügbarkeit",
+        "Localisation et disponsibilité"
     ],
     "TITLE": [
         "Titel",
@@ -329,7 +331,8 @@
         "Titelwort/Thema",
         "Titelanfang",
         "Titel / Reihe",
-        "exakter Titel"
+        "exakter Titel",
+        "Titre"
     ],
     "DIGITAL": [
         "digital",

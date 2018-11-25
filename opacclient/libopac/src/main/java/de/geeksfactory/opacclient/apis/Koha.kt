@@ -28,6 +28,7 @@ import org.jsoup.nodes.Element
 open class Koha : OkHttpBaseApi() {
     protected lateinit var baseurl: String
     protected val NOT_RENEWABLE = "NOT_RENEWABLE"
+    protected val ENCODING = "UTF-8"
     protected var searchQuery: List<SearchQuery>? = null
 
     override fun init(library: Library, factory: HttpClientFactory) {
@@ -49,7 +50,7 @@ open class Koha : OkHttpBaseApi() {
             "newspaper" to SearchResult.MediaType.MAGAZINE
     )
 
-    private fun parseSearch(doc: Document, page: Int): SearchRequestResult {
+    protected fun parseSearch(doc: Document, page: Int): SearchRequestResult {
         val countText = doc.select("#numresults").first().text
         val totalResults = Regex("\\d+").findAll(countText).last().value.toInt()
 
@@ -108,8 +109,6 @@ open class Koha : OkHttpBaseApi() {
         }
         return builder
     }
-
-    private val ENCODING = "UTF-8"
 
     override fun parseSearchFields(): List<SearchField> {
         val doc = httpGet("$baseurl/cgi-bin/koha/opac-search.pl", ENCODING).html
