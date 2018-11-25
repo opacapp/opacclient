@@ -23,6 +23,7 @@ import de.geeksfactory.opacclient.apis.BiBer1992;
 import de.geeksfactory.opacclient.apis.Bibliotheca;
 import de.geeksfactory.opacclient.apis.Heidi;
 import de.geeksfactory.opacclient.apis.IOpac;
+import de.geeksfactory.opacclient.apis.Koha;
 import de.geeksfactory.opacclient.apis.Littera;
 import de.geeksfactory.opacclient.apis.OpacApi;
 import de.geeksfactory.opacclient.apis.Open;
@@ -127,6 +128,8 @@ public class OpacApiFactory {
             newApiInstance = new TouchPoint();
         } else if (lib.getApi().equals("open")) {
             newApiInstance = new Open();
+        } else if (lib.getApi().equals("koha")) {
+            newApiInstance = new Koha();
         } else if (lib.getApi().equals("test")) {
             newApiInstance = new TestApi();
         } else {

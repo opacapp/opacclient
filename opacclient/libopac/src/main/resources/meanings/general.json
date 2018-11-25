@@ -194,13 +194,15 @@
         "übergreifender Index (TiAuSu)",
         "alle (außer Notation)",
         "Suchwort",
-        "[ALW]"
+        "[ALW]",
+        "Bibliothekskatalog"
     ],
     "AVAILABLE": [
         "verfügbar",
         "Verfügbarkeit",
         "verfügbare Medien",
-        "z.Zt. in der Bibliothek verfügbar"
+        "z.Zt. in der Bibliothek verfügbar",
+        "Nur aktuell verfügbare Exemplare"
     ],
     "ORDER": [
         "Sortierung",
@@ -300,7 +302,8 @@
         "Aktuelle Ausleih-Zweigstelle",
         "Zweigstelle für Vormerkungen und Bestellungen",
         "Abholen in Zweigstelle (bitte auswählen)",
-        "Zur Vormerkung und Bestellung hier die gewünschte Zweigstelle auswählen"
+        "Zur Vormerkung und Bestellung hier die gewünschte Zweigstelle auswählen",
+        "Standort und Verfügbarkeit"
     ],
     "TITLE": [
         "Titel",
