@@ -25,7 +25,7 @@ import org.jsoup.nodes.Element
  *
  * @author Johan von Forstner, November 2018
  */
-class Koha : OkHttpBaseApi() {
+open class Koha : OkHttpBaseApi() {
     protected lateinit var baseurl: String
     protected val NOT_RENEWABLE = "NOT_RENEWABLE"
     protected var searchQuery: List<SearchQuery>? = null
