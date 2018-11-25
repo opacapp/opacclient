@@ -17,7 +17,15 @@ import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
 import org.jsoup.nodes.Element
 
-class Koha : OkHttpBaseApi() {
+/**
+ * OpacApi implementation for the open source Koha OPAC. https://koha-community.org/
+ *
+ * It includes special cases to account for changes in the "LMSCloud" variant
+ * (https://www.lmscloud.de/) . Account features were only tested with LMSCloud.
+ *
+ * @author Johan von Forstner, November 2018
+ */
+open class Koha : OkHttpBaseApi() {
     protected lateinit var baseurl: String
     protected val NOT_RENEWABLE = "NOT_RENEWABLE"
     protected var searchQuery: List<SearchQuery>? = null
