@@ -51,6 +51,10 @@ open class Koha : OkHttpBaseApi() {
     )
 
     protected fun parseSearch(doc: Document, page: Int): SearchRequestResult {
+        if (doc.select("#noresultsfound").first() != null) {
+            return SearchRequestResult(emptyList(), 0, page)
+        }
+
         val countText = doc.select("#numresults").first().text
         val totalResults = Regex("\\d+").findAll(countText).last().value.toInt()
 
