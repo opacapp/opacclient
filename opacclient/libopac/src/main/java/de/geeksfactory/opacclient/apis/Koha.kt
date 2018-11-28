@@ -212,9 +212,23 @@ open class Koha : OkHttpBaseApi() {
             if (doc.select("h5.author, span.results_summary").size > 0) {
                 // LMSCloud
                 doc.select("h5.author, span.results_summary").forEach { row ->
-                    val title = row.text.split(":").first()
-                    val value = row.text.split(":").drop(1).joinToString(":")
-                    addDetail(Detail(title, value))
+                    // remove "Read more" link
+                    row.select(".truncable-txt-readmore").remove()
+
+                    // go through the details
+                    if (row.select("> span.label").size > 0) {
+                        // just one detail on this line
+                        val title = row.text.split(":").first().trim()
+                        val value = row.text.split(":").drop(1).joinToString(":").trim()
+                        if (!title.isBlank() || !value.isBlank()) addDetail(Detail(title, value))
+                    } else {
+                        // multiple details on this line
+                        row.select("> span").forEach { span ->
+                            val title = span.text.split(":").first().trim()
+                            val value = span.text.split(":").drop(1).joinToString(":").trim()
+                            if (!title.isBlank() || !value.isBlank()) addDetail(Detail(title, value))
+                        }
+                    }
                 }
             } else if (doc.select("#opacxslt dt.labelxslt").size > 0) {
                 // seen at https://catalogue.univ-amu.fr
