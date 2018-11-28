@@ -42,7 +42,23 @@ open class Koha : OkHttpBaseApi() {
         val url = builder.build().toString()
         val doc = httpGet(url, ENCODING).html
         doc.setBaseUri(url)
-        return parseSearch(doc, 1)
+
+        if (doc.select(".searchresults").size == 0 && doc.select(".unapi-id").size == 1) {
+            // only a single result
+            val item = parseDetail(doc)
+            return SearchRequestResult(listOf(
+                    SearchResult().apply {
+                        cover = item.cover
+                        id = item.id
+                        type = item.mediaType
+
+                        val author = item.details.find { it.desc == "Von" }?.content
+                        innerhtml = "<b>${item.title}</b><br>${author ?: ""}"
+                    }
+            ), 1, 1)
+        } else {
+            return parseSearch(doc, 1)
+        }
     }
 
     private val mediatypes = mapOf(
@@ -102,7 +118,7 @@ open class Koha : OkHttpBaseApi() {
         for (q in query) {
             if (q.value.isBlank()) continue
 
-            if (q.searchField is TextSearchField) {
+            if (q.searchField is TextSearchField || q.searchField is BarcodeSearchField) {
                 builder.addQueryParameter("idx", q.key)
                 builder.addQueryParameter("q", q.value)
             } else if (q.searchField is DropdownSearchField) {
@@ -203,11 +219,14 @@ open class Koha : OkHttpBaseApi() {
 
     override fun getResultById(id: String, homebranch: String?): DetailedItem {
         val doc = httpGet("$baseurl/cgi-bin/koha/opac-detail.pl?biblionumber=$id", ENCODING).html
+        return parseDetail(doc)
+    }
 
+    private fun parseDetail(doc: Document): DetailedItem {
         return DetailedItem().apply {
             val titleElem = doc.select("h1.title, #opacxslt h2").first()
             title = titleElem.ownText()
-            this.id = id
+            this.id = doc.select(".unapi-id").first()["title"].removePrefix("koha:biblionumber:")
 
             if (doc.select("h5.author, span.results_summary").size > 0) {
                 // LMSCloud
@@ -216,7 +235,7 @@ open class Koha : OkHttpBaseApi() {
                     row.select(".truncable-txt-readmore").remove()
 
                     // go through the details
-                    if (row.select("> span.label").size > 0) {
+                    if (row.tagName() == "h5" || row.select("> span.label").size > 0) {
                         // just one detail on this line
                         val title = row.text.split(":").first().trim()
                         val value = row.text.split(":").drop(1).joinToString(":").trim()
