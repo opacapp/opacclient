@@ -246,10 +246,21 @@ open class Koha : OkHttpBaseApi() {
                             // td.classNames().contains("itype") -> media type
                             td.classNames().contains("location") -> branch = text
                             td.classNames().contains("collection") -> location = text
-                            td.classNames().contains("call_no") -> shelfmark = text
+                            td.classNames().contains("call_no") -> {
+                                if (td.select(".isDivibibTitle").size > 0 && td.select("a").size > 0) {
+                                    // Onleihe item
+                                    val link = td.select("a").first()["href"]
+                                    addDetail(Detail("Onleihe", link))
+                                }
+                                shelfmark = text?.removeSuffix("Hier klicken zum Ausleihen.")
+                                        ?.removeSuffix("Hier klicken zum Reservieren.")
+                            }
                             td.classNames().contains("status") -> status = text
                             td.classNames().contains("date_due") ->
-                                if (text != null) returnDate = df.parseLocalDate(text)
+                                if (text != null) {
+                                    val dateText = text.removeSuffix(" 00:00") // seen with Onleihe items
+                                    returnDate = df.parseLocalDate(dateText)
+                                }
                             td.classNames().contains("holds_count") -> reservations = text
                         }
                     }
