@@ -311,7 +311,11 @@ open class Koha : OkHttpBaseApi() {
         body.add("single_bib", item.id)
         body.add("expiration_date_${item.id}", "")
         body.add("reqtype_${item.id}", "any")
-        body.add("checkitem_${item.id}", doc.select("input[name=checkitem_${item.id}]").first()["value"])
+        val checkbox = doc.select("input[name=checkitem_${item.id}]").first()
+        if (checkbox != null) {
+            body.add("checkitem_${item.id}", checkbox["value"])
+        }
+
         doc = httpPost("$baseurl/cgi-bin/koha/opac-reserve.pl", body.build(), ENCODING).html
 
         if (doc.select("input[type=hidden][name=biblionumber][value=${item.id}]").size > 0) {
