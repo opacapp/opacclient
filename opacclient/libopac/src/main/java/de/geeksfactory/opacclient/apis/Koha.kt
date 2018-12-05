@@ -71,7 +71,7 @@ open class Koha : OkHttpBaseApi() {
     protected open fun parseSearch(doc: Document, page: Int): SearchRequestResult {
         if (doc.select("#noresultsfound").first() != null) {
             return SearchRequestResult(emptyList(), 0, page)
-        } else if (doc.select("select[name=idx]").first() != null) {
+        } else if (doc.select("select[name=idx]").size > 1) {
             // We're back on the search page, no valid (likely empty) query
             throw OpacApi.OpacErrorException(stringProvider.getString("no_criteria_input"))
         } else if (doc.select("#numresults").first() == null) {
