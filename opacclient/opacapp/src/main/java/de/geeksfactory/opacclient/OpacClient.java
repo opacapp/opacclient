@@ -31,6 +31,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
+import android.support.multidex.MultiDex;
 import android.support.v4.app.ActivityCompat;
 import android.util.Log;
 
@@ -366,7 +367,6 @@ public class OpacClient extends Application {
         super.attachBaseContext(base);
         MultiDex.install(this);
     }
-
 
     @Override
     public void onCreate() {
