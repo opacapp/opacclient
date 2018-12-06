@@ -102,7 +102,7 @@ public abstract class AccountItem implements Serializable {
 
     /**
      * @return status of an item. Some libraries use codes like "E" for "first lending period", "1"
-     * for "lending period extended once", etc. Optional.
+     * for "lending period extended once" etc. or strings like e.g. "2x verl., 1x reserv.".  Optional.
      */
     public String getStatus() {
         return status;
@@ -110,7 +110,7 @@ public abstract class AccountItem implements Serializable {
 
     /**
      * Set status of an item. Some libraries use codes like "E" for "first lending period", "1" for
-     * "lending period extended once", etc. Optional.
+     * "lending period extended once" etc. or strings like e.g. "2x verl., 1x reserv.". Optional.
      */
     public void setStatus(String status) {
         this.status = status;
