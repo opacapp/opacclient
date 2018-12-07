@@ -16,6 +16,7 @@ import org.json.JSONObject
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
 import org.jsoup.nodes.Element
+import java.util.regex.Pattern
 
 /**
  * OpacApi implementation for the open source Koha OPAC. https://koha-community.org/
@@ -288,7 +289,17 @@ open class Koha : OkHttpBaseApi() {
                                 if (td.select(".isDivibibTitle").size > 0 && td.select("a").size > 0) {
                                     // Onleihe item
                                     val link = td.select("a").first()["href"]
-                                    addDetail(Detail("Onleihe", link))
+                                    if (link.startsWith("javascript:void")) {
+                                        val onclick = td.select("a").first()["onclick"]
+
+                                        val pattern = Pattern.compile(".*accessDivibibResource\\([^,]*,[ ]*['\"]([0-9]+)['\"][ ]*\\).*")
+                                        val matcher = pattern.matcher(onclick)
+                                        if (matcher.matches()) {
+                                            addDetail(Detail("_onleihe_id", matcher.group(1)))
+                                        }
+                                    } else {
+                                        addDetail(Detail("Onleihe", link))
+                                    }
                                 }
                                 shelfmark = text?.removeSuffix("Hier klicken zum Ausleihen.")
                                         ?.removeSuffix("Hier klicken zum Reservieren.")
