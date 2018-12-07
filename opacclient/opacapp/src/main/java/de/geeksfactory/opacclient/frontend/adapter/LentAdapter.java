@@ -10,6 +10,8 @@ import android.text.style.ForegroundColorSpan;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
+import android.widget.RelativeLayout;
 
 import org.joda.time.Days;
 import org.joda.time.LocalDate;
@@ -69,6 +71,27 @@ public class LentAdapter extends AccountAdapter<LentItem, LentAdapter.ViewHolder
                 builder.append(Html.fromHtml(item.getStatus()));
             }
             setTextOrHide(builder, tvStatus);
+            if (item.getHomeBranch() != null) {
+                setTextOrHide(Html.fromHtml(item.getHomeBranch()), tvBranch);
+            }
+            tvBranch.getViewTreeObserver().addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener() {
+                @Override
+                public boolean onPreDraw () {
+                    tvBranch.getViewTreeObserver().removeOnPreDrawListener(this);
+                    // place tvBranch next to or below tvStatus to prevent overlapping
+                    RelativeLayout.LayoutParams lp = (RelativeLayout.LayoutParams)tvBranch.getLayoutParams();
+                    if (tvStatus.getPaint().measureText(tvStatus.getText().toString()) <
+                            tvStatus.getWidth() / 2 - 4){
+                        lp.addRule(RelativeLayout.BELOW, 0);  //removeRule only since API 17
+                        lp.addRule(RelativeLayout.ALIGN_PARENT_TOP);
+                    } else {
+                        lp.addRule(RelativeLayout.ALIGN_PARENT_TOP,0);
+                        lp.addRule(RelativeLayout.BELOW, R.id.tvStatus);
+                    }
+                    tvBranch.setLayoutParams(lp);
+                    return true;
+                }
+            });
 
             // Color codes for return dates
             if (item.getDeadline() != null) {

@@ -2,10 +2,13 @@ package de.geeksfactory.opacclient.frontend.adapter;
 
 import android.content.Context;
 import android.content.res.TypedArray;
+import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
 import android.support.graphics.drawable.VectorDrawableCompat;
 import android.support.v7.widget.RecyclerView;
+import android.text.SpannableStringBuilder;
 import android.text.TextUtils;
+import android.text.style.StyleSpan;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -68,6 +71,7 @@ public abstract class AccountAdapter<I extends AccountItem, VH extends AccountAd
         protected Context context;
         public TextView tvTitleAndAuthor;
         protected TextView tvStatus;
+        protected TextView tvBranch;
         protected View vStatusColor;
         protected ImageButton ivProlong;
         protected ImageButton ivDownload;
@@ -85,6 +89,7 @@ public abstract class AccountAdapter<I extends AccountItem, VH extends AccountAd
             this.context = itemView.getContext();
             tvTitleAndAuthor = (TextView) itemView.findViewById(R.id.tvTitleAndAuthor);
             tvStatus = (TextView) itemView.findViewById(R.id.tvStatus);
+            tvBranch = (TextView) itemView.findViewById(R.id.tvBranch);
             vStatusColor = itemView.findViewById(R.id.vStatusColor);
             ivProlong = (ImageButton) itemView.findViewById(R.id.ivProlong);
             ivDownload = (ImageButton) itemView.findViewById(R.id.ivDownload);
@@ -101,14 +106,17 @@ public abstract class AccountAdapter<I extends AccountItem, VH extends AccountAd
         }
 
         public void setItem(I item) {
-            // Overview (Title/Author, Status/Deadline)
-            if (item.getTitle() != null && item.getAuthor() != null) {
-                tvTitleAndAuthor.setText(item.getTitle() + ", " + item.getAuthor());
-            } else if (item.getTitle() != null) {
-                tvTitleAndAuthor.setText(item.getTitle());
-            } else {
-                setTextOrHide(item.getAuthor(), tvTitleAndAuthor);
+            // Overview (Title/Author, Status/Deadline, Branch)
+            SpannableStringBuilder builder = new SpannableStringBuilder();
+            if (item.getTitle() != null) {
+                builder.append(item.getTitle());
+                builder.setSpan(new StyleSpan(Typeface.BOLD), 0, item.getTitle().length(), 0);
+                if (!TextUtils.isEmpty(item.getAuthor())) builder.append(". ");
             }
+            if (!TextUtils.isEmpty(item.getAuthor())) {
+                builder.append(item.getAuthor().split("¬\\[",2)[0]);
+            }
+            setTextOrHide(builder, tvTitleAndAuthor);
 
             if (coversHidden) {
                 ivMediaType.setVisibility(View.GONE);
