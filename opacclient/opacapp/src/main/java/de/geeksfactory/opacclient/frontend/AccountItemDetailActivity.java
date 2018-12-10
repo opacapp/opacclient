@@ -202,7 +202,7 @@ public class AccountItemDetailActivity extends AppCompatActivity {
         }
     }
 
-    public boolean hasBranch(AccountItem item) {
+    public static boolean hasBranch(AccountItem item) {
         return ((item instanceof LentItem && (((LentItem) item).getHomeBranch() != null ||
                 ((LentItem) item).getLendingBranch() != null)) ||
                 (item instanceof ReservedItem && ((ReservedItem) item).getBranch() != null));
