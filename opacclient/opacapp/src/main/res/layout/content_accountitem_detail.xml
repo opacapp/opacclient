@@ -240,7 +240,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:padding="16dp"
-                    android:visibility="@{item instanceof LentItem &amp;&amp; (((LentItem) item).homeBranch != null || ((LentItem) item).lendingBranch != null) || item instanceof ReservedItem &amp;&amp; ((ReservedItem) item).branch != null ? View.VISIBLE : View.GONE}">
+                    android:visibility="@{AccountItemDetailActivity.hasBranch(item) ? View.VISIBLE : View.GONE}">
 
                     <ImageView
                         android:id="@+id/iconBranch"

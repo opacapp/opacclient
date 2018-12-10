@@ -403,8 +403,8 @@ open class Koha : OkHttpBaseApi() {
         val doc = login(account)
         val accountData = AccountData(account.id)
 
-        accountData.lent = parseItems(doc, ::LentItem, "#checkoutst")
-        accountData.reservations = parseItems(doc, ::ReservedItem, "#holdst")
+        accountData.lent = parseItems(doc, ::LentItem, "#checkoutst").toMutableList()
+        accountData.reservations = parseItems(doc, ::ReservedItem, "#holdst").toMutableList()
 
         val feesDoc = Jsoup.parse(httpGet("$baseurl/cgi-bin/koha/opac-account.pl", ENCODING))
         accountData.pendingFees = parseFees(feesDoc)
