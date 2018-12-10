@@ -80,13 +80,16 @@ public class AccountItemDetailActivity extends AppCompatActivity {
                 }
 
                 @Override
-                public void onTransitionCancel(Transition transition) {}
+                public void onTransitionCancel(Transition transition) {
+                }
 
                 @Override
-                public void onTransitionPause(Transition transition) {}
+                public void onTransitionPause(Transition transition) {
+                }
 
                 @Override
-                public void onTransitionResume(Transition transition) {}
+                public void onTransitionResume(Transition transition) {
+                }
             });
             Transition exit = new ChangeBounds()
                     .setInterpolator(new FastOutLinearInInterpolator())
@@ -197,6 +200,12 @@ public class AccountItemDetailActivity extends AppCompatActivity {
         } else {
             return fromHtml(((ReservedItem) item).getBranch());
         }
+    }
+
+    public boolean hasBranch(AccountItem item) {
+        return ((item instanceof LentItem && (((LentItem) item).getHomeBranch() != null ||
+                ((LentItem) item).getLendingBranch() != null)) ||
+                (item instanceof ReservedItem && ((ReservedItem) item).getBranch() != null));
     }
 
     private static CharSequence fromHtml(@Nullable String text) {
