@@ -154,6 +154,33 @@ public class SISIS extends OkHttpBaseApi implements OpacApi {
         defaulttypes.put("Web-Link", MediaType.URL);
         defaulttypes.put("ejournal", MediaType.EDOC);
         defaulttypes.put("karte", MediaType.MAP);
+        defaulttypes.put("Blu-ray Disc", MediaType.BLURAY );
+        defaulttypes.put("Blu-ray Disc 3D", MediaType.BLURAY ); // TODO: define more specific media type
+        defaulttypes.put("CD-ROM", MediaType.CD_SOFTWARE );
+        defaulttypes.put("DVD-ROM", MediaType.DVD ); // TODO: define more specific media type
+        defaulttypes.put("eAudio", MediaType.EAUDIO );
+        defaulttypes.put("eMusic", MediaType.EAUDIO );
+        defaulttypes.put("ePaper", MediaType.EDOC );
+        defaulttypes.put("eText", MediaType.EDOC );
+        defaulttypes.put("eVideo", MediaType.EVIDEO );
+        defaulttypes.put("Ausleihgerät", MediaType.DEVICE );
+        defaulttypes.put("Kinderbuch", MediaType.BOOK );
+        defaulttypes.put("Schallplatte", MediaType.LP_RECORD );
+        defaulttypes.put("Medienkombination", MediaType.PACKAGE );
+        defaulttypes.put("MP3-CD", MediaType.MP3 );
+        defaulttypes.put("Spiel für Nintendo DS", MediaType.GAME_CONSOLE_NINTENDO );
+        defaulttypes.put("Spiel für Nintendo 3DS", MediaType.GAME_CONSOLE_NINTENDO );
+        defaulttypes.put("Spiel für PlayStation 2", MediaType.GAME_CONSOLE_PLAYSTATION );
+        defaulttypes.put("Spiel für PlayStation 3", MediaType.GAME_CONSOLE_PLAYSTATION );
+        defaulttypes.put("Spiel für PlayStation 4", MediaType.GAME_CONSOLE_PLAYSTATION );
+        defaulttypes.put("Spiel", MediaType.BOARDGAME );
+        defaulttypes.put("Spiel für Nintendo Switch", MediaType.GAME_CONSOLE_NINTENDO );
+        defaulttypes.put("Spiel für Nintendo Wii", MediaType.GAME_CONSOLE_WII );
+        defaulttypes.put("Spiel für Nintendo Wii U", MediaType.GAME_CONSOLE_WII );
+        defaulttypes.put("Spiel für Xbox 360", MediaType.GAME_CONSOLE_XBOX );
+        defaulttypes.put("Spiel für Xbox One", MediaType.GAME_CONSOLE_XBOX );
+        defaulttypes.put("Zeitung / Zeitschrift", MediaType.NEWSPAPER );
+        defaulttypes.put("Zeitschriftenheft", MediaType.MAGAZINE );
     }
 
     protected final long SESSION_LIFETIME = 1000 * 60 * 3;
