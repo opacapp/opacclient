@@ -281,7 +281,7 @@
     <string name="notification_repeat">Repeat notifications</string>
     <string name="update_info_title">Happy Birthday Opac App!</string>
     <string name="update_info_text">This May, our app turned five years old. We\'re celebrating the birthday with a new logo and want to thank all of you for all the feedback that we received.</string>
-    <string name="update_info_text_second">If you want to help us keep the app sustainable in the future, talk to your library: Buying the Plus Edition of the app allows us to further develop it and at the same time unlocks a set of useful features for you. Check our website www.opacapp.net for more details!</string>
+    <string name="update_info_text_second">If you want to help us keep the app sustainable in the future, talk to your library: By buying the Plus Edition of the app, they enable us to continue developing this app, and at the same time this unlocks a set of useful features for you. Check our website www.opacapp.net for more details!</string>
     <string name="accountdata_export_header">Account data of %1$s at %2$s</string>
     <string name="accountdata_title">Title</string>
     <string name="accountdata_author">Author</string>
