@@ -539,10 +539,12 @@ public class Adis extends ApacheBaseApi implements OpacApi {
                     res.setType(types.get(ttext.split("\\+")[0].trim()));
                 } else if (ttext.matches(".*ist verf.+gbar") ||
                         ttext.contains("is available") ||
+                        ttext.contains("ist ausleihbar") ||
                         img.attr("href").contains("verfu_ja")) {
                     res.setStatus(SearchResult.Status.GREEN);
                 } else if (ttext.matches(".*nicht verf.+gbar") ||
                         ttext.contains("not available") ||
+                        ttext.contains("nicht ausleihbar") ||
                         img.attr("href").contains("verfu_nein")) {
                     res.setStatus(SearchResult.Status.RED);
                 }
