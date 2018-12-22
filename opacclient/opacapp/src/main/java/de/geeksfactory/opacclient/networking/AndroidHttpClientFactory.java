@@ -19,6 +19,8 @@
 
 package de.geeksfactory.opacclient.networking;
 
+import android.os.Build;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.security.KeyStore;
@@ -67,9 +69,10 @@ public class AndroidHttpClientFactory extends HttpClientFactory {
 
     @Override
     public OkHttpClient getNewOkHttpClient(boolean customssl, boolean tls_only,
-            boolean allCipherSuites) {
+                                           boolean allCipherSuites) {
         OkHttpClient.Builder client =
-                super.getOkHttpClientBuilder(customssl, tls_only, allCipherSuites);
+                super.getOkHttpClientBuilder(customssl, tls_only, allCipherSuites,
+                        Build.VERSION.SDK_INT == 24);
         int cacheSize = 50 * 1024 * 1024; // 50MB
         client.cache(new Cache(OpacClient.context.getCacheDir(), cacheSize));
         return DebugTools.prepareHttpClient(client).build();
