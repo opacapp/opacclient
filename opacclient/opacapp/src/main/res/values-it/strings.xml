@@ -83,9 +83,15 @@
     </string-array>
     <string name="notification_warning">Preavviso</string>
     <string name="notification_warning_desc">Quanto tempo prima vuoi ricevere il promemoria?</string>
-    <string name="notif_ticker">%d libri sono in scadenza!</string>
+    <plurals name="notif_ticker">
+        <item quantity="one">%d libro è in scadenza!</item>
+        <item quantity="other">%d libri sono in scadenza!</item>
+    </plurals>
     <string name="notif_title">Libri in scadenza</string>
-    <string name="notif_ticker_expired">%d prestiti sono scaduti!</string>
+    <plurals name="notif_ticker_expired">
+        <item quantity="one">%d prestito è scaduto!</item>
+        <item quantity="other">%d prestiti sono scaduti!</item>
+    </plurals>
     <string name="notif_title_expired">Prestiti scaduti</string>
     <string name="notif_plus_more">+%d ulteriori</string>
     <string name="notif_snooze">Dopo</string>

@@ -145,11 +145,12 @@ public class ReminderBroadcastReceiver extends BroadcastReceiver {
         // You can still return the item on the day it expires on, so don't consider it to have
         // expired before the next day
         if (alarm.deadline.isBefore(LocalDate.now())) {
-            notificationText = context
-                    .getString(R.string.notif_ticker_expired, expiringItems.size());
+            notificationText = context.getResources().getQuantityString(
+                    R.plurals.notif_ticker_expired, expiringItems.size(), expiringItems.size());
             notificationTitle = context.getString(R.string.notif_title_expired);
         } else {
-            notificationText = context.getString(R.string.notif_ticker, expiringItems.size());
+            notificationText = context.getResources().getQuantityString(
+                    R.plurals.notif_ticker, expiringItems.size(), expiringItems.size());
             notificationTitle = context.getString(R.string.notif_title);
         }
 

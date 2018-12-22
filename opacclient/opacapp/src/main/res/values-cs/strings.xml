@@ -77,7 +77,18 @@
     </string-array>
     <string name="notification_warning">Perioda pro upozornění</string>
     <string name="notification_warning_desc">Jak dlouho dopředu chcete být upozorněni na blížící se datum vrácení?</string>
-    <string name="notif_ticker">u %d titulů se blíží datum vrácení!</string>
+    <plurals name="notif_ticker">
+        <item quantity="one">U %d titulu se blíží datum vrácení!</item>
+        <item quantity="few">U %d titulů se blíží datum vrácení!</item>
+        <item quantity="other">U %d titulů se blíží datum vrácení!</item>
+    </plurals>
+    <string name="notif_title">Lhůta vrácení titulů se přiblížila</string>
+    <plurals name="notif_ticker_expired">
+        <item quantity="one">Lhůta vrácení %d titulu vypršela!</item>
+        <item quantity="few">Lhůta vrácení %d titulů vypršela!</item>
+        <item quantity="other">Lhůta vrácení %d titulů vypršela!</item>
+    </plurals>
+    <string name="notif_title_expired">Lhůta vrácení titulů vypršela</string>
     <string name="notif_snooze">Později</string>
     <string name="notif_dont_remind_again">Odmítnout</string>
     <string name="volumes">Čísla</string>

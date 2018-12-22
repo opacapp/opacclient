@@ -85,9 +85,15 @@
     </string-array>
     <string name="notification_warning">Warning period</string>
     <string name="notification_warning_desc">How long before the due date should a notification be shown?</string>
-    <string name="notif_ticker">%d items are about to expire!</string>
+    <plurals name="notif_ticker">
+        <item quantity="one">%d item is about to expire!</item>
+        <item quantity="other">%d items are about to expire!</item>
+    </plurals>
     <string name="notif_title">Items are about to expire</string>
-    <string name="notif_ticker_expired">%d items have expired!</string>
+    <plurals name="notif_ticker_expired">
+        <item quantity="one">%d item has expired!</item>
+        <item quantity="other">%d items have expired!</item>
+    </plurals>
     <string name="notif_title_expired">Items have expired</string>
     <string name="notif_plus_more">+%d more</string>
     <string name="notif_snooze">Later</string>
