@@ -83,7 +83,10 @@
     </string-array>
     <string name="notification_warning">Uyarı periyodu</string>
     <string name="notification_warning_desc">Zaman dolmadan ne kadar önce bildirim almak istersiniz?</string>
-    <string name="notif_ticker">%d öğenin geri verme zamanı yaklaştı!</string>
+    <plurals name="notif_ticker">
+        <item quantity="one">%d öğenin geri verme zamanı yaklaştı!</item>
+        <item quantity="other">%d öğenin geri verme zamanı yaklaştı!</item>
+    </plurals>
     <string name="notif_title">Öğelerin geri verme zamanı yaklaştı</string>
     <string name="notif_title_expired">Zamanı geçen ögeler</string>
     <string name="notif_plus_more">+%d daha</string>

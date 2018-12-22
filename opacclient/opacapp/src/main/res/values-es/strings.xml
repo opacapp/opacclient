@@ -83,9 +83,15 @@
     </string-array>
     <string name="notification_warning">Plazo de aviso</string>
     <string name="notification_warning_desc">¿Cuánto tiempo antes de la fecha de vencimiento quieres recibir un aviso?</string>
-    <string name="notif_ticker">¡%d artículos están a punto de expirar!</string>
+    <plurals name="notif_ticker">
+        <item quantity="one">¡%d artículo está a punto de expirar!</item>
+        <item quantity="other">¡%d artículos están a punto de expirar!</item>
+    </plurals>
     <string name="notif_title">Artículos están a punto de expirar</string>
-    <string name="notif_ticker_expired">¡%d artículos han expirado!</string>
+    <plurals name="notif_ticker_expired">
+        <item quantity="one">¡%d artículo ha expirado!</item>
+        <item quantity="other">¡%d artículos han expirado!</item>
+    </plurals>
     <string name="notif_title_expired">Los artículos han expirado.</string>
     <string name="notif_plus_more">+%d más</string>
     <string name="notif_snooze">Más tarde</string>
