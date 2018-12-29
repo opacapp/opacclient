@@ -332,4 +332,7 @@
     <string name="load_covers_mobile_data">Load covers while on mobile data</string>
     <string name="load_covers_mobile_data_on">Cover images will be loaded and displayed if available</string>
     <string name="load_covers_mobile_data_off">Cover images will only be loaded on WiFi</string>
+    <string name="show_type_lent_items">Show item type/cover in lent items list</string>
+    <string name="show_type_lent_items_on">Item type symbols/book covers are shown</string>
+    <string name="show_type_lent_items_off">Item type symbols/book covers are not shown</string>
 </resources>

@@ -28,6 +28,14 @@
             android:title="@string/load_covers_mobile_data"
             android:summaryOn="@string/load_covers_mobile_data_on"
             android:summaryOff="@string/load_covers_mobile_data_off"/>
+        <CheckBoxPreference
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:defaultValue="true"
+            android:key="show_type_lent_items"
+            android:summaryOff="@string/show_type_lent_items_off"
+            android:summaryOn="@string/show_type_lent_items_on"
+            android:title="@string/show_type_lent_items"/>
     </PreferenceCategory>
     <PreferenceCategory android:title="@string/notifications">
         <CheckBoxPreference

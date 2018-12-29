@@ -1191,11 +1191,13 @@ public class AccountFragment extends Fragment implements
         displayAge();
 
         boolean hideCovers = true;
-        for (LentItem item : result.getLent()) {
-            if (item.getMediaType() != null || item.getCover() != null) hideCovers = false;
-        }
-        for (ReservedItem item : result.getReservations()) {
-            if (item.getMediaType() != null || item.getCover() != null) hideCovers = false;
+        if( sp.getBoolean( "show_type_lent_items" , true) ){
+            for (LentItem item : result.getLent()) {
+                if (item.getMediaType() != null || item.getCover() != null) hideCovers = false;
+            }
+            for (ReservedItem item : result.getReservations()) {
+                if (item.getMediaType() != null || item.getCover() != null) hideCovers = false;
+            }
         }
         lentAdapter.setCoversHidden(hideCovers);
         resAdapter.setCoversHidden(hideCovers);

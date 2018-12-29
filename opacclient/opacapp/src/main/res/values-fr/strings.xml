@@ -314,4 +314,7 @@ les frais de votre bibliothèque.</string>
     <string name="intro_title_2">Plus de 1000 bibliothèques</string>
     <string name="intro_description_2">Cette application prend en charge plus de 1000 bibliothèques partout dans le monde. Sélectionnez la vôtre ou suggérez-la si elle n\'est pas encore sur la liste!</string>
     <string name="no_title">(aucun titre)</string>
+    <string name="show_type_lent_items">Afficher types d\'articles/images de couverture dans la liste des prêts en cours</string>
+    <string name="show_type_lent_items_on">Les types d\'articles/images de couverture sont affichées</string>
+    <string name="show_type_lent_items_off">Les types d\'articles/images de couverture ne sont pas affichées</string>
 </resources>
