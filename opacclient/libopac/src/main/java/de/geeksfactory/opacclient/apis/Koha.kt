@@ -406,6 +406,12 @@ open class Koha : OkHttpBaseApi() {
         accountData.lent = parseItems(doc, ::LentItem, "#checkoutst").toMutableList()
         accountData.reservations = parseItems(doc, ::ReservedItem, "#holdst").toMutableList()
 
+        if (doc.select("a[href$=opac-illrequests.pl").size > 0) {
+            // Fernleihbestellungen / Inter-Library loan requests
+            val illdoc = httpGet("$baseurl/cgi-bin/koha/opac-illrequests.pl", ENCODING).html
+            accountData.reservations.addAll(parseItems(illdoc, ::ReservedItem, "#illrequestlist"))
+        }
+
         val feesDoc = Jsoup.parse(httpGet("$baseurl/cgi-bin/koha/opac-account.pl", ENCODING))
         accountData.pendingFees = parseFees(feesDoc)
 
@@ -422,22 +428,28 @@ open class Koha : OkHttpBaseApi() {
     }
 
     private fun <I : AccountItem> parseItems(doc: Document, constructor: () -> I, id: String): List<I> {
-        val lentTable = doc.select(id).first() ?: return emptyList()
+        val table = doc.select(id).first() ?: return emptyList()
+        val colTitles = table.select("th").map { it.text }
 
-        return lentTable.select("tbody tr").map { row ->
+        return table.select("tbody tr").map { row ->
             val item = constructor()
-            row.select("td").forEach { col ->
-                val type = col.attr("class").split(" ")[0]
+            row.select("td").zip(colTitles).forEach { (col, colTitle) ->
+                var type = col.attr("class").split(" ")[0]
+                if (type.isEmpty() || type.startsWith("sorting")) {
+                    // inter-library loans table has no class attributes :(
+                    type = colTitle
+                }
                 val content = col.text()
                 when (type) {
-                    "itype" -> item.format = content
-                    "title" -> {
+                    "itype", "Bestelltyp" -> item.format = content
+                    "title", "Titel" -> {
                         item.title = content
                         val link = col.select("a[href]").first()?.attr("href")
                         if (link != null) {
                             item.id = BaseApi.getQueryParamsFirst(link)["biblionumber"]
                         }
                     }
+                    "author", "Verfasser" -> item.author = content
                     "date_due" -> if (item is LentItem) item.deadline = parseDate(col)
                     "branch" -> if (item is LentItem) {
                         item.lendingBranch = content
@@ -445,7 +457,7 @@ open class Koha : OkHttpBaseApi() {
                         item.branch = content
                     }
                     "expirationdate" -> if (item is ReservedItem) item.expirationDate = parseDate(col)
-                    "status" -> item.status = content
+                    "status", "Status" -> item.status = content
                     "modify" -> if (item is ReservedItem) {
                         item.cancelData = "${col.select("input[name=biblionumber]").attr("value")}:${col.select("input[name=reserve_id]").attr("value")}"
                     }
