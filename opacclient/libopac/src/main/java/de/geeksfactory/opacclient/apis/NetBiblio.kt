@@ -11,15 +11,20 @@ import de.geeksfactory.opacclient.utils.get
 import de.geeksfactory.opacclient.utils.html
 import de.geeksfactory.opacclient.utils.text
 import okhttp3.FormBody
+import org.joda.time.format.DateTimeFormat
 import org.json.JSONException
 import org.json.JSONObject
+import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
 import org.jsoup.nodes.TextNode
+import org.jsoup.select.Elements
 
 open class NetBiblio : OkHttpBaseApi() {
     protected lateinit var opacUrl: String
     protected val ENCODING = "UTF-8"
+    protected val PAGE_SIZE = 25
     protected var lang = "en"
+    protected var searchResultId: String? = null
 
     override fun init(library: Library, http_client_factory: HttpClientFactory?) {
         super.init(library, http_client_factory)
@@ -104,6 +109,8 @@ open class NetBiblio : OkHttpBaseApi() {
     }
 
     override fun search(query: List<SearchQuery>): SearchRequestResult {
+        if (!initialised) start()
+        searchResultId = null
         val body = FormBody.Builder()
 
         var textCount = 0
@@ -116,19 +123,19 @@ open class NetBiblio : OkHttpBaseApi() {
                     throw OpacApi.OpacErrorException(stringProvider.getString(StringProvider.COMBINATION_NOT_SUPPORTED))
                 }
                 body.add("Request.SearchTerm", q.value)
-                body.add("Request.SearchKey", q.key)
+                body.add("Request.SearchField", q.key)
                 textCount ++
             }
         }
         if (textCount == 0) {
             body.add("Request.SearchTerm", "")
-            body.add("Request.SearchKey", "W")
+            body.add("Request.SearchField", "W")
             textCount ++
         }
         if (textCount == 1) {
             body.add("Request.SearchOperator", "AND")
             body.add("Request.SearchTerm", "")
-            body.add("Request.SearchKey", "W")
+            body.add("Request.SearchField", "W")
         }
 
         for (q in query) {
@@ -142,25 +149,44 @@ open class NetBiblio : OkHttpBaseApi() {
             }
         }
 
-        body.add("Request.PageSize", "25")
+        body.add("Request.PageSize", "$PAGE_SIZE")
 
         val doc = httpPost("$opacUrl/search/extended/submit", body.build(), ENCODING).html
         return parseSearch(doc, 1)
     }
 
     protected fun parseSearch(doc: Document, page: Int): SearchRequestResult {
-        val countText = doc.select("wo-grid-meta-resultcount").text
+        // save search result ID for later access
+        val href = doc.select(".next-page a").first()?.attr("href")
+        if (href != null) searchResultId = BaseApi.getQueryParamsFirst(href)["searchResultId"]
+
+        val resultcountElem = doc.select(".wo-grid-meta-resultcount").first()
+                ?: return SearchRequestResult(emptyList(), 0, page)
+        val countText = resultcountElem.text
         val totalCount = Regex("\\d+").findAll(countText).last().value.toInt()
 
         val results = doc.select(".wo-grid-table tbody tr").groupBy { row ->
             // there are multiple rows for one entry. Their CSS IDs all have the same prefix
             val id = row.attr("id")
-            Regex("wo-row_\\d+").find(id)!!.value
+            Regex("wo-row_(\\d+)").find(id)!!.groupValues[1]
         }.map { entry ->
             val rows = entry.value
-            val titleRow = rows[0]
+            val cols = rows[0].select("td[style=font-size: 14px;]")
+            val titleCol = cols.first()
             SearchResult().apply {
-                innerhtml = titleRow.select("td[style=font-size: 14px;] a").text
+                val title = titleCol.select("a").text
+                val author = titleCol.ownText()
+                val moreInfo = cols.drop(1).map { it.text }.joinToString(" / ")
+                this.id = entry.key
+                innerhtml = "<b>$title</b><br>${author ?: ""}<br>${moreInfo ?: ""}"
+                cover = rows[0].select(".wo-cover").first()?.attr("src")
+
+                val availIcon = rows[0].select(".wo-disposability-icon").attr("src")
+                status = when {
+                    availIcon.endsWith("yes.png") -> SearchResult.Status.GREEN
+                    availIcon.endsWith("no.png") -> SearchResult.Status.RED
+                    else -> SearchResult.Status.UNKNOWN
+                }
             }
         }
 
@@ -172,11 +198,64 @@ open class NetBiblio : OkHttpBaseApi() {
     }
 
     override fun searchGetPage(page: Int): SearchRequestResult? {
-        return null
+        val doc = httpGet("$opacUrl/search/shortview?searchType=Extended" +
+                "&searchResultId=$searchResultId&page=$page&pageSize=$PAGE_SIZE", ENCODING).html
+        return parseSearch(doc, page)
     }
 
-    override fun getResultById(id: String, homebranch: String): DetailedItem? {
-        return null
+    override fun getResultById(id: String, homebranch: String?): DetailedItem {
+        val doc = httpGet("$opacUrl/search/notice?noticeId=$id", ENCODING).html
+        return parseDetail(doc, id)
+    }
+
+    protected fun parseDetail(doc: Document, id: String): DetailedItem {
+        return DetailedItem().apply {
+            title = doc.select(".wo-marc-title").first().text
+            this.id = id
+            cover = doc.select(".wo-cover").first()?.attr("src")
+            details.addAll(doc.select("#lst-fullview_Details .wo-list-label").toList()
+                    .associateWith { label -> label.nextElementSibling() }
+                    .map {
+                        entry -> Detail(entry.key.text, entry.value.text)
+                    })
+            val description = doc.select(
+                    ".wo-list-content-no-label[style=background-color:#F3F3F3;]").text
+            details.add(Detail(stringProvider.getString(StringProvider.DESCRIPTION), description))
+
+            val copyCols = doc.select(".wo-grid-table > thead > tr > th").map { it.text.trim() }
+            val df = DateTimeFormat.forPattern("dd.MM.yyyy")
+            copies = doc.select(".wo-grid-table > tbody > tr").map { row ->
+                Copy().apply {
+                    row.select("td").zip(copyCols).forEach {(col, header) ->
+                        val headers = header.split(" / ").map { it.trim() }
+                        val data = col.html().split("<br>").map { it.html.text.trim() }
+                        headers.zip(data).forEach {
+                            (type, data) ->
+                            when (type) {
+                                "" -> {}
+                                "Bibliothek" -> branch = data
+                                "Aktueller Standort" -> location = data
+                                "Signatur" -> shelfmark = data
+                                "Verfügbarkeit" -> status = data
+                                "Fälligkeitsdatum" -> returnDate = if (data.isEmpty()) {
+                                    null
+                                } else {
+                                    df.parseLocalDate(data)
+                                }
+                                "Anz. Res." -> reservations = data
+                                "Reservieren" -> {
+                                    val button = col.select("a").first()
+                                    if (button != null) {
+                                        resInfo = BaseApi.getQueryParamsFirst(button.attr("href"))["selectedItems"]
+                                    }
+                                }
+                                "Exemplarnr" -> barcode = data
+                            }
+                        }
+                    }
+                }
+            }
+        }
     }
 
     override fun getResult(position: Int): DetailedItem? {
