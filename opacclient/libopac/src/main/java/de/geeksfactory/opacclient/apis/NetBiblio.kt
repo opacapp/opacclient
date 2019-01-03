@@ -14,10 +14,9 @@ import okhttp3.FormBody
 import org.joda.time.format.DateTimeFormat
 import org.json.JSONException
 import org.json.JSONObject
-import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
 import org.jsoup.nodes.TextNode
-import org.jsoup.select.Elements
+import java.net.URL
 
 open class NetBiblio : OkHttpBaseApi() {
     protected lateinit var opacUrl: String
@@ -249,7 +248,7 @@ open class NetBiblio : OkHttpBaseApi() {
                                         resInfo = BaseApi.getQueryParamsFirst(button.attr("href"))["selectedItems"]
                                     }
                                 }
-                                "Exemplarnr" -> barcode = data
+                                "Exemplarnr", "Item number", "No d'exemplaire" -> barcode = data
                             }
                         }
                     }
@@ -280,11 +279,28 @@ open class NetBiblio : OkHttpBaseApi() {
     }
 
     override fun account(account: Account): AccountData? {
-        return null
+        if (!initialised) start()
+        login(account)
+        return AccountData(account.id).apply {
+
+        }
     }
 
     override fun checkAccountData(account: Account) {
+        login(account)
+    }
 
+    private fun login(account: Account) {
+        val formData = FormBody.Builder()
+                .add("ReturnUrl", "${URL(opacUrl).path}/account")
+                .add("Username", account.name)
+                .add("Password", account.password)
+                .add("SaveUsernameInCookie", "false")
+                .add("StayLoggedIn", "false").build()
+        val doc = httpPost("$opacUrl/account/login", formData, ENCODING).html
+        if (doc.select(".alert").size > 0) {
+            throw OpacApi.OpacErrorException(doc.select(".alert").first().ownText())
+        }
     }
 
     override fun getShareUrl(id: String, title: String): String? {
