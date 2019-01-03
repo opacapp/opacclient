@@ -426,11 +426,8 @@ public class Adis extends ApacheBaseApi implements OpacApi {
                             .attr("value")));
                 }
             }
-            String name = "$Toolbar_0";
-            if (doc.select("[id^=Toolbar_][title*=Trefferliste]").size() > 0) {
-                // In Stuttgart, "Trefferliste" is Nr. 5, in Zurich its Nr. 1. Ofen, 0 ("back") works as well.
-                name = doc.select("[id^=Toolbar_][title*=Trefferliste]").first().attr("name");
-            }
+
+            String name = getNameToolbarTrefferListe(doc);
             nvpairs.add(new BasicNameValuePair(name + ".x", "1"));
             nvpairs.add(new BasicNameValuePair(name + ".y", "1"));
 
@@ -442,6 +439,14 @@ public class Adis extends ApacheBaseApi implements OpacApi {
                 throw new NotReachableException();
             }
         }
+    }
+
+    private String getNameToolbarTrefferListe(Document doc) {
+        if (doc.select("[id^=Toolbar_][title*=Trefferliste]").size() > 0) {
+            // In Stuttgart, "Trefferliste" is Nr. 5, in Zurich its Nr. 1. Ofen, 0 ("back") works as well.
+            return doc.select("[id^=Toolbar_][title*=Trefferliste]").first().attr("name");
+        }
+        return "$Toolbar_0";
     }
 
     private SearchRequestResult parse_search(Document doc, int page)
@@ -534,10 +539,12 @@ public class Adis extends ApacheBaseApi implements OpacApi {
                     res.setType(types.get(ttext.split("\\+")[0].trim()));
                 } else if (ttext.matches(".*ist verf.+gbar") ||
                         ttext.contains("is available") ||
+                        ttext.contains("ist ausleihbar") ||
                         img.attr("href").contains("verfu_ja")) {
                     res.setStatus(SearchResult.Status.GREEN);
                 } else if (ttext.matches(".*nicht verf.+gbar") ||
                         ttext.contains("not available") ||
+                        ttext.contains("nicht ausleihbar") ||
                         img.attr("href").contains("verfu_nein")) {
                     res.setStatus(SearchResult.Status.RED);
                 }
@@ -659,10 +666,13 @@ public class Adis extends ApacheBaseApi implements OpacApi {
 
         // Reset
         updatePageform(doc);
+
         nvpairs = s_pageform;
-        nvpairs.add(new BasicNameValuePair("$Toolbar_1.x", "1"));
-        nvpairs.add(new BasicNameValuePair("$Toolbar_1.y", "1"));
+        String name = getNameToolbarTrefferListe(doc);
+        nvpairs.add(new BasicNameValuePair(name + ".x", "1"));
+        nvpairs.add(new BasicNameValuePair(name + ".y", "1"));
         parse_search_wrapped(htmlPost(opac_url + ";jsessionid=" + s_sid, nvpairs), 1);
+
         nvpairs = s_pageform;
         nvpairs.add(new BasicNameValuePair("$Toolbar_3.x", "1"));
         nvpairs.add(new BasicNameValuePair("$Toolbar_3.y", "1"));
