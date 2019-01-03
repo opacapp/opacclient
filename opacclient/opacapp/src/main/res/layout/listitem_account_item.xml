@@ -40,8 +40,8 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="1"
-        android:layout_marginLeft="8dp"
-        android:layout_marginStart="8dp"
+        android:layout_marginLeft="4dp"
+        android:layout_marginStart="4dp"
         android:clickable="false"
         android:orientation="vertical"
         android:paddingBottom="4dp"
@@ -103,47 +103,45 @@
         android:animateLayoutChanges="true"
         android:orientation="vertical"
         android:layout_marginLeft="4dp"
-        android:layout_marginRight="4dp">
+        android:layout_marginRight="8dp"
+        android:layout_marginTop="12dp"
+        android:layout_marginBottom="12dp">
 
         <ImageButton
             android:id="@+id/ivProlong"
-            android:layout_width="48dp"
-            android:layout_height="48dp"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
             android:background="@drawable/ripple_unmasked"
             android:contentDescription="@string/prolong"
-            android:padding="12dp"
             app:srcCompat="@drawable/ic_prolong_24dp"
             tools:src="@drawable/ic_prolong_24dp"/>
 
         <ImageButton
             android:id="@+id/ivDownload"
-            android:layout_width="48dp"
-            android:layout_height="48dp"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
             android:background="@drawable/ripple_unmasked"
             android:contentDescription="@string/download"
-            android:padding="12dp"
             android:visibility="gone"
             app:srcCompat="@drawable/ic_download_24dp"
             tools:src="@drawable/ic_download_24dp"/>
 
         <ImageButton
             android:id="@+id/ivCancel"
-            android:layout_width="48dp"
-            android:layout_height="48dp"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
             android:background="@drawable/ripple_unmasked"
             android:contentDescription="@string/reservation_cancel"
-            android:padding="12dp"
             android:visibility="gone"
             app:srcCompat="@drawable/ic_cancel_24dp"
             tools:src="@drawable/ic_cancel_24dp"/>
 
         <ImageButton
             android:id="@+id/ivBooking"
-            android:layout_width="48dp"
-            android:layout_height="48dp"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
             android:background="@drawable/ripple_unmasked"
             android:contentDescription="@string/reservation_book"
-            android:padding="12dp"
             android:visibility="gone"
             app:srcCompat="@drawable/ic_booking_24dp"
             tools:src="@drawable/ic_booking_24dp"/>
