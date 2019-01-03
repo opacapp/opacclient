@@ -234,15 +234,16 @@ open class NetBiblio : OkHttpBaseApi() {
                                 "" -> {}
                                 "Bibliothek" -> branch = data
                                 "Aktueller Standort" -> location = data
-                                "Signatur" -> shelfmark = data
-                                "Verfügbarkeit" -> status = data
-                                "Fälligkeitsdatum" -> returnDate = if (data.isEmpty()) {
-                                    null
-                                } else {
-                                    df.parseLocalDate(data)
-                                }
+                                "Signatur", "Call number", "Cote" -> shelfmark = data
+                                "Verfügbarkeit", "Disposability", "Disponsibilité" -> status = data
+                                "Fälligkeitsdatum", "Due date", "Date d'échéance" ->
+                                    returnDate = if (data.isEmpty()) {
+                                        null
+                                    } else {
+                                        df.parseLocalDate(data)
+                                    }
                                 "Anz. Res." -> reservations = data
-                                "Reservieren" -> {
+                                "Reservieren", "Reserve", "Réserver" -> {
                                     val button = col.select("a").first()
                                     if (button != null) {
                                         resInfo = BaseApi.getQueryParamsFirst(button.attr("href"))["selectedItems"]
