@@ -19,6 +19,7 @@
 package de.geeksfactory.opacclient;
 
 import de.geeksfactory.opacclient.apis.Adis;
+import de.geeksfactory.opacclient.apis.Arena;
 import de.geeksfactory.opacclient.apis.BiBer1992;
 import de.geeksfactory.opacclient.apis.Bibliotheca;
 import de.geeksfactory.opacclient.apis.Heidi;
@@ -133,6 +134,8 @@ public class OpacApiFactory {
             newApiInstance = new Koha();
         } else if (lib.getApi().equals("netbiblio")) {
             newApiInstance = new NetBiblio();
+        } else if (lib.getApi().equals("arena")) {
+            newApiInstance = new Arena();
         } else if (lib.getApi().equals("test")) {
             newApiInstance = new TestApi();
         } else {
