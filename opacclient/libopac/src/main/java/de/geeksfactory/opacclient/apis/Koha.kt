@@ -416,12 +416,12 @@ open class Koha : OkHttpBaseApi() {
         return accountData
     }
 
-    private fun parseFees(feesDoc: Document): String? {
+    internal fun parseFees(feesDoc: Document): String? {
         val text = feesDoc.select("td.sum").text()
         return if (!text.isBlank()) text else null
     }
 
-    private fun <I : AccountItem> parseItems(doc: Document, constructor: () -> I, id: String): List<I> {
+    internal fun <I : AccountItem> parseItems(doc: Document, constructor: () -> I, id: String): List<I> {
         val lentTable = doc.select(id).first() ?: return emptyList()
 
         return lentTable.select("tbody tr").map { row ->
