@@ -35,6 +35,7 @@ import de.geeksfactory.opacclient.apis.PicaOld;
 import de.geeksfactory.opacclient.apis.Primo;
 import de.geeksfactory.opacclient.apis.SISIS;
 import de.geeksfactory.opacclient.apis.SLIM;
+import de.geeksfactory.opacclient.apis.SLUB;
 import de.geeksfactory.opacclient.apis.SRU;
 import de.geeksfactory.opacclient.apis.TestApi;
 import de.geeksfactory.opacclient.apis.TouchPoint;
@@ -141,6 +142,8 @@ public class OpacApiFactory {
             newApiInstance = new Koha();
         } else if (lib.getApi().equals("netbiblio")) {
             newApiInstance = new NetBiblio();
+        } else if (lib.getApi().equals("slub")) {
+            newApiInstance = new SLUB();
         } else if (lib.getApi().equals("arena")) {
             newApiInstance = new Arena();
         } else if (lib.getApi().equals("slim")) {
