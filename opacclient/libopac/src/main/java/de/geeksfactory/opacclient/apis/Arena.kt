@@ -1,6 +1,7 @@
 package de.geeksfactory.opacclient.apis
 
 import de.geeksfactory.opacclient.networking.HttpClientFactory
+import de.geeksfactory.opacclient.networking.NotReachableException
 import de.geeksfactory.opacclient.objects.*
 import de.geeksfactory.opacclient.searchfields.DropdownSearchField
 import de.geeksfactory.opacclient.searchfields.SearchField
@@ -9,6 +10,11 @@ import de.geeksfactory.opacclient.searchfields.TextSearchField
 import de.geeksfactory.opacclient.utils.get
 import de.geeksfactory.opacclient.utils.html
 import de.geeksfactory.opacclient.utils.text
+import okhttp3.FormBody
+import okhttp3.Request
+import org.jsoup.nodes.Document
+import java.net.URL
+import java.util.*
 
 /**
  * OpacApi implementation for the Arena OPAC developed by Axiell. https://www.axiell.de/arena/
@@ -73,7 +79,74 @@ class Arena: OkHttpBaseApi() {
     }
 
     override fun search(query: MutableList<SearchQuery>): SearchRequestResult {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        val searchForm = httpGet("$opacUrl/extended-search", ENCODING).html
+                .select(".arena-extended-search-original").first()
+
+        val formData = FormBody.Builder().apply {
+            searchForm.select("input[type=hidden]").forEach { hidden ->
+                add(hidden["name"], hidden["value"])
+            }
+            val submit = searchForm.select("input[type=submit]").first()
+            add(submit["name"], submit["value"])
+            query.forEach { q ->
+                add(q.key, q.value)
+            }
+        }.build()
+        val doc = httpPost(searchForm["action"], formData, ENCODING).html
+        return parseSearch(doc)
+    }
+
+    internal fun parseSearch(doc: Document, page: Int = 1): SearchRequestResult {
+        val count = doc.select(".feedbackPanelinfo").text.replace(Regex("[^\\d]"), "").toInt()
+
+        val results = doc.select(".arena-record").mapIndexed { i, record ->
+            SearchResult().apply {
+                val title = record.select(".arena-record-title").text
+                val year = record.select(".arena-record-year .arena-value").first()?.text
+                val author = record.select(".arena-record-author .arena-value").map { it.text }.joinToString(", ")
+
+                innerhtml = "<b>$title</b><br>$author ${year ?: ""}"
+                id = record.select(".arena-record-id").first().text
+
+
+                // fetch cover
+                val data = FormBody.Builder()
+                        .add("p_p_id", "searchResult_WAR_arenaportlets")
+                        .add("p_p_lifecycle", "2")
+                        .add("p_p_state", "normal")
+                        .add("p_p_mode", "view")
+                        .add("p_p_resource_id", "/searchResult/?wicket:interface=:4:searchResultPanel:dataContainer:dataView:${i + 1}:containerItem:item:indexedRecordPanel:coverDecorPanel::IBehaviorListener:0:")
+                        .add("p_p_cacheability", "cacheLevelPage")
+                        .add("p_p_col_id", "column-2")
+                        .add("p_p_col_pos", "1")
+                        .add("p_p_col_count", "2")
+                        .build()
+
+                val xml = httpPostWicket("$opacUrl/search?random=${Random().nextDouble()}", data, ENCODING)
+                val url = Regex("<img src=\"([^\"]+)").find(xml)?.groups?.get(1)?.toString()
+                cover = if (url != null) URL(URL(opacUrl), url).toString() else null
+            }
+        }
+        return SearchRequestResult(results, count, page)
+    }
+
+    private fun httpPostWicket(url: String, data: FormBody, encoding: String): CharSequence {
+        var requestbuilder: Request.Builder = Request.Builder()
+                .url(BaseApi.cleanUrl(url))
+                .header("Accept", "*/*")
+                .header("User-Agent", userAgent)
+                .header("Wicket-Ajax", "true")
+
+        if (data.contentType() != null) {
+            requestbuilder = requestbuilder.header("Content-Type", data.contentType()!!.toString())
+        }
+        val request = requestbuilder.post(data).build()
+        try {
+            val response = http_client.newCall(request).execute()
+            return response.body()!!.string()
+        } catch (e: Exception) {
+            throw NotReachableException()
+        }
     }
 
     override fun filterResults(filter: Filter, option: Filter.Option): SearchRequestResult {
