@@ -1,7 +1,6 @@
 package de.geeksfactory.opacclient.apis
 
 import de.geeksfactory.opacclient.networking.HttpClientFactory
-import de.geeksfactory.opacclient.networking.NotReachableException
 import de.geeksfactory.opacclient.objects.*
 import de.geeksfactory.opacclient.searchfields.DropdownSearchField
 import de.geeksfactory.opacclient.searchfields.SearchField
@@ -11,17 +10,16 @@ import de.geeksfactory.opacclient.utils.get
 import de.geeksfactory.opacclient.utils.html
 import de.geeksfactory.opacclient.utils.text
 import okhttp3.FormBody
-import okhttp3.Request
 import org.jsoup.nodes.Document
+import org.jsoup.nodes.Element
 import java.net.URL
-import java.util.*
 
 /**
  * OpacApi implementation for the Arena OPAC developed by Axiell. https://www.axiell.de/arena/
  *
  * @author Johan von Forstner, January 2019
  */
-class Arena: OkHttpBaseApi() {
+open class Arena : OkHttpBaseApi() {
     protected lateinit var opacUrl: String
     protected val ENCODING = "UTF-8"
 
@@ -98,6 +96,7 @@ class Arena: OkHttpBaseApi() {
 
     internal fun parseSearch(doc: Document, page: Int = 1): SearchRequestResult {
         val count = doc.select(".feedbackPanelinfo").text.replace(Regex("[^\\d]"), "").toInt()
+        val coverAjaxUrls = getCoverAjaxUrls(doc)
 
         val results = doc.select(".arena-record").mapIndexed { i, record ->
             SearchResult().apply {
@@ -107,45 +106,40 @@ class Arena: OkHttpBaseApi() {
 
                 innerhtml = "<b>$title</b><br>$author ${year ?: ""}"
                 id = record.select(".arena-record-id").first().text
-
-
-                // fetch cover
-                val data = FormBody.Builder()
-                        .add("p_p_id", "searchResult_WAR_arenaportlets")
-                        .add("p_p_lifecycle", "2")
-                        .add("p_p_state", "normal")
-                        .add("p_p_mode", "view")
-                        .add("p_p_resource_id", "/searchResult/?wicket:interface=:4:searchResultPanel:dataContainer:dataView:${i + 1}:containerItem:item:indexedRecordPanel:coverDecorPanel::IBehaviorListener:0:")
-                        .add("p_p_cacheability", "cacheLevelPage")
-                        .add("p_p_col_id", "column-2")
-                        .add("p_p_col_pos", "1")
-                        .add("p_p_col_count", "2")
-                        .build()
-
-                val xml = httpPostWicket("$opacUrl/search?random=${Random().nextDouble()}", data, ENCODING)
-                val url = Regex("<img src=\"([^\"]+)").find(xml)?.groups?.get(1)?.toString()
-                cover = if (url != null) URL(URL(opacUrl), url).toString() else null
+                cover = getCover(record, coverAjaxUrls)
             }
         }
         return SearchRequestResult(results, count, page)
     }
 
-    private fun httpPostWicket(url: String, data: FormBody, encoding: String): CharSequence {
-        var requestbuilder: Request.Builder = Request.Builder()
-                .url(BaseApi.cleanUrl(url))
-                .header("Accept", "*/*")
-                .header("User-Agent", userAgent)
-                .header("Wicket-Ajax", "true")
-
-        if (data.contentType() != null) {
-            requestbuilder = requestbuilder.header("Content-Type", data.contentType()!!.toString())
+    internal fun getCover(record: Element, coverAjaxUrls: Map<String, String>): String? {
+        val coverHolder = record.select(".arena-record-cover").first()
+        if (coverHolder != null) {
+            val id = coverHolder["id"]
+            if (coverAjaxUrls.containsKey(id)) {
+                // get cover via ajax
+                val xml = httpGet(coverAjaxUrls[id], ENCODING)
+                val url = Regex("<img src=\"([^\"]+)").find(xml)?.groups?.get(1)
+                        ?.value?.replace("&amp;", "&")
+                return if (url != null) URL(URL(opacUrl), url).toString() else null
+            } else if (coverHolder.select("img:not([src*=indicator.gif])").size > 0) {
+                // cover is included as img tag
+                val url = coverHolder.select("img:not([src*=indicator.gif])").first()["src"]
+                return URL(URL(opacUrl), url).toString()
+            }
         }
-        val request = requestbuilder.post(data).build()
-        try {
-            val response = http_client.newCall(request).execute()
-            return response.body()!!.string()
-        } catch (e: Exception) {
-            throw NotReachableException()
+        return null
+    }
+
+    internal fun getCoverAjaxUrls(doc: Document): Map<String, String> {
+        val regex = Regex(Regex.escape(
+                "<script type=\"text/javascript\">Wicket.Event.add(window,\"domready\",function(b){var a=wicketAjaxGet(\"")
+                + "([^\"]+)"
+                + Regex.escape("\",function(){}.bind(this),function(){}.bind(this),function(){return Wicket.\$(\"")
+                + "([^\"]+)"
+                + Regex.escape("\")!=null}.bind(this))});</script>"))
+        return regex.findAll(doc.html()).associate { match ->
+            Pair(match.groups[2]!!.value, match.groups[1]!!.value)
         }
     }
 
