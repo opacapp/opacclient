@@ -83,9 +83,15 @@
     </string-array>
     <string name="notification_warning">Période d\'alerte</string>
     <string name="notification_warning_desc">Combien de temps avant la date d\'échéance la notification doit-elle être affichée?</string>
-    <string name="notif_ticker">%d articles sont sur le point d\'expirer!</string>
+    <plurals name="notif_ticker">
+        <item quantity="one">%d article est sur le point d\'expirer!</item>
+        <item quantity="other">%d articles sont sur le point d\'expirer!</item>
+    </plurals>
     <string name="notif_title">Des articles sont sur le point d\'expirer</string>
-    <string name="notif_ticker_expired">%d articles ont expiré !</string>
+    <plurals name="notif_ticker_expired">
+        <item quantity="one">%d article a expiré!</item>
+        <item quantity="other">%d articles ont expiré!</item>
+    </plurals>
     <string name="notif_title_expired">Des articles ont expiré</string>
     <string name="notif_plus_more">et %d de plus</string>
     <string name="notif_snooze">Plus tard</string>

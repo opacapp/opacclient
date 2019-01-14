@@ -19,7 +19,6 @@
 package de.geeksfactory.opacclient.apis;
 
 import org.apache.http.NameValuePair;
-import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.utils.URLEncodedUtils;
 import org.apache.http.message.BasicNameValuePair;
 import org.joda.time.format.DateTimeFormat;
@@ -34,7 +33,6 @@ import org.jsoup.nodes.TextNode;
 import org.jsoup.select.Elements;
 
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -64,13 +62,14 @@ import de.geeksfactory.opacclient.searchfields.DropdownSearchField;
 import de.geeksfactory.opacclient.searchfields.SearchField;
 import de.geeksfactory.opacclient.searchfields.SearchQuery;
 import de.geeksfactory.opacclient.searchfields.TextSearchField;
+import okhttp3.FormBody;
 
 /**
  * API für Web-Opacs von Zones mit dem Hinweis "Zones.2.2.45.xx" oder "ZONES v1.8.1" im Footer.
  *
  * TODO: Kontofunktionen für Zones 1.8.1
  */
-public class Zones extends ApacheBaseApi {
+public class Zones extends OkHttpBaseApi {
 
     private static HashMap<String, MediaType> defaulttypes = new HashMap<>();
 
@@ -758,26 +757,23 @@ public class Zones extends ApacheBaseApi {
         if (doc.select("#LoginForm").size() == 0) {
             throw new NotReachableException("Login form not found");
         }
-        List<NameValuePair> params = new ArrayList<>();
+
+        FormBody.Builder params = new FormBody.Builder();
 
         for (Element input : doc.select("#LoginForm input")) {
             if (!input.attr("name").equals("BRWR")
                     && !input.attr("name").equals("PIN")) {
-                params.add(new BasicNameValuePair(input.attr("name"), input
-                        .attr("value")));
+                params.add(input.attr("name"), input.attr("value"));
             }
         }
-        params.add(new BasicNameValuePair("BRWR", acc.getName()));
-        params.add(new BasicNameValuePair("PIN", acc.getPassword()));
+        params.add("BRWR", acc.getName());
+        params.add("PIN", acc.getPassword());
 
         String loginHtml;
         try {
             loginHtml = httpPost(
                     doc.select("#LoginForm").get(0).absUrl("action"),
-                    new UrlEncodedFormEntity(params), getDefaultEncoding());
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
-            return null;
+                    params.build(), getDefaultEncoding());
         } catch (IOException e) {
             e.printStackTrace();
             return null;

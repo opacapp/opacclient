@@ -216,7 +216,7 @@ open class Koha : OkHttpBaseApi() {
         }
 
         val builder = searchUrl(searchQuery!!)
-        builder.addQueryParameter("offset", (20 * page).toString())
+        builder.addQueryParameter("offset", (20 * (page - 1)).toString())
         val url = builder.build().toString()
         val doc = httpGet(url, ENCODING).html
         doc.setBaseUri(url)
@@ -416,12 +416,12 @@ open class Koha : OkHttpBaseApi() {
         return accountData
     }
 
-    private fun parseFees(feesDoc: Document): String? {
+    internal fun parseFees(feesDoc: Document): String? {
         val text = feesDoc.select("td.sum").text()
         return if (!text.isBlank()) text else null
     }
 
-    private fun <I : AccountItem> parseItems(doc: Document, constructor: () -> I, id: String): List<I> {
+    internal fun <I : AccountItem> parseItems(doc: Document, constructor: () -> I, id: String): List<I> {
         val lentTable = doc.select(id).first() ?: return emptyList()
 
         return lentTable.select("tbody tr").map { row ->

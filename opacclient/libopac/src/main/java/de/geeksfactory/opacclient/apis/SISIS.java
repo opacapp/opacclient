@@ -154,6 +154,33 @@ public class SISIS extends OkHttpBaseApi implements OpacApi {
         defaulttypes.put("Web-Link", MediaType.URL);
         defaulttypes.put("ejournal", MediaType.EDOC);
         defaulttypes.put("karte", MediaType.MAP);
+        defaulttypes.put("Blu-ray Disc", MediaType.BLURAY );
+        defaulttypes.put("Blu-ray Disc 3D", MediaType.BLURAY ); // TODO: define more specific media type
+        defaulttypes.put("CD-ROM", MediaType.CD_SOFTWARE );
+        defaulttypes.put("DVD-ROM", MediaType.DVD ); // TODO: define more specific media type
+        defaulttypes.put("eAudio", MediaType.EAUDIO );
+        defaulttypes.put("eMusic", MediaType.EAUDIO );
+        defaulttypes.put("ePaper", MediaType.EDOC );
+        defaulttypes.put("eText", MediaType.EDOC );
+        defaulttypes.put("eVideo", MediaType.EVIDEO );
+        defaulttypes.put("Ausleihgerät", MediaType.DEVICE );
+        defaulttypes.put("Kinderbuch", MediaType.BOOK );
+        defaulttypes.put("Schallplatte", MediaType.LP_RECORD );
+        defaulttypes.put("Medienkombination", MediaType.PACKAGE );
+        defaulttypes.put("MP3-CD", MediaType.MP3 );
+        defaulttypes.put("Spiel für Nintendo DS", MediaType.GAME_CONSOLE_NINTENDO );
+        defaulttypes.put("Spiel für Nintendo 3DS", MediaType.GAME_CONSOLE_NINTENDO );
+        defaulttypes.put("Spiel für PlayStation 2", MediaType.GAME_CONSOLE_PLAYSTATION );
+        defaulttypes.put("Spiel für PlayStation 3", MediaType.GAME_CONSOLE_PLAYSTATION );
+        defaulttypes.put("Spiel für PlayStation 4", MediaType.GAME_CONSOLE_PLAYSTATION );
+        defaulttypes.put("Spiel", MediaType.BOARDGAME );
+        defaulttypes.put("Spiel für Nintendo Switch", MediaType.GAME_CONSOLE_NINTENDO );
+        defaulttypes.put("Spiel für Nintendo Wii", MediaType.GAME_CONSOLE_WII );
+        defaulttypes.put("Spiel für Nintendo Wii U", MediaType.GAME_CONSOLE_WII );
+        defaulttypes.put("Spiel für Xbox 360", MediaType.GAME_CONSOLE_XBOX );
+        defaulttypes.put("Spiel für Xbox One", MediaType.GAME_CONSOLE_XBOX );
+        defaulttypes.put("Zeitung / Zeitschrift", MediaType.NEWSPAPER );
+        defaulttypes.put("Zeitschriftenheft", MediaType.MAGAZINE );
     }
 
     protected final long SESSION_LIFETIME = 1000 * 60 * 3;
@@ -421,39 +448,12 @@ public class SISIS extends OkHttpBaseApi implements OpacApi {
         List<SearchResult> results = new ArrayList<>();
         List<CompletableFuture<Void>> futures = new ArrayList<>();
         for (int i = 0; i < table.size(); i++) {
-            Element tr = table.get(i);
             SearchResult sr = new SearchResult();
-            if (tr.select("td img[title]").size() > 0) {
-                String title = tr.select("td img").get(0).attr("title");
-                String[] fparts = tr.select("td img").get(0).attr("src")
-                                    .split("/");
-                String fname = fparts[fparts.length - 1];
-                MediaType default_by_fname = defaulttypes.get(fname
-                        .toLowerCase(Locale.GERMAN).replace(".jpg", "")
-                        .replace(".gif", "").replace(".png", ""));
-                MediaType default_by_title = defaulttypes.get(title);
-                MediaType default_name = default_by_title != null ? default_by_title
-                        : default_by_fname;
-                if (data.has("mediatypes")) {
-                    try {
-                        sr.setType(MediaType.valueOf(data.getJSONObject(
-                                "mediatypes").getString(fname)));
-                    } catch (JSONException | IllegalArgumentException e) {
-                        sr.setType(default_name);
-                    }
-                } else {
-                    sr.setType(default_name);
-                }
-            }
-            String alltext = tr.text();
-            if (alltext.contains("eAudio") || alltext.contains("eMusic")) {
-                sr.setType(MediaType.MP3);
-            } else if (alltext.contains("eVideo")) {
-                sr.setType(MediaType.EVIDEO);
-            } else if (alltext.contains("eBook")) {
-                sr.setType(MediaType.EBOOK);
-            } else if (alltext.contains("Munzinger")) {
-                sr.setType(MediaType.EDOC);
+            Element tr = table.get(i);
+
+            MediaTypeOrFormat mediaTypeOrFormat = getMediaTypeOrFormat(tr, "td", data);
+            if (mediaTypeOrFormat.mediaType != null){
+                sr.setType(mediaTypeOrFormat.mediaType);
             }
 
             // static covers
@@ -1463,6 +1463,12 @@ public class SISIS extends OkHttpBaseApi implements OpacApi {
             }
 
             item.setTitle(tr.child(1).select("strong").text().trim());
+            MediaTypeOrFormat mediaTypeOrFormat = getMediaTypeOrFormat(tr, "th", data);
+            if( mediaTypeOrFormat.mediaType != null){
+                item.setMediaType(mediaTypeOrFormat.mediaType);
+            } else {
+                item.setFormat(mediaTypeOrFormat.format);
+            }
             try {
                 String[] col1split = tr.child(1).html().split("<br[ /]*>");
                 item.setAuthor(col1split[1].trim());
@@ -1513,6 +1519,52 @@ public class SISIS extends OkHttpBaseApi implements OpacApi {
 
             media.add(item);
         }
+    }
+
+    private static class MediaTypeOrFormat{
+        SearchResult.MediaType mediaType;
+        String format;
+    }
+
+    private static MediaTypeOrFormat getMediaTypeOrFormat(Element tr, String child, JSONObject data) {
+        MediaTypeOrFormat mediaTypeOrFormat = new MediaTypeOrFormat();
+
+        if (tr.select(child + " img[title]").size() > 0) {
+            String title = tr.select(child + " img").get(0).attr("title");
+            String[] fparts = tr.select(child + " img").get(0).attr("src")
+                                .split("/");
+            String fname = fparts[fparts.length - 1];
+            MediaType default_by_fname = defaulttypes.get(fname
+                    .toLowerCase(Locale.GERMAN).replace(".jpg", "")
+                    .replace(".gif", "").replace(".png", ""));
+            MediaType default_by_title = defaulttypes.get(title);
+            MediaType default_name = default_by_title != null ? default_by_title
+                    : default_by_fname;
+            if (data.has("mediatypes")) {
+                try {
+                    mediaTypeOrFormat.mediaType = MediaType.valueOf(data.getJSONObject(
+                            "mediatypes").getString(fname));
+                } catch (JSONException | IllegalArgumentException e) {
+                    mediaTypeOrFormat.mediaType = default_name;
+                }
+            } else {
+                mediaTypeOrFormat.mediaType = default_name;
+            }
+            if (mediaTypeOrFormat.mediaType == null){
+                mediaTypeOrFormat.format = title; // fallback for new/unknown mediatypes
+            }
+        }
+        String alltext = tr.text();
+        if (alltext.contains("eAudio") || alltext.contains("eMusic")) {
+            mediaTypeOrFormat.mediaType = MediaType.MP3;
+        } else if (alltext.contains("eVideo")) {
+            mediaTypeOrFormat.mediaType = MediaType.EVIDEO;
+        } else if (alltext.contains("eBook")) {
+            mediaTypeOrFormat.mediaType = MediaType.EBOOK;
+        } else if (alltext.contains("Munzinger")) {
+            mediaTypeOrFormat.mediaType = MediaType.EDOC;
+        }
+        return mediaTypeOrFormat;
     }
 
     public static void parse_reslist6(List<ReservedItem> reservations, Document doc, int offset,

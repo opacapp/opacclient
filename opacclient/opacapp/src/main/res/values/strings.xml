@@ -85,9 +85,15 @@
     </string-array>
     <string name="notification_warning">Warning period</string>
     <string name="notification_warning_desc">How long before the due date should a notification be shown?</string>
-    <string name="notif_ticker">%d items are about to expire!</string>
+    <plurals name="notif_ticker">
+        <item quantity="one">%d item is about to expire!</item>
+        <item quantity="other">%d items are about to expire!</item>
+    </plurals>
     <string name="notif_title">Items are about to expire</string>
-    <string name="notif_ticker_expired">%d items have expired!</string>
+    <plurals name="notif_ticker_expired">
+        <item quantity="one">%d item has expired!</item>
+        <item quantity="other">%d items have expired!</item>
+    </plurals>
     <string name="notif_title_expired">Items have expired</string>
     <string name="notif_plus_more">+%d more</string>
     <string name="notif_snooze">Later</string>
@@ -281,7 +287,7 @@
     <string name="notification_repeat">Repeat notifications</string>
     <string name="update_info_title">Happy Birthday Opac App!</string>
     <string name="update_info_text">This May, our app turned five years old. We\'re celebrating the birthday with a new logo and want to thank all of you for all the feedback that we received.</string>
-    <string name="update_info_text_second">If you want to help us keep the app sustainable in the future, talk to your library: By buying the Plus Edition of the app, they allows us to continue developing this app and at the same time unlocks a set of useful features for you. Check our website www.opacapp.net for more details!</string>
+    <string name="update_info_text_second">If you want to help us keep the app sustainable in the future, talk to your library: By buying the Plus Edition of the app, they enable us to continue developing this app, and at the same time this unlocks a set of useful features for you. Check our website www.opacapp.net for more details!</string>
     <string name="accountdata_export_header">Account data of %1$s at %2$s</string>
     <string name="accountdata_title">Title</string>
     <string name="accountdata_author">Author</string>

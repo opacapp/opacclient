@@ -1,0 +1,1627 @@
+
+
+
+
+
+
+
+
+<!DOCTYPE html>
+<!-- TEMPLATE FILE: opac-account.tt -->
+
+
+
+
+<html lang="de-DE" class="no-js">
+<head>
+
+    <title>Stadtbibliothek Heilbronn - Katalog &rsaquo; Gebühren und Entgelte</title>
+
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="generator" content="Koha 18.0505005" /> <!-- leave this for stats -->
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="shortcut icon" href="/webcustom/images/custom/favicon.ico" type="image/x-icon" />
+
+    <link href="/opac-tmpl/bootstrap/lib/bootstrap/css/bootstrap.min_18.0505005.css" type="text/css" rel="stylesheet">
+
+
+
+    <link rel="stylesheet" type="text/css" href="/opac-tmpl/bootstrap/lib/jquery/jquery-ui_18.0505005.css">
+
+
+
+
+    <link href="/opac-tmpl/bootstrap/css/opac_18.0505005.css" type="text/css" rel="stylesheet">
+
+
+
+    <link rel="stylesheet" type="text/css" href="/webcustom/css/opac-lmscloud.css" />
+
+
+
+    <link media="print" href="/opac-tmpl/bootstrap/css/print_18.0505005.css" type="text/css" rel="stylesheet">
+
+    <style>@media screen and (max-width: 600px) {
+    #blockTop #wlogo > img {
+        display: block;
+        content: url("/webcustom/images/custom/Header_final_2018_10_23_600.png");
+    }
+}
+
+#blockTop #wlogo > img {
+    display: block;
+    border-radius: 7px;
+}
+
+/* Änderung der Navigationsleistenfarbe */
+.navbar-inverse .navbar-inner {
+  background-image: linear-gradient(to bottom, #999999, #aaa);
+  border-color: #999999;
+  background-color: #999999;
+}
+
+#blockTop::after {
+    clear: both;
+    content: ".";
+    display: block;
+    height: 0;
+    overflow: hidden;
+    visibility: hidden;
+}
+
+#select_library {
+    margin-right: 5px;
+}
+
+#masthead_search {
+    margin-right: 5px;
+}
+
+#blockTop {
+    opacity: 1.0;
+    margin-top: 8px;
+    width: 100%;
+    margin-top: 1em;
+    margin-bottom: .5em;
+}
+@media screen and (min-width: 601px) {
+    #blockTopInner {
+    }
+}
+
+@media screen and (min-width: 601px) {
+    .mastheadsearch {
+	background: url("/webcustom/images/custom/Header_final_2018_10_23_1b.jpg") left center no-repeat transparent;
+	position: relative;
+        color: #ffffff;
+        background-size: 100% 100%;
+        margin: unset !important;
+        border-radius: 7px;
+    }
+}
+
+#moresearches li {
+    font-size: larger;
+}
+.breadcrumb {
+    font-size: unset;
+    margin: 0px 0px 10px 0px;
+}
+
+#opacheader {
+    background-color: unset  !important;
+}
+
+body {
+    background-attachment: fixed, fixed, fixed, fixed !important;
+}
+
+#moresearches a, a.visited {
+    font-size: medium;
+    color: black;
+}
+
+#moresearches, #news {
+    margin: 1.0em 0;
+}
+
+.main {
+    background-color: #faffff;
+}
+
+@media screen and (max-width: 1023px) {
+    #logo {
+        background: transparent url(/webcustom/images/LMSCloud-Logo.png) no-repeat scroll 0;
+        padding-top: 15px;
+        margin-left: 5px;
+        width: 80px !important;
+        background-size: 80px 28px;
+    }
+}</style>
+
+    <link rel="unapi-server" type="application/xml" title="unAPI" href="https://sb-heilbronn.lmscloud.net/cgi-bin/koha/unapi" />
+
+    <link rel="stylesheet" type="text/css" href="/opac-tmpl/bootstrap/css/datatables_18.0505005.css">
+
+    <!-- Respond.js brings responsive layout behavior to IE < v.9 -->
+    <!--[if lt IE 9]>
+    <script src="/opac-tmpl/bootstrap/lib/respond.min.js"></script>
+    <![endif]-->
+    <script>
+    function _(s) { return s } // dummy function for gettext
+</script>
+    <script src="/opac-tmpl/bootstrap/lib/modernizr.min_18.0505005.js"></script>
+    <link href="/opac-tmpl/bootstrap/lib/font-awesome/css/font-awesome.min_18.0505005.css" rel="stylesheet" type="text/css">
+
+
+
+
+
+</head>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<body ID="opac-account" class="branch-HST scrollto" >
+
+
+
+
+<div id="wrap">
+    <div id="header-region" class="noprint">
+        <div class="navbar navbar-inverse navbar-static-top">
+            <h1 id="logo">
+                <a class="brand" href="/cgi-bin/koha/opac-main.pl">
+                    Stadtbibliothek Heilbronn  </a>
+            </h1>
+            <div class="navbar-inner">
+                <div class="container-fluid">
+
+                    <div id="cartDetails" class="cart-message">Ihr Korb ist leer.</div>
+
+                    <ul class="nav">
+
+                        <li class="dropdown">
+                            <a title="Stellen Sie Titel zusammen, an denen Sie interessiert sind" id="cartmenulink" data-toggle="dropdown" class="dropdown-toggle" href="#" role="button">
+                                <i id="carticon" class="icon-shopping-cart icon-white"></i> <span class="cartlabel">Korb</span> <span id="basketcount"></span> <b class="caret"></b>
+                            </a>
+                            <ul aria-labelledby="cartmenulink" role="menu" class="dropdown-menu">
+                                <li role="presentation">
+                                    <a href="#" id="cartmenuitem" class="cart-message" tabindex="-1" role="menuitem">Ihr Korb ist leer.</a>
+                                </li>
+                            </ul>
+                        </li>
+
+
+                        <li class="divider-vertical"></li>
+
+
+                        <li class="dropdown">
+                            <a id="listsmenu" title="Zeige Listen" href="#" class="dropdown-toggle" role="button" data-toggle="dropdown"><i class="icon-list icon-white"></i> <span class="listslabel">Listen</span> <b class="caret"></b></a>
+                            <ul aria-labelledby="listsmenu" role="menu" class="dropdown-menu">
+
+                                <li role="presentation"><a href="/cgi-bin/koha/opac-shelves.pl?op=list&amp;category=2" tabindex="-1" role="menuitem"><strong>Öffentliche Listen</strong></a></li>
+
+
+                                <li role="presentation"><a href="/cgi-bin/koha/opac-shelves.pl?op=view&amp;shelfnumber=89&amp;sortfield=title" tabindex="-1" role="menuitem">Literaturpreise 2018</a></li>
+
+
+
+                                <li role="presentation"><a href="/cgi-bin/koha/opac-shelves.pl?op=view&amp;shelfnumber=87&amp;sortfield=title" tabindex="-1" role="menuitem">2018 gestorben</a></li>
+
+
+
+                                <li role="presentation"><a href="/cgi-bin/koha/opac-shelves.pl?op=view&amp;shelfnumber=62&amp;sortfield=title" tabindex="-1" role="menuitem">Thomas Mann in Amerika</a></li>
+
+
+
+
+                                <li role="presentation"><a href="/cgi-bin/koha/opac-shelves.pl?op=list&amp;category=2" tabindex="-1" role="menuitem" class="listmenulink">Alle anzeigen</a></li>
+
+
+                                <li class="divider" role="presentation"></li>
+
+                                <li role="presentation"><a href="/cgi-bin/koha/opac-shelves.pl?op=list&amp;category=1" tabindex="-1" role="menuitem"><strong>Ihre Listen</strong></a></li>
+
+
+                                <li role="presentation"><a href="#" tabindex="-1" class="menu-inactive" role="menuitem">Keine privaten Listen.</a></li>
+
+                                <li role="presentation"><a href="/cgi-bin/koha/opac-shelves.pl?op=add_form" tabindex="-1" role="menuitem" class="listmenulink">Neue Liste</a></li>
+
+
+                            </ul> <!-- / .dropdown-menu -->
+                        </li> <!-- / .dropdown -->
+
+                    </ul> <!-- / .nav -->
+                    <div id="listsDetails"></div>
+
+                    <a id="user-menu-trigger" class="pull-right" href="#"><i class="icon-user"></i> <span class="caret"></span></a>
+                    <div id="members">
+                        <ul class="nav pull-right">
+
+
+
+
+
+
+
+
+                            <li><p class="members navbar-text">Willkommen, <a href="/cgi-bin/koha/opac-user.pl"><span class="loggedinusername">Claudia</span></a></p></li>
+                            <li class="divider-vertical"></li>
+
+
+
+                            <li><p class="navbar-text"><a title="Suchhistorie anzeigen" class="login-link" href="/cgi-bin/koha/opac-search-history.pl">Suchhistorie</a> [<a title="Suchhistorie löschen" href="/cgi-bin/koha/opac-search-history.pl?action=delete" class="logout clearsh">x</a>]</p></li>
+                            <li class="divider-vertical"></li>
+
+
+
+                            <li><p class="navbar-text">
+                                <a class="logout" id="logout" href="/cgi-bin/koha/opac-main.pl?logout.x=1">
+                                    Abmelden</a></p></li>
+
+
+                        </ul>
+                    </div> <!-- /members -->
+
+                </div> <!-- /container-fluid -->
+            </div> <!-- /navbar-inner -->
+        </div> <!-- /navbar -->
+
+
+        <div class="container-fluid">
+            <div class="row-fluid">
+                <div id="opacheader">
+                    <div id="blockTop">
+                        <div id="blockTopInner">
+                            <a title="Zur Startseite" href="/" id="wlogo">
+                                <img alt="Logo" src="/webcustom/images/custom/Header_final_2018_10_23_1a.jpg" target="_blank">
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div> <!-- / header-region -->
+
+    <div class="container-fluid">
+        <div class="row-fluid">
+            <div id="opac-main-search">
+                <div class="span12">
+
+
+
+                    <div class="mastheadsearch librarypulldown">
+
+
+                        <form name="searchform" method="get" action="/cgi-bin/koha/opac-search.pl" id="searchform" class="form-inline">
+                            <label for="masthead_search"> Suche  </label>
+
+                            <select name="idx" id="masthead_search">
+
+                                <option value="kw,wrdl">Bibliothekskatalog</option>
+
+
+                                <option value="ti,phr">Titel</option>
+
+
+                                <option value="au">Verfasser</option>
+
+
+                                <option value="su,phr">Schlagwort</option>
+
+
+                                <option value="nb">ISBN</option>
+
+
+                                <option value="se,phr">Reihen</option>
+
+
+
+                                <option value="callnum">Signatur</option>
+
+
+                            </select>
+
+
+
+                            <input class="transl1" title="Suchbegriffe eingeben" id="translControl1" name="q" type="text" /><span id="translControl"></span>
+
+
+
+
+
+                            <div class="input-append">
+                                <select name="branch_group_limit" id="select_library">
+                                    <option value="">Alle Bibliotheken</option>
+
+
+
+
+
+                                    <option value="branch:V1">Fahrbibliothek robi</option>
+
+
+
+                                    <option value="branch:eBib">Onleihe</option>
+
+
+
+                                    <option value="branch:V3">Stadtteilbibliothek Biberach</option>
+
+
+
+                                    <option value="branch:V4">Stadtteilbibliothek Böckingen</option>
+
+
+
+                                    <option value="branch:HST">Zentralbibliothek im K3</option>
+
+
+
+
+                                </select>
+                                <button type="submit" id="searchsubmit" class="btn btn-primary">OK</button>
+                            </div>
+
+
+                        </form>
+
+                    </div> <!-- / .mastheadsearch -->
+
+
+                    <div class="row-fluid">
+                        <div id="moresearches">
+
+
+
+
+
+
+
+
+                            <ul>
+                                <li><a href="/cgi-bin/koha/opac-entrypages.pl?interestGroup=9&page=Childto9&classlevel=2&filter=^C:.*%206-9%20Jahre$">Kinder</a></li>
+                                <li><a href="/cgi-bin/koha/opac-entrypages.pl?interestGroup=T&page=Childfrom9&classlevel=2&filter=^C:.*%20(10-12|ab%2013)%20Jahren?$">Jugend</a></li>
+                                <li><a href="/cgi-bin/koha/opac-entrypages.pl?interestGroup=A&page=Adult&mediafilter=^M:&filter=^S:">Sachthemen</a></li>
+                                <li><a href="/cgi-bin/koha/opac-entrypages.pl?interestGroup=N&page=Novel&mediafilter=^M:&filter=^S:">Romane & Spielfilme</a></li>
+                                <li><a href="/cgi-bin/koha/opac-entrypages.pl?interestGroup=M&page=Music&mediafilter=^M:&filter=^S:">Musik</a></li>
+
+                                <!-- <li><img src="/webcustom/images/Antolin16.png" style="vertical-align: baseline;"></img> <a href="/cgi-bin/koha/opac-antolin.pl">Bücher mit Antolin-Quiz</a></li> -->
+                                <li><a href="/cgi-bin/koha/opac-search.pl"><i class="fa fa-search-plus" style="color:cadetblue"></i>
+                                    Profisuche</a></li>
+
+
+
+                                <!--  -->
+
+
+
+
+
+                            </ul>
+
+                        </div> <!-- /#moresearches -->
+                    </div> <!-- /.row-fluid -->
+
+
+                </div> <!-- /.span12 -->
+            </div> <!-- /.opac-main-search -->
+        </div> <!-- / .row-fluid -->
+    </div> <!-- /.container-fluid -->
+
+    <!-- Login form hidden by default, used for modal window -->
+    <div id="loginModal" class="modal hide" tabindex="-1" role="dialog" aria-labelledby="modalLoginLabel" aria-hidden="true">
+        <div class="modal-header">
+            <button type="button" class="closebtn" data-dismiss="modal" aria-hidden="true">×</button>
+            <h3 id="modalLoginLabel">Benutzerkonto</h3>
+        </div>
+        <form action="/cgi-bin/koha/opac-user.pl" method="post" name="auth" id="modalAuth">
+            <div class="modal-body">
+
+                <input type="hidden" name="koha_login_context" value="opac" />
+                <fieldset class="brief">
+                    <label for="muserid">Login:</label><input type="text" id="muserid" name="userid" />
+                    <label for="mpassword">Passwort:</label><input type="password" id="mpassword" name="password" />
+
+                    <div id="nologininstructions-modal" class="nologininstructions">
+                        <script>
+document.getElementById('login').style.backgroundColor = '#a7b1be';
+document.getElementById('login').style.borderStyle = 'solid';
+document.getElementById('login').style.borderColor = 'transparent';
+document.getElementById('login').style.borderWidth = '15px';
+</script>
+
+                        <br />
+                        <p>
+                            Zum Anmelden verwenden Sie bitte Ihre Benutzernummer als Login Kennung und Ihr Geburtsdatum in der Form XX.XX.XXXX als Passwort. <br /> Nach dem ersten Login haben Sie die Möglichkeit, Ihr Passwort auf ein von Ihnen gewähltes zu ändern.</p>
+
+
+                    </div>
+
+
+
+                </fieldset>
+            </div>
+            <div class="modal-footer">
+                <input type="submit" value="Anmelden" class="btn btn-primary" />
+                <a href="#" data-dismiss="modal" aria-hidden="true" class="cancel">Abbrechen</a>
+            </div>
+        </form> <!-- /#auth -->
+    </div> <!-- /#modalAuth -->
+
+
+    <div class="main">
+        <ul class="breadcrumb">
+            <li><a href="/cgi-bin/koha/opac-main.pl">Start</a> <span class="divider">&rsaquo;</span></li>
+            <li><a href="/cgi-bin/koha/opac-user.pl">Erika Mustermann</a><span class="divider">&rsaquo;</span></li>
+            <li><a href="#">Gebühren und Entgelte</a></li>
+        </ul>
+
+        <div class="container-fluid">
+            <div class="row-fluid">
+                <div class="span2">
+                    <div id="navigation">
+                        <div id="opacnav"></div>
+
+                        <div id="usermenu">
+
+                            <div id="menu">
+                                <h4><a href="#" class="menu-collapse-toggle">Benutzerkonto</a></h4>
+                                <ul class="menu-collapse">
+
+                                    <li>
+
+                                        <a href="/cgi-bin/koha/opac-user.pl">Kontoübersicht</a></li>
+
+
+                                    <li class="active">
+
+                                        <a href="/cgi-bin/koha/opac-account.pl">Gebühren</a></li>
+
+
+
+                                    <li>
+
+                                        <a href="/cgi-bin/koha/opac-memberentry.pl">Persönliche Daten</a></li>
+
+
+
+
+                                    <li>
+
+                                        <a href="/cgi-bin/koha/opac-passwd.pl">Passwort ändern</a></li>
+
+
+
+
+                                    <li>
+
+                                        <a href="/cgi-bin/koha/opac-search-history.pl">Suchhistorie</a></li>
+
+
+
+
+                                    <li>
+
+                                        <a href="/cgi-bin/koha/opac-readingrecord.pl">Ausleihverlauf</a></li>
+
+
+                                    <li>
+
+                                        <a href="/cgi-bin/koha/opac-privacy.pl">Datenschutzoptionen</a></li>
+
+
+
+
+
+                                    <li>
+
+                                        <a href="/cgi-bin/koha/opac-suggestions.pl">Anschaffungsvorschläge</a></li>
+
+
+
+
+
+
+
+
+                                    <li>
+
+                                        <a href="/cgi-bin/koha/opac-shelves.pl?op=list&amp;category=1">Listen</a></li>
+
+
+
+
+
+
+
+
+                                    <li>
+
+                                        <a href="/cgi-bin/koha/opac-illrequests.pl">Ihre Fernleihebestellungen</a></li>
+
+
+                                </ul>
+                            </div>
+
+                        </div>
+
+                        <div id="opacnavbottom"></div>
+
+                    </div>
+                </div>
+                <div class="span10">
+                    <div id="useraccount" class="maincontent">
+
+
+
+
+
+                        <h3>Gebühren und Entgelte</h3>
+
+
+                        <form method="post" action="opac-account-pay.pl" class="form-horizontal">
+                            <table class="table table-bordered table-striped" id="finestable">
+                                <thead>
+                                <tr>
+
+                                    <th class="title-string">Datum</th>
+                                    <th>Beschreibung</th>
+                                    <th>Gebühr</th>
+                                    <th>Offener Betrag</th>
+                                </tr>
+                                </thead>
+
+                                <tfoot>
+                                <tr> <th class="sum" colspan="3">Gebühren insgesamt</th>
+                                    <td class="sum">10,00</td>
+                                </tr>
+                                </tfoot>
+
+                                <tbody>
+
+                                <tr>
+
+                                    <td><span title="2019-01-03">03.01.2019</span></td>
+                                    <td>
+                                        Benachrichtigungsgebühr , 03.01.2019  </td>
+                                    <td class="credit">1,00</td>
+                                    <td class="credit">1,00</td>
+                                </tr>
+
+                                <tr>
+
+                                    <td><span title="2019-01-03">03.01.2019</span></td>
+                                    <td>
+                                        Leihgebühr , Rental  </td>
+                                    <td class="credit">1,50</td>
+                                    <td class="credit">1,50</td>
+                                </tr>
+
+                                <tr>
+
+                                    <td><span title="2019-01-03">03.01.2019</span></td>
+                                    <td>
+                                        Leihgebühr , Renewal of Rental Item Das Löwenmädchen 83332534764  </td>
+                                    <td class="credit">1,50</td>
+                                    <td class="credit">1,50</td>
+                                </tr>
+
+                                <tr>
+
+                                    <td><span title="2019-01-03">03.01.2019</span></td>
+                                    <td>
+                                        Leihgebühr , Renewal of Rental Item Das Löwenmädchen 83332534764  </td>
+                                    <td class="credit">1,50</td>
+                                    <td class="credit">1,50</td>
+                                </tr>
+
+                                <tr>
+
+                                    <td><span title="2019-01-03">03.01.2019</span></td>
+                                    <td>
+                                        Leihgebühr , Rental  </td>
+                                    <td class="credit">1,50</td>
+                                    <td class="credit">1,50</td>
+                                </tr>
+
+                                <tr>
+
+                                    <td><span title="2019-01-03">03.01.2019</span></td>
+                                    <td>
+                                        Leihgebühr , Renewal of Rental Item Das Löwenmädchen 83332534764  </td>
+                                    <td class="credit">1,50</td>
+                                    <td class="credit">1,50</td>
+                                </tr>
+
+                                <tr>
+
+                                    <td><span title="2019-01-03">03.01.2019</span></td>
+                                    <td>
+                                        Leihgebühr , Rental  </td>
+                                    <td class="credit">1,50</td>
+                                    <td class="credit">1,50</td>
+                                </tr>
+
+                                <tr>
+
+                                    <td><span title="2018-11-29">29.11.2018</span></td>
+                                    <td>
+                                        Gebührenerlass , Storno Fehlbuchung (Leihgebühr für Ausleihe (Frist: 12.08.2016))  </td>
+                                    <td class="debit">-4,00</td>
+                                    <td class="credit">0,00</td>
+                                </tr>
+
+                                <tr>
+
+                                    <td><span title="2018-11-29">29.11.2018</span></td>
+                                    <td>
+                                        Gebührenerlass , Storno Fehlbuchung (Leihgebühr für Ausleihe (Frist: 09.10.2018))  </td>
+                                    <td class="debit">-4,00</td>
+                                    <td class="credit">0,00</td>
+                                </tr>
+
+                                <tr>
+
+                                    <td><span title="2018-09-11">11.09.2018</span></td>
+                                    <td>
+                                        Leihgebühr , Leihgebühr für Ausleihe (Frist: 09.10.2018)  </td>
+                                    <td class="credit">4,00</td>
+                                    <td class="credit">0,00</td>
+                                </tr>
+
+                                <tr>
+
+                                    <td><span title="2017-07-05">05.07.2017</span></td>
+                                    <td>
+                                        Benutzungsgebühr , Beitrag: bis:04.07.2018  </td>
+                                    <td class="credit">0,00</td>
+                                    <td class="credit">0,00</td>
+                                </tr>
+
+                                <tr>
+
+                                    <td><span title="2016-12-19">19.12.2016</span></td>
+                                    <td>
+                                        Benutzungsgebühr , Beitrag: bis:18.03.2017  </td>
+                                    <td class="credit">0,00</td>
+                                    <td class="credit">0,00</td>
+                                </tr>
+
+                                <tr>
+
+                                    <td><span title="2016-07-19">19.07.2016</span></td>
+                                    <td>
+                                        Leihgebühr , Leihgebühr für Ausleihe (Frist: 12.08.2016)  </td>
+                                    <td class="credit">4,00</td>
+                                    <td class="credit">0,00</td>
+                                </tr>
+
+                                <tr>
+
+                                    <td><span title="2016-01-22">22.01.2016</span></td>
+                                    <td>
+                                        Manue, Tests  </td>
+                                    <td class="debit">-6,00</td>
+                                    <td class="credit">0,00</td>
+                                </tr>
+
+                                <tr>
+
+                                    <td><span title="2016-01-13">13.01.2016</span></td>
+                                    <td>
+                                        Leihgebühr , Leihgebühr für Ausleihe (Frist: 20.01.2016)  </td>
+                                    <td class="credit">1,50</td>
+                                    <td class="credit">0,00</td>
+                                </tr>
+
+                                <tr>
+
+                                    <td><span title="2015-06-09">09.06.2015</span></td>
+                                    <td>
+                                        Verschiedenes , Gebühr für Verlängerung  </td>
+                                    <td class="credit">1,50</td>
+                                    <td class="credit">0,00</td>
+                                </tr>
+
+                                <tr>
+
+                                    <td><span title="2015-05-28">28.05.2015</span></td>
+                                    <td>
+                                        Leihgebühr , Leihgebühr für Ausleihe (Frist: 05.06.2015)  </td>
+                                    <td class="credit">1,50</td>
+                                    <td class="credit">0,00</td>
+                                </tr>
+
+                                <tr>
+
+                                    <td><span title="2015-02-10">10.02.2015</span></td>
+                                    <td>
+                                        Leihgebühr , Leihgebühr für Ausleihe (Frist: 17.02.2015)  </td>
+                                    <td class="credit">1,50</td>
+                                    <td class="credit">0,00</td>
+                                </tr>
+
+                                <tr>
+
+                                    <td><span title="2014-04-21">21.04.2014</span></td>
+                                    <td>
+                                        Benutzungsgebühr , Beitrag: bis:20.04.2015  </td>
+                                    <td class="credit">0,00</td>
+                                    <td class="credit">0,00</td>
+                                </tr>
+
+                                <tr>
+
+                                    <td><span title="2013-09-25">25.09.2013</span></td>
+                                    <td>
+                                        Gebührenerlass , Kassenautomat  </td>
+                                    <td class="debit">-0,10</td>
+                                    <td class="credit">0,00</td>
+                                </tr>
+
+                                <tr>
+
+                                    <td><span title="2013-09-25">25.09.2013</span></td>
+                                    <td>
+                                        Manue, Testgebühr für EC-Zahlungs-Funktion am Kassenautomat  </td>
+                                    <td class="credit">0,10</td>
+                                    <td class="credit">0,00</td>
+                                </tr>
+
+                                <tr>
+
+                                    <td><span title="2013-09-09">09.09.2013</span></td>
+                                    <td>
+                                        Gebührenerlass , Kassenautomat  </td>
+                                    <td class="debit">-11,00</td>
+                                    <td class="credit">0,00</td>
+                                </tr>
+
+                                <tr>
+
+                                    <td><span title="2013-08-23">23.08.2013</span></td>
+                                    <td>
+                                        Leihgebühr , Leihgebühr für Ausleihe (Frist: 30.08.2013)  </td>
+                                    <td class="credit">1,50</td>
+                                    <td class="credit">0,00</td>
+                                </tr>
+
+                                <tr>
+
+                                    <td><span title="2012-05-05">05.05.2012</span></td>
+                                    <td>
+                                        Leihgebühr , Leihgebühr für Ausleihe (Frist: 12.05.2012)  </td>
+                                    <td class="credit">1,50</td>
+                                    <td class="credit">0,00</td>
+                                </tr>
+
+                                <tr>
+
+                                    <td><span title="2011-07-26">26.07.2011</span></td>
+                                    <td>
+                                        Verschiedenes , Gebühr für Verlängerung  </td>
+                                    <td class="credit">1,50</td>
+                                    <td class="credit">0,00</td>
+                                </tr>
+
+                                <tr>
+
+                                    <td><span title="2011-07-23">23.07.2011</span></td>
+                                    <td>
+                                        Leihgebühr , Leihgebühr für Ausleihe (Frist: 30.07.2011)  </td>
+                                    <td class="credit">1,50</td>
+                                    <td class="credit">0,00</td>
+                                </tr>
+
+                                <tr>
+
+                                    <td><span title="2011-07-01">01.07.2011</span></td>
+                                    <td>
+                                        Leihgebühr , Leihgebühr für Ausleihe (Frist: 08.07.2011)  </td>
+                                    <td class="credit">1,50</td>
+                                    <td class="credit">0,00</td>
+                                </tr>
+
+                                <tr>
+
+                                    <td><span title="2010-05-18">18.05.2010</span></td>
+                                    <td>
+                                        Leihgebühr , Leihgebühr für Ausleihe (Frist: 18.06.2010)  </td>
+                                    <td class="credit">2,50</td>
+                                    <td class="credit">0,00</td>
+                                </tr>
+
+                                <tr>
+
+                                    <td><span title="2010-05-11">11.05.2010</span></td>
+                                    <td>
+                                        Gebührenerlass , Storno Fehlbuchung (Leihgebühr für Ausleihe (Frist: 11.06.2010))  </td>
+                                    <td class="debit">-2,50</td>
+                                    <td class="credit">0,00</td>
+                                </tr>
+
+                                <tr>
+
+                                    <td><span title="2010-05-11">11.05.2010</span></td>
+                                    <td>
+                                        Gebührenerlass , Storno Fehlbuchung (Leihgebühr für Ausleihe (Frist: 11.06.2010))  </td>
+                                    <td class="debit">-2,50</td>
+                                    <td class="credit">0,00</td>
+                                </tr>
+
+                                <tr>
+
+                                    <td><span title="2010-05-10">10.05.2010</span></td>
+                                    <td>
+                                        Leihgebühr , Leihgebühr für Ausleihe (Frist: 11.06.2010)  </td>
+                                    <td class="credit">2,50</td>
+                                    <td class="credit">0,00</td>
+                                </tr>
+
+                                <tr>
+
+                                    <td><span title="2010-05-10">10.05.2010</span></td>
+                                    <td>
+                                        Leihgebühr , Leihgebühr für Ausleihe (Frist: 11.06.2010)  </td>
+                                    <td class="credit">2,50</td>
+                                    <td class="credit">0,00</td>
+                                </tr>
+
+                                <tr>
+
+                                    <td><span title="2009-01-15">15.01.2009</span></td>
+                                    <td>
+                                        Verschiedenes , (1,-)CD-ROM/DVD  </td>
+                                    <td class="credit">1,00</td>
+                                    <td class="credit">0,00</td>
+                                </tr>
+
+                                <tr>
+
+                                    <td><span title="2008-12-17">17.12.2008</span></td>
+                                    <td>
+                                        Gebührenerlass , Storno Fehlbuchung (Leihgebühr für Ausleihe (Frist: 25.04.2008))  </td>
+                                    <td class="debit">-2,50</td>
+                                    <td class="credit">0,00</td>
+                                </tr>
+
+                                <tr>
+
+                                    <td><span title="2008-04-11">11.04.2008</span></td>
+                                    <td>
+                                        Leihgebühr , Leihgebühr für Ausleihe (Frist: 25.04.2008)  </td>
+                                    <td class="credit">2,50</td>
+                                    <td class="credit">0,00</td>
+                                </tr>
+
+                                <tr>
+
+                                    <td><span title="2007-12-10">10.12.2007</span></td>
+                                    <td>
+                                        Gebührenerlass , Storno Fehlbuchung (Leihgebühr für Ausleihe (Frist: 21.12.2007))  </td>
+                                    <td class="debit">-2,50</td>
+                                    <td class="credit">0,00</td>
+                                </tr>
+
+                                <tr>
+
+                                    <td><span title="2007-12-07">07.12.2007</span></td>
+                                    <td>
+                                        Leihgebühr , Leihgebühr für Ausleihe (Frist: 21.12.2007)  </td>
+                                    <td class="credit">2,50</td>
+                                    <td class="credit">0,00</td>
+                                </tr>
+
+                                <tr>
+
+                                    <td><span title="2007-06-02">02.06.2007</span></td>
+                                    <td>
+                                        Gebührenerlass , Storno Fehlbuchung ((14,-)Jahresbenutzungsgebühr)  </td>
+                                    <td class="debit">-14,00</td>
+                                    <td class="credit">0,00</td>
+                                </tr>
+
+                                <tr>
+
+                                    <td><span title="2007-06-02">02.06.2007</span></td>
+                                    <td>
+                                        Gebührenerlass , Storno Fehlbuchung ((12,-)Jahresbenutzungsgebühr)  </td>
+                                    <td class="debit">-12,00</td>
+                                    <td class="credit">0,00</td>
+                                </tr>
+
+                                <tr>
+
+                                    <td><span title="2007-06-02">02.06.2007</span></td>
+                                    <td>
+                                        Gebührenerlass , Storno Fehlbuchung ((12,-)Jahresbenutzungsgebühr)  </td>
+                                    <td class="debit">-12,00</td>
+                                    <td class="credit">0,00</td>
+                                </tr>
+
+                                <tr>
+
+                                    <td><span title="2007-06-02">02.06.2007</span></td>
+                                    <td>
+                                        Verschiedenes , (14,-)Jahresbenutzungsgebühr  </td>
+                                    <td class="credit">14,00</td>
+                                    <td class="credit">0,00</td>
+                                </tr>
+
+                                <tr>
+
+                                    <td><span title="2007-06-02">02.06.2007</span></td>
+                                    <td>
+                                        Verschiedenes , (12,-)Jahresbenutzungsgebühr  </td>
+                                    <td class="credit">12,00</td>
+                                    <td class="credit">0,00</td>
+                                </tr>
+
+                                <tr>
+
+                                    <td><span title="2007-06-02">02.06.2007</span></td>
+                                    <td>
+                                        Verschiedenes , (12,-)Jahresbenutzungsgebühr  </td>
+                                    <td class="credit">12,00</td>
+                                    <td class="credit">0,00</td>
+                                </tr>
+
+                                <tr>
+
+                                    <td><span title="2006-02-22">22.02.2006</span></td>
+                                    <td>
+                                        Gebührenerlass , Storno Fehlbuchung (Gebühr für Verlängerung)  </td>
+                                    <td class="debit">-1,50</td>
+                                    <td class="credit">0,00</td>
+                                </tr>
+
+                                <tr>
+
+                                    <td><span title="2006-02-22">22.02.2006</span></td>
+                                    <td>
+                                        Gebührenerlass , Storno Fehlbuchung (Gebühr für Verlängerung)  </td>
+                                    <td class="debit">-1,50</td>
+                                    <td class="credit">0,00</td>
+                                </tr>
+
+                                <tr>
+
+                                    <td><span title="2006-02-17">17.02.2006</span></td>
+                                    <td>
+                                        Verschiedenes , Gebühr für Verlängerung  </td>
+                                    <td class="credit">1,50</td>
+                                    <td class="credit">0,00</td>
+                                </tr>
+
+                                <tr>
+
+                                    <td><span title="2006-02-17">17.02.2006</span></td>
+                                    <td>
+                                        Verschiedenes , Gebühr für Verlängerung  </td>
+                                    <td class="credit">1,50</td>
+                                    <td class="credit">0,00</td>
+                                </tr>
+
+                                <tr>
+
+                                    <td><span title="2005-12-02">02.12.2005</span></td>
+                                    <td>
+                                        Gebührenerlass , Storno Fehlbuchung (Beitrag: bis:01.12.2006)  </td>
+                                    <td class="debit">-12,00</td>
+                                    <td class="credit">0,00</td>
+                                </tr>
+
+                                <tr>
+
+                                    <td><span title="2005-12-02">02.12.2005</span></td>
+                                    <td>
+                                        Benutzungsgebühr , Beitrag: bis:01.12.2006  </td>
+                                    <td class="credit">0,00</td>
+                                    <td class="credit">0,00</td>
+                                </tr>
+
+                                <tr>
+
+                                    <td><span title="2005-12-02">02.12.2005</span></td>
+                                    <td>
+                                        Benutzungsgebühr , Beitrag: bis:01.12.2006  </td>
+                                    <td class="credit">0,00</td>
+                                    <td class="credit">0,00</td>
+                                </tr>
+
+                                <tr>
+
+                                    <td><span title="2005-12-02">02.12.2005</span></td>
+                                    <td>
+                                        Benutzungsgebühr , Beitrag: bis:01.12.2006  </td>
+                                    <td class="credit">0,00</td>
+                                    <td class="credit">0,00</td>
+                                </tr>
+
+                                <tr>
+
+                                    <td><span title="2005-12-02">02.12.2005</span></td>
+                                    <td>
+                                        Benutzungsgebühr , Beitrag: bis:01.12.2006  </td>
+                                    <td class="credit">0,00</td>
+                                    <td class="credit">0,00</td>
+                                </tr>
+
+                                <tr>
+
+                                    <td><span title="2005-12-02">02.12.2005</span></td>
+                                    <td>
+                                        Benutzungsgebühr , Beitrag: bis:01.12.2006  </td>
+                                    <td class="credit">12,00</td>
+                                    <td class="credit">0,00</td>
+                                </tr>
+
+                                <tr>
+
+                                    <td><span title="2005-02-15">15.02.2005</span></td>
+                                    <td>
+                                        Benutzungsgebühr , Beitrag: bis:15.02.2006  </td>
+                                    <td class="credit">0,00</td>
+                                    <td class="credit">0,00</td>
+                                </tr>
+
+                                <tr>
+
+                                    <td><span title="2004-12-17">17.12.2004</span></td>
+                                    <td>
+                                        Manue, Storno  </td>
+                                    <td class="debit">-6,50</td>
+                                    <td class="credit">0,00</td>
+                                </tr>
+
+                                <tr>
+
+                                    <td><span title="2004-12-09">09.12.2004</span></td>
+                                    <td>
+                                        Leihgebühr , Leihgebühr für Ausleihe (Frist: 10.12.2004)  </td>
+                                    <td class="credit">2,50</td>
+                                    <td class="credit">0,00</td>
+                                </tr>
+
+                                <tr>
+
+                                    <td><span title="2004-12-09">09.12.2004</span></td>
+                                    <td>
+                                        Leihgebühr , Leihgebühr für Ausleihe (Frist: 13.01.2005)  </td>
+                                    <td class="credit">2,50</td>
+                                    <td class="credit">0,00</td>
+                                </tr>
+
+                                <tr>
+
+                                    <td><span title="2004-06-23">23.06.2004</span></td>
+                                    <td>
+                                        Leihgebühr , Leihgebühr für Ausleihe (Frist: 07.07.2004)  </td>
+                                    <td class="credit">1,50</td>
+                                    <td class="credit">0,00</td>
+                                </tr>
+
+                                <tr>
+
+                                    <td><span title="2004-03-05">05.03.2004</span></td>
+                                    <td>
+                                        Gebührenerlass , Storno (Gebühr für Verlängerung)  </td>
+                                    <td class="debit">-1,50</td>
+                                    <td class="credit">0,00</td>
+                                </tr>
+
+                                <tr>
+
+                                    <td><span title="2004-03-05">05.03.2004</span></td>
+                                    <td>
+                                        Gebührenerlass , Storno (Gebühr für Verlängerung)  </td>
+                                    <td class="debit">-1,50</td>
+                                    <td class="credit">0,00</td>
+                                </tr>
+
+                                <tr>
+
+                                    <td><span title="2004-03-05">05.03.2004</span></td>
+                                    <td>
+                                        Gebührenerlass , Storno (Leihgebühr für Ausleihe (Frist: 05.03.2004))  </td>
+                                    <td class="debit">-1,50</td>
+                                    <td class="credit">0,00</td>
+                                </tr>
+
+                                <tr>
+
+                                    <td><span title="2004-03-05">05.03.2004</span></td>
+                                    <td>
+                                        Gebührenerlass , Storno (Gebühr für Verlängerung)  </td>
+                                    <td class="debit">-1,50</td>
+                                    <td class="credit">0,00</td>
+                                </tr>
+
+                                <tr>
+
+                                    <td><span title="2004-03-05">05.03.2004</span></td>
+                                    <td>
+                                        Verschiedenes , Gebühr für Verlängerung  </td>
+                                    <td class="credit">1,50</td>
+                                    <td class="credit">0,00</td>
+                                </tr>
+
+                                <tr>
+
+                                    <td><span title="2004-03-05">05.03.2004</span></td>
+                                    <td>
+                                        Verschiedenes , Gebühr für Verlängerung  </td>
+                                    <td class="credit">1,50</td>
+                                    <td class="credit">0,00</td>
+                                </tr>
+
+                                <tr>
+
+                                    <td><span title="2004-03-05">05.03.2004</span></td>
+                                    <td>
+                                        Leihgebühr , Leihgebühr für Ausleihe (Frist: 05.03.2004)  </td>
+                                    <td class="credit">1,50</td>
+                                    <td class="credit">0,00</td>
+                                </tr>
+
+                                <tr>
+
+                                    <td><span title="2004-03-05">05.03.2004</span></td>
+                                    <td>
+                                        Leihgebühr , Leihgebühr für Ausleihe (Frist: 05.03.2004)  </td>
+                                    <td class="credit">1,50</td>
+                                    <td class="credit">0,00</td>
+                                </tr>
+
+                                <tr>
+
+                                    <td><span title="2004-03-05">05.03.2004</span></td>
+                                    <td>
+                                        Gebührenerlass , Storno (Leihgebühr für Ausleihe (Frist: 05.03.2004))  </td>
+                                    <td class="debit">-1,50</td>
+                                    <td class="credit">0,00</td>
+                                </tr>
+
+                                <tr>
+
+                                    <td><span title="2004-03-05">05.03.2004</span></td>
+                                    <td>
+                                        Gebührenerlass , Storno (Leihgebühr für Ausleihe (Frist: 05.03.2004))  </td>
+                                    <td class="debit">-1,50</td>
+                                    <td class="credit">0,00</td>
+                                </tr>
+
+                                <tr>
+
+                                    <td><span title="2004-03-05">05.03.2004</span></td>
+                                    <td>
+                                        Gebührenerlass , Storno (Leihgebühr für Ausleihe (Frist: 25.03.2004))  </td>
+                                    <td class="debit">-1,50</td>
+                                    <td class="credit">0,00</td>
+                                </tr>
+
+                                <tr>
+
+                                    <td><span title="2004-03-05">05.03.2004</span></td>
+                                    <td>
+                                        Gebührenerlass , Storno (Leihgebühr für Ausleihe (Frist: 25.03.2004))  </td>
+                                    <td class="debit">-1,50</td>
+                                    <td class="credit">0,00</td>
+                                </tr>
+
+                                <tr>
+
+                                    <td><span title="2004-03-05">05.03.2004</span></td>
+                                    <td>
+                                        Gebührenerlass , Storno (Leihgebühr für Ausleihe (Frist: 25.03.2004))  </td>
+                                    <td class="debit">-1,50</td>
+                                    <td class="credit">0,00</td>
+                                </tr>
+
+                                <tr>
+
+                                    <td><span title="2004-03-05">05.03.2004</span></td>
+                                    <td>
+                                        Leihgebühr , Leihgebühr für Ausleihe (Frist: 05.03.2004)  </td>
+                                    <td class="credit">1,50</td>
+                                    <td class="credit">0,00</td>
+                                </tr>
+
+                                <tr>
+
+                                    <td><span title="2004-03-05">05.03.2004</span></td>
+                                    <td>
+                                        Leihgebühr , Leihgebühr für Ausleihe (Frist: 05.03.2004)  </td>
+                                    <td class="credit">1,50</td>
+                                    <td class="credit">0,00</td>
+                                </tr>
+
+                                <tr>
+
+                                    <td><span title="2004-03-05">05.03.2004</span></td>
+                                    <td>
+                                        Leihgebühr , Leihgebühr für Ausleihe (Frist: 25.03.2004)  </td>
+                                    <td class="credit">1,50</td>
+                                    <td class="credit">0,00</td>
+                                </tr>
+
+                                <tr>
+
+                                    <td><span title="2004-03-05">05.03.2004</span></td>
+                                    <td>
+                                        Leihgebühr , Leihgebühr für Ausleihe (Frist: 25.03.2004)  </td>
+                                    <td class="credit">1,50</td>
+                                    <td class="credit">0,00</td>
+                                </tr>
+
+                                <tr>
+
+                                    <td><span title="2004-03-05">05.03.2004</span></td>
+                                    <td>
+                                        Zahlung , Einzahlung  </td>
+                                    <td class="debit">-1,50</td>
+                                    <td class="credit">0,00</td>
+                                </tr>
+
+                                <tr>
+
+                                    <td><span title="2004-03-05">05.03.2004</span></td>
+                                    <td>
+                                        Leihgebühr , Leihgebühr für Ausleihe (Frist: 25.03.2004)  </td>
+                                    <td class="credit">1,50</td>
+                                    <td class="credit">0,00</td>
+                                </tr>
+
+                                <tr>
+
+                                    <td><span title="2004-03-05">05.03.2004</span></td>
+                                    <td>
+                                        Verschiedenes , Gebühr für Verlängerung  </td>
+                                    <td class="credit">1,50</td>
+                                    <td class="credit">0,00</td>
+                                </tr>
+
+                                <tr>
+
+                                    <td><span title="2004-02-17">17.02.2004</span></td>
+                                    <td>
+                                        Gebührenerlass , Storno (Exemplar verloren)  </td>
+                                    <td class="debit">-1,00</td>
+                                    <td class="credit">0,00</td>
+                                </tr>
+
+                                <tr>
+
+                                    <td><span title="2003-09-05">05.09.2003</span></td>
+                                    <td>
+                                        Manue, Exemplar verloren  </td>
+                                    <td class="credit">1,00</td>
+                                    <td class="credit">0,00</td>
+                                </tr>
+
+                                </tbody>
+
+                            </table>
+
+
+                        </form>
+
+                    </div> <!-- / #useraccount -->
+                </div> <!-- / .span10 -->
+            </div> <!-- / .row-fluid -->
+        </div> <!-- / .container-fluid -->
+    </div> <!-- / .main -->
+
+
+
+
+
+
+
+    <div class="container-fluid">
+        <div class="row-fluid">
+            <div class="span12">
+                <div id="koha_url" class="clearfix noprint">
+                    <p>Powered by
+                        <a class="koha_url" rel="nofollow" href="http://koha-community.org">Koha</a>
+                    </p>
+                </div>
+            </div> <!-- /.span12 -->
+        </div> <!-- /.row-fluid -->
+    </div> <!-- /.container-fluid -->
+
+
+</div> <!-- / #wrap in masthead.inc -->
+
+
+
+
+
+
+
+
+<!-- JavaScript includes -->
+<script src="/opac-tmpl/bootstrap/lib/jquery/jquery_18.0505005.js"></script>
+<script src="/opac-tmpl/bootstrap/lib/jquery/jquery-ui_18.0505005.js"></script>
+<script>
+// Resolve name collision between jQuery UI and Twitter Bootstrap
+$.widget.bridge('uitooltip', $.ui.tooltip);
+</script>
+<script src="/opac-tmpl/bootstrap/lib/bootstrap/js/bootstrap.min_18.0505005.js"></script>
+<script src="/opac-tmpl/bootstrap/js/global_18.0505005.js"></script>
+<script>
+    Modernizr.load([
+        // Test need for polyfill
+        {
+            test: window.matchMedia,
+            nope: "/opac-tmpl/bootstrap/lib/media.match.min_18.0505005.js"
+        },
+        // and then load enquire
+        "/opac-tmpl/bootstrap/lib/enquire.min_18.0505005.js",
+        "/opac-tmpl/bootstrap/js/script_18.0505005.js",
+    ]);
+
+    // Fix for datepicker in a modal
+    $.fn.modal.Constructor.prototype.enforceFocus = function () {};
+</script>
+
+
+<script src="/opac-tmpl/lib/emoji-picker/js/config_18.0505005.js"></script>
+<script src="/opac-tmpl/lib/emoji-picker/js/util_18.0505005.js"></script>
+<script src="/opac-tmpl/lib/emoji-picker/js/jquery.emojiarea_18.0505005.js"></script>
+<script src="/opac-tmpl/lib/emoji-picker/js/emoji-picker_18.0505005.js"></script>
+
+<script>
+    //<![CDATA[
+    var MSG_CONFIRM_AGAIN = _("Vorsicht: Dies kann nicht rückgängig gemacht werden. Bitte bestätigen Sie nochmals")
+    var MSG_DELETE_SEARCH_HISTORY = _("Sind Sie sicher, dass Sie Ihre Suchhistorie löschen möchten?");
+    var MSG_NO_SUGGESTION_SELECTED = _("Kein Anschaffungsvorschlag ausgewählt");
+
+        var MSG_BASKET_EMPTY = _("Ihr Korb ist zur Zeit leer");
+        var MSG_RECORD_IN_BASKET = _("Dieser Titel ist bereits in Ihrem Korb");
+        var MSG_RECORD_ADDED = _("Dieser Titel wurde Ihrem Korb hinzugefügt");
+        var MSG_RECORD_REMOVED = _("Dieser Titel wurde aus Ihrem Korb gelöscht");
+        var MSG_NRECORDS_ADDED = _(" Titel zum Korb hinzugefügt");
+        var MSG_NRECORDS_IN_BASKET = _("bereits in Ihrem Korb");
+        var MSG_NO_RECORD_SELECTED = _("Kein Exemplar ausgewählt");
+        var MSG_NO_RECORD_ADDED = _("Es wurde kein Exemplar in den Korb gelegt.");
+        var MSG_CONFIRM_DEL_BASKET = _("Sind Sie sicher, dass Sie Ihren Korb leeren möchten?");
+        var MSG_CONFIRM_DEL_RECORDS = _("Sind Sie sicher, dass Sie die markierten Exemplare löschen möchten?");
+        var MSG_ITEM_IN_CART = _("In Ihrem Korb");
+        var MSG_IN_YOUR_CART = _("Titel in Ihrem Korb: ");
+        var MSG_ITEM_NOT_IN_CART = _("Meinem Korb hinzufügen");
+
+
+
+    $(".print-large").on("click",function(){
+        window.print();
+        return false;
+    });
+    $("#ulactioncontainer > ul > li > a.addtoshelf").on("click",function(){
+        Dopop('opac-addbybiblionumber.pl?biblionumber=');
+        return false;
+    });
+    $("body").on("click", ".addtocart", function(e){
+        e.preventDefault();
+        var biblionumber = $(this).data("biblionumber");
+        addRecord( biblionumber );
+    });
+    $("body").on("click", ".cartRemove", function(e){
+        e.preventDefault();
+        var biblionumber = $(this).data("biblionumber");
+        delSingleRecord( biblionumber );
+    });
+    $(".clearsh").on("click", function(e){
+        e.preventDefault();
+        return confirmDelete(MSG_DELETE_SEARCH_HISTORY);
+    });
+    //]]>
+</script>
+
+
+<script src="/opac-tmpl/bootstrap/js/basket_18.0505005.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<script src="/opac-tmpl/bootstrap/lib/jquery/plugins/jquery.cookie.min_18.0505005.js"></script>
+<script>
+$(document).ready(function() {
+    if($('#searchsubmit').length) {
+        $(document).on("click", '#searchsubmit', function(e) {
+            jQuery.removeCookie("form_serialized", { path: '/'});
+            jQuery.removeCookie("form_serialized_limits", { path: '/'});
+            jQuery.removeCookie("num_paragraph", { path: '/'});
+            jQuery.removeCookie("search_path_code", { path: '/'});
+        });
+    }
+
+    window.emojiPicker = new EmojiPicker({
+      emojiable_selector: '[data-emojiable=true]',
+      assetsPath: '/opac-tmpl/lib/emoji-picker/img/',
+      popupButtonClasses: 'fa fa-smile-o'
+    });
+    window.emojiPicker.discover();
+});
+</script>
+
+
+<script src="/opac-tmpl/lib/jquery/plugins/jquery.dataTables.min_18.0505005.js"></script>
+<script>
+//<![CDATA[
+    var MSG_DT_FIRST = _("Erste");
+    var MSG_DT_LAST = _("Letzte");
+    var MSG_DT_NEXT = _("Weiter");
+    var MSG_DT_PREVIOUS = _("Zurück");
+    var MSG_DT_EMPTY_TABLE = _("Keine Daten verfügbar");
+    var MSG_DT_INFO = _("Zeige _START_ bis _END_ von _TOTAL_");
+    var MSG_DT_INFO_EMPTY = _("Keine Einträge anzuzeigen");
+    var MSG_DT_INFO_FILTERED = _("(Auswahl von _MAX_ Einträgen)");
+    var MSG_DT_LENGTH_MENU = _("Zeige _MENU_ Einträge");
+    var MSG_DT_LOADING_RECORDS = _("Lädt...");
+    var MSG_DT_PROCESSING = _("Lädt...");
+    var MSG_DT_SEARCH = _("Suche:");
+    var MSG_DT_ZERO_RECORDS = _("Keine übereinstimmenden Datensätze gefunden");
+    var CONFIG_EXCLUDE_ARTICLES_FROM_SORT = _("ein eine einer eines einem einen der die das");
+//]]>
+</script>
+<script src="/opac-tmpl/bootstrap/js/datatables_18.0505005.js"></script>
+<script>
+$( document ).ready(function() {
+
+    $("#finestable").dataTable($.extend(true, {}, dataTablesDefaults, {
+        "aoColumnDefs": [
+             { "sType": "title-string", "aTargets" : [ "title-string" ] }
+         ]
+    } ));
+
+    $(".paypal").on("click", function() {
+        window.open('https://www.paypal.com/webapps/mpp/paypal-popup','WIPaypal','toolbar=no, location=no, directories=no, status=no, menubar=no, scrollbars=yes, resizable=yes, width=1060, height=700');
+        return false;
+    });
+
+    $(".pay-online").removeClass("hidden");
+
+    $("#amount-to-pay-label").hide();
+
+    $(".checkbox-pay").change( function() {
+        // Disable the pay button if no fees are selected
+        $("#submit-pay").prop("disabled", ! $(".checkbox-pay:checked").length );
+
+        // Calculate the total amount to be paid based on selected fees
+        var total = 0;
+        $(".checkbox-pay").each( function() {
+            if ( $(this).is(":checked") ) {
+                var id = this.id.split("checkbox-pay-")[1];
+                total += parseFloat( $("#amount-" + id).val() );
+            }
+        });
+
+        if ( total ) {
+            $("#amount-to-pay").html( total.toFixed(2) );
+            $("#amount-to-pay-label").show();
+        } else {
+            $("#amount-to-pay-label").hide();
+        }
+    });
+});
+</script>
+
+
+<script>
+        //<![CDATA[
+        $( document ).ready(function() {
+  $(".view a:contains('MARC')").hide();
+  $("#availability_facet").hide();
+  $("span.title_resp_stmt").hide();
+
+  $(".link-collection-collapse-toggle").on("click",function(e){
+        e.preventDefault();
+        $(this).toggleClass("menu-open");
+        // $(".link-collection-collapse-entries").toggle();
+        $($(this).attr("href")).toggle();
+    });
+
+
+  $('#language-limit').html('<option value="">keine Begrenzung</option>\
+                             <option value="ln,rtrn:ger">Deutsch (Deutsch)</option>\
+                             <option value="ln,rtrn:eng">English (Englisch)</option>\
+                             <option value="ln,rtrn:fre">Français (Französisch)</option>\
+                             <option value="ln,rtrn:spa">Español (Spanisch)</option>\
+                             <option value="ln,rtrn:afr">Africaans (Afrikaans)</option>\
+                             <option value="ln,rtrn:alb">Shqip (Albanisch)</option>\
+                             <option value="ln,rtrn:amh">አማርኛ (Amharisch)</option>\
+                             <option value="ln,rtrn:ara">لعربية (Arabisch)</option>\
+                             <option value="ln,rtrn:cat">бо̀сански (Bosnisch)</option>\
+                             <option value="ln,rtrn:bul">Български (Bulgarisch)</option>\
+                             <option value="ln,rtrn:cat">Sinugboanon (Cebuano)</option>\
+                             <option value="ln,rtrn:chi">中文 (Chinesisch)</option>\
+                             <option value="ln,rtrn:dan">Dansk (Dänisch)</option>\
+                             <option value="ln,rtrn:fin">Suomi (Finnisch)</option>\
+                             <option value="ln,rtrn:gle">Gaelic (Gälisch)</option>\
+                             <option value="ln,rtrn:gre">Eλληνικά (Griechisch)</option>\
+                             <option value="ln,rtrn:kal">Kalaallisut (Grönländisch)</option>\
+                             <option value="ln,rtrn:guj">ગુજરાતી (Gujarati)</option>\
+                             <option value="ln,rtrn:heb">עִבְרִית (Hebräisch)</option>\
+                             <option value="ln,rtrn:hin">हिन्दी (Hindi)</option>\
+                             <option value="ln,rtrn:ice">Íslenska (Isländisch)</option>\
+                             <option value="ln,rtrn:ind">Bahasa Indonesia (Indonesisch)</option>\
+                             <option value="ln,rtrn:ita">Italiano (Italienisch)</option>\
+                             <option value="ln,rtrn:jpn">日本語 (Japanisch)</option>\
+                             <option value="ln,rtrn:yid">יידיש (Jiddisch)</option>\
+                             <option value="ln,rtrn:kan">ಕನ್ನಡ (Kanaresisch)</option>\
+                             <option value="ln,rtrn:cat">Català (Katalanisch)</option>\
+                             <option value="ln,rtrn:kir">Кыргызча (Kirgisisch)</option>\
+                             <option value="ln,rtrn:kor">한국어 (Koreanisch)</option>\
+                             <option value="ln,rtrn:hrv">Hrvatski (Kroatisch)</option>\
+                             <option value="ln,rtrn:kur">کوردی (Kurdisch)</option>\
+                             <option value="ln,rtrn:lat">Latina (Latein)</option>\
+                             <option value="ln,rtrn:lav">latviešu valoda (Lettisch)</option>\
+                             <option value="ln,rtrn:may">Bahasa melayu (Malay)</option>\
+                             <option value="ln,rtrn:ben">മലയാളം (Malayalam)</option>\
+                             <option value="ln,rtrn:mar">मराठी (Marathi)</option>\
+                             <option value="ln,rtrn:mon">Mонгол (Mongolisch)</option>\
+                             <option value="ln,rtrn:nep">नेपाली (Nepali)</option>\
+                             <option value="ln,rtrn:dut">Nederlands (Niederländisch)</option>\
+                             <option value="ln,rtrn:nob">Norsk bokmål (Norwegisch bokmål)</option>\
+                             <option value="ln,rtrn:nor">Norsk (Norwegisch)</option>\
+                             <option value="ln,rtrn:nor">ଓଡ଼ିଆ (Oriya)</option>\
+                             <option value="ln,rtrn:nor">پنجابی,ਪੰਜਾਬੀ (Panjabi)</option>\
+                             <option value="ln,rtrn:per">فارسى (Persisch)</option>\
+                             <option value="ln,rtrn:pol">Polski (Polnisch)</option>\
+                             <option value="ln,rtrn:por">Português (Portugiesisch)</option>\
+                             <option value="ln,rtrn:rum">Română (Rumänisch)</option>\
+                             <option value="ln,rtrn:rus">Русский (Russisch)</option>\
+                             <option value="ln,rtrn:gsw">Schwizerdütsch (Schweizerdeutsch)</option>\
+                             <option value="ln,rtrn:sin">සිංහල (Singhalesisch)</option>\
+                             <option value="ln,rtrn:slo">Slovenský jazyk (Slowakisch)</option>\
+                             <option value="ln,rtrn:slv">Slovenščina (Slowenisch)</option>\
+                             <option value="ln,rtrn:srp">Cрпски (Serbisch)</option>\
+                             <option value="ln,rtrn:swa">Kiswahili (Swahili)</option>\
+                             <option value="ln,rtrn:swe">Svenska (Schwedisch)</option>\
+                             <option value="ln,rtrn:tam">தமிழ் (Tamil)</option>\
+                             <option value="ln,rtrn:tgl">Tagalog (Tagalog)</option>\
+                             <option value="ln,rtrn:tha">ภาษาไทย (Thailändisch)</option>\
+                             <option value="ln,rtrn:cze">Čeština (Tschechisch)</option>\
+                             <option value="ln,rtrn:tur">Türkçe (Türkisch)</option>\
+                             <option value="ln,rtrn:hun">Magyar (Ungarisch)</option>\
+                             <option value="ln,rtrn:ukr">Українська (Ukrainisch)</option>\
+                             <option value="ln,rtrn:urd">اردو (Urdu)</option>\
+                             <option value="ln,rtrn:vie">㗂越 (Vietnamese)</option>\
+                             <option value="ln,rtrn:zul">isiZulu (Zulu)</option>');
+
+});
+
+
+        //]]>
+    </script>
+
+
+
+</body>
+</html>
+
+

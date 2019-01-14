@@ -83,9 +83,13 @@
     </string-array>
     <string name="notification_warning">警告時期</string>
     <string name="notification_warning_desc">期限のどれくらい前に警告を表示しますか?</string>
-    <string name="notif_ticker">%d 本の期限です!</string>
+    <plurals name="notif_ticker">
+        <item quantity="other">%d 本の期限です!</item>
+    </plurals>
     <string name="notif_title">本の期限です</string>
-    <string name="notif_ticker_expired">%d 冊の期限が過ぎました!</string>
+    <plurals name="notif_ticker_expired">
+        <item quantity="other">%d 冊の期限が過ぎました!</item>
+    </plurals>
     <string name="notif_title_expired">本の期限が過ぎました</string>
     <string name="notif_plus_more">さらに +%d</string>
     <string name="notif_snooze">後で</string>
