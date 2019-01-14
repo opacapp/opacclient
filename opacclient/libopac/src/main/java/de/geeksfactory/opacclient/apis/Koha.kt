@@ -216,7 +216,7 @@ open class Koha : OkHttpBaseApi() {
         }
 
         val builder = searchUrl(searchQuery!!)
-        builder.addQueryParameter("offset", (20 * page).toString())
+        builder.addQueryParameter("offset", (20 * (page - 1)).toString())
         val url = builder.build().toString()
         val doc = httpGet(url, ENCODING).html
         doc.setBaseUri(url)
