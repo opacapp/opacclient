@@ -247,6 +247,7 @@ open class NetBiblio : OkHttpBaseApi() {
                                     val button = col.select("a").first()
                                     if (button != null) {
                                         resInfo = BaseApi.getQueryParamsFirst(button.attr("href"))["selectedItems"]
+                                        isReservable = true
                                     }
                                 }
                                 "Exemplarnr", "Item number", "No d'exemplaire" -> barcode = data
@@ -262,9 +263,51 @@ open class NetBiblio : OkHttpBaseApi() {
         return null
     }
 
+    var reservationItemId: String? = null
     override fun reservation(item: DetailedItem, account: Account, useraction: Int,
-                             selection: String): OpacApi.ReservationResult? {
-        return null
+                             selection: String?): OpacApi.ReservationResult? {
+        if (useraction == 0 && selection == null) {
+            // step 1: select item
+            val reservableCopies = item.copies.filter { it.resInfo != null }
+            when (reservableCopies.size) {
+                0 -> return OpacApi.ReservationResult(OpacApi.MultiStepResult.Status.ERROR, stringProvider.getString(StringProvider.NO_COPY_RESERVABLE))
+                1 -> return reservation(item, account, 1, reservableCopies.first()!!.resInfo)
+                else -> {
+                    val options = reservableCopies.map { copy ->
+                        hashMapOf(
+                                "key" to copy.resInfo,
+                                "value" to "${copy.branch} ${copy.status} ${copy.returnDate}"
+                        )
+                    }
+                    return OpacApi.ReservationResult(OpacApi.MultiStepResult.Status.SELECTION_NEEDED).apply {
+                        actionIdentifier = 1
+                        this.selection = options
+                    }
+                }
+            }
+        } else if (useraction == 1) {
+            reservationItemId = selection
+            val doc = httpGet("$opacUrl/account/makeitemreservation?selectedItems%5B0%5D=$selection", ENCODING).html
+            val warning = doc.select("label:has(.wo-reservationkind[checked])").text
+            return OpacApi.ReservationResult(OpacApi.MultiStepResult.Status.CONFIRMATION_NEEDED).apply {
+                details = listOf(arrayOf(warning))
+            }
+        } else if (useraction == OpacApi.MultiStepResult.ACTION_CONFIRMATION) {
+            val body = FormBody.Builder()
+                    .add("ItemID", reservationItemId!!)
+                    .add("ReservationKind", "Reservation") // TODO: maybe don't hardcode this
+                    .add("AddessId" /* sic! */, "26305") //TODO: don't hardcode this
+                    .build()
+
+            val doc = httpPost("$opacUrl/account/makeitemreservation", body, ENCODING).html
+            if (doc.select(".alert-success").size == 1) {
+                return OpacApi.ReservationResult(OpacApi.MultiStepResult.Status.OK)
+            } else {
+                return OpacApi.ReservationResult(OpacApi.MultiStepResult.Status.ERROR)
+            }
+        } else {
+            return OpacApi.ReservationResult(OpacApi.MultiStepResult.Status.ERROR)
+        }
     }
 
     override fun prolong(media: String, account: Account, useraction: Int, selection: String?): OpacApi.ProlongResult? {
@@ -371,7 +414,7 @@ open class NetBiblio : OkHttpBaseApi() {
     }
 
     override fun getSupportFlags(): Int {
-        return 0
+        return OpacApi.SUPPORT_FLAG_ENDLESS_SCROLLING or OpacApi.SUPPORT_FLAG_WARN_RESERVATION_FEES
     }
 
     override fun getSupportedLanguages(): Set<String>? {
