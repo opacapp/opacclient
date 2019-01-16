@@ -309,7 +309,7 @@ open class NetBiblio : OkHttpBaseApi() {
         }
     }
 
-    private fun <I : AccountItem> parseItems(doc: Document, constructor: () -> I): List<I> {
+    internal fun <I : AccountItem> parseItems(doc: Document, constructor: () -> I): List<I> {
         val table = doc.select(".wo-grid-table").first() ?: return emptyList()
         val cols = table.select("> thead > tr > th").map { it.text.trim() }
         val rows = table.select("> tbody > tr")
