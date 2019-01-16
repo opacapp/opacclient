@@ -409,8 +409,8 @@ open class NetBiblio : OkHttpBaseApi() {
         }
     }
 
-    override fun getShareUrl(id: String, title: String): String? {
-        return null
+    override fun getShareUrl(id: String, title: String?): String? {
+        return "$opacUrl/search/notice?noticeId=$id"
     }
 
     override fun getSupportFlags(): Int {
