@@ -267,23 +267,85 @@ open class NetBiblio : OkHttpBaseApi() {
         return null
     }
 
-    override fun prolong(media: String, account: Account, useraction: Int, selection: String): OpacApi.ProlongResult? {
+    override fun prolong(media: String, account: Account, useraction: Int, selection: String?): OpacApi.ProlongResult? {
         return null
     }
 
-    override fun prolongAll(account: Account, useraction: Int, selection: String): OpacApi.ProlongAllResult? {
+    override fun prolongAll(account: Account, useraction: Int, selection: String?): OpacApi.ProlongAllResult? {
         return null
     }
 
-    override fun cancel(media: String, account: Account, useraction: Int, selection: String): OpacApi.CancelResult? {
-        return null
+    override fun cancel(media: String, account: Account, useraction: Int, selection: String?): OpacApi.CancelResult? {
+        if (!initialised) start()
+        login(account)
+
+        val doc = httpGet("$opacUrl/account/deletereservations?selectedItems%5B0%5D=$media", ENCODING).html
+        if (doc.select(".alert-success").size == 1) {
+            return OpacApi.CancelResult(OpacApi.MultiStepResult.Status.OK)
+        } else {
+            return OpacApi.CancelResult(OpacApi.MultiStepResult.Status.ERROR)
+        }
     }
 
     override fun account(account: Account): AccountData? {
         if (!initialised) start()
         login(account)
-        return AccountData(account.id).apply {
 
+        val overview = httpGet("$opacUrl/account", ENCODING).html
+        val resDoc = httpGet("$opacUrl/account/reservations", ENCODING).html
+        val lentDoc = httpGet("$opacUrl/account/circulations", ENCODING).html
+
+        return AccountData(account.id).apply {
+            val feesString = overview.select("a[href$=fees]").first()?.text
+            pendingFees = if (feesString != null) {
+                Regex("\\(([^\\)]+)\\)").find(feesString)?.groups?.get(1)?.value
+            } else null
+            validUntil = overview.select(
+                    ".wo-list-label:contains(Abonnement (Ende)) + .wo-list-content, " +
+                            ".wo-list-label:contains(Subscription (end)) + .wo-list-content," +
+                            " .wo-list-label:contains(Abonnement (Fin)) + .wo-list-content").first()?.text
+            reservations = parseItems(resDoc, ::ReservedItem)
+            lent = parseItems(lentDoc, ::LentItem)
+        }
+    }
+
+    private fun <I : AccountItem> parseItems(doc: Document, constructor: () -> I): List<I> {
+        val table = doc.select(".wo-grid-table").first() ?: return emptyList()
+        val cols = table.select("> thead > tr > th").map { it.text.trim() }
+        val rows = table.select("> tbody > tr")
+
+        return rows.map { row ->
+            constructor().apply {
+                row.select("td").zip(cols).forEach { (col, header) ->
+                    val headers = header.split(" / ").map { it.trim() }
+                    val data = col.html().split("<br>").map { it.html.text.trim() }
+                    headers.zip(data).forEach { (type, data) ->
+                        when (type) {
+                            "" -> {
+                                val checkbox = col.select("input[type=checkbox]").first()
+                                val coverImg = col.select(".wo-cover").first()
+                                if (checkbox != null) {
+                                    when {
+                                        this is LentItem -> prolongData = checkbox["value"]
+                                        this is ReservedItem -> cancelData = checkbox["value"]
+                                    }
+                                } else if (coverImg != null) {
+                                    cover = coverImg["src"]
+                                }
+                            }
+                            "Bibliothek" -> when {
+                                this is LentItem -> lendingBranch = data
+                                this is ReservedItem -> branch = data
+                            }
+                            "Autor", "Author", "Auteur" -> author = data
+                            "Titel", "Title", "Titre" -> title = data
+                            "Medienart" -> format = data
+                            //"Aktueller Standort" ->
+                            //"Signatur", "Call number", "Cote" ->
+                        }
+                    }
+                }
+            }
         }
     }
 
