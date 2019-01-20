@@ -11,6 +11,7 @@ import de.geeksfactory.opacclient.utils.get
 import de.geeksfactory.opacclient.utils.html
 import de.geeksfactory.opacclient.utils.text
 import okhttp3.FormBody
+import okhttp3.HttpUrl
 import org.joda.time.format.DateTimeFormat
 import org.json.JSONException
 import org.json.JSONObject
@@ -176,7 +177,7 @@ open class NetBiblio : OkHttpBaseApi() {
                 val title = titleCol.select("a").text
                 val author = titleCol.ownText()
                 val moreInfo = cols.drop(1).map { it.text }.joinToString(" / ")
-                this.id = entry.key
+                this.id = "noticeId=${entry.key}"
                 innerhtml = "<b>$title</b><br>${author ?: ""}<br>${moreInfo ?: ""}"
                 cover = rows[0].select(".wo-cover").first()?.attr("src")
 
@@ -203,7 +204,7 @@ open class NetBiblio : OkHttpBaseApi() {
     }
 
     override fun getResultById(id: String, homebranch: String?): DetailedItem {
-        val doc = httpGet("$opacUrl/search/notice?noticeId=$id", ENCODING).html
+        val doc = httpGet("$opacUrl/search/notice?$id", ENCODING).html
         return parseDetail(doc, id)
     }
 
@@ -311,11 +312,40 @@ open class NetBiblio : OkHttpBaseApi() {
     }
 
     override fun prolong(media: String, account: Account, useraction: Int, selection: String?): OpacApi.ProlongResult? {
-        return null
+        if (!initialised) start()
+        login(account)
+
+        val doc = httpGet("$opacUrl/account/renew?selectedItems%5B0%5D=$media", ENCODING).html
+        if (doc.select(".alert-success").size == 1) {
+            return OpacApi.ProlongResult(OpacApi.MultiStepResult.Status.OK)
+        } else {
+            return OpacApi.ProlongResult(OpacApi.MultiStepResult.Status.ERROR,
+                    doc.select(".alert-danger").text)
+        }
     }
 
     override fun prolongAll(account: Account, useraction: Int, selection: String?): OpacApi.ProlongAllResult? {
-        return null
+        if (!initialised) start()
+        login(account)
+
+        val lentDoc = httpGet("$opacUrl/account/circulations", ENCODING).html
+        val lent = parseItems(lentDoc, ::LentItem)
+
+        val builder = HttpUrl.parse("$opacUrl/account/renew")!!.newBuilder()
+        lent.forEachIndexed { index, item ->
+            if (item.prolongData != null) {
+                builder.addQueryParameter("selectedItems[$index]", item.prolongData)
+            }
+        }
+        builder.addQueryParameter("returnUrl", "${URL(opacUrl).path}/account/circulations")
+
+        val doc = httpGet(builder.build().toString(), ENCODING).html
+        if (doc.select(".alert-success").size == 1) {
+            return OpacApi.ProlongAllResult(OpacApi.MultiStepResult.Status.OK)
+        } else {
+            return OpacApi.ProlongAllResult(OpacApi.MultiStepResult.Status.ERROR,
+                    doc.select(".alert-danger").text)
+        }
     }
 
     override fun cancel(media: String, account: Account, useraction: Int, selection: String?): OpacApi.CancelResult? {
@@ -326,7 +356,8 @@ open class NetBiblio : OkHttpBaseApi() {
         if (doc.select(".alert-success").size == 1) {
             return OpacApi.CancelResult(OpacApi.MultiStepResult.Status.OK)
         } else {
-            return OpacApi.CancelResult(OpacApi.MultiStepResult.Status.ERROR)
+            return OpacApi.CancelResult(OpacApi.MultiStepResult.Status.ERROR,
+                    doc.select(".alert-danger").text)
         }
     }
 
@@ -357,11 +388,17 @@ open class NetBiblio : OkHttpBaseApi() {
         val cols = table.select("> thead > tr > th").map { it.text.trim() }
         val rows = table.select("> tbody > tr")
 
+        val df = DateTimeFormat.forPattern("dd.MM.yyyy")
+
         return rows.map { row ->
             constructor().apply {
+                var renewals: Int? = null
+                var reservations: Int? = null
+
                 row.select("td").zip(cols).forEach { (col, header) ->
                     val headers = header.split(" / ").map { it.trim() }
                     val data = col.html().split("<br>").map { it.html.text.trim() }
+
                     headers.zip(data).forEach { (type, data) ->
                         when (type) {
                             "" -> {
@@ -380,14 +417,50 @@ open class NetBiblio : OkHttpBaseApi() {
                                 this is LentItem -> lendingBranch = data
                                 this is ReservedItem -> branch = data
                             }
-                            "Autor", "Author", "Auteur" -> author = data
-                            "Titel", "Title", "Titre" -> title = data
+                            "Autor", "Author", "Auteur" -> {
+                                author = data
+                                val link = col.select("a").first()
+                                if (link != null) {
+                                    val nr = BaseApi.getQueryParamsFirst(link["href"])["noticeNr"]
+                                    id = "noticeNr=$nr"
+                                }
+                            }
+                            "Titel", "Title", "Titre" -> {
+                                title = data
+                                val link = col.select("a").first()
+                                if (link != null) {
+                                    val nr = BaseApi.getQueryParamsFirst(link["href"])["noticeNr"]
+                                    id = "noticeNr=$nr"
+                                }
+                            }
                             "Medienart" -> format = data
+                            "Fälligkeitsdatum", "Due date", "Date d'échéance" -> when {
+                                this is LentItem -> deadline = df.parseLocalDate(data)
+                            }
+                            "Exemplarnr.", "Item number", "No d'exemplaire" -> when {
+                                this is LentItem -> barcode = data
+                            }
+                            "Verlängerungen", "Renewals", "Prolongations" ->
+                                renewals = data.toIntOrNull()
+                            "Anz. Res." -> reservations = data.toIntOrNull()
                             //"Aktueller Standort" ->
                             //"Signatur", "Call number", "Cote" ->
+                            //"Bereich" ->
+                            //"Jahr" ->
+                            //"Datum der Verlängerung", "Renewal date", "Date de prolongation"
                         }
                     }
                 }
+
+                val renewalsText = if (renewals != null && renewals!! > 0)
+                    "${renewals}x ${stringProvider.getString(StringProvider.PROLONGED_ABBR)}"
+                else null
+                val reservationsText = if (reservations != null && reservations!! > 0) {
+                    stringProvider.getFormattedString(StringProvider.RESERVATIONS_NUMBER, reservations)
+                } else null
+                status = listOf(renewalsText, reservationsText).filter { it != null }
+                        .joinToString(", ")
+                if (status.isEmpty()) status = null
             }
         }
     }
@@ -410,11 +483,12 @@ open class NetBiblio : OkHttpBaseApi() {
     }
 
     override fun getShareUrl(id: String, title: String?): String? {
-        return "$opacUrl/search/notice?noticeId=$id"
+        return "$opacUrl/search/notice?$id"
     }
 
     override fun getSupportFlags(): Int {
-        return OpacApi.SUPPORT_FLAG_ENDLESS_SCROLLING or OpacApi.SUPPORT_FLAG_WARN_RESERVATION_FEES
+        return OpacApi.SUPPORT_FLAG_ENDLESS_SCROLLING or OpacApi
+                .SUPPORT_FLAG_WARN_RESERVATION_FEES or OpacApi.SUPPORT_FLAG_ACCOUNT_PROLONG_ALL
     }
 
     override fun getSupportedLanguages(): Set<String>? {
