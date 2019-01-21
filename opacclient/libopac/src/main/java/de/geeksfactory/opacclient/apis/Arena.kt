@@ -96,7 +96,7 @@ open class Arena : OkHttpBaseApi() {
 
     internal fun parseSearch(doc: Document, page: Int = 1): SearchRequestResult {
         val count = doc.select(".feedbackPanelinfo").text.replace(Regex("[^\\d]"), "").toInt()
-        val coverAjaxUrls = getCoverAjaxUrls(doc)
+        val coverAjaxUrls = getAjaxUrls(doc)
 
         val results = doc.select(".arena-record").mapIndexed { i, record ->
             SearchResult().apply {
@@ -131,7 +131,7 @@ open class Arena : OkHttpBaseApi() {
         return null
     }
 
-    internal fun getCoverAjaxUrls(doc: Document): Map<String, String> {
+    internal fun getAjaxUrls(doc: Document): Map<String, String> {
         val regex = Regex(Regex.escape(
                 "<script type=\"text/javascript\">Wicket.Event.add(window,\"domready\",function(b){var a=wicketAjaxGet(\"")
                 + "([^\"]+)"
@@ -152,11 +152,39 @@ open class Arena : OkHttpBaseApi() {
     }
 
     override fun getResultById(id: String, homebranch: String?): DetailedItem {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        val url = "$opacUrl/results?p_p_id=searchResult_WAR_arenaportlets&p_r_p_687834046_search_item_id=$id"
+        val doc = httpGet(url, ENCODING).html
+        doc.setBaseUri(url)
+        return parseDetail(doc)
     }
 
-    override fun getResult(position: Int): DetailedItem {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    private fun parseDetail(doc: Document): DetailedItem {
+        val urls = getAjaxUrls(doc).filterKeys { it.contains("crDetailWicket") }
+        val holdingsUrl = if (urls.isNotEmpty()) urls.values.iterator().next() else null
+        val holdingsDoc = if (holdingsUrl != null) {
+            val ajaxResp = httpGet(URL(URL(opacUrl), holdingsUrl).toString(), ENCODING).html
+            ajaxResp.select("component").first().text.html
+        } else null
+
+        return DetailedItem().apply {
+            title = doc.select(".arena-detail-title").text
+            doc.select(".arena-catalogue-detail .arena-field").forEach { field ->
+                addDetail(Detail(field.text, field.nextElementSibling().text))
+            }
+            id = doc.select(".arena-record-id").first().text
+            cover = doc.select(".arena-detail-cover img").first()?.absUrl("href")
+            copies = holdingsDoc?.select(".arena-row")?.map { row ->
+                Copy().apply {
+                    department = row.select(".arena-holding-department .arena-value").text
+                    shelfmark = row.select(".arena-holding-shelf-mark .arena-value").text
+                    status = row.select(".arena-availability-right").text
+                }
+            } ?: emptyList()
+        }
+    }
+
+    override fun getResult(position: Int): DetailedItem? {
+        return null
     }
 
     override fun reservation(item: DetailedItem, account: Account, useraction: Int, selection: String?): OpacApi.ReservationResult {
@@ -184,11 +212,11 @@ open class Arena : OkHttpBaseApi() {
     }
 
     override fun getShareUrl(id: String, title: String?): String {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        return "$opacUrl/results?p_p_id=searchResult_WAR_arenaportlets&p_r_p_687834046_search_item_id=$id"
     }
 
     override fun getSupportFlags(): Int {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        return OpacApi.SUPPORT_FLAG_ENDLESS_SCROLLING
     }
 
     override fun getSupportedLanguages(): MutableSet<String>? {

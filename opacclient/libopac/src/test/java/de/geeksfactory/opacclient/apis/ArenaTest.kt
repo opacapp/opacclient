@@ -42,7 +42,7 @@ class ArenaSearchTest : BaseHtmlTest() {
         val script = "<script type=\"text/javascript\" >Wicket.Event.add(window,\"domready\",function(b){var a=wicketAjaxGet(\"https://url\",function(){}.bind(this),function(){}.bind(this),function(){return Wicket.\$(\"id__searchResult__WAR__arenaportlets____90\")!=null}.bind(this))});</script>"
         val coverHolder = "<div class=\"arena-record-cover\" id=\"id__searchResult__WAR__arenaportlets____90\"><div><img alt=\"Loading...\" src=\"/arena-portlets/searchResult/ps:searchResult_WAR_arenaportlets_LAYOUT_21521/resources/org.apache.wicket.ajax.AbstractDefaultAjaxBehavior/indicator.gif\"/></div>"
         val doc = "<html><head>$script</head><body>$coverHolder</body></html>".html
-        val ajaxUrls = arena.getCoverAjaxUrls(doc)
+        val ajaxUrls = arena.getAjaxUrls(doc)
 
         assertEquals(1, ajaxUrls.size)
 
