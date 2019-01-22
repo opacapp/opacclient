@@ -1,0 +1,951 @@
+<!DOCTYPE html>
+<html class="wo-classic">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+    <link rel="shortcut icon" href="/GGG/WebOPAC/media/images/ggg.ico">
+    <title>Reservierte Dokumente - GGG Stadtbibliothek Basel</title>
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+    <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+    <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+
+    <link href="/GGG/WebOPAC/Content/less/bundle?v=GxvFiyNSw8POUjalnhzf5b-KXeRzERd0JeG1kpa6OFE1"
+          rel="stylesheet"/>
+
+
+    <link rel="stylesheet"
+          href="https://fonts.googleapis.com/css?family=Open+Sans:400italic,700italic,300,400,700">
+</head>
+<body>
+<div class="wos-wrapper">
+    <div class="wos-content-wrapper">
+        <div class="wos-header">
+
+            <div class="media wo-header">
+                <div class="media-left wo-header-logo">
+                    <a href="http://www.stadtbibliothekbasel.ch" target="_blank">
+                        <img class="media-object"
+                             src="/GGG/WebOPAC/media/images/logo-base-ggg.png"/>
+                    </a>
+                </div>
+                <div class="media-body wo-header-text">
+                    <h1>
+                    </h1>
+                </div>
+                <div class="media-right wo-header-meta-nav ">
+                    <div Class="row text-right">
+                        <div Class="btn-group">
+                            <button type="button" Class="btn btn-xs btn-link dropdown-toggle"
+                                    data-toggle="dropdown">
+                                Sprache <span Class="caret"></span>
+                            </button>
+                            <ul Class="dropdown-menu">
+                                <li>
+                                    <a href="/GGG/WebOPAC/Site/ChangeLanguage?language=en&amp;returnUrl=%2FGGG%2FWebOPAC%2Faccount%2Freservations">English</a>
+                                </li>
+                                <li class="active">
+                                    <a href="#">Deutsch</a>
+                                </li>
+                                <li>
+                                    <a href="/GGG/WebOPAC/Site/ChangeLanguage?language=fr&amp;returnUrl=%2FGGG%2FWebOPAC%2Faccount%2Freservations">Fran&#231;ais</a>
+                                </li>
+                            </ul>
+                        </div>
+                        <a class="btn btn-xs btn-link" href="/GGG/WebOPAC/endsession">Beenden</a>
+                    </div>
+
+                </div>
+            </div>
+
+
+            <div class="navbar navbar-default wo-navbar  yamm">
+                <div class="container-fluid">
+                    <ul class="nav navbar-nav">
+                        <li>
+                            <a href="/GGG/WebOPAC/">Startseite - Freie Suche</a>
+                        </li>
+                        <li>
+                            <a href="/GGG/WebOPAC/search/extended">Erweiterte Suche</a>
+                        </li>
+                        <li>
+                            <a href="/GGG/WebOPAC/search/date">Suche nach Neuanschaffungen</a>
+                        </li>
+                        <li class="dropdown">
+                            <a href="#" class="dropdown-toggle"
+                               data-toggle="dropdown">Listen mit Neuanschaffungen<span
+                                    class="caret wo-navbar-caret"></span></a>
+
+
+                            <ul class="dropdown-menu yamm-content wo-dropdownmenu-s wo-dropdownmenu-medialist wo-nav-dropdown">
+                                <li>
+                                    <a class="wo-dropdownmenu-medialist-entry media"
+                                       href="/GGG/WebOPAC/search/predefinedsearch/submit?Name=BelletristikErwachseneDeutsch"
+                                       rel="nofollow">
+                                        <div class="media-body">
+                                            <div class="wo-media-title">Romane Deutsch</div>
+                                        </div>
+                                    </a>
+                                    <a class="wo-dropdownmenu-medialist-entry media"
+                                       href="/GGG/WebOPAC/search/predefinedsearch/submit?Name=BelletristikErwachseneEnglisch"
+                                       rel="nofollow">
+                                        <div class="media-body">
+                                            <div class="wo-media-title">English Novels</div>
+                                        </div>
+                                    </a>
+                                    <a class="wo-dropdownmenu-medialist-entry media"
+                                       href="/GGG/WebOPAC/search/predefinedsearch/submit?Name=NonfictionErwachseneEnglisch"
+                                       rel="nofollow">
+                                        <div class="media-body">
+                                            <div class="wo-media-title">English Nonfiction</div>
+                                        </div>
+                                    </a>
+                                    <a class="wo-dropdownmenu-medialist-entry media"
+                                       href="/GGG/WebOPAC/search/predefinedsearch/submit?Name=BelletristikErwachseneFranzosisch"
+                                       rel="nofollow">
+                                        <div class="media-body">
+                                            <div class="wo-media-title">Livres Français</div>
+                                        </div>
+                                    </a>
+                                    <a class="wo-dropdownmenu-medialist-entry media"
+                                       href="/GGG/WebOPAC/search/predefinedsearch/submit?Name=BelletristikErwachseneItalienisch"
+                                       rel="nofollow">
+                                        <div class="media-body">
+                                            <div class="wo-media-title">Libri Italiani</div>
+                                        </div>
+                                    </a>
+                                    <a class="wo-dropdownmenu-medialist-entry media"
+                                       href="/GGG/WebOPAC/search/predefinedsearch/submit?Name=KommunikationInformation"
+                                       rel="nofollow">
+                                        <div class="media-body">
+                                            <div class="wo-media-title">Kommunikation & Information</div>
+                                        </div>
+                                    </a>
+                                    <a class="wo-dropdownmenu-medialist-entry media"
+                                       href="/GGG/WebOPAC/search/predefinedsearch/submit?Name=KindErziehung"
+                                       rel="nofollow">
+                                        <div class="media-body">
+                                            <div class="wo-media-title">Kind & Erziehung</div>
+                                        </div>
+                                    </a>
+                                    <a class="wo-dropdownmenu-medialist-entry media"
+                                       href="/GGG/WebOPAC/search/predefinedsearch/submit?Name=KorperGeist"
+                                       rel="nofollow">
+                                        <div class="media-body">
+                                            <div class="wo-media-title">Körper & Geist</div>
+                                        </div>
+                                    </a>
+                                    <a class="wo-dropdownmenu-medialist-entry media"
+                                       href="/GGG/WebOPAC/search/predefinedsearch/submit?Name=GesellschaftGeschichte"
+                                       rel="nofollow">
+                                        <div class="media-body">
+                                            <div class="wo-media-title">Gesellschaft & Geschichte</div>
+                                        </div>
+                                    </a>
+                                    <a class="wo-dropdownmenu-medialist-entry media"
+                                       href="/GGG/WebOPAC/search/predefinedsearch/submit?Name=NaturTechnik"
+                                       rel="nofollow">
+                                        <div class="media-body">
+                                            <div class="wo-media-title">Natur & Technik</div>
+                                        </div>
+                                    </a>
+                                    <a class="wo-dropdownmenu-medialist-entry media"
+                                       href="/GGG/WebOPAC/search/predefinedsearch/submit?Name=HausFreizeit"
+                                       rel="nofollow">
+                                        <div class="media-body">
+                                            <div class="wo-media-title">Haus & Freizeit</div>
+                                        </div>
+                                    </a>
+                                    <a class="wo-dropdownmenu-medialist-entry media"
+                                       href="/GGG/WebOPAC/search/predefinedsearch/submit?Name=KunstFilm"
+                                       rel="nofollow">
+                                        <div class="media-body">
+                                            <div class="wo-media-title">Kunst & Film</div>
+                                        </div>
+                                    </a>
+                                    <a class="wo-dropdownmenu-medialist-entry media"
+                                       href="/GGG/WebOPAC/search/predefinedsearch/submit?Name=ReisenLaender"
+                                       rel="nofollow">
+                                        <div class="media-body">
+                                            <div class="wo-media-title">Reisen & Länder</div>
+                                        </div>
+                                    </a>
+                                    <a class="wo-dropdownmenu-medialist-entry media"
+                                       href="/GGG/WebOPAC/search/predefinedsearch/submit?Name=BaselRegion"
+                                       rel="nofollow">
+                                        <div class="media-body">
+                                            <div class="wo-media-title">Basel & Region</div>
+                                        </div>
+                                    </a>
+                                    <a class="wo-dropdownmenu-medialist-entry media"
+                                       href="/GGG/WebOPAC/search/predefinedsearch/submit?Name=AktuellGefragt"
+                                       rel="nofollow">
+                                        <div class="media-body">
+                                            <div class="wo-media-title">Aktuell & Gefragt</div>
+                                        </div>
+                                    </a>
+                                    <a class="wo-dropdownmenu-medialist-entry media"
+                                       href="/GGG/WebOPAC/search/predefinedsearch/submit?Name=HorbucherErwachsene"
+                                       rel="nofollow">
+                                        <div class="media-body">
+                                            <div class="wo-media-title">Hörbücher Erwachsene</div>
+                                        </div>
+                                    </a>
+                                    <a class="wo-dropdownmenu-medialist-entry media"
+                                       href="/GGG/WebOPAC/search/predefinedsearch/submit?Name=Spielfilme%20Erwachsene"
+                                       rel="nofollow">
+                                        <div class="media-body">
+                                            <div class="wo-media-title">Spielfilme Erwachsene</div>
+                                        </div>
+                                    </a>
+                                    <a class="wo-dropdownmenu-medialist-entry media"
+                                       href="/GGG/WebOPAC/search/predefinedsearch/submit?Name=Sachfilme%20Erwachsene"
+                                       rel="nofollow">
+                                        <div class="media-body">
+                                            <div class="wo-media-title">Sachfilme Erwachsene</div>
+                                        </div>
+                                    </a>
+                                    <a class="wo-dropdownmenu-medialist-entry media"
+                                       href="/GGG/WebOPAC/search/predefinedsearch/submit?Name=Musik"
+                                       rel="nofollow">
+                                        <div class="media-body">
+                                            <div class="wo-media-title">Musik</div>
+                                        </div>
+                                    </a>
+                                    <a class="wo-dropdownmenu-medialist-entry media"
+                                       href="/GGG/WebOPAC/search/predefinedsearch/submit?Name=CD-ROMDVD-ROM"
+                                       rel="nofollow">
+                                        <div class="media-body">
+                                            <div class="wo-media-title">CD-ROM / DVD-ROM</div>
+                                        </div>
+                                    </a>
+                                    <a class="wo-dropdownmenu-medialist-entry media"
+                                       href="/GGG/WebOPAC/search/predefinedsearch/submit?Name=eGames"
+                                       rel="nofollow">
+                                        <div class="media-body">
+                                            <div class="wo-media-title">eGames</div>
+                                        </div>
+                                    </a>
+                                    <a class="wo-dropdownmenu-medialist-entry media"
+                                       href="/GGG/WebOPAC/search/predefinedsearch/submit?Name=Landkarten"
+                                       rel="nofollow">
+                                        <div class="media-body">
+                                            <div class="wo-media-title">Landkarten</div>
+                                        </div>
+                                    </a>
+                                    <a class="wo-dropdownmenu-medialist-entry media"
+                                       href="/GGG/WebOPAC/search/predefinedsearch/submit?Name=Sprachkurse"
+                                       rel="nofollow">
+                                        <div class="media-body">
+                                            <div class="wo-media-title">Sprachkurse</div>
+                                        </div>
+                                    </a>
+                                    <a class="wo-dropdownmenu-medialist-entry media"
+                                       href="/GGG/WebOPAC/search/predefinedsearch/submit?Name=Spiele"
+                                       rel="nofollow">
+                                        <div class="media-body">
+                                            <div class="wo-media-title">Spiele</div>
+                                        </div>
+                                    </a>
+                                    <a class="wo-dropdownmenu-medialist-entry media"
+                                       href="/GGG/WebOPAC/search/predefinedsearch/submit?Name=KinderErzahlungenRomane"
+                                       rel="nofollow">
+                                        <div class="media-body">
+                                            <div class="wo-media-title">Kinder Geschichten</div>
+                                        </div>
+                                    </a>
+                                    <a class="wo-dropdownmenu-medialist-entry media"
+                                       href="/GGG/WebOPAC/search/predefinedsearch/submit?Name=KinderBilderbucher"
+                                       rel="nofollow">
+                                        <div class="media-body">
+                                            <div class="wo-media-title">Kinder Bilderbücher</div>
+                                        </div>
+                                    </a>
+                                    <a class="wo-dropdownmenu-medialist-entry media"
+                                       href="/GGG/WebOPAC/search/predefinedsearch/submit?Name=KinderSachbucher"
+                                       rel="nofollow">
+                                        <div class="media-body">
+                                            <div class="wo-media-title">Kinder Sachbücher</div>
+                                        </div>
+                                    </a>
+                                    <a class="wo-dropdownmenu-medialist-entry media"
+                                       href="/GGG/WebOPAC/search/predefinedsearch/submit?Name=KinderHorbucher"
+                                       rel="nofollow">
+                                        <div class="media-body">
+                                            <div class="wo-media-title">Kinder Hörbücher</div>
+                                        </div>
+                                    </a>
+                                    <a class="wo-dropdownmenu-medialist-entry media"
+                                       href="/GGG/WebOPAC/search/predefinedsearch/submit?Name=KinderFilme"
+                                       rel="nofollow">
+                                        <div class="media-body">
+                                            <div class="wo-media-title">Kinder Filme</div>
+                                        </div>
+                                    </a>
+                                    <a class="wo-dropdownmenu-medialist-entry media"
+                                       href="/GGG/WebOPAC/search/predefinedsearch/submit?Name=JugendlicheErzahlungenRomane"
+                                       rel="nofollow">
+                                        <div class="media-body">
+                                            <div class="wo-media-title">Jugend Geschichten</div>
+                                        </div>
+                                    </a>
+                                    <a class="wo-dropdownmenu-medialist-entry media"
+                                       href="/GGG/WebOPAC/search/predefinedsearch/submit?Name=JugendlicheSachbucher"
+                                       rel="nofollow">
+                                        <div class="media-body">
+                                            <div class="wo-media-title">Jugend Sachbücher</div>
+                                        </div>
+                                    </a>
+                                    <a class="wo-dropdownmenu-medialist-entry media"
+                                       href="/GGG/WebOPAC/search/predefinedsearch/submit?Name=JugendlicheHorbucher"
+                                       rel="nofollow">
+                                        <div class="media-body">
+                                            <div class="wo-media-title">Jugend Hörbücher</div>
+                                        </div>
+                                    </a>
+                                    <a class="wo-dropdownmenu-medialist-entry media"
+                                       href="/GGG/WebOPAC/search/predefinedsearch/submit?Name=JugendlicheFilme"
+                                       rel="nofollow">
+                                        <div class="media-body">
+                                            <div class="wo-media-title">Jugend Filme</div>
+                                        </div>
+                                    </a>
+                                    <a class="wo-dropdownmenu-medialist-entry media"
+                                       href="/GGG/WebOPAC/search/predefinedsearch/submit?Name=Comics"
+                                       rel="nofollow">
+                                        <div class="media-body">
+                                            <div class="wo-media-title">Comics</div>
+                                        </div>
+                                    </a>
+                                    <a class="wo-dropdownmenu-medialist-entry media"
+                                       href="/GGG/WebOPAC/search/predefinedsearch/submit?Name=LiteraturwissenschaftInterpretationen"
+                                       rel="nofollow">
+                                        <div class="media-body">
+                                            <div class="wo-media-title">Literaturwissenschaft und Interpretationen</div>
+                                        </div>
+                                    </a>
+                                    <a class="wo-dropdownmenu-medialist-entry media"
+                                       href="/GGG/WebOPAC/search/predefinedsearch/submit?Name=SachmedienErwachsene"
+                                       rel="nofollow">
+                                        <div class="media-body">
+                                            <div class="wo-media-title">Sachmedien Erwachsene</div>
+                                        </div>
+                                    </a>
+                                </li>
+                            </ul>
+
+                        </li>
+                    </ul>
+                    <ul class="nav navbar-nav navbar-right">
+                        <li class="dropdown wo-dropdown-account-btn-loggedin">
+                            <a href="#" class="dropdown-toggle wo-account-btn"
+                               data-toggle="dropdown">
+                                <div class="wo-account-btn-text">
+                                    <b>Benutzungskonto von</b>
+                                    <br/>
+                                    BigApp-Testnutzer Kevin
+                                </div>
+                                <div class="wo-account-btn-right">
+                                    <span class="caret"></span>
+                                </div>
+                            </a>
+
+
+                            <div class="dropdown-menu row yamm-content wo-dropdownmenu-m wo-dropdown-account-overview">
+                                <div class="wo-dropdown-account-overview-container">
+                                    <div class="wo-dropdown-account-overview-left">
+                                        <h3 class="wo-dropdown-account-overview-title">Aktuell</h3>
+                                        <div class="list-group">
+                                            <a class="list-group-item"
+                                               href="/GGG/WebOPAC/account/reservations">Reserviert: 1 Dokument(e)</a>
+                                            <a class="list-group-item"
+                                               href="/GGG/WebOPAC/account/acquisitionwishes">Anschaffungsw&#252;nsche</a>
+                                            <a class="list-group-item"
+                                               href="/GGG/WebOPAC/account/fees">Sie haben offene Geb&#252;hren (Fr. 29,00)</a>
+                                        </div>
+
+                                        <h3 class="wo-dropdown-account-overview-title">Chronik</h3>
+                                        <div class="list-group">
+                                            <a class="list-group-item"
+                                               href="/GGG/WebOPAC/account/oldcirculations">Ausleihprotokoll anzeigen</a>
+                                        </div>
+                                    </div>
+
+                                    <div class="wo-dropdown-account-overview-right">
+
+                                        <div class="list-group">
+                                            <div class="list-group-item">
+                                                <b>BigApp-Testnutzer Kevin</b>
+                                                <div class="wo-dropdown-account-overview-emailaddress">
+                                                    nrutschmann@stadtbibliothekbasel.ch
+                                                </div>
+                                            </div>
+
+                                            <a class="list-group-item with-border-top"
+                                               href="/GGG/WebOPAC/account/edit">Benutzungskonto bearbeiten</a>
+                                            <a class="list-group-item "
+                                               href="/GGG/WebOPAC/account/changepassword">Passwort &#228;ndern</a>
+                                            <a class="list-group-item with-border-top"
+                                               href="/GGG/WebOPAC/account">Benutzerkonto Übersicht</a>
+                                            <a class="list-group-item with-border-top"
+                                               href="/GGG/WebOPAC/account/logout"><b><span
+                                                    class="text-danger">Abmelden</span></b></a>
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+
+        </div>
+
+        <div class="wos-container wos-has-sidebar-l  clearfix">
+            <div class="wos-main">
+                <div class="wos-box">
+
+
+                    <div class="wo-com wo-com-account wo-com-reservations">
+                        <h1 class="wo-component-title">
+                            Reservierte Dokumente
+                        </h1>
+
+                        <ul class="wo-linklist">
+                            <li class="wo-link"><a
+                                    href="/GGG/WebOPAC/account">Zur&#252;ck zur Konto&#252;bersicht</a>
+                            </li>
+                        </ul>
+
+
+                        <div id="grd-reservations" class="wo-grid">
+                            <div class="wo-grid-meta wo-grid-meta-top">
+                                <div class="wo-grid-meta-row clearfix">
+                                    <div class="wo-grid-meta-resultcount">
+                                        Treffer 1-1 von 1
+                                    </div>
+                                </div>
+                                <div class="wo-grid-meta-row clearfix">
+                                    <div class="wo-grid-actions pull-right">
+                                        <button class="ladda-button wo-grid-action-btn wo-button btn-default btn"
+                                                data-action="/GGG/WebOPAC/account/deletereservations"
+                                                data-actionhandling="get"
+                                                data-additionalparameters="{&quot;returnUrl&quot;:&quot;/GGG/WebOPAC/account/reservations&quot;}"
+                                                data-ismobilerowaction="false"
+                                                data-isrowaction="true"
+                                                data-rowactionmaximumcount="2147483647"
+                                                data-rowactionminimumcount="1"
+                                                data-selectablerows="56695"
+                                                data-spinner-color="#333" data-style="zoom-in"
+                                                type="button"><span class="ladda-label"><span
+                                                class="glyphicon glyphicon-remove"></span> L&#246;schen</span>
+                                        </button>
+                                    </div>
+                                    <div class="wo-grid-meta-export pull-right">
+
+                                        <div class="dropdown wo-export-bar yamm">
+                                            <a class="btn btn-default wo-export-btn">
+                                                <span class="glyphicon glyphicon-download-alt"></span> Speichern / Versenden
+                                            </a>
+
+                                            <ul class="dropdown-menu dropdown-menu-right yamm-content wo-dropdownmenu-s wo-dropdown-export">
+                                                <div class="tabs-top">
+                                                    <ul class="nav nav-tabs wo-dropdown-export-tabs">
+                                                        <li class="active">
+                                                            <a href="#wo-tb-export-save"
+                                                               data-toggle="tab"
+                                                               id="wo-dropdown-export-tab-save">Speichern</a>
+                                                        </li>
+                                                        <li>
+                                                            <a href="#wo-tb-export-send"
+                                                               data-toggle="tab"
+                                                               id="wo-dropdown-export-tab-send">Versenden</a>
+                                                        </li>
+                                                    </ul>
+                                                </div>
+                                                <div class="tab-content">
+                                                    <div class="tab-pane active"
+                                                         id="wo-tb-export-save">
+                                                        <p>Klicken Sie auf das gewünschte Format um die aktuelle Ansicht zu speichern.</p>
+                                                        <ul>
+                                                            <li>
+                                                                <a class="wo-export-bar-btn-download"
+                                                                   href="/GGG/WebOPAC/export/account?sort=Reservations.CreationDate&amp;page=1&amp;pageSize=25&amp;accountExportType=Reservations&amp;exportFormat=DOCX">Word</a>
+                                                            </li>
+                                                            <li>
+                                                                <a class="wo-export-bar-btn-download"
+                                                                   href="/GGG/WebOPAC/export/account?sort=Reservations.CreationDate&amp;page=1&amp;pageSize=25&amp;accountExportType=Reservations&amp;exportFormat=XLSX">Excel</a>
+                                                            </li>
+                                                            <li>
+                                                                <a class="wo-export-bar-btn-download"
+                                                                   href="/GGG/WebOPAC/export/account?sort=Reservations.CreationDate&amp;page=1&amp;pageSize=25&amp;accountExportType=Reservations&amp;exportFormat=PDF">PDF</a>
+                                                            </li>
+                                                            <li>
+                                                                <a class="wo-export-bar-btn-download"
+                                                                   href="/GGG/WebOPAC/export/account?sort=Reservations.CreationDate&amp;page=1&amp;pageSize=25&amp;accountExportType=Reservations&amp;exportFormat=RTF">Rich Text</a>
+                                                            </li>
+                                                        </ul>
+                                                    </div>
+                                                    <div class="tab-pane " id="wo-tb-export-send">
+                                                        <p>Wählen Sie das gewünschte Format und geben Sie eine E-Mail Adresse ein, um die aktuelle Ansicht zu versenden.</p>
+                                                        <form action="/GGG/WebOPAC/export/sendaccount?sort=Reservations.CreationDate&amp;page=1&amp;pageSize=25&amp;accountExportType=Reservations&amp;exportFormat=RTF"
+                                                              method="post" id="wo-frm-send-export">
+                                                            <p>
+
+                                                            <div class="radio">
+                                                                <label>
+                                                                    <input type="radio"
+                                                                           name="exportFormat"
+                                                                           value="DOCX" checked>
+                                                                    Word
+                                                                </label>
+                                                            </div>
+                                                            <div class="radio">
+                                                                <label>
+                                                                    <input type="radio"
+                                                                           name="exportFormat"
+                                                                           value="XLSX">
+                                                                    Excel
+                                                                </label>
+                                                            </div>
+                                                            <div class="radio">
+                                                                <label>
+                                                                    <input type="radio"
+                                                                           name="exportFormat"
+                                                                           value="PDF">
+                                                                    PDF
+                                                                </label>
+                                                            </div>
+                                                            <div class="radio">
+                                                                <label>
+                                                                    <input type="radio"
+                                                                           name="exportFormat"
+                                                                           value="RTF">
+                                                                    Rich Text
+                                                                </label>
+                                                            </div>
+                                                            </p>
+                                                            <p>
+                                                            <div class="input-group">
+                                                                <input class="form-control"
+                                                                       id="emailaddress"
+                                                                       name="emailaddress"
+                                                                       placeholder="E-Mail"
+                                                                       type="text" value=""/>
+                                                                <div class="input-group-addon"><span
+                                                                        class="glyphicon glyphicon-envelope"></span>
+                                                                </div>
+                                                            </div>
+                                                            </p>
+                                                            <p>
+                                                                <button class="ladda-button wo-button btn-primary btn"
+                                                                        data-style="zoom-in"
+                                                                        id="wo-export-bar-btn-send"
+                                                                        type="submit"><span
+                                                                        class="ladda-label">Senden</span>
+                                                                </button>
+                                                            </p>
+                                                        </form>
+                                                    </div>
+                                                </div>
+                                            </ul>
+                                        </div>
+
+
+                                    </div>
+                                </div>
+                            </div>
+                            <table class="table wo-grid-table">
+                                <thead>
+                                <tr>
+                                    <th><input type="checkbox" checked="checked"
+                                               class="wo-grid-chkall"/></th>
+                                    <th><span class="wo-grid-header-content"></span></th>
+                                    <th class="combined"><span class="wo-grid-header-content"><a
+                                            href="/GGG/WebOPAC/account/reservations?sort=Notices.MediaType1Code&amp;page=1&amp;pageSize=25">Medienart</a> / <a
+                                            href="/GGG/WebOPAC/account/reservations?sort=Notices.MediaType2Code&amp;page=1&amp;pageSize=25">Bereich</a></span>
+                                    </th>
+                                    <th class="combined"><span class="wo-grid-header-content"><a
+                                            href="/GGG/WebOPAC/account/reservations?sort=Notices.Author&amp;page=1&amp;pageSize=25">Autor</a> / <a
+                                            href="/GGG/WebOPAC/account/reservations?sort=Notices.Title&amp;page=1&amp;pageSize=25">Titel</a></span>
+                                    </th>
+                                    <th class="combined"><span class="wo-grid-header-content"><a
+                                            href="/GGG/WebOPAC/account/reservations?sort=Items.UserDefined1&amp;page=1&amp;pageSize=25">Aktueller Standort</a> / <a
+                                            href="/GGG/WebOPAC/account/reservations?sort=Items.CallNumber&amp;page=1&amp;pageSize=25">Signatur</a></span>
+                                    </th>
+                                    <th class="sortable"><span class="wo-grid-header-content"><a
+                                            href="/GGG/WebOPAC/account/reservations?sort=Branchoffices.SortKey&amp;page=1&amp;pageSize=25">Bibliothek</a></span>
+                                    </th>
+                                    <th class="sortable"><span class="wo-grid-header-content"><a
+                                            href="/GGG/WebOPAC/account/reservations?sort=Reservations.CreationDate%20DESC&amp;page=1&amp;pageSize=25">Erzeugungsdatum<span
+                                            class="wo-grid-sort glyphicon glyphicon-triangle-top"></span></a></span>
+                                    </th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr id="wo-row_56695" class="active-row">
+                                    <td class="wo-grid-cell-checkbox"><input type="checkbox"
+                                                                             value="56695"
+                                                                             checked="checked"
+                                                                             class="wo-grid-checkbox"/>
+                                    </td>
+                                    <td>
+                                        <a href="/GGG/WebOPAC/search/notice?noticeNr=333244&amp;backLinkType=reservations&amp;backLink=sort%3DReservations.CreationDate%26page%3D1%26pageSize%3D25"><img
+                                                class="wo-cover wo-cover-shortview"
+                                                src="https://images-eu.ssl-images-amazon.com/images/I/51Upg2MTHRL.03._SY160_.jpg"
+                                                style="max-height: 160px;"/></a></td>
+                                    <td>DVD-Video<br/>Spielfilm</td>
+                                    <td>Yates, David<br/><a
+                                            href="/GGG/WebOPAC/search/notice?noticeNr=333244&backLinkType=reservations&backLink=sort%3DReservations.CreationDate%26page%3D1%26pageSize%3D25">Harry Potter und der Halbblutprinz [DVD-Video]</a>
+                                    </td>
+                                    <td>Boys &amp; Girls<br/>HARR</td>
+                                    <td>Bibliothek Schmiedenhof</td>
+                                    <td>16.01.2019</td>
+                                </tr>
+                                </tbody>
+                            </table>
+                            <div class="wo-grid-meta wo-grid-meta-bottom">
+                                <div class="wo-grid-meta-row clearfix">
+                                    <div class="wo-pagesizeselector pull-right">
+                                        Anzahl Treffer pro Seite<select
+                                            class="form-control wo-pagesize"
+                                            id="grd-reservations-pagesize-bottom" name="PageSize">
+                                        <option selected="selected" value="25">25</option>
+                                        <option value="50">50</option>
+                                        <option value="100">100</option>
+                                        <option value="200">200</option>
+                                    </select>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+
+                    </div>
+
+                </div>
+            </div>
+
+            <div class="wos-sidebar-l">
+                <div class="wos-box">
+                    <div class="panel panel-primary wo-panel wo-sidebar-l-meta">
+                        <div class="wo-panel-body">
+
+                            <div class="dropdown wo-sidebar wo-sidebar-searchhistory">
+                                <button class="btn btn-default dropdown-toggle wo-icon-btn wo-sidebar-btn"
+                                        type="button" data-toggle="dropdown">
+                                    <div class="wo-icon-btn-left">
+                                        <span class="glyphicon glyphicon-time"></span>
+                                    </div>
+                                    <div class="wo-icon-btn-center">
+                                        Suchverlauf <br/>
+                                        <small>
+                                            <i>
+                                                0
+                                                Einträge </i>
+                                        </small>
+                                    </div>
+                                    <div class="wo-icon-btn-right">
+                                        <span class="caret"></span>
+                                    </div>
+                                </button>
+                                <ul class="dropdown-menu">
+                                    <li>
+                                        <a href="#">
+                                            Keine Einträge gefunden
+                                        </a>
+                                    </li>
+                                </ul>
+                            </div>
+
+                            <div class="wo-sidebar wo-sidebar-watchlist">
+                                <a class="btn btn-default wo-icon-btn wo-sidebar-btn"
+                                   href="/GGG/WebOPAC/watchlist">
+                                    <div class="wo-icon-btn-left">
+                                        <span class="glyphicon glyphicon-bookmark"></span>
+                                    </div>
+                                    <div class="wo-icon-btn-center">
+                                        Merkliste <br/>
+                                        <small><i>
+                                            0
+                                            Einträge </i></small>
+                                    </div>
+                                </a>
+                            </div>
+
+                            <div class="dropdown wo-sidebar wo-sidebar-links yamm">
+                                <button class="btn btn-default dropdown-toggle wo-icon-btn wo-sidebar-btn"
+                                        type="button" data-toggle="dropdown">
+                                    <div class="wo-icon-btn-left">
+                                        <span class="glyphicon glyphicon-link"></span>
+                                    </div>
+                                    <div class="wo-icon-btn-center">
+                                        Links
+                                    </div>
+                                    <div class="wo-icon-btn-right">
+                                        <span class="caret"></span>
+                                    </div>
+                                </button>
+                                <ul class="dropdown-menu yamm-content wo-dropdownmenu-s wo-dropdownmenu-medialist">
+                                    <li>
+                                        <a class="wo-dropdownmenu-medialist-entry media"
+                                           href="https://www.swissbib.ch/" target="_blank">
+                                            <div class="media-body">
+                                                <div class="wo-media-title"><b>Swissbib</b></div>
+                                                <small class="wo-media-description">
+                                                    Swissbib ist der Katalog aller Schweizer Hochschulbibliotheken, der Schweizerischen Nationalbibliothek, zahlreicher Kantonsbibliotheken und weiterer Institutionen. Er bietet einen raschen, einfachen und umfassenden Zugang zu wissenschaftlichen Publikationen in der Schweiz an.
+                                                </small>
+                                            </div>
+                                        </a>
+                                    </li>
+                                </ul>
+                            </div>
+
+                        </div>
+                    </div>
+
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="wos-footer-wrapper">
+
+        <footer class="wos-footer">
+            <div class="wos-footer-custom wos-has-sidebar-l">
+                <div class="wos-footer-main">
+                    <div class="wos-box">
+                        <div class="wo-librarynews-entry-footer">
+                            <style type="text/css">
+.auto-style2 {
+ text-align: left;
+}
+
+                            </style>
+
+                            <table style="width: 100%">
+                                <tbody>
+                                <tr>
+                                    <td style="width: 66%; vertical-align: top; padding-left: 10px; padding-right: 10px">
+                                        <table style="width: 100%">
+                                            <tbody>
+                                            <tr>
+                                                <td colspan="2">
+                                                    <h1 style="margin-top: 0px">Kontakt &amp; Öffnungszeiten</h1>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td style="height: 24px; width: 332px"><a
+                                                        href="https://www.stadtbibliothekbasel.ch/de/schmiedenhof.html"
+                                                        target="_blank">GGG Stadtbibliothek Schmiedenhof</a>
+                                                </td>
+                                                <td style="height: 24px"><a
+                                                        href="https://www.stadtbibliothekbasel.ch/de/hirzbrunnen.html"
+                                                        target="_blank">GGG Stadtbibliothek Hirzbrunnen</a>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td style="height: 24px; width: 332px"><a
+                                                        href="https://www.stadtbibliothekbasel.ch/de/baselwest.html"
+                                                        target="_blank">GGG Stadtbibliothek Basel West</a>
+                                                </td>
+                                                <td style="height: 24px"><a
+                                                        href="https://www.stadtbibliothekbasel.ch/de/neubad.html"
+                                                        target="_blank">GGG Stadtbibliothek Neubad</a>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td style="height: 24px; width: 332px"><a
+                                                        href="https://www.stadtbibliothekbasel.ch/de/blaesi.html"
+                                                        target="_blank">GGG Stadtbibliothek Bläsi</a>
+                                                </td>
+                                                <td style="height: 24px"><a
+                                                        href="https://www.stadtbibliothekbasel.ch/de/binningen.html"
+                                                        target="_blank">Gemeinde- und Schulbibliothek Binningen</a>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td style="height: 24px; width: 332px"><a
+                                                        href="https://www.stadtbibliothekbasel.ch/de/breite.html"
+                                                        target="_blank">GGG Stadtbibliothek Breite</a>
+                                                </td>
+                                                <td style="height: 24px"><a
+                                                        href="https://www.stadtbibliothekbasel.ch/de/pratteln.html"
+                                                        target="_blank">Gemeindebibliothek Pratteln</a>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td style="height: 24px; width: 332px"><a
+                                                        href="https://www.stadtbibliothekbasel.ch/de/gundeldingen.html"
+                                                        target="_blank">GGG Stadtbibliothek Gundeldingen</a>
+                                                </td>
+                                                <td style="height: 24px"><a
+                                                        href="https://www.stadtbibliothekbasel.ch/de/ukbb.html"
+                                                        target="_blank">UKBB-Kinderbibliothek</a>
+                                                </td>
+                                            </tr>
+                                            </tbody>
+                                        </table>
+                                    </td>
+                                    <td style="width: 33%; vertical-align: top">
+                                        <table style="width: 100%; vertical-align: top">
+                                            <tbody>
+                                            <tr>
+                                                <td class="auto-style2"><a title="Bibnetz Schweiz"
+                                                                           href="http://www.biblio24.ch/basel/"
+                                                                           target="_blank"></a>
+                                                    <h1 class="auto-style2" style="margin-top: 0px"
+                                                        align="left">Quicklinks</h1></td>
+                                            </tr>
+                                            <tr>
+                                                <td class="auto-style2"><a
+                                                        href="https://www.stadtbibliothekbasel.ch/de/newsletterabo.html"
+                                                        target="_blank">Newsletter abonnieren</a><br/><a
+                                                        href="https://www.biblio24.ch/basel/"
+                                                        target="_blank">Bibnetz - Onleihe</a></td>
+                                            </tr>
+                                            <tr>
+                                                <td>
+                                                    <h1>&nbsp;</h1></td>
+                                            </tr>
+                                            </tbody>
+                                        </table>
+                                    </td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="wos-sidebar-l">
+                    <div class="wos-box">
+                        <p>
+                            Folgen Sie uns auf
+                        </p>
+                        <div class="media">
+                            <div class="media-left">
+                                <a href="https://www.facebook.com/GGGStadtbibliothekBasel/"
+                                   target="_blank">
+                                    <img class="media-object"
+                                         src="/GGG/WebOPAC/Media/Images/SocialMedia/icon_facebook.png"
+                                         alt="Facebook"/>
+                                </a>
+                            </div>
+                            <div class="media-body media-middle">
+                                <a href="https://www.facebook.com/GGGStadtbibliothekBasel/"
+                                   target="_blank">
+                                    Facebook
+                                </a>
+                            </div>
+                        </div>
+                        <div class="media">
+                            <div class="media-left">
+                                <a href="https://twitter.com/GGGBibliothek?lang=de" target="_blank">
+                                    <img class="media-object"
+                                         src="/GGG/WebOPAC/Media/Images/SocialMedia/icon_twitter.png"
+                                         alt="Twitter"/>
+                                </a>
+                            </div>
+                            <div class="media-body media-middle">
+                                <a href="https://twitter.com/GGGBibliothek?lang=de" target="_blank">
+                                    Twitter
+                                </a>
+                            </div>
+                        </div>
+                        <div class="media">
+                            <div class="media-left">
+                                <a href="https://instagram.com/stbibbasel/" target="_blank">
+                                    <img class="media-object"
+                                         src="/GGG/WebOPAC/Media/Images/SocialMedia/icon_instagram.png"
+                                         alt="Instagram"/>
+                                </a>
+                            </div>
+                            <div class="media-body media-middle">
+                                <a href="https://instagram.com/stbibbasel/" target="_blank">
+                                    Instagram
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="wos-footer-alcoda">
+                <div class="wos-box">
+                    <p> NetBiblio WebOPAC 4.0.0.188 &copy; Copyright 2009 - 2019
+                        <a href="http://www.alcoda.ch" target="_blank">AlCoda GmbH</a>
+                        <span Class="wo-builddate">Build Date: 16.01.2019</span></p>
+                    <p>
+                        <a href="/GGG/WebOPAC/Site/SwitchView?mobile=True&amp;permanent=False&amp;returnUrl=%2FGGG%2FWebOPAC%2Faccount%2Freservations">Zur mobilen Ansicht</a>
+                    </p>
+                </div>
+            </div>
+        </footer>
+    </div>
+
+</div>
+
+
+<script type="text/javascript">
+   WOConfig = {
+      baseUrl:          '/GGG/WebOPAC/',
+      language:         'de',
+      browser: {
+         name:    'chrome',
+         osname:  'windows 10',
+         isiOS:   false,
+         isIE:    false,
+      },
+      webAppIcon:       '/GGG/WebOPAC/media/images/icon_ggg.png'
+   }
+
+</script>
+
+<script src="/GGG/WebOPAC/bundles/scripts?v=P9Jesx1Ohtg7rPDf9ukpPGT49Pu32HqJjt5cPkpE_qM1"></script>
+
+<script type="text/javascript">$(document).ready(function() {$('.wo-linklist').woLinklist();});</script>
+<script type="text/javascript">$(document).ready(function() {$('#grd-reservations').woGrid({"mobile":false,"pageSizePostbackUrl":"/GGG/WebOPAC/account/reservations?sort=Reservations.CreationDate&page=1&pageSize=PLC_PAGESIZE","scrollX":false});});</script>
+<script type="text/javascript">
+      $(document).ready(function () {
+         $('.wo-export-btn').click(function () {
+            $(this).parent().toggleClass("open");
+         });
+
+         $('body').on('click', function (e) {
+            if (!$('.wo-export-bar').is(e.target) &&
+               $('.wo-export-bar').has(e.target).length === 0) {
+
+               $('.wo-export-bar').removeClass('open');
+            }
+         });
+
+         $('#wo-frm-send-export').ajaxForm({
+            success: function (response) {
+               if (response.Success) {
+                  WO.msg.success(response.Message);
+                  $('.wo-export-bar').removeClass('open');
+               } else {
+                  WO.msg.danger(response.Message);
+               }
+               Ladda.stopAll();
+            }
+         });
+      });
+
+</script>
+
+
+<script type="text/javascript">
+               WO.monitorSessionExpiry(1200000, 'sessionend', '/GGG/WebOPAC/sessionend');
+
+</script>
+
+</body>
+</html>
