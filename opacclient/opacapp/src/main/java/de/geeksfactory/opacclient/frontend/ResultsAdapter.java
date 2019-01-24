@@ -51,10 +51,12 @@ import de.geeksfactory.opacclient.utils.BitmapUtils;
 
 public class ResultsAdapter extends ArrayAdapter<SearchResult> {
     private List<SearchResult> objects;
+    final int padding8dp;
 
     public ResultsAdapter(Context context, List<SearchResult> objects, OpacApi api) {
         super(context, R.layout.listitem_searchresult, objects);
         this.objects = objects;
+        this.padding8dp = (int)(8 * context.getResources().getDisplayMetrics().density + 0.5f);
     }
 
     @DrawableRes
@@ -162,6 +164,7 @@ public class ResultsAdapter extends ArrayAdapter<SearchResult> {
         if (item.getCoverBitmap() != null) {
             ivType.setImageBitmap(BitmapUtils.bitmapFromBytes(item.getCoverBitmap()));
             ivType.setVisibility(View.VISIBLE);
+            ivType.setPadding(0, 0, 0, 0);
         } else if ((pds.isLoadCoversOnDataPreferenceSet()
                 || !ConnectivityManagerCompat.isActiveNetworkMetered(connMgr))
                 && item.getCover() != null) {
@@ -169,9 +172,11 @@ public class ResultsAdapter extends ArrayAdapter<SearchResult> {
             lct.execute();
             ivType.setImageResource(R.drawable.ic_loading);
             ivType.setVisibility(View.VISIBLE);
+            ivType.setPadding(0, 0, 0, 0);
         } else if (item.getType() != null && item.getType() != MediaType.NONE) {
             ivType.setImageResource(getResourceByMediaType(item.getType()));
             ivType.setVisibility(View.VISIBLE);
+            ivType.setPadding(padding8dp, padding8dp, padding8dp, padding8dp);
         } else {
             ivType.setVisibility(View.INVISIBLE);
         }

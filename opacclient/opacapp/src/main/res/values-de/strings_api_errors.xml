@@ -82,4 +82,5 @@
   <string name="mediatype_eaudio">eAudio</string>
   <string name="fee_confirmation">Gebühr: %s</string>
   <string name="all">Alle</string>
+  <string name="description">Beschreibung</string>
 </resources>
