@@ -155,7 +155,7 @@ open class NetBiblio : OkHttpBaseApi() {
         return parseSearch(doc, 1)
     }
 
-    protected fun parseSearch(doc: Document, page: Int): SearchRequestResult {
+    protected open fun parseSearch(doc: Document, page: Int): SearchRequestResult {
         // save search result ID for later access
         val href = doc.select(".next-page a").first()?.attr("href")
         if (href != null) searchResultId = BaseApi.getQueryParamsFirst(href)["searchResultId"]
