@@ -218,9 +218,19 @@ open class NetBiblio : OkHttpBaseApi() {
                     .map {
                         entry -> Detail(entry.key.text, entry.value.text)
                     })
+
             val description = doc.select(
                     ".wo-list-content-no-label[style=background-color:#F3F3F3;]").text
             details.add(Detail(stringProvider.getString(StringProvider.DESCRIPTION), description))
+
+            val medialinks = doc.select(".wo-linklist-multimedialinks .wo-link a")
+            if (medialinks.size > 0) {
+                val link = medialinks.first()
+                if (link.attr("href").contains("multimedialinks/link?url")) {
+                    val url = BaseApi.getQueryParamsFirst(link.attr("href"))["url"]
+                    addDetail(Detail(link.text(), url))
+                }
+            }
 
             val copyCols = doc.select(".wo-grid-table > thead > tr > th").map { it.text.trim() }
             val df = DateTimeFormat.forPattern("dd.MM.yyyy")
