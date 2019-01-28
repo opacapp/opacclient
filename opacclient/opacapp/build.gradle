@@ -71,8 +71,8 @@ dependencies {
     implementation(project(':libopac')) {
         transitive = false
     }
-    implementation "org.jetbrains.kotlin:kotlin-stdlib:1.2.71"
-    implementation 'io.sentry:sentry-android:1.7.4'
+    implementation "org.jetbrains.kotlin:kotlin-stdlib:1.3.11"
+    implementation 'io.sentry:sentry-android:1.7.16'
     implementation 'org.jsoup:jsoup:1.8.3'
     implementation 'com.android.support:design:27.1.1'
     implementation 'com.android.support:support-v4:27.1.1'
@@ -87,7 +87,7 @@ dependencies {
     implementation 'joda-time:joda-time:2.9.9'
     implementation 'org.joda:joda-convert:1.8'
     implementation 'su.j2e:rv-joiner:1.0.6'
-    implementation 'com.squareup.okhttp3:okhttp:3.10.0'
+    implementation 'com.squareup.okhttp3:okhttp:3.12.1'
     implementation 'com.squareup.okhttp3:okhttp-urlconnection:3.10.0'
     implementation 'com.squareup.retrofit2:retrofit:2.3.0'
     implementation 'com.squareup.retrofit2:converter-moshi:2.1.0'
@@ -103,7 +103,7 @@ dependencies {
     debugImplementation 'com.squareup.leakcanary:leakcanary-android:1.4-beta2'
     testImplementation 'org.mockito:mockito-core:1.10.19'
     testImplementation 'junit:junit:4.12'
-    testImplementation 'com.squareup.okhttp3:okhttp:3.10.0'
+    testImplementation 'com.squareup.okhttp3:okhttp:3.12.1'
     testImplementation 'com.squareup.retrofit2:retrofit-mock:2.3.0'
     testImplementation 'commons-io:commons-io:2.5'
     // We don't want to rely on the CommonsWare Maven repo, so we include these libraries as JARs
