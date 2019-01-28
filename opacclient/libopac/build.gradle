@@ -14,9 +14,9 @@ dependencies {
     // Use older org.json version to have an environment equivalent to the android platform
     api 'org.json:json:20090211'
     implementation 'org.jsoup:jsoup:1.8.3'
-    implementation 'org.apache.httpcomponents:httpmime:4.3.6'
-    api 'joda-time:joda-time:2.8.2'
-    api 'com.squareup.okhttp3:okhttp:3.10.0'
+    implementation 'org.apache.httpcomponents:httpmime:4.5.2'
+    api 'joda-time:joda-time:2.9.9'
+    api 'com.squareup.okhttp3:okhttp:3.12.1'
     api "com.squareup.okhttp3:okhttp-urlconnection:3.10.0"
     implementation 'net.sourceforge.streamsupport:streamsupport-cfuture:1.6.0'
     testImplementation "junit:junit:4.12"
