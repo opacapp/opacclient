@@ -15,7 +15,7 @@ TYPES = [
         'BOARDGAME', 'SCHOOL_VERSION', 'MAP', 'BLURAY', 'AUDIO_CASSETTE', 'ART', 'MAGAZINE',
         'GAME_CONSOLE_WII', 'GAME_CONSOLE_NINTENDO', 'GAME_CONSOLE_PLAYSTATION',
         'GAME_CONSOLE_XBOX', 'LP_RECORD', 'MP3', 'URL', 'EVIDEO','EDOC','EAUDIO',
-        'MICROFORM']
+        'DEVICE', 'MICROFORM']
 
 
 def getInput(required=False, default=None):
