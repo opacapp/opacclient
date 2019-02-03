@@ -274,7 +274,7 @@ open class SLUB : OkHttpBaseApi() {
     }
 
     override fun getShareUrl(id: String?, title: String?): String {
-        TODO("not implemented")
+        return "$baseurl/id/$id"
     }
 
     override fun getSupportFlags(): Int {
