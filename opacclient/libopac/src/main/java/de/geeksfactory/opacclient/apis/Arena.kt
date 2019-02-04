@@ -207,9 +207,17 @@ open class Arena : OkHttpBaseApi() {
 
         return DetailedItem().apply {
             title = doc.select(".arena-detail-title").text
+
             doc.select(".arena-catalogue-detail .arena-field").forEach { field ->
                 addDetail(Detail(field.text, field.nextElementSibling().text))
             }
+            doc.select(".arena-detail-link > a").forEach { link ->
+                val href = link["href"]
+                if (href.contains("onleihe") && href.contains("mediaInfo")) {
+                    addDetail(Detail(link.text(), href));
+                }
+            }
+
             id = doc.select(".arena-record-id").first().text
             cover = doc.select(".arena-detail-cover img").first()?.absUrl("href")
             copies = holdingsDoc?.select(".arena-row")?.map { row ->
