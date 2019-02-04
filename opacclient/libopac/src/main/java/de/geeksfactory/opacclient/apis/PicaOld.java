@@ -1,8 +1,5 @@
 package de.geeksfactory.opacclient.apis;
 
-import org.apache.http.NameValuePair;
-import org.apache.http.client.entity.UrlEncodedFormEntity;
-import org.apache.http.message.BasicNameValuePair;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 import org.json.JSONArray;
@@ -32,6 +29,7 @@ import de.geeksfactory.opacclient.objects.AccountData;
 import de.geeksfactory.opacclient.objects.DetailedItem;
 import de.geeksfactory.opacclient.objects.LentItem;
 import de.geeksfactory.opacclient.objects.ReservedItem;
+import okhttp3.FormBody;
 
 /**
  * API for the PICA OPAC by OCLC with the old default PICA account functions
@@ -169,32 +167,31 @@ public class PicaOld extends Pica {
                     params.put("BOR_U", account.getName());
                     params.put("BOR_PW", account.getPassword());
 
-                    List<NameValuePair> paramlist = new ArrayList<>();
+                    FormBody.Builder paramlist = new FormBody.Builder();
                     for (Map.Entry<String, String> param : params.entrySet()) {
-                        paramlist.add(new BasicNameValuePair(param.getKey(), param.getValue()));
+                        paramlist.add(param.getKey(), param.getValue());
                     }
 
-                    return reservation_result(paramlist,
+                    return reservation_result(paramlist.build(),
                             doc1.select("form").attr("action").contains("REQCONT"));
                 }
             } else {
                 // A copy has been selected
                 JSONObject values = new JSONObject(selection);
-                List<NameValuePair> params = new ArrayList<>();
+                FormBody.Builder params = new FormBody.Builder();
 
                 //noinspection unchecked
                 Iterator<String> keys = values.keys();
                 while (keys.hasNext()) {
                     String key = keys.next();
                     String value = values.getString(key);
-                    params.add(new BasicNameValuePair(key, value));
+                    params.add(key, value);
                 }
 
-                params.add(new BasicNameValuePair("BOR_U", account.getName()));
-                params.add(new BasicNameValuePair("BOR_PW", account
-                        .getPassword()));
+                params.add("BOR_U", account.getName());
+                params.add("BOR_PW", account.getPassword());
 
-                return reservation_result(params, true);
+                return reservation_result(params.build(), true);
             }
         } catch (JSONException e) {
             e.printStackTrace();
@@ -204,12 +201,11 @@ public class PicaOld extends Pica {
         }
     }
 
-    public ReservationResult reservation_result(List<NameValuePair> params,
+    public ReservationResult reservation_result(FormBody body,
             boolean multi) throws IOException {
         String html2 = httpPost(https_url + "/loan/DB=" + db + "/LNG="
                 + getLang() + "/SET=" + searchSet + "/TTL=1/"
-                + (multi ? "REQCONT" : "RESCONT"), new UrlEncodedFormEntity(
-                params, getDefaultEncoding()), getDefaultEncoding());
+                + (multi ? "REQCONT" : "RESCONT"), body, getDefaultEncoding());
         Document doc2 = Jsoup.parse(html2);
 
         String alert = doc2.select(".alert").text().trim();
@@ -238,18 +234,14 @@ public class PicaOld extends Pica {
             }
         }
 
-        List<NameValuePair> params = new ArrayList<>();
-        params.add(new BasicNameValuePair("ACT", "UI_RENEWLOAN"));
-
-        params.add(new BasicNameValuePair("BOR_U", account.getName()));
-        params.add(new BasicNameValuePair("BOR_PW_ENC", URLDecoder.decode(
-                pwEncoded, "UTF-8")));
-
-        params.add(new BasicNameValuePair("VB", media));
+        FormBody body = new FormBody.Builder()
+                .add("ACT", "UI_RENEWLOAN")
+                .add("BOR_U", account.getName())
+                .add("BOR_PW_ENC", URLDecoder.decode(pwEncoded, "UTF-8"))
+                .add("VB", media).build();
 
         String html = httpPost(https_url + "/loan/DB=" + db + "/LNG="
-                + getLang() + "/USERINFO", new UrlEncodedFormEntity(params,
-                getDefaultEncoding()), getDefaultEncoding());
+                + getLang() + "/USERINFO", body, getDefaultEncoding());
         Document doc = Jsoup.parse(html);
 
         if (doc.select("td.regular-text")
@@ -285,22 +277,20 @@ public class PicaOld extends Pica {
     @Override
     public CancelResult cancel(String media, Account account, int useraction,
             String selection) throws IOException, OpacErrorException {
-        List<NameValuePair> params = new ArrayList<>();
-        params.add(new BasicNameValuePair("ACT", "UI_CANCELRES"));
+        FormBody.Builder params = new FormBody.Builder();
+        params.add("ACT", "UI_CANCELRES");
 
-        params.add(new BasicNameValuePair("BOR_U", account.getName()));
-        params.add(new BasicNameValuePair("BOR_PW_ENC", URLDecoder.decode(
-                pwEncoded, "UTF-8")));
+        params.add("BOR_U", account.getName());
+        params.add("BOR_PW_ENC", URLDecoder.decode(pwEncoded, "UTF-8"));
         if (lor_reservations != null) {
-            params.add(new BasicNameValuePair("LOR_RESERVATIONS", lor_reservations));
+            params.add("LOR_RESERVATIONS", lor_reservations);
         }
 
-        params.add(new BasicNameValuePair("VB", media));
+        params.add("VB", media);
 
         String html = httpPost(https_url + "/loan/DB=" + db + "/LNG="
                         + getLang() + "/SET=" + searchSet + "/TTL=1/USERINFO",
-                new UrlEncodedFormEntity(params, getDefaultEncoding()),
-                getDefaultEncoding());
+                params.build(), getDefaultEncoding());
         Document doc = Jsoup.parse(html);
 
         if (doc.select("td.regular-text").text()
@@ -329,20 +319,18 @@ public class PicaOld extends Pica {
             start();
         }
 
-        List<NameValuePair> params = new ArrayList<>();
-        params.add(new BasicNameValuePair("ACT", "UI_DATA"));
-        params.add(new BasicNameValuePair("HOST_NAME", ""));
-        params.add(new BasicNameValuePair("HOST_PORT", ""));
-        params.add(new BasicNameValuePair("HOST_SCRIPT", ""));
-        params.add(new BasicNameValuePair("LOGIN", "KNOWNUSER"));
-        params.add(new BasicNameValuePair("STATUS", "HML_OK"));
-
-        params.add(new BasicNameValuePair("BOR_U", account.getName()));
-        params.add(new BasicNameValuePair("BOR_PW", account.getPassword()));
+        FormBody body = new FormBody.Builder()
+                .add("ACT", "UI_DATA")
+                .add("HOST_NAME", "")
+                .add("HOST_PORT", "")
+                .add("HOST_SCRIPT", "")
+                .add("LOGIN", "KNOWNUSER")
+                .add("STATUS", "HML_OK")
+                .add("BOR_U", account.getName())
+                .add("BOR_PW", account.getPassword()).build();
 
         String html = httpPost(https_url + "/loan/DB=" + db + "/LNG="
-                + getLang() + "/USERINFO", new UrlEncodedFormEntity(params,
-                getDefaultEncoding()), getDefaultEncoding());
+                + getLang() + "/USERINFO", body, getDefaultEncoding());
         Document doc = Jsoup.parse(html);
 
         AccountData res = new AccountData(account.getId());
@@ -627,20 +615,18 @@ public class PicaOld extends Pica {
     @Override
     public void checkAccountData(Account account) throws IOException,
             JSONException, OpacErrorException {
-        List<NameValuePair> params = new ArrayList<>();
-        params.add(new BasicNameValuePair("ACT", "UI_DATA"));
-        params.add(new BasicNameValuePair("HOST_NAME", ""));
-        params.add(new BasicNameValuePair("HOST_PORT", ""));
-        params.add(new BasicNameValuePair("HOST_SCRIPT", ""));
-        params.add(new BasicNameValuePair("LOGIN", "KNOWNUSER"));
-        params.add(new BasicNameValuePair("STATUS", "HML_OK"));
-
-        params.add(new BasicNameValuePair("BOR_U", account.getName()));
-        params.add(new BasicNameValuePair("BOR_PW", account.getPassword()));
+        FormBody body = new FormBody.Builder()
+                .add("ACT", "UI_DATA")
+                .add("HOST_NAME", "")
+                .add("HOST_PORT", "")
+                .add("HOST_SCRIPT", "")
+                .add("LOGIN", "KNOWNUSER")
+                .add("STATUS", "HML_OK")
+                .add("BOR_U", account.getName())
+                .add("BOR_PW", account.getPassword()).build();
 
         String html = httpPost(https_url + "/loan/DB=" + db + "/LNG="
-                + getLang() + "/USERINFO", new UrlEncodedFormEntity(params,
-                getDefaultEncoding()), getDefaultEncoding());
+                + getLang() + "/USERINFO", body, getDefaultEncoding());
         Document doc = Jsoup.parse(html);
 
         if (doc.select(".cnt .alert, .cnt .error").size() > 0) {

@@ -1,8 +1,5 @@
 package de.geeksfactory.opacclient.apis;
 
-import org.apache.http.NameValuePair;
-import org.apache.http.client.entity.UrlEncodedFormEntity;
-import org.apache.http.message.BasicNameValuePair;
 import org.joda.time.LocalDate;
 import org.joda.time.format.DateTimeFormat;
 import org.json.JSONArray;
@@ -26,6 +23,7 @@ import de.geeksfactory.opacclient.objects.DetailedItem;
 import de.geeksfactory.opacclient.objects.LentItem;
 import de.geeksfactory.opacclient.objects.Library;
 import de.geeksfactory.opacclient.objects.ReservedItem;
+import okhttp3.FormBody;
 
 /**
  * API for the PICA OPAC by OCLC combined with LBS account functions Tested with LBS 4 in TU
@@ -56,12 +54,11 @@ public class PicaLBS extends Pica {
                 Document doc = Jsoup.parse(httpGet(url, getDefaultLBSEncoding()));
 
                 if (doc.select("#opacVolumesForm").size() == 0) {
-                    List<NameValuePair> params = new ArrayList<>();
-                    params.add(new BasicNameValuePair("j_username", account.getName()));
-                    params.add(new BasicNameValuePair("j_password", account.getPassword()));
-                    params.add(new BasicNameValuePair("login", "Login"));
-                    doc = Jsoup.parse(httpPost(url,
-                            new UrlEncodedFormEntity(params), getDefaultLBSEncoding()));
+                    FormBody body = new FormBody.Builder()
+                            .add("j_username", account.getName())
+                            .add("j_password", account.getPassword())
+                            .add("login", "Login").build();
+                    doc = Jsoup.parse(httpPost(url, body, getDefaultLBSEncoding()));
                 }
 
                 if (doc.select(".error, font[color=red]").size() > 0) {
@@ -72,12 +69,11 @@ public class PicaLBS extends Pica {
                 System.out.println(doc.text());
                 List<Connection.KeyVal> keyVals =
                         ((FormElement) doc.select("#opacVolumesForm").first()).formData();
-                List<NameValuePair> params = new ArrayList<>();
+                FormBody.Builder params = new FormBody.Builder();
                 for (Connection.KeyVal kv : keyVals) {
-                    params.add(new BasicNameValuePair(kv.key(), kv.value()));
+                    params.add(kv.key(), kv.value());
                 }
-                doc = Jsoup.parse(
-                        httpPost(url, new UrlEncodedFormEntity(params), getDefaultEncoding()));
+                doc = Jsoup.parse(httpPost(url, params.build(), getDefaultEncoding()));
                 if (doc.select(".error").size() > 0) {
                     ReservationResult res = new ReservationResult(MultiStepResult.Status.ERROR);
                     res.setMessage(doc.select(".error").text());
@@ -102,14 +98,13 @@ public class PicaLBS extends Pica {
     @Override
     public ProlongResult prolong(String media, Account account, int useraction,
             String selection) throws IOException {
-        List<NameValuePair> params = new ArrayList<>();
+        FormBody body = new FormBody.Builder()
+                .add("renew", "Renew")
+                .add("_volumeNumbersToRenew", "")
+                .add("volumeNumbersToRenew", media).build();
 
-        params.add(new BasicNameValuePair("renew", "Renew"));
-        params.add(new BasicNameValuePair("_volumeNumbersToRenew", ""));
-        params.add(new BasicNameValuePair("volumeNumbersToRenew", media));
-
-        String html = httpPost(lbsUrl + "/LBS_WEB/borrower/loans.htm",
-                new UrlEncodedFormEntity(params), getDefaultLBSEncoding());
+        String html = httpPost(lbsUrl + "/LBS_WEB/borrower/loans.htm", body,
+                getDefaultLBSEncoding());
         Document doc = Jsoup.parse(html);
         String message = doc.select(".alertmessage").text();
         if (message.contains("wurde verlängert") || message.contains("has been renewed")) {
@@ -128,14 +123,13 @@ public class PicaLBS extends Pica {
     @Override
     public CancelResult cancel(String media, Account account, int useraction,
             String selection) throws IOException, OpacErrorException {
-        List<NameValuePair> params = new ArrayList<>();
+        FormBody body = new FormBody.Builder()
+                .add("cancel", "Cancel reservation")
+                .add("_volumeReservationsToCancel", "")
+                .add("volumeReservationsToCancel", media).build();
 
-        params.add(new BasicNameValuePair("cancel", "Cancel reservation"));
-        params.add(new BasicNameValuePair("_volumeReservationsToCancel", ""));
-        params.add(new BasicNameValuePair("volumeReservationsToCancel", media));
-
-        String html = httpPost(lbsUrl + "/LBS_WEB/borrower/reservations.htm",
-                new UrlEncodedFormEntity(params), getDefaultLBSEncoding());
+        String html = httpPost(lbsUrl + "/LBS_WEB/borrower/reservations.htm", body,
+                getDefaultLBSEncoding());
         Document doc = Jsoup.parse(html);
         String message = doc.select(".alertmessage").text();
         if (message.contains("ist storniert") || message.contains("has been cancelled")) {
@@ -348,11 +342,11 @@ public class PicaLBS extends Pica {
         // Get JSESSIONID cookie
         httpGet(lbsUrl + "/LBS_WEB/borrower/borrower.htm?USR=1000&BES=" + db + "&LAN=" + getLang(),
                 getDefaultLBSEncoding());
-        List<NameValuePair> data = new ArrayList<>();
-        data.add(new BasicNameValuePair("j_username", account.getName()));
-        data.add(new BasicNameValuePair("j_password", account.getPassword()));
+        FormBody body = new FormBody.Builder()
+                .add("j_username", account.getName())
+                .add("j_password", account.getPassword()).build();
         Document doc = Jsoup.parse(httpPost(lbsUrl + "/LBS_WEB/j_spring_security_check",
-                new UrlEncodedFormEntity(data), getDefaultLBSEncoding()));
+                body, getDefaultLBSEncoding()));
 
         if (doc.select("font[color=red]").size() > 0) {
             throw new OpacErrorException(doc.select("font[color=red]").text());
