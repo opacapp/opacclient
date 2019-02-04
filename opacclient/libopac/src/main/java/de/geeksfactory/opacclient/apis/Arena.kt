@@ -251,11 +251,37 @@ open class Arena : OkHttpBaseApi() {
     }
 
     override fun account(account: Account): AccountData {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        login(account)
+
+        val profileDoc = httpGet("$opacUrl/protected/profile", ENCODING).html
+        val feesDoc = httpGet("$opacUrl/protected/debts", ENCODING).html
+        val loansDoc = httpGet("$opacUrl/protected/loans", ENCODING).html
+        val reservationsDoc = httpGet("$opacUrl/protected/reservations", ENCODING).html
+
+        return AccountData(account.id).apply {
+
+        }
     }
 
     override fun checkAccountData(account: Account) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        login(account)
+    }
+
+    fun login(account: Account) {
+        val loginForm = httpGet("$opacUrl/welcome", ENCODING).html
+                .select(".arena-patron-signin form").first()
+        val formData = FormBody.Builder()
+                .add("openTextUsernameContainer:openTextUsername", account.name)
+                .add("textPassword", account.password)
+        loginForm.select("input[type=hidden]").forEach { input ->
+            formData.add(input["name"], input["value"])
+        }
+
+        val doc = httpPost(loginForm["action"], formData.build(), ENCODING).html
+        val errorPanel = doc.select(".feedbackPanelWARNING").first()
+        if (errorPanel != null) {
+            throw OpacApi.OpacErrorException(errorPanel.text)
+        }
     }
 
     override fun getShareUrl(id: String, title: String?): String {
