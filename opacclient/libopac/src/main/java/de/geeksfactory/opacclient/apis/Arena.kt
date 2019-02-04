@@ -1,6 +1,7 @@
 package de.geeksfactory.opacclient.apis
 
 import de.geeksfactory.opacclient.networking.HttpClientFactory
+import de.geeksfactory.opacclient.networking.NotReachableException
 import de.geeksfactory.opacclient.objects.*
 import de.geeksfactory.opacclient.searchfields.DropdownSearchField
 import de.geeksfactory.opacclient.searchfields.SearchField
@@ -22,6 +23,7 @@ import java.net.URL
 open class Arena : OkHttpBaseApi() {
     protected lateinit var opacUrl: String
     protected val ENCODING = "UTF-8"
+    protected var searchDoc: Document? = null
 
     override fun init(library: Library, factory: HttpClientFactory) {
         super.init(library, factory)
@@ -95,7 +97,11 @@ open class Arena : OkHttpBaseApi() {
     }
 
     internal fun parseSearch(doc: Document, page: Int = 1): SearchRequestResult {
-        val count = doc.select(".feedbackPanelinfo").text.replace(Regex("[^\\d]"), "").toInt()
+        searchDoc = doc
+
+        val countRegex = Regex("\\d+-\\d+ (?:von|of|av) (\\d+)")
+        val count = countRegex.find(doc.select(".arena-record-counter").text)?.groups?.get(1)?.value?.toInt()
+                ?: 0
         val coverAjaxUrls = getAjaxUrls(doc)
 
         val results = doc.select(".arena-record").mapIndexed { i, record ->
@@ -148,7 +154,40 @@ open class Arena : OkHttpBaseApi() {
     }
 
     override fun searchGetPage(page: Int): SearchRequestResult {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        val doc = searchDoc ?: throw NotReachableException()
+        val pageLinks = doc.select(".arena-record-navigation").first()
+                .select(".arena-page-number > a, .arena-page-number > span")
+
+        // determining the link to get to the right page is not straightforward, so we try to find
+        // the link to the right page.
+        val from = Integer.valueOf(pageLinks.first().text())
+        val to = Integer.valueOf(pageLinks.last().text())
+        val linkToClick: Element
+        val willBeCorrectPage: Boolean
+
+        if (page < from) {
+            linkToClick = pageLinks.first()
+            willBeCorrectPage = false
+        } else if (page > to) {
+            linkToClick = pageLinks.last()
+            willBeCorrectPage = false
+        } else {
+            linkToClick = pageLinks.get(page - from)
+            willBeCorrectPage = true
+        }
+
+        if (linkToClick.tagName() == "span") {
+            // we are trying to get the page we are already on
+            return parseSearch(doc, page)
+        }
+
+        val newDoc = httpGet(linkToClick["href"], ENCODING).html
+        if (willBeCorrectPage) {
+            return parseSearch(newDoc, page)
+        } else {
+            searchDoc = newDoc
+            return searchGetPage(page)
+        }
     }
 
     override fun getResultById(id: String, homebranch: String?): DetailedItem {
