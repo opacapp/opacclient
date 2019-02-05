@@ -40,8 +40,9 @@ open class SLUB : OkHttpBaseApi() {
             "Journal, E-Journal" to SearchResult.MediaType.NEWSPAPER,
             "Map" to SearchResult.MediaType.MAP,
             "Audio" to SearchResult.MediaType.EAUDIO,
+            "Electronic Resource (Data Carrier)" to SearchResult.MediaType.EAUDIO,
             "Image" to SearchResult.MediaType.ART,
-            //"Microfrom" to SearchResult.MediaType.MICROFORM    //TODO: define new media type microform
+            "Microform" to SearchResult.MediaType.MICROFORM,
             "Visual Media" to SearchResult.MediaType.ART
     )
 
