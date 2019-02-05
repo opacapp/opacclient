@@ -5,6 +5,7 @@ import de.geeksfactory.opacclient.networking.HttpClientFactory
 import de.geeksfactory.opacclient.objects.Library
 import de.geeksfactory.opacclient.utils.html
 import org.json.JSONObject
+import org.junit.Assert
 import org.junit.Assert.assertEquals
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -71,6 +72,11 @@ class ArenaAccountTest(private val file: String) : BaseHtmlTest() {
 
     init {
         arena.stringProvider = DummyStringProvider()
+        arena.init(Library().apply {
+            data = JSONObject().apply {
+                put("baseurl", "https://arena.stabi-beispielburg.de/web/arena")
+            }
+        }, HttpClientFactory("OpacTest/1.0"))
     }
 
     @Test
@@ -82,10 +88,10 @@ class ArenaAccountTest(private val file: String) : BaseHtmlTest() {
         }
     }
 
-    /*@Test
+    @Test
     fun testParseLent() {
         val doc = readResource("/arena/lent/$file")?.html ?: return
-        val lent = arena.parseItems(doc, de.geeksfactory.opacclient.objects::LentItem)
+        val lent = arena.parseLent(doc)
 
         if (file.contains("_empty")) {
             Assert.assertTrue(lent.isEmpty())
@@ -103,7 +109,7 @@ class ArenaAccountTest(private val file: String) : BaseHtmlTest() {
     @Test
     fun testParseReservations() {
         val doc = readResource("/arena/reservations/$file")?.html ?: return
-        val reservations = arena.parseItems(doc, de.geeksfactory.opacclient.objects::ReservedItem)
+        val reservations = arena.parseReservations(doc)
 
         if (file.contains("_empty")) {
             Assert.assertTrue(reservations.isEmpty())
@@ -112,12 +118,12 @@ class ArenaAccountTest(private val file: String) : BaseHtmlTest() {
         }
         for (item in reservations) {
             BaseHtmlTest.assertContainsData(item.title)
-            Assert.assertNotNull(item.cancelData)
             Assert.assertNotNull(item.id)
+            Assert.assertNotNull(item.cover)
             BaseHtmlTest.assertContainsData(item.branch)
             BaseHtmlTest.assertContainsData(item.format)
         }
-    }*/
+    }
 
     companion object {
 

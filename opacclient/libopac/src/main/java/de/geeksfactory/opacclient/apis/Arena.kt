@@ -11,6 +11,7 @@ import de.geeksfactory.opacclient.utils.get
 import de.geeksfactory.opacclient.utils.html
 import de.geeksfactory.opacclient.utils.text
 import okhttp3.FormBody
+import org.joda.time.format.DateTimeFormat
 import org.jsoup.nodes.Document
 import org.jsoup.nodes.Element
 import java.net.URL
@@ -118,11 +119,11 @@ open class Arena : OkHttpBaseApi() {
         return SearchRequestResult(results, count, page)
     }
 
-    internal fun getCover(record: Element, coverAjaxUrls: Map<String, String>): String? {
+    internal fun getCover(record: Element, coverAjaxUrls: Map<String, String>? = null): String? {
         val coverHolder = record.select(".arena-record-cover").first()
         if (coverHolder != null) {
             val id = coverHolder["id"]
-            if (coverAjaxUrls.containsKey(id)) {
+            if (coverAjaxUrls != null && coverAjaxUrls.containsKey(id)) {
                 // get cover via ajax
                 val xml = httpGet(coverAjaxUrls[id], ENCODING)
                 val url = Regex("<img src=\"([^\"]+)").find(xml)?.groups?.get(1)
@@ -260,12 +261,52 @@ open class Arena : OkHttpBaseApi() {
 
         return AccountData(account.id).apply {
             pendingFees = parseFees(feesDoc)
+            lent = parseLent(loansDoc)
+            reservations = parseReservations(reservationsDoc)
+            //validUntil = parseValidUntil(profileDoc)
+        }
+    }
+
+    internal fun parseReservations(doc: Document): List<ReservedItem> {
+        return doc.select(".arena-record").map {  record ->
+            ReservedItem().apply {
+                id = record.select(".arena-record-id").first().text
+                title = record.select(".arena-record-title").first()?.text
+                author = record.select(".arena-record-author .arena-value")
+                        .map { it.text }.joinToString(", ")
+                format = record.select(".arena-record-media .arena-value").first()?.text
+                cover = getCover(record)
+                branch = record.select(".arena-record-branch .arena-value").first()?.text
+                status = record.select(".arena-result-info .arena-value").first()?.text
+            }
+        }
+    }
+
+    internal fun parseLent(doc: Document): List<LentItem> {
+        val df = DateTimeFormat.forPattern("dd.MM.yyyy")
+        return doc.select("#loansTable > tbody > tr").map {  tr ->
+            LentItem().apply {
+                id = tr.select(".arena-record-id").first().text
+                title = tr.select(".arena-record-title").first()?.text
+                author = tr.select(".arena-record-author .arena-value")
+                        .map { it.text }.joinToString(", ")
+                format = tr.select(".arena-record-media .arena-value").first()?.text
+                lendingBranch = tr.select(".arena-renewal-branch .arena-value").first()?.text
+                deadline = df.parseLocalDate(tr.select(".arena-renewal-date-value").first().text)
+                isRenewable = tr.hasClass("arena-renewal-true")
+                prolongData = tr.select(".arena-renewal-checkbox input").first()?.attr("value")
+                status = tr.select(".arena-renewal-status-message").first()?.text
+            }
         }
     }
 
     internal fun parseFees(feesDoc: Document): String? {
         return feesDoc.select(".arena-charges-total-debt span:eq(2)").first()?.text
     }
+
+    /*internal fun parseValidUntil(profileDoc: Document): String? {
+        return profileDoc.select(".arena-charges-total-debt span:eq(2)").first()?.text
+    }*/
 
     override fun checkAccountData(account: Account) {
         login(account)
