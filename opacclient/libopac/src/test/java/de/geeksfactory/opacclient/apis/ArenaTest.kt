@@ -1,15 +1,19 @@
 package de.geeksfactory.opacclient.apis
 
+import de.geeksfactory.opacclient.i18n.DummyStringProvider
 import de.geeksfactory.opacclient.networking.HttpClientFactory
 import de.geeksfactory.opacclient.objects.Library
 import de.geeksfactory.opacclient.utils.html
 import org.json.JSONObject
 import org.junit.Assert.assertEquals
 import org.junit.Test
+import org.junit.runner.RunWith
+import org.junit.runners.Parameterized
 import org.mockito.Matchers.anyString
 import org.mockito.Matchers.eq
 import org.mockito.Mockito.doReturn
 import org.mockito.Mockito.spy
+import java.util.ArrayList
 
 class ArenaSearchTest : BaseHtmlTest() {
     val arena = spy(Arena::class.java)
@@ -58,5 +62,75 @@ class ArenaSearchTest : BaseHtmlTest() {
         val doc = "<html><head></head><body>$coverHolder</body></html>".html
         val cover = arena.getCover(doc.select("div").first(), emptyMap())
         assertEquals("https://arena.stabi-ludwigsburg.de/arena-portlets/portletResources?resource=resourceCover&portalSiteId=37779237&recordId=104266&agencyName=ASE100117&width=0&height=0", cover)
+    }
+}
+
+@RunWith(Parameterized::class)
+class ArenaAccountTest(private val file: String) : BaseHtmlTest() {
+    val arena = Arena()
+
+    init {
+        arena.stringProvider = DummyStringProvider()
+    }
+
+    @Test
+    fun testParseFees() {
+        val doc = readResource("/arena/fees/$file")?.html ?: return
+        val fees = arena.parseFees(doc)
+        when (file) {
+            "lugwigsburg.html" -> assertEquals("5,00", fees)
+        }
+    }
+
+    /*@Test
+    fun testParseLent() {
+        val doc = readResource("/arena/lent/$file")?.html ?: return
+        val lent = arena.parseItems(doc, de.geeksfactory.opacclient.objects::LentItem)
+
+        if (file.contains("_empty")) {
+            Assert.assertTrue(lent.isEmpty())
+        } else {
+            Assert.assertTrue(lent.isNotEmpty())
+        }
+        for (item in lent) {
+            BaseHtmlTest.assertContainsData(item.title)
+            Assert.assertNotNull(item.deadline)
+            Assert.assertNotNull(item.id)
+            BaseHtmlTest.assertContainsData(item.format)
+        }
+    }
+
+    @Test
+    fun testParseReservations() {
+        val doc = readResource("/arena/reservations/$file")?.html ?: return
+        val reservations = arena.parseItems(doc, de.geeksfactory.opacclient.objects::ReservedItem)
+
+        if (file.contains("_empty")) {
+            Assert.assertTrue(reservations.isEmpty())
+        } else {
+            Assert.assertTrue(reservations.isNotEmpty())
+        }
+        for (item in reservations) {
+            BaseHtmlTest.assertContainsData(item.title)
+            Assert.assertNotNull(item.cancelData)
+            Assert.assertNotNull(item.id)
+            BaseHtmlTest.assertContainsData(item.branch)
+            BaseHtmlTest.assertContainsData(item.format)
+        }
+    }*/
+
+    companion object {
+
+        private val FILES = arrayOf("ludwigsburg.html", "ludwigsburg_empty.html")
+
+        @JvmStatic
+        @Parameterized.Parameters(name = "{0}")
+        fun files(): Collection<Array<String>> {
+            val files = ArrayList<Array<String>>()
+            for (file in FILES) {
+                files.add(arrayOf(file))
+            }
+            return files
+        }
     }
 }

@@ -259,8 +259,12 @@ open class Arena : OkHttpBaseApi() {
         val reservationsDoc = httpGet("$opacUrl/protected/reservations", ENCODING).html
 
         return AccountData(account.id).apply {
-
+            pendingFees = parseFees(feesDoc)
         }
+    }
+
+    internal fun parseFees(feesDoc: Document): String? {
+        return feesDoc.select(".arena-charges-total-debt span:eq(2)").first()?.text
     }
 
     override fun checkAccountData(account: Account) {
