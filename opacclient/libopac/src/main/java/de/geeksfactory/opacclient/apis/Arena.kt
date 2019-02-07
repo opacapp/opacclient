@@ -301,7 +301,7 @@ open class Arena : OkHttpBaseApi() {
     }
 
     internal fun parseFees(feesDoc: Document): String? {
-        return feesDoc.select(".arena-charges-total-debt span:eq(2)").first()?.text
+        return feesDoc.select(".arena-charges-total-debt span:eq(1)").first()?.text
     }
 
     /*internal fun parseValidUntil(profileDoc: Document): String? {
@@ -314,7 +314,7 @@ open class Arena : OkHttpBaseApi() {
 
     fun login(account: Account) {
         val loginForm = httpGet("$opacUrl/welcome", ENCODING).html
-                .select(".arena-patron-signin form").first()
+                .select(".arena-patron-signin form").first() ?: return
         val formData = FormBody.Builder()
                 .add("openTextUsernameContainer:openTextUsername", account.name)
                 .add("textPassword", account.password)

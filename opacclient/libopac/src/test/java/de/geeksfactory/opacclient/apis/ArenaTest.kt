@@ -14,7 +14,7 @@ import org.mockito.Matchers.anyString
 import org.mockito.Matchers.eq
 import org.mockito.Mockito.doReturn
 import org.mockito.Mockito.spy
-import java.util.ArrayList
+import java.util.*
 
 class ArenaSearchTest : BaseHtmlTest() {
     val arena = spy(Arena::class.java)
@@ -84,7 +84,7 @@ class ArenaAccountTest(private val file: String) : BaseHtmlTest() {
         val doc = readResource("/arena/fees/$file")?.html ?: return
         val fees = arena.parseFees(doc)
         when (file) {
-            "lugwigsburg.html" -> assertEquals("5,00", fees)
+            "ludwigsburg.html" -> assertEquals("5,00", fees)
         }
     }
 
