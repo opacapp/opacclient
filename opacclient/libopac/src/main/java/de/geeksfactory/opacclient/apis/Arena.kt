@@ -1,5 +1,6 @@
 package de.geeksfactory.opacclient.apis
 
+import de.geeksfactory.opacclient.i18n.StringProvider
 import de.geeksfactory.opacclient.networking.HttpClientFactory
 import de.geeksfactory.opacclient.networking.NotReachableException
 import de.geeksfactory.opacclient.objects.*
@@ -240,11 +241,31 @@ open class Arena : OkHttpBaseApi() {
     }
 
     override fun prolong(media: String, account: Account, useraction: Int, selection: String?): OpacApi.ProlongResult {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        login(account)
+        val loansDoc = httpGet("$opacUrl/protected/loans", ENCODING).html
+        val internalError = OpacApi.ProlongResult(OpacApi.MultiStepResult.Status.ERROR, stringProvider.getString(StringProvider.INTERNAL_ERROR))
+
+        val row = loansDoc.select("tr:has(.arena-record-id:contains($media)").first()
+                ?: return internalError
+
+        val js = row.select(".arena-renewal-status input[type=submit]").first()["onclick"]
+        val url = Regex("window\\.location\\.href='([^']+)'").find(js)?.groups?.get(1)?.value
+                ?: return internalError
+
+        val doc = httpGet(url, ENCODING).html
+        val error = doc.select(".arena-internal-error-description-value").first()
+        return if (error != null) {
+            OpacApi.ProlongResult(OpacApi.MultiStepResult.Status.ERROR, error.text)
+        } else if (doc.select(".arena-renewal-fail-table").size > 0) {
+            OpacApi.ProlongResult(OpacApi.MultiStepResult.Status.ERROR, stringProvider.getString(StringProvider.PROLONGING_IMPOSSIBLE))
+        } else {
+            OpacApi.ProlongResult(OpacApi.MultiStepResult.Status.OK)
+        }
     }
 
     override fun prolongAll(account: Account, useraction: Int, selection: String?): OpacApi.ProlongAllResult {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        // it seems that this does not work without JavaScript, and I couldn't find out why.
+        return OpacApi.ProlongAllResult(OpacApi.MultiStepResult.Status.ERROR)
     }
 
     override fun cancel(media: String, account: Account, useraction: Int, selection: String?): OpacApi.CancelResult {
@@ -294,7 +315,7 @@ open class Arena : OkHttpBaseApi() {
                 lendingBranch = tr.select(".arena-renewal-branch .arena-value").first()?.text
                 deadline = df.parseLocalDate(tr.select(".arena-renewal-date-value").first().text)
                 isRenewable = tr.hasClass("arena-renewal-true")
-                prolongData = tr.select(".arena-renewal-checkbox input").first()?.attr("value")
+                prolongData = id
                 status = tr.select(".arena-renewal-status-message").first()?.text
             }
         }
