@@ -193,7 +193,7 @@ open class Arena : OkHttpBaseApi() {
     }
 
     override fun getResultById(id: String, homebranch: String?): DetailedItem {
-        val url = "$opacUrl/results?p_p_id=searchResult_WAR_arenaportlets&p_r_p_687834046_search_item_id=$id"
+        val url = getUrl(id)
         val doc = httpGet(url, ENCODING).html
         doc.setBaseUri(url)
         return parseDetail(doc)
@@ -229,6 +229,8 @@ open class Arena : OkHttpBaseApi() {
                     status = row.select(".arena-availability-right").text
                 }
             } ?: emptyList()
+            isReservable = doc.select(".arena-reservation-button-login, a[href*=reservationButton]").first() != null
+            reservation_info = if (isReservable) id else null
         }
     }
 
@@ -237,7 +239,36 @@ open class Arena : OkHttpBaseApi() {
     }
 
     override fun reservation(item: DetailedItem, account: Account, useraction: Int, selection: String?): OpacApi.ReservationResult {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        login(account)
+        val details = httpGet(getUrl(item.id), ENCODING).html
+        val url = details.select(" a[href*=reservationButton]").first()?.attr("href")
+        val doc = httpGet(url, ENCODING).html
+        val form = doc.select("form[action*=reservationForm]").first()
+        if (selection == null) {
+            return OpacApi.ReservationResult(OpacApi.MultiStepResult.Status.SELECTION_NEEDED).apply {
+                actionIdentifier = OpacApi.ReservationResult.ACTION_BRANCH
+                this.selection = form.select(".arena-select").first().select("option").map { option ->
+                    hashMapOf(
+                            "key" to option["value"],
+                            "value" to option.text
+                    )
+                }
+            }
+        }
+
+        val formData = FormBody.Builder()
+        form.select("input[type=hidden]").forEach { input ->
+            formData.add(input["name"], input["value"])
+        }
+        formData.add("branch", selection)
+        val resultDoc = httpPost(form["action"], formData.build(), ENCODING).html
+
+        val errorPanel = resultDoc.select(".feedbackPanelWARNING").first()
+        if (errorPanel != null) {
+            return OpacApi.ReservationResult(OpacApi.MultiStepResult.Status.ERROR, errorPanel.text)
+        } else {
+            return OpacApi.ReservationResult(OpacApi.MultiStepResult.Status.OK)
+        }
     }
 
     override fun prolong(media: String, account: Account, useraction: Int, selection: String?): OpacApi.ProlongResult {
@@ -299,6 +330,7 @@ open class Arena : OkHttpBaseApi() {
                 cover = getCover(record)
                 branch = record.select(".arena-record-branch .arena-value").first()?.text
                 status = record.select(".arena-result-info .arena-value").first()?.text
+                cancelData = id
             }
         }
     }
@@ -351,8 +383,11 @@ open class Arena : OkHttpBaseApi() {
     }
 
     override fun getShareUrl(id: String, title: String?): String {
-        return "$opacUrl/results?p_p_id=searchResult_WAR_arenaportlets&p_r_p_687834046_search_item_id=$id"
+        return getUrl(id)
     }
+
+    private fun getUrl(id: String) =
+            "$opacUrl/results?p_p_id=searchResult_WAR_arenaportlets&p_r_p_687834046_search_item_id=$id"
 
     override fun getSupportFlags(): Int {
         return OpacApi.SUPPORT_FLAG_ENDLESS_SCROLLING
