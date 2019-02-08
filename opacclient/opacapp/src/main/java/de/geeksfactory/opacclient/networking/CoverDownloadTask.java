@@ -67,8 +67,11 @@ public abstract class CoverDownloadTask extends AsyncTask<Void, Integer, CoverHo
                         "RLvvClHAoh60wIC1CmSa6bvxAqBtEhMAUO0GmVJKacKT9jvtEIv22kLC67aQKQOnckB" +
                         "Bww7zq8S/F6SaqQejUkCyquHSOoQCy46Q7MAjKICBxpQycHLKF7CcRKYF9PxBtZWOcD" +
                         "IAIyTc7xCjUmqptE6P4K/BFxONwQjBeorwrQxIva8QExQQthAMaE0EA+i28DXTZq89d" +
-                        "qJwxy333HTXbffdeOcdRhAAOw=="
-        );
+                        "qJwxy333HTXbffdeOcdRhAAOw==");
+        rejectImages.add("R0lGODlhUAB4AIAAAP///wAAACH5BAEAAAAALAAAAABQAHgAAAJxhI+py+" +
+                "0Po5y02ouz3rz7D4biSJbmiabqyrbuC8fyTNf2jef6zvf+DwwKh8Si8YhMKpfMpvMJj" +
+                "Uqn1Kr1is1qt9yu9wsOi8fksvmMTqvX7Lb7DY/L5/S6/Y7P6/f8vv8PGCg4SFhoeIiY" +
+                "qLjI2OjYUAAAOw==");
     }
 
     protected CoverHolder item;
