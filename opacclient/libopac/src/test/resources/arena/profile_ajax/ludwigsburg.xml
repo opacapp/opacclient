@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?><ajax-response><component id="id__arenaAccount__WAR__arenaportlets____36" ><![CDATA[<div class="arena-toggle-panel" id="id__arenaAccount__WAR__arenaportlets____36">
+         	<table class="arena-recycle-table arena-profile-name-table">
+				<tr>
+					<td>
+        				<span class="arena-label">
+        					Name
+        				</span>
+        			</td>
+        			<td>
+		        		<span class="arena-value">Test, Mobiler OPAC/App</span>
+		        	</td>
+		        </tr>
+
+	                <tr>
+	                     <td>
+	                         <span class="arena-label">
+	                              	Anmerkung
+	                       	</span>
+	                     </td>
+	                     </tr>
+	                 <tr>
+	                     <td>
+	                         <span class="arena-value">Ausweis gueltig bis : 01.04.2020</span>
+	                     </td>
+	                 </tr>
+
+
+			</table>
+
+        	<div id="id__arenaAccount__WAR__arenaportlets____46">
+
+        	</div>
+
+        	<div id="id__arenaAccount__WAR__arenaportlets____47">
+
+	        </div>
+	        <div id="id__arenaAccount__WAR__arenaportlets____48" style="display:none"></div>
+	        <div class="arena-new-phone-container" id="id__arenaAccount__WAR__arenaportlets____49">
+
+	        </div>
+
+	        <div id="id__arenaAccount__WAR__arenaportlets____4a">
+
+	        </div>
+	        <div id="id__arenaAccount__WAR__arenaportlets____4b" style="display:none"></div>
+	        <div id="id__arenaAccount__WAR__arenaportlets____4c">
+
+	        </div>
+
+			<div class="data-entries-container" id="id__arenaAccount__WAR__arenaportlets____4d">
+
+			</div>
+        </div>]]></component><header-contribution encoding="wicket1" ><![CDATA[<head xmlns:wicket="http://wicket.apache.org"><script type="text/javascript" ><!--/*--><![CDATA[/*><!--*/
+var e = Wicket.$('id__arenaAccount__WAR__arenaportlets____33--ajax-indicator'); if (e != null && typeof(e.parentNode) != 'undefined') e.parentNode.removeChild(e);
+/*-->]^]^>*/</script>
+
+</head>]]></header-contribution><component id="id__arenaAccount__WAR__arenaportlets____33" ><![CDATA[<a id="id__arenaAccount__WAR__arenaportlets____33" href="https://arena.stabi-ludwigsburg.de/web/arena/protected/profile?p_p_id=arenaAccount_WAR_arenaportlets&amp;p_p_lifecycle=2&amp;p_p_state=normal&amp;p_p_mode=view&amp;p_p_resource_id=%2FarenaAccount%2F%3Fwicket%3Ainterface%3D%3A2%3AlibraryProfilePanel%3ApersonalInfoPanel%3AtogglableLink%3A%3AILinkListener%3A%3A&amp;p_p_cacheability=cacheLevelPage" onclick="if (function(){return Wicket.$('id__arenaAccount__WAR__arenaportlets____33') != null;}.bind(this)()) { Wicket.showIncrementally('id__arenaAccount__WAR__arenaportlets____33--ajax-indicator');}var wcall=wicketAjaxGet('https://arena.stabi-ludwigsburg.de/web/arena/protected/profile?p_p_id=arenaAccount_WAR_arenaportlets&amp;p_p_lifecycle=2&amp;p_p_state=normal&amp;p_p_mode=view&amp;p_p_resource_id=%2FarenaAccount%2F%3Fwicket%3Ainterface%3D%3A2%3AlibraryProfilePanel%3ApersonalInfoPanel%3AtogglableLink%3A%3AIBehaviorListener%3A0%3A&amp;p_p_cacheability=cacheLevelPage',function() { ;Wicket.hideIncrementally('id__arenaAccount__WAR__arenaportlets____33--ajax-indicator');}.bind(this),function() { ;Wicket.hideIncrementally('id__arenaAccount__WAR__arenaportlets____33--ajax-indicator');}.bind(this), function() {return Wicket.$('id__arenaAccount__WAR__arenaportlets____33') != null;}.bind(this));return !wcall;" title="Hier klicken, um den Inhalt auszublenden" class="arena-toggle-link arena-toggle-link-shown">
+	        			<span id="id__arenaAccount__WAR__arenaportlets____34" style="display:none"></span>
+	        			<span id="id__arenaAccount__WAR__arenaportlets____35">Ausblenden</span>
+	        		</a><span style="display:none;" class="wicket-ajax-indicator" id="id__arenaAccount__WAR__arenaportlets____33--ajax-indicator"><img src="/arena-portlets/arenaAccount/ps:arenaAccount_WAR_arenaportlets_LAYOUT_21565/resources/org.apache.wicket.ajax.AbstractDefaultAjaxBehavior/indicator.gif" alt=""/></span>]]></component></ajax-response>
