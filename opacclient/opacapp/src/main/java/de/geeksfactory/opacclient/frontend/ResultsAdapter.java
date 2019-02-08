@@ -122,6 +122,8 @@ public class ResultsAdapter extends ArrayAdapter<SearchResult> {
                 return R.drawable.type_lp_record;
             case DEVICE:
                 return R.drawable.type_device;
+            case MICROFORM:
+                return R.drawable.type_microform;
         }
 
         return R.drawable.type_unknown;
