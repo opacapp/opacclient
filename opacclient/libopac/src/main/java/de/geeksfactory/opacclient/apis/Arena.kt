@@ -300,7 +300,24 @@ open class Arena : OkHttpBaseApi() {
     }
 
     override fun cancel(media: String, account: Account, useraction: Int, selection: String?): OpacApi.CancelResult {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        val resDoc = httpGet("$opacUrl/protected/reservations", ENCODING).html
+        val internalError = OpacApi.CancelResult(OpacApi.MultiStepResult.Status.ERROR,
+                stringProvider.getString(StringProvider.INTERNAL_ERROR))
+
+        val record = resDoc.select(".arena-record-container:has(.arena-record-id:contains($media)")
+                .first() ?: return internalError
+        // find the URL that needs to be called to select the item
+        val url = record.select(".arena-select-item a").first()?.attr("href")
+
+        val selectedDoc = httpGet(url, ENCODING).html
+        val cancelUrl = selectedDoc.select(".arena-delete").first().attr("href")
+        val resultDoc = httpGet(cancelUrl, ENCODING).html
+        val errorPanel = resultDoc.select(".feedbackPanelWARNING").first()
+        if (errorPanel != null) {
+            return OpacApi.CancelResult(OpacApi.MultiStepResult.Status.ERROR, errorPanel.text)
+        } else {
+            return OpacApi.CancelResult(OpacApi.MultiStepResult.Status.OK)
+        }
     }
 
     override fun account(account: Account): AccountData {
