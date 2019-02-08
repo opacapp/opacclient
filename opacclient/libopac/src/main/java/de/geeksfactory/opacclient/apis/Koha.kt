@@ -454,10 +454,13 @@ open class Koha : OkHttpBaseApi() {
                         if (input != null) {
                             item.prolongData = input.attr("value")
                             item.isRenewable = true
+                            item.status = col.select("span.renewals").text()
                         } else {
                             item.prolongData = NOT_RENEWABLE + content
                             item.isRenewable = false
+                            item.status = col.text()
                         }
+                        item.status = item.status.trim().replaceFirst(Regex("^\\(?(.*?)\\)?\$"), "$1")
                     }
                     // "call_no" -> Signatur
                     // "fines" -> Gebühren (Ja/Nein)
