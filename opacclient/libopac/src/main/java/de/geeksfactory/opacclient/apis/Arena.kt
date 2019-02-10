@@ -106,18 +106,23 @@ open class Arena : OkHttpBaseApi() {
                 ?: 0
         val coverAjaxUrls = getAjaxUrls(doc)
 
-        val results = doc.select(".arena-record").mapIndexed { i, record ->
-            SearchResult().apply {
-                val title = record.select(".arena-record-title").text
-                val year = record.select(".arena-record-year .arena-value").first()?.text
-                val author = record.select(".arena-record-author .arena-value").map { it.text }.joinToString(", ")
-
-                innerhtml = "<b>$title</b><br>$author ${year ?: ""}"
-                id = record.select(".arena-record-id").first().text
-                cover = getCover(record, coverAjaxUrls)
-            }
+        val results = doc.select(".arena-record").map{ record ->
+            parseSearchResult(record, coverAjaxUrls)
         }
         return SearchRequestResult(results, count, page)
+    }
+
+    protected fun parseSearchResult(record: Element, coverAjaxUrls: Map<String, String>):
+            SearchResult {
+        return SearchResult().apply {
+            val title = record.select(".arena-record-title").text
+            val year = record.select(".arena-record-year .arena-value").first()?.text
+            val author = record.select(".arena-record-author .arena-value").map { it.text }.joinToString(", ")
+
+            innerhtml = "<b>$title</b><br>$author ${year ?: ""}"
+            id = record.select(".arena-record-id").first().text
+            cover = getCover(record, coverAjaxUrls)
+        }
     }
 
     internal fun getCover(record: Element, coverAjaxUrls: Map<String, String>? = null): String? {
