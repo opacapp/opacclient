@@ -466,7 +466,7 @@ open class NetBiblio : OkHttpBaseApi() {
                     "${renewals}x ${stringProvider.getString(StringProvider.PROLONGED_ABBR)}"
                 else null
                 val reservationsText = if (reservations != null && reservations!! > 0) {
-                    stringProvider.getFormattedString(StringProvider.RESERVATIONS_NUMBER, reservations)
+                    stringProvider.getQuantityString(StringProvider.RESERVATIONS_NUMBER, reservations!!, reservations)
                 } else null
                 status = listOf(renewalsText, reservationsText).filter { it != null }
                         .joinToString(", ")
