@@ -98,7 +98,7 @@ open class Arena : OkHttpBaseApi() {
         return parseSearch(doc)
     }
 
-    internal fun parseSearch(doc: Document, page: Int = 1): SearchRequestResult {
+    protected open fun parseSearch(doc: Document, page: Int = 1): SearchRequestResult {
         searchDoc = doc
 
         val countRegex = Regex("\\d+-\\d+ (?:von|of|av) (\\d+)")
