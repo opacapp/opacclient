@@ -1330,8 +1330,8 @@ public class BiBer1992 extends OkHttpBaseApi {
             }
             throw new OpacErrorException(errText);
         }
-        if (doc.title().contains("Server error")) {
-            // seen in Minden, real error message is only shown on login
+        if (doc.title().contains("Server error") || doc.title().contains("opax/titel!")) {
+            // seen in Minden & Bochum, real error message is only shown on login
             accountHttpPost(account, "login", "login.C");
         }
         if (doc.select("tr td font[color=red], tr:eq(1) td:eq(0) .p02b").size() == 1) {
