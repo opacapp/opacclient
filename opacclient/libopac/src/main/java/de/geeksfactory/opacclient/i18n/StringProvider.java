@@ -83,6 +83,7 @@ public interface StringProvider {
     String FEE_CONFIRMATION = "fee_confirmation";
     String ALL = "all";
     String DESCRIPTION = "description";
+    String RESERVATION_READY = "reservation_ready";
 
     /**
      * Returns the translated string identified by identifier

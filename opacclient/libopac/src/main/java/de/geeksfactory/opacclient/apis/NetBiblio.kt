@@ -377,6 +377,7 @@ open class NetBiblio : OkHttpBaseApi() {
 
         val overview = httpGet("$opacUrl/account", ENCODING).html
         val resDoc = httpGet("$opacUrl/account/reservations", ENCODING).html
+        val readyDoc = httpGet("$opacUrl/account/orders", ENCODING).html
         val lentDoc = httpGet("$opacUrl/account/circulations", ENCODING).html
 
         return AccountData(account.id).apply {
@@ -388,12 +389,12 @@ open class NetBiblio : OkHttpBaseApi() {
                     ".wo-list-label:contains(Abonnement (Ende)) + .wo-list-content, " +
                             ".wo-list-label:contains(Subscription (end)) + .wo-list-content," +
                             " .wo-list-label:contains(Abonnement (Fin)) + .wo-list-content").first()?.text
-            reservations = parseItems(resDoc, ::ReservedItem)
+            reservations = parseItems(resDoc, ::ReservedItem) + parseItems(readyDoc, ::ReservedItem, ready = true)
             lent = parseItems(lentDoc, ::LentItem)
         }
     }
 
-    internal fun <I : AccountItem> parseItems(doc: Document, constructor: () -> I): List<I> {
+    internal fun <I : AccountItem> parseItems(doc: Document, constructor: () -> I, ready: Boolean = false): List<I> {
         val table = doc.select(".wo-grid-table").first() ?: return emptyList()
         val cols = table.select("> thead > tr > th").map { it.text.trim() }
         val rows = table.select("> tbody > tr")
@@ -462,13 +463,14 @@ open class NetBiblio : OkHttpBaseApi() {
                     }
                 }
 
+                val readyText = if (ready) stringProvider.getString(StringProvider.RESERVATION_READY) else null
                 val renewalsText = if (renewals != null && renewals!! > 0)
                     "${renewals}x ${stringProvider.getString(StringProvider.PROLONGED_ABBR)}"
                 else null
                 val reservationsText = if (reservations != null && reservations!! > 0) {
                     stringProvider.getQuantityString(StringProvider.RESERVATIONS_NUMBER, reservations!!, reservations)
                 } else null
-                status = listOf(renewalsText, reservationsText).filter { it != null }
+                status = listOf(readyText, renewalsText, reservationsText).filter { it != null }
                         .joinToString(", ")
                 if (status.isEmpty()) status = null
             }

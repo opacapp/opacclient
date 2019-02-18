@@ -84,4 +84,5 @@
     <string name="fee_confirmation">Gebühr: %s</string>
     <string name="all">All</string>
     <string name="description">Description</string>
+    <string name="reservation_ready">Ready for pickup</string>
 </resources>
