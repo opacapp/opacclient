@@ -264,8 +264,7 @@ open class NetBiblio : OkHttpBaseApi() {
             details.add(Detail(stringProvider.getString(StringProvider.DESCRIPTION), description))
 
             val medialinks = doc.select(".wo-linklist-multimedialinks .wo-link a")
-            if (medialinks.size > 0) {
-                val link = medialinks.first()
+            for (link in medialinks) {
                 if (link.attr("href").contains("multimedialinks/link?url")) {
                     val url = BaseApi.getQueryParamsFirst(link.attr("href"))["url"]
                     addDetail(Detail(link.text(), url))
