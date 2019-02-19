@@ -1,5 +1,6 @@
 package de.geeksfactory.opacclient.utils
 
+import org.json.JSONObject
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
 import org.jsoup.nodes.Element
@@ -8,6 +9,9 @@ import org.jsoup.select.Elements
 
 val String.html: Document
     get() = Jsoup.parse(this)
+
+val String.jsonObject: JSONObject
+    get() = JSONObject(this)
 
 operator fun Element.get(name: String): String = this.attr(name)
 
