@@ -379,7 +379,27 @@ open class Koha : OkHttpBaseApi() {
     }
 
     override fun prolongAll(account: Account, useraction: Int, selection: String?): OpacApi.ProlongAllResult {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        var doc = login(account)
+        var borrowernumber = doc.select("input[name=borrowernumber]").first()?.attr("value")
+        val lent = parseItems(doc, ::LentItem, "#checkoutst")
+
+        val builder = HttpUrl.parse("$baseurl/cgi-bin/koha/opac-renew.pl")!!.newBuilder()
+                .addQueryParameter("from", "opac_user")
+                .addQueryParameter("borrowernumber", borrowernumber)
+        lent.forEach { item ->
+            if (item.isRenewable) {
+                builder.addQueryParameter("item", item.prolongData)
+            }
+        }
+
+        doc = Jsoup.parse(httpGet(builder.build().toString(), ENCODING))
+        val label = doc.select(".blabel").first()
+        if (label != null && label.hasClass("label-success")) {
+            return OpacApi.ProlongAllResult(OpacApi.MultiStepResult.Status.OK)
+        } else {
+            return OpacApi.ProlongAllResult(OpacApi.MultiStepResult.Status.ERROR, label?.text()
+                    ?: stringProvider.getString(StringProvider.ERROR))
+        }
     }
 
     override fun cancel(media: String, account: Account, useraction: Int, selection: String?): OpacApi.CancelResult {
@@ -505,7 +525,7 @@ open class Koha : OkHttpBaseApi() {
     }
 
     override fun getSupportFlags(): Int {
-        return OpacApi.SUPPORT_FLAG_ENDLESS_SCROLLING
+        return OpacApi.SUPPORT_FLAG_ENDLESS_SCROLLING or OpacApi.SUPPORT_FLAG_ACCOUNT_PROLONG_ALL
     }
 
     override fun getSupportedLanguages(): Set<String>? {
