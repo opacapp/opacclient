@@ -381,18 +381,8 @@ open class Koha : OkHttpBaseApi() {
     override fun prolongAll(account: Account, useraction: Int, selection: String?): OpacApi.ProlongAllResult {
         var doc = login(account)
         var borrowernumber = doc.select("input[name=borrowernumber]").first()?.attr("value")
-        val lent = parseItems(doc, ::LentItem, "#checkoutst")
 
-        val builder = HttpUrl.parse("$baseurl/cgi-bin/koha/opac-renew.pl")!!.newBuilder()
-                .addQueryParameter("from", "opac_user")
-                .addQueryParameter("borrowernumber", borrowernumber)
-        lent.forEach { item ->
-            if (item.isRenewable) {
-                builder.addQueryParameter("item", item.prolongData)
-            }
-        }
-
-        doc = Jsoup.parse(httpGet(builder.build().toString(), ENCODING))
+        doc = Jsoup.parse(httpGet("$baseurl/cgi-bin/koha/opac-renew.pl?from=opac_user&borrowernumber=$borrowernumber", ENCODING))
         val label = doc.select(".blabel").first()
         if (label != null && label.hasClass("label-success")) {
             return OpacApi.ProlongAllResult(OpacApi.MultiStepResult.Status.OK)
