@@ -11,9 +11,11 @@ import java.util.Collection;
 import java.util.List;
 
 import de.geeksfactory.opacclient.i18n.DummyStringProvider;
+import de.geeksfactory.opacclient.i18n.StringProvider;
 import de.geeksfactory.opacclient.objects.LentItem;
 import de.geeksfactory.opacclient.objects.ReservedItem;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
@@ -73,10 +75,14 @@ public class WinBiapAccountTest extends BaseHtmlTest {
         if (html == null) return; // we may not have all files for all libraries
 
         try {
-            WinBiap.handleLoginErrors(Jsoup.parse(html));
+            WinBiap.handleLoginErrors(Jsoup.parse(html), new DummyStringProvider());
             fail("Login succeeded even though the password was wrong");
         } catch (OpacApi.OpacErrorException e) {
-            assertTrue(e.getMessage().startsWith("Leider stimmen Ihre Anmeldedaten nicht."));
+            if (file.equals("leichlingen.html")) {
+                assertTrue(e.getMessage().startsWith("Leider stimmen Ihre Anmeldedaten nicht."));
+            } else if (file.equals("neufahrn.html")) {
+                assertEquals(StringProvider.PLEASE_CHANGE_PASSWORD, e.getMessage());
+            }
         }
     }
 }

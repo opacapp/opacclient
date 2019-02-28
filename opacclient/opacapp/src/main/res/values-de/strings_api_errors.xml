@@ -83,5 +83,6 @@
   <string name="fee_confirmation">Gebühr: %s</string>
   <string name="all">Alle</string>
   <string name="description">Beschreibung</string>
-    <string name="reservation_ready">Abholbereit</string>
+  <string name="reservation_ready">Abholbereit</string>
+  <string name="please_change_password">Die Bibliothek fordert Sie auf, Ihr Passwort zu ändern. Bitte loggen Sie sich dazu auf der Bibliothekswebsite ein, um das Passwort zu ändern, und geben dann das neue Passwort in der App ein.</string>
 </resources>

@@ -1,8 +1,6 @@
 package de.geeksfactory.opacclient.apis;
 
 import org.apache.http.NameValuePair;
-import org.apache.http.client.entity.UrlEncodedFormEntity;
-import org.apache.http.client.methods.HttpGet;
 import org.apache.http.message.BasicNameValuePair;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
@@ -1026,14 +1024,19 @@ public class WinBiap extends OkHttpBaseApi implements OpacApi {
         String postUrl = opac_url + (homePage ? "/index.aspx" : "/user/login.aspx");
         String html = httpPost(postUrl, data.build(), "UTF-8");
         Document doc = Jsoup.parse(html);
-        handleLoginErrors(doc);
+        handleLoginErrors(doc, stringProvider);
         return doc;
     }
 
-    static void handleLoginErrors(Document doc) throws OpacErrorException {
-        String errorSelector = "span[id$=LabelLoginMessage]";
-        if (doc.select(errorSelector).size() > 0) {
-            throw new OpacErrorException(doc.select(errorSelector).text());
+    static void handleLoginErrors(Document doc, StringProvider sp) throws OpacErrorException {
+        Elements loginMessage = doc.select("span[id$=LabelLoginMessage]");
+        if (loginMessage.size() > 0) {
+            throw new OpacErrorException(loginMessage.text());
+        }
+
+        Elements passwordWarning = doc.select("span[id$=lblDefaultPasswordWarning]");
+        if (passwordWarning.size() > 0) {
+            throw new OpacErrorException(sp.getString(StringProvider.PLEASE_CHANGE_PASSWORD));
         }
     }
 
