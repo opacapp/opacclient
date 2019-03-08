@@ -125,7 +125,7 @@ public class BarcodeScanIntegrator {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
                         Uri uri = Uri
-                                .parse("market://details?id=com.google.zxing.client.android");
+                                .parse("market://details?id=com.srowen.bs.android");
                         Intent intent = new Intent(Intent.ACTION_VIEW, uri);
                         try {
                             ctx.startActivity(intent);

@@ -9,6 +9,7 @@ import de.geeksfactory.opacclient.searchfields.SearchQuery
 import de.geeksfactory.opacclient.searchfields.TextSearchField
 import de.geeksfactory.opacclient.utils.get
 import de.geeksfactory.opacclient.utils.html
+import de.geeksfactory.opacclient.utils.jsonObject
 import de.geeksfactory.opacclient.utils.text
 import okhttp3.FormBody
 import okhttp3.HttpUrl
@@ -16,6 +17,7 @@ import org.joda.time.format.DateTimeFormat
 import org.json.JSONException
 import org.json.JSONObject
 import org.jsoup.nodes.Document
+import org.jsoup.nodes.Element
 import org.jsoup.nodes.TextNode
 import java.net.URL
 
@@ -165,13 +167,17 @@ open class NetBiblio : OkHttpBaseApi() {
         val countText = resultcountElem.text
         val totalCount = Regex("\\d+").findAll(countText).last().value.toInt()
 
+        // status of eBooks is fetched via AJAX
+        val divibibStatus = getDivibibStatus(doc)
+
         val results = doc.select(".wo-grid-table tbody tr").groupBy { row ->
             // there are multiple rows for one entry. Their CSS IDs all have the same prefix
             val id = row.attr("id")
             Regex("wo-row_(\\d+)").find(id)!!.groupValues[1]
         }.map { entry ->
             val rows = entry.value
-            val cols = rows[0].select("td[style=font-size: 14px;]")
+            val firstRow = rows[0]
+            val cols = firstRow.select("td[style=font-size: 14px;]")
             val titleCol = cols.first()
             SearchResult().apply {
                 val title = titleCol.select("a").text
@@ -179,18 +185,52 @@ open class NetBiblio : OkHttpBaseApi() {
                 val moreInfo = cols.drop(1).map { it.text }.joinToString(" / ")
                 this.id = "noticeId=${entry.key}"
                 innerhtml = "<b>$title</b><br>${author ?: ""}<br>${moreInfo ?: ""}"
-                cover = rows[0].select(".wo-cover").first()?.attr("src")
+                cover = firstRow.select(".wo-cover").first()?.attr("src")
 
-                val availIcon = rows[0].select(".wo-disposability-icon").attr("src")
-                status = when {
-                    availIcon.endsWith("yes.png") -> SearchResult.Status.GREEN
-                    availIcon.endsWith("no.png") -> SearchResult.Status.RED
-                    else -> SearchResult.Status.UNKNOWN
-                }
+                status = divibibStatus[entry.key] ?: getStatus(firstRow)
             }
         }
 
         return SearchRequestResult(results, totalCount, page)
+    }
+
+    private fun getStatus(elem: Element): SearchResult.Status? {
+        val availIcon = elem.select(".wo-disposability-icon").first()
+        if (availIcon != null) {
+            val src = availIcon.attr("src")
+            return when {
+                src.endsWith("yes.png") -> SearchResult.Status.GREEN
+                src.endsWith("no.png") -> SearchResult.Status.RED
+                else -> SearchResult.Status.UNKNOWN
+            }
+        }
+        return null
+    }
+
+    private fun getDivibibStatus(doc: Document): Map<String, SearchResult.Status> {
+        val elements = doc.select(".wo-status-plc[data-entityid][data-divibibid]")
+
+        if (elements.size == 0) return emptyMap()
+
+        val entityIds = elements.map { it["data-entityid"] }
+        val divibibIds = elements.map { it["data-divibibid"] }
+
+        val ids = entityIds.zip(divibibIds).map { (eid, did) -> "$eid#$did/0"}.joinToString(",")
+
+        val body = FormBody.Builder()
+                .add("format", "icon")
+                .add("ids", ids).build()
+        val result = httpPost("$opacUrl/handler/divibibstatus", body, ENCODING).jsonObject
+        val arr = result.optJSONArray("DivibibStatus") ?: return emptyMap()
+
+        return HashMap<String, SearchResult.Status>().apply {
+            for (i in 0 until arr.length()) {
+                val obj = arr.getJSONObject(i)
+                val html = obj.getString("result").html
+                val status = getStatus(html)
+                if (status != null) put(obj.getString("entityId").replace("N", ""), status)
+            }
+        }
     }
 
     override fun filterResults(filter: Filter, option: Filter.Option): SearchRequestResult? {
@@ -224,8 +264,7 @@ open class NetBiblio : OkHttpBaseApi() {
             details.add(Detail(stringProvider.getString(StringProvider.DESCRIPTION), description))
 
             val medialinks = doc.select(".wo-linklist-multimedialinks .wo-link a")
-            if (medialinks.size > 0) {
-                val link = medialinks.first()
+            for (link in medialinks) {
                 if (link.attr("href").contains("multimedialinks/link?url")) {
                     val url = BaseApi.getQueryParamsFirst(link.attr("href"))["url"]
                     addDetail(Detail(link.text(), url))

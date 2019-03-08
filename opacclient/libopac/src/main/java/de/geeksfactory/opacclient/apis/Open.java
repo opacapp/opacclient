@@ -311,9 +311,9 @@ public class Open extends OkHttpBaseApi implements OpacApi {
         searchResultDoc = doc;
 
         if (doc.select("#Label1, span[id$=LblInfoMessage]").size() > 0) {
-            String message = doc.select("#Label1, span[id$=LblInfoMessage]").text();
+            String message = doc.select("#Label1, span[id$=LblInfoMessage], .boldText").text();
             if (message.contains("keine Treffer")) {
-                return new SearchRequestResult(new ArrayList<SearchResult>(), 0, 1, page);
+                return new SearchRequestResult(new ArrayList<>(), 0, 1, page);
             } else {
                 throw new OpacErrorException(message);
             }
