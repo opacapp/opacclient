@@ -358,7 +358,7 @@ open class Arena : OkHttpBaseApi() {
     }
 
     internal fun parseLent(doc: Document): List<LentItem> {
-        val df = DateTimeFormat.forPattern("dd.MM.yyyy")
+        val df = DateTimeFormat.forPattern("dd.MM.yy")
         return doc.select("#loansTable > tbody > tr").map {  tr ->
             LentItem().apply {
                 id = tr.select(".arena-record-id").first().text
