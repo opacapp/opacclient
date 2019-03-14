@@ -1710,32 +1710,32 @@ public class Adis extends ApacheBaseApi implements OpacApi {
                 field.setHint("");
                 field.setData(selectableData);
                 fields.add(field);
-            } else if (row.select("select").size() == 1
+            } else if (row.select("select").size() >= 1
                     && row.select("input[type=text]").size() == 0) {
                 // Things like language, media type, etc.
-                Element select = row.select("select").first();
-                DropdownSearchField field = new DropdownSearchField();
-                field.setId(select.id());
-                field.setDisplayName(row.select("label").first().text());
-                for (Element opt : select.select("option")) {
-                    field.addDropdownValue(opt.attr("value"), opt.text());
-                }
-
-                if (field.getDisplayName().equals("oder Bezirk") ||
-                        field.getDisplayName().equals("oder Bibliothek")) {
-                    // VOeBB: Suche im Verbund oder Bezirk oder Bibliothek
-                    if (doc.select("#SUCHIN_3").size() == 1) {
-                        field.setDisplayName(field.getDisplayName().replace("oder ", ""));
-                        JSONObject data = new JSONObject();
-                        data.put(DATA_DISABLE_WHEN_SELECTED, "SUCHIN_3");
-                        data.put(DATA_GROUP, "verbund");
-                        field.setData(data);
-                    } else {
-                        continue;
+                for (Element select : row.select("select")) {
+                    DropdownSearchField field = new DropdownSearchField();
+                    field.setId(select.id());
+                    field.setDisplayName(row.select("label[for="+select.id()+"]").first().text());
+                    for (Element opt : select.select("option")) {
+                        field.addDropdownValue(opt.attr("value"), opt.text());
                     }
-                }
+                    if (field.getDisplayName().equals("oder Bezirk") ||
+                            field.getDisplayName().equals("oder Bibliothek")) {
+                        // VOeBB: Suche im Verbund oder Bezirk oder Bibliothek
+                        if (doc.select("#SUCHIN_3").size() == 1) {
+                            field.setDisplayName(field.getDisplayName().replace("oder ", ""));
+                            JSONObject data = new JSONObject();
+                            data.put(DATA_DISABLE_WHEN_SELECTED, "SUCHIN_3");
+                            data.put(DATA_GROUP, "verbund");
+                            field.setData(data);
+                        } else {
+                            continue;
+                        }
+                    }
 
-                fields.add(field);
+                    fields.add(field);
+                }
             } else if (row.select("select").size() == 0
                     && row.select("input[type=text]").size() == 3
                     && row.select("label").size() == 3) {
@@ -1758,14 +1758,14 @@ public class Adis extends ApacheBaseApi implements OpacApi {
 
                     TextSearchField field2 = new TextSearchField();
                     field2.setId(input2.id());
-                    field2.setDisplayName(name2.replace("von", "").trim());
+                    field2.setDisplayName(name2.replace("von", "").trim() + " (Bereich)");
                     field2.setHint("von");
                     field2.setData(selectableData);
                     fields.add(field2);
 
                     TextSearchField field3 = new TextSearchField();
                     field3.setId(input3.id());
-                    field3.setDisplayName(name3.replace("bis", "").trim());
+                    field3.setDisplayName(name3.replace("bis", "").trim() + " (Bereich)");
                     field3.setHint("bis");
                     field3.setHalfWidth(true);
                     field3.setData(selectableData);
