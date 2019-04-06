@@ -325,6 +325,8 @@ open class Koha : OkHttpBaseApi() {
         return null
     }
 
+    var reservationFeeConfirmed = false
+
     override fun reservation(item: DetailedItem, account: Account, useraction: Int, selection: String?): OpacApi.ReservationResult {
         try {
             login(account)
@@ -332,10 +334,26 @@ open class Koha : OkHttpBaseApi() {
             return OpacApi.ReservationResult(OpacApi.MultiStepResult.Status.ERROR, e.message)
         }
 
+        when (useraction) {
+            0 -> reservationFeeConfirmed = false
+            OpacApi.MultiStepResult.ACTION_CONFIRMATION -> reservationFeeConfirmed = true
+        }
+
         var doc = httpGet("$baseurl/cgi-bin/koha/opac-reserve.pl?biblionumber=${item.id}", ENCODING).html
 
         if (doc.select(".alert").size > 0) {
-            return OpacApi.ReservationResult(OpacApi.MultiStepResult.Status.ERROR, doc.select(".alert").text())
+            val alert = doc.select(".alert").first()
+            val message = alert.text
+            if (alert.id() == "reserve_fee") {
+                if (!reservationFeeConfirmed) {
+                    val res = OpacApi.ReservationResult(
+                            OpacApi.MultiStepResult.Status.CONFIRMATION_NEEDED)
+                    res.details = arrayListOf(arrayOf(message))
+                    return res
+                }
+            } else {
+                return OpacApi.ReservationResult(OpacApi.MultiStepResult.Status.ERROR, message)
+            }
         }
 
         val body = FormBody.Builder()
@@ -348,7 +366,12 @@ open class Koha : OkHttpBaseApi() {
         body.add("reqtype_${item.id}", "any")
         val checkbox = doc.select("input[name=checkitem_${item.id}]").first()
         if (checkbox != null) {
-            body.add("checkitem_${item.id}", checkbox["value"])
+            if (checkbox["value"] == "any") {
+                body.add("checkitem_${item.id}", "any")
+            } else {
+                // TODO: copy selection (but it also works like this)
+                body.add("checkitem_${item.id}", "any")
+            }
         }
 
         doc = httpPost("$baseurl/cgi-bin/koha/opac-reserve.pl", body.build(), ENCODING).html
@@ -515,7 +538,8 @@ open class Koha : OkHttpBaseApi() {
     }
 
     override fun getSupportFlags(): Int {
-        return OpacApi.SUPPORT_FLAG_ENDLESS_SCROLLING or OpacApi.SUPPORT_FLAG_ACCOUNT_PROLONG_ALL
+        return OpacApi.SUPPORT_FLAG_ENDLESS_SCROLLING or OpacApi.SUPPORT_FLAG_ACCOUNT_PROLONG_ALL or
+                OpacApi.SUPPORT_FLAG_WARN_RESERVATION_FEES
     }
 
     override fun getSupportedLanguages(): Set<String>? {
