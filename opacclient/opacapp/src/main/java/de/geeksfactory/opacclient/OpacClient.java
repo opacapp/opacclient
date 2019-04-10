@@ -74,6 +74,7 @@ import de.geeksfactory.opacclient.storage.PreferenceDataSource;
 import de.geeksfactory.opacclient.storage.StarContentProvider;
 import de.geeksfactory.opacclient.utils.DebugTools;
 import de.geeksfactory.opacclient.utils.ErrorReporter;
+import de.geeksfactory.opacclient.utils.GooglePlayTools;
 import de.geeksfactory.opacclient.utils.Utils;
 import de.geeksfactory.opacclient.webservice.LibraryConfigUpdateService;
 import de.geeksfactory.opacclient.webservice.UpdateHandler;
@@ -371,6 +372,9 @@ public class OpacClient extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
+
+        GooglePlayTools.updateSecurityProvider(getApplicationContext());
+
         sp = PreferenceManager.getDefaultSharedPreferences(this);
 
         if (!BuildConfig.DEBUG) {
