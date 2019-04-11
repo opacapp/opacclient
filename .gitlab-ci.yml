@@ -2,7 +2,7 @@ lint:
     script:
         - cd opacclient
         - sed -i "s/.*versionName .*/        versionName \"git-${CI_BUILD_REF}\"/g" opacapp/build.gradle
-        - GRADLE_USER_HOME=/cache ANDROID_HOME=/android-sdk-linux ./gradlew lint test assembleDebug
+        - GRADLE_USER_HOME=/cache ANDROID_HOME=/android-sdk-linux ./gradlew lint test assembleGooglePlayServicesDebug
     except:
         - android-studio-library
 
