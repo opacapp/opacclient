@@ -127,7 +127,7 @@ jacoco {
     toolVersion = "0.7.4.201502262128"
 }
 
-task jacocoTestReport(type: JacocoReport, dependsOn: 'testDebugUnitTest') {
+task jacocoTestReport(type: JacocoReport, dependsOn: 'testGooglePlayServicesDebugUnitTest') {
 
     reports {
         xml.enabled = true
@@ -137,12 +137,12 @@ task jacocoTestReport(type: JacocoReport, dependsOn: 'testDebugUnitTest') {
     jacocoClasspath = configurations['jacocoAnt']
 
     def fileFilter = ['**/R.class', '**/R$*.class', '**/BuildConfig.*', '**/Manifest*.*', '**/*Test*.*', 'android/**/*.*']
-    def debugTree = fileTree(dir: "${buildDir}/intermediates/classes/debug", excludes: fileFilter)
+    def debugTree = fileTree(dir: "${buildDir}/intermediates/classes/googlePlayServicesDebug", excludes: fileFilter)
     def mainSrc = "${project.projectDir}/src/main/java"
 
     sourceDirectories = files([mainSrc])
     classDirectories = files([debugTree])
-    executionData = files("${buildDir}/jacoco/testDebugUnitTest.exec")
+    executionData = files("${buildDir}/jacoco/testGooglePlayServicesDebugUnitTest.exec")
 }
 
 task downloadJson(type: JsonFilesTask)
