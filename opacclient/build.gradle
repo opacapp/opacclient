@@ -29,11 +29,11 @@ jacoco {
 
 task jacocoRootReport(type: JacocoReport) {
     dependsOn = [":libopac:jacocoTestReport", ":opacapp:jacocoTestReport"]
-    executionData files(["libopac/build/jacoco/test.exec", "opacapp/build/jacoco/testDebugUnitTest.exec"])
+    executionData files(["libopac/build/jacoco/test.exec", "opacapp/build/jacoco/testGooglePlayServicesDebugUnitTest.exec"])
     sourceDirectories = files(["opacapp/src/main/java", "libopac/src/main/java"])
 
     def fileFilter = ['**/R.class', '**/R$*.class', '**/BuildConfig.*', '**/Manifest*.*', '**/*Test*.*', 'android/**/*.*']
-    def debugTree = fileTree(dir: "opacapp/build/intermediates/classes/debug", excludes: fileFilter)
+    def debugTree = fileTree(dir: "opacapp/build/intermediates/classes/googlePlayServicesDebug", excludes: fileFilter)
     def libopacDebugTree = fileTree(dir: "libopac/build/classes/java/main")
     classDirectories = files([debugTree, libopacDebugTree])
     jacocoClasspath = configurations.jacocoAnt

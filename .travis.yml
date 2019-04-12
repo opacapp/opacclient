@@ -12,8 +12,8 @@ android:
         - platform-tools
 script:
     - cd opacclient
-    - ./gradlew lintDebug test jacocoRootReport coveralls
-    - cat opacapp/build/reports/lint-results-debug.xml
+    - ./gradlew lintGooglePlayServicesDebug test jacocoRootReport coveralls
+    - cat opacapp/build/reports/lint-results-googlePlayServicesDebug.xml
 cache:
     directories:
         - $HOME/.gradle

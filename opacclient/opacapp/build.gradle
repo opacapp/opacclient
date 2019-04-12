@@ -44,6 +44,17 @@ android {
             versionNameSuffix "-debug"
         }
     }
+
+    flavorDimensions "dependencies"
+    productFlavors {
+        googlePlayServices {
+            dimension "dependencies"
+        }
+        foss {
+            dimension "dependencies"
+        }
+    }
+
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
@@ -106,6 +117,7 @@ dependencies {
     testImplementation 'com.squareup.okhttp3:okhttp:3.12.1'
     testImplementation 'com.squareup.retrofit2:retrofit-mock:2.3.0'
     testImplementation 'commons-io:commons-io:2.5'
+    googlePlayServicesImplementation 'com.google.android.gms:play-services-safetynet:15.0.1'
     // We don't want to rely on the CommonsWare Maven repo, so we include these libraries as JARs
     implementation files('libs/adapter-1.0.1.jar')
     implementation files('libs/endless-1.2.3.jar')
@@ -115,7 +127,7 @@ jacoco {
     toolVersion = "0.7.4.201502262128"
 }
 
-task jacocoTestReport(type: JacocoReport, dependsOn: 'testDebugUnitTest') {
+task jacocoTestReport(type: JacocoReport, dependsOn: 'testGooglePlayServicesDebugUnitTest') {
 
     reports {
         xml.enabled = true
@@ -125,12 +137,12 @@ task jacocoTestReport(type: JacocoReport, dependsOn: 'testDebugUnitTest') {
     jacocoClasspath = configurations['jacocoAnt']
 
     def fileFilter = ['**/R.class', '**/R$*.class', '**/BuildConfig.*', '**/Manifest*.*', '**/*Test*.*', 'android/**/*.*']
-    def debugTree = fileTree(dir: "${buildDir}/intermediates/classes/debug", excludes: fileFilter)
+    def debugTree = fileTree(dir: "${buildDir}/intermediates/classes/googlePlayServicesDebug", excludes: fileFilter)
     def mainSrc = "${project.projectDir}/src/main/java"
 
     sourceDirectories = files([mainSrc])
     classDirectories = files([debugTree])
-    executionData = files("${buildDir}/jacoco/testDebugUnitTest.exec")
+    executionData = files("${buildDir}/jacoco/testGooglePlayServicesDebugUnitTest.exec")
 }
 
 task downloadJson(type: JsonFilesTask)
