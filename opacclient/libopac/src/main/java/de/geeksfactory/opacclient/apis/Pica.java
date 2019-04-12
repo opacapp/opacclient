@@ -735,6 +735,12 @@ public abstract class Pica extends OkHttpBaseApi implements OpacApi {
             field.setId("SRT");
             for (Element option : sort.select("option")) {
                 field.addDropdownValue(option.attr("value"), option.text());
+                if ("RLV".equals(option.attr("value"))) {
+                    // move "relevance" option to the top to make it the default
+                    field.getDropdownValues().add(0,
+                            field.getDropdownValues().remove(
+                                    field.getDropdownValues().size() - 1));
+                }
             }
             fields.add(field);
         }
