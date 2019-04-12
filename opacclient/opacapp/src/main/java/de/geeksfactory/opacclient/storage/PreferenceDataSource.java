@@ -43,6 +43,7 @@ public class PreferenceDataSource {
     private static final String LAST_LIBRARY_CONFIG_UPDATE = "last_library_config_update";
     private static final String LAST_LIBRARY_CONFIG_UPDATE_VERSION =
             "last_library_config_update_version";
+    private static final String ACCOUNT_PTR_HINT_SHOWN = "account_ptr_hint_shown";
     protected SharedPreferences sp;
     protected Context context;
 
@@ -103,5 +104,13 @@ public class PreferenceDataSource {
 
     public boolean isLoadCoversOnDataPreferenceSet() {
         return sp.getBoolean("on_data_load_covers", true);
+    }
+
+    public void setAccountPtrHintShown(int number) {
+        sp.edit().putInt(ACCOUNT_PTR_HINT_SHOWN, number).apply();
+    }
+
+    public int getAccountPtrHintShown() {
+        return sp.getInt(ACCOUNT_PTR_HINT_SHOWN, 0);
     }
 }
