@@ -104,6 +104,7 @@ import de.geeksfactory.opacclient.objects.ReservedItem;
 import de.geeksfactory.opacclient.reminder.ReminderHelper;
 import de.geeksfactory.opacclient.reminder.SyncAccountJobCreator;
 import de.geeksfactory.opacclient.storage.AccountDataSource;
+import de.geeksfactory.opacclient.storage.PreferenceDataSource;
 import de.geeksfactory.opacclient.ui.AccountDividerItemDecoration;
 import de.geeksfactory.opacclient.utils.ErrorReporter;
 import su.j2e.rvjoiner.JoinableAdapter;
@@ -340,6 +341,11 @@ public class AccountFragment extends Fragment implements
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == R.id.action_refresh) {
+            PreferenceDataSource prefs = new PreferenceDataSource(getActivity());
+            if (prefs.getAccountPtrHintShown() < 2) {
+                Toast.makeText(getActivity(), R.string.account_ptr_hint, Toast.LENGTH_LONG).show();
+                prefs.setAccountPtrHintShown(prefs.getAccountPtrHintShown() + 1);
+            }
             refresh();
         } else if (item.getItemId() == R.id.action_prolong_all) {
             prolongAllStart();
