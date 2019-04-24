@@ -15,7 +15,6 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
-import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.app.ListFragment;
 import android.support.v4.view.MenuItemCompat;
@@ -36,7 +35,6 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
-import android.widget.RelativeLayout;
 import android.widget.SectionIndexer;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -164,25 +162,6 @@ public class LibraryListActivity extends AppCompatActivity
                     showListGeo();
                 }
             }
-        });
-
-        final RelativeLayout rlSuggestLibrary =
-                (RelativeLayout) findViewById(R.id.rlSuggestLibrary);
-        rlSuggestLibrary.setOnClickListener(new OnClickListener() {
-
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(LibraryListActivity.this,
-                        SuggestLibraryActivity.class);
-                if (getIntent().hasExtra("welcome")) {
-                    intent.putExtra("welcome", true);
-                }
-                ActivityOptionsCompat options = ActivityOptionsCompat.makeScaleUpAnimation
-                        (rlSuggestLibrary, rlSuggestLibrary.getLeft(), rlSuggestLibrary.getTop(),
-                                rlSuggestLibrary.getWidth(), rlSuggestLibrary.getHeight());
-                ActivityCompat.startActivity(LibraryListActivity.this, intent, options.toBundle());
-            }
-
         });
     }
 

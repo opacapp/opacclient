@@ -137,14 +137,6 @@
                 android:value="de.geeksfactory.opacclient.frontend.AccountListActivity"/>
         </activity>
         <activity
-            android:name="de.geeksfactory.opacclient.frontend.SuggestLibraryActivity"
-            android:label="@string/title_activity_suggest_library"
-            android:theme="@style/Theme.Opacapp.Floating">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="de.geeksfactory.opacclient.frontend.LibraryListActivity"/>
-        </activity>
-        <activity
             android:name="org.acra.CrashReportDialog"
             android:excludeFromRecents="true"
             android:finishOnTaskLaunch="true"
