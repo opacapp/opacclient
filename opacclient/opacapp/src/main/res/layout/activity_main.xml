@@ -21,6 +21,8 @@
             android:theme="@style/ThemeOverlay.Opacapp.ActionBar"
             app:popupTheme="@style/ThemeOverlay.AppCompat.Light"/>
 
+        <include layout="@layout/support_policy_hint"/>
+
         <FrameLayout
             android:id="@+id/content_frame"
             android:layout_width="match_parent"

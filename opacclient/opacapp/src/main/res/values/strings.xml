@@ -333,4 +333,7 @@
     <string name="load_covers_mobile_data_on">Cover images will be loaded and displayed if available</string>
     <string name="load_covers_mobile_data_off">Cover images will only be loaded on WiFi</string>
     <string name="account_ptr_hint">You can also pull down the list to refresh the data.</string>
+    <string name="support_policy_hint">We provide no free support for use of this library in the
+        app, problems that may occur in the future will probably not be fixed.</string>
+    <string name="support_policy_more_info">more info</string>
 </resources>

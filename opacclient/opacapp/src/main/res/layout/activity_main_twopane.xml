@@ -22,10 +22,16 @@
             android:theme="@style/ThemeOverlay.Opacapp.ActionBar"
             app:popupTheme="@style/ThemeOverlay.AppCompat.Light"/>
 
+        <include layout="@layout/support_policy_hint"
+            android:id="@+id/support_policy_hint"
+            android:layout_below="@+id/toolbar"
+            android:layout_height="wrap_content"
+            android:layout_width="match_parent"/>
+
         <View
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_below="@+id/toolbar"
+            android:layout_below="@+id/support_policy_hint"
             android:background="@drawable/toolbar_shadow"/>
 
         <LinearLayout

@@ -334,4 +334,8 @@
     <string name="load_covers_mobile_data_on">Buchcover werden geladen und angezeigt, wenn verfügbar</string>
     <string name="load_covers_mobile_data_off">Buchcover werden nur über WLAN geladen</string>
     <string name="account_ptr_hint">Sie können auch die Liste nach unten ziehen, um die Daten neu zu laden.</string>
+    <string name="support_policy_hint">Für die Nutzung dieser Bibliothek in der App gibt es
+        keinen kostenfreien Support, eventuelle zukünftige Fehler werden wahrscheinlich nicht
+        behoben.</string>
+    <string name="support_policy_more_info">mehr Infos</string>
 </resources>
