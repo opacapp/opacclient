@@ -647,20 +647,7 @@ public class Adis extends ApacheBaseApi implements OpacApi {
             }
             nvpairs.add(new BasicNameValuePair("selected", "ZTEXT       " + id));
             doc = htmlPost(opac_url + ";jsessionid=" + s_sid, nvpairs);
-
-            List<NameValuePair> form = new ArrayList<>();
-            for (Element input : doc.select("input, select")) {
-                if (!"image".equals(input.attr("type"))
-                        && !"submit".equals(input.attr("type"))
-                        && !"checkbox".equals(input.attr("type"))
-                        && !"".equals(input.attr("name"))
-                        && !"selected".equals(input.attr("name"))) {
-                    form.add(new BasicNameValuePair(input.attr("name"), input
-                            .attr("value")));
-                }
-            }
-            form.add(new BasicNameValuePair("selected", "ZTEXT       " + id));
-            doc = htmlPost(opac_url + ";jsessionid=" + s_sid, form);
+            doc = htmlPost(opac_url + ";jsessionid=" + s_sid, nvpairs);
             // Yep, two times.
         }
 
