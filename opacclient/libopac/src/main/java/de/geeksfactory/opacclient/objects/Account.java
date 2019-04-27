@@ -35,6 +35,7 @@ public class Account {
     private String password;
     private long cached;
     private boolean password_known_valid = false;
+    private boolean supportPolicyHintSeen = false;
 
     @Override
     public String toString() {
@@ -173,5 +174,13 @@ public class Account {
     @Override
     public int hashCode() {
         return (int) (id ^ (id >>> 32));
+    }
+
+    public boolean isSupportPolicyHintSeen() {
+        return supportPolicyHintSeen;
+    }
+
+    public void setSupportPolicyHintSeen(boolean supportPolicyHintSeen) {
+        this.supportPolicyHintSeen = supportPolicyHintSeen;
     }
 }

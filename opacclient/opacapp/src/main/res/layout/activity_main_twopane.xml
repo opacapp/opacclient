@@ -26,7 +26,8 @@
             android:id="@+id/support_policy_hint"
             android:layout_below="@+id/toolbar"
             android:layout_height="wrap_content"
-            android:layout_width="match_parent"/>
+            android:layout_width="match_parent"
+            android:visibility="gone"/>
 
         <View
             android:layout_width="match_parent"
