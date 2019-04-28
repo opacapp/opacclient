@@ -114,7 +114,7 @@
     <string name="connection_error_detail">La connessione al server della biblioteca non è riuscita. Controlla che la tua connessione internet sia attiva. Se il problema persiste probabilmente il server della biblioteca ha un problema oppure l\'applicazione non è riuscita ad elaborare la risposta ricevuta.</string>
     <string name="connection_error_detail_nre">La connessione al server della biblioteca non è riuscita. Controlla che la tua connessione internet sia attiva. Se il problema persiste probabilmente il server della biblioteca ha un problema.</string>
     <string name="retry">Riprova</string>
-    <string name="connection_error_detail_security">La connessione sicura al server della biblioteca non è riuscita. Se il problema persiste potrebbe esserci qualcuno che intercetta la tua connessione. Contatta info@opacapp.de se il problema si presenta in reti Wi-Fi diverse. </string>
+    <string name="connection_error_detail_security">La connessione sicura al server della biblioteca non è riuscita. Se il problema persiste potrebbe esserci qualcuno che intercetta la tua connessione. Contatta https://opac.app/en/support/ se il problema si presenta in reti Wi-Fi diverse. </string>
     <string name="default_account_name">Account anonimo</string>
     <string name="title_activity_account_list">Account</string>
     <string name="account_add">Aggiungi un account</string>
@@ -298,7 +298,7 @@ controlla le tariffe della biblioteca.</string>
     <string name="library_config_update_failure">Impossibile aggiornare i dati della biblioteca.</string>
     <string name="library_config_last_update">Ultimo aggiornamento %s</string>
     <string name="library_config_reset">Ripristinati i dati della biblioteca dell\'ultimo aggiornamento.</string>
-    <string name="library_removed_error">Sfortunatamente la biblioteca non è più disponibile nell\'applicazione. Questo perché la biblioteca potrebbe utilizzare adesso sistema software non più compatibile con l\'applicazione oppure perché la biblioteca ci ha chiesto espressamente di essere rimossa. Puoi contattarci scrivendo a info@opacapp.net per informazioni.</string>
+    <string name="library_removed_error">Sfortunatamente la biblioteca non è più disponibile nell\'applicazione. Questo perché la biblioteca potrebbe utilizzare adesso sistema software non più compatibile con l\'applicazione oppure perché la biblioteca ci ha chiesto espressamente di essere rimossa. Puoi contattarci scrivendo a https://opac.app/en/support/ per informazioni.</string>
     <string name="account_anonymous">anonimo (solo ricerca)</string>
     <string name="account_with_credentials">con dati utente (ricerca e profilo)</string>
     <string name="please_enter_password">Inserisci la tua password.</string>

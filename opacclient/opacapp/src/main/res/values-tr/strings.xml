@@ -110,7 +110,7 @@
     <string name="connection_error_detail">Kütüphane sunucusuna bağlantı başarısız oldu. Lütfen internet bağlantınızı kontrol edin. Eğer hata devam ederse kütüphane sunucusunda bir sorun olabilir veya uygulama kütüphane sunucusundan gelen cevabı okuyamıyor olabilir.</string>
     <string name="connection_error_detail_nre">Kütüphane sunucusuna bağlantı başarısız oldu. Lütfen internet bağlantınızı kontrol edin. Eğer hata devam ederse kütüphane sunucusunda bir sorun olabilir.</string>
     <string name="retry">Tekrar deneyin</string>
-    <string name="connection_error_detail_security">Kütüphane sunucusuna güvenli bağlantı başarısız oldu. Lütfen tekrar deneyin. Eğer sorun devam ediyorsa bağlantınızı engelleyen biri olabilir. Lütfen başka WiFi ağlarında da aynı sorun devam ederse info@opacapp.de e-posta adresi ile iletişime geçin.</string>
+    <string name="connection_error_detail_security">Kütüphane sunucusuna güvenli bağlantı başarısız oldu. Lütfen tekrar deneyin. Eğer sorun devam ediyorsa bağlantınızı engelleyen biri olabilir. Lütfen başka WiFi ağlarında da aynı sorun devam ederse https://opac.app/en/support/ e-posta adresi ile iletişime geçin.</string>
     <string name="default_account_name">İsimsiz hesap</string>
     <string name="title_activity_account_list">Hesaplar</string>
     <string name="account_add">Hesap ekle</string>

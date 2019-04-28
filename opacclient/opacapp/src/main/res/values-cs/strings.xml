@@ -104,7 +104,7 @@
     <string name="info_error">Nepodařilo se získat doplňující informace k vybrané knihovně.</string>
     <string name="info_unsupported">Bohužel nemáme k dispozici žádné další infomace o knihovně.</string>
     <string name="retry">Prosím, zkuste to znovu</string>
-    <string name="connection_error_detail_security">Zabezpečené připojení na server knihovny se nezdařilo. Zkuste to prosím znovu. Pokud problém přetrvá, je možné, že něco blokuje spojení. Pokud se problém projevuje i na jiných WiFi sítích, dejte nám vědět na info@opacapp.de.</string>
+    <string name="connection_error_detail_security">Zabezpečené připojení na server knihovny se nezdařilo. Zkuste to prosím znovu. Pokud problém přetrvá, je možné, že něco blokuje spojení. Pokud se problém projevuje i na jiných WiFi sítích, dejte nám vědět na https://opac.app/en/support/.</string>
     <string name="default_account_name">Nepojmenovaný účet</string>
     <string name="title_activity_account_list">Účty</string>
     <string name="account_add">Přidat účet</string>
