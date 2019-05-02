@@ -110,7 +110,7 @@
     <string name="share_notsupported">Not supported in this library.</string>
     <string name="unsupported">Not supported</string>
     <string name="account_unsupported_api">This feature is not yet supported in your library. Sorry \uD83D\uDE1E</string>
-    <string name="account_unsupported_api_opensource"><![CDATA[This feature is not yet supported in your library. Sorry \uD83D\uDE1E<br><br>If you have experience in programming and some spare time, you might be able to help us to implement it. You can find more information about this on <a href="https://github.com/opacapp/opacclient">GitHub</a> or ask us via <a href="mailto:info@opacapp.net">email</a>]]>.</string>
+    <string name="account_unsupported_api_opensource"><![CDATA[This feature is not yet supported in your library. Sorry \uD83D\uDE1E<br><br>If you have experience in programming and some spare time, you might be able to help us to implement it. You can find more information about this on <a href="https://github.com/opacapp/opacclient">GitHub</a>]]>.</string>
     <string name="write_mail">Write e-mail</string>
     <string name="info_error">Could not load additional information for this library.</string>
     <string name="info_unsupported">We don\'t have any information about this library to show.</string>
@@ -120,7 +120,7 @@
     <string name="connection_error_detail">The connection to the library server failed. Please check your internet connection. If the problem persists, there may have been a problem on the library server or the app was unable to parse the server\'s response.</string>
     <string name="connection_error_detail_nre">The connection to the library server failed. Please check your internet connection. If the problem persists, there may have been a problem on the library server.</string>
     <string name="retry">Try again</string>
-    <string name="connection_error_detail_security">The secure connection to the library server failed. Please try again. If the problem persists, there may be someone intercepting your connection. Please contact info@opacapp.de if the problem persists in multiple WiFi networks.</string>
+    <string name="connection_error_detail_security">The secure connection to the library server failed. Please try again. If the problem persists, there may be someone intercepting your connection. Please contact https://opac.app/en/support/ if the problem persists in multiple WiFi networks.</string>
     <string name="default_account_name">Unnamed account</string>
     <string name="title_activity_account_list">Accounts</string>
     <string name="account_add">Add account</string>
@@ -242,6 +242,8 @@
     <string name="website_url">www.opacapp.net</string>
     <string name="developer">Developer</string>
     <string name="feedback">Feedback</string>
+    <string name="support">Support</string>
+    <string name="support_url">https://opac.app/en/support/</string>
     <string name="rate">Rate application</string>
     <string name="other">Other</string>
     <string name="source">Source Code</string>
@@ -317,7 +319,7 @@
     <string name="library_config_last_update">Last updated %s</string>
     <string name="library_config_last_update_never">No data downloaded yet</string>
     <string name="library_config_reset">Restored library data from last app update.</string>
-    <string name="library_removed_error">Unfortunately, the library you are using was removed from the app. The reason for this could be that the library switched to a new software system that the app is not compatible with or that the library contacted us and explicitly stated that they want to be removed from the app. You can contact us at info@opacapp.net to find out more.</string>
+    <string name="library_removed_error">Unfortunately, the library you are using was removed from the app. The reason for this could be that the library switched to a new software system that the app is not compatible with or that the library contacted us and explicitly stated that they want to be removed from the app. You can contact us at https://opac.app/en/support/ to find out more.</string>
     <string name="account_anonymous">anonymous (search only)</string>
     <string name="account_with_credentials">with credentials (search and account)</string>
     <string name="please_enter_password">Please enter your password.</string>
@@ -333,4 +335,7 @@
     <string name="load_covers_mobile_data_on">Cover images will be loaded and displayed if available</string>
     <string name="load_covers_mobile_data_off">Cover images will only be loaded on WiFi</string>
     <string name="account_ptr_hint">You can also pull down the list to refresh the data.</string>
+    <string name="support_policy_hint">We provide no free support for use of this library in the
+        app, problems that may occur in the future will probably not be fixed.</string>
+    <string name="support_policy_more_info">more info</string>
 </resources>

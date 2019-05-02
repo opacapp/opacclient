@@ -66,6 +66,7 @@ public class AccountDataSource {
         values.put("name", acc.getName());
         values.put("password", acc.getPassword());
         values.put("passwordValid", acc.isPasswordKnownValid() ? 1 : 0);
+        values.put("supportPolicyHintSeen", acc.isSupportPolicyHintSeen() ? 1 : 0);
         database.update("accounts", values, "id = ?", new String[]{acc.getId() + ""});
     }
 
@@ -150,6 +151,7 @@ public class AccountDataSource {
         acc.setPassword(cursor.getString(4));
         acc.setCached(cursor.getLong(5));
         acc.setPasswordKnownValid(cursor.getLong(9) > 0);
+        acc.setSupportPolicyHintSeen(cursor.getLong(10) > 0);
         return acc;
     }
 

@@ -16,8 +16,10 @@ import android.preference.PreferenceManager;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
+import android.view.View;
 import android.widget.Toast;
 
 import org.json.JSONException;
@@ -26,9 +28,11 @@ import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 import de.geeksfactory.opacclient.R;
 import de.geeksfactory.opacclient.barcode.BarcodeScanIntegrator;
@@ -263,6 +267,7 @@ public class MainActivity extends OpacActivity
         }
 
         nfcHint();
+        supportPolicyHint();
 
         //		try {
         //			List<SearchField> fields = app.getApi()
@@ -419,6 +424,42 @@ public class MainActivity extends OpacActivity
                             .show();
                 }
             }).show();
+        }
+    }
+
+
+    private void supportPolicyHint() {
+        Account account = app.getAccount();
+        if (!app.getLibrary().isSupportContract() && !account.isSupportPolicyHintSeen()) {
+            findViewById(R.id.support_policy_hint).setVisibility(View.VISIBLE);
+            findViewById(R.id.btMoreInfo).setOnClickListener(v -> {
+                Intent websiteIntent = new Intent(Intent.ACTION_VIEW);
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2) {
+                    // Chrome custom tabs
+                    Bundle extras = new Bundle();
+                    extras.putBinder("android.support.customtabs.extra.SESSION", null);
+                    extras.putInt("android.support.customtabs.extra.TOOLBAR_COLOR",
+                            ContextCompat.getColor(this, R.color.primary_red));
+                    websiteIntent.putExtras(extras);
+                }
+
+                String url = "https://opac.app/en/support-policy/";
+                String languageCode = Locale.getDefault().getLanguage().toLowerCase();
+                if (Arrays.asList("de", "en", "fr").contains(languageCode)) {
+                    url = String.format("https://opac.app/%s/support-policy/", languageCode);
+                }
+
+                websiteIntent.setData(Uri.parse(url));
+                startActivity(websiteIntent);
+
+            });
+            findViewById(R.id.btGotIt).setOnClickListener(v -> {
+                findViewById(R.id.support_policy_hint).setVisibility(View.GONE);
+                account.setSupportPolicyHintSeen(true);
+                new AccountDataSource(this).update(account);
+            });
+        } else {
+            findViewById(R.id.support_policy_hint).setVisibility(View.GONE);
         }
     }
 

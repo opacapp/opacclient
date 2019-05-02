@@ -114,7 +114,7 @@
     <string name="connection_error_detail">La conexión con el servidor de la biblioteca falló. Por favor, compruebe su conexión de Internet. Si el problema continúa, probablemente había un problema en el servidor de la biblioteca o la aplicación no podía analizar la respuesta del servidor.</string>
     <string name="connection_error_detail_nre">La conexión con el servidor de la biblioteca falló. Por favor, compruebe su conexión de Internet. Si el problema continúa, probablemente había un problema en el servidor de la biblioteca.</string>
     <string name="retry">Inténtalo de nuevo</string>
-    <string name="connection_error_detail_security">La conexión segura con el servidor de la biblioteca falló. Por favor, inténtelo de nuevo. Si el problema continúa, puede que alguien corte su conexión. Por favor, avisa a info@opacapp.de si el problema continúa en redes wifi multiples.</string>
+    <string name="connection_error_detail_security">La conexión segura con el servidor de la biblioteca falló. Por favor, inténtelo de nuevo. Si el problema continúa, puede que alguien corte su conexión. Por favor, avisa a https://opac.app/en/support/ si el problema continúa en redes wifi multiples.</string>
     <string name="default_account_name">Cuenta no denominada</string>
     <string name="title_activity_account_list">Cuentas</string>
     <string name="account_add">Añadir cuenta</string>
@@ -299,7 +299,7 @@ por favor consulta las tarifas de tu biblioteca.</string>
     <string name="library_config_last_update">Última actualización %s</string>
     <string name="library_config_last_update_never">Todavía no se descargaron ajustes.</string>
     <string name="library_config_reset"> Ajustes de biblioteca restablecidos de la última actualización. </string>
-    <string name="library_removed_error">Lamentablemente, la biblioteca que estás utilizando fue borrado de la aplicación. Puede que la biblioteca haya cambiado a un nuevo sistema de software que ya no es compatible o puede que la biblioteca nos haya contactado para exponer que se los borre de la aplicación. Escríbenos a info@opacapp.net para saber más detalles.</string>
+    <string name="library_removed_error">Lamentablemente, la biblioteca que estás utilizando fue borrado de la aplicación. Puede que la biblioteca haya cambiado a un nuevo sistema de software que ya no es compatible o puede que la biblioteca nos haya contactado para exponer que se los borre de la aplicación. Escríbenos a https://opac.app/en/support/ para saber más detalles.</string>
     <string name="account_anonymous">anónimo (sólo búsqueda)</string>
     <string name="account_with_credentials">con credenciales (búsqueda y cuenta)</string>
     <string name="please_enter_password">Por favor, introduzca tu contraseña.</string>

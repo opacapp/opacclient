@@ -118,7 +118,7 @@
     <string name="connection_error_detail">Połączenie do serwera tej biblioteki nie powiodło się. Sprawdź połączenie z internetem. Jeśli problem powtarza się powodem może być awaria serwera lub aplikacja nie potrafi zinterpretować odpowiedzi serwera.</string>
     <string name="connection_error_detail_nre">Połączenie do serwera tej biblioteki nie powiodło się. Sprawdź połączenie z internetem. Jeśli problem powtarza się powodem może być awaria serwera.</string>
     <string name="retry">Spróbuj ponownie</string>
-    <string name="connection_error_detail_security">Bezpieczne połączenie do serwera biblioteki nie powiodło się. Spróbuj ponownie. Jeśli problem się powtarza, być może ktoś przechwytuje twoje połączenie. Skontaktuj się z info@opacapp.de jeśli problem powtarza się na wielu różnych sieciach WiFi. </string>
+    <string name="connection_error_detail_security">Bezpieczne połączenie do serwera biblioteki nie powiodło się. Spróbuj ponownie. Jeśli problem się powtarza, być może ktoś przechwytuje twoje połączenie. Skontaktuj się z https://opac.app/en/support/ jeśli problem powtarza się na wielu różnych sieciach WiFi. </string>
     <string name="default_account_name">Nienazwane konto</string>
     <string name="title_activity_account_list">Konta</string>
     <string name="account_add">Dodaj konto</string>

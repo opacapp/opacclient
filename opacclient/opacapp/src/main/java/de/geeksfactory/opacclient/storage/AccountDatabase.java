@@ -30,7 +30,8 @@ public class AccountDatabase extends SQLiteOpenHelper {
 
     private static AccountDatabase instance;
     public static final String[] COLUMNS = {"id", "bib", "label", "name",
-            "password", "cached", "pendingFees", "validUntil", "warning", "passwordValid"};
+            "password", "cached", "pendingFees", "validUntil", "warning", "passwordValid",
+            "supportPolicyHintSeen"};
     public static final String[] COLUMNS_ALARMS = {"id", "deadline", "media", "alarm",
             "notified", "finished"};
     // CHANGE THIS
@@ -45,7 +46,7 @@ public class AccountDatabase extends SQLiteOpenHelper {
     public static final String TABLENAME_RESERVATION = "accountdata_reservations";
     public static final String TABLENAME_ALARMS = "alarms";
     private static final String DATABASE_NAME = "accounts.db";
-    private static final int DATABASE_VERSION = 27; // REPLACE ONUPGRADE IF YOU
+    private static final int DATABASE_VERSION = 28; // REPLACE ONUPGRADE IF YOU
 
     private AccountDatabase(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -62,7 +63,7 @@ public class AccountDatabase extends SQLiteOpenHelper {
                 + "accounts ( id integer primary key autoincrement,"
                 + " bib text," + " label text," + " name text,"
                 + " password text," + " cached integer," + " pendingFees text,"
-                + " validUntil text," + " warning text," + " passwordValid integer" + ");");
+                + " validUntil text," + " warning text," + " passwordValid integer," + " supportPolicyHintSeen integer" + ");");
         db.execSQL(
                 "create table " + "accountdata_lent (" + "id integer primary key autoincrement," +
                         "account integer," + "title text," + "author text," + "format text," +
@@ -214,6 +215,9 @@ public class AccountDatabase extends SQLiteOpenHelper {
             db.execSQL("alter table accountdata_lent add column cover text");
             db.execSQL("alter table accountdata_reservations add column mediatype text");
             db.execSQL("alter table accountdata_reservations add column cover text");
+        }
+        if (oldVersion < 28) {
+            db.execSQL("alter table accounts add column supportPolicyHintSeen integer");
         }
     }
 

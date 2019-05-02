@@ -110,14 +110,14 @@
     <string name="share_notsupported">In dieser Bibliothek nicht unterstützt</string>
     <string name="unsupported">Funktion nicht unterstützt</string>
     <string name="account_unsupported_api">Diese Funktion wird in deiner Bibliothek noch nicht unterstützt. Tut uns leid \uD83D\uDE1E</string>
-    <string name="account_unsupported_api_opensource"><![CDATA[Diese Funktion wird in deiner Bibliothek noch nicht unterstützt. Tut uns leid \uD83D\uDE1E<br><br>Wenn du programmieren kannst und etwas Zeit hast, kannst du uns vielleicht helfen, diese Funktion zu implementieren. Weitere Informationen bekommst du bei <a href="https://github.com/opacapp/opacclient">GitHub</a> unter von uns per <a href="mailto:info@opacapp.net">E-Mail</a>]]>.</string>
+    <string name="account_unsupported_api_opensource"><![CDATA[Diese Funktion wird in deiner Bibliothek noch nicht unterstützt. Tut uns leid \uD83D\uDE1E<br><br>Wenn du programmieren kannst und etwas Zeit hast, kannst du uns vielleicht helfen, diese Funktion zu implementieren. Weitere Informationen bekommst du bei <a href="https://github.com/opacapp/opacclient">GitHub</a>]]>.</string>
     <string name="write_mail">E-Mail schreiben</string>
     <string name="info_error">Die zusätzlichen Informationen der Bibliothek konnten nicht abgerufen werden.</string>
     <string name="info_unsupported">Deine Bücherei stellt keine zusätzlichen Informationen bereit, die wir dir anzeigen könnten.</string>
     <string name="connection_error_detail">Der Aufbau einer Verbindung zum Bibliotheksserver ist fehlgeschlagen. Prüfe, ob eine Verbindung zum Internet verfügbar ist. Möglicherweise hat auch der Bibliotheksserver ein Problem oder die App konnte seine Antwort nicht auswerten.</string>
     <string name="connection_error_detail_nre">Der Aufbau einer Verbindung zum Bibliotheksserver ist fehlgeschlagen. Prüfe, ob eine Verbindung zum Internet verfügbar ist. Wenn ja, hat wahrscheinlich der Bibliotheksserver ein Problem.</string>
     <string name="retry">Erneut versuchen</string>
-    <string name="connection_error_detail_security">Der Aufbau einer gesicherten Verbindung zum Bibliotheksserver ist fehlgeschlagen. Bitte probiere es erneut. Wenn das Problem fortbesteht, versucht eventuell jemand, die Verbindung abzuhören. Bitte wende dich an info@opacapp.de, wenn das Problem verschiedenen WLAN-Netzwerken fortbesteht.</string>
+    <string name="connection_error_detail_security">Der Aufbau einer gesicherten Verbindung zum Bibliotheksserver ist fehlgeschlagen. Bitte probiere es erneut. Wenn das Problem fortbesteht, versucht eventuell jemand, die Verbindung abzuhören. Bitte wende dich an https://opac.app/de/support/, wenn das Problem verschiedenen WLAN-Netzwerken fortbesteht.</string>
     <string name="default_account_name">Unbenanntes Konto</string>
     <string name="title_activity_account_list">Konten</string>
     <string name="account_add">Konto hinzufügen</string>
@@ -232,6 +232,8 @@
     <string name="website_url">www.opacapp.de</string>
     <string name="developer">Entwickler</string>
     <string name="feedback">Feedback</string>
+    <string name="support">Support</string>
+	<string name="support_url">https://opac.app/de/support/</string>
     <string name="rate">Applikation bewerten</string>
     <string name="other">Sonstiges</string>
     <string name="source">Quellcode</string>
@@ -310,7 +312,7 @@
     <string name="library_config_last_update">Zuletzt aktualisiert %s</string>
     <string name="library_config_last_update_never">Noch keine Daten geladen</string>
     <string name="library_config_reset">Bibliotheksdaten vom letzten App-Update wiederhergestellt.</string>
-    <string name="library_removed_error">Ihre Bibliothek wurde leider aus der App entfernt. Gründe dafür könnten sein, dass die Bibliothek zu einer anderen Software gewechselt hat, mit der die App nicht kompatibel ist, oder, dass die Bibliothek uns direkt kontaktiert hat und explizit darum gebeten hat, aus der App entfernt zu werden. Für weitere Informationen können Sie uns unter info@opacapp.net kontaktieren.</string>
+    <string name="library_removed_error">Ihre Bibliothek wurde leider aus der App entfernt. Gründe dafür könnten sein, dass die Bibliothek zu einer anderen Software gewechselt hat, mit der die App nicht kompatibel ist, oder, dass die Bibliothek uns direkt kontaktiert hat und explizit darum gebeten hat, aus der App entfernt zu werden. Für weitere Informationen können Sie uns unter https://opac.app/en/support/ kontaktieren.</string>
     <string name="account_anonymous">anonym (nur Suche)</string>
     <string name="account_with_credentials">mit Zugangsdaten (Suche und Konto)</string>
     <string name="please_enter_password">Bitte geben Sie Ihr Passwort ein.</string>
@@ -334,4 +336,8 @@
     <string name="load_covers_mobile_data_on">Buchcover werden geladen und angezeigt, wenn verfügbar</string>
     <string name="load_covers_mobile_data_off">Buchcover werden nur über WLAN geladen</string>
     <string name="account_ptr_hint">Sie können auch die Liste nach unten ziehen, um die Daten neu zu laden.</string>
+    <string name="support_policy_hint">Für die Nutzung dieser Bibliothek in der App gibt es
+        keinen kostenfreien Support, eventuelle zukünftige Fehler werden wahrscheinlich nicht
+        behoben.</string>
+    <string name="support_policy_more_info">mehr Infos</string>
 </resources>

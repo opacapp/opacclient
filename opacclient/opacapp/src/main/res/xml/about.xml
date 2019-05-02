@@ -13,20 +13,12 @@
             android:key="website"
             android:summary="@string/website_url"
             android:title="@string/website"/>
-        <Preference
-            android:key="developer"
-            android:summary="Raphael Michel · www.raphaelmichel.de"
-            android:title="@string/developer"/>
     </PreferenceCategory>
-    <PreferenceCategory android:title="@string/feedback">
+    <PreferenceCategory android:title="@string/support">
         <Preference
-            android:key="feedback"
-            android:summary="info@opacapp.de"
-            android:title="@string/feedback"/>
-        <Preference
-            android:key="rate_play"
-            android:summary="Google Play"
-            android:title="@string/rate"/>
+            android:key="support"
+			android:summary="@string/support_url"
+            android:title="@string/support"/>
     </PreferenceCategory>
     <PreferenceCategory android:title="@string/other">
         <Preference
