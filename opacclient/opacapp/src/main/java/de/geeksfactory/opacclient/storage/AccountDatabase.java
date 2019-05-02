@@ -63,7 +63,7 @@ public class AccountDatabase extends SQLiteOpenHelper {
                 + "accounts ( id integer primary key autoincrement,"
                 + " bib text," + " label text," + " name text,"
                 + " password text," + " cached integer," + " pendingFees text,"
-                + " validUntil text," + " warning text," + " passwordValid integer" + ");");
+                + " validUntil text," + " warning text," + " passwordValid integer," + " supportPolicyHintSeen integer" + ");");
         db.execSQL(
                 "create table " + "accountdata_lent (" + "id integer primary key autoincrement," +
                         "account integer," + "title text," + "author text," + "format text," +
