@@ -326,6 +326,7 @@ open class Koha : OkHttpBaseApi() {
     }
 
     var reservationFeeConfirmed = false
+    val ACTION_ITEM = 101
 
     override fun reservation(item: DetailedItem, account: Account, useraction: Int, selection: String?): OpacApi.ReservationResult {
         try {
@@ -334,9 +335,12 @@ open class Koha : OkHttpBaseApi() {
             return OpacApi.ReservationResult(OpacApi.MultiStepResult.Status.ERROR, e.message)
         }
 
+        var selectedCopy: String? = null
+
         when (useraction) {
             0 -> reservationFeeConfirmed = false
             OpacApi.MultiStepResult.ACTION_CONFIRMATION -> reservationFeeConfirmed = true
+            ACTION_ITEM -> selectedCopy = selection
         }
 
         var doc = httpGet("$baseurl/cgi-bin/koha/opac-reserve.pl?biblionumber=${item.id}", ENCODING).html
@@ -364,13 +368,29 @@ open class Koha : OkHttpBaseApi() {
         body.add("single_bib", item.id)
         body.add("expiration_date_${item.id}", "")
         body.add("reqtype_${item.id}", "any")
-        val checkbox = doc.select("input[name=checkitem_${item.id}]").first()
-        if (checkbox != null) {
-            if (checkbox["value"] == "any") {
+        val checkboxes = doc.select("input[name=checkitem_${item.id}]")
+        if (checkboxes.size > 0) {
+            if (checkboxes.first()["value"] == "any") {
                 body.add("checkitem_${item.id}", "any")
             } else {
-                // TODO: copy selection (but it also works like this)
-                body.add("checkitem_${item.id}", "any")
+                if (selectedCopy != null) {
+                    body.add("checkitem_${item.id}", selectedCopy)
+                } else {
+                    // copy selection
+                    return OpacApi.ReservationResult(
+                            OpacApi.MultiStepResult.Status.SELECTION_NEEDED,
+                            doc.select(".copiesrow caption").text).apply {
+                        actionIdentifier = ACTION_ITEM
+                        setSelection(doc.select(".copiesrow tr:has(td)").map { row ->
+                            HashMap<String, String>().apply {
+                                put("key", row.select("input").first()["value"])
+                                put("value", "${row.select(".itype").text}\n${row.select("" +
+                                ".homebranch").text}\n${row.select(".information").text}")
+                            }
+                        })
+                    }
+                }
+
             }
         }
 
