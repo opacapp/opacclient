@@ -107,14 +107,14 @@
     <string name="share_wait">Veuillez patienter pendant le chargement des détails.</string>
     <string name="share_notsupported">Non pris en charge dans cette bibliothèque.</string>
     <string name="unsupported">Non supporté</string>
-    <string name="account_unsupported_api">Cette fonctionnalité n\'est pas encore prise en charge dans votre bibliothèque. Nous pourrions utiliser l\'aide des lecteurs comme vous pour la déployer. Si vous êtes intéressés pour participer, envoyez-nous un courrier à info@opacapp.de</string>
+    <string name="account_unsupported_api">Cette fonctionnalité n\'est pas encore prise en charge dans votre bibliothèque. Nous pourrions utiliser l\'aide des lecteurs comme vous pour la déployer. Si vous êtes intéressés pour participer, envoyez-nous un courrier à https://opac.app/en/support/</string>
     <string name="write_mail">Écrire un e-mail</string>
     <string name="info_error">Impossible de charger des informations supplémentaires pour cette bibliothèque.</string>
     <string name="info_unsupported">Nous n\'avons aucune information à afficher sur cette bibliothèque.</string>
     <string name="connection_error_detail">La connexion au serveur de la bibliothèque a échoué. Veuillez vérifier votre connexion Internet. Si le problème persiste, il peut y avoir eu un problème sur le serveur de la bibliothèque, ou l\'application n\'a pas pu analyser la réponse du serveur.</string>
     <string name="connection_error_detail_nre">La connexion au serveur de la bibliothèque a échoué. Veuillez vérifier votre connexion Internet. Si le problème persiste, il se peut qu\'il y ait eu un problème sur le serveur de la bibliothèque.</string>
     <string name="retry">Réessayer</string>
-    <string name="connection_error_detail_security">La connexion sécurisée au serveur de la bibliothèque a échoué. Veuillez réessayer. Si le problème persiste, il se peut que quelqu\'un intercepte votre connexion. Veuillez contacter info@opacapp.de si le problème persiste sur plusieurs réseaux WiFi.</string>
+    <string name="connection_error_detail_security">La connexion sécurisée au serveur de la bibliothèque a échoué. Veuillez réessayer. Si le problème persiste, il se peut que quelqu\'un intercepte votre connexion. Veuillez contacter https://opac.app/en/support/ si le problème persiste sur plusieurs réseaux WiFi.</string>
     <string name="default_account_name">Compte sans nom</string>
     <string name="title_activity_account_list">Comptes</string>
     <string name="account_add">Ajouter un compte</string>
@@ -302,7 +302,7 @@ les frais de votre bibliothèque.</string>
     <string name="library_config_last_update">Dernière mise à jour %s</string>
     <string name="library_config_last_update_never">Aucune donnée téléchargée pour l\'instant</string>
     <string name="library_config_reset">Restaurer les données de bibliothèque à partir de la dernière mise à jour de l\'application.</string>
-    <string name="library_removed_error">Malheureusement, la bibliothèque que vous utilisez a été supprimée de l\'application. La raison peut être que la bibliothèque est passée à un nouveau système logiciel avec lequel l\'application n\'est pas compatible, ou que la bibliothèque nous a contacté et a déclaré explicitement qu\'elle souhaitait être retirée de l\'application. Vous pouvez nous contacter à info@opacapp.net pour en savoir plus.</string>
+    <string name="library_removed_error">Malheureusement, la bibliothèque que vous utilisez a été supprimée de l\'application. La raison peut être que la bibliothèque est passée à un nouveau système logiciel avec lequel l\'application n\'est pas compatible, ou que la bibliothèque nous a contacté et a déclaré explicitement qu\'elle souhaitait être retirée de l\'application. Vous pouvez nous contacter à https://opac.app/en/support/ pour en savoir plus.</string>
     <string name="account_anonymous">anonyme (recherche uniquement)</string>
     <string name="account_with_credentials">avec les informations d\'identification (recherche et compte)</string>
     <string name="please_enter_password">Veuillez entrer votre mot de passe.</string>

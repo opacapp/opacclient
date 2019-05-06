@@ -20,7 +20,7 @@ Contributing
 
 If you want to test a new library or edit the configuration of an existing one, you can simply do that change in the `src/main/assets/bibs` directory and run the app. Just be sure not to run the `downloadJson` Gradle task afterwards because it will revert all your changes.
 
-When you are done testing your change, please contact us at [info@opacapp.net](mailto:info@opacapp.net) or via a GitHub issue so that we can update the file on the server to push it to all app users.
+When you are done testing your change, please contact us via a GitHub issue so that we can update the file on the server to push it to all app users.
 
 Accessing the API directly
 --------------------------
@@ -52,4 +52,4 @@ Rules for using the API
 
 The library configuration files available through the API are subject to the same [license](https://github.com/opacapp/opacclient/blob/master/LICENSE) as the app itself.
 
-While there are no special security measures in place to restrict access to the API, please contact us at [info@opacapp.net](mailto:info@opacapp.net) if you would like to use it in a way that is not directly related to the development of the app and/or is expected to cause a considerable amount of traffic on our server, e.g. through frequent polling.
+While there are no special security measures in place to restrict access to the API, please contact us at [legal@opac.app](mailto:legal@opac.app) if you would like to use it in a way that is not directly related to the development of the app and/or is expected to cause a considerable amount of traffic on our server, e.g. through frequent polling.

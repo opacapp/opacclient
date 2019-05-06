@@ -778,6 +778,7 @@ public class SISIS extends OkHttpBaseApi implements OpacApi {
 
         try {
             result.setId(doc.select("#bibtip_id").text().trim());
+            if ("".equals(result.getId())) result.setId(null);
         } catch (Exception ex) {
             ex.printStackTrace();
         }
@@ -801,6 +802,12 @@ public class SISIS extends OkHttpBaseApi implements OpacApi {
                     reservationlinks.add(href.split("\\?")[1]);
                 }
             }
+        }
+        if (result.getId() == null && doc.select("#permalink_link").size() > 0) {
+            // another way of ID retrieval, seen in Augsburg
+            String[] link = doc.select("#permalink_link").first().text().split("/");
+            String katkey = link[link.length - 1];
+            result.setId(katkey);
         }
         if (reservationlinks.size() == 1) {
             result.setReservable(true);

@@ -112,7 +112,7 @@
     <string name="connection_error_detail">図書館サーバーに接続できませんでした。インターネット接続を確認してください。問題が続く場合、図書館サーバーに問題があるか、アプリがサーバーのレスポンスを解析できませんでした。</string>
     <string name="connection_error_detail_nre">図書館サーバーに接続できませんでした。インターネット接続を確認してください。問題が続く場合、図書館サーバーに障害が発生している可能性があります。</string>
     <string name="retry">再試行</string>
-    <string name="connection_error_detail_security">図書館サーバーに安全な接続ができませんでした。再度実行してください。問題が続く場合、誰かが接続を傍受している可能性があります。複数の WiFi ネットワークで問題が続く場合は、info@opacapp.de までご連絡ください。</string>
+    <string name="connection_error_detail_security">図書館サーバーに安全な接続ができませんでした。再度実行してください。問題が続く場合、誰かが接続を傍受している可能性があります。複数の WiFi ネットワークで問題が続く場合は、https://opac.app/en/support/ までご連絡ください。</string>
     <string name="default_account_name">アカウントが指定されていません</string>
     <string name="title_activity_account_list">アカウント</string>
     <string name="account_add">アカウントを追加</string>
@@ -291,7 +291,7 @@
     <string name="library_config_update_failure">図書館データを更新できませんでした。</string>
     <string name="library_config_last_update">最終更新 %s</string>
     <string name="library_config_reset">最後のアプリのアップデートから図書館データを復元しました。</string>
-    <string name="library_removed_error">残念ながら、あなたが使用している図書館がアプリから削除されました。この理由は、図書館がアプリと互換性のない新しいソフトウェアシステムに切り替えたか、図書館が私たちに連絡し、明示的に、アプリから削除したいと述べたことが考えられます。詳細は info@opacapp.net までご連絡ください。</string>
+    <string name="library_removed_error">残念ながら、あなたが使用している図書館がアプリから削除されました。この理由は、図書館がアプリと互換性のない新しいソフトウェアシステムに切り替えたか、図書館が私たちに連絡し、明示的に、アプリから削除したいと述べたことが考えられます。詳細は ihttps://opac.app/en/support までご連絡ください。</string>
     <string name="account_anonymous">匿名 (検索のみ)</string>
     <string name="account_with_credentials">資格情報で (検索とアカウント)</string>
     <string name="please_enter_password">パスワードを入力してください。</string>

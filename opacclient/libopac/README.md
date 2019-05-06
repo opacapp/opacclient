@@ -17,7 +17,7 @@ The following resources should help you to get started on using libopac:
 * [Javadoc](https://opac.app/doc/) (not always up-to-date)
 * [JSON configuration files](https://github.com/opacapp/opacclient/blob/master/opacclient/opacapp/LIBRARY_DATA.md) for more than 1000 public and university libraries
 
-If you have any questions, you can write us an email at [info@opacapp.net](mailto:info@opacapp.net).
+If you have any questions, please open an issue on GitHub.
 
 ### Usage on Android
 

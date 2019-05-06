@@ -58,29 +58,11 @@
             android:id="@+id/container"
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
-            android:layout_above="@+id/rlSuggestLibrary"
+            android:layout_alignParentBottom="true"
             android:layout_alignParentLeft="true"
             android:layout_below="@id/llLocate">
 
         </FrameLayout>
-
-        <RelativeLayout
-            android:id="@+id/rlSuggestLibrary"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:layout_alignParentLeft="true"
-            android:layout_marginTop="8dp">
-
-            <TextView
-                android:id="@+id/tvSuggestLibrary"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:background="@drawable/suggest_library_background"
-                android:padding="8dp"
-                android:text="@string/suggest_library"/>
-
-        </RelativeLayout>
 
     </RelativeLayout>
 </LinearLayout>
