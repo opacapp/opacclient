@@ -314,6 +314,8 @@ open class NetBiblio : OkHttpBaseApi() {
     }
 
     var reservationItemId: String? = null
+    var reservationAdressId: String? = null
+
     override fun reservation(item: DetailedItem, account: Account, useraction: Int,
                              selection: String?): OpacApi.ReservationResult? {
         if (useraction == 0 && selection == null) {
@@ -343,6 +345,7 @@ open class NetBiblio : OkHttpBaseApi() {
                 doc = httpGet("$opacUrl/account/makeitemreservation?selectedItems%5B0%5D=$selection", ENCODING).html
             }
             val warning = doc.select("label:has(.wo-reservationkind[checked])").text
+            reservationAdressId = doc.select("input[name=AddessId]").first().`val`()
             return OpacApi.ReservationResult(OpacApi.MultiStepResult.Status.CONFIRMATION_NEEDED).apply {
                 details = listOf(arrayOf(warning))
             }
