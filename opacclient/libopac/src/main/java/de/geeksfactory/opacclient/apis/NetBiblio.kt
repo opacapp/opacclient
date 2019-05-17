@@ -337,7 +337,11 @@ open class NetBiblio : OkHttpBaseApi() {
             }
         } else if (useraction == 1) {
             reservationItemId = selection
-            val doc = httpGet("$opacUrl/account/makeitemreservation?selectedItems%5B0%5D=$selection", ENCODING).html
+            var doc = httpGet("$opacUrl/account/makeitemreservation?selectedItems%5B0%5D=$selection", ENCODING).html
+            if (doc.select("#wo-frm-login").count() > 0) {
+                login(account);
+                doc = httpGet("$opacUrl/account/makeitemreservation?selectedItems%5B0%5D=$selection", ENCODING).html
+            }
             val warning = doc.select("label:has(.wo-reservationkind[checked])").text
             return OpacApi.ReservationResult(OpacApi.MultiStepResult.Status.CONFIRMATION_NEEDED).apply {
                 details = listOf(arrayOf(warning))
