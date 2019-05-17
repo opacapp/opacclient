@@ -133,6 +133,7 @@ public class Library implements Comparable<Library> {
         if (displayName != null) json.put("displayname", displayName);
         json.put("_plus_store_url", replacedby);
         json.put("_notice_text", notice_text);
+        json.put("_support_contract", supportContract);
         if (geo != null) {
             JSONArray geoJson = new JSONArray();
             geoJson.put(geo[0]);

@@ -126,13 +126,13 @@ open class NetBiblio : OkHttpBaseApi() {
                 }
                 body.add("Request.SearchTerm", q.value)
                 body.add("Request.SearchField", q.key)
-                textCount ++
+                textCount++
             }
         }
         if (textCount == 0) {
             body.add("Request.SearchTerm", "")
             body.add("Request.SearchField", "W")
-            textCount ++
+            textCount++
         }
         if (textCount == 1) {
             body.add("Request.SearchOperator", "AND")
@@ -215,7 +215,7 @@ open class NetBiblio : OkHttpBaseApi() {
         val entityIds = elements.map { it["data-entityid"] }
         val divibibIds = elements.map { it["data-divibibid"] }
 
-        val ids = entityIds.zip(divibibIds).map { (eid, did) -> "$eid#$did/0"}.joinToString(",")
+        val ids = entityIds.zip(divibibIds).map { (eid, did) -> "$eid#$did/0" }.joinToString(",")
 
         val body = FormBody.Builder()
                 .add("format", "icon")
@@ -255,8 +255,8 @@ open class NetBiblio : OkHttpBaseApi() {
             cover = doc.select(".wo-cover").first()?.attr("src")
             details.addAll(doc.select("#lst-fullview_Details .wo-list-label").toList()
                     .associateWith { label -> label.nextElementSibling() }
-                    .map {
-                        entry -> Detail(entry.key.text, entry.value.text)
+                    .map { entry ->
+                        Detail(entry.key.text, entry.value.text)
                     })
 
             val description = doc.select(
@@ -275,13 +275,13 @@ open class NetBiblio : OkHttpBaseApi() {
             val df = DateTimeFormat.forPattern("dd.MM.yyyy")
             copies = doc.select(".wo-grid-table > tbody > tr").map { row ->
                 Copy().apply {
-                    row.select("td").zip(copyCols).forEach {(col, header) ->
+                    row.select("td").zip(copyCols).forEach { (col, header) ->
                         val headers = header.split(" / ").map { it.trim() }
                         val data = col.html().split("<br>").map { it.html.text.trim() }
-                        headers.zip(data).forEach {
-                            (type, data) ->
+                        headers.zip(data).forEach { (type, data) ->
                             when (type) {
-                                "" -> {}
+                                "" -> {
+                                }
                                 "Bibliothek" -> branch = data
                                 "Aktueller Standort" -> location = data
                                 "Signatur", "Call number", "Cote" -> shelfmark = data
@@ -314,6 +314,8 @@ open class NetBiblio : OkHttpBaseApi() {
     }
 
     var reservationItemId: String? = null
+    var reservationAdressId: String? = null
+
     override fun reservation(item: DetailedItem, account: Account, useraction: Int,
                              selection: String?): OpacApi.ReservationResult? {
         if (useraction == 0 && selection == null) {
@@ -337,8 +339,13 @@ open class NetBiblio : OkHttpBaseApi() {
             }
         } else if (useraction == 1) {
             reservationItemId = selection
-            val doc = httpGet("$opacUrl/account/makeitemreservation?selectedItems%5B0%5D=$selection", ENCODING).html
+            var doc = httpGet("$opacUrl/account/makeitemreservation?selectedItems%5B0%5D=$selection", ENCODING).html
+            if (doc.select("#wo-frm-login").count() > 0) {
+                login(account);
+                doc = httpGet("$opacUrl/account/makeitemreservation?selectedItems%5B0%5D=$selection", ENCODING).html
+            }
             val warning = doc.select("label:has(.wo-reservationkind[checked])").text
+            reservationAdressId = doc.select("input[name=AddessId]").first().`val`()
             return OpacApi.ReservationResult(OpacApi.MultiStepResult.Status.CONFIRMATION_NEEDED).apply {
                 details = listOf(arrayOf(warning))
             }
@@ -412,7 +419,7 @@ open class NetBiblio : OkHttpBaseApi() {
 
     override fun account(account: Account): AccountData? {
         if (!initialised) start()
-        login(account)
+        val login = login(account)
 
         val overview = httpGet("$opacUrl/account", ENCODING).html
         val resDoc = httpGet("$opacUrl/account/reservations", ENCODING).html
@@ -420,6 +427,12 @@ open class NetBiblio : OkHttpBaseApi() {
         val lentDoc = httpGet("$opacUrl/account/circulations", ENCODING).html
 
         return AccountData(account.id).apply {
+            if (overview.select(".alert").size > 0) {
+                warning = overview.select(".alert").first().ownText()
+            } else if (login.select(".alert").size > 0) {
+                warning = login.select(".alert").first().ownText()
+            }
+
             val feesString = overview.select("a[href$=fees]").first()?.text
             pendingFees = if (feesString != null) {
                 Regex("\\(([^\\)]+)\\)").find(feesString)?.groups?.get(1)?.value
@@ -520,7 +533,7 @@ open class NetBiblio : OkHttpBaseApi() {
         login(account)
     }
 
-    private fun login(account: Account) {
+    private fun login(account: Account): Document {
         val formData = FormBody.Builder()
                 .add("ReturnUrl", "${URL(opacUrl).path}/account")
                 .add("Username", account.name)
@@ -528,9 +541,10 @@ open class NetBiblio : OkHttpBaseApi() {
                 .add("SaveUsernameInCookie", "false")
                 .add("StayLoggedIn", "false").build()
         val doc = httpPost("$opacUrl/account/login", formData, ENCODING).html
-        if (doc.select(".alert").size > 0) {
+        if (doc.select(".alert").size > 0 && doc.select(".wo-com-account-overview").size < 1) {
             throw OpacApi.OpacErrorException(doc.select(".alert").first().ownText())
         }
+        return doc
     }
 
     override fun getShareUrl(id: String, title: String?): String? {
