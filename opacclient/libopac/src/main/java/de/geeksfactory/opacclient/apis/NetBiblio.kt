@@ -353,7 +353,7 @@ open class NetBiblio : OkHttpBaseApi() {
             val body = FormBody.Builder()
                     .add("ItemID", reservationItemId!!)
                     .add("ReservationKind", "Reservation") // TODO: maybe don't hardcode this
-                    .add("AddessId" /* sic! */, "26305") //TODO: don't hardcode this
+                    .add("AddessId" /* sic! */, reservationAdressId)
                     .build()
 
             val doc = httpPost("$opacUrl/account/makeitemreservation", body, ENCODING).html
