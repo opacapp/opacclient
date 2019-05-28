@@ -1,8 +1,6 @@
 language: android
 jdk: oraclejdk8
 sudo: false
-before_install:
-  - yes | sdkmanager "platforms;android-27"
 android:
     components:
         - tools
