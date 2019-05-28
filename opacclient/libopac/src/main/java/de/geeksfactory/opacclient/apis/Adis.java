@@ -787,6 +787,8 @@ public class Adis extends ApacheBaseApi implements OpacApi {
         throw new UnsupportedOperationException();
     }
 
+    private String reservation_selection = null;
+
     @Override
     public ReservationResult reservation(DetailedItem item, Account account,
             int useraction, String selection) throws IOException {
@@ -797,6 +799,10 @@ public class Adis extends ApacheBaseApi implements OpacApi {
 
         if (selection != null && selection.equals("")) {
             selection = null;
+        }
+
+        if (!"confirmed".equals(selection)) {
+            reservation_selection = selection;
         }
 
         if (s_pageform == null) {
@@ -858,13 +864,16 @@ public class Adis extends ApacheBaseApi implements OpacApi {
                         e1.getMessage());
             }
 
-            if (useraction == 0 && selection == null) {
+            if (useraction == 0 && selection == null && doc.select("#F23 .klein").size() > 0) {
+                // fee warning (old versions)
+                // in new versions, #F23 is a selection if you want a notification when the
+                // reservation is ready.
                 res = new ReservationResult(
                         MultiStepResult.Status.CONFIRMATION_NEEDED);
                 List<String[]> details = new ArrayList<>();
                 details.add(new String[]{doc.select("#F23").text()});
                 res.setDetails(details);
-            } else if (doc.select("#AUSGAB_1").size() > 0 && (selection == null || "confirmed".equals(selection))) {
+            } else if (doc.select("#AUSGAB_1").size() > 0 && reservation_selection == null) {
                 List<Map<String, String>> sel = new ArrayList<>();
                 for (Element opt : doc.select("#AUSGAB_1 option")) {
                     if (opt.text().trim().length() > 0) {
@@ -879,15 +888,15 @@ public class Adis extends ApacheBaseApi implements OpacApi {
                         "#AUSGAB_1").first().parent().select("span").text());
                 res.setSelection(sel);
             } else if (doc.select("#FSET01 select[name=select$0]").size() > 0 &&
-                    (selection == null || !selection.contains("_SEP_"))) {
+                    (reservation_selection == null || !reservation_selection.contains("_SEP_"))) {
                 // Munich: "Benachrichtigung mit E-Mail"
                 List<Map<String, String>> sel = new ArrayList<>();
                 for (Element opt : doc.select("select[name=select$0] option")) {
                     if (opt.text().trim().length() > 0) {
                         Map<String, String> selopt = new HashMap<>();
                         selopt.put("value", opt.text());
-                        if (selection != null) {
-                            selopt.put("key", opt.val() + "_SEP_" + selection);
+                        if (reservation_selection != null) {
+                            selopt.put("key", opt.val() + "_SEP_" + reservation_selection);
                         } else {
                             selopt.put("key", opt.val());
                         }
@@ -898,20 +907,23 @@ public class Adis extends ApacheBaseApi implements OpacApi {
                         MultiStepResult.Status.SELECTION_NEEDED, doc.select(
                         "#FSET01 select[name=select$0]").first().parent().select("span").text());
                 res.setSelection(sel);
-            } else if (selection != null || doc.select("#AUSGAB_1").size() == 0) {
-                if (doc.select("#AUSGAB_1").size() > 0 && selection != null) {
-                    if (selection.contains("_SEP_")) {
-                        doc.select("#AUSGAB_1").attr("value", selection.split("_SEP_")[1]);
+            } else if (reservation_selection != null || doc.select("#AUSGAB_1").size() == 0) {
+                if (doc.select("#AUSGAB_1").size() > 0 && reservation_selection != null) {
+                    if (reservation_selection.contains("_SEP_")) {
+                        doc.select("#AUSGAB_1")
+                           .attr("value", reservation_selection.split("_SEP_")[1]);
                     } else {
-                        doc.select("#AUSGAB_1").attr("value", selection);
+                        doc.select("#AUSGAB_1").attr("value", reservation_selection);
                     }
                 }
-                if (doc.select("#FSET01 select[name=select$0]").size() > 0 && selection != null) {
-                    if (selection.contains("_SEP_")) {
+                if (doc.select("#FSET01 select[name=select$0]").size() > 0 &&
+                        reservation_selection != null) {
+                    if (reservation_selection.contains("_SEP_")) {
                         doc.select("#FSET01 select[name=select$0]")
-                           .attr("value", selection.split("_SEP_")[0]);
+                           .attr("value", reservation_selection.split("_SEP_")[0]);
                     } else {
-                        doc.select("#FSET01 select[name=select$0]").attr("value", selection);
+                        doc.select("#FSET01 select[name=select$0]")
+                           .attr("value", reservation_selection);
                     }
                 }
                 if (doc.select("#BENJN_1").size() > 0) {
@@ -956,20 +968,29 @@ public class Adis extends ApacheBaseApi implements OpacApi {
 
                     if (doc.select("input[name=textButton]").attr("value")
                            .contains("kostenpflichtig bestellen")) {
-                        // Munich
-                        form = new ArrayList<>();
-                        for (Element input : doc.select("input, select")) {
-                            if (!"image".equals(input.attr("type"))
-                                    && !"submit".equals(input.attr("type"))
-                                    && !"checkbox".equals(input.attr("type"))
-                                    && !"".equals(input.attr("name"))) {
-                                form.add(new BasicNameValuePair(input.attr("name"),
-                                        input.attr("value")));
+                        // Munich, new version in Zürich
+                        if (doc.select(".achtung").size() > 0 && !"confirmed".equals(selection)) {
+                            // fee warning (new version in Zürich 2019/06)
+                            res = new ReservationResult(
+                                    MultiStepResult.Status.CONFIRMATION_NEEDED);
+                            List<String[]> details = new ArrayList<>();
+                            details.add(new String[]{doc.select(".achtung").text()});
+                            res.setDetails(details);
+                        } else {
+                            form = new ArrayList<>();
+                            for (Element input : doc.select("input, select")) {
+                                if (!"image".equals(input.attr("type"))
+                                        && !"submit".equals(input.attr("type"))
+                                        && !"checkbox".equals(input.attr("type"))
+                                        && !"".equals(input.attr("name"))) {
+                                    form.add(new BasicNameValuePair(input.attr("name"),
+                                            input.attr("value")));
+                                }
                             }
+                            form.add(new BasicNameValuePair("textButton",
+                                    doc.select("input[name=textButton]").first().attr("value")));
+                            doc = htmlPost(opac_url + ";jsessionid=" + s_sid, form);
                         }
-                        form.add(new BasicNameValuePair("textButton",
-                                doc.select("input[name=textButton]").first().attr("value")));
-                        doc = htmlPost(opac_url + ";jsessionid=" + s_sid, form);
                     }
 
                     if (doc.select(".message h1").size() > 0) {
