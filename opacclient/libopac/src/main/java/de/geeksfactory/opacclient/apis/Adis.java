@@ -550,6 +550,11 @@ public class Adis extends ApacheBaseApi implements OpacApi {
                 }
             }
 
+            if (tr.select(".rList_cover img").size() > 0) {
+                String url = tr.select(".rList_cover img").first().absUrl("data-src");
+                if (url != null && !url.equals("")) res.setCover(url);
+            }
+
             results.add(res);
             nr++;
         }
