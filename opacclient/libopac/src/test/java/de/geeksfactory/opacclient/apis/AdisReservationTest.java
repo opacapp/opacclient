@@ -65,32 +65,23 @@ public class AdisReservationTest extends BaseHtmlTest {
 
     @Test
     public void testReservation() throws JSONException, IOException, OpacApi.OpacErrorException {
-        testReservationStep1();
-        String selection = testReservationStep2();
-        selection = testReservationStep3(selection);
-        testReservationStep4(selection);
+        String selection = testReservationStep1();
+        selection = testReservationStep2(selection);
+        testReservationStep3(selection);
     }
 
-    public void testReservationStep1() throws OpacApi.OpacErrorException, JSONException,
+    public String testReservationStep1() throws OpacApi.OpacErrorException, JSONException,
             IOException {
         String html = readResource(DIR + file + "_1.html");
         doReturn(Jsoup.parse(html)).when(adis).htmlPost(anyString(), any(List.class));
         OpacApi.ReservationResult result = adis.reservation(item, null, 0, null);
-        assertEquals(result.status, OpacApi.MultiStepResult.Status.CONFIRMATION_NEEDED);
-    }
-
-    public String testReservationStep2() throws OpacApi.OpacErrorException, JSONException,
-            IOException {
-        String html = readResource(DIR + file + "_1.html");
-        doReturn(Jsoup.parse(html)).when(adis).htmlPost(anyString(), any(List.class));
-        OpacApi.ReservationResult result = adis.reservation(item, null, 0, "confirmed");
         assertEquals(result.status, OpacApi.MultiStepResult.Status.SELECTION_NEEDED);
         assertTrue(result.selection.size() > 0);
         assertEquals(result.message, "Ausgabeort");
         return result.selection.get(0).get("key");
     }
 
-    public String testReservationStep3(String selection)
+    public String testReservationStep2(String selection)
             throws OpacApi.OpacErrorException, JSONException,
             IOException {
         String html = readResource(DIR + file + "_1.html");
@@ -104,7 +95,7 @@ public class AdisReservationTest extends BaseHtmlTest {
         return result.selection.get(1).get("key");
     }
 
-    public void testReservationStep4(String selection)
+    public void testReservationStep3(String selection)
             throws OpacApi.OpacErrorException, JSONException,
             IOException {
         String html = readResource(DIR + file + "_2.html");
