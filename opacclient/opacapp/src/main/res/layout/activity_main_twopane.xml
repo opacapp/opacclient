@@ -53,7 +53,7 @@
 
             <LinearLayout
                 android:id="@+id/twopane_wrapper_inner"
-                android:layout_width="720dp"
+                android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:animateLayoutChanges="true"
                 android:baselineAligned="false"
