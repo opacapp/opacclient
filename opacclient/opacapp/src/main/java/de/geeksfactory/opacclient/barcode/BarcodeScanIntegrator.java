@@ -102,6 +102,13 @@ public class BarcodeScanIntegrator {
         } catch (NameNotFoundException e) {
         }
         try {
+            pm.getPackageInfo("de.t_dankworth.secscanqr", 0);
+            initiate_scan_zxing();
+            return;
+        } catch (NameNotFoundException e) {
+        }
+
+        try {
             pm.getPackageInfo("la.droid.qr", 0);
             initiate_scan_qrdroid();
             return;
@@ -189,7 +196,7 @@ public class BarcodeScanIntegrator {
     private String findTargetAppPackage(Intent intent) {
         final Collection<String> targetApplications = list(
                 "com.google.zxing.client.android", "com.srowen.bs.android",
-                "com.srowen.bs.android.simple");
+                "com.srowen.bs.android.simple", "de.t_dankworth.secscanqr");
         PackageManager pm = ctx.getPackageManager();
         List<ResolveInfo> availableApps = pm.queryIntentActivities(intent,
                 PackageManager.MATCH_DEFAULT_ONLY);
