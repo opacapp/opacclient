@@ -376,22 +376,34 @@ open class Koha : OkHttpBaseApi() {
                 if (selectedCopy != null) {
                     body.add("checkitem_${item.id}", selectedCopy)
                 } else {
+                    val copies = doc.select(".copiesrow tr:has(td)")
+                    val activeCopies = copies.filter { row ->
+                        !row.select("input").first().hasAttr("disabled")
+                    }
+                    if (copies.size > 0 && activeCopies.isEmpty()) {
+                        return OpacApi.ReservationResult(
+                                OpacApi.MultiStepResult.Status.ERROR,
+                                stringProvider.getString(StringProvider.NO_COPY_RESERVABLE)
+                        )
+                    }
                     // copy selection
                     return OpacApi.ReservationResult(
                             OpacApi.MultiStepResult.Status.SELECTION_NEEDED,
                             doc.select(".copiesrow caption").text).apply {
                         actionIdentifier = ACTION_ITEM
-                        setSelection(doc.select(".copiesrow tr:has(td)").map { row ->
+                        setSelection(activeCopies.map { row ->
                             HashMap<String, String>().apply {
                                 put("key", row.select("input").first()["value"])
                                 put("value", "${row.select(".itype").text}\n${row.select("" +
-                                ".homebranch").text}\n${row.select(".information").text}")
+                                        ".homebranch").text}\n${row.select(".information").text}")
                             }
                         })
                     }
                 }
-
             }
+        } else if (doc.select(".holdrow .alert").size > 0) {
+            return OpacApi.ReservationResult(OpacApi.MultiStepResult.Status.ERROR,
+                    doc.select(".holdrow .alert").text().trim())
         }
 
         doc = httpPost("$baseurl/cgi-bin/koha/opac-reserve.pl", body.build(), ENCODING).html
