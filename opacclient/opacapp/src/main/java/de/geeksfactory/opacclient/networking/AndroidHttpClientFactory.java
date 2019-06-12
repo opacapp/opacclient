@@ -22,7 +22,6 @@ package de.geeksfactory.opacclient.networking;
 import android.os.Build;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.security.KeyStore;
 import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
@@ -42,16 +41,7 @@ public class AndroidHttpClientFactory extends HttpClientFactory {
     @Override
     public KeyStore getKeyStore()
             throws KeyStoreException, IOException, CertificateException, NoSuchAlgorithmException {
-        KeyStore trustStore = KeyStore.getInstance("BKS");
-
-        final InputStream in = Thread.currentThread().getContextClassLoader()
-                                     .getResourceAsStream("ssl_trust_store.bks");
-        try {
-            trustStore.load(in, "ro5eivoijeeGohsh0daequoo5Zeepaen".toCharArray());
-        } finally {
-            in.close();
-        }
-        return trustStore;
+        return super.getKeyStore();
     }
 
     @Override
