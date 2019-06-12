@@ -29,7 +29,6 @@ import java.security.NoSuchAlgorithmException;
 import java.security.cert.CertificateException;
 
 import de.geeksfactory.opacclient.OpacClient;
-import de.geeksfactory.opacclient.R;
 import de.geeksfactory.opacclient.utils.DebugTools;
 import okhttp3.Cache;
 import okhttp3.OkHttpClient;
@@ -44,8 +43,9 @@ public class AndroidHttpClientFactory extends HttpClientFactory {
     public KeyStore getKeyStore()
             throws KeyStoreException, IOException, CertificateException, NoSuchAlgorithmException {
         KeyStore trustStore = KeyStore.getInstance("BKS");
-        final InputStream in = OpacClient.context.getResources().openRawResource(
-                R.raw.ssl_trust_store);
+
+        final InputStream in = Thread.currentThread().getContextClassLoader()
+                                     .getResourceAsStream("ssl_trust_store.bks");
         try {
             trustStore.load(in, "ro5eivoijeeGohsh0daequoo5Zeepaen".toCharArray());
         } finally {

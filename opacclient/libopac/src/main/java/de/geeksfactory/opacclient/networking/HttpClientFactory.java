@@ -70,7 +70,7 @@ import okhttp3.TlsVersion;
 public class HttpClientFactory {
 
     public String user_agent;
-    public String ssl_store_path = "../res/raw/ssl_trust_store.bks";
+    public String ssl_store_path = "ssl_trust_store.bks";
     private KeyStore trust_store;
 
     /**
@@ -96,12 +96,7 @@ public class HttpClientFactory {
     protected KeyStore getKeyStore()
             throws KeyStoreException, IOException, CertificateException, NoSuchAlgorithmException {
         final KeyStore trustStore = KeyStore.getInstance("BKS");
-        InputStream in;
-        try {
-            in = new FileInputStream(ssl_store_path);
-        } catch (FileNotFoundException e) {
-            in = new FileInputStream("../opacapp/src/main/res/raw/ssl_trust_store.bks");
-        }
+        InputStream in = Thread.currentThread().getContextClassLoader().getResourceAsStream(ssl_store_path);
         try {
             trustStore.load(in,
                     "ro5eivoijeeGohsh0daequoo5Zeepaen".toCharArray());
