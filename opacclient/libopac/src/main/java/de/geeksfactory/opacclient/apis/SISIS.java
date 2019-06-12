@@ -791,7 +791,6 @@ public class SISIS extends OkHttpBaseApi implements OpacApi {
                 String key = hrefq.get("katkey");
                 if (key != null) {
                     result.setId(key);
-                    break;
                 }
             }
 
