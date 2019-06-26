@@ -18,7 +18,7 @@ f.close()
 
 bcjar = "tools/bcprov-jdk15on-146.jar"
 
-truststore = "opacclient/opacapp/src/main/res/raw/ssl_trust_store.bks"
+truststore = "opacclient/libopac/src/main/resources/ssl_trust_store.bks"
 storepass = "ro5eivoijeeGohsh0daequoo5Zeepaen"
 
 alias = host + "-" + subprocess.check_output("openssl x509 -inform PEM -subject_hash -noout -in " + cert_file, shell=True).decode('utf-8')

@@ -1,6 +1,6 @@
 #!/bin/bash
 BCJAR=tools/bcprov-jdk15on-146.jar
-TRUSTSTORE=opacclient/opacapp/src/main/res/raw/ssl_trust_store.bks
+TRUSTSTORE=opacclient/libopac/src/main/resources/ssl_trust_store.bks
 STOREPASS=ro5eivoijeeGohsh0daequoo5Zeepaen
 
 DOMAINS=$(keytool -list \

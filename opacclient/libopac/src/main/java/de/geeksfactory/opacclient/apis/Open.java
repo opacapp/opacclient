@@ -378,6 +378,8 @@ public class Open extends OkHttpBaseApi implements OpacApi {
             String subtitle = catalogueContent.select("span[id$=LblSubTitleValue]").text();
             String author = catalogueContent.select("span[id$=LblAuthorValue]").text();
             String year = catalogueContent.select("span[id$=LblProductionYearValue]").text();
+            String mediumIdentifier =
+                    catalogueContent.select("span[id$=LblMediumIdentifierValue]").text();
             String series = catalogueContent.select("span[id$=LblSeriesValue]").text();
 
             // Some libraries, such as Bern, have labels but no <span id="..Value"> tags
@@ -405,6 +407,7 @@ public class Open extends OkHttpBaseApi implements OpacApi {
             text.append("<b>").append(title).append("</b>");
             if (!subtitle.equals("")) text.append("<br/>").append(subtitle);
             if (!author.equals("")) text.append("<br/>").append(author);
+            if (!mediumIdentifier.equals("")) text.append("<br/>").append(mediumIdentifier);
             if (!year.equals("")) text.append("<br/>").append(year);
             if (!series.equals("")) text.append("<br/>").append(series);
 
