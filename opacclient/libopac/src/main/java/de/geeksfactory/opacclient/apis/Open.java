@@ -310,7 +310,8 @@ public class Open extends OkHttpBaseApi implements OpacApi {
     protected SearchRequestResult parse_search(Document doc, int page) throws OpacErrorException {
         searchResultDoc = doc;
 
-        if (doc.select("#Label1, span[id$=LblInfoMessage]").size() > 0) {
+        if (doc.select("#Label1, span[id$=LblInfoMessage], .oclc-searchmodule-searchresult > " +
+                ".boldText").size() > 0) {
             String message = doc.select("#Label1, span[id$=LblInfoMessage], .boldText").text();
             if (message.contains("keine Treffer")) {
                 return new SearchRequestResult(new ArrayList<>(), 0, 1, page);
