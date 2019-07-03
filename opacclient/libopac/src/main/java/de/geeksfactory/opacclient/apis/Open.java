@@ -1051,7 +1051,7 @@ public class Open extends OkHttpBaseApi implements OpacApi {
      */
     protected static MultipartBody.Builder formData(FormElement form, String submitName) {
         MultipartBody.Builder data = new MultipartBody.Builder();
-        data.setType(MediaType.parse("multipart/form-data; charset=utf-8"));
+        data.setType(MediaType.parse("multipart/form-data"));
 
         // data.setCharset somehow breaks everything in Bern.
         // data.addTextBody breaks utf-8 characters in select boxes in Bern
