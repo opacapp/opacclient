@@ -89,10 +89,11 @@ public abstract class CoverDownloadTask extends AsyncTask<Void, Integer, CoverHo
 
         response = httpClient.execute(httpget);
 
+        HttpEntity entity = response.getEntity();
         if (response.getStatusLine().getStatusCode() >= 400) {
+            EntityUtils.consume(entity);
             return null;
         }
-        HttpEntity entity = response.getEntity();
         return EntityUtils.toByteArray(entity);
     }
 
@@ -141,7 +142,7 @@ public abstract class CoverDownloadTask extends AsyncTask<Void, Integer, CoverHo
 
                 try {
                     byte[] bytes = getImage();
-                    if (rejectImages.contains(Base64.encodeBytes(bytes)) || bytes == null) {
+                    if (bytes == null || rejectImages.contains(Base64.encodeBytes(bytes))) {
                         // OPACs like VuFind have a 'cover proxy' that returns a simple GIF with
                         // the text 'no image available' if no cover was found. We don't want to
                         // display this image but the media type,
