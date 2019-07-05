@@ -91,7 +91,7 @@ public abstract class CoverDownloadTask extends AsyncTask<Void, Integer, CoverHo
 
         HttpEntity entity = response.getEntity();
         if (response.getStatusLine().getStatusCode() >= 400) {
-            EntityUtils.consume(entity);
+            HttpUtils.consume(entity);
             return null;
         }
         return EntityUtils.toByteArray(entity);
