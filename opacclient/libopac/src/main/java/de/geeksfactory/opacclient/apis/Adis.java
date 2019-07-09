@@ -462,7 +462,7 @@ public class Adis extends OkHttpBaseApi implements OpacApi {
 
             Matcher matcher = patId.matcher(tr.select(selector_link).first().attr("href"));
             if (matcher.matches()) {
-                res.setId(matcher.group(1));
+                res.setId(page + "!" + matcher.group(1));
             }
 
             for (Element img : tr.select(selector_img)) {
@@ -573,6 +573,14 @@ public class Adis extends OkHttpBaseApi implements OpacApi {
         } else if (id.startsWith("http")) {
             return parseResult(id, htmlGet(id));
         } else {
+            if (id.contains("!")) {
+                String[] split = id.split("!");
+                int page = Integer.parseInt(split[0]);
+                // first go to correct page
+                searchGetPage(page);
+                id = split[1];
+            }
+
             nvpairs = s_pageform;
             int i = 0;
             List<Integer> indexes = new ArrayList<>();
