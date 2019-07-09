@@ -377,6 +377,14 @@ public class Adis extends OkHttpBaseApi implements OpacApi {
         return "$Toolbar_0";
     }
 
+    private String getNameToolbarFirstPage(Document doc) throws OpacErrorException {
+        if (doc.select("[id^=Toolbar_][title*=Beginn], [id^=Toolbar_][title*=Anfang]").size() > 0) {
+            return doc.select("[id^=Toolbar_][title*=Begin], [id^=Toolbar_][title*=Anfang]").first()
+                      .attr("name");
+        }
+        throw new OpacErrorException(stringProvider.getString(StringProvider.INTERNAL_ERROR));
+    }
+
     private SearchRequestResult parse_search(Document doc, int page)
             throws OpacErrorException, SingleResultFound {
 
@@ -584,21 +592,30 @@ public class Adis extends OkHttpBaseApi implements OpacApi {
             // Yep, two times.
         }
 
-        // Reset
+        reset(doc);
+
+        return parseResult(id, doc);
+    }
+
+    private void reset(Document doc) throws IOException, OpacErrorException {
+        // performs a "reset", i.e. goes back from a detail page to the first page of the results
+        // list
+        List<NameValuePair> nvpairs;
         updatePageform(doc);
 
+        // Reset step 1: go back to results list
         nvpairs = s_pageform;
         String name = getNameToolbarTrefferListe(doc);
         nvpairs.add(new BasicNameValuePair(name + ".x", "1"));
         nvpairs.add(new BasicNameValuePair(name + ".y", "1"));
         parse_search_wrapped(htmlPost(opac_url + ";jsessionid=" + s_sid, nvpairs), 1);
 
+        // Reset step 2: go back to first page
         nvpairs = s_pageform;
-        nvpairs.add(new BasicNameValuePair("$Toolbar_3.x", "1"));
-        nvpairs.add(new BasicNameValuePair("$Toolbar_3.y", "1"));
+        name = getNameToolbarFirstPage(doc);
+        nvpairs.add(new BasicNameValuePair(name + ".x", "1"));
+        nvpairs.add(new BasicNameValuePair(name + ".y", "1"));
         parse_search_wrapped(htmlPost(opac_url + ";jsessionid=" + s_sid, nvpairs), 1);
-
-        return parseResult(id, doc);
     }
 
     DetailedItem parseResult(String id, Document doc)
@@ -984,20 +1001,9 @@ public class Adis extends OkHttpBaseApi implements OpacApi {
         }
 
         // Reset
-        updatePageform(doc);
         try {
-            nvpairs = s_pageform;
-            nvpairs.add(new BasicNameValuePair("$Toolbar_1.x", "1"));
-            nvpairs.add(new BasicNameValuePair("$Toolbar_1.y", "1"));
-            parse_search_wrapped(htmlPost(opac_url + ";jsessionid=" + s_sid, nvpairs),
-                    1);
-            nvpairs = s_pageform;
-            nvpairs.add(new BasicNameValuePair("$Toolbar_3.x", "1"));
-            nvpairs.add(new BasicNameValuePair("$Toolbar_3.y", "1"));
-            parse_search_wrapped(htmlPost(opac_url + ";jsessionid=" + s_sid, nvpairs),
-                    1);
+            reset(doc);
         } catch (OpacErrorException e) {
-            // TODO Auto-generated catch block
             e.printStackTrace();
         }
 
