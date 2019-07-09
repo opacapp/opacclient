@@ -1396,8 +1396,15 @@ public class Adis extends OkHttpBaseApi implements OpacApi {
                             .attr("value")));
                 }
             }
-            form.add(new BasicNameValuePair("$Toolbar_0.x", "1"));
-            form.add(new BasicNameValuePair("$Toolbar_0.y", "1"));
+
+            // find back button
+            if (rdoc.select("#Toolbar_0").size() > 0) {
+                form.add(new BasicNameValuePair("$Toolbar_0.x", "1"));
+                form.add(new BasicNameValuePair("$Toolbar_0.y", "1"));
+            } else if (rdoc.select("input[value=Abbrechen]").size() > 0) {
+                Element button = rdoc.select("input[value=Abbrechen]").first();
+                form.add(new BasicNameValuePair(button.attr("name"), button.attr("value")));
+            }
             htmlPost(opac_url + ";jsessionid=" + s_sid, form);
         }
 
