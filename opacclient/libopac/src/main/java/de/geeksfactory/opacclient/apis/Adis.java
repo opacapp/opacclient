@@ -382,7 +382,11 @@ public class Adis extends OkHttpBaseApi implements OpacApi {
             return doc.select("[id^=Toolbar_][title*=Begin], [id^=Toolbar_][title*=Anfang]").first()
                       .attr("name");
         }
-        throw new OpacErrorException(stringProvider.getString(StringProvider.INTERNAL_ERROR));
+        if (stringProvider != null) { // null is check just to make tests work!
+            throw new OpacErrorException(stringProvider.getString(StringProvider.INTERNAL_ERROR));
+        } else {
+            return "";
+        }
     }
 
     private SearchRequestResult parse_search(Document doc, int page)
