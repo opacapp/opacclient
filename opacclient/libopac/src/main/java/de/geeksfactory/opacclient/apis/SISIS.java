@@ -181,6 +181,8 @@ public class SISIS extends OkHttpBaseApi implements OpacApi {
         defaulttypes.put("Spiel für Xbox One", MediaType.GAME_CONSOLE_XBOX );
         defaulttypes.put("Zeitung / Zeitschrift", MediaType.NEWSPAPER );
         defaulttypes.put("Zeitschriftenheft", MediaType.MAGAZINE );
+        defaulttypes.put("???de.alt.img.label.CD???", MediaType.CD );
+        defaulttypes.put("???de.alt.img.label.BD???", MediaType.BLURAY );
     }
 
     protected final long SESSION_LIFETIME = 1000 * 60 * 3;
