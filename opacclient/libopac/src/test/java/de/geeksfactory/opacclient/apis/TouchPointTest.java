@@ -1,12 +1,12 @@
 package de.geeksfactory.opacclient.apis;
 
-import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.junit.Before;
 import org.junit.Test;
 
 import java.io.IOException;
 
 import de.geeksfactory.opacclient.objects.Account;
+import okhttp3.FormBody;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
@@ -38,7 +38,7 @@ public class TouchPointTest extends BaseHtmlTest {
                 .when(touchPoint).httpGet(eq(touchPoint.opac_url + "/login.do"), anyString());
         doReturn(readResource("/touchpoint/login/errorMessage.html"))
                 .when(touchPoint)
-                .httpPost(eq(touchPoint.opac_url + "/login.do"), any(UrlEncodedFormEntity.class),
+                .httpPost(eq(touchPoint.opac_url + "/login.do"), any(FormBody.class),
                         anyString());
 
         try {
@@ -59,7 +59,7 @@ public class TouchPointTest extends BaseHtmlTest {
                 .when(touchPoint).httpGet(eq(touchPoint.opac_url + "/login.do"), anyString());
         doReturn(readResource("/touchpoint/login/loggedIn.html"))
                 .when(touchPoint)
-                .httpPost(eq(touchPoint.opac_url + "/login.do"), any(UrlEncodedFormEntity.class),
+                .httpPost(eq(touchPoint.opac_url + "/login.do"), any(FormBody.class),
                         anyString());
 
 
@@ -74,7 +74,7 @@ public class TouchPointTest extends BaseHtmlTest {
                 .when(touchPoint).httpGet(eq(touchPoint.opac_url + "/login.do"), anyString());
         doReturn(readResource("/touchpoint/login/alertMessage.html"))
                 .when(touchPoint)
-                .httpPost(eq(touchPoint.opac_url + "/login.do"), any(UrlEncodedFormEntity.class),
+                .httpPost(eq(touchPoint.opac_url + "/login.do"), any(FormBody.class),
                         anyString());
         doReturn(readResource("/touchpoint/login/loggedIn.html"))
                 .when(touchPoint)
@@ -92,7 +92,7 @@ public class TouchPointTest extends BaseHtmlTest {
                 .when(touchPoint).httpGet(eq(touchPoint.opac_url + "/login.do"), anyString());
         doReturn(readResource("/touchpoint/login/warningMessage.html"))
                 .when(touchPoint)
-                .httpPost(eq(touchPoint.opac_url + "/login.do"), any(UrlEncodedFormEntity.class),
+                .httpPost(eq(touchPoint.opac_url + "/login.do"), any(FormBody.class),
                         anyString());
         doReturn(readResource("/touchpoint/login/loggedIn.html"))
                 .when(touchPoint)
