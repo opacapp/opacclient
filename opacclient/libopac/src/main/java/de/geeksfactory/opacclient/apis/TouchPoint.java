@@ -22,7 +22,6 @@
 package de.geeksfactory.opacclient.apis;
 
 import org.apache.http.NameValuePair;
-import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.utils.URLEncodedUtils;
 import org.apache.http.message.BasicNameValuePair;
 import org.joda.time.format.DateTimeFormat;
@@ -72,11 +71,13 @@ import de.geeksfactory.opacclient.searchfields.DropdownSearchField;
 import de.geeksfactory.opacclient.searchfields.SearchField;
 import de.geeksfactory.opacclient.searchfields.SearchQuery;
 import de.geeksfactory.opacclient.searchfields.TextSearchField;
+import okhttp3.FormBody;
+import okhttp3.HttpUrl;
 
 /**
  * OpacApi implementation for Web Opacs of the TouchPoint product, developed by OCLC.
  */
-public class TouchPoint extends ApacheBaseApi implements OpacApi {
+public class TouchPoint extends OkHttpBaseApi implements OpacApi {
     protected static HashMap<String, MediaType> defaulttypes = new HashMap<>();
 
     static {
@@ -771,12 +772,12 @@ public class TouchPoint extends ApacheBaseApi implements OpacApi {
                 } else if (reservationDoc.select("form[action*=requestItem.do]").size() == 1) {
                     // seen at UB Erlangen-Nürnberg
                     result.setReservable(true);
-                    List<NameValuePair> nvps = new ArrayList<>();
                     Element form = reservationDoc.select("form[action*=requestItem.do]").first();
+                    HttpUrl.Builder url = HttpUrl.parse(form.absUrl("action")).newBuilder();
                     for (Element input : form.select("input[type=hidden]")) {
-                        nvps.add(new BasicNameValuePair(input.attr("name"), input.val()));
+                        url.addQueryParameter(input.attr("name"), input.val());
                     }
-                    result.setReservation_info(form.absUrl("action") + buildHttpGetParams(nvps));
+                    result.setReservation_info(url.build().toString());
                 }
             } catch (Exception e) {
                 e.printStackTrace();
@@ -874,12 +875,10 @@ public class TouchPoint extends ApacheBaseApi implements OpacApi {
             return new ReservationResult(MultiStepResult.Status.ERROR, doc
                     .select(".message-error").first().text());
         }
-        List<NameValuePair> nameValuePairs = new ArrayList<>();
-        nameValuePairs
-                .add(new BasicNameValuePair("methodToCall", "requestItem"));
+        FormBody.Builder body = new FormBody.Builder();
+        body.add("methodToCall", "requestItem");
         if (doc.select("#newNeedBeforeDate").size() > 0) {
-            nameValuePairs.add(new BasicNameValuePair("newNeedBeforeDate", doc
-                    .select("#newNeedBeforeDate").val()));
+            body.add("newNeedBeforeDate", doc.select("#newNeedBeforeDate").val());
         }
         if (doc.select("select[name=location] option").size() > 0
                 && selection == null) {
@@ -898,14 +897,13 @@ public class TouchPoint extends ApacheBaseApi implements OpacApi {
             reusehtml_reservation = html;
             return res;
         } else if (selection != null) {
-            nameValuePairs.add(new BasicNameValuePair("location", selection));
+            body.add("location", selection);
             reusehtml_reservation = null;
         }
 
-        nameValuePairs.add(new BasicNameValuePair("submited", "true")); // sic!
+        body.add("submited", "true"); // sic!
 
-        html = httpPost(opac_url + "/requestItem.do", new UrlEncodedFormEntity(
-                nameValuePairs), ENCODING);
+        html = httpPost(opac_url + "/requestItem.do", body.build(), ENCODING);
         doc = Jsoup.parse(html);
         if (doc.select(".message-confirm").size() > 0) {
             return new ReservationResult(MultiStepResult.Status.OK);
@@ -1278,7 +1276,7 @@ public class TouchPoint extends ApacheBaseApi implements OpacApi {
     protected LoginResponse login(Account acc) throws OpacErrorException, IOException {
         String html;
 
-        List<NameValuePair> nameValuePairs = new ArrayList<>();
+        FormBody.Builder body = new FormBody.Builder();
 
         try {
             httpGet(opac_url + "/login.do", ENCODING);
@@ -1286,14 +1284,12 @@ public class TouchPoint extends ApacheBaseApi implements OpacApi {
             e1.printStackTrace();
         }
 
-        nameValuePairs.add(new BasicNameValuePair("username", acc.getName()));
-        nameValuePairs
-                .add(new BasicNameValuePair("password", acc.getPassword()));
-        nameValuePairs.add(new BasicNameValuePair("CSId", CSId));
-        nameValuePairs.add(new BasicNameValuePair("methodToCall", "submit"));
-        nameValuePairs.add(new BasicNameValuePair("login_action", "Login"));
-        html = httpPost(opac_url + "/login.do", new UrlEncodedFormEntity(
-                nameValuePairs), ENCODING);
+        body.add("username", acc.getName());
+        body.add("password", acc.getPassword());
+        body.add("CSId", CSId);
+        body.add("methodToCall", "submit");
+        body.add("login_action", "Login");
+        html = httpPost(opac_url + "/login.do", body.build(), ENCODING);
 
         Document doc = Jsoup.parse(html);
 
