@@ -1,10 +1,6 @@
 package de.geeksfactory.opacclient.apis;
 
-import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
-import org.apache.http.client.entity.UrlEncodedFormEntity;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.client.methods.HttpPost;
 import org.apache.http.message.BasicNameValuePair;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
@@ -16,7 +12,6 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
 import java.io.IOException;
-import java.io.InterruptedIOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.util.ArrayList;
@@ -34,9 +29,7 @@ import java.util.regex.Pattern;
 import de.geeksfactory.opacclient.apis.OpacApi.MultiStepResult.Status;
 import de.geeksfactory.opacclient.i18n.StringProvider;
 import de.geeksfactory.opacclient.networking.HttpClientFactory;
-import de.geeksfactory.opacclient.networking.HttpUtils;
 import de.geeksfactory.opacclient.networking.NotReachableException;
-import de.geeksfactory.opacclient.networking.SSLSecurityException;
 import de.geeksfactory.opacclient.objects.Account;
 import de.geeksfactory.opacclient.objects.AccountData;
 import de.geeksfactory.opacclient.objects.Copy;
@@ -54,8 +47,9 @@ import de.geeksfactory.opacclient.searchfields.DropdownSearchField;
 import de.geeksfactory.opacclient.searchfields.SearchField;
 import de.geeksfactory.opacclient.searchfields.SearchQuery;
 import de.geeksfactory.opacclient.searchfields.TextSearchField;
+import okhttp3.FormBody;
 
-public class Adis extends ApacheBaseApi implements OpacApi {
+public class Adis extends OkHttpBaseApi implements OpacApi {
 
     protected static final String DATA_DISABLE_WHEN_SELECTED = "disableWhenSelected";
     protected static final String DATA_GROUP = "group";
@@ -137,41 +131,7 @@ public class Adis extends ApacheBaseApi implements OpacApi {
                     + s_requestCount;
         }
 
-        HttpGet httpget = new HttpGet(cleanUrl(url));
-        HttpResponse response;
-
-        try {
-            response = http_client.execute(httpget);
-        } catch (javax.net.ssl.SSLPeerUnverifiedException e) {
-            throw new SSLSecurityException(e.getMessage());
-        } catch (javax.net.ssl.SSLException e) {
-            // Can be "Not trusted server certificate" or can be a
-            // aborted/interrupted handshake/connection
-            if (e.getMessage().contains("timed out")
-                    || e.getMessage().contains("reset by")) {
-                e.printStackTrace();
-                throw new NotReachableException(e.getMessage());
-            } else {
-                throw new SSLSecurityException(e.getMessage());
-            }
-        } catch (InterruptedIOException e) {
-            e.printStackTrace();
-            throw new NotReachableException(e.getMessage());
-        } catch (IOException e) {
-            if (e.getMessage() != null && e.getMessage().contains("Request aborted")) {
-                e.printStackTrace();
-                throw new NotReachableException(e.getMessage());
-            } else {
-                throw e;
-            }
-        }
-
-        if (response.getStatusLine().getStatusCode() >= 400) {
-            throw new NotReachableException(response.getStatusLine().getReasonPhrase());
-        }
-        String html = convertStreamToString(response.getEntity().getContent(),
-                getDefaultEncoding());
-        HttpUtils.consume(response.getEntity());
+        String html = httpGet(url, getDefaultEncoding());
         Document doc = Jsoup.parse(html);
         Pattern patRequestCount = Pattern.compile("requestCount=([0-9]+)");
         for (Element a : doc.select("a")) {
@@ -186,8 +146,6 @@ public class Adis extends ApacheBaseApi implements OpacApi {
 
     public Document htmlPost(String url, List<NameValuePair> data)
             throws IOException {
-        HttpPost httppost = new HttpPost(cleanUrl(url));
-
         boolean rcf = false;
         for (NameValuePair nv : data) {
             if (nv.getName().equals("requestCount")) {
@@ -199,42 +157,12 @@ public class Adis extends ApacheBaseApi implements OpacApi {
             data.add(new BasicNameValuePair("requestCount", s_requestCount + ""));
         }
 
-        httppost.setEntity(new UrlEncodedFormEntity(data, getDefaultEncoding()));
-        HttpResponse response;
-
-        try {
-            response = http_client.execute(httppost);
-
-        } catch (javax.net.ssl.SSLPeerUnverifiedException e) {
-            throw new SSLSecurityException(e.getMessage());
-        } catch (javax.net.ssl.SSLException e) {
-            // Can be "Not trusted server certificate" or can be a
-            // aborted/interrupted handshake/connection
-            if (e.getMessage().contains("timed out")
-                    || e.getMessage().contains("reset by")) {
-                e.printStackTrace();
-                throw new NotReachableException(e.getMessage());
-            } else {
-                throw new SSLSecurityException(e.getMessage());
-            }
-        } catch (InterruptedIOException e) {
-            e.printStackTrace();
-            throw new NotReachableException(e.getMessage());
-        } catch (IOException e) {
-            if (e.getMessage() != null && e.getMessage().contains("Request aborted")) {
-                e.printStackTrace();
-                throw new NotReachableException(e.getMessage());
-            } else {
-                throw e;
-            }
+        FormBody.Builder builder = new FormBody.Builder();
+        for (NameValuePair nvp : data) {
+            builder.add(nvp.getName(), nvp.getValue());
         }
 
-        if (response.getStatusLine().getStatusCode() >= 400) {
-            throw new NotReachableException(response.getStatusLine().getReasonPhrase());
-        }
-        String html = convertStreamToString(response.getEntity().getContent(),
-                getDefaultEncoding());
-        HttpUtils.consume(response.getEntity());
+        String html = httpPost(url, builder.build(), getDefaultEncoding());
         Document doc = Jsoup.parse(html);
         Pattern patRequestCount = Pattern
                 .compile(".*requestCount=([0-9]+)[^0-9].*");
@@ -449,6 +377,18 @@ public class Adis extends ApacheBaseApi implements OpacApi {
         return "$Toolbar_0";
     }
 
+    private String getNameToolbarFirstPage(Document doc) throws OpacErrorException {
+        if (doc.select("[id^=Toolbar_][title*=Beginn], [id^=Toolbar_][title*=Anfang]").size() > 0) {
+            return doc.select("[id^=Toolbar_][title*=Begin], [id^=Toolbar_][title*=Anfang]").first()
+                      .attr("name");
+        }
+        if (stringProvider != null) { // null is check just to make tests work!
+            throw new OpacErrorException(stringProvider.getString(StringProvider.INTERNAL_ERROR));
+        } else {
+            return "";
+        }
+    }
+
     private SearchRequestResult parse_search(Document doc, int page)
             throws OpacErrorException, SingleResultFound {
 
@@ -526,7 +466,7 @@ public class Adis extends ApacheBaseApi implements OpacApi {
 
             Matcher matcher = patId.matcher(tr.select(selector_link).first().attr("href"));
             if (matcher.matches()) {
-                res.setId(matcher.group(1));
+                res.setId(page + "!" + matcher.group(1));
             }
 
             for (Element img : tr.select(selector_img)) {
@@ -637,6 +577,14 @@ public class Adis extends ApacheBaseApi implements OpacApi {
         } else if (id.startsWith("http")) {
             return parseResult(id, htmlGet(id));
         } else {
+            if (id.contains("!")) {
+                String[] split = id.split("!");
+                int page = Integer.parseInt(split[0]);
+                // first go to correct page
+                searchGetPage(page);
+                id = split[1];
+            }
+
             nvpairs = s_pageform;
             int i = 0;
             List<Integer> indexes = new ArrayList<>();
@@ -656,21 +604,30 @@ public class Adis extends ApacheBaseApi implements OpacApi {
             // Yep, two times.
         }
 
-        // Reset
+        reset(doc);
+
+        return parseResult(id, doc);
+    }
+
+    private void reset(Document doc) throws IOException, OpacErrorException {
+        // performs a "reset", i.e. goes back from a detail page to the first page of the results
+        // list
+        List<NameValuePair> nvpairs;
         updatePageform(doc);
 
+        // Reset step 1: go back to results list
         nvpairs = s_pageform;
         String name = getNameToolbarTrefferListe(doc);
         nvpairs.add(new BasicNameValuePair(name + ".x", "1"));
         nvpairs.add(new BasicNameValuePair(name + ".y", "1"));
         parse_search_wrapped(htmlPost(opac_url + ";jsessionid=" + s_sid, nvpairs), 1);
 
+        // Reset step 2: go back to first page
         nvpairs = s_pageform;
-        nvpairs.add(new BasicNameValuePair("$Toolbar_3.x", "1"));
-        nvpairs.add(new BasicNameValuePair("$Toolbar_3.y", "1"));
+        name = getNameToolbarFirstPage(doc);
+        nvpairs.add(new BasicNameValuePair(name + ".x", "1"));
+        nvpairs.add(new BasicNameValuePair(name + ".y", "1"));
         parse_search_wrapped(htmlPost(opac_url + ";jsessionid=" + s_sid, nvpairs), 1);
-
-        return parseResult(id, doc);
     }
 
     DetailedItem parseResult(String id, Document doc)
@@ -1056,20 +1013,9 @@ public class Adis extends ApacheBaseApi implements OpacApi {
         }
 
         // Reset
-        updatePageform(doc);
         try {
-            nvpairs = s_pageform;
-            nvpairs.add(new BasicNameValuePair("$Toolbar_1.x", "1"));
-            nvpairs.add(new BasicNameValuePair("$Toolbar_1.y", "1"));
-            parse_search_wrapped(htmlPost(opac_url + ";jsessionid=" + s_sid, nvpairs),
-                    1);
-            nvpairs = s_pageform;
-            nvpairs.add(new BasicNameValuePair("$Toolbar_3.x", "1"));
-            nvpairs.add(new BasicNameValuePair("$Toolbar_3.y", "1"));
-            parse_search_wrapped(htmlPost(opac_url + ";jsessionid=" + s_sid, nvpairs),
-                    1);
+            reset(doc);
         } catch (OpacErrorException e) {
-            // TODO Auto-generated catch block
             e.printStackTrace();
         }
 
@@ -1454,8 +1400,15 @@ public class Adis extends ApacheBaseApi implements OpacApi {
                             .attr("value")));
                 }
             }
-            form.add(new BasicNameValuePair("$Toolbar_0.x", "1"));
-            form.add(new BasicNameValuePair("$Toolbar_0.y", "1"));
+
+            // find back button
+            if (rdoc.select("#Toolbar_0").size() > 0) {
+                form.add(new BasicNameValuePair("$Toolbar_0.x", "1"));
+                form.add(new BasicNameValuePair("$Toolbar_0.y", "1"));
+            } else if (rdoc.select("input[value=Abbrechen]").size() > 0) {
+                Element button = rdoc.select("input[value=Abbrechen]").first();
+                form.add(new BasicNameValuePair(button.attr("name"), button.attr("value")));
+            }
             htmlPost(opac_url + ";jsessionid=" + s_sid, form);
         }
 
