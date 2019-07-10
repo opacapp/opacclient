@@ -627,16 +627,14 @@ public class SISIS extends OkHttpBaseApi implements OpacApi {
                         description.append(part[2]);
                     }
                 }
-                if (part.length == 4) {
+                if (part.length == 5 && part[4].contains("purple")) {
+                    sr.setStatus(SearchResult.Status.YELLOW);
+                } else if (part.length >= 4) {
                     if (part[0].equals("span") && part[3].equals("textgruen")) {
                         sr.setStatus(SearchResult.Status.GREEN);
                     } else if (part[0].equals("span")
                             && part[3].equals("textrot")) {
                         sr.setStatus(SearchResult.Status.RED);
-                    }
-                } else if (part.length == 5) {
-                    if (part[4].contains("purple")) {
-                        sr.setStatus(SearchResult.Status.YELLOW);
                     }
                 }
                 if (sr.getStatus() == null) {
