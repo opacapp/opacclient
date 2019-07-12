@@ -163,7 +163,8 @@ public class ResultsAdapter extends ArrayAdapter<SearchResult> {
             ivCover.setImageBitmap(BitmapUtils.bitmapFromBytes(item.getCoverBitmap()));
             ivCover.setVisibility(View.VISIBLE);
             ivCover.setPadding(0, 0, 0, 0);
-            if (item.getType() != null && item.getType() != MediaType.NONE) {
+            if (item.getType() != null && item.getType() != MediaType.NONE
+                    && item.getType() != MediaType.UNKNOWN) {
                 ivType.setImageResource(getResourceByMediaType(item.getType()));
                 ivType.setVisibility(View.VISIBLE);
             } else {
