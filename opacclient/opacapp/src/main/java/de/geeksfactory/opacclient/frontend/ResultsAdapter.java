@@ -33,15 +33,10 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import org.apache.http.client.HttpClient;
-
 import java.util.List;
 
 import de.geeksfactory.opacclient.R;
-import de.geeksfactory.opacclient.apis.ApacheBaseApi;
-import de.geeksfactory.opacclient.apis.BaseApi;
 import de.geeksfactory.opacclient.apis.OpacApi;
-import de.geeksfactory.opacclient.networking.AndroidHttpClientFactory;
 import de.geeksfactory.opacclient.networking.CoverDownloadTask;
 import de.geeksfactory.opacclient.objects.CoverHolder;
 import de.geeksfactory.opacclient.objects.SearchResult;
@@ -157,32 +152,48 @@ public class ResultsAdapter extends ArrayAdapter<SearchResult> {
         TextView tv = (TextView) view.findViewById(R.id.tvResult);
         tv.setText(Html.fromHtml(item.getInnerhtml()));
 
-        ImageView ivType = (ImageView) view.findViewById(R.id.ivType);
+        ImageView ivCover = view.findViewById(R.id.ivCover);
+        ImageView ivType = view.findViewById(R.id.ivType);
 
         PreferenceDataSource pds = new PreferenceDataSource(getContext());
         ConnectivityManager connMgr =
                 (ConnectivityManager) getContext().getSystemService(Context.CONNECTIVITY_SERVICE);
 
         if (item.getCoverBitmap() != null) {
-            ivType.setImageBitmap(BitmapUtils.bitmapFromBytes(item.getCoverBitmap()));
-            ivType.setVisibility(View.VISIBLE);
-            ivType.setPadding(0, 0, 0, 0);
+            ivCover.setImageBitmap(BitmapUtils.bitmapFromBytes(item.getCoverBitmap()));
+            ivCover.setVisibility(View.VISIBLE);
+            ivCover.setPadding(0, 0, 0, 0);
+            if (item.getType() != null && item.getType() != MediaType.NONE) {
+                ivType.setImageResource(getResourceByMediaType(item.getType()));
+                ivType.setVisibility(View.VISIBLE);
+            } else {
+                ivType.setVisibility(View.GONE);
+            }
         } else if ((pds.isLoadCoversOnDataPreferenceSet()
                 || !ConnectivityManagerCompat.isActiveNetworkMetered(connMgr))
                 && item.getCover() != null) {
-            LoadCoverTask lct = new LoadCoverTask(ivType, item);
+            LoadCoverTask lct = new LoadCoverTask(ivCover, ivType, item);
             lct.execute();
-            ivType.setImageResource(R.drawable.ic_loading);
-            ivType.setVisibility(View.VISIBLE);
-            ivType.setPadding(0, 0, 0, 0);
+            ivCover.setImageResource(R.drawable.ic_loading);
+            ivCover.setVisibility(View.VISIBLE);
+            ivCover.setPadding(0, 0, 0, 0);
+            if (item.getType() != null && item.getType() != MediaType.NONE
+                    && item.getType() != MediaType.UNKNOWN) {
+                ivType.setImageResource(getResourceByMediaType(item.getType()));
+                ivType.setVisibility(View.VISIBLE);
+            } else {
+                ivType.setVisibility(View.GONE);
+            }
         } else if (item.getType() != null && item.getType() != MediaType.NONE) {
-            ivType.setImageResource(getResourceByMediaType(item.getType()));
-            ivType.setVisibility(View.VISIBLE);
-            ivType.setPadding(padding8dp, padding8dp, padding8dp, padding8dp);
+            ivCover.setImageResource(getResourceByMediaType(item.getType()));
+            ivCover.setVisibility(View.VISIBLE);
+            ivCover.setPadding(padding8dp, padding8dp, padding8dp, padding8dp);
+            ivType.setVisibility(View.GONE);
         } else {
-            ivType.setVisibility(View.INVISIBLE);
+            ivCover.setVisibility(View.INVISIBLE);
+            ivType.setVisibility(View.GONE);
         }
-        ImageView ivStatus = (ImageView) view.findViewById(R.id.ivStatus);
+        ImageView ivStatus = view.findViewById(R.id.ivStatus);
 
         if (item.getStatus() != null) {
             ivStatus.setVisibility(View.VISIBLE);
@@ -208,24 +219,28 @@ public class ResultsAdapter extends ArrayAdapter<SearchResult> {
     }
 
     public class LoadCoverTask extends CoverDownloadTask {
-        protected ImageView iv;
+        protected ImageView ivCover;
+        protected ImageView ivType;
 
-        public LoadCoverTask(ImageView iv, SearchResult item) {
+        public LoadCoverTask(ImageView ivCover, ImageView ivType, SearchResult item) {
             super(getContext(), item);
-            this.iv = iv;
+            this.ivCover = ivCover;
+            this.ivType = ivType;
         }
 
         @Override
         protected void onPostExecute(CoverHolder result) {
             if (item.getCover() != null && item.getCoverBitmap() != null) {
-                iv.setImageBitmap(BitmapUtils.bitmapFromBytes(item.getCoverBitmap()));
-                iv.setVisibility(View.VISIBLE);
+                ivCover.setImageBitmap(BitmapUtils.bitmapFromBytes(item.getCoverBitmap()));
+                ivCover.setVisibility(View.VISIBLE);
             } else if (item instanceof SearchResult && ((SearchResult) item).getType() != null
                     && ((SearchResult) item).getType() != MediaType.NONE) {
-                iv.setImageResource(getResourceByMediaType(((SearchResult) item).getType()));
-                iv.setVisibility(View.VISIBLE);
+                ivCover.setImageResource(getResourceByMediaType(((SearchResult) item).getType()));
+                ivCover.setPadding(padding8dp, padding8dp, padding8dp, padding8dp);
+                ivCover.setVisibility(View.VISIBLE);
+                ivType.setVisibility(View.GONE);
             } else {
-                iv.setVisibility(View.INVISIBLE);
+                ivCover.setVisibility(View.INVISIBLE);
             }
         }
     }
