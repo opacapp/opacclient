@@ -12,7 +12,7 @@ import de.geeksfactory.opacclient.objects.DetailedItem;
  * For search-only API implementations, i.e. without account support, some abstract method
  * implementations are provided.
  */
-public abstract class ApacheSearchOnlyApi extends ApacheBaseApi {
+public abstract class OkHttpSearchOnlyApi extends OkHttpBaseApi {
 
     @Override
     public final ReservationResult reservation(DetailedItem item, Account account,

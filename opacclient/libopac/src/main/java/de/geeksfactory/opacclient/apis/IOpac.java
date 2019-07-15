@@ -21,10 +21,6 @@
  */
 package de.geeksfactory.opacclient.apis;
 
-import org.apache.http.NameValuePair;
-import org.apache.http.client.entity.UrlEncodedFormEntity;
-import org.apache.http.client.utils.URLEncodedUtils;
-import org.apache.http.message.BasicNameValuePair;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 import org.json.JSONException;
@@ -69,6 +65,8 @@ import de.geeksfactory.opacclient.searchfields.DropdownSearchField;
 import de.geeksfactory.opacclient.searchfields.SearchField;
 import de.geeksfactory.opacclient.searchfields.SearchQuery;
 import de.geeksfactory.opacclient.searchfields.TextSearchField;
+import okhttp3.FormBody;
+import okhttp3.HttpUrl;
 
 /**
  * Implementation of Fleischmann iOpac, including account support Seems to work in all the libraries
@@ -77,7 +75,7 @@ import de.geeksfactory.opacclient.searchfields.TextSearchField;
  * @author Johan von Forstner, 17.09.2013
  */
 
-public class IOpac extends ApacheBaseApi implements OpacApi {
+public class IOpac extends OkHttpBaseApi implements OpacApi {
 
     protected static HashMap<String, MediaType> defaulttypes = new HashMap<>();
 
@@ -128,13 +126,13 @@ public class IOpac extends ApacheBaseApi implements OpacApi {
         }
     }
 
-    protected int addParameters(SearchQuery query, List<NameValuePair> params,
+    protected int addParameters(SearchQuery query, FormBody.Builder params,
             int index) {
         if (query.getValue().equals("")) {
             return index;
         }
 
-        params.add(new BasicNameValuePair(query.getKey(), query.getValue()));
+        params.add(query.getKey(), query.getValue());
         return index + 1;
 
     }
@@ -146,7 +144,7 @@ public class IOpac extends ApacheBaseApi implements OpacApi {
             start();
         }
 
-        List<NameValuePair> params = new ArrayList<>();
+        FormBody.Builder params = new FormBody.Builder();
 
         int index = 0;
         start();
@@ -155,8 +153,8 @@ public class IOpac extends ApacheBaseApi implements OpacApi {
             index = addParameters(query, params, index);
         }
 
-        params.add(new BasicNameValuePair("Anzahl", "10"));
-        params.add(new BasicNameValuePair("pshStart", "Suchen"));
+        params.add("Anzahl", "10");
+        params.add("pshStart", "Suchen");
 
         if (index == 0) {
             throw new OpacErrorException(
@@ -164,7 +162,7 @@ public class IOpac extends ApacheBaseApi implements OpacApi {
         }
 
         String html = httpPost(opac_url + "/cgi-bin/di.exe",
-                new UrlEncodedFormEntity(params, "iso-8859-1"),
+                params.build(),
                 getDefaultEncoding());
 
         return parse_search(html, 1);
@@ -564,18 +562,17 @@ public class IOpac extends ApacheBaseApi implements OpacApi {
         }
 
         Element form = doc.select("form[name=form1]").first();
-        List<BasicNameValuePair> params = new ArrayList<>();
-        params.add(new BasicNameValuePair("sleKndNr", account.getName()));
-        params.add(new BasicNameValuePair("slePw", account.getPassword()));
-        params.add(new BasicNameValuePair("pshLogin", "Reservieren"));
+        FormBody.Builder params = new FormBody.Builder();
+        params.add("sleKndNr", account.getName());
+        params.add("slePw", account.getPassword());
+        params.add("pshLogin", "Reservieren");
         for (Element input : form.select("input[type=hidden]")) {
-            params.add(new BasicNameValuePair(input.attr("name"), input
-                    .attr("value")));
+            params.add(input.attr("name"), input
+                    .attr("value"));
         }
 
         // STEP 2: Confirmation page
-        html = httpPost(opac_url + "/cgi-bin/di.exe", new UrlEncodedFormEntity(
-                params), getDefaultEncoding());
+        html = httpPost(opac_url + "/cgi-bin/di.exe", params.build(), getDefaultEncoding());
         doc = Jsoup.parse(html);
 
         if (doc.select("form[name=form1]").size() > 0) {
@@ -647,14 +644,12 @@ public class IOpac extends ApacheBaseApi implements OpacApi {
         Document doc = getAccountPage(account);
         // Check if the iOPAC verion supports this feature
         if (doc.select("button.verlallbutton").size() > 0) {
-            List<NameValuePair> params = new ArrayList<>();
-            params.add(new BasicNameValuePair("mode", "42"));
+            HttpUrl.Builder url = HttpUrl.parse(opac_url + "/cgi-bin/di.exe").newBuilder();
+            url.addQueryParameter("mode", "42");
             for (Element checkbox : doc.select("input.VerlAllCheckboxOK")) {
-                params.add(new BasicNameValuePair("MedNrVerlAll", checkbox.val()));
+                url.addQueryParameter("MedNrVerlAll", checkbox.val());
             }
-            String html = httpGet(
-                    opac_url + "/cgi-bin/di.exe?" + URLEncodedUtils.format(params, "UTF-8"),
-                    getDefaultEncoding());
+            String html = httpGet(url.build().toString(), getDefaultEncoding());
             Document doc2 = Jsoup.parse(html);
             Pattern pattern = Pattern.compile("(\\d+ Medi(?:en|um) wurden? verl.ngert)\\s*(\\d+ " +
                     "Medi(?:en|um) wurden? nicht verl.ngert)?");
@@ -767,13 +762,12 @@ public class IOpac extends ApacheBaseApi implements OpacApi {
     }
 
     private Document getAccountPage(Account account) throws IOException {
-        List<NameValuePair> params = new ArrayList<>();
-        params.add(new BasicNameValuePair("sleKndNr", account.getName()));
-        params.add(new BasicNameValuePair("slePw", account.getPassword()));
-        params.add(new BasicNameValuePair("pshLogin", "Login"));
+        FormBody.Builder params = new FormBody.Builder();
+        params.add("sleKndNr", account.getName());
+        params.add("slePw", account.getPassword());
+        params.add("pshLogin", "Login");
 
-        String html = httpPost(opac_url + "/cgi-bin/di.exe",
-                new UrlEncodedFormEntity(params, "iso-8859-1"),
+        String html = httpPost(opac_url + "/cgi-bin/di.exe", params.build(),
                 getDefaultEncoding());
         return Jsoup.parse(html);
     }

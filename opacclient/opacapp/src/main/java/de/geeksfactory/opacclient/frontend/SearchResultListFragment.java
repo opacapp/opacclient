@@ -252,7 +252,7 @@ public class SearchResultListFragment extends CustomListFragment {
         // Notify the active callbacks interface (the activity, if the
         // fragment is attached to one) that an item has been selected.
         callbacks.onItemSelected(searchresult.getResults().get(position),
-                view.findViewById(R.id.ivType), touchPositionX, touchPositionY);
+                view.findViewById(R.id.ivCover), touchPositionX, touchPositionY);
 
     }
 

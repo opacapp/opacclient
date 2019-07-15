@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:tools="http://schemas.android.com/tools"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
@@ -7,15 +8,31 @@
                 android:padding="5dip">
 
     <ImageView
-        android:id="@+id/ivType"
+        android:id="@+id/ivCover"
         android:layout_width="56dp"
         android:layout_height="56dp"
         android:layout_alignParentLeft="true"
         android:layout_alignParentTop="true"
         android:layout_marginRight="10dip"
+        android:contentDescription="@string/cover"
         android:gravity="center"
+        android:transitionName="@string/transition_cover"
+        tools:srcCompat="@tools:sample/avatars[0]"/>
+
+    <ImageView
+        android:id="@+id/ivType"
+        android:layout_width="28dp"
+        android:layout_height="28dp"
+        android:paddingLeft="8dp"
+        android:paddingTop="8dp"
+        android:background="@drawable/quarter_circle"
+        android:layout_alignBottom="@+id/ivCover"
+        android:layout_alignEnd="@+id/ivCover"
+        android:layout_alignRight="@+id/ivCover"
         android:contentDescription="@string/mediatype"
-        android:transitionName="@string/transition_cover"/>
+        android:gravity="center"
+        tools:srcCompat="@drawable/type_book"
+        tools:ignore="RtlSymmetry"/>
 
     <ImageView
         android:id="@+id/ivStatus"
@@ -35,5 +52,5 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_toLeftOf="@id/ivStatus"
-        android:layout_toRightOf="@id/ivType"/>
+        android:layout_toRightOf="@id/ivCover"/>
 </RelativeLayout>
