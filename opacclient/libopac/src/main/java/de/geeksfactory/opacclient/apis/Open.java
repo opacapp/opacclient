@@ -66,6 +66,7 @@ import okhttp3.Headers;
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
+import okhttp3.ResponseBody;
 
 import static okhttp3.MultipartBody.Part.create;
 
@@ -332,6 +333,9 @@ public class Open extends OkHttpBaseApi implements OpacApi {
         Pattern idPattern = Pattern.compile("\\$(mdv|civ|dcv)(\\d+)\\$");
         Pattern weakIdPattern = Pattern.compile("(mdv|civ|dcv)(\\d+)[^\\d]");
 
+        // Determine portalID value for availability
+        int portalId = getPortalId(doc);
+
         Elements elements = doc.select("div[id$=divMedium], div[id$=divComprehensiveItem], div[id$=divDependentCatalogue]");
         List<SearchResult> results = new ArrayList<>();
         int i = 0;
@@ -427,39 +431,46 @@ public class Open extends OkHttpBaseApi implements OpacApi {
 
             // Availability
             if (result.getId() != null) {
-                String url = opac_url +
-                        "/DesktopModules/OCLC.OPEN.PL.DNN.SearchModule/SearchService" +
-                        ".asmx/GetAvailability";
                 String culture = element.select("input[name$=culture]").val();
+                String ekzid = element.select("input[name$=ekzid]").val();
+                boolean ebook = !ekzid.equals("");
+
+                String url;
+                if (ebook) {
+                    url = opac_url + "/DesktopModules/OCLC.OPEN.PL.DNN.CopConnector/Services" +
+                            "/Onleihe.asmx/GetNcipLookupItem";
+                } else {
+                    url = opac_url +
+                            "/DesktopModules/OCLC.OPEN.PL.DNN.SearchModule/SearchService" +
+                            ".asmx/GetAvailability";
+                }
+
                 JSONObject data = new JSONObject();
                 try {
-
-                    // Determine portalID value
-                    int portalId = 1;
-                    for (Element scripttag : doc.select("script")) {
-                        String scr = scripttag.html();
-                        if (scr.contains("LoadSharedCatalogueViewAvailabilityAsync")) {
-                            Pattern portalIdPattern = Pattern.compile(
-                                    ".*LoadSharedCatalogueViewAvailabilityAsync\\([^,]*,[^,]*," +
-                                            "[^0-9,]*([0-9]+)[^0-9,]*,.*\\).*");
-                            Matcher portalIdMatcher = portalIdPattern.matcher(scr);
-                            if (portalIdMatcher.find()) {
-                                portalId = Integer.parseInt(portalIdMatcher.group(1));
-                            }
-                        }
+                    if (ebook) {
+                        data.put("portalId", portalId).put("itemid", ekzid)
+                            .put("language", culture);
+                    } else {
+                        data.put("portalId", portalId).put("mednr", result.getId())
+                            .put("culture", culture).put("requestCopyData", false)
+                            .put("branchFilter", "");
                     }
-
-                    data.put("portalId", portalId).put("mednr", result.getId())
-                        .put("culture", culture).put("requestCopyData", false)
-                        .put("branchFilter", "");
                     RequestBody entity = RequestBody.create(MEDIA_TYPE_JSON, data.toString());
 
                     futures.add(asyncPost(url, entity, false).handle((response, throwable) -> {
                         if (throwable != null) return null;
+                        ResponseBody body = response.body();
                         try {
-                            JSONObject availabilityData = new JSONObject(response.body().string());
-                            String isAvail =
-                                    availabilityData.getJSONObject("d").getString("IsAvail");
+                            JSONObject availabilityData = new JSONObject(body.string());
+                            String isAvail;
+                            if (ebook) {
+                                isAvail = availabilityData
+                                        .getJSONObject("d").getJSONObject("LookupItem")
+                                        .getString("Available");
+                            } else {
+                                isAvail = availabilityData
+                                        .getJSONObject("d").getString("IsAvail");
+                            }
                             switch (isAvail) {
                                 case "true":
                                     result.setStatus(SearchResult.Status.GREEN);
@@ -474,6 +485,7 @@ public class Open extends OkHttpBaseApi implements OpacApi {
                         } catch (JSONException | IOException e) {
                             e.printStackTrace();
                         }
+                        body.close();
                         return null;
                     }));
                 } catch (JSONException e) {
@@ -487,6 +499,23 @@ public class Open extends OkHttpBaseApi implements OpacApi {
         CompletableFuture.allOf(futures.toArray(new CompletableFuture[futures.size()])).join();
 
         return new SearchRequestResult(results, totalCount, page);
+    }
+
+    private int getPortalId(Document doc) {
+        int portalId = 1;
+        for (Element scripttag : doc.select("script")) {
+            String scr = scripttag.html();
+            if (scr.contains("LoadSharedCatalogueViewAvailabilityAsync")) {
+                Pattern portalIdPattern = Pattern.compile(
+                        ".*LoadSharedCatalogueViewAvailabilityAsync\\([^,]*,[^,]*," +
+                                "[^0-9,]*([0-9]+)[^0-9,]*,.*\\).*");
+                Matcher portalIdMatcher = portalIdPattern.matcher(scr);
+                if (portalIdMatcher.find()) {
+                    portalId = Integer.parseInt(portalIdMatcher.group(1));
+                }
+            }
+        }
+        return portalId;
     }
 
     private List<String> getCoverUrlList(Element img) {
