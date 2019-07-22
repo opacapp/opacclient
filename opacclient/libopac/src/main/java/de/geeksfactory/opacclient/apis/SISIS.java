@@ -697,7 +697,7 @@ public class SISIS extends OkHttpBaseApi implements OpacApi {
             throws IOException {
 
         if (id.startsWith("http://") || id.startsWith("https://")) {
-            return loadDetail(id);
+            return loadDetail(httpGet(id, ENCODING));
         }
 
         // Some libraries require start parameters for start.do, like Login=foo
@@ -1065,6 +1065,10 @@ public class SISIS extends OkHttpBaseApi implements OpacApi {
                         links.get(eli).attr("href")), "UTF-8");
                 for (NameValuePair nv : anyurl) {
                     if (nv.getName().equals("methodToCall")
+                            && nv.getValue().equals("parentSearch")) {
+                        result.setCollectionId(links.get(eli).absUrl("href"));
+                        break;
+                    } else if (nv.getName().equals("methodToCall")
                             && nv.getValue().equals("volumeSearch")) {
                         isvolume = links.get(eli);
                     } else if (nv.getName().equals("catKey")) {
