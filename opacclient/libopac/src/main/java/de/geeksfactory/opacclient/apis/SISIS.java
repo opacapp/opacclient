@@ -697,7 +697,7 @@ public class SISIS extends OkHttpBaseApi implements OpacApi {
             throws IOException {
 
         if (id.startsWith("http://") || id.startsWith("https://")) {
-            return loadDetail(id);
+            return loadDetail(httpGet(id, ENCODING));
         }
 
         // Some libraries require start parameters for start.do, like Login=foo
@@ -1065,6 +1065,10 @@ public class SISIS extends OkHttpBaseApi implements OpacApi {
                         links.get(eli).attr("href")), "UTF-8");
                 for (NameValuePair nv : anyurl) {
                     if (nv.getName().equals("methodToCall")
+                            && nv.getValue().equals("parentSearch")) {
+                        result.setCollectionId(links.get(eli).absUrl("href"));
+                        break;
+                    } else if (nv.getName().equals("methodToCall")
                             && nv.getValue().equals("volumeSearch")) {
                         isvolume = links.get(eli);
                     } else if (nv.getName().equals("catKey")) {
@@ -1121,6 +1125,9 @@ public class SISIS extends OkHttpBaseApi implements OpacApi {
         }
     }
 
+    // whether we are currently waiting for the confirmation of fees
+    private boolean confirmingFees = false;
+
     @Override
     public ReservationResult reservation(DetailedItem item, Account acc,
             int useraction, String selection) throws IOException {
@@ -1134,13 +1141,20 @@ public class SISIS extends OkHttpBaseApi implements OpacApi {
             action = "order";
         }
 
-        if (useraction == MultiStepResult.ACTION_CONFIRMATION) {
+        if (useraction == MultiStepResult.ACTION_CONFIRMATION && !confirmingFees) {
             FormBody.Builder fb = new FormBody.Builder(Charset.forName(getDefaultEncoding()))
                     .add("methodToCall", action)
                     .add("CSId", CSId);
             String html = httpPost(opac_url + "/" + action + ".do", fb.build(), ENCODING);
             doc = Jsoup.parse(html);
-        } else if (selection == null || useraction == 0) {
+        } else if (selection == null || useraction == 0 ||
+                useraction == MultiStepResult.ACTION_CONFIRMATION) {
+            boolean confirmedFees = false;
+            if (useraction == MultiStepResult.ACTION_CONFIRMATION) {
+                confirmingFees = false;
+                confirmedFees = true;
+            }
+
             String html = httpGet(opac_url + "/availability.do?"
                     + reservation_info, ENCODING);
             doc = Jsoup.parse(html);
@@ -1163,6 +1177,18 @@ public class SISIS extends OkHttpBaseApi implements OpacApi {
                     logged_in_as = acc;
                 }
             }
+
+            if (doc.select("#CirculationForm .textrot").size() >= 1 && !confirmedFees) {
+                String errmsg = doc.select("#CirculationForm .textrot").get(0).text();
+                ReservationResult result = new ReservationResult(
+                        Status.CONFIRMATION_NEEDED);
+                List<String[]> details = new ArrayList<>();
+                details.add(new String[]{"", errmsg});
+                result.setDetails(details);
+                confirmingFees = true;
+                return result;
+            }
+
             if (doc.select("input[name=expressorder]").size() > 0) {
                 FormBody.Builder fb = new FormBody.Builder(Charset.forName(getDefaultEncoding()))
                         .add(branch_inputfield, selection)
