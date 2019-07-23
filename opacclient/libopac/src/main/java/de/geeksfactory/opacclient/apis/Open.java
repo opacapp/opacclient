@@ -782,7 +782,11 @@ public class Open extends OkHttpBaseApi implements OpacApi {
                     }
 
                     if (text.equals("")) continue;
-                    copy.set(columnmap.get(j), text, fmt);
+                    String colname = columnmap.get(j);
+                    if (copy.get(colname) != null && !copy.get(colname).isEmpty()) {
+                        text = copy.get(colname) + " / " + text;
+                    }
+                    copy.set(colname, text, fmt);
                 }
                 item.addCopy(copy);
             }
@@ -841,6 +845,8 @@ public class Open extends OkHttpBaseApi implements OpacApi {
                 return "branch";
             case "Standorte":
             case "Standort":
+            case "Standort 2":
+            case "Standort 3":
                 return "location";
             case "Status":
                 return "status";
@@ -851,6 +857,8 @@ public class Open extends OkHttpBaseApi implements OpacApi {
                 return "returndate";
             case "Signatur":
                 return "signature";
+            case "Barcode":
+                return "barcode";
             default:
                 return null;
         }
