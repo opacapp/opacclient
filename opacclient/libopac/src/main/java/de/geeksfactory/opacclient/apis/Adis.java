@@ -1622,6 +1622,9 @@ public class Adis extends OkHttpBaseApi implements OpacApi {
                 throw new OpacErrorException(msg);
             }
             return doc;
+        } else if (doc.select("input.errstate").size() > 0) {
+            // password field highlighted in red -> wrong password
+            throw new OpacErrorException(stringProvider.getString(StringProvider.WRONG_LOGIN_DATA));
         } else {
             return doc;
         }
