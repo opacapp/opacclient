@@ -8,7 +8,7 @@ buildscript {
         google()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:3.3.0'
+        classpath 'com.android.tools.build:gradle:3.4.2'
         classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:1.8.4'
         classpath 'org.kt3k.gradle.plugin:coveralls-gradle-plugin:2.4.0'
         classpath 'org.json:json:20090211'
@@ -39,9 +39,9 @@ task jacocoRootReport(type: JacocoReport) {
     jacocoClasspath = configurations.jacocoAnt
     reports {
         html.enabled = true
-        html.destination = "build/reports/jacoco/jacocoRootReport/html"
+        html.destination = file("build/reports/jacoco/jacocoRootReport/html")
         xml.enabled = true
-        xml.destination = "build/reports/jacoco/jacocoRootReport/jacocoRootReport.xml"
+        xml.destination = file("build/reports/jacoco/jacocoRootReport/jacocoRootReport.xml")
     }
 }
 
