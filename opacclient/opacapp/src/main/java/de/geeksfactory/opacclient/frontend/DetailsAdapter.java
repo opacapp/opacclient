@@ -1,7 +1,6 @@
 package de.geeksfactory.opacclient.frontend;
 
 import android.content.Context;
-import android.support.v7.widget.RecyclerView;
 import android.text.util.Linkify;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,6 +9,7 @@ import android.widget.TextView;
 
 import java.util.List;
 
+import androidx.recyclerview.widget.RecyclerView;
 import de.geeksfactory.opacclient.R;
 import de.geeksfactory.opacclient.objects.Detail;
 

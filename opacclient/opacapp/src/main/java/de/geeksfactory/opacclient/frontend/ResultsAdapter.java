@@ -23,8 +23,6 @@ package de.geeksfactory.opacclient.frontend;
 
 import android.content.Context;
 import android.net.ConnectivityManager;
-import android.support.annotation.DrawableRes;
-import android.support.v4.net.ConnectivityManagerCompat;
 import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -35,6 +33,8 @@ import android.widget.TextView;
 
 import java.util.List;
 
+import androidx.annotation.DrawableRes;
+import androidx.core.net.ConnectivityManagerCompat;
 import de.geeksfactory.opacclient.R;
 import de.geeksfactory.opacclient.apis.OpacApi;
 import de.geeksfactory.opacclient.networking.CoverDownloadTask;

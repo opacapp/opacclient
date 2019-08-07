@@ -5,7 +5,6 @@ import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.support.v7.app.AlertDialog;
 import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.style.StyleSpan;
@@ -16,6 +15,7 @@ import android.widget.TextView;
 
 import java.text.NumberFormat;
 
+import androidx.appcompat.app.AlertDialog;
 import de.geeksfactory.opacclient.R;
 
 public class AppCompatProgressDialog extends AlertDialog {

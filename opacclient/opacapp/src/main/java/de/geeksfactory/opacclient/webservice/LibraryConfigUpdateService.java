@@ -21,7 +21,6 @@ package de.geeksfactory.opacclient.webservice;
 import android.app.IntentService;
 import android.content.Context;
 import android.content.Intent;
-import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 
 import org.joda.time.DateTime;
@@ -31,6 +30,7 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import de.geeksfactory.opacclient.BuildConfig;
 import de.geeksfactory.opacclient.OpacClient;
 import de.geeksfactory.opacclient.storage.JsonSearchFieldDataSource;

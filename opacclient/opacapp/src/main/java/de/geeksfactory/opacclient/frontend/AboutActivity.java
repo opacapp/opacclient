@@ -22,10 +22,10 @@
 package de.geeksfactory.opacclient.frontend;
 
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.preference.PreferenceFragmentCompat;
-import android.support.v7.widget.Toolbar;
 
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import androidx.preference.PreferenceFragmentCompat;
 import de.geeksfactory.opacclient.R;
 
 public class AboutActivity extends AppCompatActivity {
