@@ -6,14 +6,14 @@
 
 <resources xmlns:tools="http://schemas.android.com/tools">
     <!-- Changes not specific to API level go here -->
-    <style name="Theme.Opacapp.Base" parent="Theme.AppCompat.Light.DarkActionBar">
+    <style name="Theme.Opacapp.Base" parent="Theme.MaterialComponents.Light.DarkActionBar">
         <item name="colorPrimary">@color/primary_red</item>
         <item name="colorPrimaryDark">@color/primary_red_dark</item>
         <item name="colorAccent">@color/accent_red</item>
         <item name="preferenceTheme">@style/MaterialPreferenceThemeOverlay</item>
     </style>
 
-    <style name="Theme.Opacapp.NoActionBar.Base" parent="Theme.AppCompat.Light.NoActionBar">
+    <style name="Theme.Opacapp.NoActionBar.Base" parent="Theme.MaterialComponents.Light.NoActionBar">
         <item name="colorPrimary">@color/primary_red</item>
         <item name="colorPrimaryDark">@color/primary_red_dark</item>
         <item name="colorAccent">@color/accent_red</item>
@@ -22,7 +22,7 @@
         <item name="windowActionModeOverlay">true</item>
     </style>
 
-    <style name="Theme.Opacapp.Base.Floating" parent="Theme.AppCompat.Light.DialogWhenLarge">
+    <style name="Theme.Opacapp.Base.Floating" parent="Theme.MaterialComponents.Light.DialogWhenLarge">
         <item name="colorPrimary">@color/primary_red</item>
         <item name="colorPrimaryDark">@color/primary_red_dark</item>
         <item name="colorAccent">@color/accent_red</item>
@@ -33,7 +33,7 @@
         <item name="windowNoTitle">true</item>
     </style>
 
-    <style name="Theme.Opacapp.Base.Transparent" parent="Theme.AppCompat.Light.NoActionBar">
+    <style name="Theme.Opacapp.Base.Transparent" parent="Theme.MaterialComponents.Light.NoActionBar">
         <item name="colorPrimary">@color/primary_red</item>
         <item name="colorPrimaryDark">@color/primary_red_dark</item>
         <item name="colorAccent">@color/accent_red</item>
@@ -47,7 +47,7 @@
         <item name="android:backgroundDimEnabled">false</item>
     </style>
 
-    <style name="Theme.Opacapp.Base.AccountDetail" parent="Theme.AppCompat.Light.NoActionBar">
+    <style name="Theme.Opacapp.Base.AccountDetail" parent="Theme.MaterialComponents.Light.NoActionBar">
         <item name="colorPrimary">@color/primary_red</item>
         <item name="colorPrimaryDark">@color/primary_red_dark</item>
         <item name="colorAccent">@color/accent_red</item>

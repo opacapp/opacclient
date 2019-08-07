@@ -144,7 +144,7 @@
             android:excludeFromRecents="true"
             android:finishOnTaskLaunch="true"
             android:launchMode="singleInstance"
-            android:theme="@style/Theme.AppCompat.Light.Dialog"/>
+            android:theme="@style/Theme.MaterialComponents.Light.Dialog"/>
         <activity
             android:name="de.geeksfactory.opacclient.frontend.SnoozeDatePickerActivity"
             android:theme="@style/Theme.Opacapp.Transparent"/>
