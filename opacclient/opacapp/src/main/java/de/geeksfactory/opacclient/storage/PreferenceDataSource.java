@@ -20,18 +20,14 @@ package de.geeksfactory.opacclient.storage;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.net.ConnectivityManager;
-import android.preference.Preference;
 import android.preference.PreferenceManager;
-import android.support.annotation.Nullable;
-import android.support.v7.preference.CheckBoxPreference;
-
 
 import org.joda.time.DateTime;
 
 import java.io.IOException;
 import java.io.InputStream;
 
+import androidx.annotation.Nullable;
 import de.geeksfactory.opacclient.BuildConfig;
 import de.geeksfactory.opacclient.utils.Utils;
 

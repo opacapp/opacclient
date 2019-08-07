@@ -30,9 +30,6 @@ import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.support.annotation.NonNull;
-import android.support.multidex.MultiDex;
-import android.support.v4.app.ActivityCompat;
 import android.util.Log;
 
 import com.evernote.android.job.JobManager;
@@ -55,6 +52,9 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
+import androidx.annotation.NonNull;
+import androidx.core.app.ActivityCompat;
+import androidx.multidex.MultiDex;
 import de.geeksfactory.opacclient.apis.OpacApi;
 import de.geeksfactory.opacclient.frontend.AccountListActivity;
 import de.geeksfactory.opacclient.frontend.LibraryListActivity;

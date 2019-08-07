@@ -9,7 +9,6 @@ import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.preference.PreferenceManager;
-import android.support.v7.app.AlertDialog;
 import android.text.Html;
 import android.text.TextUtils.TruncateAt;
 import android.view.LayoutInflater;
@@ -27,6 +26,7 @@ import android.widget.TextView;
 import java.util.List;
 import java.util.Map;
 
+import androidx.appcompat.app.AlertDialog;
 import de.geeksfactory.opacclient.R;
 import de.geeksfactory.opacclient.apis.OpacApi.MultiStepResult;
 import de.geeksfactory.opacclient.apis.OpacApi.ReservationResult;

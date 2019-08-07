@@ -2,7 +2,8 @@ package de.geeksfactory.opacclient.ui.vectordrawable;
 
 import android.graphics.drawable.Drawable;
 import android.os.Build;
-import android.support.annotation.NonNull;
+
+import androidx.annotation.NonNull;
 
 /**
  * Copied from AOSP code

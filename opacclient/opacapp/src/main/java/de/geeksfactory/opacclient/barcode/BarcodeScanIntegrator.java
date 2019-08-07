@@ -22,7 +22,6 @@
 package de.geeksfactory.opacclient.barcode;
 
 import android.app.Activity;
-import android.support.v7.app.AlertDialog;
 import android.content.ActivityNotFoundException;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -36,6 +35,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
+import androidx.appcompat.app.AlertDialog;
 import de.geeksfactory.opacclient.R;
 import de.geeksfactory.opacclient.utils.CompatibilityUtils;
 

@@ -4,12 +4,12 @@ apply plugin: 'com.android.application'
 apply plugin: 'jacoco'
 
 android {
-    compileSdkVersion 27
+    compileSdkVersion 28
 
     defaultConfig {
         applicationId "de.geeksfactory.opacclient"
         minSdkVersion 15
-        targetSdkVersion 27
+        targetSdkVersion 28
         multiDexEnabled true
         versionCode 208
         versionName "6.0.4"
@@ -85,16 +85,15 @@ dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib:1.3.11"
     implementation 'io.sentry:sentry-android:1.7.16'
     implementation 'org.jsoup:jsoup:1.8.3'
-    implementation 'com.android.support:design:27.1.1'
-    implementation 'com.android.support:support-v4:27.1.1'
-    implementation 'com.android.support:percent:27.1.1'
-    implementation 'com.android.support:appcompat-v7:27.1.1'
-    implementation 'com.android.support:palette-v7:27.1.1'
-    implementation 'com.android.support:cardview-v7:27.1.1'
-    implementation 'com.android.support:preference-v7:27.1.1'
+    implementation 'com.github.opacapp:material-components-android:d290745a71'
+    implementation 'androidx.legacy:legacy-support-v4:1.0.0'
+    implementation 'androidx.percentlayout:percentlayout:1.0.0'
+    implementation 'androidx.appcompat:appcompat:1.0.2'
+    implementation 'androidx.palette:palette:1.0.0'
+    implementation 'androidx.cardview:cardview:1.0.0'
+    implementation 'androidx.preference:preference:1.0.0'
     implementation 'org.apmem.tools:layouts:1.10@aar'
     implementation 'org.apache.httpcomponents:httpclient-android:4.3.5.1'
-    implementation 'net.opacapp:multiline-collapsingtoolbar:27.1.1'
     implementation 'joda-time:joda-time:2.9.9'
     implementation 'org.joda:joda-convert:1.8'
     implementation 'su.j2e:rv-joiner:1.0.6'
@@ -108,7 +107,7 @@ dependencies {
     implementation 'com.github.bumptech.glide:okhttp3-integration:1.5.0@aar'
     implementation 'com.evernote:android-job:1.2.0'
     implementation 'net.sourceforge.streamsupport:streamsupport-cfuture:1.6.0'
-    implementation 'com.android.support:multidex:1.0.3'
+    implementation 'androidx.multidex:multidex:2.0.0'
     debugImplementation 'com.facebook.stetho:stetho:1.5.0'
     debugImplementation 'com.facebook.stetho:stetho-okhttp3:1.5.0'
     debugImplementation 'com.squareup.leakcanary:leakcanary-android:1.4-beta2'

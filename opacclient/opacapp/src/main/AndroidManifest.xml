@@ -28,6 +28,9 @@
         android:supportsRtl="false"
         android:theme="@style/Theme.Opacapp.NoActionBar"
         tools:replace="android:supportsRtl, android:allowBackup">
+        <uses-library
+            android:name="org.apache.http.legacy"
+            android:required="false"/>
         <activity
             android:name="de.geeksfactory.opacclient.frontend.MainActivity"
             android:label="@string/launcher_name"
