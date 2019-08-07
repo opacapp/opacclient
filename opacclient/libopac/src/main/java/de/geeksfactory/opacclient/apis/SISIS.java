@@ -1030,6 +1030,7 @@ public class SISIS extends OkHttpBaseApi implements OpacApi {
                 if (status.select("a[href*=doVormerkung]").size() == 1) {
                     copy.setResInfo(status.select("a[href*=doVormerkung]").attr("href")
                                           .split("\\?")[1]);
+                    result.setReservable(true);
                 }
 
                 String branchtext = tr
@@ -1127,11 +1128,64 @@ public class SISIS extends OkHttpBaseApi implements OpacApi {
 
     // whether we are currently waiting for the confirmation of fees
     private boolean confirmingFees = false;
+    private String selectedCopy = null;
+    private static final int ACTION_COPY = 99;
 
     @Override
     public ReservationResult reservation(DetailedItem item, Account acc,
             int useraction, String selection) throws IOException {
+        if (useraction == 0) selectedCopy = null;
+
         String reservation_info = item.getReservation_info();
+
+        if (reservation_info == null) {
+            if (selectedCopy == null) {
+                if (useraction == ACTION_COPY) {
+                    selectedCopy = selection;
+                    reservation_info = selectedCopy;
+                    useraction = 0;
+                    selection = null;
+                } else {
+                    // copy-based reservation
+                    if (item.getCopies() == null) {
+                        return new ReservationResult(MultiStepResult.Status.ERROR);
+                    }
+
+                    List<Map<String, String>> copies = new ArrayList<>();
+                    for (Copy copy : item.getCopies()) {
+                        if (copy.getResInfo() == null) continue;
+
+                        String branch = copy.getBranch() != null ? copy.getBranch() : "";
+                        String shelfmark = copy.getShelfmark() != null ? copy.getShelfmark() : "";
+                        String status = copy.getStatus() != null ? copy.getStatus() : "";
+                        String returnDate = copy.getReturnDate() != null ?
+                                (DateTimeFormat.forPattern("dd.MM.yyyy")
+                                               .print(copy.getReturnDate())) : "";
+                        String reservations = copy.getReservations() != null ? stringProvider
+                                .getQuantityString(StringProvider.RESERVATIONS_NUMBER,
+                                        Integer.parseInt(copy.getReservations()),
+                                        Integer.parseInt(copy.getReservations())) : "";
+                        String value =
+                                branch + " " + shelfmark + " " + status + " " + returnDate + " " +
+                                        reservations;
+                        String key = copy.getResInfo();
+                        Map<String, String> selopt = new HashMap<>();
+                        selopt.put("key", key);
+                        selopt.put("value", value);
+                        copies.add(selopt);
+                    }
+                    ReservationResult result = new ReservationResult(
+                            MultiStepResult.Status.SELECTION_NEEDED);
+                    result.setMessage(stringProvider.getString(StringProvider.PICA_WHICH_COPY));
+                    result.setActionIdentifier(ACTION_COPY);
+                    result.setSelection(copies);
+                    return result;
+                }
+            } else {
+                reservation_info = selectedCopy;
+            }
+        }
+
         final String branch_inputfield = "issuepoint";
 
         Document doc = null;

@@ -1521,9 +1521,12 @@ public class Adis extends OkHttpBaseApi implements OpacApi {
                 // Format "Titel / Autor #Sig#Nr", z.B. normale Ausleihe in Berlin
                 String[] split = text.split("[/#\n]");
                 String title = split[0];
-                //Is always the last one...
-                String id = split[split.length - 1];
-                item.setId(id);
+                //Is always the last one, but some libraries don't show it
+                //(only Title/Author#Signature)
+                if (split.length > 3) {
+                    String id = split[split.length - 1];
+                    item.setId(id);
+                }
                 if (split_title_author) {
                     title = title.replaceFirst("([^:;\n]+)[:;\n](.*)$", "$1");
                 }
@@ -1622,6 +1625,9 @@ public class Adis extends OkHttpBaseApi implements OpacApi {
                 throw new OpacErrorException(msg);
             }
             return doc;
+        } else if (doc.select("input.errstate").size() > 0) {
+            // password field highlighted in red -> wrong password
+            throw new OpacErrorException(stringProvider.getString(StringProvider.WRONG_LOGIN_DATA));
         } else {
             return doc;
         }

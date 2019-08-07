@@ -22,7 +22,7 @@ dependencies {
 
 task unitTest(type:Test, dependsOn: assemble) {
     description = "run unit tests"
-    testClassesDir = project.sourceSets.unitTest.output.classesDir
+    testClassesDirs = project.sourceSets.unitTest.output.classesDirs
     classpath = project.sourceSets.unitTest.runtimeClasspath
     workingDir = file('../')
 }
