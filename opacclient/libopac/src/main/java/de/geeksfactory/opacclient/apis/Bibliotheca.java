@@ -97,6 +97,7 @@ public class Bibliotheca extends OkHttpBaseApi {
         defaulttypes.put("emedium", MediaType.EBOOK);
         defaulttypes.put("monleihe", MediaType.EBOOK);
         defaulttypes.put("mdivis", MediaType.EBOOK);
+        defaulttypes.put("onleihes", MediaType.EBOOK);
         defaulttypes.put("mbmonos", MediaType.PACKAGE_BOOKS);
         defaulttypes.put("mbuechers", MediaType.PACKAGE_BOOKS);
         defaulttypes.put("mdvds", MediaType.DVD);
