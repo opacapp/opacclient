@@ -9,5 +9,6 @@
     -->
     <item name="activity_searchresult_list" type="layout">@layout/activity_searchresult_twopane
     </item>
+    <item name="results_background_color" type="color">@color/popup_bg</item>
 
 </resources>

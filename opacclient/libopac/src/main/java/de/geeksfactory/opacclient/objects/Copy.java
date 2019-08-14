@@ -284,7 +284,7 @@ public class Copy {
             case "status":
                 return getStatus();
             case "returndate":
-                return ISODateTimeFormat.date().print(getReturnDate());
+                return getReturnDate() != null ? ISODateTimeFormat.date().print(getReturnDate()) : null;
             case "reservations":
                 return getReservations();
             case "signature":
