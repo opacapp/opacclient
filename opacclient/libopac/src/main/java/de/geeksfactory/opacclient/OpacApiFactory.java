@@ -33,6 +33,7 @@ import de.geeksfactory.opacclient.apis.PicaLBS;
 import de.geeksfactory.opacclient.apis.PicaOld;
 import de.geeksfactory.opacclient.apis.Primo;
 import de.geeksfactory.opacclient.apis.SISIS;
+import de.geeksfactory.opacclient.apis.SLIM;
 import de.geeksfactory.opacclient.apis.SRU;
 import de.geeksfactory.opacclient.apis.TestApi;
 import de.geeksfactory.opacclient.apis.TouchPoint;
@@ -136,6 +137,8 @@ public class OpacApiFactory {
             newApiInstance = new NetBiblio();
         } else if (lib.getApi().equals("arena")) {
             newApiInstance = new Arena();
+        } else if (lib.getApi().equals("slim")) {
+            newApiInstance = new SLIM();
         } else if (lib.getApi().equals("test")) {
             newApiInstance = new TestApi();
         } else {
