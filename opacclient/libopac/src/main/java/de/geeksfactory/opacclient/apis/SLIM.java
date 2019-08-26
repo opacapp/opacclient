@@ -244,8 +244,7 @@ public class SLIM extends OkHttpBaseApi {
             formData.add("pwd", account.getPassword());
             formData.add("itemID", item.getId());
             JSONObject jo = new JSONObject(
-                    httpPost(this.opac_url + "Account/ReserveItem", formData.build(), ENCODING,
-                            true));
+                    httpPost(this.opac_url + "Account/ReserveItem", formData.build(), ENCODING));
             boolean isReissued = jo.getBoolean("success");
             strMsg = jo.getString("message");
             if (!isReissued) {
@@ -269,8 +268,7 @@ public class SLIM extends OkHttpBaseApi {
             formData.add("pwd", account.getPassword());
             formData.add("barcode", media);
             JSONObject jo = new JSONObject(
-                    httpPost(this.opac_url + "Account/RenewItem", formData.build(), ENCODING,
-                            true));
+                    httpPost(this.opac_url + "Account/RenewItem", formData.build(), ENCODING));
             boolean isReissued = jo.getBoolean("success");
             strMsg = jo.getString("message");
             if (!isReissued) {
@@ -300,8 +298,7 @@ public class SLIM extends OkHttpBaseApi {
             formData.add("itemID", media);
             JSONObject jo = new JSONObject(
                     httpPost(this.opac_url + "Account/CancelReservation", formData.build(),
-                            ENCODING,
-                            true));
+                            ENCODING));
             boolean isCancelled = jo.getBoolean("success");
             if (!isCancelled) {
                 return new CancelResult(MultiStepResult.Status.ERROR, jo.getString("message"));
@@ -325,8 +322,7 @@ public class SLIM extends OkHttpBaseApi {
         formData.add("userid", account.getName());
         formData.add("pwd", account.getPassword());
         JSONObject jo = new JSONObject(
-                httpPost(this.opac_url + "Account/AccountData", formData.build(), ENCODING,
-                        true));
+                httpPost(this.opac_url + "Account/AccountData", formData.build(), ENCODING));
 
         data.setPendingFees(jo.getString("pendingFees"));
         data.setValidUntil(jo.getString("validUntil"));
@@ -398,8 +394,7 @@ public class SLIM extends OkHttpBaseApi {
         formData.add("userid", account.getName());
         formData.add("pwd", account.getPassword());
         JSONObject jo = new JSONObject(
-                httpPost(this.opac_url + "Account/Login", formData.build(), ENCODING,
-                        true));
+                httpPost(this.opac_url + "Account/Login", formData.build(), ENCODING));
         boolean isUserVerified = jo.getBoolean("isVerified");
         if (!isUserVerified) {
             throw new OpacApi.OpacErrorException(jo.getString("message"));
