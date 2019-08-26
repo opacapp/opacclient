@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2013 by Johan von Forstner under the MIT license:
+ * Copyright (C) 2019 by Mayur Patil, Algorhythms Consultants Pvt. Ltd under the MIT license:
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"),
@@ -49,6 +49,10 @@ import de.geeksfactory.opacclient.searchfields.SearchQuery;
 import de.geeksfactory.opacclient.searchfields.TextSearchField;
 import okhttp3.FormBody;
 
+/**
+ * Implementation of the SLIM21 OPAC developed by Algorhythms Consultants Pvt. Ltd
+ * https://www.slimkm.com
+ */
 public class SLIM extends OkHttpBaseApi {
 
     protected String ENCODING = "UTF-8", opac_url = "", share_url = "";
