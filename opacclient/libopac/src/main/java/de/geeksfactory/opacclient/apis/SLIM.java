@@ -1,7 +1,27 @@
+/**
+ * Copyright (C) 2013 by Johan von Forstner under the MIT license:
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"),
+ * to deal in the Software without restriction, including without limitation
+ * the rights to use, copy, modify, merge, publish, distribute, sublicense,
+ * and/or sell copies of the Software, and to permit persons to whom the Software
+ * is furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+ * IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
+ * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,
+ * ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
+ * DEALINGS IN THE SOFTWARE.
+ */
 package de.geeksfactory.opacclient.apis;
 
-import org.apache.http.client.CookieStore;
-import org.apache.http.impl.client.BasicCookieStore;
+import org.joda.time.LocalDate;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -11,7 +31,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
-import de.geeksfactory.opacclient.i18n.StringProvider;
 import de.geeksfactory.opacclient.networking.HttpClientFactory;
 import de.geeksfactory.opacclient.objects.Account;
 import de.geeksfactory.opacclient.objects.AccountData;
@@ -36,13 +55,11 @@ public class SLIM extends OkHttpBaseApi {
     protected int totoal_result_count = 0;
     protected int total_page = 0;
     protected JSONObject data;
-    protected CookieStore cookieStore = new BasicCookieStore();
     private List<SearchResult> list = new ArrayList<>();
     protected List<SearchQuery> searchQuery = new ArrayList<>();
-    static String borrowerID = "";
 
     @Override
-    public void start() throws IOException {
+    public void start() {
 
     }
 
@@ -55,7 +72,7 @@ public class SLIM extends OkHttpBaseApi {
         this.share_url = data.optString("itemdetail_url", "");
     }
 
-    private void ParseSearchResults(JSONObject jo)
+    private SearchRequestResult ParseSearchResults(JSONObject jo)
             throws JSONException {
         list.clear();
         for (int i = 0; i < jo.getJSONArray("results").length(); i++) {
@@ -66,30 +83,24 @@ public class SLIM extends OkHttpBaseApi {
             res.setCover(l.getString("cover"));
             res.setStatus(SearchResult.Status.valueOf(l.getString("status").toUpperCase()));
             res.setType(SearchResult.MediaType.valueOf(l.getString("type").toUpperCase()));
-            res.setNr(Integer.parseInt(l.getString("seqNum")));
+            res.setNr(l.getInt("seqNum"));
             res.setPage(Integer.parseInt(l.getString("pageNum")));
             list.add(res);
         }
-        totoal_result_count = Integer.parseInt(jo.getString("total_result_count"));
-        total_page = Integer.parseInt(jo.getString("page_count"));
-
+        totoal_result_count = jo.getInt("total_result_count");
+        total_page = jo.getInt("page_count");
+        return new SearchRequestResult(list, totoal_result_count, total_page, 1);
     }
 
-    private void fetchSearchResults(List<SearchQuery> query, int page) {
-        try {
-            FormBody.Builder formData = new FormBody.Builder(Charset.forName(getDefaultEncoding()));
-            BuildSearchParams(formData, query);
-            formData.add("page", Integer.toString(page));
-            formData.add("userID", this.borrowerID);
-            JSONObject jo = new JSONObject(
-                    httpPost(this.opac_url + "OPAC/SearchRequestResult", formData.build(), ENCODING,
-                            true));
-            ParseSearchResults(jo);
-        } catch (JSONException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+    private JSONObject fetchSearchResults(List<SearchQuery> query, int page)
+            throws JSONException, IOException {
+        FormBody.Builder formData = new FormBody.Builder(Charset.forName(getDefaultEncoding()));
+        BuildSearchParams(formData, query);
+        formData.add("page", Integer.toString(page));
+        JSONObject jo = new JSONObject(
+                httpPost(this.opac_url + "OPAC/SearchRequestResult", formData.build(), ENCODING,
+                        true));
+        return jo;
     }
 
     private void BuildSearchParams(FormBody.Builder formData, List<SearchQuery> query) {
@@ -109,11 +120,12 @@ public class SLIM extends OkHttpBaseApi {
             throws IOException, OpacErrorException, JSONException {
         for (int i = 0; i < jo.getJSONArray("Text").length(); i++) {
             JSONObject l = jo.getJSONArray("Text").getJSONObject(i);
-            fields.add(new TextSearchField(l.getString("id"), l.getString("displayName"),
-                    Boolean.parseBoolean(l.getString("advanced")),
-                    Boolean.parseBoolean(l.getString("halfWidth")), l.getString("hint"),
-                    Boolean.parseBoolean(l.getString("freeSearch")),
-                    Boolean.parseBoolean(l.getString("number"))));
+            TextSearchField tsf = new TextSearchField(l.getString("id"), l.getString("displayName"),
+                    l.getBoolean("advanced"), l.getBoolean("halfWidth"), l.getString("hint"),
+                    l.getBoolean("freeSearch"),
+                    l.getBoolean("number"));
+            tsf.setMeaning(SearchField.Meaning.valueOf(l.getString("meaning")));
+            fields.add(tsf);
         }
     }
 
@@ -122,11 +134,12 @@ public class SLIM extends OkHttpBaseApi {
             JSONObject l = jo.getJSONArray("Select").getJSONObject(i);
             DropdownSearchField catField =
                     new DropdownSearchField(l.getString("id"), l.getString("displayName"),
-                            Boolean.parseBoolean(l.getString("advanced")), null);
+                            l.getBoolean("advanced"), null);
             for (int j = 0; j < l.getJSONArray("dropdownValues").length(); j++) {
                 JSONObject ddv = l.getJSONArray("dropdownValues").getJSONObject(j);
                 catField.addDropdownValue(ddv.getString("code"), ddv.getString("value"));
             }
+            catField.setMeaning(SearchField.Meaning.valueOf(l.getString("meaning")));
             fields.add(catField);
         }
     }
@@ -144,10 +157,10 @@ public class SLIM extends OkHttpBaseApi {
 
     @Override
     public SearchRequestResult search(List<SearchQuery> query)
-            throws IOException, OpacErrorException, JSONException {
+            throws IOException, JSONException {
         searchQuery = query;
-        fetchSearchResults(query, 1);
-        return new SearchRequestResult(list, totoal_result_count, total_page, 1);
+        JSONObject sr = fetchSearchResults(query, 1);
+        return ParseSearchResults(sr);
     }
 
     @Override
@@ -162,17 +175,18 @@ public class SLIM extends OkHttpBaseApi {
         if (searchQuery == null) {
             throw new OpacApi.OpacErrorException("Internal Error");
         }
-        fetchSearchResults(searchQuery, page);
-        return new SearchRequestResult(list, totoal_result_count, total_page, page);
+        JSONObject sr = fetchSearchResults(searchQuery, page);
+        return ParseSearchResults(sr);
     }
 
-    private void ParseDetailedItem(DetailedItem item, JSONObject jo)
+    private DetailedItem ParseDetailedItem(JSONObject jo)
             throws JSONException {
+        DetailedItem item = new DetailedItem();
         item.setId(jo.getString("id"));
         item.setTitle(jo.getString("title"));
         item.setCover(jo.getString("cover"));
         item.setMediaType(SearchResult.MediaType.valueOf(jo.getString("mediaType").toUpperCase()));
-        item.setReservable(Boolean.parseBoolean(jo.getString("reservable")));
+        item.setReservable(jo.getBoolean("reservable"));
 
         for (int i = 0; i < jo.getJSONArray("details").length(); i++) {
             JSONObject l = jo.getJSONArray("details").getJSONObject(i);
@@ -181,38 +195,34 @@ public class SLIM extends OkHttpBaseApi {
         for (int i = 0; i < jo.getJSONArray("copies").length(); i++) {
             JSONObject l = jo.getJSONArray("copies").getJSONObject(i);
             Copy oCopy = new Copy();
-            oCopy.set("barcode", l.getString("barcode"));
-            oCopy.set("location", l.getString("location"));
-            oCopy.set("department", l.getString("department"));
-            oCopy.set("branch", l.getString("branch"));
+            oCopy.setBarcode(l.getString("barcode"));
+            oCopy.setLocation(l.getString("location"));
+            oCopy.setDepartment(l.getString("department"));
+            oCopy.setBranch(l.getString("branch"));
             String sRetDt = l.getString("returndate");
             if (sRetDt != null && !sRetDt.isEmpty()) {
-                oCopy.set("returndate", l.getString("returndate"));
+                oCopy.setReturnDate(LocalDate.parse(l.getString("returndate")));
             }
-            oCopy.set("reservations", l.getString("reservations"));
+            oCopy.setReservations(l.getString("reservations"));
             oCopy.setShelfmark(l.getString("shelfmark"));
-            oCopy.set("url", l.getString("url"));
+            oCopy.setUrl(l.getString("url"));
             oCopy.setStatus(l.getString("status"));
             item.addCopy(oCopy);
         }
-        /*for (int i = 0; i < jo.getJSONArray("volumes").length(); i++) {
-            JSONObject l = jo.getJSONArray("volumes").getJSONObject(i);
-            item.addVolume(new Volume(l.getString("id"), l.getString("title")));
-        }*/
+        return item;
     }
 
     @Override
     public DetailedItem getResultById(String id, String homebranch)
             throws IOException, OpacErrorException {
-        DetailedItem item = new DetailedItem();
         try {
             JSONObject jo =
                     new JSONObject(httpGet(this.opac_url + "OPAC/DetailedItem?id=" + id, ENCODING));
-            ParseDetailedItem(item, jo);
+            return ParseDetailedItem(jo);
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        return item;
+        return null;
     }
 
     @Override
@@ -223,6 +233,7 @@ public class SLIM extends OkHttpBaseApi {
     @Override
     public ReservationResult reservation(DetailedItem item, Account account,
             int useraction, String selection) throws IOException {
+        String strMsg = "";
         try {
             FormBody.Builder formData = new FormBody.Builder(Charset.forName(getDefaultEncoding()));
             formData.add("userid", account.getName());
@@ -231,7 +242,8 @@ public class SLIM extends OkHttpBaseApi {
             JSONObject jo = new JSONObject(
                     httpPost(this.opac_url + "Account/ReserveItem", formData.build(), ENCODING,
                             true));
-            boolean isReissued = Boolean.parseBoolean(jo.getString("success"));
+            boolean isReissued = jo.getBoolean("success");
+            strMsg = jo.getString("message");
             if (!isReissued) {
                 return new ReservationResult(MultiStepResult.Status.ERROR, jo.getString("message"));
             }
@@ -240,12 +252,13 @@ public class SLIM extends OkHttpBaseApi {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        return new ReservationResult(MultiStepResult.Status.OK);
+        return new ReservationResult(MultiStepResult.Status.OK, strMsg);
     }
 
     @Override
     public ProlongResult prolong(String media, Account account, int useraction,
             String selection) throws IOException {
+        String strMsg = "";
         try {
             FormBody.Builder formData = new FormBody.Builder(Charset.forName(getDefaultEncoding()));
             formData.add("userid", account.getName());
@@ -254,7 +267,8 @@ public class SLIM extends OkHttpBaseApi {
             JSONObject jo = new JSONObject(
                     httpPost(this.opac_url + "Account/RenewItem", formData.build(), ENCODING,
                             true));
-            boolean isReissued = Boolean.parseBoolean(jo.getString("success"));
+            boolean isReissued = jo.getBoolean("success");
+            strMsg = jo.getString("message");
             if (!isReissued) {
                 return new ProlongResult(MultiStepResult.Status.ERROR, jo.getString("message"));
             }
@@ -263,7 +277,7 @@ public class SLIM extends OkHttpBaseApi {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        return new ProlongResult(MultiStepResult.Status.OK);
+        return new ProlongResult(MultiStepResult.Status.OK, strMsg);
     }
 
     @Override
@@ -284,7 +298,7 @@ public class SLIM extends OkHttpBaseApi {
                     httpPost(this.opac_url + "Account/CancelReservation", formData.build(),
                             ENCODING,
                             true));
-            boolean isCancelled = Boolean.parseBoolean(jo.getString("success"));
+            boolean isCancelled = jo.getBoolean("success");
             if (!isCancelled) {
                 return new CancelResult(MultiStepResult.Status.ERROR, jo.getString("message"));
             }
@@ -302,68 +316,66 @@ public class SLIM extends OkHttpBaseApi {
         AccountData data = new AccountData(account.getId());
         List<LentItem> lent = new ArrayList<>();
         List<ReservedItem> reservations = new ArrayList<>();
-        try {
 
-            FormBody.Builder formData = new FormBody.Builder(Charset.forName(getDefaultEncoding()));
-            formData.add("userid", account.getName());
-            formData.add("pwd", account.getPassword());
-            JSONObject jo = new JSONObject(
-                    httpPost(this.opac_url + "Account/AccountData", formData.build(), ENCODING,
-                            true));
+        FormBody.Builder formData = new FormBody.Builder(Charset.forName(getDefaultEncoding()));
+        formData.add("userid", account.getName());
+        formData.add("pwd", account.getPassword());
+        JSONObject jo = new JSONObject(
+                httpPost(this.opac_url + "Account/AccountData", formData.build(), ENCODING,
+                        true));
 
-            data.setPendingFees(jo.getString("pendingFees"));
-            data.setValidUntil(jo.getString("validUntil"));
-            data.setWarning(jo.getString("warningMessage"));
+        data.setPendingFees(jo.getString("pendingFees"));
+        data.setValidUntil(jo.getString("validUntil"));
+        data.setWarning(jo.getString("warningMessage"));
 
-            for (int i = 0; i < jo.getJSONArray("lentItems").length(); i++) {
-                JSONObject l = jo.getJSONArray("lentItems").getJSONObject(i);
-                LentItem lentItem = new LentItem();
-                lentItem.setTitle(l.getString("title"));
-                lentItem.setAuthor(l.getString("author"));
-                lentItem.setStatus(l.getString("status"));
-                lentItem.setDeadline(l.getString("returnDate"));
-                lentItem.setRenewable(Boolean.parseBoolean(l.getString("renewable")));
-                if (lentItem.isRenewable()) {
-                    lentItem.setProlongData(l.getString("prolongData"));
-                }
-                lentItem.setEbook(Boolean.parseBoolean(l.getString("eBook")));
-                if (!l.getString("coverImage").isEmpty()) {
-                    lentItem.setCover(l.getString("coverImage"));
-                }
-                lentItem.setDownloadData(l.getString("downloadData"));
-                lentItem.setHomeBranch(l.getString("homeBranch"));
-                lentItem.setLendingBranch(l.getString("lendingBranch"));
-                lentItem.setBarcode(l.getString("barcode"));
-                lentItem.setId(l.getString("catrefnum"));
-                lentItem.setMediaType(
-                        SearchResult.MediaType.valueOf(l.getString("mediaType").toUpperCase()));
-                lent.add(lentItem);
+        for (int i = 0; i < jo.getJSONArray("lentItems").length(); i++) {
+            JSONObject l = jo.getJSONArray("lentItems").getJSONObject(i);
+            LentItem lentItem = new LentItem();
+            lentItem.setTitle(l.getString("title"));
+            lentItem.setAuthor(l.getString("author"));
+            lentItem.setStatus(l.getString("status"));
+            lentItem.setDeadline(l.getString("returnDate"));
+            lentItem.setRenewable(l.getBoolean("renewable"));
+            if (lentItem.isRenewable()) {
+                lentItem.setProlongData(l.getString("prolongData"));
             }
+            lentItem.setEbook(l.getBoolean("eBook"));
+            if (!l.getString("coverImage").isEmpty()) {
+                lentItem.setCover(l.getString("coverImage"));
+            }
+            lentItem.setDownloadData(l.getString("downloadData"));
+            lentItem.setHomeBranch(l.getString("homeBranch"));
+            lentItem.setLendingBranch(l.getString("lendingBranch"));
+            lentItem.setBarcode(l.getString("barcode"));
+            lentItem.setId(l.getString("catrefnum"));
+            lentItem.setMediaType(
+                    SearchResult.MediaType.valueOf(l.getString("mediaType").toUpperCase()));
+            lent.add(lentItem);
+        }
 
-            for (int i = 0; i < jo.getJSONArray("reservations").length(); i++) {
-                JSONObject l = jo.getJSONArray("reservations").getJSONObject(i);
-                ReservedItem reservedItem = new ReservedItem();
-                reservedItem.setAuthor(l.getString("author"));
-                reservedItem.setTitle(l.getString("title"));
-                reservedItem.setStatus(l.getString("status"));
+        for (int i = 0; i < jo.getJSONArray("reservations").length(); i++) {
+            JSONObject l = jo.getJSONArray("reservations").getJSONObject(i);
+            ReservedItem reservedItem = new ReservedItem();
+            reservedItem.setAuthor(l.getString("author"));
+            reservedItem.setTitle(l.getString("title"));
+            reservedItem.setStatus(l.getString("status"));
+            if (!l.getString("readyDate").isEmpty()) {
                 reservedItem.setReadyDate(l.getString("readyDate"));
-                reservedItem.setExpirationDate(l.getString("expirationDate"));
-                reservedItem.setBranch(l.getString("branch"));
-                if (!l.getString("cancelData").isEmpty()) {
-                    reservedItem.setCancelData(l.getString("cancelData"));
-                }
-                reservedItem.setId(l.getString("catrefnum"));
-                if (!l.getString("coverImage").isEmpty()) {
-                    reservedItem.setCover(l.getString("coverImage"));
-                }
-                reservedItem.setMediaType(
-                        SearchResult.MediaType.valueOf(l.getString("mediaType").toUpperCase()));
-                reservations.add(reservedItem);
             }
-        } catch (JSONException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
+            if (!l.getString("expirationDate").isEmpty()) {
+                reservedItem.setExpirationDate(l.getString("expirationDate"));
+            }
+            reservedItem.setBranch(l.getString("branch"));
+            if (!l.getString("cancelData").isEmpty()) {
+                reservedItem.setCancelData(l.getString("cancelData"));
+            }
+            reservedItem.setId(l.getString("catrefnum"));
+            if (!l.getString("coverImage").isEmpty()) {
+                reservedItem.setCover(l.getString("coverImage"));
+            }
+            reservedItem.setMediaType(
+                    SearchResult.MediaType.valueOf(l.getString("mediaType").toUpperCase()));
+            reservations.add(reservedItem);
         }
         data.setLent(lent);
         data.setReservations(reservations);
@@ -377,24 +389,16 @@ public class SLIM extends OkHttpBaseApi {
         login(account);
     }
 
-    private void login(Account account) throws OpacErrorException {
-        try {
-            FormBody.Builder formData = new FormBody.Builder(Charset.forName(getDefaultEncoding()));
-            formData.add("userid", account.getName());
-            formData.add("pwd", account.getPassword());
-            JSONObject jo = new JSONObject(
-                    httpPost(this.opac_url + "Account/Login", formData.build(), ENCODING,
-                            true));
-            boolean isUserVerified = Boolean.parseBoolean(jo.getString("isVerified"));
-            if (isUserVerified) {
-                this.borrowerID = account.getName();
-            } else {
-                throw new OpacApi.OpacErrorException(jo.getString("message"));
-            }
-        } catch (JSONException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
+    private void login(Account account) throws IOException, JSONException, OpacErrorException {
+        FormBody.Builder formData = new FormBody.Builder(Charset.forName(getDefaultEncoding()));
+        formData.add("userid", account.getName());
+        formData.add("pwd", account.getPassword());
+        JSONObject jo = new JSONObject(
+                httpPost(this.opac_url + "Account/Login", formData.build(), ENCODING,
+                        true));
+        boolean isUserVerified = jo.getBoolean("isVerified");
+        if (!isUserVerified) {
+            throw new OpacApi.OpacErrorException(jo.getString("message"));
         }
     }
 
@@ -405,17 +409,12 @@ public class SLIM extends OkHttpBaseApi {
 
     @Override
     public int getSupportFlags() {
-        return 0;
+        return SUPPORT_FLAG_ENDLESS_SCROLLING;
     }
 
     @Override
     public boolean shouldUseMeaningDetector() {
         return false;
-    }
-
-    @Override
-    public void setStringProvider(StringProvider stringProvider) {
-
     }
 
     @Override
