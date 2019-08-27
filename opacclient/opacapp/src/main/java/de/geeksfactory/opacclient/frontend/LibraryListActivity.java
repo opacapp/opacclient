@@ -170,6 +170,8 @@ public class LibraryListActivity extends AppCompatActivity
         if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
             String query = intent.getStringExtra(SearchManager.QUERY).trim();
             search(query);
+        } else {
+            super.onNewIntent(intent);
         }
     }
 

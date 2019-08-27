@@ -151,6 +151,8 @@ public class AccountListActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == ACCOUNT_EDIT_REQUEST_CODE) {
             refreshLv();
+        } else {
+            super.onActivityResult(requestCode, resultCode, data);
         }
     }
 
