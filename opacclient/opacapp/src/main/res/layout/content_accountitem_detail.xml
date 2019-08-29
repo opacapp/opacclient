@@ -332,13 +332,12 @@
         </ScrollView>
 
         <Button
-            android:text="@string/go_to_details"
+            android:id="@+id/btnDetails"
+            style="@style/Widget.MaterialComponents.Button.TextButton"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/btnDetails"
-            android:textColor="?attr/colorPrimary"
-            style="@style/Widget.AppCompat.Button.Borderless"
-            android:visibility="@{item.id != null ? View.VISIBLE : View.GONE}"/>
+            android:text="@string/go_to_details"
+            android:visibility="@{item.id != null ? View.VISIBLE : View.GONE}" />
     </LinearLayout>
 
 </layout>

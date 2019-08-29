@@ -989,6 +989,12 @@ public class Adis extends OkHttpBaseApi implements OpacApi {
                             res = new ReservationResult(
                                     MultiStepResult.Status.OK, msg);
                         }
+                    } else if (doc.select(".alert").size() > 0) {
+                        // Zuerich: message "available media can not be reserved"
+                        String msg = doc.select(".alert").first().ownText();
+                        if (msg.contains("nicht reserviert werden")) {
+                            res = new ReservationResult(MultiStepResult.Status.ERROR, msg);
+                        }
                     }
                 }
             }

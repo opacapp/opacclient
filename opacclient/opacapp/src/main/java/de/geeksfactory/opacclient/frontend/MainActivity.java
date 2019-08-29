@@ -489,6 +489,8 @@ public class MainActivity extends OpacActivity
                     startActivity(detailIntent);
                 }
             }
+        } else {
+            super.onNewIntent(intent);
         }
     }
 
