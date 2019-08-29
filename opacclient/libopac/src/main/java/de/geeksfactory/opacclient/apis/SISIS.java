@@ -1031,6 +1031,10 @@ public class SISIS extends OkHttpBaseApi implements OpacApi {
                     copy.setResInfo(status.select("a[href*=doVormerkung]").attr("href")
                                           .split("\\?")[1]);
                     result.setReservable(true);
+                } else if (status.select("a[href*=doBestellung]").size() == 1) {
+                    copy.setResInfo(status.select("a[href*=doBestellung]").attr("href")
+                                          .split("\\?")[1]);
+                    result.setReservable(true);
                 }
 
                 String branchtext = tr
