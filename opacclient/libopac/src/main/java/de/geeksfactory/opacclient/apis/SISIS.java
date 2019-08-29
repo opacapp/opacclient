@@ -1548,15 +1548,19 @@ public class SISIS extends OkHttpBaseApi implements OpacApi {
                 return;
             }
 
-            item.setTitle(tr.child(1).select("strong").text().trim());
+            // first column can be a checkbox, then all others are shifted by one
+            int firstCol = tr.child(0).select("input[type=checkbox]").size() > 0 ? 1 : 0;
+
+            item.setTitle(tr.child(1 + firstCol).select("strong").text().trim());
             MediaTypeOrFormat mediaTypeOrFormat = getMediaTypeOrFormat(tr, "th", data);
-            if( mediaTypeOrFormat.mediaType != null){
+            if (mediaTypeOrFormat.mediaType != null) {
                 item.setMediaType(mediaTypeOrFormat.mediaType);
             } else {
                 item.setFormat(mediaTypeOrFormat.format);
             }
+
             try {
-                String[] col1split = tr.child(1).html().split("<br[ /]*>");
+                String[] col1split = tr.child(1 + firstCol).html().split("<br[ /]*>");
                 item.setAuthor(col1split[1].trim());
 
                 if (col1split.length > 2 && col1split[2].contains("&nbsp;/&nbsp;")) {
@@ -1567,7 +1571,7 @@ public class SISIS extends OkHttpBaseApi implements OpacApi {
                     }
                 }
 
-                String[] col2split = tr.child(2).html().split("<br[ /]*>");
+                String[] col2split = tr.child(2 + firstCol).html().split("<br[ /]*>");
                 String deadline = col2split[0].trim();
                 if (deadline.contains("-")) {
                     deadline = deadline.split("-")[1].trim();
