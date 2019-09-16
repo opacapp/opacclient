@@ -1842,7 +1842,7 @@ public class SISIS extends OkHttpBaseApi implements OpacApi {
 
     <I extends AccountItem> void loadPages(List<I> media, Document doc, Set<Integer> pagesLoaded,
             ParseAccountListFunction<I> func) throws IOException {
-        Map<String, Integer> links = getAccountPageLinks(doc);
+        Map<String, Integer> links = getAccountPageLinks(doc, opac_url);
         for (Map.Entry<String, Integer> link : links.entrySet()) {
             if (!pagesLoaded.contains(link.getValue())) {
                 String html = httpGet(link.getKey(), ENCODING);
@@ -1855,18 +1855,28 @@ public class SISIS extends OkHttpBaseApi implements OpacApi {
         }
     }
 
-    static Map<String, Integer> getAccountPageLinks(Document doc) {
+    static Map<String, Integer> getAccountPageLinks(Document doc, String opac_url) {
         Map<String, Integer> links = new HashMap<>();
         if (doc.select(".box-right").size() > 0) {
             for (Element link : doc.select(".box-right").first().select("a")) {
-                String href = link.attr("abs:href");
-                Map<String, String> hrefq = getQueryParamsFirst(href);
-                if (hrefq == null || hrefq.get("methodToCall") == null) {
-                    break;
-                }
-                if (hrefq.get("methodToCall").equals("pos")
-                        && !"1".equals(hrefq.get("anzPos"))) {
-                    links.put(href, Integer.parseInt(hrefq.get("anzPos")));
+                if (link.attr("onclick").startsWith("navigate(")) {
+                    Pattern pattern = Pattern.compile(
+                            "navigate\\('([^']+)','([0-9]+)'\\)");
+                    Matcher matcher = pattern.matcher(link.attr("onclick"));
+                    if (matcher.find()) {
+                        String url = opac_url + "/userAccount.do?methodToCall=pos&accountTyp=" + matcher.group(1) + "&anzPos=" + matcher.group(2);
+                        links.put(url, Integer.parseInt(matcher.group(2)));
+                    }
+                } else {
+                    String href = link.attr("abs:href");
+                    Map<String, String> hrefq = getQueryParamsFirst(href);
+                    if (hrefq == null || hrefq.get("methodToCall") == null) {
+                        break;
+                    }
+                    if (hrefq.get("methodToCall").equals("pos")
+                            && !"1".equals(hrefq.get("anzPos"))) {
+                        links.put(href, Integer.parseInt(hrefq.get("anzPos")));
+                    }
                 }
             }
         }

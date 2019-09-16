@@ -56,7 +56,7 @@ public class SISISAccountTest extends BaseHtmlTest {
             assertContainsData(item.getBarcode());
         }
 
-        Map<String, Integer> links = SISIS.getAccountPageLinks(doc);
+        Map<String, Integer> links = SISIS.getAccountPageLinks(doc, "");
         if (file.equals("erfurt.html")) {
             // here we have two pages
             assertTrue(links.size() == 1);

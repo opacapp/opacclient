@@ -98,7 +98,7 @@ public class SLIM extends OkHttpBaseApi {
 
     private JSONObject fetchSearchResults(List<SearchQuery> query, int page)
             throws JSONException, IOException {
-        FormBody.Builder formData = new FormBody.Builder(Charset.forName(getDefaultEncoding()));
+        FormBody.Builder formData = new FormBody.Builder();
         BuildSearchParams(formData, query);
         formData.add("page", Integer.toString(page));
         JSONObject jo = new JSONObject(
@@ -239,7 +239,7 @@ public class SLIM extends OkHttpBaseApi {
             int useraction, String selection) throws IOException {
         String strMsg = "";
         try {
-            FormBody.Builder formData = new FormBody.Builder(Charset.forName(getDefaultEncoding()));
+            FormBody.Builder formData = new FormBody.Builder();
             formData.add("userid", account.getName());
             formData.add("pwd", account.getPassword());
             formData.add("itemID", item.getId());
@@ -263,7 +263,7 @@ public class SLIM extends OkHttpBaseApi {
             String selection) throws IOException {
         String strMsg = "";
         try {
-            FormBody.Builder formData = new FormBody.Builder(Charset.forName(getDefaultEncoding()));
+            FormBody.Builder formData = new FormBody.Builder();
             formData.add("userid", account.getName());
             formData.add("pwd", account.getPassword());
             formData.add("barcode", media);
@@ -292,7 +292,7 @@ public class SLIM extends OkHttpBaseApi {
     public CancelResult cancel(String media, Account account, int useraction,
             String selection) throws IOException, OpacErrorException {
         try {
-            FormBody.Builder formData = new FormBody.Builder(Charset.forName(getDefaultEncoding()));
+            FormBody.Builder formData = new FormBody.Builder();
             formData.add("userid", account.getName());
             formData.add("pwd", account.getPassword());
             formData.add("itemID", media);
@@ -318,7 +318,7 @@ public class SLIM extends OkHttpBaseApi {
         List<LentItem> lent = new ArrayList<>();
         List<ReservedItem> reservations = new ArrayList<>();
 
-        FormBody.Builder formData = new FormBody.Builder(Charset.forName(getDefaultEncoding()));
+        FormBody.Builder formData = new FormBody.Builder();
         formData.add("userid", account.getName());
         formData.add("pwd", account.getPassword());
         JSONObject jo = new JSONObject(
@@ -390,7 +390,7 @@ public class SLIM extends OkHttpBaseApi {
     }
 
     private void login(Account account) throws IOException, JSONException, OpacErrorException {
-        FormBody.Builder formData = new FormBody.Builder(Charset.forName(getDefaultEncoding()));
+        FormBody.Builder formData = new FormBody.Builder();
         formData.add("userid", account.getName());
         formData.add("pwd", account.getPassword());
         JSONObject jo = new JSONObject(
