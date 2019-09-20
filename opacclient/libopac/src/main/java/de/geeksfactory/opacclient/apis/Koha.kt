@@ -285,6 +285,7 @@ open class Koha : OkHttpBaseApi() {
                             // td.classNames().contains("itype") -> media type
                             td.classNames().contains("location") -> branch = text
                             td.classNames().contains("collection") -> location = text
+                            td.classNames().contains("vol_info") -> issue = text
                             td.classNames().contains("call_no") -> {
                                 if (td.select(".isDivibibTitle").size > 0 && td.select("a").size > 0) {
                                     // Onleihe item

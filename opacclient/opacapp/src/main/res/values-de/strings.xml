@@ -245,6 +245,7 @@
     <string name="return_date">Rückgabedatum</string>
     <string name="location">Standort</string>
     <string name="department">Abteilung</string>
+    <string name="issue">Ausgabe</string>
     <string name="reservations">Reservierungen</string>
     <string name="barcode">Barcode</string>
     <string name="clear_search">Formular leeren</string>
