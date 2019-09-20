@@ -30,6 +30,7 @@ public class Copy {
     private String location;
     private String department;
     private String branch;
+    private String issue;
     private String status;
     private LocalDate returnDate;
     private String reservations;
@@ -92,6 +93,20 @@ public class Copy {
      */
     public void setBranch(String branch) {
         this.branch = branch;
+    }
+
+    /**
+     * @return The issue, e.g. when the item represents a year of magazines, this is the magazine number.
+     */
+    public String getIssue() {
+        return issue;
+    }
+
+    /**
+     * @param issue The issue, e.g. when the item represents a year of magazines, this is the magazine number.
+     */
+    public void setIssue(String issue) {
+        this.issue = issue;
     }
 
     /**
@@ -311,6 +326,7 @@ public class Copy {
                 || getReservations() != null
                 || getShelfmark() != null
                 || getResInfo() != null
+                || getIssue() != null
                 || getUrl() != null;
     }
 
@@ -325,6 +341,7 @@ public class Copy {
                 ", returnDate=" + returnDate +
                 ", reservations='" + reservations + '\'' +
                 ", shelfmark='" + shelfmark + '\'' +
+                ", issue='" + issue + '\'' +
                 ", resInfo='" + resInfo + '\'' +
                 ", url='" + url + '\'' +
                 '}';

@@ -19,6 +19,20 @@
         android:padding="8dp">
 
         <de.geeksfactory.opacclient.ui.vectordrawable.VectorDrawableTextView
+            android:id="@+id/tvIssue"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="4dp"
+            android:ellipsize="end"
+            android:singleLine="true"
+            android:textIsSelectable="true"
+            app:drawableLeftCompat="@drawable/ic_date_range_24dp"
+            tools:drawableLeft="@drawable/ic_date_range_24dp"
+            android:drawablePadding="8dp"
+            android:gravity="center_vertical"
+            android:contentDescription="@string/issue"/>
+
+        <de.geeksfactory.opacclient.ui.vectordrawable.VectorDrawableTextView
             android:id="@+id/tvBranch"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"

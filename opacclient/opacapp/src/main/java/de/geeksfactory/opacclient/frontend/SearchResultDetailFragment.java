@@ -716,6 +716,13 @@ public class SearchResultDetailFragment extends Fragment
                                             + branch + infoTypeSeparator;
                                 }
 
+                                String iss = copy.getIssue();
+                                String issTxt = "";
+                                if (iss != null && !iss.isEmpty()) {
+                                    issTxt += getString(R.string.issue) + labelSeparator
+                                            + iss + infoTypeSeparator;
+                                }
+
                                 String dept = copy.getDepartment();
                                 String deptTxt = "";
                                 if (dept != null && !dept.isEmpty()) {
