@@ -1600,6 +1600,16 @@ public class SISIS extends OkHttpBaseApi implements OpacApi {
                             break;
                         }
                     }
+                } else if (tr.select("input[type=checkbox]:not([disabled])").size() > 0) {
+                    Element checkbox = tr.select("input[type=checkbox]").first();
+                    Pattern pattern = Pattern.compile("selectedMediaListentries\\[(\\d+)\\]");
+                    Matcher matcher = pattern.matcher(checkbox.attr("name"));
+                    if (matcher.find()) {
+                        String nr = matcher.group(1);
+                        item.setProlongData(
+                                offset + "$" + "methodToCall=renewalPossible&actPos=" + nr);
+                        item.setRenewable(true);
+                    }
                 } else if (tr.select(".textrot, .textgruen, .textdunkelblau")
                              .size() > 0) {
                     item.setProlongData(
