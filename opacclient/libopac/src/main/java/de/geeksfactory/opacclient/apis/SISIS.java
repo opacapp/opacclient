@@ -1571,7 +1571,11 @@ public class SISIS extends OkHttpBaseApi implements OpacApi {
                     String[] barcodeAndJournalIssue = col1split[2].split("&nbsp;/&nbsp;");
                     item.setBarcode(barcodeAndJournalIssue[0].trim());
                     if (item.getTitle() == null || item.getTitle().equals("")) {
+                        // no title - set journal issue as title
                         item.setTitle(barcodeAndJournalIssue[1].trim());
+                    } else {
+                        // append journal issue to title
+                        item.setTitle(item.getTitle() + " " + barcodeAndJournalIssue[1]);
                     }
                 }
 
