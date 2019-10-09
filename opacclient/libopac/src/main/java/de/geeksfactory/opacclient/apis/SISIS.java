@@ -1571,7 +1571,11 @@ public class SISIS extends OkHttpBaseApi implements OpacApi {
                     String[] barcodeAndJournalIssue = col1split[2].split("&nbsp;/&nbsp;");
                     item.setBarcode(barcodeAndJournalIssue[0].trim());
                     if (item.getTitle() == null || item.getTitle().equals("")) {
+                        // no title - set journal issue as title
                         item.setTitle(barcodeAndJournalIssue[1].trim());
+                    } else {
+                        // append journal issue to title
+                        item.setTitle(item.getTitle() + " " + barcodeAndJournalIssue[1]);
                     }
                 }
 
@@ -1599,6 +1603,16 @@ public class SISIS extends OkHttpBaseApi implements OpacApi {
                             item.setRenewable(true);
                             break;
                         }
+                    }
+                } else if (tr.select("input[type=checkbox]:not([disabled])").size() > 0) {
+                    Element checkbox = tr.select("input[type=checkbox]").first();
+                    Pattern pattern = Pattern.compile("selectedMediaListentries\\[(\\d+)\\]");
+                    Matcher matcher = pattern.matcher(checkbox.attr("name"));
+                    if (matcher.find()) {
+                        String nr = matcher.group(1);
+                        item.setProlongData(
+                                offset + "$" + "methodToCall=renewalPossible&actPos=" + nr);
+                        item.setRenewable(true);
                     }
                 } else if (tr.select(".textrot, .textgruen, .textdunkelblau")
                              .size() > 0) {
