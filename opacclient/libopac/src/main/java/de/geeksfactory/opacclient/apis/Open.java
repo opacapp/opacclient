@@ -18,6 +18,7 @@
  */
 package de.geeksfactory.opacclient.apis;
 
+import org.apache.http.client.utils.URIBuilder;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 import org.json.JSONArray;
@@ -31,6 +32,7 @@ import org.jsoup.select.Elements;
 
 import java.io.IOException;
 import java.net.MalformedURLException;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -334,7 +336,7 @@ public class Open extends OkHttpBaseApi implements OpacApi {
         Pattern weakIdPattern = Pattern.compile("(mdv|civ|dcv)(\\d+)[^\\d]");
 
         // Determine portalID value for availability
-        int portalId = getPortalId(doc);
+        AvailabilityRestInfo restInfo = getAvailabilityRestInfo(doc);
 
         Elements elements = doc.select("div[id$=divMedium], div[id$=divComprehensiveItem], div[id$=divDependentCatalogue]");
         List<SearchResult> results = new ArrayList<>();
@@ -437,21 +439,22 @@ public class Open extends OkHttpBaseApi implements OpacApi {
 
                 String url;
                 if (ebook) {
-                    url = opac_url + "/DesktopModules/OCLC.OPEN.PL.DNN.CopConnector/Services" +
-                            "/Onleihe.asmx/GetNcipLookupItem";
+                    url = restInfo.ebookRestUrl != null ? restInfo.ebookRestUrl :
+                            opac_url + "/DesktopModules/OCLC.OPEN.PL.DNN.CopConnector/Services" +
+                                    "/Onleihe.asmx/GetNcipLookupItem";
                 } else {
-                    url = opac_url +
-                            "/DesktopModules/OCLC.OPEN.PL.DNN.SearchModule/SearchService" +
-                            ".asmx/GetAvailability";
+                    url = restInfo.restUrl != null ? restInfo.restUrl :
+                            opac_url + "/DesktopModules/OCLC.OPEN.PL.DNN.SearchModule/" +
+                                    "SearchService.asmx/GetAvailability";
                 }
 
                 JSONObject data = new JSONObject();
                 try {
                     if (ebook) {
-                        data.put("portalId", portalId).put("itemid", ekzid)
+                        data.put("portalId", restInfo.portalId).put("itemid", ekzid)
                             .put("language", culture);
                     } else {
-                        data.put("portalId", portalId).put("mednr", result.getId())
+                        data.put("portalId", restInfo.portalId).put("mednr", result.getId())
                             .put("culture", culture).put("requestCopyData", false)
                             .put("branchFilter", "");
                     }
@@ -501,21 +504,46 @@ public class Open extends OkHttpBaseApi implements OpacApi {
         return new SearchRequestResult(results, totalCount, page);
     }
 
-    private int getPortalId(Document doc) {
-        int portalId = 1;
+    private AvailabilityRestInfo getAvailabilityRestInfo(Document doc) {
+        AvailabilityRestInfo info = new AvailabilityRestInfo();
+        info.portalId = 1;
         for (Element scripttag : doc.select("script")) {
             String scr = scripttag.html();
             if (scr.contains("LoadSharedCatalogueViewAvailabilityAsync")) {
-                Pattern portalIdPattern = Pattern.compile(
-                        ".*LoadSharedCatalogueViewAvailabilityAsync\\([^,]*,[^,]*," +
+                Pattern pattern = Pattern.compile(
+                        ".*LoadSharedCatalogueViewAvailabilityAsync\\(\"([^,]*)\",\"([^,]*)\"," +
                                 "[^0-9,]*([0-9]+)[^0-9,]*,.*\\).*");
-                Matcher portalIdMatcher = portalIdPattern.matcher(scr);
-                if (portalIdMatcher.find()) {
-                    portalId = Integer.parseInt(portalIdMatcher.group(1));
+                Matcher matcher = pattern.matcher(scr);
+                if (matcher.find()) {
+                    info.restUrl = getAbsoluteUrl(opac_url, matcher.group(1));
+                    info.ebookRestUrl = getAbsoluteUrl(opac_url, matcher.group(2));
+                    info.portalId = Integer.parseInt(matcher.group(3));
                 }
             }
         }
-        return portalId;
+
+
+        return info;
+    }
+
+    protected static String getAbsoluteUrl(String baseUrl, String url) {
+        if (!url.contains("://")) {
+            try {
+                URIBuilder uriBuilder = new URIBuilder(baseUrl);
+                url = uriBuilder.setPath(url)
+                                .build()
+                                .normalize().toString();
+            } catch (URISyntaxException e) {
+                e.printStackTrace();
+            }
+        }
+        return url;
+    }
+
+    private class AvailabilityRestInfo {
+        public int portalId;
+        public String restUrl;
+        public String ebookRestUrl;
     }
 
     private List<String> getCoverUrlList(Element img) {
