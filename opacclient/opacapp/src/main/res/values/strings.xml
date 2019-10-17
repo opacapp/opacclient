@@ -43,7 +43,7 @@
     <string name="doing_cancel">Reservation is being cancelled…</string>
     <string name="doing_prolong">Performing renewal…</string>
     <string name="doing_download">Download information is being retrieved…</string>
-    <string name="reader_needed">To read the e-book, you need a separate app, for example \'Bluefire Reader\'. Click \'Ignore\' if you already have such an app, this message won\'t show up again in this case. Click \'Download\' to open up the Play Store to download Bluefire Reader.</string>
+    <string name="reader_needed">To read the e-book, you need a separate app, for example \'Aldiko\'. Click \'Ignore\' if you already have such an app, this message won\'t show up again in this case. Click \'Download\' to open up the Play Store to download Aldiko.</string>
     <string name="reader_needed_overdrive">To open this medium, you need a separate app, for example OverDrive\'s own app. Click \'Ignore\' if you already have such an app, this message won\'t show up again in this case. Click \'Download\' to open up the Play Store to download the OverDrive app.</string>
     <string name="reader_needed_ignore">Ignore</string>
     <string name="doing_prolong_all">All renewable media is being renewed…</string>

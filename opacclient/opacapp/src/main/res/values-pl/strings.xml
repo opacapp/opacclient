@@ -43,7 +43,7 @@
     <string name="doing_cancel">Rezerwacja jest anulowana...</string>
     <string name="doing_prolong">Dokonywanie odnowienia...</string>
     <string name="doing_download">Informacje są pobierane...</string>
-    <string name="reader_needed">Aby czytać e-booki potrzebujesz osobnej aplikacji, np \'Bluefire Reader\'. Kliknij \'Ignoruj\' jeśli posiadasz już taką aplikację, w takim wypadku ta informacja nie pojawi się ponownie. Kliknij \'Pobierz\' aby otworzyć Sklep Play i pobrać  Bluefire Reader.</string>
+    <string name="reader_needed">Aby czytać e-booki potrzebujesz osobnej aplikacji, np \'Aldiko\'. Kliknij \'Ignoruj\' jeśli posiadasz już taką aplikację, w takim wypadku ta informacja nie pojawi się ponownie. Kliknij \'Pobierz\' aby otworzyć Sklep Play i pobrać  Aldiko.</string>
     <string name="reader_needed_ignore">Ignoruj</string>
     <string name="doing_prolong_all">Wszystkie odnawialne pozycje są odnawiane...</string>
     <string name="prolong_all_confirm">Czy na pewno odnowić wszystkie pozycje na tym koncie? Niektóre biblioteki mogą naliczyć opłaty.</string>
