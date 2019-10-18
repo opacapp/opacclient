@@ -43,7 +43,7 @@
     <string name="doing_cancel">Cancelando reservación…</string>
     <string name="doing_prolong">Realizando renovación…</string>
     <string name="doing_download">Recuperando información de descarga…</string>
-    <string name="reader_needed">Para leer el e-book, necesitas otra aplicación, i.e. \"Bluefire Reader\". Pincha \"Ignorar\" si ya obtienes de una aplicación parecida, en este caso, la mensaje no volverá a aparecer. Pincha \"Descargar\" para abrir la tienda Play para descargar Bluefire Reader.</string>
+    <string name="reader_needed">Para leer el e-book, necesitas otra aplicación, i.e. \"Aldiko\". Pincha \"Ignorar\" si ya obtienes de una aplicación parecida, en este caso, la mensaje no volverá a aparecer. Pincha \"Descargar\" para abrir la tienda Play para descargar Aldiko.</string>
     <string name="reader_needed_ignore">Ignorar</string>
     <string name="doing_prolong_all">Todos los medios renovables se han renovado…</string>
     <string name="prolong_all_confirm">¿Seguramente quieres renovar todos artículos en tu cuenta? Esto puede provocar tasas en algunas bibliotecas.  </string>

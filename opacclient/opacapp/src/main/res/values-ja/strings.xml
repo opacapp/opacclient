@@ -43,7 +43,7 @@
     <string name="doing_cancel">予約をキャンセルしています…</string>
     <string name="doing_prolong">延長しています…</string>
     <string name="doing_download">ダウンロード情報を取得しています…</string>
-    <string name="reader_needed">e-book を読むには、\'Bluefire リーダー\' のような別のアプリが必要です. すでにそのようなアプリを持っている場合は \'無視\' をクリックします. その場合このメッセージは今後表示されません. Google Play で Bluefire Reader をダウンロードするには \'ダウンロード\' をクリックします.</string>
+    <string name="reader_needed">e-book を読むには、\'Aldiko\' のような別のアプリが必要です. すでにそのようなアプリを持っている場合は \'無視\' をクリックします. その場合このメッセージは今後表示されません. Google Play で Aldiko をダウンロードするには \'ダウンロード\' をクリックします.</string>
     <string name="reader_needed_ignore">無視</string>
     <string name="doing_prolong_all">延長可能な蔵書を延長しています…</string>
     <string name="prolong_all_confirm">すべての蔵書を延長してもよろしいですか? 一部の図書館では料金が発生することがあります.</string>

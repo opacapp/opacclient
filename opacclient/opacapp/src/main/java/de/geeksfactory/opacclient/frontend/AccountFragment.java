@@ -871,7 +871,7 @@ public class AccountFragment extends Fragment implements
                                                public void onClick(
                                                        DialogInterface dialog, int id) {
                                                    dialog.cancel();
-                                                   String reader = "com.bluefirereader";
+                                                   String reader = "com.aldiko.android";
                                                    if (a.toLowerCase().contains("overdrive")) {
                                                        reader = "com.overdrive.mobile.android.mediaconsole";
                                                    }

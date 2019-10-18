@@ -43,7 +43,7 @@
     <string name="doing_cancel">La réservation est annulée...</string>
     <string name="doing_prolong">Prolongation en cours...</string>
     <string name="doing_download">Le téléchargement des informations est en cours...</string>
-    <string name="reader_needed">Pour lire l\'e-book, vous avez besoin d\'une application extérieure, par exemple \"Bluefire Reader\". Cliquez sur \"Ignorer\" si vous avez déjà une telle application, ce message ne s\'affichera plus. Cliquez sur \"Télécharger\" pour ouvrir le Play Store et télécharger Bluefire Reader.</string>
+    <string name="reader_needed">Pour lire l\'e-book, vous avez besoin d\'une application extérieure, par exemple \"Aldiko\". Cliquez sur \"Ignorer\" si vous avez déjà une telle application, ce message ne s\'affichera plus. Cliquez sur \"Télécharger\" pour ouvrir le Play Store et télécharger Aldiko.</string>
     <string name="reader_needed_ignore">Ignorer</string>
     <string name="doing_prolong_all">Tous les médias prolongeables sont en cours de prolongation...</string>
     <string name="prolong_all_confirm">Voulez-vous vraiment renouveler tous les articles de votre compte? Dans certaines bibliothèques, cela peut entraîner des frais.</string>

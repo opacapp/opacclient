@@ -43,7 +43,7 @@
     <string name="doing_cancel">Vorbestellung wird gelöscht…</string>
     <string name="doing_prolong">Verlängerung wird durchgeführt…</string>
     <string name="doing_download">Download-Informationen werden abgerufen</string>
-    <string name="reader_needed">Um die E-Book-Datei zu lesen, benötigen Sie eine weitere App, z.B. Bluefire Reader. Klicken Sie auf Ignorieren, wenn Sie bereits eine solche App haben. Diese Meldung erscheint dann nicht wieder. Klicken Sie auf Download, um in den Play Store zu gelangen und Bluefire Reader herunterzuladen.</string>
+    <string name="reader_needed">Um die E-Book-Datei zu lesen, benötigen Sie eine weitere App, z.B. Aldiko. Klicken Sie auf Ignorieren, wenn Sie bereits eine solche App haben. Diese Meldung erscheint dann nicht wieder. Klicken Sie auf Download, um in den Play Store zu gelangen und Aldiko herunterzuladen.</string>
     <string name="reader_needed_overdrive">Um dieses Medium zu öffnen, benötigen Sie eine weitere App, z.B. die OverDrive-App. Klicken Sie auf Ignorieren, wenn Sie bereits eine solche App haben. Diese Meldung erscheint dann nicht wieder. Klicken Sie auf Download, um in den Play Store zu gelangen und OverDrive herunterzuladen.</string>
     <string name="reader_needed_ignore">Ignorieren</string>
     <string name="doing_prolong_all">Medien, die verlängert werden können, werden verlängert…</string>

@@ -43,7 +43,7 @@
     <string name="doing_cancel">Cancellazione della prenotazione…</string>
     <string name="doing_prolong">Rinnovo del prestito in corso…</string>
     <string name="doing_download">Le informazioni vengono scaricate</string>
-    <string name="reader_needed">Per leggere l\'e-book è necessario un\'altra applicazione ad es. \"Bluefire Reader\". Clicca su \"Ignora\" se hai già un\'app simile installata, questo avviso non apparirà nuovamente in seguito. Clicca invece su \"Download\" per installare Bluefire Reader tramite Play Store. </string>
+    <string name="reader_needed">Per leggere l\'e-book è necessario un\'altra applicazione ad es. \"Aldiko\". Clicca su \"Ignora\" se hai già un\'app simile installata, questo avviso non apparirà nuovamente in seguito. Clicca invece su \"Download\" per installare Aldiko tramite Play Store. </string>
     <string name="reader_needed_ignore">Ignora</string>
     <string name="doing_prolong_all">Tutti i prestiti rinnovabili vengono rinnovati…</string>
     <string name="prolong_all_confirm">Vuoi davvero rinnovare tutti i prestiti? Alcune biblioteche possono richiedere costi aggiuntivi per questa operazione.</string>

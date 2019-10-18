@@ -43,7 +43,7 @@
     <string name="doing_cancel">Rezervasyon iptal ediliyor…</string>
     <string name="doing_prolong">Uzatılıyor…</string>
     <string name="doing_download">İndirme bilgisi alınıyor…</string>
-    <string name="reader_needed">Bir e-kitap okuyabilmek için ayrı bir uygulama kullanmalısınız. Zaten bir uygulamanız varsa \'Yoksay\' butonuna tıklayınız ve bu mesaj bir daha gösterilmeyecek. Play Store\'u açığ Bluefire Reader uygulamasını indirmek için \'İndir\' butonuna tıklayınız.</string>
+    <string name="reader_needed">Bir e-kitap okuyabilmek için ayrı bir uygulama kullanmalısınız. Zaten bir uygulamanız varsa \'Yoksay\' butonuna tıklayınız ve bu mesaj bir daha gösterilmeyecek. Play Store\'u açığ Aldiko uygulamasını indirmek için \'İndir\' butonuna tıklayınız.</string>
     <string name="reader_needed_ignore">Yoksay</string>
     <string name="doing_prolong_all">Uzatılması mümkün olan tüm medyaların süresi uzatılıyor…</string>
     <string name="prolong_all_confirm">Hesabınızdaki (uzatılabilir) tüm öğeleri uzatmak istediğinizden emin misiniz? Bu işlem bazı kütüphanelerde ücretli olabilir.</string>
