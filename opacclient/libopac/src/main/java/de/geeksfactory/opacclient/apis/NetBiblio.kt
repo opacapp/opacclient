@@ -263,10 +263,14 @@ open class NetBiblio : OkHttpBaseApi() {
                     ".wo-list-content-no-label[style=background-color:#F3F3F3;]").text
             details.add(Detail(stringProvider.getString(StringProvider.DESCRIPTION), description))
 
-            val medialinks = doc.select(".wo-linklist-multimedialinks .wo-link a")
+            val medialinks = doc.select(".wo-linklist-multimedialinks .wo-link a, .wo-btn-ebibliomedia")
             for (link in medialinks) {
-                if (link.attr("href").contains("multimedialinks/link?url")) {
-                    val url = BaseApi.getQueryParamsFirst(link.attr("href"))["url"]
+                val href = link.attr("href")
+                if (href.contains("multimedialinks/link?url")) {
+                    val url = BaseApi.getQueryParamsFirst(href)["url"]
+                    addDetail(Detail(link.text(), url))
+                } else if (href.contains("ebibliomedialink?ref")) {
+                    val url = BaseApi.getQueryParamsFirst(href)["ref"]
                     addDetail(Detail(link.text(), url))
                 }
             }
