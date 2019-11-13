@@ -86,6 +86,7 @@ public class Open extends OkHttpBaseApi implements OpacApi {
     protected static HashMap<String, SearchResult.MediaType> defaulttypes = new HashMap<>();
 
     static {
+        // icons
         defaulttypes.put("archv", SearchResult.MediaType.BOOK);
         defaulttypes.put("archv-digital", SearchResult.MediaType.EDOC);
         defaulttypes.put("artchap", SearchResult.MediaType.ART);
@@ -203,6 +204,19 @@ public class Open extends OkHttpBaseApi implements OpacApi {
         defaulttypes.put("visvid", SearchResult.MediaType.MOVIE);
         defaulttypes.put("visvidurl", SearchResult.MediaType.EVIDEO);
         defaulttypes.put("web", SearchResult.MediaType.URL);
+
+        // fallback: Text
+        defaulttypes.put("Buch", SearchResult.MediaType.BOOK);
+        defaulttypes.put("Compact Disc", SearchResult.MediaType.CD);
+        defaulttypes.put("DVD", SearchResult.MediaType.DVD);
+        defaulttypes.put("Konsolenspiel", SearchResult.MediaType.GAME_CONSOLE);
+        defaulttypes.put("Noten", SearchResult.MediaType.SCORE_MUSIC);
+        defaulttypes.put("eBook", SearchResult.MediaType.EBOOK);
+        defaulttypes.put("Zeitschrift", SearchResult.MediaType.MAGAZINE);
+        defaulttypes.put("Blu-ray", SearchResult.MediaType.BLURAY);
+        defaulttypes.put("eAudio", SearchResult.MediaType.EAUDIO);
+        defaulttypes.put("DVD-ROM", SearchResult.MediaType.CD_SOFTWARE);
+        defaulttypes.put("Kinderzeitschriften", SearchResult.MediaType.MAGAZINE);
     }
 
     /**
@@ -360,6 +374,11 @@ public class Open extends OkHttpBaseApi implements OpacApi {
                 String mediatype = catalogueContent.select("#spanMediaGrpIcon, .spanMediaGrpIcon").attr("class");
                 if (mediatype.startsWith("itemtype ")) {
                     mediatype = mediatype.substring("itemtype ".length());
+                }
+
+                if ("".equals(mediatype)) {
+                    // fallback: use text media type if icon is not available (e.g. Wien)
+                    mediatype = catalogueContent.select("[id$=spanMediaGrpValue]").text();
                 }
 
                 SearchResult.MediaType defaulttype = defaulttypes.get(mediatype);
