@@ -37,6 +37,7 @@ import de.geeksfactory.opacclient.utils.Utils;
 public class PreferenceDataSource {
 
     private static final String LAST_LIBRARY_CONFIG_UPDATE = "last_library_config_update";
+    private static final String LAST_LIBRARY_CONFIG_UPDATE_TRY = "last_library_config_update_try";
     private static final String LAST_LIBRARY_CONFIG_UPDATE_VERSION =
             "last_library_config_update_version";
     private static final String ACCOUNT_PTR_HINT_SHOWN = "account_ptr_hint_shown";
@@ -48,6 +49,10 @@ public class PreferenceDataSource {
     public PreferenceDataSource(Context context) {
         this.context = context;
         sp = PreferenceManager.getDefaultSharedPreferences(context);
+    }
+
+    public long getLastLibraryConfigUpdateTry() {
+        return sp.getLong(LAST_LIBRARY_CONFIG_UPDATE_TRY, 0);
     }
 
     @Nullable
@@ -79,6 +84,10 @@ public class PreferenceDataSource {
         sp.edit().putString(LAST_LIBRARY_CONFIG_UPDATE, lastUpdate.toString()).apply();
     }
 
+    public void setLastLibraryConfigUpdateTry(long lastUpdate) {
+        sp.edit().putLong(LAST_LIBRARY_CONFIG_UPDATE_TRY, lastUpdate).apply();
+    }
+
     public boolean hasBundledConfiguration() {
         return getBundledConfigUpdateTime() != null;
     }
@@ -86,6 +95,7 @@ public class PreferenceDataSource {
     public void clearLastLibraryConfigUpdate() {
         sp.edit()
           .remove(LAST_LIBRARY_CONFIG_UPDATE)
+          .remove(LAST_LIBRARY_CONFIG_UPDATE_TRY)
           .remove(LAST_LIBRARY_CONFIG_UPDATE_VERSION)
           .apply();
     }
