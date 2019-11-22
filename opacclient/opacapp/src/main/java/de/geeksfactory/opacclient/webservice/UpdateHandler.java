@@ -59,6 +59,7 @@ public class UpdateHandler {
         DateTime lastUpdate = new DateTime(response.headers().get("X-Page-Generated"));
         prefs.setLastLibraryConfigUpdate(lastUpdate);
         prefs.setLastLibraryConfigUpdateVersion(BuildConfig.VERSION_CODE);
+        prefs.setLastLibraryConfigUpdateTry(System.currentTimeMillis());
 
         return updatedLibraries.size();
     }

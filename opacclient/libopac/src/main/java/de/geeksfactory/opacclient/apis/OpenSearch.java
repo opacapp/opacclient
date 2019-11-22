@@ -78,7 +78,7 @@ import static okhttp3.MultipartBody.Part.create;
  * @author Johan von Forstner, 29.03.2015
  */
 
-public class Open extends OkHttpBaseApi implements OpacApi {
+public class OpenSearch extends OkHttpBaseApi implements OpacApi {
     protected JSONObject data;
     protected String opac_url;
     protected Document searchResultDoc;

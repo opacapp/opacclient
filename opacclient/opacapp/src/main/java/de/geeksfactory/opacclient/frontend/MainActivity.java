@@ -45,7 +45,9 @@ import de.geeksfactory.opacclient.searchfields.SearchQuery;
 import de.geeksfactory.opacclient.storage.AccountDataSource;
 import de.geeksfactory.opacclient.storage.DataIntegrityException;
 import de.geeksfactory.opacclient.storage.JsonSearchFieldDataSource;
+import de.geeksfactory.opacclient.storage.PreferenceDataSource;
 import de.geeksfactory.opacclient.storage.SearchFieldDataSource;
+import de.geeksfactory.opacclient.webservice.LibraryConfigUpdateService;
 
 public class MainActivity extends OpacActivity
         implements SearchFragment.Callback, StarredFragment.Callback,
@@ -238,6 +240,15 @@ public class MainActivity extends OpacActivity
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             getWindow().setExitTransition(null);
+        }
+
+        PreferenceDataSource prefs = new PreferenceDataSource(this);
+        if (System.currentTimeMillis() - prefs.getLastLibraryConfigUpdateTry() > 24 * 3600 * 1000) {
+            // If the library config update did not run for more than 24h, let's trigger it now in
+            // the background, even if the result will only be active on the next app start / account
+            // switch.
+            Intent i = new Intent(this, LibraryConfigUpdateService.class);
+            startService(i);
         }
     }
 

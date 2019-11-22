@@ -28,7 +28,8 @@ import de.geeksfactory.opacclient.apis.Koha;
 import de.geeksfactory.opacclient.apis.Littera;
 import de.geeksfactory.opacclient.apis.NetBiblio;
 import de.geeksfactory.opacclient.apis.OpacApi;
-import de.geeksfactory.opacclient.apis.Open;
+import de.geeksfactory.opacclient.apis.OpenAccountScraper;
+import de.geeksfactory.opacclient.apis.OpenSearch;
 import de.geeksfactory.opacclient.apis.PicaLBS;
 import de.geeksfactory.opacclient.apis.PicaOld;
 import de.geeksfactory.opacclient.apis.Primo;
@@ -83,7 +84,8 @@ public class OpacApiFactory {
      * @param lib  the {@link Library} you want to connect to
      * @param sp   the {@link StringProvider} to use
      * @param hcf  the {@link HttpClientFactory} to use
-     * @param lang the preferred language as a ISO-639-1 code, see {@link OpacApi#setLanguage(String)}
+     * @param lang the preferred language as a ISO-639-1 code, see
+     * {@link OpacApi#setLanguage(String)}
      * @return a new {@link OpacApi} instance
      */
     public static OpacApi create(Library lib, StringProvider sp, HttpClientFactory hcf,
@@ -130,7 +132,11 @@ public class OpacApiFactory {
         } else if (lib.getApi().equals("touchpoint")) {
             newApiInstance = new TouchPoint();
         } else if (lib.getApi().equals("open")) {
-            newApiInstance = new Open();
+            if (lib.isAccountSupported() && lib.isSupportContract()) {
+                newApiInstance = new OpenAccountScraper();
+            } else {
+                newApiInstance = new OpenSearch();
+            }
         } else if (lib.getApi().equals("koha")) {
             newApiInstance = new Koha();
         } else if (lib.getApi().equals("netbiblio")) {
