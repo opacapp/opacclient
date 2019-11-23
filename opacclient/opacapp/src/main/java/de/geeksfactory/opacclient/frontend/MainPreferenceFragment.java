@@ -128,7 +128,7 @@ public class MainPreferenceFragment extends PreferenceFragmentCompat {
             meta_run_check.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
                 @Override
                 public boolean onPreferenceClick(Preference arg0) {
-                    SyncAccountJob.runImmediately();
+                    SyncAccountJob.runImmediately(getContext());
                     return false;
                 }
             });
@@ -150,7 +150,7 @@ public class MainPreferenceFragment extends PreferenceFragmentCompat {
                             PreferenceManager.getDefaultSharedPreferences(getActivity());
                     sp.edit().remove("reservation_fee_warning_ignore").apply();
 
-                    SyncAccountJob.runImmediately();
+                    SyncAccountJob.runImmediately(getContext());
                     return false;
                 }
             });
