@@ -923,8 +923,10 @@ public class Adis extends OkHttpBaseApi implements OpacApi {
                     res = new ReservationResult(MultiStepResult.Status.OK);
                     doc = htmlPost(opac_url + ";jsessionid=" + s_sid, form);
 
-                    if (doc.select("input[name=textButton]").attr("value")
-                           .contains("kostenpflichtig bestellen")) {
+                    String buttonText = doc.select("input[name=textButton]")
+                            .attr("value");
+                    if (buttonText.contains("kostenpflichtig bestellen")
+                            || buttonText.contains("Bestellung / Vormerkung abschicken")) {
                         // Munich, new version in Zürich
                         if (doc.select(".achtung").size() > 0 && !"confirmed".equals(selection)) {
                             // fee warning (new version in Zürich 2019/06)
