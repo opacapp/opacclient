@@ -1726,10 +1726,10 @@ public class SISIS extends OkHttpBaseApi implements OpacApi {
     protected void parse_fees(Document doc, AccountData res) {
         if (doc.select("#label8").size() > 0) {
             String text = doc.select("#label8").first().text().trim();
-            if (text.matches("Geb.+hren[^\\(]+\\(([0-9.,]+)[^0-9€A-Z]*(€|EUR|CHF|Fr)\\)")) {
+            if (text.matches("Geb.+hren[^\\(]+\\(([0-9.,]+)[^0-9€A-Z]*(€|EUR|CHF|Fr.?)\\)")) {
                 text = text
                         .replaceAll(
-                                "Geb.+hren[^\\(]+\\(([0-9.,]+)[^0-9€A-Z]*(€|EUR|CHF|Fr)\\)",
+                                "Geb.+hren[^\\(]+\\(([0-9.,]+)[^0-9€A-Z]*(€|EUR|CHF|Fr.?)\\)",
                                 "$1 $2");
                 res.setPendingFees(text);
             }
