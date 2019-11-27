@@ -884,9 +884,11 @@ public class Adis extends OkHttpBaseApi implements OpacApi {
                     }
                 }
                 if (doc.select("#BENJN_1").size() > 0) {
-                    // Notification not requested because some libraries notify by snail mail
-                    // and take a fee for it (Example: Stuttgart_Uni)
-                    doc.select("#BENJN_1").attr("value", "Nein");
+                    if (!data.optBoolean("reservation_notification_enabled")) {
+                        // Notification not requested because some libraries notify by snail mail
+                        // and take a fee for it (Example: Stuttgart_Uni)
+                        doc.select("#BENJN_1").attr("value", "Nein");
+                    }
                 }
                 if (doc.select(".message h1").size() > 0) {
                     String msg = doc.select(".message h1").text().trim();
@@ -923,8 +925,10 @@ public class Adis extends OkHttpBaseApi implements OpacApi {
                     res = new ReservationResult(MultiStepResult.Status.OK);
                     doc = htmlPost(opac_url + ";jsessionid=" + s_sid, form);
 
-                    if (doc.select("input[name=textButton]").attr("value")
-                           .contains("kostenpflichtig bestellen")) {
+                    String buttonText = doc.select("input[name=textButton]")
+                            .attr("value");
+                    if (buttonText.contains("kostenpflichtig bestellen")
+                            || buttonText.contains("Bestellung / Vormerkung abschicken")) {
                         // Munich, new version in Zürich
                         if (doc.select(".achtung").size() > 0 && !"confirmed".equals(selection)) {
                             // fee warning (new version in Zürich 2019/06)
