@@ -884,7 +884,9 @@ public class Adis extends OkHttpBaseApi implements OpacApi {
                     }
                 }
                 if (doc.select("#BENJN_1").size() > 0) {
-                    if (!data.optBoolean("reservation_notification_enabled")) {
+                    if (data.optBoolean("reservation_notification_enabled")) {
+                        doc.select("#BENJN_1").attr("value", "Ja");
+                    } else {
                         // Notification not requested because some libraries notify by snail mail
                         // and take a fee for it (Example: Stuttgart_Uni)
                         doc.select("#BENJN_1").attr("value", "Nein");
