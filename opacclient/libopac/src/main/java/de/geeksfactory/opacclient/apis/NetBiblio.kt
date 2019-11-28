@@ -263,7 +263,7 @@ open class NetBiblio : OkHttpBaseApi() {
                     ".wo-list-content-no-label[style=background-color:#F3F3F3;]").text
             details.add(Detail(stringProvider.getString(StringProvider.DESCRIPTION), description))
 
-            val medialinks = doc.select(".wo-linklist-multimedialinks .wo-link a, .wo-btn-ebibliomedia")
+            val medialinks = doc.select(".wo-linklist-multimedialinks .wo-link a, .wo-btn-ebibliomedia, .wo-btn-divibib")
             for (link in medialinks) {
                 val href = link.attr("href")
                 if (href.contains("multimedialinks/link?url")) {
@@ -272,6 +272,9 @@ open class NetBiblio : OkHttpBaseApi() {
                 } else if (href.contains("ebibliomedialink?ref")) {
                     val url = BaseApi.getQueryParamsFirst(href)["ref"]
                     addDetail(Detail(link.text(), url))
+                } else if (href.contains("divibibrequestitem?divibibId")) {
+                    val url = BaseApi.getQueryParamsFirst(href)["divibibId"]
+                    addDetail(Detail("_onleihe_id", url))
                 }
             }
 

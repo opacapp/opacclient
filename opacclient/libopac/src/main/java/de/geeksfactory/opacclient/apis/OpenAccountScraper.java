@@ -207,6 +207,9 @@ public class OpenAccountScraper extends OpenSearch {
                         // ignore
                     }
                 }
+                if (copy.getLocation().equals("Bestsellerregal") && library.getIdent().equals("Wien")) {
+                    continue;
+                }
                 map.put("value",
                         copy.getBranch() + " - " + (copy.getReturnDate() != null ? fmt.print(
                                 copy.getReturnDate()) : "unbekannt"));
