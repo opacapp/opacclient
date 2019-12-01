@@ -48,7 +48,7 @@ import de.geeksfactory.opacclient.storage.JsonSearchFieldDataSource;
 import de.geeksfactory.opacclient.storage.SearchFieldDataSource;
 
 public class MainActivity extends OpacActivity
-        implements SearchFragment.Callback, StarredFragment.Callback,
+        implements SearchFragment.Callback, StarredFragment.Callback, HistoryFragment.Callback,
         SearchResultDetailFragment.Callbacks {
 
     public static final String EXTRA_FRAGMENT = "fragment";

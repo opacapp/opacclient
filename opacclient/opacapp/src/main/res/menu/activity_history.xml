@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item
+        android:id="@+id/action_sort"
+        android:icon="@drawable/ic_sort_white_24dp"
+        app:showAsAction="ifRoom"
+        android:title="@string/sort_history">
+        <menu>
+            <item
+                android:id="@+id/action_sort_title"
+                android:title="@string/sort_history_title">
+            </item>
+            <item
+                android:id="@+id/action_sort_author"
+                android:title="@string/sort_history_author">
+            </item>
+            <item
+                android:id="@+id/action_sort_firstDate"
+                android:title="@string/sort_history_firstDate">
+            </item>
+            <item
+                android:id="@+id/action_sort_lastDate"
+                android:title="@string/sort_history_lastDate">
+            </item>
+            <item
+                android:id="@+id/action_sort_prolongCount"
+                android:title="@string/sort_history_prolongCount">
+            </item>
+            <item
+                android:id="@+id/action_sort_duration"
+                android:title="@string/sort_history_duration">
+            </item>
+        </menu>
+    </item>
+    <item
+        android:id="@+id/action_export"
+        android:icon="@drawable/ic_share_toolbar_24dp"
+        app:showAsAction="ifRoom"
+        android:title="@string/share_starred">
+    </item>
+    <item
+        android:id="@+id/action_export_to_storage"
+        app:showAsAction="never"
+        android:title="@string/export_starred_to_storage">
+    </item>
+    <item
+        android:id="@+id/action_import_from_storage"
+        app:showAsAction="never"
+        android:title="@string/import_starred_from_storage">
+    </item>
+
+</menu>

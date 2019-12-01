@@ -70,6 +70,7 @@ import de.geeksfactory.opacclient.reminder.SyncAccountJobCreator;
 import de.geeksfactory.opacclient.searchfields.SearchField;
 import de.geeksfactory.opacclient.searchfields.SearchQuery;
 import de.geeksfactory.opacclient.storage.AccountDataSource;
+import de.geeksfactory.opacclient.storage.HistoryContentProvider;
 import de.geeksfactory.opacclient.storage.PreferenceDataSource;
 import de.geeksfactory.opacclient.storage.StarContentProvider;
 import de.geeksfactory.opacclient.utils.DebugTools;
@@ -98,6 +99,7 @@ public class OpacClient extends Application {
     private static OpacClient instance;
     public final boolean SLIDING_MENU = true;
     private final Uri STAR_PROVIDER_STAR_URI = StarContentProvider.STAR_URI;
+    private final Uri HISTORY_PROVIDER_STAR_URI = HistoryContentProvider.HIST_URI;
     protected Account account;
     protected OpacApi api;
     protected Library library;
@@ -173,6 +175,10 @@ public class OpacClient extends Application {
 
     public Uri getStarProviderStarUri() {
         return STAR_PROVIDER_STAR_URI;
+    }
+
+    public Uri getHistoryProviderHistoryUri() {
+        return HISTORY_PROVIDER_STAR_URI;
     }
 
     public void addFirstAccount(Activity activity) {

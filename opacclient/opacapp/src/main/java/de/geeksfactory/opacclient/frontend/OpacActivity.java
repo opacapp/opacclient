@@ -423,6 +423,10 @@ public abstract class OpacActivity extends AppCompatActivity
             fragment = new StarredFragment();
             setTwoPane(true);
             setFabVisible(false);
+        } else if (id == R.id.nav_history) {
+            fragment = new HistoryFragment();
+            setTwoPane(true);
+            setFabVisible(false);
         } else if (id == R.id.nav_info) {
             fragment = new InfoFragment();
             setTwoPane(false);

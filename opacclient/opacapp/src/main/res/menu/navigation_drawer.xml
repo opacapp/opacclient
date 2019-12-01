@@ -16,6 +16,10 @@
             android:icon="@drawable/ic_star_24dp"
             android:title="@string/nav_starred"/>
         <item
+            android:id="@+id/nav_history"
+            android:icon="@drawable/ic_clock_24dp"
+            android:title="@string/nav_history"/>
+        <item
             android:id="@+id/nav_info"
             android:icon="@drawable/ic_info_24dp"
             android:title="@string/nav_info"/>

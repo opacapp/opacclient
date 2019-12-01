@@ -104,6 +104,7 @@ import de.geeksfactory.opacclient.objects.ReservedItem;
 import de.geeksfactory.opacclient.reminder.ReminderHelper;
 import de.geeksfactory.opacclient.reminder.SyncAccountJobCreator;
 import de.geeksfactory.opacclient.storage.AccountDataSource;
+import de.geeksfactory.opacclient.storage.HistoryDataSource;
 import de.geeksfactory.opacclient.storage.PreferenceDataSource;
 import de.geeksfactory.opacclient.ui.AccountDividerItemDecoration;
 import de.geeksfactory.opacclient.utils.ErrorReporter;
@@ -1474,6 +1475,17 @@ public class AccountFragment extends Fragment implements
                 account.setPasswordKnownValid(true);
                 adatasource.update(account);
                 adatasource.storeCachedAccountData(adatasource.getAccount(data.getAccount()), data);
+
+                // Update Lent-History
+                HistoryDataSource historyDataSource;
+                if (getActivity() == null && OpacClient.getEmergencyContext() != null) {
+                    // TODO HistoryDataSource erwartet Activity
+                   //  historyDataSource = new HistoryDataSource(OpacClient.getEmergencyContext());
+                } else {
+                    historyDataSource = new HistoryDataSource(getActivity());
+                    historyDataSource.updateLenting(adatasource.getAccount(data.getAccount()), data);
+                }
+
             } finally {
                 new ReminderHelper(app).generateAlarms();
             }
