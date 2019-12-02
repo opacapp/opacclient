@@ -360,4 +360,6 @@
     <string name="history_status_lending">seit %1$s für %2$d Tage</string>
     <string name="history_status_finished_1">vom %1$s für 1 Tag</string>
     <string name="history_status_lending_1">seit %1$s für 1 Tag</string>
+    <string name="history_first_date">Beginndatum</string>
+    <string name="history_last_date">Endedatum</string>
 </resources>
