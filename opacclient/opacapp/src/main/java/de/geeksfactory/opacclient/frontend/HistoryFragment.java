@@ -624,11 +624,14 @@ public class HistoryFragment extends Fragment implements
                     countDays = 1 + daysBetween.getDays();
                 }
                 String status = "?";
-                if (item.isLending()) {
-                    status = getString(R.string.history_status_lending, item.getFirstDate(), countDays);
+                int resId = 0;
+                String fmtFirstDate = fmt.print(item.getFirstDate());
+                if (countDays == 1) {
+                    resId = item.isLending() ?  R.string.history_status_lending_1 : R.string.history_status_finished_1;
                 } else {
-                    status = getString(R.string.history_status_finished, item.getFirstDate(), countDays);
+                    resId = item.isLending() ?  R.string.history_status_lending : R.string.history_status_finished;
                 }
+                status = getString(resId, fmtFirstDate, countDays);
                 setTextOrHide(status, tvStatus);
             }
             // setTextOrHide(builder, tvStatus);

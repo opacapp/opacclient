@@ -322,10 +322,10 @@
     <string name="starred_removed_undo">Undo</string>
     <string name="history_removed">Removed from history</string>
     <string name="history_removed_undo">Undo</string>
-    <string name="history_status_lending">since %s for %d days</string>
-    <string name="history_status_lending_1">since %s for 1 day</string>
-    <string name="history_status_finished">from %s for %d days</string>
-    <string name="history_status_finished_1">from %s for 1 day</string>
+    <string name="history_status_lending">since %1$s for %2$d days</string>
+    <string name="history_status_lending_1">since %1$s for 1 day</string>
+    <string name="history_status_finished">from %1$s for %2$d days</string>
+    <string name="history_status_finished_1">from %1$s for 1 day</string>
     <string name="print">Print</string>
     <string name="print_wait">Please wait for details to load</string>
     <string name="preference_category_library_config">Library data</string>

@@ -356,8 +356,8 @@
     <string name="share_history">Teilen</string>
     <string name="export_history_to_storage">Exportieren</string>
     <string name="history_welcome">Dies ist deine Verlaufsliste. Die Liste wird für jede Bibliothek, die du benutzt, separat geführt.</string>
-    <string name="history_status_finished">vom %s für %d Tage</string>
-    <string name="history_status_lending">seit %s für %d Tage</string>
-    <string name="history_status_finished_1">vom %s für 1 Tag</string>
-    <string name="history_status_lending_1">seit %s für 1 Tag</string>
+    <string name="history_status_finished">vom %1$s für %2$d Tage</string>
+    <string name="history_status_lending">seit %1$s für %2$d Tage</string>
+    <string name="history_status_finished_1">vom %1$s für 1 Tag</string>
+    <string name="history_status_lending_1">seit %1$s für 1 Tag</string>
 </resources>
