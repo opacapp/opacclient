@@ -70,6 +70,8 @@ import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.List;
 
+import androidx.core.app.ActivityCompat;
+import androidx.core.app.ActivityOptionsCompat;
 import androidx.cursoradapter.widget.SimpleCursorAdapter;
 import androidx.fragment.app.Fragment;
 import androidx.loader.app.LoaderManager.LoaderCallbacks;
@@ -78,7 +80,9 @@ import androidx.loader.content.Loader;
 import de.geeksfactory.opacclient.OpacClient;
 import de.geeksfactory.opacclient.R;
 import de.geeksfactory.opacclient.frontend.OpacActivity.AccountSelectedListener;
+import de.geeksfactory.opacclient.frontend.adapter.AccountAdapter;
 import de.geeksfactory.opacclient.objects.Account;
+import de.geeksfactory.opacclient.objects.AccountItem;
 import de.geeksfactory.opacclient.objects.HistoryItem;
 import de.geeksfactory.opacclient.searchfields.SearchField;
 import de.geeksfactory.opacclient.searchfields.SearchField.Meaning;
@@ -99,6 +103,8 @@ public class HistoryFragment extends Fragment implements
     private static final String JSON_ITEM_MEDIATYPE = "item_mediatype";
     private static final int REQUEST_CODE_EXPORT = 123;
     private static final int REQUEST_CODE_IMPORT = 124;
+
+    private static int REQUEST_CODE_DETAIL = 1; // siehe AccountFragment.REQUEST_DETAIL
 
     protected View view;
     protected OpacClient app;
@@ -166,7 +172,8 @@ public class HistoryFragment extends Fragment implements
                                 Toast.LENGTH_LONG).show();
                     }
                 } else {
-                    callback.showDetail(item.getMNr());
+//                  callback.showDetail(item.getMNr());
+                    showDetailActivity(item, view);
                 }
             }
         });
@@ -187,6 +194,17 @@ public class HistoryFragment extends Fragment implements
         setActivateOnItemClick(((OpacActivity) getActivity()).isTablet());
 
         return view;
+    }
+
+    private void showDetailActivity(AccountItem item, View view) {
+        Intent intent = new Intent(getContext(), AccountItemDetailActivity.class);
+        intent.putExtra(AccountItemDetailActivity.EXTRA_ITEM, item);
+        ActivityOptionsCompat options = ActivityOptionsCompat
+                .makeSceneTransitionAnimation(getActivity(), view,
+                        getString(R.string.transition_background));
+
+        ActivityCompat
+                .startActivityForResult(getActivity(), intent, REQUEST_CODE_DETAIL, options.toBundle());
     }
 
     @Override
@@ -233,7 +251,7 @@ public class HistoryFragment extends Fragment implements
 
         if (sortOrder == null) {
             // bisher nicht sortiert
-            sortOrder = orderby + " ASC";
+            sortOrder = orderby + " DESC";
         } else if (sortOrder.startsWith(orderby)) {
             // bereits nach dieser Spalte sortiert
             // d.h. ASC/DESC swappen
@@ -426,10 +444,10 @@ public class HistoryFragment extends Fragment implements
     }
 
     @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+    public void onActivityResult(int requestCode, int resultCode, Intent intent) {
         if (requestCode == REQUEST_CODE_EXPORT && resultCode == Activity.RESULT_OK) {
-            Log.i("HistoryItemFragment", data.toString());
-            Uri uri = data.getData();
+            Log.i("HistoryItemFragment", intent.toString());
+            Uri uri = intent.getData();
             try {
                 OutputStream os = getActivity().getContentResolver().openOutputStream(uri);
                 if (os != null) {
@@ -447,7 +465,7 @@ public class HistoryFragment extends Fragment implements
                 showExportError();
             }
         } else if (requestCode == REQUEST_CODE_IMPORT && resultCode == Activity.RESULT_OK) {
-            Uri uri = data.getData();
+            Uri uri = intent.getData();
             InputStream is = null;
             try {
                 HistoryDataSource dataSource = new HistoryDataSource(getActivity());
@@ -511,8 +529,19 @@ public class HistoryFragment extends Fragment implements
                     }
                 }
             }
+        } else if ((requestCode == REQUEST_CODE_DETAIL) && (intent != null)) {
+            String data = intent.getStringExtra(AccountItemDetailActivity.EXTRA_DATA);
+            switch (resultCode) {
+                case AccountItemDetailActivity.RESULT_PROLONG:
+                    // TODO implement prolong from History
+                    // prolong(data);
+                    break;
+                case AccountItemDetailActivity.RESULT_BOOKING:
+                    // TODO implement booking from History
+                    // bookingStart(data);
+                    break;
+            }
         }
-
     }
 
     @Override

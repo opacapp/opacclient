@@ -25,6 +25,7 @@ import de.geeksfactory.opacclient.apis.EbookServiceApi;
 import de.geeksfactory.opacclient.apis.OpacApi;
 import de.geeksfactory.opacclient.databinding.AccountItemDetailActivityBinding;
 import de.geeksfactory.opacclient.objects.AccountItem;
+import de.geeksfactory.opacclient.objects.HistoryItem;
 import de.geeksfactory.opacclient.objects.LentItem;
 import de.geeksfactory.opacclient.objects.ReservedItem;
 import de.geeksfactory.opacclient.objects.SearchResult;
@@ -154,6 +155,23 @@ public class AccountItemDetailActivity extends AppCompatActivity {
                 cancel.setVisible(false);
                 booking.setVisible(false);
             }
+        } else if (item instanceof HistoryItem) {
+            final HistoryItem i = (HistoryItem) item;
+            download.setVisible(false);
+            cancel.setVisible(false);   // cancel reservation
+            if (i.isLending() ) {
+                booking.setVisible(false);
+
+                prolong.setVisible(true);
+                // solange beo HistoryFragment nicht implementierr
+                prolong.setVisible(false);
+            } else {
+                prolong.setVisible(false);
+
+                booking.setVisible(true);
+                // solange beo HistoryFragment nicht implementierr
+                booking.setVisible(false);
+            }
         }
 
         return true;
@@ -197,15 +215,32 @@ public class AccountItemDetailActivity extends AppCompatActivity {
             } else {
                 return null;
             }
-        } else {
+        } else if (item instanceof ReservedItem) {
             return fromHtml(((ReservedItem) item).getBranch());
+        } else if (item instanceof HistoryItem) {
+            HistoryItem historyItem = (HistoryItem) item;
+            if (historyItem.getLendingBranch() != null && historyItem.getHomeBranch() != null) {
+                return fromHtml(String.format(format, historyItem.getLendingBranch(),
+                        historyItem.getHomeBranch()));
+            } else if (historyItem.getLendingBranch() != null) {
+                return fromHtml(historyItem.getLendingBranch());
+            } else if (historyItem.getHomeBranch() != null) {
+                return fromHtml(historyItem.getHomeBranch());
+            } else {
+                return null;
+            }
+        } else {
+            return null;
         }
     }
 
     public static boolean hasBranch(AccountItem item) {
         return ((item instanceof LentItem && (((LentItem) item).getHomeBranch() != null ||
                 ((LentItem) item).getLendingBranch() != null)) ||
-                (item instanceof ReservedItem && ((ReservedItem) item).getBranch() != null));
+                (item instanceof ReservedItem && ((ReservedItem) item).getBranch() != null) ||
+                (item instanceof HistoryItem && (((HistoryItem) item).getHomeBranch() != null ||
+                ((HistoryItem) item).getLendingBranch() != null))
+                );
     }
 
     private static CharSequence fromHtml(@Nullable String text) {
