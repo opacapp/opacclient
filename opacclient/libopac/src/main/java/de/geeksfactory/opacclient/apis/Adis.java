@@ -1000,6 +1000,7 @@ public class Adis extends OkHttpBaseApi implements OpacApi {
                         String msg = doc.select(".alert").first().ownText();
                         if (msg.contains("nicht reserviert werden")) {
                             res = new ReservationResult(MultiStepResult.Status.ERROR, msg);
+                            doc = reservationGoBack(doc);
                         }
                     }
                 }
@@ -1009,19 +1010,7 @@ public class Adis extends OkHttpBaseApi implements OpacApi {
         if (res == null
                 || res.getStatus() == MultiStepResult.Status.SELECTION_NEEDED
                 || res.getStatus() == MultiStepResult.Status.CONFIRMATION_NEEDED) {
-            form = new ArrayList<>();
-            for (Element input : doc.select("input, select")) {
-                if (!"image".equals(input.attr("type"))
-                        && !"submit".equals(input.attr("type"))
-                        && !"checkbox".equals(input.attr("type"))
-                        && !"".equals(input.attr("name"))) {
-                    form.add(new BasicNameValuePair(input.attr("name"), input
-                            .attr("value")));
-                }
-            }
-            Element button = doc.select("input[value=Abbrechen], input[value=Zurück]").first();
-            form.add(new BasicNameValuePair(button.attr("name"), button.attr("value")));
-            doc = htmlPost(opac_url + ";jsessionid=" + s_sid, form);
+            doc = reservationGoBack(doc);
         }
 
         // Reset
@@ -1032,6 +1021,25 @@ public class Adis extends OkHttpBaseApi implements OpacApi {
         }
 
         return res;
+    }
+
+    private Document reservationGoBack(Document doc) throws IOException {
+        // cancels the reservation process, i.e. goes back to the result detail page.
+        List<NameValuePair> form;
+        form = new ArrayList<>();
+        for (Element input : doc.select("input, select")) {
+            if (!"image".equals(input.attr("type"))
+                    && !"submit".equals(input.attr("type"))
+                    && !"checkbox".equals(input.attr("type"))
+                    && !"".equals(input.attr("name"))) {
+                form.add(new BasicNameValuePair(input.attr("name"), input
+                        .attr("value")));
+            }
+        }
+        Element button = doc.select("input[value=Abbrechen], input[value=Zurück]").first();
+        form.add(new BasicNameValuePair(button.attr("name"), button.attr("value")));
+        doc = htmlPost(opac_url + ";jsessionid=" + s_sid, form);
+        return doc;
     }
 
     void updatePageform(Document doc) {
