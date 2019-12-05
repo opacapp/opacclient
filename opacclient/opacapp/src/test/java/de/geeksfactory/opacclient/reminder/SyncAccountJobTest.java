@@ -53,7 +53,7 @@ public class SyncAccountJobTest {
         helper = mock(ReminderHelper.class);
         api1 = mock(OpacApi.class);
         api2 = mock(OpacApi.class);
-        service = new SyncAccountJob();
+        service = new SyncAccountJob(null, null);
 
         when(sp.contains("update_151_clear_cache")).thenReturn(true);
 
