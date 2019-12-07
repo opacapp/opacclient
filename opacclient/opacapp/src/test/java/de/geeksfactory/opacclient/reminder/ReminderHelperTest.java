@@ -109,14 +109,8 @@ public class ReminderHelperTest {
 
         rh.generateAlarms();
 
-        verify(data, times(1)).updateAlarm(argThat(new ArgumentMatcher<Alarm>() {
-
-            @Override
-            public boolean matches(Object argument) {
-                Alarm alarm = (Alarm) argument;
-                return alarm.media.length == 1 && alarm.media[0] == 2L;
-            }
-        }));
+        verify(data, times(1)).updateAlarm(argThat(
+                alarm -> alarm.media.length == 1 && alarm.media[0] == 2L));
     }
 
     @SuppressLint("CommitPrefEdits")
