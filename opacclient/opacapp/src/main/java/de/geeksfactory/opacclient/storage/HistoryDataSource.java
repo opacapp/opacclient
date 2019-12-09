@@ -29,9 +29,13 @@ import android.database.sqlite.SQLiteDatabase;
 import android.text.BoringLayout;
 
 import org.joda.time.LocalDate;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -119,6 +123,58 @@ public class HistoryDataSource {
         }
     }
 
+    public JSONArray getAllItemsAsJson(String bib) throws
+            JSONException {
+
+        String[] selA = {bib};
+        Cursor cursor = context
+                .getContentResolver()
+                .query(((OpacClient) context.getApplication())
+                                .getHistoryProviderHistoryUri(),
+                        HistoryDatabase.COLUMNS, HistoryDatabase.HIST_WHERE_LIB,
+                        selA, null);
+
+        cursor.moveToFirst();
+        JSONArray items = new JSONArray();
+        while (!cursor.isAfterLast()) {
+            JSONObject item = cursorToJson(HistoryDatabase.COLUMNS, cursor);
+            items.put(item);
+
+            cursor.moveToNext();
+        }
+        // Make sure to close the cursor
+        cursor.close();
+        return items;
+    }
+
+    private static JSONObject cursorToJson(String[] columns, Cursor cursor) throws
+            JSONException {
+        JSONObject jsonItem = new JSONObject();
+        int i=0;
+        for (String col : columns) {
+            switch (col) {
+                case "lending":
+                case "ebook":
+                    // boolean wie int
+                case "prolongCount":
+                    // Integer
+                    jsonItem.put(col, Integer.toString(cursor.getInt(i++)));
+                    break;
+                case "historyId AS _id":
+                    col = "historyId";
+                case "firstDate":
+                case "lastDate":
+                case "deadline":
+                    // date wie String
+                default:
+                    // String
+                    jsonItem.put(col, cursor.getString(i++));
+            }
+        }
+
+        return jsonItem;
+    }
+
     public static HistoryItem cursorToItem(Cursor cursor) {
         HistoryItem item = new HistoryItem();
         int i=0;
@@ -203,6 +259,44 @@ public class HistoryDataSource {
 
     public void insertHistoryItem(HistoryItem historyItem ) {
         ContentValues values = createContentValues(historyItem);
+        context.getContentResolver()
+               .insert(((OpacClient) context.getApplication()).getHistoryProviderHistoryUri(), values);
+    }
+
+    public void insertHistoryItem(JSONObject item ) throws JSONException {
+        ContentValues values = new ContentValues();
+        Iterator<String> keys = item.keys();
+        while(keys.hasNext()) {
+            String key = keys.next();
+            switch (key) {
+                case "lending":
+                case "ebook":
+                    // boolean
+                    boolean b = (1 == item.getInt(key));
+                    putOrNull(values, key, b );
+                    break;
+                case "prolongCount":
+                    // Integer
+                    try {
+                        int i = item.getInt(key);
+                        values.put(key, i);
+                    } catch (JSONException e) {
+                        values.putNull(key);
+                    }
+                    break;
+                case "historyId AS _id":
+                    // putOrNull(values,"historyId", item.getString(key) );
+                    // key wird neu vergeben.
+                    break;
+                case "firstDate":
+                case "lastDate":
+                case "deadline":
+                    // date wird als String inserted
+                default:
+                    // String
+                    putOrNull(values,key, item.getString(key) );
+            }
+        }
         context.getContentResolver()
                .insert(((OpacClient) context.getApplication()).getHistoryProviderHistoryUri(), values);
     }

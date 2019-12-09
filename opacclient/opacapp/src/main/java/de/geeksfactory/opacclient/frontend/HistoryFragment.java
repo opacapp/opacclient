@@ -98,9 +98,9 @@ public class HistoryFragment extends Fragment implements
     private static final String STATE_ACTIVATED_POSITION = "activated_position";
     private static final String JSON_LIBRARY_NAME = "library_name";
     private static final String JSON_HISTORY_LIST = "history_list";
-    private static final String JSON_ITEM_MNR = "item_mnr";
-    private static final String JSON_ITEM_TITLE = "item_title";
-    private static final String JSON_ITEM_MEDIATYPE = "item_mediatype";
+    private static final String JSON_ITEM_MNR = "medianr";
+    private static final String JSON_ITEM_TITLE = "title";
+    private static final String JSON_ITEM_MEDIATYPE = "mediatype";
     private static final int REQUEST_CODE_EXPORT = 123;
     private static final int REQUEST_CODE_IMPORT = 124;
 
@@ -406,9 +406,10 @@ public class HistoryFragment extends Fragment implements
     private JSONObject getEncodedHistoryItemObjects() {
         JSONObject history = new JSONObject();
         try {
-            history.put(JSON_LIBRARY_NAME, app.getLibrary().getIdent());
-            JSONArray items = new JSONArray();
             HistoryDataSource data = new HistoryDataSource(getActivity());
+            JSONArray items = data.getAllItemsAsJson(app.getLibrary().getIdent());
+            /*
+            JSONArray items = new JSONArray();
             List<HistoryItem> libItems = data.getAllItems(app.getLibrary().getIdent());
             for (HistoryItem libItem : libItems) {
                 JSONObject item = new JSONObject();
@@ -417,6 +418,8 @@ public class HistoryFragment extends Fragment implements
                 item.put(JSON_ITEM_MEDIATYPE, libItem.getMediaType());
                 items.put(item);
             }
+            */
+            history.put(JSON_LIBRARY_NAME, app.getLibrary().getIdent());
             history.put(JSON_HISTORY_LIST, items);
         } catch (JSONException e) {
             showExportError();
@@ -500,15 +503,10 @@ public class HistoryFragment extends Fragment implements
                         JSONObject entry = items.getJSONObject(i);
                         if (entry.has(JSON_ITEM_MNR) &&
                                 !dataSource.isHistory(bib, entry.getString(JSON_ITEM_MNR)) ||
-                                !entry.has(JSON_ITEM_MNR) && !dataSource.isHistoryTitle(bib,
-                                        entry.getString(JSON_ITEM_TITLE))) { //disallow dupes
-                            String mediatype = entry.optString(JSON_ITEM_MEDIATYPE, null);
-                            /* TODO import
-                            dataSource.historize(entry.optString(JSON_ITEM_MNR),
-                                    entry.getString(JSON_ITEM_TITLE), bib,
-                                    mediatype != null ? SearchResult.MediaType.valueOf(mediatype) :
-                                            null);
-                             */
+                                !entry.has(JSON_ITEM_MNR) /* && !dataSource.isHistoryTitle(bib,
+                                        entry.getString(JSON_ITEM_TITLE))*/) { //disallow dupes
+                            // String mediatype = entry.optString(JSON_ITEM_MEDIATYPE, null);
+                            dataSource.insertHistoryItem(entry);
                         }
                     }
                     adapter.notifyDataSetChanged();
