@@ -1122,7 +1122,7 @@ public class TouchPoint extends OkHttpBaseApi implements OpacApi {
 
     static List<LentItem> parse_medialist(Document doc) {
         List<LentItem> media = new ArrayList<>();
-        Elements copytrs = doc.select(".data tr");
+        Elements copytrs = doc.select(".data tr, .data .row");
 
         DateTimeFormatter fmt = DateTimeFormat.forPattern("dd.MM.yyyy").withLocale(Locale.GERMAN);
 
@@ -1176,6 +1176,14 @@ public class TouchPoint extends OkHttpBaseApi implements OpacApi {
                     item.setStatus(Parser.unescapeEntities(lines[2].trim(), false));
                 } else if (lines.length == 2) {
                     item.setAuthor(Parser.unescapeEntities(lines[1].trim(), false));
+                } else if (lines.length > 5) {
+                    // Chemnitz 2019
+                    if (lines[2].contains("&nbsp;/&nbsp;")) {
+                        item.setAuthor(Jsoup.parse(lines[1]).text().trim());
+                        item.setBarcode(Jsoup.parse(lines[2]).text().trim());
+                    } else {
+                        item.setBarcode(Jsoup.parse(lines[1]).text().trim());
+                    }
                 }
 
                 String[] col3split = tr.select(".account-display-state").html().split("<br[ /]*>");
@@ -1229,7 +1237,7 @@ public class TouchPoint extends OkHttpBaseApi implements OpacApi {
 
     static List<ReservedItem> parse_reslist(Document doc) {
         List<ReservedItem> reservations = new ArrayList<>();
-        Elements copytrs = doc.select(".data tr, #account-data .table tr");
+        Elements copytrs = doc.select(".data tr, #account-data .table tr, .data .row");
         int trs = copytrs.size();
         if (trs <= 1) {
             return null;
@@ -1242,12 +1250,29 @@ public class TouchPoint extends OkHttpBaseApi implements OpacApi {
                 return null;
             }
 
-            item.setTitle(tr.child(2).select("b, strong").text().trim());
             try {
-                String[] rowsplit2 = tr.child(2).html().split("<br[ /]*>");
-                String[] rowsplit3 = tr.child(3).html().split("<br[ /]*>");
-                if (rowsplit2.length > 1) item.setAuthor(rowsplit2[1].replace("</a>", "").trim());
-                if (rowsplit3.length > 2) item.setBranch(rowsplit3[2].replace("</a>", "").trim());
+                String[] rowsplit2;
+                String[] rowsplit3;
+                if (tr.hasClass("row")) {
+                    // Chemnitz 2019
+                    item.setTitle(
+                            tr.select(".account-display-title").select("b, strong").text().trim());
+
+                    rowsplit2 = tr.select(".account-display-title > div").first().html().split("<br[ /]*>");
+                    rowsplit3 =
+                            tr.select(".account-display-state").last().html().split("<br[ /]*>");
+                } else {
+                    item.setTitle(
+                            tr.child(2).select("b, strong").text().trim());
+                    rowsplit2 = tr.child(2).html().split("<br[ /]*>");
+                    rowsplit3 = tr.child(3).html().split("<br[ /]*>");
+                }
+                if (rowsplit2.length > 1) {
+                    item.setAuthor(rowsplit2[1].replace("</a>", "").trim());
+                }
+                if (rowsplit3.length > 2) {
+                    item.setBranch(rowsplit3[2].replace("</a>", "").trim());
+                }
                 if (rowsplit3.length > 2) {
                     item.setStatus(rowsplit3[0].trim() + " (" + rowsplit3[1].trim() + ")");
                 }
