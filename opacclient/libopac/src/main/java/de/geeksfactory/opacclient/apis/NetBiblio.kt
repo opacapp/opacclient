@@ -208,13 +208,14 @@ open class NetBiblio : OkHttpBaseApi() {
     }
 
     private fun getDivibibStatus(doc: Document): Map<String, SearchResult.Status> {
-        val elements = doc.select(".wo-status-plc[data-entityid][data-divibibid]")
+        val elements = doc.select(".wo-status-plc[data-entityid][data-divibibid], .wo-status-plc-icon[data-entityid][data-divibibid]")
 
         if (elements.size == 0) return emptyMap()
 
         val entityIds = elements.map { it["data-entityid"] }
         val divibibIds = elements.map { it["data-divibibid"] }
 
+        // The 0 is contained in data-divibibagencyid, but seems to be always 0 and we don't have zip(a,b,c) readily available ;)
         val ids = entityIds.zip(divibibIds).map { (eid, did) -> "$eid#$did/0" }.joinToString(",")
 
         val body = FormBody.Builder()
