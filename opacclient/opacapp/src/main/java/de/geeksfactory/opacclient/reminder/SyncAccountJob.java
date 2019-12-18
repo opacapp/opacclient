@@ -24,9 +24,6 @@ import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 import android.util.Log;
 
-import com.evernote.android.job.Job;
-import com.evernote.android.job.JobRequest;
-
 import org.joda.time.DateTime;
 import org.joda.time.Hours;
 import org.json.JSONException;
@@ -37,6 +34,14 @@ import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import androidx.annotation.NonNull;
+import androidx.work.Constraints;
+import androidx.work.NetworkType;
+import androidx.work.OneTimeWorkRequest;
+import androidx.work.PeriodicWorkRequest;
+import androidx.work.WorkManager;
+import androidx.work.WorkRequest;
+import androidx.work.Worker;
+import androidx.work.WorkerParameters;
 import de.geeksfactory.opacclient.BuildConfig;
 import de.geeksfactory.opacclient.OpacClient;
 import de.geeksfactory.opacclient.apis.OpacApi;
@@ -51,69 +56,87 @@ import de.geeksfactory.opacclient.webservice.WebService;
 import de.geeksfactory.opacclient.webservice.WebServiceManager;
 import io.sentry.Sentry;
 
-public class SyncAccountJob extends Job {
+public class SyncAccountJob extends Worker {
 
     static final String TAG = "SyncAccountJob";
     static final String TAG_RETRY = "SyncAccountJob_retry";
     static final String TAG_IMMEDIATE = "SyncAccountJob_immediate";
 
+    public static final String PREF_SYNC_SERVICE = "notification_service";
+
+    public SyncAccountJob(@NonNull Context context,
+            @NonNull WorkerParameters workerParams) {
+        super(context, workerParams);
+    }
+
     public static void scheduleJob(Context ctx) {
+        WorkManager wm = WorkManager.getInstance(ctx);
+        wm.cancelAllWorkByTag(TAG);
+
+        WorkRequest wr =
+                new PeriodicWorkRequest.Builder(SyncAccountJob.class, 12, TimeUnit.HOURS)
+                        .addTag(TAG)
+                        .setConstraints(getConstraints(ctx))
+                        .build();
+        wm.enqueue(wr);
+    }
+
+    private static Constraints getConstraints(Context ctx) {
         SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(ctx);
-        new JobRequest.Builder(TAG)
-                .setPeriodic(TimeUnit.HOURS.toMillis(12), TimeUnit.HOURS.toMillis(3))
-                .setRequiredNetworkType(sp.getBoolean("notification_service_wifionly", false) ?
-                        JobRequest.NetworkType.UNMETERED : JobRequest.NetworkType.CONNECTED)
-                .setRequirementsEnforced(true)
-                .setUpdateCurrent(true)
-                .build()
-                .schedule();
+        return new Constraints.Builder()
+                .setRequiredNetworkType(
+                        sp.getBoolean("notification_service_wifionly", false) ?
+                                NetworkType.UNMETERED : NetworkType.CONNECTED)
+                .build();
     }
 
     public static void scheduleRetryJob(Context ctx) {
-        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(ctx);
-        new JobRequest.Builder(TAG_RETRY)
-                .setExecutionWindow(TimeUnit.MINUTES.toMillis(30), TimeUnit.MINUTES.toMillis(60))
-                .setBackoffCriteria(TimeUnit.MINUTES.toMillis(30),
-                        JobRequest.BackoffPolicy.EXPONENTIAL)
-                .setRequiredNetworkType(sp.getBoolean("notification_service_wifionly", false) ?
-                        JobRequest.NetworkType.UNMETERED : JobRequest.NetworkType.CONNECTED)
-                .setRequirementsEnforced(true)
-                .setUpdateCurrent(true)
-                .build()
-                .schedule();
+        WorkManager wm = WorkManager.getInstance(ctx);
+        wm.cancelAllWorkByTag(TAG_RETRY);
+
+        WorkRequest wr = new OneTimeWorkRequest.Builder(SyncAccountJob.class)
+                .addTag(TAG_RETRY)
+                .setInitialDelay(30, TimeUnit.MINUTES)
+                .setConstraints(getConstraints(ctx))
+                .build();
+        wm.enqueue(wr);
     }
 
-    public static void runImmediately() {
-        new JobRequest.Builder(TAG_IMMEDIATE)
-                .startNow()
-                .setUpdateCurrent(true)
-                .build()
-                .schedule();
+    public static void runImmediately(Context ctx) {
+        WorkManager wm = WorkManager.getInstance(ctx);
+        wm.cancelAllWorkByTag(TAG_IMMEDIATE);
+
+        WorkRequest wr = new OneTimeWorkRequest.Builder(SyncAccountJob.class)
+                .addTag(TAG_IMMEDIATE)
+                .setInitialDelay(0, TimeUnit.MINUTES)
+                .build();
+        wm.enqueue(wr);
     }
 
     @NonNull
     @Override
-    protected Result onRunJob(Params params) {
+    public Result doWork() {
         if (BuildConfig.DEBUG) Log.i(TAG, "SyncAccountJob started");
 
-        if (getParams().getTag().equals(TAG_RETRY) && getParams().getFailureCount() >= 4) {
+        if (getTags().contains(TAG_RETRY) && getRunAttemptCount() >= 4) {
             // too many retries, give up and wait for the next regular scheduled run
-            return Result.SUCCESS;
+            return Result.success();
         }
 
-        if (!getParams().getTag().equals(TAG_RETRY)) {
+        if (!getTags().contains(TAG_RETRY)) {
             updateLibraryConfig();
         }
 
-        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(getContext());
+        SharedPreferences sp =
+                PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
 
-        if (!sp.getBoolean(SyncAccountJobCreator.PREF_SYNC_SERVICE, false)) {
+        if (!sp.getBoolean(PREF_SYNC_SERVICE, false)) {
             if (BuildConfig.DEBUG) Log.i(TAG, "notifications are disabled");
-            return Result.SUCCESS;
+            return Result.success();
         }
 
         OpacClient app = getApp();
-        AccountDataSource data = new AccountDataSource(getContext());
+        AccountDataSource data = new AccountDataSource(getApplicationContext());
         ReminderHelper helper = new ReminderHelper(app);
         boolean failed = syncAccounts(app, data, sp, helper);
 
@@ -122,19 +145,19 @@ public class SyncAccountJob extends Job {
                     (failed ? " with errors" : " " + "successfully"));
         }
 
-        if (failed && params.getTag().equals(TAG)) {
+        if (failed && getTags().contains(TAG)) {
             // only schedule a retry job if this is not already a retry
-            scheduleRetryJob(getContext());
+            scheduleRetryJob(getApplicationContext());
         }
-        if (params.getTag().equals(TAG_RETRY)) {
-            return failed ? Result.RESCHEDULE : Result.SUCCESS;
+        if (getTags().contains(TAG_RETRY)) {
+            return failed ? Result.retry() : Result.success();
         } else {
-            return failed ? Result.FAILURE : Result.SUCCESS;
+            return failed ? Result.failure() : Result.success();
         }
     }
 
     private OpacClient getApp() {
-        Context ctx = getContext();
+        Context ctx = getApplicationContext();
         if (ctx instanceof Service) {
             return (OpacClient) ((Service) ctx).getApplication();
         } else if (ctx instanceof OpacClient) {
@@ -145,7 +168,7 @@ public class SyncAccountJob extends Job {
     }
 
     private void updateLibraryConfig() {
-        PreferenceDataSource prefs = new PreferenceDataSource(getContext());
+        PreferenceDataSource prefs = new PreferenceDataSource(getApplicationContext());
         if (prefs.getLastLibraryConfigUpdate() != null
                 && prefs.getLastLibraryConfigUpdate()
                         .isAfter(DateTime.now().minus(Hours.ONE))) {
@@ -155,13 +178,14 @@ public class SyncAccountJob extends Job {
 
         WebService service = WebServiceManager.getInstance();
         File filesDir =
-                new File(getContext().getFilesDir(), LibraryConfigUpdateService.LIBRARIES_DIR);
+                new File(getApplicationContext().getFilesDir(),
+                        LibraryConfigUpdateService.LIBRARIES_DIR);
         filesDir.mkdirs();
         try {
             int count = getApp().getUpdateHandler().updateConfig(
                     service, prefs,
                     new LibraryConfigUpdateService.FileOutput(filesDir),
-                    new JsonSearchFieldDataSource(getContext()));
+                    new JsonSearchFieldDataSource(getApplicationContext()));
             Log.d(TAG, "updated config for " + String.valueOf(count) + " libraries");
             getApp().resetCache();
             if (!BuildConfig.DEBUG) {

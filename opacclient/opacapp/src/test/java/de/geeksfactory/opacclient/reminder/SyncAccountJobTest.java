@@ -1,6 +1,8 @@
 package de.geeksfactory.opacclient.reminder;
 
+import android.content.Context;
 import android.content.SharedPreferences;
+import android.test.mock.MockContext;
 
 import org.json.JSONException;
 import org.junit.Before;
@@ -10,6 +12,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import androidx.work.WorkerParameters;
 import de.geeksfactory.opacclient.OpacClient;
 import de.geeksfactory.opacclient.apis.OpacApi;
 import de.geeksfactory.opacclient.objects.Account;
@@ -53,15 +56,17 @@ public class SyncAccountJobTest {
         helper = mock(ReminderHelper.class);
         api1 = mock(OpacApi.class);
         api2 = mock(OpacApi.class);
-        service = new SyncAccountJob();
+        service = new SyncAccountJob(mock(Context.class), mock(WorkerParameters.class));
 
         when(sp.contains("update_151_clear_cache")).thenReturn(true);
 
         accounts = new ArrayList<>();
         account1 = new Account();
         account1.setId(0);
+        account1.setLibrary("Test");
         account2 = new Account();
         account2.setId(1);
+        account2.setLibrary("Test");
         accounts.add(account1);
         accounts.add(account2);
         library = new Library();
