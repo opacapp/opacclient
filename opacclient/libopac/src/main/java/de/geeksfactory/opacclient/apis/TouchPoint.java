@@ -1039,7 +1039,16 @@ public class TouchPoint extends OkHttpBaseApi implements OpacApi {
                 if (!page.hasAttr("href")) {
                     continue;
                 }
-                html = httpGet(page.attr("abs:href"), ENCODING);
+                String url = page.attr("abs:href");
+                Map<String, String> params = getQueryParamsFirst(url);
+                if (params.containsKey("anzPos")) {
+                    // Prevent fetching, backwards, first page again, or "last page"/"next page" links
+                    Integer anzPos = Integer.valueOf(params.get("anzPos"));
+                    if (anzPos <= 1 || page.select("svg").size() > 0) {
+                        continue;
+                    }
+                }
+                html = httpGet(url, ENCODING);
                 doc = Jsoup.parse(html);
                 doc.setBaseUri(opac_url);
                 nextpageLent = parse_medialist(doc);
@@ -1068,7 +1077,16 @@ public class TouchPoint extends OkHttpBaseApi implements OpacApi {
                 if (!page.hasAttr("href")) {
                     continue;
                 }
-                html = httpGet(page.attr("abs:href"), ENCODING);
+                String url = page.attr("abs:href");
+                Map<String, String> params = getQueryParamsFirst(url);
+                if (params.containsKey("anzPos")) {
+                    // Prevent fetching, backwards, first page again, or "last page"/"next page" links
+                    Integer anzPos = Integer.valueOf(params.get("anzPos"));
+                    if (anzPos <= 1 || page.select("svg").size() > 0) {
+                        continue;
+                    }
+                }
+                html = httpGet(url, ENCODING);
                 doc = Jsoup.parse(html);
                 doc.setBaseUri(opac_url);
                 nextpageRes = parse_reslist(doc);
@@ -1094,7 +1112,16 @@ public class TouchPoint extends OkHttpBaseApi implements OpacApi {
                 if (!page.hasAttr("href")) {
                     continue;
                 }
-                html = httpGet(page.attr("abs:href"), ENCODING);
+                String url = page.attr("abs:href");
+                Map<String, String> params = getQueryParamsFirst(url);
+                if (params.containsKey("anzPos")) {
+                    // Prevent fetching, backwards, first page again, or "last page"/"next page" links
+                    Integer anzPos = Integer.valueOf(params.get("anzPos"));
+                    if (anzPos <= 1 || page.select("svg").size() > 0) {
+                        continue;
+                    }
+                }
+                html = httpGet(url, ENCODING);
                 doc = Jsoup.parse(html);
                 doc.setBaseUri(opac_url);
                 nextpageOrd = parse_reslist(doc);
