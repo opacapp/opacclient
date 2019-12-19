@@ -368,13 +368,14 @@ open class Koha : OkHttpBaseApi() {
         body.add("reserve_mode", "multi")
         body.add("single_bib", item.id)
         body.add("expiration_date_${item.id}", "")
-        body.add("reqtype_${item.id}", "any")
         val checkboxes = doc.select("input[name=checkitem_${item.id}]")
         if (checkboxes.size > 0) {
             if (checkboxes.first()["value"] == "any") {
+                body.add("reqtype_${item.id}", "any")
                 body.add("checkitem_${item.id}", "any")
             } else {
                 if (selectedCopy != null) {
+                    body.add("reqtype_${item.id}", "Specific")
                     body.add("checkitem_${item.id}", selectedCopy)
                 } else {
                     val copies = doc.select(".copiesrow tr:has(td)")
