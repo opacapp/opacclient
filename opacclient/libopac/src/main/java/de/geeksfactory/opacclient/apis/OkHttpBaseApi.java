@@ -274,6 +274,7 @@ public abstract class OkHttpBaseApi extends BaseApi {
                 if (response.isSuccessful() || ignore_errors) {
                     future.complete(response);
                 } else {
+                    response.close();
                     future.completeExceptionally(new NotReachableException(response.message()));
                 }
             }
