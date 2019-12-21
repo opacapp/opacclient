@@ -248,6 +248,7 @@ public abstract class OkHttpBaseApi extends BaseApi {
                 .url(cleanUrl(url))
                 .header("Accept", "*/*")
                 .header("User-Agent", getUserAgent())
+                .head()
                 .build();
 
         return adapt(http_client.newCall(request), ignore_errors);

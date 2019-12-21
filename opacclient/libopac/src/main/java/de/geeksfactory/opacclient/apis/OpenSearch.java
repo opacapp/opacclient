@@ -307,8 +307,9 @@ public class OpenSearch extends OkHttpBaseApi implements OpacApi {
         if (queue.size() > 0) {
             final String url = queue.get(0);
             queue.remove(0);
-            return asyncHead(url, false)
+            return asyncGet(url, false)
                     .handle((response, throwable) -> {
+                        response.close();
                         if (throwable == null) {
                             result.setCover(url);
                         } else {

@@ -106,6 +106,7 @@ public abstract class CoverDownloadTask extends AsyncTask<Void, Integer, CoverHo
         Response response = httpClient.newCall(request).execute();
 
         if (response.code() >= 400) {
+            response.close();
             return null;
         }
 
