@@ -364,7 +364,6 @@ open class Koha : OkHttpBaseApi() {
         val body = FormBody.Builder()
         body.add("place_reserve", "1")
         body.add("biblionumbers", "${item.id}/")
-        body.add("selecteditems", "${item.id}///")
         body.add("reserve_mode", "multi")
         body.add("single_bib", item.id)
         body.add("expiration_date_${item.id}", "")
@@ -373,10 +372,12 @@ open class Koha : OkHttpBaseApi() {
             if (checkboxes.first()["value"] == "any") {
                 body.add("reqtype_${item.id}", "any")
                 body.add("checkitem_${item.id}", "any")
+                body.add("selecteditems", "${item.id}///")
             } else {
                 if (selectedCopy != null) {
                     body.add("reqtype_${item.id}", "Specific")
                     body.add("checkitem_${item.id}", selectedCopy)
+                    body.add("selecteditems", "${item.id}/$selectedCopy//")
                 } else {
                     val copies = doc.select(".copiesrow tr:has(td)")
                     val activeCopies = copies.filter { row ->
