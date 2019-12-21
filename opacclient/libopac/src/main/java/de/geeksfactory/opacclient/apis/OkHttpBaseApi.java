@@ -151,6 +151,7 @@ public abstract class OkHttpBaseApi extends BaseApi {
             Response response = http_client.newCall(request).execute();
 
             if (response.code() >= 400) {
+                response.close();
                 return;
             }
 
