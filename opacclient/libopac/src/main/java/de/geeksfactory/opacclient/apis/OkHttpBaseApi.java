@@ -151,6 +151,7 @@ public abstract class OkHttpBaseApi extends BaseApi {
             Response response = http_client.newCall(request).execute();
 
             if (response.code() >= 400) {
+                response.close();
                 return;
             }
 
@@ -248,6 +249,7 @@ public abstract class OkHttpBaseApi extends BaseApi {
                 .url(cleanUrl(url))
                 .header("Accept", "*/*")
                 .header("User-Agent", getUserAgent())
+                .head()
                 .build();
 
         return adapt(http_client.newCall(request), ignore_errors);
@@ -272,6 +274,7 @@ public abstract class OkHttpBaseApi extends BaseApi {
                 if (response.isSuccessful() || ignore_errors) {
                     future.complete(response);
                 } else {
+                    response.close();
                     future.completeExceptionally(new NotReachableException(response.message()));
                 }
             }
