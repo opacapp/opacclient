@@ -362,4 +362,5 @@
     <string name="history_status_lending_1">seit %1$s für 1 Tag</string>
     <string name="history_first_date">Beginndatum</string>
     <string name="history_last_date">Endedatum</string>
+    <string name="info_history_updated_count">Import abgeschlossen, %1$d Einträge hinzugefügt, %2$d geändert</string>
 </resources>

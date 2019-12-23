@@ -98,9 +98,6 @@ public class HistoryFragment extends Fragment implements
     private static final String STATE_ACTIVATED_POSITION = "activated_position";
     private static final String JSON_LIBRARY_NAME = "library_name";
     private static final String JSON_HISTORY_LIST = "history_list";
-    private static final String JSON_ITEM_MNR = "medianr";
-    private static final String JSON_ITEM_TITLE = "title";
-    private static final String JSON_ITEM_MEDIATYPE = "mediatype";
     private static final int REQUEST_CODE_EXPORT = 123;
     private static final int REQUEST_CODE_IMPORT = 124;
 
@@ -492,26 +489,34 @@ public class HistoryFragment extends Fragment implements
                     String list = builder.toString();
                     JSONObject savedList = new JSONObject(list);
                     String bib = savedList.getString(JSON_LIBRARY_NAME);
+
                     //disallow import if from different library than current library
                     if (bib != null && !bib.equals(app.getLibrary().getIdent())) {
                         Snackbar.make(getView(), R.string.info_different_library,
                                 Snackbar.LENGTH_SHORT).show();
                         return;
                     }
+
+                    int countUpdate = 0;
+                    int countInsert = 0;
                     JSONArray items = savedList.getJSONArray(JSON_HISTORY_LIST);
                     for (int i = 0; i < items.length(); i++) {
                         JSONObject entry = items.getJSONObject(i);
-                        if (entry.has(JSON_ITEM_MNR) &&
-                                !dataSource.isHistory(bib, entry.getString(JSON_ITEM_MNR)) ||
-                                !entry.has(JSON_ITEM_MNR) /* && !dataSource.isHistoryTitle(bib,
-                                        entry.getString(JSON_ITEM_TITLE))*/) { //disallow dupes
-                            // String mediatype = entry.optString(JSON_ITEM_MEDIATYPE, null);
-                            dataSource.insertHistoryItem(entry);
+                        HistoryDataSource.ChangeType ct = dataSource.insertOrUpdate(bib, entry);
+                        switch (ct) {
+                            case UPDATE: countUpdate++; break;
+                            case INSERT: countInsert++; break;
                         }
                     }
-                    adapter.notifyDataSetChanged();
-                    Snackbar.make(getView(), R.string.info_history_updated,
-                            Snackbar.LENGTH_SHORT).show();
+                    if(countInsert>0 || countUpdate>0) {
+                        adapter.notifyDataSetChanged();
+                        Snackbar.make(getView(),
+                                getString(R.string.info_history_updated_count, countInsert, countUpdate),
+                                Snackbar.LENGTH_LONG).show();
+                    } else {
+                        Snackbar.make(getView(), R.string.info_history_updated,
+                                Snackbar.LENGTH_SHORT).show();
+                    }
                 } else {
                     showImportError();
                 }
