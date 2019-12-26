@@ -220,7 +220,7 @@ public class HistoryDataSource {
         int i=0;
         for (String col : columns) {
             switch (col) {
-                case "lending":
+                case HistoryDatabase.HIST_COL_LENDING:
                 case "ebook":
                     // boolean wie int
                 case "prolongCount":
@@ -231,7 +231,7 @@ public class HistoryDataSource {
                     col = "historyId";
                 case HistoryDatabase.HIST_COL_FIRST_DATE:
                 case HistoryDatabase.HIST_COL_LAST_DATE:
-                case "deadline":
+                case HistoryDatabase.HIST_COL_DEADLINE:
                     // date wie String
                 default:
                     // String
@@ -288,9 +288,9 @@ public class HistoryDataSource {
     }
 
     private void addAccountItemValues(ContentValues values, AccountItem item ) {
-        putOrNull(values,"medianr", item.getId());
-        putOrNull(values,"title", item.getTitle());
-        putOrNull(values,"author", item.getAuthor());
+        putOrNull(values,HistoryDatabase.HIST_COL_MEDIA_NR, item.getId());
+        putOrNull(values,HistoryDatabase.HIST_COL_TITLE, item.getTitle());
+        putOrNull(values,HistoryDatabase.HIST_COL_AUTHOR, item.getAuthor());
         putOrNull(values,"format", item.getFormat());
         putOrNull(values,"status", item.getStatus());
         putOrNull(values,"cover", item.getCover());
@@ -304,13 +304,13 @@ public class HistoryDataSource {
 
         putOrNull(values,HistoryDatabase.HIST_COL_FIRST_DATE, historyItem.getFirstDate());
         putOrNull(values,HistoryDatabase.HIST_COL_LAST_DATE, historyItem.getLastDate());
-        putOrNull(values,"lending", historyItem.isLending());
+        putOrNull(values,HistoryDatabase.HIST_COL_LENDING, historyItem.isLending());
         putOrNull(values,"bib", historyItem.getBib());
         putOrNull(values,"homeBranch", historyItem.getHomeBranch());
         putOrNull(values,"lendingBranch", historyItem.getLendingBranch());
         putOrNull(values,"ebook", historyItem.isEbook());
         putOrNull(values,"barcode", historyItem.getBarcode());
-        putOrNull(values,"deadline", historyItem.getDeadline());
+        putOrNull(values,HistoryDatabase.HIST_COL_DEADLINE, historyItem.getDeadline());
         values.put("prolongCount", historyItem.getProlongCount());
 
         return values;
@@ -340,7 +340,7 @@ public class HistoryDataSource {
         while(keys.hasNext()) {
             String key = keys.next();
             switch (key) {
-                case "lending":
+                case HistoryDatabase.HIST_COL_LENDING:
                 case "ebook":
                     // boolean
                     boolean b = (1 == item.getInt(key));
@@ -365,7 +365,7 @@ public class HistoryDataSource {
                     break;
                 case HistoryDatabase.HIST_COL_FIRST_DATE:
                 case HistoryDatabase.HIST_COL_LAST_DATE:
-                case "deadline":
+                case HistoryDatabase.HIST_COL_DEADLINE:
                     // date wird als String inserted
                 default:
                     // String
@@ -383,14 +383,14 @@ public class HistoryDataSource {
 
         putOrNull(values, HistoryDatabase.HIST_COL_FIRST_DATE, LocalDate.now());
         putOrNull(values, HistoryDatabase.HIST_COL_LAST_DATE, LocalDate.now());
-        putOrNull(values, "lending", true);
+        putOrNull(values, HistoryDatabase.HIST_COL_LENDING, true);
 
         putOrNull(values, "bib", bib);
         putOrNull(values, "homeBranch", lentItem.getHomeBranch());
         putOrNull(values, "lendingBranch", lentItem.getLendingBranch());
         putOrNull(values, "ebook", lentItem.isEbook());
         putOrNull(values, "barcode", lentItem.getBarcode());
-        putOrNull(values, "deadline", lentItem.getDeadline());
+        putOrNull(values, HistoryDatabase.HIST_COL_DEADLINE, lentItem.getDeadline());
 
         context.getContentResolver()
                .insert(((OpacClient) context.getApplication()).getHistoryProviderHistoryUri(),

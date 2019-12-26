@@ -38,6 +38,8 @@ public class HistoryDatabase extends SQLiteOpenHelper {
     public static final String HIST_COL_FIRST_DATE = "firstDate";
     public static final String HIST_COL_LAST_DATE = "lastDate";
     public static final String HIST_COL_PROLONG_COUNT = "prolongCount";
+    public static final String HIST_COL_DEADLINE = "deadline";
+    public static final String HIST_COL_LENDING = "lending";
 
     public static final String HIST_WHERE_HISTORY_ID = HIST_COL_HISTORY_ID +" = ?";
     public static final String HIST_WHERE_LIB = "bib = ?";
@@ -57,7 +59,7 @@ public class HistoryDatabase extends SQLiteOpenHelper {
                 // siehe https://developer.android.com/reference/android/widget/CursorAdapter.html
             HIST_COL_FIRST_DATE,
             HIST_COL_LAST_DATE,
-            "lending",
+            HIST_COL_LENDING,
             HIST_COL_MEDIA_NR,
             "bib",
             HIST_COL_TITLE,
@@ -70,7 +72,7 @@ public class HistoryDatabase extends SQLiteOpenHelper {
             "lendingBranch",
             "ebook",
             "barcode",
-            "deadline",
+            HIST_COL_DEADLINE,
             HIST_COL_PROLONG_COUNT
         };
 
@@ -91,7 +93,7 @@ public class HistoryDatabase extends SQLiteOpenHelper {
             "\tlendingBranch text,\n" +
             "\tebook boolean,\n" +
             "\tbarcode text,\n" +
-            "\tdeadline date,\n" +
+            "\t" + HIST_COL_DEADLINE + " date,\n" +
             "\t" + HIST_COL_PROLONG_COUNT + " integer\n" +
             ");";
 
@@ -120,7 +122,7 @@ public class HistoryDatabase extends SQLiteOpenHelper {
                     "\t" + HIST_COL_HISTORY_ID +" integer primary key autoincrement,\n" +
                     "\t" + HIST_COL_FIRST_DATE + " date,\n" +
                     "\t" + HIST_COL_LAST_DATE + " date,\n" +
-                    "\tlending boolean,\n" +
+                    "\t" + HIST_COL_LENDING + " boolean,\n" +
                     "\t" + HIST_COL_MEDIA_NR + " text,\n" +
                     "\tbib text,\n" +
                     "\t" + HIST_COL_TITLE + " text,\n" +
@@ -133,7 +135,7 @@ public class HistoryDatabase extends SQLiteOpenHelper {
                     "\tlendingBranch text,\n" +
                     "\tebook boolean,\n" +
                     "\tbarcode text,\n" +
-                    "\tdeadline date,\n" +
+                    "\t" + HIST_COL_DEADLINE + " date,\n" +
                     "\t" + HIST_COL_PROLONG_COUNT + " integer\n" +
                     ");";
 
