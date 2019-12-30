@@ -83,8 +83,11 @@ open class SLUB : OkHttpBaseApi() {
         if (queryfb.size() <= 4)
             throw OpacApi.OpacErrorException(stringProvider.getString(StringProvider.NO_CRITERIA_INPUT))
         val json = JSONObject(httpPost(baseurl, queryfb, ENCODING))
-        return SearchRequestResult(json.optJSONArray("docs")
-                ?.let { 0.until(it.length()).map { i -> it.optJSONObject(i) } }
+        return parseSearchResults(json)
+    }
+
+    internal fun parseSearchResults(json: JSONObject): SearchRequestResult{
+        val searchresults = json.optJSONArray("docs")?.let { 0.until(it.length()).map { i -> it.optJSONObject(i) } }
                 ?.map {
                     SearchResult().apply {
                         innerhtml = "<b>${it.optString("title")}</b><br>${it.optJSONArray("author")?.optString(0)
@@ -92,8 +95,9 @@ open class SLUB : OkHttpBaseApi() {
                         type = mediaTypes[it.optJSONArray("format")?.optString(0)]
                         id = it.optString("id")
                     }
-                }, json.optInt("numFound"), 1)
+                }
         //TODO: get status (one request per item!)
+        return SearchRequestResult(searchresults, json.optInt("numFound"), 1)
     }
 
     override fun filterResults(filter: Filter, option: Filter.Option): SearchRequestResult {
@@ -101,7 +105,16 @@ open class SLUB : OkHttpBaseApi() {
     }
 
     override fun getResultById(id: String, homebranch: String?): DetailedItem {
+        val detailfb = FormBody.Builder()
+                .add("type", "1369315142")
+                .add("tx_find_find[format]", "data")
+                .add("tx_find_find[data-format]", "app")
+        val json = JSONObject(httpPost("$baseurl/id/$id/", detailfb.build(), ENCODING))
+        return parseResultById(id, json)
+    }
 
+    internal fun parseResultById(id:String, json: JSONObject): DetailedItem {
+        val dateFormat = DateTimeFormat.forPattern("dd.MM.yyyy")
         fun getCopies(copiesArray: JSONArray, df: DateTimeFormatter): List<Copy> =
                 copiesArray.run { 0.until(length()).map { optJSONObject(it) } }
                         .map {
@@ -123,14 +136,6 @@ open class SLUB : OkHttpBaseApi() {
                                 // url: not for accessible online resources, only for lendable online copies
                             }
                         }
-
-        val detailfb = FormBody.Builder()
-                .add("type", "1369315142")
-                .add("tx_find_find[format]", "data")
-                .add("tx_find_find[data-format]", "app")
-        val json = JSONObject(httpPost("$baseurl/id/$id/", detailfb.build(), ENCODING))
-        val dateFormat = DateTimeFormat.forPattern("dd.MM.yyyy")
-
         return DetailedItem().apply {
             this.id = id
             val record = json.optJSONObject("record")
@@ -204,13 +209,38 @@ open class SLUB : OkHttpBaseApi() {
     }
 
     override fun account(account: Account): AccountData {
-        val fmt = DateTimeFormat.shortDate()
         val json = requestAccount(account, "account")
+        return parseAccountData(account, json)
+    }
+
+    internal fun parseAccountData(account: Account, json: JSONObject): AccountData {
+        fun getReservations(items: JSONObject?): MutableList<ReservedItem> {
+            val types = listOf<String>("hold", "request_ready", "readingroom", "request_progress", "reserve", "ill")
+            // "requests" is a copy of "request_ready" + "readingroom" + "request_progress"
+            val reservationsList = mutableListOf<ReservedItem>()
+            for (type in types) {
+                items?.optJSONArray(type)?.let {
+                    for (i in 0 until it.length()) {
+                        reservationsList.add(it.getJSONObject(i).let {
+                            ReservedItem().apply {
+                                title = it.optString("about")
+                                author = it.optJSONArray("X_author")?.optString(0)
+                                format = it.optString("X_medientyp")
+                                status = it.optInt("X_queue_number").let { "Pos. $it" }
+                            }
+                        })
+                    }
+                }
+            }
+            return reservationsList
+        }
+
+        val fmt = DateTimeFormat.shortDate()
         return AccountData(account.id).apply {
             pendingFees = json.optJSONObject("fees")?.optString("topay_list")
             validUntil = json.optJSONObject("memberInfo")?.optString("expires")
                     ?.substring(0, 10)?.let { fmt.print(LocalDateTime(it)) }
-            lent = json.optJSONObject("items")?.optJSONArray("loan")
+            lent = json.optJSONObject("items")?.optJSONArray("loan")    // TODO: plus permanent loans (need example)
                     ?.run { 0.until(length()).map { optJSONObject(it) } }
                     ?.map {
                         LentItem().apply {
@@ -232,16 +262,7 @@ open class SLUB : OkHttpBaseApi() {
                             }
                         }
                     } ?: emptyList()
-            reservations = json.optJSONObject("items")?.optJSONArray("reserve")
-                    ?.run { 0.until(length()).toMutableList().map { optJSONObject(it) } }
-                    ?.map {
-                        ReservedItem().apply {
-                            title = it.optString("about")
-                            author = it.optJSONArray("X_author")?.optString(0)
-                            format = it.optString("X_medientyp")
-                            status = it.optInt("X_queue_number").let { "Pos. $it" }
-                        }
-                    } ?: emptyList()
+            reservations = getReservations(json.optJSONObject("items"))
         }
     }
 
