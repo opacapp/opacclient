@@ -342,7 +342,7 @@
         behoben.</string>
     <string name="support_policy_more_info">mehr Infos</string>
     <string name="import_history_from_storage">Importieren</string>
-    <string name="history_removed">Aus dem Verlauf gelöscht</string>
+    <string name="history_removed">Aus der Chronik gelöscht</string>
     <string name="history_removed_undo">Rückgängig</string>
     <string name="sort_history">Sortieren</string>
     <string name="sort_history_author">nach Author</string>
@@ -351,11 +351,11 @@
     <string name="sort_history_lastDate">nach Ende</string>
     <string name="sort_history_prolongCount">Verlängerungen</string>
     <string name="sort_history_title">Titel</string>
-    <string name="info_history_updated">Import des Verlaufs abgeschlossen</string>
-    <string name="nav_history">Verlauf</string>
+    <string name="info_history_updated">Import der Chronik abgeschlossen</string>
+    <string name="nav_history">Chronik</string>
     <string name="share_history">Teilen</string>
     <string name="export_history_to_storage">Exportieren</string>
-    <string name="history_welcome">Dies ist deine Verlaufsliste. Die Liste wird für jede Bibliothek, die du benutzt, separat geführt.</string>
+    <string name="history_welcome">Dies ist deine Leih-Chronik. Die Liste wird für jede Bibliothek, die du benutzt, separat geführt.</string>
     <string name="history_status_finished">vom %1$s für %2$d Tage</string>
     <string name="history_status_lending">seit %1$s für %2$d Tage</string>
     <string name="history_status_finished_1">vom %1$s für 1 Tag</string>
