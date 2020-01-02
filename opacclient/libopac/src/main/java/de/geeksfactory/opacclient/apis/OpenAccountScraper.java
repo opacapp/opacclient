@@ -610,7 +610,15 @@ public class OpenAccountScraper extends OpenSearch {
             return doc;
         } else {
             // sometimes (-> Verden), we are redirected to the home page, not to the account page.
-            return Jsoup.parse(httpGet(opac_url + accountUrl, getDefaultEncoding()));
+            doc = Jsoup.parse(httpGet(opac_url + accountUrl, getDefaultEncoding()));
+            if (doc.select("[id$=tpnlReservations_ucReservationsView_grdViewReservations]").first()
+                    != null) {
+                return doc;
+            } else {
+                // bug in Wien, sometimes login does not work and we just get the login page back,
+                // without an error message
+                throw new OpacErrorException(stringProvider.getString(StringProvider.COULD_NOT_LOAD_ACCOUNT));
+            }
         }
     }
 
