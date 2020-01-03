@@ -1,0 +1,111 @@
+{
+  "numFound": 1,
+  "start": 0,
+  "docs": [
+    {
+      "id": "0-1093989777",
+      "format": [
+        "Book, E-Book"
+      ],
+      "title": "Tu en hagiois patros hēmōn Maximu tu homologetu Hapanta = S.P.N. Maximi Confessoris Opera omnia eruta, Latine transl., notisque ill. opera et studio Francisci Combefis. Adauxit Franciscus Oehler. Accurante et denuo recognoscente J.-P. Migne",
+      "author": [
+        "Maximus Confessor",
+        "Combefis, François",
+        "Oehler, Franz",
+        "Migne, Jacques Paul"
+      ],
+      "creationDate": null,
+      "imprint": [
+        "Lutetiae Parisiorum: Migne, 18XX"
+      ]
+    }
+  ],
+  "facets": {
+    "access_facet": {
+      "translation": "Zugang",
+      "values": {
+        "Local Holdings": {
+          "translation": "Lokale Bestände",
+          "values": 1
+        }
+      }
+    },
+    "format_de15": {
+      "translation": "Medientyp",
+      "values": {
+        "Book, E-Book": {
+          "translation": "Bücher",
+          "values": 1
+        }
+      }
+    },
+    "publishDateSort": {
+      "translation": "Erscheinungsjahr",
+      "values": []
+    },
+    "branch": {
+      "translation": "Standort",
+      "values": []
+    },
+    "language": {
+      "translation": "Sprache",
+      "values": {
+        "Ancient Greek": {
+          "translation": "Altgriechisch",
+          "values": 1
+        },
+        "Latin": {
+          "translation": "Latein",
+          "values": 1
+        }
+      }
+    },
+    "thema": {
+      "translation": "Fachgebiet",
+      "values": {
+        "Theologie und Religionswissenschaft": {
+          "translation": "Theologie und Religionswissenschaft",
+          "values": 1
+        }
+      }
+    },
+    "author": {
+      "translation": "Person/Institution",
+      "values": {
+        "Combefis, François": {
+          "translation": "Combefis, François",
+          "values": 1
+        },
+        "Maximus Confessor": {
+          "translation": "Maximus Confessor",
+          "values": 1
+        },
+        "Migne, Jacques Paul": {
+          "translation": "Migne, Jacques Paul",
+          "values": 1
+        },
+        "Oehler, Franz": {
+          "translation": "Oehler, Franz",
+          "values": 1
+        }
+      }
+    },
+    "facet_music_notation_de14": {
+      "translation": "musikalische Ausgabeform",
+      "values": []
+    },
+    "music_heading_browse": {
+      "translation": "musikalische Besetzung",
+      "values": []
+    },
+    "mega_collection": {
+      "translation": "Kollektion",
+      "values": {
+        "Verbunddaten SWB": {
+          "translation": "Verbunddaten SWB",
+          "values": 1
+        }
+      }
+    }
+  }
+}

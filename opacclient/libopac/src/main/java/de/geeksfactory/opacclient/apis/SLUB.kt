@@ -91,7 +91,12 @@ open class SLUB : OkHttpBaseApi() {
                 ?.map {
                     SearchResult().apply {
                         innerhtml = "<b>${it.optString("title")}</b><br>${it.optJSONArray("author")?.optString(0)
-                                ?: ""}<br>(${it.optString("creationDate")})"
+                                ?: ""}"
+                        it.optString("creationDate")?.run {
+                            if (this != "null") {
+                                innerhtml += "<br>(${this})"
+                            }
+                        }
                         type = mediaTypes[it.optJSONArray("format")?.optString(0)]
                         id = it.optString("id")
                     }

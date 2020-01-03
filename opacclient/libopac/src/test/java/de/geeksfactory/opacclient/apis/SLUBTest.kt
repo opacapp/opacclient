@@ -76,6 +76,21 @@ class SLUBSearchTest() : BaseHtmlTest() {
     }
 
     @Test
+    fun testParseSearchResultsWithNullCreationDate() {
+        val json = JSONObject(readResource("/slub/search/search-null_creation_date.json"))
+        val result1 = SearchResult().apply {
+            innerhtml = "<b>Tu en hagiois patros hēmōn Maximu tu homologetu Hapanta = S.P.N. Maximi Confessoris Opera omnia eruta, Latine transl., notisque ill. opera et studio Francisci Combefis. Adauxit Franciscus Oehler. Accurante et denuo recognoscente J.-P. Migne</b><br>Maximus Confessor"
+            type = SearchResult.MediaType.BOOK
+            id = "0-1093989777"
+        }
+
+        val searchresults = slub.parseSearchResults(json)
+
+        assertEquals(1, searchresults.total_result_count)
+        assertThat(result1, samePropertyValuesAs(searchresults.results[0]))
+    }
+
+    @Test
     fun testParseResultById() {
         val json = JSONObject(readResource("/slub/search/simple-item.json"))
         val expected = DetailedItem().apply {
