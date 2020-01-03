@@ -45,6 +45,24 @@ class SLUBAccountTest() : BaseHtmlTest() {
         assertThat(lentitem1, samePropertyValuesAs(accountdata.lent[0]))
         assertEquals("vorgemerkt", accountdata.lent[1].status)
     }
+
+    @Test
+    fun testParseAccountDataIllInProgress() {
+        val json = JSONObject(readResource("/slub/account/account-ill_in_progress.json"))
+        val reserveditem = ReservedItem().apply {
+            title = "Kotlin"
+            author = "Szwillus, Karl"
+            id = "145073"
+            branch = "zell1"
+            status = "Bestellung ausgelöst"
+        }
+
+        val accountdata = slub.parseAccountData(Account(), json)
+
+        assertEquals(0, accountdata.lent.size)
+        assertEquals(1, accountdata.reservations.size)
+        assertThat(reserveditem, samePropertyValuesAs(accountdata.reservations[0]))
+    }
 }
 
 class SLUBSearchTest() : BaseHtmlTest() {

@@ -220,7 +220,7 @@ open class SLUB : OkHttpBaseApi() {
 
     internal fun parseAccountData(account: Account, json: JSONObject): AccountData {
         fun getReservations(items: JSONObject?): MutableList<ReservedItem> {
-            val types = listOf<String>("hold", "request_ready", "readingroom", "request_progress", "reserve", "ill")
+            val types = listOf<String>("hold", "request_ready", "readingroom", "request_progress", "reserve")
             // "requests" is a copy of "request_ready" + "readingroom" + "request_progress"
             val reservationsList = mutableListOf<ReservedItem>()
             for (type in types) {
@@ -237,6 +237,20 @@ open class SLUB : OkHttpBaseApi() {
                     }
                 }
             }
+            items?.optJSONArray("ill")?.let {
+                for (i in 0 until it.length()) {
+                    reservationsList.add(it.getJSONObject(i).let {
+                        ReservedItem().apply {
+                            title = it.optString("Titel")
+                            author = it.optString("Autor")
+                            id = it.optString("Fernleih_ID")
+                            branch = it.optString("Zweigstelle")
+                            status = it.optString("Status_DESC")
+                        }
+                    })
+                }
+            }
+
             return reservationsList
         }
 
