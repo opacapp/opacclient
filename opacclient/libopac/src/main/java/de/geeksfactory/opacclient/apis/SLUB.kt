@@ -10,7 +10,7 @@ import de.geeksfactory.opacclient.utils.get
 import de.geeksfactory.opacclient.utils.html
 import de.geeksfactory.opacclient.utils.text
 import okhttp3.FormBody
-import org.joda.time.LocalDateTime
+import org.joda.time.LocalDate
 import org.joda.time.format.DateTimeFormat
 import org.joda.time.format.DateTimeFormatter
 import org.json.JSONArray
@@ -258,7 +258,7 @@ open class SLUB : OkHttpBaseApi() {
         return AccountData(account.id).apply {
             pendingFees = json.optJSONObject("fees")?.optString("topay_list")
             validUntil = json.optJSONObject("memberInfo")?.optString("expires")
-                    ?.substring(0, 10)?.let { fmt.print(LocalDateTime(it)) }
+                    ?.substring(0, 10)?.let { fmt.print(LocalDate(it)) }
             lent = json.optJSONObject("items")?.optJSONArray("loan")    // TODO: plus permanent loans (need example)
                     ?.run { 0.until(length()).map { optJSONObject(it) } }
                     ?.map {
