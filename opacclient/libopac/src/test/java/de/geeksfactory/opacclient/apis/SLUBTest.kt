@@ -4,6 +4,8 @@ import com.shazam.shazamcrest.matcher.Matchers.sameBeanAs
 import de.geeksfactory.opacclient.objects.*
 import org.hamcrest.MatcherAssert.assertThat
 import org.hamcrest.Matchers.*
+import org.joda.time.LocalDate
+import org.joda.time.format.DateTimeFormat
 import org.json.JSONObject
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertTrue
@@ -20,7 +22,7 @@ class SLUBAccountTest() : BaseHtmlTest() {
         val accountdata = slub.parseAccountData(Account(), json)
 
         assertEquals("1,23 EUR", accountdata.pendingFees)
-        assertEquals("31.03.20", accountdata.validUntil)
+        assertEquals(DateTimeFormat.shortDate().print(LocalDate("2020-03-31")), accountdata.validUntil)
         assertTrue(accountdata.lent.isEmpty())
         assertTrue(accountdata.reservations.isEmpty())
     }
