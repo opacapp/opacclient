@@ -380,6 +380,8 @@ public abstract class OpacActivity extends AppCompatActivity
             drawer.setCheckedItem(R.id.nav_search);
         } else if (fragment instanceof AccountFragment) {
             drawer.setCheckedItem(R.id.nav_account);
+        } else if (fragment instanceof HistoryFragment) {
+            drawer.setCheckedItem(R.id.nav_history);
         } else if (fragment instanceof StarredFragment) {
             drawer.setCheckedItem(R.id.nav_starred);
         } else if (fragment instanceof InfoFragment) {
@@ -493,6 +495,9 @@ public abstract class OpacActivity extends AppCompatActivity
                 break;
             case "starred":
                 id = R.id.nav_starred;
+                break;
+            case "history":
+                id = R.id.nav_history;
                 break;
             case "info":
                 id = R.id.nav_info;
