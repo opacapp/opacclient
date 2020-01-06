@@ -161,15 +161,20 @@ public class HistoryItem extends AccountItem implements Serializable {
         this.historyId = historyId;
     }
 
-    // MNr wie bei Starred
-    public String getMNr() {
-        return super.getId();
-    }
-    public void setMNr(String mnr) {
-        super.setId(mnr);
-    }
-
     public boolean isSameAsLentItem(LentItem lentItem) {
+
+        // Id/MediaNr
+        if (getId() == null) {
+            if (lentItem.getId() != null) {
+                return false;
+            }
+        } else {
+            if (!getId().equals(lentItem.getId())) {
+                return false;
+            }
+            // Id/MediaNr are equal
+            // return true; ??
+        }
 
         if (getMediaType() == null) {
             if (lentItem.getMediaType() != null) {

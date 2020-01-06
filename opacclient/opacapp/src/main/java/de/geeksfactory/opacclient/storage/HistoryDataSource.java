@@ -161,10 +161,10 @@ public class HistoryDataSource {
         HistoryItem item = null;
 
         if (entry.has(HistoryDatabase.HIST_COL_MEDIA_NR)) {
-            //
+            // mediaNr eindeutig
             String id = entry.getString(HistoryDatabase.HIST_COL_MEDIA_NR);
             Log.d(methodName, String.format("json: medianr %s", id));
-            item = isHistory(bib, id, firstDate, lastDate);
+            item = findItem(bib, id, firstDate, lastDate);
         } else {
             // title, type and author
             String title = entry.getString(HistoryDatabase.HIST_COL_TITLE);
@@ -172,7 +172,7 @@ public class HistoryDataSource {
             String mediatype = entry.getString(HistoryDatabase.HIST_COL_MEDIA_TYPE);
             Log.d(methodName, String.format("json: title %s, author %s, mediatype %s"
                     ,title, author, mediatype));
-            item = isHistory(bib, title, author, mediatype , firstDate, lastDate);
+            item = findItem(bib, title, author, mediatype , firstDate, lastDate);
         }
         Log.d(methodName, String.format("HistoryItem: %s", item));
 
@@ -255,7 +255,7 @@ public class HistoryDataSource {
             item.setLastDate(LocalDate.parse(ds));
         }
         item.setLending(cursor.getInt(i++) > 0);
-        item.setMNr(cursor.getString(i++));
+        item.setId(cursor.getString(i++));
         item.setBib(cursor.getString(i++));
         item.setTitle(cursor.getString(i++));
         item.setAuthor(cursor.getString(i++));
@@ -487,13 +487,13 @@ public class HistoryDataSource {
         return item;
     }
 
-    public HistoryItem getItem(String bib, String id) {
-        String[] selA = {bib, id};
+    public HistoryItem getItem(String bib, String mediaNr) {
+        String[] selA = {bib, mediaNr};
         Cursor cursor = context
                 .getContentResolver()
                 .query(((OpacClient) context.getApplication())
                                 .getHistoryProviderHistoryUri(),
-                        HistoryDatabase.COLUMNS, HistoryDatabase.HIST_WHERE_LIB_NR,
+                        HistoryDatabase.COLUMNS, HistoryDatabase.HIST_WHERE_LIB_MEDIA_NR,
                         selA, null);
         HistoryItem item = null;
 
@@ -507,8 +507,8 @@ public class HistoryDataSource {
         return item;
     }
 
-    public HistoryItem getItem(long id) {
-        String[] selA = {String.valueOf(id)};
+    public HistoryItem getItem(long historyId) {
+        String[] selA = {String.valueOf(historyId)};
         Cursor cursor = context
                 .getContentResolver()
                 .query(((OpacClient) context.getApplication())
@@ -527,26 +527,25 @@ public class HistoryDataSource {
         return item;
     }
 
-    public HistoryItem isHistory(String bib, String id, LocalDate firstDate, LocalDate lastDate) {
-        if (id == null) {
+    private HistoryItem findItem(String bib, String mediaNr, LocalDate firstDate, LocalDate lastDate) {
+        if (mediaNr == null) {
             return null;
         }
 
-        String[] selA = {bib, id};
+        String[] selA = {bib, mediaNr};
         Cursor cursor = context
                 .getContentResolver()
                 .query(((OpacClient) context.getApplication())
                                 .getHistoryProviderHistoryUri(),
-                        HistoryDatabase.COLUMNS, HistoryDatabase.HIST_WHERE_LIB_NR,
+                        HistoryDatabase.COLUMNS, HistoryDatabase.HIST_WHERE_LIB_MEDIA_NR,
                         selA, null);
-        cursor.moveToFirst();
-        HistoryItem item = foo(cursor, firstDate, lastDate);
+        HistoryItem item = findItemToDates(cursor, firstDate, lastDate);
         cursor.close();
 
         return item;
     }
 
-    public HistoryItem isHistory(String bib, String title, String author, String mediatype
+    private HistoryItem findItem(String bib, String title, String author, String mediatype
             , LocalDate firstDate, LocalDate lastDate) {
 
         String[] selA = {bib, title, author, mediatype};
@@ -556,13 +555,13 @@ public class HistoryDataSource {
                                 .getHistoryProviderHistoryUri(),
                         HistoryDatabase.COLUMNS, HistoryDatabase.HIST_WHERE_LIB_TITLE_AUTHOR_TYPE,
                         selA, null);
-        cursor.moveToFirst();
-        HistoryItem item = foo(cursor, firstDate, lastDate);
+        HistoryItem item = findItemToDates(cursor, firstDate, lastDate);
         cursor.close();
         return item;
     }
 
-    private HistoryItem foo(Cursor cursor, LocalDate firstDate, LocalDate lastDate) {
+    private HistoryItem findItemToDates(Cursor cursor, LocalDate firstDate, LocalDate lastDate) {
+        cursor.moveToFirst();
         while (!cursor.isAfterLast()) {
             HistoryItem item = cursorToItem(cursor);
 

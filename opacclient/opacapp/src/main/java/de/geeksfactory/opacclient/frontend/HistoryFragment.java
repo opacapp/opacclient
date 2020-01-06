@@ -134,8 +134,8 @@ public class HistoryFragment extends Fragment implements
                     int position, long id) {
                 HistoryItem item = (HistoryItem) view.findViewById(R.id.ivDelete)
                                              .getTag();
-                if (item.getMNr() == null || item.getMNr().equals("null")
-                        || item.getMNr().equals("")) {
+                if (item.getId() == null || item.getId().equals("null")
+                        || item.getId().equals("")) {
 
                     SharedPreferences sp = PreferenceManager
                             .getDefaultSharedPreferences(getActivity());
@@ -336,7 +336,7 @@ public class HistoryFragment extends Fragment implements
             text.append("\n");
             String shareUrl;
             try {
-                shareUrl = app.getApi().getShareUrl(item.getMNr(),
+                shareUrl = app.getApi().getShareUrl(item.getId(),
                         item.getTitle());
             } catch (OpacClient.LibraryRemovedException e) {
                 return;

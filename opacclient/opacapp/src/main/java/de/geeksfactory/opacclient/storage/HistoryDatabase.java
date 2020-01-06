@@ -48,7 +48,7 @@ public class HistoryDatabase extends SQLiteOpenHelper {
     public static final String HIST_WHERE_TITLE_LIB = "bib = ? AND "
             + HIST_COL_MEDIA_NR + " IS NULL AND "
             + HIST_COL_TITLE + " = ?";
-    public static final String HIST_WHERE_LIB_NR = "bib = ? AND "
+    public static final String HIST_WHERE_LIB_MEDIA_NR = "bib = ? AND "
             + HIST_COL_MEDIA_NR + " = ?";
     public static final String HIST_WHERE_LIB_TITLE_AUTHOR_TYPE = "bib = ? AND "
             + HIST_COL_TITLE + " = ? AND "
