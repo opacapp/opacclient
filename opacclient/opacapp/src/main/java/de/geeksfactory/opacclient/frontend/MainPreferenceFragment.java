@@ -134,6 +134,27 @@ public class MainPreferenceFragment extends PreferenceFragmentCompat {
             });
         }
 
+        Preference historyMaintain = findPreference("history_maintain");
+        if (historyMaintain != null) {
+            historyMaintain.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
+                @Override
+                public boolean onPreferenceChange(Preference preference, Object newValue) {
+                    boolean newHistoryMaintain = ((Boolean) newValue).booleanValue();
+                    if (newHistoryMaintain) {
+                        // nothing more to do
+                        return true;
+                    }
+
+                    // false, no History. Maybe delete historyDb?
+                    // TODO historyDb löschen? Ask first (AlertDialog.Builder?
+                    // HistoryDataSource hdata = new HistoryDataSource(context);
+                    // hdata.deleteAll();
+
+                    return true;
+                }
+            });
+        }
+
         Preference meta = findPreference("meta_clear");
         if (meta != null) {
             meta.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {

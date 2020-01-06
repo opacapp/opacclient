@@ -28,6 +28,13 @@
             android:title="@string/load_covers_mobile_data"
             android:summaryOn="@string/load_covers_mobile_data_on"
             android:summaryOff="@string/load_covers_mobile_data_off"/>
+
+        <CheckBoxPreference
+            android:defaultValue="false"
+            android:key="history_maintain"
+            android:title="@string/history_maintain"
+            android:summaryOn="@string/history_maintain_on"
+            android:summaryOff="@string/history_maintain_off"/>
     </PreferenceCategory>
     <PreferenceCategory android:title="@string/notifications">
         <CheckBoxPreference

@@ -363,4 +363,7 @@
     <string name="history_first_date">Beginndatum</string>
     <string name="history_last_date">Endedatum</string>
     <string name="info_history_updated_count">Import abgeschlossen, %1$d Einträge hinzugefügt, %2$d geändert</string>
+    <string name="history_maintain">Führe Chronik aller ausgeliehenen Medien</string>
+    <string name="history_maintain_off">Speicher keine Liste aller jemals ausgeliehenen Medien</string>
+    <string name="history_maintain_on">Speichere eine Liste aller jemals ausgeliehenen Medien</string>
 </resources>
