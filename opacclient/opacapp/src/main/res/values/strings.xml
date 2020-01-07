@@ -105,7 +105,7 @@
     <string name="star_wait">Please wait for the details to load.</string>
     <string name="star_unsupported">We could not obtain enough information about this item to add it to your list.</string>
     <string name="starred_welcome">This is your favorites list. You can add items by clicking the star on a detail page. The list is saved separately for every library you use.</string>
-    <string name="history_welcome">This is your history list. You can The list is saved separately for every library you use.</string>
+    <string name="history_welcome">This is your history list. The list is saved separately for every library you use.</string>
     <string name="share">Share</string>
     <string name="share_wait">Please wait for the details to load.</string>
     <string name="share_notsupported">Not supported in this library.</string>
@@ -332,6 +332,9 @@
     <string name="history_maintain">Maintain history lent items</string>
     <string name="history_maintain_on">Store title, author, begin-date, end-date ... of all lent items</string>
     <string name="history_maintain_off">Do not store a history off all lent items</string>
+    <string name="history_remove_all">Delete All</string>
+    <string name="history_remove_all_sure">Are you sure? (No undo possible)</string>
+    <string name="history_remove_all_prefs">Do you want to delete the history of all libraries? (No undo possible)</string>
     <string name="print">Print</string>
     <string name="print_wait">Please wait for details to load</string>
     <string name="preference_category_library_config">Library data</string>

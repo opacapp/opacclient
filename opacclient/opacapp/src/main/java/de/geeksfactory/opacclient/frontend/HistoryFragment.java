@@ -24,6 +24,7 @@ package de.geeksfactory.opacclient.frontend;
 import android.app.Activity;
 import android.content.ActivityNotFoundException;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
@@ -70,6 +71,7 @@ import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.List;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.core.app.ActivityCompat;
 import androidx.core.app.ActivityOptionsCompat;
 import androidx.cursoradapter.widget.SimpleCursorAdapter;
@@ -240,6 +242,9 @@ public class HistoryFragment extends Fragment implements
         } else if (item.getItemId() == R.id.action_sort_duration) {
             sort("julianday(lastDate) - julianday(firstDate)");
             return true;
+        } else if (item.getItemId() == R.id.action_remove_all) {
+            removeAll();
+            return true;
         }
         return super.onOptionsItemSelected(item);
     }
@@ -277,6 +282,32 @@ public class HistoryFragment extends Fragment implements
         historyItem = item;
         showSnackBar();
         data.remove(item);
+    }
+
+    public void removeAll() {
+        DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                switch (which){
+                    case DialogInterface.BUTTON_POSITIVE:
+                        // Yes button clicked
+                        HistoryDataSource data = new HistoryDataSource(getActivity());
+                        String bib = app.getLibrary().getIdent();
+                        data.removeAll(bib);
+                        break;
+
+                    case DialogInterface.BUTTON_NEGATIVE:
+                        // No button clicked
+                        break;
+                }
+            }
+        };
+        AlertDialog.Builder builder = new AlertDialog.Builder(
+                getActivity());
+        builder.setMessage(R.string.history_remove_all_sure)
+               .setPositiveButton(R.string.yes, dialogClickListener)
+               .setNegativeButton(R.string.no, dialogClickListener)
+               .show();
     }
 
     //Added code to show SnackBar when clicked on Remove button in Favorites screen

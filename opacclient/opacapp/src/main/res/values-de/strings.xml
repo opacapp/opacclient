@@ -366,4 +366,7 @@
     <string name="history_maintain">Führe Chronik aller ausgeliehenen Medien</string>
     <string name="history_maintain_off">Speicher keine Liste aller jemals ausgeliehenen Medien</string>
     <string name="history_maintain_on">Speichere eine Liste aller jemals ausgeliehenen Medien</string>
+    <string name="history_remove_all">Alle löschen</string>
+    <string name="history_remove_all_sure">Bist du sicher? (Kein rückgängig möglich)</string>
+    <string name="history_remove_all_prefs">Sollen die Verleich-Chroniken zu allen Bibliotheken gelöscht werden? (Kein rückgängig möglich)</string>
 </resources>

@@ -605,6 +605,45 @@ public class HistoryDataSource {
                        HistoryDatabase.HIST_WHERE_HISTORY_ID, selA);
     }
 
+    /**
+     * Löscht alle Einträge zu einer Bibliothek
+     *
+     * @param bib Name der Bibliothek/Library
+     */
+    public void removeAll(String bib) {
+        String[] selA = {bib};
+        context.getContentResolver()
+               .delete(((OpacClient) context.getApplication())
+                               .getHistoryProviderHistoryUri(),
+                       HistoryDatabase.HIST_WHERE_LIB, selA);
+    }
+
+    /**
+     * Löscht alle Einträge zu allen Bibliothekcn in der Database
+     */
+    public void removeAll() {
+        context.getContentResolver()
+               .delete(((OpacClient) context.getApplication())
+                               .getHistoryProviderHistoryUri(),
+                       null, null);
+    }
+
+    public int getCountItems() {
+        Cursor cursor = context
+                .getContentResolver()
+                .query(((OpacClient) context.getApplication())
+                                .getHistoryProviderHistoryUri(),
+                        new String[]{"count(*)"},
+                        null, null, null);
+        cursor.moveToFirst();
+        int count = 0;
+        if (!cursor.isAfterLast()) {
+            count = cursor.getInt(0);
+        }
+        cursor.close();
+        return count;
+    }
+
     public void renameLibraries(Map<String, String> map) {
         for (Entry<String, String> entry : map.entrySet()) {
             ContentValues cv = new ContentValues();

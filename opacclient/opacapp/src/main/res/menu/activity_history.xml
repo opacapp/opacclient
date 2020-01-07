@@ -50,5 +50,10 @@
         app:showAsAction="never"
         android:title="@string/import_starred_from_storage">
     </item>
+    <item
+        android:id="@+id/action_remove_all"
+        app:showAsAction="never"
+        android:title="@string/history_remove_all">
+    </item>
 
 </menu>
