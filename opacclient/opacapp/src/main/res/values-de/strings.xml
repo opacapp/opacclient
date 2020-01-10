@@ -1,4 +1,3 @@
-<?xml version='1.0' encoding='UTF-8'?>
 <resources>
     <string name="app_name">Web Opac</string>
     <string name="launcher_name">Web Opac</string>
@@ -345,28 +344,28 @@
     <string name="history_removed">Aus der Chronik gelöscht</string>
     <string name="history_removed_undo">Rückgängig</string>
     <string name="sort_history">Sortieren</string>
-    <string name="sort_history_author">nach Author</string>
-    <string name="sort_history_duration">nach Dauer</string>
-    <string name="sort_history_firstDate">nach Beginn</string>
-    <string name="sort_history_lastDate">nach Ende</string>
-    <string name="sort_history_prolongCount">Verlängerungen</string>
-    <string name="sort_history_title">Titel</string>
+    <string name="sort_history_author">nach Autor</string>
+    <string name="sort_history_duration">nach Leihdauer</string>
+    <string name="sort_history_firstDate">nach Beginn Ausleihe</string>
+    <string name="sort_history_lastDate">nach Ende Ausleihe</string>
+    <string name="sort_history_prolongCount">nach Anzahl Verlängerungen</string>
+    <string name="sort_history_title">nach Titel</string>
     <string name="info_history_updated">Import der Chronik abgeschlossen</string>
     <string name="nav_history">Chronik</string>
     <string name="share_history">Teilen</string>
     <string name="export_history_to_storage">Exportieren</string>
-    <string name="history_welcome">Dies ist deine Leih-Chronik. Die Liste wird für jede Bibliothek, die du benutzt, separat geführt.</string>
+    <string name="history_welcome">Hier werden alle Medien gespeichert, die du in der Vergangenheit entliehen hast. Die Liste wird für jede Bibliothek, die du benutzt, separat geführt.</string>
     <string name="history_status_finished">vom %1$s für %2$d Tage</string>
     <string name="history_status_lending">seit %1$s für %2$d Tage</string>
     <string name="history_status_finished_1">vom %1$s für 1 Tag</string>
     <string name="history_status_lending_1">seit %1$s für 1 Tag</string>
-    <string name="history_first_date">Beginndatum</string>
-    <string name="history_last_date">Endedatum</string>
+    <string name="history_first_date">Beginn Ausleihe</string>
+    <string name="history_last_date">Ende Ausleihe</string>
     <string name="info_history_updated_count">Import abgeschlossen, %1$d Einträge hinzugefügt, %2$d geändert</string>
     <string name="history_maintain">Führe Chronik aller ausgeliehenen Medien</string>
-    <string name="history_maintain_off">Speicher keine Liste aller jemals ausgeliehenen Medien</string>
+    <string name="history_maintain_off">Speichere keine Liste aller jemals ausgeliehenen Medien</string>
     <string name="history_maintain_on">Speichere eine Liste aller jemals ausgeliehenen Medien</string>
     <string name="history_remove_all">Alle löschen</string>
     <string name="history_remove_all_sure">Bist du sicher? (Kein rückgängig möglich)</string>
-    <string name="history_remove_all_prefs">Sollen die Verleich-Chroniken zu allen Bibliotheken gelöscht werden? (Kein rückgängig möglich)</string>
+    <string name="history_remove_all_prefs">Sollen die Verleih-Chroniken zu allen Bibliotheken gelöscht werden? (Kein rückgängig möglich)</string>
 </resources>
