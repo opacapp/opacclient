@@ -25,10 +25,10 @@ import de.geeksfactory.opacclient.apis.EbookServiceApi;
 import de.geeksfactory.opacclient.apis.OpacApi;
 import de.geeksfactory.opacclient.databinding.AccountItemDetailActivityBinding;
 import de.geeksfactory.opacclient.objects.AccountItem;
-import de.geeksfactory.opacclient.storage.HistoryItem;
 import de.geeksfactory.opacclient.objects.LentItem;
 import de.geeksfactory.opacclient.objects.ReservedItem;
 import de.geeksfactory.opacclient.objects.SearchResult;
+import de.geeksfactory.opacclient.storage.HistoryItem;
 
 public class AccountItemDetailActivity extends AppCompatActivity {
     public static final String EXTRA_ITEM = "item";
@@ -159,7 +159,7 @@ public class AccountItemDetailActivity extends AppCompatActivity {
             final HistoryItem i = (HistoryItem) item;
             download.setVisible(false);
             cancel.setVisible(false);   // cancel reservation
-            if (i.isLending() ) {
+            if (i.isLending()) {
                 booking.setVisible(false);
 
                 prolong.setVisible(true);

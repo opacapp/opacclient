@@ -1,23 +1,20 @@
 /**
  * Copyright (C) 2013 by Raphael Michel under the MIT license:
  *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
- * of this software and associated documentation files (the "Software"), 
- * to deal in the Software without restriction, including without limitation 
- * the rights to use, copy, modify, merge, publish, distribute, sublicense, 
- * and/or sell copies of the Software, and to permit persons to whom the Software 
- * is furnished to do so, subject to the following conditions:
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
+ * associated documentation files (the "Software"), to deal in the Software without restriction,
+ * including without limitation the rights to use, copy, modify, merge, publish, distribute,
+ * sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
  *
- * The above copyright notice and this permission notice shall be included in 
- * all copies or substantial portions of the Software.
+ * The above copyright notice and this permission notice shall be included in all copies or
+ * substantial portions of the Software.
  *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR 
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, 
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. 
- * IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, 
- * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, 
- * ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER 
- * DEALINGS IN THE SOFTWARE.
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT
+ * NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+ * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
+ * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 package de.geeksfactory.opacclient.storage;
 
@@ -51,9 +48,12 @@ public class HistoryDataSource {
     private SQLiteDatabase database;
     private String[] allColumns = HistoryDatabase.COLUMNS;
 
-    public enum ChangeType { NOTHING, UPDATE, INSERT};
+    public enum ChangeType {NOTHING, UPDATE, INSERT}
+
+    ;
 
     private Activity context;
+
     public HistoryDataSource(Activity context) {
         this.context = context;
     }
@@ -74,7 +74,7 @@ public class HistoryDataSource {
         List<HistoryItem> historyItems = getAllLendingItems(account.getLibrary());
         for (LentItem lentItem : adata.getLent()) {
             HistoryItem foundItem = null;
-            for (HistoryItem historyItem: historyItems ) {
+            for (HistoryItem historyItem : historyItems) {
                 if (historyItem.isSameAsLentItem(lentItem)) {
                     foundItem = historyItem;
                     break;
@@ -100,7 +100,7 @@ public class HistoryDataSource {
             }
         }
 
-        for (HistoryItem historyItem: historyItems ) {
+        for (HistoryItem historyItem : historyItems) {
             boolean isLending = false;
             for (LentItem lentItem : adata.getLent()) {
                 if (historyItem.isSameAsLentItem(lentItem)) {
@@ -143,14 +143,14 @@ public class HistoryDataSource {
         return items;
     }
 
-    public ChangeType insertOrUpdate(String bib, JSONObject entry) throws  JSONException {
+    public ChangeType insertOrUpdate(String bib, JSONObject entry) throws JSONException {
 
         final String methodName = "insertOrUpdate";
 
         // - same id/medianr or same (title, author and type)
         // - and Zeitraum=(first bis last) überschneiden sich
         LocalDate firstDate = LocalDate.parse(entry.getString(HistoryDatabase.HIST_COL_FIRST_DATE));
-        LocalDate lastDate  = LocalDate.parse(entry.getString(HistoryDatabase.HIST_COL_LAST_DATE));
+        LocalDate lastDate = LocalDate.parse(entry.getString(HistoryDatabase.HIST_COL_LAST_DATE));
 
         Log.d(methodName, String.format("bib: %s, json: dates %s - %s", bib, firstDate, lastDate));
 
@@ -167,13 +167,13 @@ public class HistoryDataSource {
             String author = entry.getString(HistoryDatabase.HIST_COL_AUTHOR);
             String mediatype = entry.getString(HistoryDatabase.HIST_COL_MEDIA_TYPE);
             Log.d(methodName, String.format("json: title %s, author %s, mediatype %s"
-                    ,title, author, mediatype));
-            item = findItem(bib, title, author, mediatype , firstDate, lastDate);
+                    , title, author, mediatype));
+            item = findItem(bib, title, author, mediatype, firstDate, lastDate);
         }
         Log.d(methodName, String.format("HistoryItem: %s", item));
 
         ChangeType changeType = ChangeType.NOTHING;
-        if (item==null) {
+        if (item == null) {
             // noch kein entsprechender Satz in Datenbank
             Log.d(methodName, "call insertHistoryItem(...)");
             insertHistoryItem(bib, entry);
@@ -182,12 +182,12 @@ public class HistoryDataSource {
             // Satz vorhanden, ev. updaten
 
             // firstDate, lastDate und count 'mergen'
-            if (firstDate.compareTo(item.getFirstDate())<0) {
+            if (firstDate.compareTo(item.getFirstDate()) < 0) {
                 Log.d(methodName, "firstDate changed");
                 changeType = ChangeType.UPDATE;
                 item.setFirstDate(firstDate);
             }
-            if (lastDate.compareTo(item.getLastDate())>0) {
+            if (lastDate.compareTo(item.getLastDate()) > 0) {
                 Log.d(methodName, "lastDate changed");
                 changeType = ChangeType.UPDATE;
                 item.setLastDate(lastDate);
@@ -213,7 +213,7 @@ public class HistoryDataSource {
     private static JSONObject cursorToJson(String[] columns, Cursor cursor) throws
             JSONException {
         JSONObject jsonItem = new JSONObject();
-        int i=0;
+        int i = 0;
         for (String col : columns) {
             switch (col) {
                 case HistoryDatabase.HIST_COL_LENDING:
@@ -240,14 +240,14 @@ public class HistoryDataSource {
 
     public static HistoryItem cursorToItem(Cursor cursor) {
         HistoryItem item = new HistoryItem();
-        int i=0;
+        int i = 0;
         item.setHistoryId(cursor.getInt(i++));
         String ds = cursor.getString(i++);
-        if ( ds!=null) {
+        if (ds != null) {
             item.setFirstDate(LocalDate.parse(ds));
         }
         ds = cursor.getString(i++);
-        if ( ds!=null) {
+        if (ds != null) {
             item.setLastDate(LocalDate.parse(ds));
         }
         item.setLending(cursor.getInt(i++) > 0);
@@ -259,7 +259,7 @@ public class HistoryDataSource {
         item.setStatus(cursor.getString(i++));
         item.setCover(cursor.getString(i++));
         String mds = cursor.getString(i++);
-        if (mds!=null) {
+        if (mds != null) {
             try {
                 SearchResult.MediaType mediaType = SearchResult.MediaType.valueOf(mds);
                 item.setMediaType(mediaType);
@@ -274,7 +274,7 @@ public class HistoryDataSource {
         item.setBarcode(cursor.getString(i++));
 
         ds = cursor.getString(i++);
-        if ( ds!=null) {
+        if (ds != null) {
             item.setDeadline(LocalDate.parse(ds));
         }
         int count = cursor.getInt(i++);
@@ -283,64 +283,64 @@ public class HistoryDataSource {
         return item;
     }
 
-    private void addAccountItemValues(ContentValues values, AccountItem item ) {
-        putOrNull(values,HistoryDatabase.HIST_COL_MEDIA_NR, item.getId());
-        putOrNull(values,HistoryDatabase.HIST_COL_TITLE, item.getTitle());
-        putOrNull(values,HistoryDatabase.HIST_COL_AUTHOR, item.getAuthor());
-        putOrNull(values,"format", item.getFormat());
-        putOrNull(values,"status", item.getStatus());
-        putOrNull(values,"cover", item.getCover());
+    private void addAccountItemValues(ContentValues values, AccountItem item) {
+        putOrNull(values, HistoryDatabase.HIST_COL_MEDIA_NR, item.getId());
+        putOrNull(values, HistoryDatabase.HIST_COL_TITLE, item.getTitle());
+        putOrNull(values, HistoryDatabase.HIST_COL_AUTHOR, item.getAuthor());
+        putOrNull(values, "format", item.getFormat());
+        putOrNull(values, "status", item.getStatus());
+        putOrNull(values, "cover", item.getCover());
         SearchResult.MediaType mediaType = item.getMediaType();
-        putOrNull(values,"mediatype", mediaType != null ? mediaType.toString() : null);
+        putOrNull(values, "mediatype", mediaType != null ? mediaType.toString() : null);
     }
 
     private ContentValues createContentValues(HistoryItem historyItem) {
         ContentValues values = new ContentValues();
         addAccountItemValues(values, historyItem);
 
-        putOrNull(values,HistoryDatabase.HIST_COL_FIRST_DATE, historyItem.getFirstDate());
-        putOrNull(values,HistoryDatabase.HIST_COL_LAST_DATE, historyItem.getLastDate());
-        putOrNull(values,HistoryDatabase.HIST_COL_LENDING, historyItem.isLending());
-        putOrNull(values,"bib", historyItem.getBib());
-        putOrNull(values,"homeBranch", historyItem.getHomeBranch());
-        putOrNull(values,"lendingBranch", historyItem.getLendingBranch());
-        putOrNull(values,"ebook", historyItem.isEbook());
-        putOrNull(values,"barcode", historyItem.getBarcode());
-        putOrNull(values,HistoryDatabase.HIST_COL_DEADLINE, historyItem.getDeadline());
+        putOrNull(values, HistoryDatabase.HIST_COL_FIRST_DATE, historyItem.getFirstDate());
+        putOrNull(values, HistoryDatabase.HIST_COL_LAST_DATE, historyItem.getLastDate());
+        putOrNull(values, HistoryDatabase.HIST_COL_LENDING, historyItem.isLending());
+        putOrNull(values, "bib", historyItem.getBib());
+        putOrNull(values, "homeBranch", historyItem.getHomeBranch());
+        putOrNull(values, "lendingBranch", historyItem.getLendingBranch());
+        putOrNull(values, "ebook", historyItem.isEbook());
+        putOrNull(values, "barcode", historyItem.getBarcode());
+        putOrNull(values, HistoryDatabase.HIST_COL_DEADLINE, historyItem.getDeadline());
         values.put("prolongCount", historyItem.getProlongCount());
 
         return values;
     }
 
-    private void updateHistoryItem(HistoryItem historyItem ) {
+    private void updateHistoryItem(HistoryItem historyItem) {
         ContentValues values = createContentValues(historyItem);
         String where = "historyId = ?";
         context.getContentResolver()
                .update(((OpacClient) context.getApplication()).getHistoryProviderHistoryUri()
                        , values, where, new String[]{Integer.toString(historyItem.getHistoryId())
-                       } );
+                       });
     }
 
-    public void insertHistoryItem(HistoryItem historyItem ) {
+    public void insertHistoryItem(HistoryItem historyItem) {
         ContentValues values = createContentValues(historyItem);
         context.getContentResolver()
                .insert(((OpacClient) context.getApplication()).getHistoryProviderHistoryUri(),
-               values);
+                       values);
     }
 
-    public void insertHistoryItem(String bib, JSONObject item ) throws JSONException {
+    public void insertHistoryItem(String bib, JSONObject item) throws JSONException {
         ContentValues values = new ContentValues();
         values.put("bib", bib);
 
         Iterator<String> keys = item.keys();
-        while(keys.hasNext()) {
+        while (keys.hasNext()) {
             String key = keys.next();
             switch (key) {
                 case HistoryDatabase.HIST_COL_LENDING:
                 case "ebook":
                     // boolean
                     boolean b = (1 == item.getInt(key));
-                    putOrNull(values, key, b );
+                    putOrNull(values, key, b);
                     break;
                 case "prolongCount":
                     // Integer
@@ -365,15 +365,15 @@ public class HistoryDataSource {
                     // date wird als String inserted
                 default:
                     // String
-                    putOrNull(values,key, item.getString(key) );
+                    putOrNull(values, key, item.getString(key));
             }
         }
         context.getContentResolver()
                .insert(((OpacClient) context.getApplication()).getHistoryProviderHistoryUri(),
-               values);
+                       values);
     }
 
-    private void insertLentItem(String bib, LentItem lentItem ) {
+    private void insertLentItem(String bib, LentItem lentItem) {
         ContentValues values = new ContentValues();
         addAccountItemValues(values, lentItem);
 
@@ -390,7 +390,7 @@ public class HistoryDataSource {
 
         context.getContentResolver()
                .insert(((OpacClient) context.getApplication()).getHistoryProviderHistoryUri(),
-               values);
+                       values);
     }
 
     private void putOrNull(ContentValues cv, String key, String value) {
@@ -400,6 +400,7 @@ public class HistoryDataSource {
             cv.putNull(key);
         }
     }
+
     private void putOrNull(ContentValues cv, String key, LocalDate value) {
         if (value != null) {
             cv.put(key, value.toString());
@@ -407,6 +408,7 @@ public class HistoryDataSource {
             cv.putNull(key);
         }
     }
+
     private void putOrNull(ContentValues cv, String key, boolean value) {
         cv.put(key, value ? Boolean.TRUE : Boolean.FALSE);
     }
@@ -523,7 +525,8 @@ public class HistoryDataSource {
         return item;
     }
 
-    private HistoryItem findItem(String bib, String mediaNr, LocalDate firstDate, LocalDate lastDate) {
+    private HistoryItem findItem(String bib, String mediaNr, LocalDate firstDate,
+            LocalDate lastDate) {
         if (mediaNr == null) {
             return null;
         }
@@ -561,9 +564,9 @@ public class HistoryDataSource {
         while (!cursor.isAfterLast()) {
             HistoryItem item = cursorToItem(cursor);
 
-            if (firstDate.compareTo(item.getLastDate())>0) {
+            if (firstDate.compareTo(item.getLastDate()) > 0) {
                 // firstDate > item.lastDate: Zeitraum überschneidet sich nicht
-            } else if (item.getFirstDate().compareTo(lastDate)>0) {
+            } else if (item.getFirstDate().compareTo(lastDate) > 0) {
                 // item.firstDate > lastDate: Zeitraum überschneidet sich nicht
                 item = null;
             } else {

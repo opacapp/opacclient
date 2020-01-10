@@ -32,7 +32,10 @@ public class HistoryItem extends AccountItem implements Serializable {
         return prolongCount;
     }
 
-    public LocalDate getDeadline() { return deadline; }
+    public LocalDate getDeadline() {
+        return deadline;
+    }
+
     public void setDeadline(LocalDate deadline) {
         this.deadline = deadline;
     }
@@ -153,6 +156,7 @@ public class HistoryItem extends AccountItem implements Serializable {
     public String getBib() {
         return bib;
     }
+
     public void setBib(String bib) {
         this.bib = bib;
     }
@@ -160,6 +164,7 @@ public class HistoryItem extends AccountItem implements Serializable {
     public int getHistoryId() {
         return historyId;
     }
+
     public void setHistoryId(int historyId) {
         this.historyId = historyId;
     }

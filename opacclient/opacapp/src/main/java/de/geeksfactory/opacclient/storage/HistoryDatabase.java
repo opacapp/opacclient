@@ -1,23 +1,20 @@
 /**
  * Copyright (C) 2013 by Raphael Michel under the MIT license:
  *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
- * of this software and associated documentation files (the "Software"), 
- * to deal in the Software without restriction, including without limitation 
- * the rights to use, copy, modify, merge, publish, distribute, sublicense, 
- * and/or sell copies of the Software, and to permit persons to whom the Software 
- * is furnished to do so, subject to the following conditions:
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
+ * associated documentation files (the "Software"), to deal in the Software without restriction,
+ * including without limitation the rights to use, copy, modify, merge, publish, distribute,
+ * sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
  *
- * The above copyright notice and this permission notice shall be included in 
- * all copies or substantial portions of the Software.
+ * The above copyright notice and this permission notice shall be included in all copies or
+ * substantial portions of the Software.
  *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR 
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, 
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. 
- * IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, 
- * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, 
- * ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER 
- * DEALINGS IN THE SOFTWARE.
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT
+ * NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+ * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
+ * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 package de.geeksfactory.opacclient.storage;
 
@@ -41,7 +38,7 @@ public class HistoryDatabase extends SQLiteOpenHelper {
     public static final String HIST_COL_DEADLINE = "deadline";
     public static final String HIST_COL_LENDING = "lending";
 
-    public static final String HIST_WHERE_HISTORY_ID = HIST_COL_HISTORY_ID +" = ?";
+    public static final String HIST_WHERE_HISTORY_ID = HIST_COL_HISTORY_ID + " = ?";
     public static final String HIST_WHERE_LIB = "bib = ?";
 
     public static final String HIST_WHERE_LIB_LENDING = "bib = ? AND lending = 1";
@@ -53,31 +50,32 @@ public class HistoryDatabase extends SQLiteOpenHelper {
     public static final String HIST_WHERE_LIB_TITLE_AUTHOR_TYPE = "bib = ? AND "
             + HIST_COL_TITLE + " = ? AND "
             + HIST_COL_AUTHOR + " = ? AND "
-            + HIST_COL_MEDIA_TYPE + " = ?"
-            ;
-    public static final String[] COLUMNS = {HIST_COL_HISTORY_ID +" AS _id", // wg. android.widget.CursorAdapter
-                // siehe https://developer.android.com/reference/android/widget/CursorAdapter.html
-            HIST_COL_FIRST_DATE,
-            HIST_COL_LAST_DATE,
-            HIST_COL_LENDING,
-            HIST_COL_MEDIA_NR,
-            "bib",
-            HIST_COL_TITLE,
-            HIST_COL_AUTHOR,
-            "format",
-            "status",
-            "cover",
-            HIST_COL_MEDIA_TYPE,
-            "homeBranch",
-            "lendingBranch",
-            "ebook",
-            "barcode",
-            HIST_COL_DEADLINE,
-            HIST_COL_PROLONG_COUNT
-        };
+            + HIST_COL_MEDIA_TYPE + " = ?";
+    public static final String[] COLUMNS =
+            {HIST_COL_HISTORY_ID + " AS _id", // wg. android.widget.CursorAdapter
+                    // siehe https://developer.android.com/reference/android/widget/CursorAdapter
+                    // .html
+                    HIST_COL_FIRST_DATE,
+                    HIST_COL_LAST_DATE,
+                    HIST_COL_LENDING,
+                    HIST_COL_MEDIA_NR,
+                    "bib",
+                    HIST_COL_TITLE,
+                    HIST_COL_AUTHOR,
+                    "format",
+                    "status",
+                    "cover",
+                    HIST_COL_MEDIA_TYPE,
+                    "homeBranch",
+                    "lendingBranch",
+                    "ebook",
+                    "barcode",
+                    HIST_COL_DEADLINE,
+                    HIST_COL_PROLONG_COUNT
+            };
 
     private static final String DATABASE_CREATE = "create table historyTable (\n" +
-            "\t" + HIST_COL_HISTORY_ID +" integer primary key autoincrement,\n" +
+            "\t" + HIST_COL_HISTORY_ID + " integer primary key autoincrement,\n" +
             "\t" + HIST_COL_FIRST_DATE + " date,\n" +
             "\t" + HIST_COL_LAST_DATE + " date,\n" +
             "\tlending boolean,\n" +
@@ -118,26 +116,26 @@ public class HistoryDatabase extends SQLiteOpenHelper {
                 + ", which will destroy all old data");
 
         final String createTemp =
-            "create table tempTable (\n" +
-                    "\t" + HIST_COL_HISTORY_ID +" integer primary key autoincrement,\n" +
-                    "\t" + HIST_COL_FIRST_DATE + " date,\n" +
-                    "\t" + HIST_COL_LAST_DATE + " date,\n" +
-                    "\t" + HIST_COL_LENDING + " boolean,\n" +
-                    "\t" + HIST_COL_MEDIA_NR + " text,\n" +
-                    "\tbib text,\n" +
-                    "\t" + HIST_COL_TITLE + " text,\n" +
-                    "\t" + HIST_COL_AUTHOR + " text,\n" +
-                    "\tformat text,\n" +
-                    "\tstatus text,\n" +
-                    "\tcover text,\n" +
-                    "\t" + HIST_COL_MEDIA_TYPE + " text,\n" +
-                    "\thomeBranch text,\n" +
-                    "\tlendingBranch text,\n" +
-                    "\tebook boolean,\n" +
-                    "\tbarcode text,\n" +
-                    "\t" + HIST_COL_DEADLINE + " date,\n" +
-                    "\t" + HIST_COL_PROLONG_COUNT + " integer\n" +
-                    ");";
+                "create table tempTable (\n" +
+                        "\t" + HIST_COL_HISTORY_ID + " integer primary key autoincrement,\n" +
+                        "\t" + HIST_COL_FIRST_DATE + " date,\n" +
+                        "\t" + HIST_COL_LAST_DATE + " date,\n" +
+                        "\t" + HIST_COL_LENDING + " boolean,\n" +
+                        "\t" + HIST_COL_MEDIA_NR + " text,\n" +
+                        "\tbib text,\n" +
+                        "\t" + HIST_COL_TITLE + " text,\n" +
+                        "\t" + HIST_COL_AUTHOR + " text,\n" +
+                        "\tformat text,\n" +
+                        "\tstatus text,\n" +
+                        "\tcover text,\n" +
+                        "\t" + HIST_COL_MEDIA_TYPE + " text,\n" +
+                        "\thomeBranch text,\n" +
+                        "\tlendingBranch text,\n" +
+                        "\tebook boolean,\n" +
+                        "\tbarcode text,\n" +
+                        "\t" + HIST_COL_DEADLINE + " date,\n" +
+                        "\t" + HIST_COL_PROLONG_COUNT + " integer\n" +
+                        ");";
 
         db.execSQL(createTemp);
         db.execSQL("insert into tempTable select * from " + HIST_TABLE + ";");

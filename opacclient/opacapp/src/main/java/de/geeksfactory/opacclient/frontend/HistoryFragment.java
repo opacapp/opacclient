@@ -1,23 +1,20 @@
 /**
  * Copyright (C) 2013 by Raphael Michel under the MIT license:
  * <p>
- * Permission is hereby granted, free of charge, to any person obtaining a copy
- * of this software and associated documentation files (the "Software"),
- * to deal in the Software without restriction, including without limitation
- * the rights to use, copy, modify, merge, publish, distribute, sublicense,
- * and/or sell copies of the Software, and to permit persons to whom the Software
- * is furnished to do so, subject to the following conditions:
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
+ * associated documentation files (the "Software"), to deal in the Software without restriction,
+ * including without limitation the rights to use, copy, modify, merge, publish, distribute,
+ * sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
  * <p>
- * The above copyright notice and this permission notice shall be included in
- * all copies or substantial portions of the Software.
+ * The above copyright notice and this permission notice shall be included in all copies or
+ * substantial portions of the Software.
  * <p>
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
- * IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
- * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,
- * ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
- * DEALINGS IN THE SOFTWARE.
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT
+ * NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+ * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
+ * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 package de.geeksfactory.opacclient.frontend;
 
@@ -84,12 +81,12 @@ import de.geeksfactory.opacclient.R;
 import de.geeksfactory.opacclient.frontend.OpacActivity.AccountSelectedListener;
 import de.geeksfactory.opacclient.objects.Account;
 import de.geeksfactory.opacclient.objects.AccountItem;
-import de.geeksfactory.opacclient.storage.HistoryItem;
 import de.geeksfactory.opacclient.searchfields.SearchField;
 import de.geeksfactory.opacclient.searchfields.SearchField.Meaning;
 import de.geeksfactory.opacclient.searchfields.SearchQuery;
 import de.geeksfactory.opacclient.storage.HistoryDataSource;
 import de.geeksfactory.opacclient.storage.HistoryDatabase;
+import de.geeksfactory.opacclient.storage.HistoryItem;
 import de.geeksfactory.opacclient.storage.JsonSearchFieldDataSource;
 import de.geeksfactory.opacclient.utils.CompatibilityUtils;
 
@@ -134,7 +131,7 @@ public class HistoryFragment extends Fragment implements
             public void onItemClick(AdapterView<?> parent, View view,
                     int position, long id) {
                 HistoryItem item = (HistoryItem) view.findViewById(R.id.ivDelete)
-                                             .getTag();
+                                                     .getTag();
                 if (item.getId() == null || item.getId().equals("null")
                         || item.getId().equals("")) {
 
@@ -202,7 +199,8 @@ public class HistoryFragment extends Fragment implements
                         getString(R.string.transition_background));
 
         ActivityCompat
-                .startActivityForResult(getActivity(), intent, REQUEST_CODE_DETAIL, options.toBundle());
+                .startActivityForResult(getActivity(), intent, REQUEST_CODE_DETAIL,
+                        options.toBundle());
     }
 
     @Override
@@ -250,7 +248,7 @@ public class HistoryFragment extends Fragment implements
 
     private void sort(String orderby) {
 
-        if ((sortOrder != null ) && sortOrder.startsWith(orderby)) {
+        if ((sortOrder != null) && sortOrder.startsWith(orderby)) {
             // bereits nach dieser Spalte sortiert
             // d.h. ASC/DESC swappen
             if (sortOrder.equals(orderby + " ASC")) {
@@ -291,23 +289,24 @@ public class HistoryFragment extends Fragment implements
     }
 
     public void removeAll() {
-        DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                switch (which){
-                    case DialogInterface.BUTTON_POSITIVE:
-                        // Yes button clicked
-                        HistoryDataSource data = new HistoryDataSource(getActivity());
-                        String bib = app.getLibrary().getIdent();
-                        data.removeAll(bib);
-                        break;
+        DialogInterface.OnClickListener dialogClickListener =
+                new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        switch (which) {
+                            case DialogInterface.BUTTON_POSITIVE:
+                                // Yes button clicked
+                                HistoryDataSource data = new HistoryDataSource(getActivity());
+                                String bib = app.getLibrary().getIdent();
+                                data.removeAll(bib);
+                                break;
 
-                    case DialogInterface.BUTTON_NEGATIVE:
-                        // No button clicked
-                        break;
-                }
-            }
-        };
+                            case DialogInterface.BUTTON_NEGATIVE:
+                                // No button clicked
+                                break;
+                        }
+                    }
+                };
         AlertDialog.Builder builder = new AlertDialog.Builder(
                 getActivity());
         builder.setMessage(R.string.history_remove_all_sure)
@@ -541,14 +540,19 @@ public class HistoryFragment extends Fragment implements
                         JSONObject entry = items.getJSONObject(i);
                         HistoryDataSource.ChangeType ct = dataSource.insertOrUpdate(bib, entry);
                         switch (ct) {
-                            case UPDATE: countUpdate++; break;
-                            case INSERT: countInsert++; break;
+                            case UPDATE:
+                                countUpdate++;
+                                break;
+                            case INSERT:
+                                countInsert++;
+                                break;
                         }
                     }
-                    if(countInsert>0 || countUpdate>0) {
+                    if (countInsert > 0 || countUpdate > 0) {
                         adapter.notifyDataSetChanged();
                         Snackbar.make(getView(),
-                                getString(R.string.info_history_updated_count, countInsert, countUpdate),
+                                getString(R.string.info_history_updated_count, countInsert,
+                                        countUpdate),
                                 Snackbar.LENGTH_LONG).show();
                     } else {
                         Snackbar.make(getView(), R.string.info_history_updated,
@@ -659,7 +663,7 @@ public class HistoryFragment extends Fragment implements
                 if (!TextUtils.isEmpty(item.getAuthor())) builder.append(". ");
             }
             if (!TextUtils.isEmpty(item.getAuthor())) {
-                builder.append(item.getAuthor().split("¬\\[",2)[0]);
+                builder.append(item.getAuthor().split("¬\\[", 2)[0]);
             }
             setTextOrHide(builder, tvTitleAndAuthor);
             // statt von StarFragment
@@ -696,9 +700,11 @@ public class HistoryFragment extends Fragment implements
                 int resId = 0;
                 String fmtFirstDate = fmt.print(item.getFirstDate());
                 if (countDays == 1) {
-                    resId = item.isLending() ?  R.string.history_status_lending_1 : R.string.history_status_finished_1;
+                    resId = item.isLending() ? R.string.history_status_lending_1 :
+                            R.string.history_status_finished_1;
                 } else {
-                    resId = item.isLending() ?  R.string.history_status_lending : R.string.history_status_finished;
+                    resId = item.isLending() ? R.string.history_status_lending :
+                            R.string.history_status_finished;
                 }
                 status = getString(resId, fmtFirstDate, countDays);
                 setTextOrHide(status, tvStatus);
@@ -709,24 +715,26 @@ public class HistoryFragment extends Fragment implements
                 setTextOrHide(Html.fromHtml(item.getHomeBranch()), tvBranch);
             }
 
-            tvBranch.getViewTreeObserver().addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener() {
-                @Override
-                public boolean onPreDraw () {
-                    tvBranch.getViewTreeObserver().removeOnPreDrawListener(this);
-                    // place tvBranch next to or below tvStatus to prevent overlapping
-                    RelativeLayout.LayoutParams lp = (RelativeLayout.LayoutParams)tvBranch.getLayoutParams();
-                    if (tvStatus.getPaint().measureText(tvStatus.getText().toString()) <
-                            tvStatus.getWidth() / 2 - 4){
-                        lp.addRule(RelativeLayout.BELOW, 0);  //removeRule only since API 17
-                        lp.addRule(RelativeLayout.ALIGN_PARENT_TOP);
-                    } else {
-                        lp.addRule(RelativeLayout.ALIGN_PARENT_TOP,0);
-                        lp.addRule(RelativeLayout.BELOW, R.id.tvStatus);
-                    }
-                    tvBranch.setLayoutParams(lp);
-                    return true;
-                }
-            });
+            tvBranch.getViewTreeObserver()
+                    .addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener() {
+                        @Override
+                        public boolean onPreDraw() {
+                            tvBranch.getViewTreeObserver().removeOnPreDrawListener(this);
+                            // place tvBranch next to or below tvStatus to prevent overlapping
+                            RelativeLayout.LayoutParams lp =
+                                    (RelativeLayout.LayoutParams) tvBranch.getLayoutParams();
+                            if (tvStatus.getPaint().measureText(tvStatus.getText().toString()) <
+                                    tvStatus.getWidth() / 2 - 4) {
+                                lp.addRule(RelativeLayout.BELOW, 0);  //removeRule only since API 17
+                                lp.addRule(RelativeLayout.ALIGN_PARENT_TOP);
+                            } else {
+                                lp.addRule(RelativeLayout.ALIGN_PARENT_TOP, 0);
+                                lp.addRule(RelativeLayout.BELOW, R.id.tvStatus);
+                            }
+                            tvBranch.setLayoutParams(lp);
+                            return true;
+                        }
+                    });
 
             ImageView ivType = (ImageView) view.findViewById(R.id.ivMediaType);
             if (item.getMediaType() != null) {
@@ -748,7 +756,7 @@ public class HistoryFragment extends Fragment implements
                         callback.removeFragment();
                     }
                 });
-             }
+            }
         }
     }
 
