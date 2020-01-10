@@ -1,8 +1,11 @@
-package de.geeksfactory.opacclient.objects;
+package de.geeksfactory.opacclient.storage;
 
 import org.joda.time.LocalDate;
 
 import java.io.Serializable;
+
+import de.geeksfactory.opacclient.objects.AccountItem;
+import de.geeksfactory.opacclient.objects.LentItem;
 
 public class HistoryItem extends AccountItem implements Serializable {
 

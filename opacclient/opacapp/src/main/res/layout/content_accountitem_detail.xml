@@ -11,7 +11,7 @@
 
         <import type="de.geeksfactory.opacclient.objects.ReservedItem"/>
 
-        <import type="de.geeksfactory.opacclient.objects.HistoryItem"/>
+        <import type="de.geeksfactory.opacclient.storage.HistoryItem"/>
 
         <import type="android.view.View"/>
 

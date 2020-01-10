@@ -23,10 +23,8 @@ package de.geeksfactory.opacclient.storage;
 
 import android.app.Activity;
 import android.content.ContentValues;
-import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.text.BoringLayout;
 import android.util.Log;
 
 import org.joda.time.LocalDate;
@@ -34,7 +32,6 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -47,7 +44,6 @@ import de.geeksfactory.opacclient.objects.AccountData;
 import de.geeksfactory.opacclient.objects.AccountItem;
 import de.geeksfactory.opacclient.objects.LentItem;
 import de.geeksfactory.opacclient.objects.SearchResult;
-import de.geeksfactory.opacclient.objects.HistoryItem;
 
 public class HistoryDataSource {
 
@@ -62,7 +58,7 @@ public class HistoryDataSource {
         this.context = context;
     }
 
-    public void updateLenting(Account account, AccountData adata) {
+    public void updateLending(Account account, AccountData adata) {
         String library = account.getLibrary();
 
         /*   Account   yes      /   no

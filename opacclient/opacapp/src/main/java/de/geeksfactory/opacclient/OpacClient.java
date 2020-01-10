@@ -99,7 +99,7 @@ public class OpacClient extends Application {
     private static OpacClient instance;
     public final boolean SLIDING_MENU = true;
     private final Uri STAR_PROVIDER_STAR_URI = StarContentProvider.STAR_URI;
-    private final Uri HISTORY_PROVIDER_STAR_URI = HistoryContentProvider.HIST_URI;
+    private final Uri HISTORY_PROVIDER_HIST_URI = HistoryContentProvider.HIST_URI;
     protected Account account;
     protected OpacApi api;
     protected Library library;
@@ -178,7 +178,7 @@ public class OpacClient extends Application {
     }
 
     public Uri getHistoryProviderHistoryUri() {
-        return HISTORY_PROVIDER_STAR_URI;
+        return HISTORY_PROVIDER_HIST_URI;
     }
 
     public void addFirstAccount(Activity activity) {

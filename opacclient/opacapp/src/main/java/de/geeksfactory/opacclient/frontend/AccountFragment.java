@@ -1490,7 +1490,7 @@ public class AccountFragment extends Fragment implements
                         // historyDataSource = new HistoryDataSource(OpacClient.getEmergencyContext());
                     } else {
                         historyDataSource = new HistoryDataSource(getActivity());
-                        historyDataSource.updateLenting(adatasource.getAccount(data.getAccount()), data);
+                        historyDataSource.updateLending(adatasource.getAccount(data.getAccount()), data);
                     }
                 }
 

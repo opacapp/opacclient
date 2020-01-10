@@ -25,7 +25,7 @@ import de.geeksfactory.opacclient.apis.EbookServiceApi;
 import de.geeksfactory.opacclient.apis.OpacApi;
 import de.geeksfactory.opacclient.databinding.AccountItemDetailActivityBinding;
 import de.geeksfactory.opacclient.objects.AccountItem;
-import de.geeksfactory.opacclient.objects.HistoryItem;
+import de.geeksfactory.opacclient.storage.HistoryItem;
 import de.geeksfactory.opacclient.objects.LentItem;
 import de.geeksfactory.opacclient.objects.ReservedItem;
 import de.geeksfactory.opacclient.objects.SearchResult;

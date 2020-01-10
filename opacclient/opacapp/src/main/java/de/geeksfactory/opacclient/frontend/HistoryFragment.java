@@ -82,10 +82,9 @@ import androidx.loader.content.Loader;
 import de.geeksfactory.opacclient.OpacClient;
 import de.geeksfactory.opacclient.R;
 import de.geeksfactory.opacclient.frontend.OpacActivity.AccountSelectedListener;
-import de.geeksfactory.opacclient.frontend.adapter.AccountAdapter;
 import de.geeksfactory.opacclient.objects.Account;
 import de.geeksfactory.opacclient.objects.AccountItem;
-import de.geeksfactory.opacclient.objects.HistoryItem;
+import de.geeksfactory.opacclient.storage.HistoryItem;
 import de.geeksfactory.opacclient.searchfields.SearchField;
 import de.geeksfactory.opacclient.searchfields.SearchField.Meaning;
 import de.geeksfactory.opacclient.searchfields.SearchQuery;
@@ -180,7 +179,7 @@ public class HistoryFragment extends Fragment implements
         listView.setTextFilterEnabled(true);
 
         getActivity().getSupportLoaderManager()
-                     .initLoader(0, null, this);
+                     .initLoader(1, null, this);
         listView.setAdapter(adapter);
 
         // Restore the previously serialized activated item position.
@@ -251,10 +250,7 @@ public class HistoryFragment extends Fragment implements
 
     private void sort(String orderby) {
 
-        if (sortOrder == null) {
-            // bisher nicht sortiert
-            sortOrder = orderby + " DESC";
-        } else if (sortOrder.startsWith(orderby)) {
+        if ((sortOrder != null ) && sortOrder.startsWith(orderby)) {
             // bereits nach dieser Spalte sortiert
             // d.h. ASC/DESC swappen
             if (sortOrder.equals(orderby + " ASC")) {
@@ -263,9 +259,19 @@ public class HistoryFragment extends Fragment implements
                 sortOrder = orderby + " ASC";
             }
         } else {
-            // bisher nach anderer Spalte sortiert
-            // zunächst ASC
-            sortOrder = orderby + " ASC";
+            // bisher nicht sortiert oder
+            // nach anderer Spalte sortiert
+            switch (orderby) {
+                case "author":
+                case "title":
+                    // zunächst ASC
+                    sortOrder = orderby + " ASC";
+                    break;
+
+                default:
+                    // Datum, Anzahl
+                    sortOrder = orderby + " DESC";
+            }
         }
 
         // Loader restarten
