@@ -114,12 +114,10 @@ public class HistoryFragment extends Fragment implements
 
     private enum EnumSortDirection {
 
-        DESC("DESC", R.string.sort_direction_desc)
-        ,ASC("ASC", R.string.sort_direction_asc)
-        ;
+        DESC("DESC", R.string.sort_direction_desc), ASC("ASC", R.string.sort_direction_asc);
 
-        String sqlText;
-        int textId;
+        final String sqlText;
+        final int textId;
 
         private EnumSortDirection(String sqlText, int textId) {
             this.sqlText = sqlText;
@@ -127,54 +125,59 @@ public class HistoryFragment extends Fragment implements
         }
 
         public EnumSortDirection swap() {
-            if (this==ASC) {
+            if (this == ASC) {
                 return DESC;
             } else {
                 return ASC;
             }
         }
     }
+
     EnumSortDirection currentSortDirection = null;
 
     private enum EnumSortOption {
 
-        AUTOR(R.id.action_sort_author, R.string.sort_history_author, HistoryDatabase.HIST_COL_AUTHOR, EnumSortDirection.ASC)
-        ,TITLE(R.id.action_sort_title, R.string.sort_history_title, HistoryDatabase.HIST_COL_TITLE, EnumSortDirection.ASC)
-        ,FIRST_DATE(R.id.action_sort_firstDate, R.string.sort_history_firstDate, HistoryDatabase.HIST_COL_FIRST_DATE)
-        ,LAST_DATE(R.id.action_sort_lastDate, R.string.sort_history_lastDate, HistoryDatabase.HIST_COL_LAST_DATE)
-        ,PROLONG_COUNT(R.id.action_sort_prolongCount, R.string.sort_history_prolongCount, HistoryDatabase.HIST_COL_PROLONG_COUNT)
-        ,DURATION(R.id.action_sort_duration, R.string.sort_history_duration, "julianday(lastDate) - julianday(firstDate)")
-        ;
+        AUTOR(R.id.action_sort_author, R.string.sort_history_author,
+                HistoryDatabase.HIST_COL_AUTHOR, EnumSortDirection.ASC),
+        TITLE(R.id.action_sort_title, R.string.sort_history_title, HistoryDatabase.HIST_COL_TITLE,
+                EnumSortDirection.ASC),
+        FIRST_DATE(R.id.action_sort_firstDate, R.string.sort_history_firstDate,
+                HistoryDatabase.HIST_COL_FIRST_DATE),
+        LAST_DATE(R.id.action_sort_lastDate, R.string.sort_history_lastDate,
+                HistoryDatabase.HIST_COL_LAST_DATE),
+        PROLONG_COUNT(R.id.action_sort_prolongCount, R.string.sort_history_prolongCount,
+                HistoryDatabase.HIST_COL_PROLONG_COUNT),
+        DURATION(R.id.action_sort_duration, R.string.sort_history_duration,
+                "julianday(lastDate) - julianday(firstDate)");
 
-        int menuId;
-        int textId;
-        String column;
-        EnumSortDirection initialSortDirection;
+        final int menuId;
+        final int textId;
+        final String column;
+        final EnumSortDirection initialSortDirection;
 
         private EnumSortOption(int menuId, int textId, String column) {
+            // SortDirection Default ist DESC
+            this(menuId, textId, column, EnumSortDirection.DESC);
+        }
+
+        private EnumSortOption(int menuId, int textId, String column,
+                EnumSortDirection sortDirection) {
             this.menuId = menuId;
             this.textId = textId;
             this.column = column;
-
-            // SortDirection Default ist DESC
-            this.initialSortDirection = EnumSortDirection.DESC;
-        }
-
-        private EnumSortOption(int menuId, int textId, String column, EnumSortDirection sortDirection) {
-            this(menuId, textId, column);
             this.initialSortDirection = sortDirection;
         }
 
         public static EnumSortOption fromMenuId(int menuId) {
-            for (EnumSortOption value: EnumSortOption.values())
-            {
-                   if(value.menuId == menuId) {
-                       return value;
-                   }
+            for (EnumSortOption value : EnumSortOption.values()) {
+                if (value.menuId == menuId) {
+                    return value;
+                }
             }
             return null;
         }
     }
+
     private EnumSortOption currentSortOption = null;
 
     @Override
@@ -234,6 +237,7 @@ public class HistoryFragment extends Fragment implements
                     }
                 } else {
 //                  callback.showDetail(item.getMNr());
+                    item.setStatus(null);
                     showDetailActivity(item, view);
                 }
             }
