@@ -119,7 +119,8 @@
     <string name="info_starred_updated">Import complete.</string>
     <string name="info_history_updated">History import complete.</string>
     <string name="info_history_updated_count">History import complete. %1$d new items, %2$d changed items</string>
-
+    <string name="history_header">%1$d items</string>
+    <string name="history_header_sort">%1$d items, sorted %2$s %3$s</string>
     <string name="connection_error_detail">The connection to the library server failed. Please check your internet connection. If the problem persists, there may have been a problem on the library server or the app was unable to parse the server\'s response.</string>
     <string name="connection_error_detail_nre">The connection to the library server failed. Please check your internet connection. If the problem persists, there may have been a problem on the library server.</string>
     <string name="retry">Try again</string>
@@ -193,6 +194,8 @@
     <string name="sort_history_lastDate">by return date</string>
     <string name="sort_history_duration">by lending duration</string>
     <string name="sort_history_prolongCount">by no. of renewals</string>
+    <string name="sort_direction_desc">descending</string>
+    <string name="sort_direction_asc">ascending</string>
 
     <string name="export_account">Share as text</string>
     <string name="failed_exporting_file">An error occurred during export. Please try again later.</string>

@@ -109,9 +109,73 @@ public class HistoryFragment extends Fragment implements
     private ListView listView;
     private int activatedPosition = ListView.INVALID_POSITION;
     private TextView tvWelcome;
+    private TextView tvHistoryHeader;
     private HistoryItem historyItem;
 
-    private String sortOrder = null;
+    private enum EnumSortDirection {
+
+        DESC("DESC", R.string.sort_direction_desc)
+        ,ASC("ASC", R.string.sort_direction_asc)
+        ;
+
+        String sqlText;
+        int textId;
+
+        private EnumSortDirection(String sqlText, int textId) {
+            this.sqlText = sqlText;
+            this.textId = textId;
+        }
+
+        public EnumSortDirection swap() {
+            if (this==ASC) {
+                return DESC;
+            } else {
+                return ASC;
+            }
+        }
+    }
+    EnumSortDirection currentSortDirection = null;
+
+    private enum EnumSortOption {
+
+        AUTOR(R.id.action_sort_author, R.string.sort_history_author, HistoryDatabase.HIST_COL_AUTHOR, EnumSortDirection.ASC)
+        ,TITLE(R.id.action_sort_title, R.string.sort_history_title, HistoryDatabase.HIST_COL_TITLE, EnumSortDirection.ASC)
+        ,FIRST_DATE(R.id.action_sort_firstDate, R.string.sort_history_firstDate, HistoryDatabase.HIST_COL_FIRST_DATE)
+        ,LAST_DATE(R.id.action_sort_lastDate, R.string.sort_history_lastDate, HistoryDatabase.HIST_COL_LAST_DATE)
+        ,PROLONG_COUNT(R.id.action_sort_prolongCount, R.string.sort_history_prolongCount, HistoryDatabase.HIST_COL_PROLONG_COUNT)
+        ,DURATION(R.id.action_sort_duration, R.string.sort_history_duration, "julianday(lastDate) - julianday(firstDate)")
+        ;
+
+        int menuId;
+        int textId;
+        String column;
+        EnumSortDirection initialSortDirection;
+
+        private EnumSortOption(int menuId, int textId, String column) {
+            this.menuId = menuId;
+            this.textId = textId;
+            this.column = column;
+
+            // SortDirection Default ist DESC
+            this.initialSortDirection = EnumSortDirection.DESC;
+        }
+
+        private EnumSortOption(int menuId, int textId, String column, EnumSortDirection sortDirection) {
+            this(menuId, textId, column);
+            this.initialSortDirection = sortDirection;
+        }
+
+        public static EnumSortOption fromMenuId(int menuId) {
+            for (EnumSortOption value: EnumSortOption.values())
+            {
+                   if(value.menuId == menuId) {
+                       return value;
+                   }
+            }
+            return null;
+        }
+    }
+    private EnumSortOption currentSortOption = null;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -126,6 +190,7 @@ public class HistoryFragment extends Fragment implements
 
         listView = (ListView) view.findViewById(R.id.lvHistory);
         tvWelcome = (TextView) view.findViewById(R.id.tvHistoryWelcome);
+        tvHistoryHeader = (TextView) view.findViewById(R.id.tvHistoryHeader);
 
         listView.setOnItemClickListener(new OnItemClickListener() {
             @Override
@@ -192,6 +257,20 @@ public class HistoryFragment extends Fragment implements
         return view;
     }
 
+    private void updateHeader() {
+        String text = null;
+        int countItems = adapter.getCount();
+        if (currentSortOption == null) {
+            text = getString(R.string.history_header, countItems);
+        } else {
+            String sortColumnText = getString(currentSortOption.textId);
+            String sortDirectionText = getString(currentSortDirection.textId);
+            text = getString(R.string.history_header_sort, countItems,
+                    sortColumnText, sortDirectionText);
+        }
+        tvHistoryHeader.setText(text);
+    }
+
     private void showDetailActivity(AccountItem item, View view) {
         Intent intent = new Intent(getContext(), AccountItemDetailActivity.class);
         intent.putExtra(AccountItemDetailActivity.EXTRA_ITEM, item);
@@ -222,59 +301,35 @@ public class HistoryFragment extends Fragment implements
         } else if (item.getItemId() == R.id.action_import_from_storage) {
             importFromStorage();
             return true;
-        } else if (item.getItemId() == R.id.action_sort_author) {
-            sort("author");
-            return true;
-        } else if (item.getItemId() == R.id.action_sort_title) {
-            sort("title");
-            return true;
-        } else if (item.getItemId() == R.id.action_sort_firstDate) {
-            sort("firstDate");
-            return true;
-        } else if (item.getItemId() == R.id.action_sort_lastDate) {
-            sort("lastDate");
-            return true;
-        } else if (item.getItemId() == R.id.action_sort_prolongCount) {
-            sort("prolongCount");
-            return true;
-        } else if (item.getItemId() == R.id.action_sort_duration) {
-            sort("julianday(lastDate) - julianday(firstDate)");
-            return true;
         } else if (item.getItemId() == R.id.action_remove_all) {
             removeAll();
             return true;
+        } else {
+            EnumSortOption sortOption = EnumSortOption.fromMenuId(item.getItemId());
+            if (sortOption != null) {
+                sort(sortOption);
+                return true;
+            }
         }
         return super.onOptionsItemSelected(item);
     }
 
-    private void sort(String orderby) {
+    private void sort(EnumSortOption sortOption) {
 
-        if ((sortOrder != null) && sortOrder.startsWith(orderby)) {
+        if (currentSortOption == sortOption) {
             // bereits nach dieser Spalte sortiert
             // d.h. ASC/DESC swappen
-            if (sortOrder.equals(orderby + " ASC")) {
-                sortOrder = orderby + " DESC";
-            } else {
-                sortOrder = orderby + " ASC";
-            }
+            currentSortDirection = currentSortDirection.swap();
         } else {
-            // bisher nicht sortiert oder
-            // nach anderer Spalte sortiert
-            switch (orderby) {
-                case "author":
-                case "title":
-                    // zunächst ASC
-                    sortOrder = orderby + " ASC";
-                    break;
-
-                default:
-                    // Datum, Anzahl
-                    sortOrder = orderby + " DESC";
-            }
+            currentSortOption = sortOption;
+            currentSortDirection = sortOption.initialSortDirection;
         }
 
         // Loader restarten
         getActivity().getSupportLoaderManager().restartLoader(LOADER_ID, null, this);
+
+        // Header aktualisieren
+        // updateHeader(); unnötig, wird via onLoadFinished aufgerufen
     }
 
     @Override
@@ -335,6 +390,10 @@ public class HistoryFragment extends Fragment implements
     @Override
     public Loader<Cursor> onCreateLoader(int arg0, Bundle arg1) {
         if (app.getLibrary() != null) {
+            String sortOrder = null;
+            if (currentSortOption != null) {
+                sortOrder = currentSortOption.column + " " + currentSortDirection.sqlText;
+            }
             return new CursorLoader(getActivity(),
                     app.getHistoryProviderHistoryUri(), HistoryDatabase.COLUMNS,
                     HistoryDatabase.HIST_WHERE_LIB, new String[]{app
@@ -351,6 +410,7 @@ public class HistoryFragment extends Fragment implements
             tvWelcome.setVisibility(View.VISIBLE);
         } else {
             tvWelcome.setVisibility(View.GONE);
+            updateHeader();
         }
     }
 

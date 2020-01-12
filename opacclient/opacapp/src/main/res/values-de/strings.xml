@@ -368,4 +368,8 @@
     <string name="history_remove_all">Alle löschen</string>
     <string name="history_remove_all_sure">Bist du sicher? (Kein rückgängig möglich)</string>
     <string name="history_remove_all_prefs">Sollen die Verleih-Chroniken zu allen Bibliotheken gelöscht werden? (Kein rückgängig möglich)</string>
+    <string name="history_header">%1$d Medien</string>
+    <string name="history_header_sort">%1$d Medien, %2$s %3$s sortiert</string>
+    <string name="sort_direction_asc">aufsteigend</string>
+    <string name="sort_direction_desc">absteigend</string>
 </resources>
