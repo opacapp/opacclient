@@ -1482,15 +1482,21 @@ public class AccountFragment extends Fragment implements
                 } else {
                      prefs = new PreferenceDataSource(getActivity());
                 }
+
+                // Update Lent-History?
                 if (prefs.isHistoryMaintain()) {
-                    // Update Lent-History
-                    HistoryDataSource historyDataSource;
-                    if (getActivity() == null && OpacClient.getEmergencyContext() != null) {
-                        // TODO HistoryDataSource erwartet Activity, Context reicht nicht
-                        // historyDataSource = new HistoryDataSource(OpacClient.getEmergencyContext());
+                    HistoryDataSource historyDataSource = null;
+                    if (getActivity() == null) {
+                        if (OpacClient.getEmergencyContext() != null) {
+                            historyDataSource =
+                                    new HistoryDataSource(OpacClient.getEmergencyContext(), app);
+                        }
                     } else {
                         historyDataSource = new HistoryDataSource(getActivity());
-                        historyDataSource.updateLending(adatasource.getAccount(data.getAccount()), data);
+                    }
+                    if (historyDataSource != null) {
+                        historyDataSource
+                                .updateLending(adatasource.getAccount(data.getAccount()), data);
                     }
                 }
 
