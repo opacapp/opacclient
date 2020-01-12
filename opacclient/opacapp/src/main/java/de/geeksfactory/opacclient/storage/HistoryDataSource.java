@@ -20,8 +20,9 @@ package de.geeksfactory.opacclient.storage;
 
 import android.app.Activity;
 import android.content.ContentValues;
+import android.content.Context;
 import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
+import android.net.Uri;
 import android.util.Log;
 
 import org.joda.time.LocalDate;
@@ -44,18 +45,18 @@ import de.geeksfactory.opacclient.objects.SearchResult;
 
 public class HistoryDataSource {
 
-    // Database fields
-    private SQLiteDatabase database;
-    private String[] allColumns = HistoryDatabase.COLUMNS;
-
     public enum ChangeType {NOTHING, UPDATE, INSERT}
 
-    ;
+    final private Context context;
+    final private Uri historyProviderUri;
 
-    private Activity context;
+    public HistoryDataSource(Activity activity) {
+        this(activity, (OpacClient) activity.getApplication());
+    }
 
-    public HistoryDataSource(Activity context) {
+    public HistoryDataSource(Context context, OpacClient app) {
         this.context = context;
+        historyProviderUri = app.getHistoryProviderHistoryUri();
     }
 
     public void updateLending(Account account, AccountData adata) {
@@ -125,8 +126,7 @@ public class HistoryDataSource {
         String[] selA = {bib};
         Cursor cursor = context
                 .getContentResolver()
-                .query(((OpacClient) context.getApplication())
-                                .getHistoryProviderHistoryUri(),
+                .query(historyProviderUri,
                         HistoryDatabase.COLUMNS, HistoryDatabase.HIST_WHERE_LIB,
                         selA, null);
 
@@ -316,7 +316,7 @@ public class HistoryDataSource {
         ContentValues values = createContentValues(historyItem);
         String where = "historyId = ?";
         context.getContentResolver()
-               .update(((OpacClient) context.getApplication()).getHistoryProviderHistoryUri()
+               .update(historyProviderUri
                        , values, where, new String[]{Integer.toString(historyItem.getHistoryId())
                        });
     }
@@ -324,7 +324,7 @@ public class HistoryDataSource {
     public void insertHistoryItem(HistoryItem historyItem) {
         ContentValues values = createContentValues(historyItem);
         context.getContentResolver()
-               .insert(((OpacClient) context.getApplication()).getHistoryProviderHistoryUri(),
+               .insert(historyProviderUri,
                        values);
     }
 
@@ -369,7 +369,7 @@ public class HistoryDataSource {
             }
         }
         context.getContentResolver()
-               .insert(((OpacClient) context.getApplication()).getHistoryProviderHistoryUri(),
+               .insert(historyProviderUri,
                        values);
     }
 
@@ -389,7 +389,7 @@ public class HistoryDataSource {
         putOrNull(values, HistoryDatabase.HIST_COL_DEADLINE, lentItem.getDeadline());
 
         context.getContentResolver()
-               .insert(((OpacClient) context.getApplication()).getHistoryProviderHistoryUri(),
+               .insert(historyProviderUri,
                        values);
     }
 
@@ -418,8 +418,7 @@ public class HistoryDataSource {
         String[] selA = {bib};
         Cursor cursor = context
                 .getContentResolver()
-                .query(((OpacClient) context.getApplication())
-                                .getHistoryProviderHistoryUri(),
+                .query(historyProviderUri,
                         HistoryDatabase.COLUMNS, HistoryDatabase.HIST_WHERE_LIB,
                         selA, null);
 
@@ -437,8 +436,7 @@ public class HistoryDataSource {
     public void sort(String bib, String sortOrder) {
         String[] selA = {bib};
         context.getContentResolver()
-               .query(((OpacClient) context.getApplication())
-                               .getHistoryProviderHistoryUri(),
+               .query(historyProviderUri,
                        HistoryDatabase.COLUMNS, HistoryDatabase.HIST_WHERE_LIB,
                        selA, sortOrder);
     }
@@ -448,8 +446,7 @@ public class HistoryDataSource {
         String[] selA = {bib};
         Cursor cursor = context
                 .getContentResolver()
-                .query(((OpacClient) context.getApplication())
-                                .getHistoryProviderHistoryUri(),
+                .query(historyProviderUri,
                         HistoryDatabase.COLUMNS, HistoryDatabase.HIST_WHERE_LIB_LENDING,
                         selA, null);
 
@@ -469,8 +466,7 @@ public class HistoryDataSource {
         String[] selA = {bib, title};
         Cursor cursor = context
                 .getContentResolver()
-                .query(((OpacClient) context.getApplication())
-                                .getHistoryProviderHistoryUri(),
+                .query(historyProviderUri,
                         HistoryDatabase.COLUMNS,
                         HistoryDatabase.HIST_WHERE_TITLE_LIB, selA, null);
         HistoryItem item = null;
@@ -489,8 +485,7 @@ public class HistoryDataSource {
         String[] selA = {bib, mediaNr};
         Cursor cursor = context
                 .getContentResolver()
-                .query(((OpacClient) context.getApplication())
-                                .getHistoryProviderHistoryUri(),
+                .query(historyProviderUri,
                         HistoryDatabase.COLUMNS, HistoryDatabase.HIST_WHERE_LIB_MEDIA_NR,
                         selA, null);
         HistoryItem item = null;
@@ -509,8 +504,7 @@ public class HistoryDataSource {
         String[] selA = {String.valueOf(historyId)};
         Cursor cursor = context
                 .getContentResolver()
-                .query(((OpacClient) context.getApplication())
-                                .getHistoryProviderHistoryUri(),
+                .query(historyProviderUri,
                         HistoryDatabase.COLUMNS, HistoryDatabase.HIST_WHERE_HISTORY_ID, selA,
                         null);
         HistoryItem item = null;
@@ -534,8 +528,7 @@ public class HistoryDataSource {
         String[] selA = {bib, mediaNr};
         Cursor cursor = context
                 .getContentResolver()
-                .query(((OpacClient) context.getApplication())
-                                .getHistoryProviderHistoryUri(),
+                .query(historyProviderUri,
                         HistoryDatabase.COLUMNS, HistoryDatabase.HIST_WHERE_LIB_MEDIA_NR,
                         selA, null);
         HistoryItem item = findItemToDates(cursor, firstDate, lastDate);
@@ -550,8 +543,7 @@ public class HistoryDataSource {
         String[] selA = {bib, title, author, mediatype};
         Cursor cursor = context
                 .getContentResolver()
-                .query(((OpacClient) context.getApplication())
-                                .getHistoryProviderHistoryUri(),
+                .query(historyProviderUri,
                         HistoryDatabase.COLUMNS, HistoryDatabase.HIST_WHERE_LIB_TITLE_AUTHOR_TYPE,
                         selA, null);
         HistoryItem item = findItemToDates(cursor, firstDate, lastDate);
@@ -587,8 +579,7 @@ public class HistoryDataSource {
         String[] selA = {bib, title};
         Cursor cursor = context
                 .getContentResolver()
-                .query(((OpacClient) context.getApplication())
-                                .getHistoryProviderHistoryUri(),
+                .query(historyProviderUri,
                         HistoryDatabase.COLUMNS,
                         HistoryDatabase.HIST_WHERE_TITLE_LIB, selA, null);
         int c = cursor.getCount();
@@ -599,8 +590,7 @@ public class HistoryDataSource {
     public void remove(HistoryItem item) {
         String[] selA = {"" + item.getHistoryId()};
         context.getContentResolver()
-               .delete(((OpacClient) context.getApplication())
-                               .getHistoryProviderHistoryUri(),
+               .delete(historyProviderUri,
                        HistoryDatabase.HIST_WHERE_HISTORY_ID, selA);
     }
 
@@ -612,8 +602,7 @@ public class HistoryDataSource {
     public void removeAll(String bib) {
         String[] selA = {bib};
         context.getContentResolver()
-               .delete(((OpacClient) context.getApplication())
-                               .getHistoryProviderHistoryUri(),
+               .delete(historyProviderUri,
                        HistoryDatabase.HIST_WHERE_LIB, selA);
     }
 
@@ -622,16 +611,14 @@ public class HistoryDataSource {
      */
     public void removeAll() {
         context.getContentResolver()
-               .delete(((OpacClient) context.getApplication())
-                               .getHistoryProviderHistoryUri(),
+               .delete(historyProviderUri,
                        null, null);
     }
 
     public int getCountItems() {
         Cursor cursor = context
                 .getContentResolver()
-                .query(((OpacClient) context.getApplication())
-                                .getHistoryProviderHistoryUri(),
+                .query(historyProviderUri,
                         new String[]{"count(*)"},
                         null, null, null);
         cursor.moveToFirst();
@@ -649,8 +636,7 @@ public class HistoryDataSource {
             cv.put("bib", entry.getValue());
 
             context.getContentResolver()
-                   .update(((OpacClient) context.getApplication())
-                                   .getHistoryProviderHistoryUri(),
+                   .update(historyProviderUri,
                            cv, HistoryDatabase.HIST_WHERE_LIB,
                            new String[]{entry.getKey()});
         }
