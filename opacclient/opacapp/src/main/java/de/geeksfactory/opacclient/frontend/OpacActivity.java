@@ -74,6 +74,7 @@ import de.geeksfactory.opacclient.R;
 import de.geeksfactory.opacclient.objects.Account;
 import de.geeksfactory.opacclient.reminder.ReminderHelper;
 import de.geeksfactory.opacclient.storage.AccountDataSource;
+import de.geeksfactory.opacclient.storage.PreferenceDataSource;
 import de.geeksfactory.opacclient.ui.AccountSwitcherNavigationView;
 import de.geeksfactory.opacclient.utils.Utils;
 
@@ -329,6 +330,13 @@ public abstract class OpacActivity extends AppCompatActivity
                 }, 500);
 
             }
+
+            // entweder über PreferenceDataSource, type-safe
+            PreferenceDataSource prefs = new PreferenceDataSource(this);
+            boolean historyMaintain = prefs.isHistoryMaintain();
+            // oder über SharedPreferences mit "string"
+            // boolean historyMaintain = sp.getBoolean("history_maintain", true);
+            drawer.getMenu().findItem(R.id.nav_history).setEnabled(historyMaintain);
         }
     }
 
