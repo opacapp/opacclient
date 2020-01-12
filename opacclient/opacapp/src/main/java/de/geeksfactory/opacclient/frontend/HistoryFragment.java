@@ -100,6 +100,7 @@ public class HistoryFragment extends Fragment implements
     private static final int REQUEST_CODE_IMPORT = 124;
 
     private static int REQUEST_CODE_DETAIL = 1; // siehe AccountFragment.REQUEST_DETAIL
+    private static int LOADER_ID = 1; // !=0 wie bei Star
 
     protected View view;
     protected OpacClient app;
@@ -176,7 +177,7 @@ public class HistoryFragment extends Fragment implements
         listView.setTextFilterEnabled(true);
 
         getActivity().getSupportLoaderManager()
-                     .initLoader(1, null, this);
+                     .initLoader(LOADER_ID, null, this);
         listView.setAdapter(adapter);
 
         // Restore the previously serialized activated item position.
@@ -273,12 +274,12 @@ public class HistoryFragment extends Fragment implements
         }
 
         // Loader restarten
-        getActivity().getSupportLoaderManager().restartLoader(0, null, this);
+        getActivity().getSupportLoaderManager().restartLoader(LOADER_ID, null, this);
     }
 
     @Override
     public void accountSelected(Account account) {
-        getActivity().getSupportLoaderManager().restartLoader(0, null, this);
+        getActivity().getSupportLoaderManager().restartLoader(LOADER_ID, null, this);
     }
 
     public void remove(HistoryItem item) {
@@ -601,7 +602,7 @@ public class HistoryFragment extends Fragment implements
 
     @Override
     public void onResume() {
-        getActivity().getSupportLoaderManager().restartLoader(0, null, this);
+        getActivity().getSupportLoaderManager().restartLoader(LOADER_ID, null, this);
         super.onResume();
     }
 
