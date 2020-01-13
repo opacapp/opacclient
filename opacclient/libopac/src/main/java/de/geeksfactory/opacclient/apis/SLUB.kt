@@ -210,7 +210,12 @@ open class SLUB : OkHttpBaseApi() {
     }
 
     override fun cancel(media: String, account: Account, useraction: Int, selection: String?): OpacApi.CancelResult {
-        TODO("not implemented")
+        return try {
+            requestAccount(account, "delete", mapOf("tx_slubaccount_account[delete][0]" to media))
+            OpacApi.CancelResult(OpacApi.MultiStepResult.Status.OK)
+        } catch (e: Exception) {
+            OpacApi.CancelResult(OpacApi.MultiStepResult.Status.ERROR, e.message)
+        }
     }
 
     override fun account(account: Account): AccountData {
