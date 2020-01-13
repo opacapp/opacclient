@@ -10,6 +10,7 @@ import de.geeksfactory.opacclient.utils.get
 import de.geeksfactory.opacclient.utils.html
 import de.geeksfactory.opacclient.utils.text
 import okhttp3.FormBody
+import okhttp3.HttpUrl
 import org.joda.time.LocalDate
 import org.joda.time.format.DateTimeFormat
 import org.joda.time.format.DateTimeFormatter
@@ -69,21 +70,24 @@ open class SLUB : OkHttpBaseApi() {
     }
 
     override fun searchGetPage(page: Int): SearchRequestResult {
-        val queryfbb = FormBody.Builder()
-                .add("type", "1369315142")
-                .add("tx_find_find[format]", "data")
-                .add("tx_find_find[data-format]", "app")
-                .add("tx_find_find[page]", page.toString())
+        if (query.size <= 4) {
+            throw OpacApi.OpacErrorException(stringProvider.getString(StringProvider.NO_CRITERIA_INPUT))
+        }
+        val queryUrlB = HttpUrl.get("$baseurl/?type=1369315142&tx_find_find[format]=data&tx_find_find[data-format]=app")
+                .newBuilder()
+                .addQueryParameter("tx_find_find[page]", page.toString())
         for (sq in query) {
             if (sq.value.isNotEmpty()) {
-                queryfbb.add("tx_find_find[q][${sq.key}]", sq.value)
+                queryUrlB.addQueryParameter("tx_find_find[q][${sq.key}]", sq.value)
             }
         }
-        val queryfb = queryfbb.build()
-        if (queryfb.size() <= 4)
-            throw OpacApi.OpacErrorException(stringProvider.getString(StringProvider.NO_CRITERIA_INPUT))
-        val json = JSONObject(httpPost(baseurl, queryfb, ENCODING))
-        return parseSearchResults(json)
+        try {
+            return parseSearchResults(JSONObject(httpGet(queryUrlB.build().toString(), ENCODING)))
+        } catch (e: JSONException) {
+            throw OpacApi.OpacErrorException(stringProvider.getFormattedString(
+                    StringProvider.UNKNOWN_ERROR_WITH_DESCRIPTION,
+                    "search returned malformed JSON object: ${e.message}"))
+        }
     }
 
     internal fun parseSearchResults(json: JSONObject): SearchRequestResult{
