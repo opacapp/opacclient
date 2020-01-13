@@ -396,6 +396,8 @@ public class WebOpacNet extends OkHttpBaseApi implements OpacApi {
                 // There are some more conditions under which the reservation button is hidden in
                 // the OPAC's JS code, depending on the library configuration and user permissions.
                 // We have not implemented those here yet.
+            } else {
+                result.setReservable(true);
             }
 
             return result;
