@@ -30,7 +30,6 @@ import de.geeksfactory.opacclient.searchfields.TextSearchField
 import de.geeksfactory.opacclient.utils.get
 import de.geeksfactory.opacclient.utils.html
 import de.geeksfactory.opacclient.utils.text
-import okhttp3.FormBody
 import okhttp3.HttpUrl
 import org.joda.time.LocalDate
 import org.joda.time.format.DateTimeFormat
@@ -135,11 +134,16 @@ open class SLUB : OkHttpBaseApi() {
     }
 
     override fun getResultById(id: String, homebranch: String?): DetailedItem {
-        val detailfb = FormBody.Builder()
-                .add("type", "1369315142")
-                .add("tx_find_find[format]", "data")
-                .add("tx_find_find[data-format]", "app")
-        val json = JSONObject(httpPost("$baseurl/id/$id/", detailfb.build(), ENCODING))
+        val json: JSONObject
+        try {
+             json = JSONObject(httpGet(
+                    "$baseurl/id/$id/?type=1369315142&tx_find_find[format]=data&tx_find_find[data-format]=app",
+                    ENCODING))
+        } catch (e: JSONException) {
+            throw OpacApi.OpacErrorException(stringProvider.getFormattedString(
+                    StringProvider.UNKNOWN_ERROR_WITH_DESCRIPTION,
+                    "search returned malformed JSON object: ${e.message}"))
+        }
         return parseResultById(id, json)
     }
 
@@ -316,17 +320,16 @@ open class SLUB : OkHttpBaseApi() {
     }
 
     private fun requestAccount(account: Account, action: String, parameters: Map<String, String>? = null): JSONObject {
-        val formBody = FormBody.Builder()
-                .add("type", "1")
-                .add("tx_slubaccount_account[controller]", "API")
-                .add("tx_slubaccount_account[action]", action)
-                .add("tx_slubaccount_account[username]", account.name)
-                .add("tx_slubaccount_account[password]", account.password)
+        val queryUrlB = HttpUrl.get("$baseurl/mein-konto/?type=1&tx_slubaccount_account[controller]=API")
+                .newBuilder()
+                .addQueryParameter("tx_slubaccount_account[action]", action)
+                .addQueryParameter("tx_slubaccount_account[username]", account.name)
+                .addQueryParameter("tx_slubaccount_account[password]", account.password)
         parameters?.map {
-            formBody.add(it.key, it.value)
+            queryUrlB.addQueryParameter(it.key, it.value)
         }
         try {
-            return JSONObject(httpPost("$baseurl/mein-konto/", formBody.build(), ENCODING)).also {
+            return JSONObject(httpGet(queryUrlB.build().toString(), ENCODING)).also {
                 if (it.optInt("status") != 1) {
                     throw OpacApi.OpacErrorException(stringProvider.getFormattedString(
                             StringProvider.UNKNOWN_ERROR_ACCOUNT_WITH_DESCRIPTION,
