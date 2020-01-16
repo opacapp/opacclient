@@ -23,8 +23,6 @@ import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import de.geeksfactory.opacclient.apis.OpacApi;
-import de.geeksfactory.opacclient.apis.OpenSearch;
 import de.geeksfactory.opacclient.i18n.StringProvider;
 import de.geeksfactory.opacclient.objects.Account;
 import de.geeksfactory.opacclient.objects.AccountData;
@@ -320,16 +318,15 @@ public class OpenAccountScraper extends OpenSearch {
             String html = httpPost(postUrl, data, "UTF-8");
             Document doc = Jsoup.parse(html);
             prolongDoc = null;
-            if (doc.select(
+            String message = doc.select(
                     "[id$=ucExtensionFailedMessagePopupView_LblPopupMessage], " +
                             "[id$=messagePopup_lblMessage]")
-                   .text().length() > 1) {
-                return new ProlongResult(MultiStepResult.Status.ERROR, doc.select
-                        ("[id$=ucExtensionFailedMessagePopupView_LblPopupMessage], " +
-                                "[id$=messagePopup_lblMessage]")
-                                                                          .text().trim());
+                                .text().trim();
+            if (message.length() > 1 &&
+                    !message.contains("Ihre Verlängerung wurde durchgeführt.")) {
+                return new ProlongResult(MultiStepResult.Status.ERROR, message);
             } else {
-                return new ProlongResult(MultiStepResult.Status.ERROR);
+                return new ProlongResult(MultiStepResult.Status.OK);
             }
         } else {
             Document doc = null;
