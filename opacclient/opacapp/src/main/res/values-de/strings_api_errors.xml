@@ -87,4 +87,9 @@
   <string name="please_change_password">Die Bibliothek fordert Sie auf, Ihr Passwort zu ändern. Bitte loggen Sie sich dazu auf der Bibliothekswebsite ein, um das Passwort zu ändern, und geben dann das neue Passwort in der App ein.</string>
   <string name="prolong_all_not_possible">Eine Verlängerung aller Medien ist momentan nicht möglich.</string>
   <string name="prolong_all_no_items">Es sind keine Medien verlängerbar.</string>
+  <string name="hold">liegt seit %s bereit</string>
+  <string name="request_ready">seit %s abholbereit (Magazinbestellung)</string>
+  <string name="readingroom">liegt seit %s zur Benutzung in Bibliothek bereit</string>
+  <string name="request_progress">Magazinbestellung seit %s in Arbeit</string>
+  <string name="reserved_pos">vorgemerkt, Pos. %s</string>
 </resources>

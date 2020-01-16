@@ -76,7 +76,10 @@ open class SLUB : OkHttpBaseApi() {
             "identifier" to "ISBN",
             "language" to "Sprache",
             "subject" to "Schlagwörter",
-            "description" to "Beschreibung"
+            "description" to "Beschreibung",
+            "linksRelated" to "Info",
+            "linksAccess" to "Zugang",
+            "linksGeneral" to "Link"
     )
 
     override fun init(library: Library, factory: HttpClientFactory) {
@@ -182,7 +185,10 @@ open class SLUB : OkHttpBaseApi() {
                         val arrayItem = v.get(it)
                         when (arrayItem) {
                             is String -> arrayItem
-                            is JSONObject -> arrayItem.optString("title")
+                            is JSONObject -> arrayItem.optString("title").also {
+                                // if item is part of multiple collections, collectionsId holds the last one
+                                collectionId = arrayItem.optString(("id"), null)
+                            }
                             else -> null
                         }
                     }.joinToString("; ")
@@ -196,6 +202,27 @@ open class SLUB : OkHttpBaseApi() {
                     addDetail(Detail(fieldCaptions[key], value))
                 }
             }
+            json.optString("thumbnail")?.run {
+                if (this != "") {
+                    cover = this
+                }
+            }
+            // links and references
+            for (link in listOf<String>("linksRelated", "linksAccess", "linksGeneral")){
+                val linkArray = json.optJSONArray(link)
+                linkArray.run { 0.until(length()).map { optJSONObject(it) } }.map{
+                    // assuming that only on of material, note or hostlabel is set
+                    val key = with(it.optString("material") + it.optString("note") + it.optString("hostLabel")) {
+                        if (isEmpty()) fieldCaptions[link] else this
+                    }
+                    addDetail(Detail( key, it.optString("uri")))
+                }
+            }
+            json.optJSONArray("references").run { 0.until(length()).map { optJSONObject(it) } }.map{
+                // TODO: usually links to old SLUB catalogue, does it make sense to add the link?
+                addDetail(Detail( it.optString("text"), "${it.optString("name")} (${it.optString("target")})"))
+            }
+            // copies
             val cps = json.opt("copies")
             if (cps is JSONArray) {
                 getCopies(cps, dateFormat)?.let { copies = it }
@@ -209,10 +236,13 @@ open class SLUB : OkHttpBaseApi() {
                 }
                 copies = copiesList
             }
-            // TODO: volumes
-            // TODO: collectionid
-            // TODO: add linksAccess as detail (uri & hostLabel, note?, material?)
-            // TODO: add other links (links, linksRelated, linksGeneral) as details?
+            // volumes
+            volumes = json.optJSONObject("parts")?.optJSONArray("records")?.run {
+                0.until(length()).map { optJSONObject(it) }?.map {
+                    Volume(it.optString("id"),
+                            "${it.optString("part")} ${Parser.unescapeEntities(it.optString("name"),false)}")
+                }
+            } ?: emptyList()
         }
     }
 
@@ -253,6 +283,7 @@ open class SLUB : OkHttpBaseApi() {
     }
 
     internal fun parseAccountData(account: Account, json: JSONObject): AccountData {
+        val fmt = DateTimeFormat.shortDate()
         fun getReservations(items: JSONObject?): MutableList<ReservedItem> {
             val types = listOf<String>("hold", "request_ready", "readingroom", "request_progress", "reserve")
             // "requests" is a copy of "request_ready" + "readingroom" + "request_progress"
@@ -264,8 +295,25 @@ open class SLUB : OkHttpBaseApi() {
                             ReservedItem().apply {
                                 title = it.optString("about")
                                 author = it.optJSONArray("X_author")?.optString(0)
+                                //id = it.optString("label")  // TODO: get details from here via /bc --> redirects to /id, from there get the proper id
                                 format = it.optString("X_medientyp")
-                                status = it.optInt("X_queue_number").let { "Pos. $it" }
+                                status = when(type){  // TODO: maybe we need time (LocalDateTime) too make an educated guess on actual ready date for stack requests
+                                    "hold" -> stringProvider.getFormattedString(StringProvider.HOLD,
+                                            fmt.print(LocalDate(it.optString("X_date_reserved").substring(0, 10))))
+                                    "request_ready" -> stringProvider.getFormattedString(StringProvider.REQUEST_READY,
+                                            fmt.print(LocalDate(it.optString("X_date_requested").substring(0, 10))))
+                                    "readingroom" -> stringProvider.getFormattedString(StringProvider.READINGROOM,
+                                            fmt.print(LocalDate(it.optString("X_date_provided").substring(0, 10))))
+                                    "request_progress" -> stringProvider.getFormattedString(StringProvider.REQUEST_PROGRESS,
+                                            fmt.print(LocalDate(it.optString("X_date_requested").substring(0, 10))))
+                                    "reserve" -> stringProvider.getFormattedString(StringProvider.RESERVED_POS,
+                                            it.optInt("X_queue_number"))
+                                    else -> null
+                                }
+                                branch = it.optString("X_pickup_desc", null)
+                                if (type == "reserve") {
+                                    cancelData = "${it.optString("label")}_${it.getInt("X_delete_number")}"
+                                }
                             }
                         })
                     }
@@ -277,7 +325,10 @@ open class SLUB : OkHttpBaseApi() {
                         ReservedItem().apply {
                             title = it.optString("Titel")
                             author = it.optString("Autor")
-                            id = it.optString("Fernleih_ID")
+                            //id = it.optString("Fernleih_ID") --> this id is of no use whatsoever
+                            it.optString("Medientyp")?.run {
+                                if (length > 0) format = this
+                            }
                             branch = it.optString("Zweigstelle")
                             status = it.optString("Status_DESC")
                         }
@@ -288,12 +339,11 @@ open class SLUB : OkHttpBaseApi() {
             return reservationsList
         }
 
-        val fmt = DateTimeFormat.shortDate()
         return AccountData(account.id).apply {
             pendingFees = json.optJSONObject("fees")?.optString("topay_list")
             validUntil = json.optJSONObject("memberInfo")?.optString("expires")
                     ?.substring(0, 10)?.let { fmt.print(LocalDate(it)) }
-            lent = json.optJSONObject("items")?.optJSONArray("loan")    // TODO: plus permanent loans (need example)
+            lent = json.optJSONObject("items")?.optJSONArray("loan")    // TODO: plus permanent loans? (need example)
                     ?.run { 0.until(length()).map { optJSONObject(it) } }
                     ?.map {
                         LentItem().apply {
@@ -301,13 +351,14 @@ open class SLUB : OkHttpBaseApi() {
                             author = it.optJSONArray("X_author")?.optString(0)
                             setDeadline(it.optString("X_date_due"))
                             format = it.optString("X_medientyp")
+                            //id = it.optString("label")  // TODO: get details from here via /bc --> redirects to /id, from there get the proper id
                             barcode = it.optString("X_barcode")
                             status = when {
                                 it.optInt("renewals") == 2 -> "2x verlängert"
                                 it.optInt("X_is_reserved") != 0 -> "vorgemerkt"
                                 else -> null
                             }
-                            isRenewable = if (it.optInt("X_is_renewable") == 1) {
+                            isRenewable = if (it.optInt("X_is_renewable") == 1) {  // TODO: X_is_flrenewable for ill items
                                 prolongData = barcode
                                 true
                             } else {
