@@ -1,0 +1,43 @@
+{
+  "record": {
+    "format": "Foto",
+    "title": "Maya",
+    "contributor": [],
+    "publisher": [],
+    "ispartof": [],
+    "identifier": "",
+    "language": [
+      "Kein linguistischer Inhalt"
+    ],
+    "subject": [
+      "Skulptur",
+      "Statue",
+      "Ortskatalog zur Kunst und Architektur"
+    ],
+    "description": "",
+    "status": "",
+    "rvk": ""
+  },
+  "id": "dswarm-67-b2FpOmRldXRzY2hlZm90b3RoZWsuZGU6YTg0NTA6Om9ianwzMzA1NTgxMHxkZl9oYXVwdGthdGFsb2dfMDEwMDMzNg",
+  "oa": 0,
+  "thumbnail": "http://fotothek.slub-dresden.de/thumbs/df_hauptkatalog_0100336.jpg",
+  "links": [
+    {
+      "uri": "http://wwwdb.dbod.de/login?url=http://www.deutschefotothek.de/obj33055810.html",
+      "note": "In der Deutschen Fotothek ansehen"
+    }
+  ],
+  "linksRelated": [],
+  "linksAccess": [],
+  "linksGeneral": [
+    {
+      "uri": "http://www.deutschefotothek.de/obj33055810.html",
+      "hostLabel": "In der Deutschen Fotothek ansehen",
+      "note": "",
+      "material": ""
+    }
+  ],
+  "references": [],
+  "copies": [],
+  "parts": {}
+}

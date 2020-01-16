@@ -1,0 +1,233 @@
+{
+  "record": {
+    "format": "Buch",
+    "title": "Urania-Tierreich: in 6 B&auml;nden",
+    "contributor": [],
+    "publisher": [
+      "Leipzig Jena Berlin Urania-Verl. 19XX- "
+    ],
+    "ispartof": [],
+    "identifier": "",
+    "language": [
+      "Deutsch"
+    ],
+    "subject": [
+      "Tiere"
+    ],
+    "description": "",
+    "status": "",
+    "rvk": ""
+  },
+  "id": "0-112458708X",
+  "oa": 0,
+  "thumbnail": "",
+  "links": [],
+  "linksRelated": [],
+  "linksAccess": [],
+  "linksGeneral": [],
+  "references": [],
+  "copies": [],
+  "parts": {
+    "title": "Mehrbändiges Werk",
+    "records": [
+      {
+        "author": [],
+        "author2": [
+          "Günther, Kurt K."
+        ],
+        "part": "(inse,5):",
+        "id": "0-1149529121",
+        "name": "in 6 B&auml;nden",
+        "imprint": "Leipzig, Jena, Berlin, Urania-Verl., 1989",
+        "sequence": "inse,5"
+      },
+      {
+        "author": [],
+        "author2": [
+          "Petzsch, Hans"
+        ],
+        "part": ":",
+        "id": "0-1124595643",
+        "name": "in 6 B&auml;nden",
+        "imprint": "Leipzig, Jena, Berlin, Urania-Verl., 1986",
+        "sequence": "saug,5"
+      },
+      {
+        "author": [],
+        "author2": [
+          "Gruner, Hans-Eckhard"
+        ],
+        "part": "(wirb,1,3):",
+        "id": "0-1149528753",
+        "name": "in 6 B&auml;nden",
+        "imprint": "Leipzig, Jena, Berlin, Urania-Verl., 1981",
+        "sequence": "wirb,1,3"
+      },
+      {
+        "author": [],
+        "author2": [
+          "Crome, Wolfgang"
+        ],
+        "part": "(wirb,2,3):",
+        "id": "0-1149528885",
+        "name": "in 6 B&auml;nden",
+        "imprint": "Leipzig, Jena, Berlin, Urania-Verl., 1979",
+        "sequence": "wirb,2,3"
+      },
+      {
+        "author": [],
+        "author2": [
+          "Günther, Kurt K."
+        ],
+        "part": "(inse,4):",
+        "id": "0-1162094052",
+        "name": "in 6 B&auml;nden",
+        "imprint": "Leipzig, Jena, Berlin, Urania-Verl., 1978",
+        "sequence": "inse,4"
+      },
+      {
+        "author": [],
+        "author2": [
+          "Mauersberger, Gottfried"
+        ],
+        "part": "(voge):",
+        "id": "0-1129107655",
+        "name": "in 6 B&auml;nden",
+        "imprint": "Leipzig, Jena, Berlin, Urania-Verl., 1977",
+        "sequence": "voge"
+      },
+      {
+        "author": [],
+        "author2": [
+          "Deckert, Kurt"
+        ],
+        "part": "(fisc,4):",
+        "id": "0-1149529466",
+        "name": "in 6 B&auml;nden",
+        "imprint": "Leipzig, Jena, Berlin, Urania-Verl., 1976",
+        "sequence": "fisc,4"
+      },
+      {
+        "author": [],
+        "author2": [
+          "Günther, Kurt K."
+        ],
+        "part": "(inse, 2./3.):",
+        "id": "0-1124590285",
+        "name": "in 6 B&auml;nden",
+        "imprint": "Leipzig, Jena, Berlin, Urania-Verl., 1974",
+        "sequence": "inse, 2./3."
+      },
+      {
+        "author": [],
+        "author2": [
+          "Deckert, Kurt"
+        ],
+        "part": "(fisc,3):",
+        "id": "0-1162153717",
+        "name": "in 6 B&auml;nden",
+        "imprint": "Leipzig, Jena, Berlin, Urania-Verl., 1973",
+        "sequence": "fisc,3"
+      },
+      {
+        "author": [],
+        "author2": [
+          "Mauersberger, Gottfried"
+        ],
+        "part": "(voge,3):",
+        "id": "0-1162188383",
+        "name": "in 6 B&auml;nden",
+        "imprint": "Leipzig, Jena, Berlin, Urania-Verl., 1972",
+        "sequence": "voge,3"
+      },
+      {
+        "author": [],
+        "author2": [
+          "Petzsch, Hans"
+        ],
+        "part": "(saug,3):",
+        "id": "0-112459082X",
+        "name": "in 6 B&auml;nden",
+        "imprint": "Leipzig, Jena, Berlin, Urania-Verl., 1972",
+        "sequence": "saug,3"
+      },
+      {
+        "author": [],
+        "author2": [
+          "Mauersberger, Gottfried"
+        ],
+        "part": "(voge):",
+        "id": "0-1124587314",
+        "name": "in 6 B&auml;nden",
+        "imprint": "Leipzig, Jena, Berlin, Urania-Verl., 1969",
+        "sequence": "voge"
+      },
+      {
+        "author": [],
+        "author2": [
+          "Crome, Wolfgang"
+        ],
+        "part": "(wirb,2):",
+        "id": "0-1124588604",
+        "name": "in 6 B&auml;nden",
+        "imprint": "Leipzig, Jena, Berlin, Urania-Verl., 1969",
+        "sequence": "wirb,2"
+      },
+      {
+        "author": [],
+        "author2": [
+          "Günther, Kurt K."
+        ],
+        "part": "(inse):",
+        "id": "0-1124590048",
+        "name": "in 6 B&auml;nden",
+        "imprint": "Leipzig, Jena, Berlin, Urania-Verl., 1968",
+        "sequence": "inse"
+      },
+      {
+        "author": [],
+        "author2": [
+          "Deckert, Kurt"
+        ],
+        "part": "(fisc):",
+        "id": "0-1124587748",
+        "name": "in 6 B&auml;nden",
+        "imprint": "Leipzig, Jena, Berlin, Urania-Verl., 1967",
+        "sequence": "fisc"
+      },
+      {
+        "author": [],
+        "author2": [
+          "Crome, Wolfgang"
+        ],
+        "part": "(wirb,1):",
+        "id": "0-112458983X",
+        "name": "in 6 B&auml;nden",
+        "imprint": "Leipzig, Jena, Berlin, Urania-Verl., 1967",
+        "sequence": "wirb,1"
+      },
+      {
+        "author": [],
+        "author2": [
+          "Petzsch, Hans"
+        ],
+        "part": "(saug):",
+        "id": "0-1124591036",
+        "name": "in 6 B&auml;nden",
+        "imprint": "Leipzig, Jena, Berlin, Urania-Verl., 1967",
+        "sequence": "saug"
+      },
+      {
+        "author": [],
+        "author2": [
+          "Petzsch, Hans"
+        ],
+        "part": "(saug,1):",
+        "id": "0-117225883X",
+        "name": "in 6 B&auml;nden",
+        "imprint": "Leipzig, Jena, Berlin, Urania-Verl., 1966",
+        "sequence": "saug,1"
+      }
+    ]
+  }
+}

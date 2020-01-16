@@ -85,6 +85,11 @@ public interface StringProvider {
     String DESCRIPTION = "description";
     String RESERVATION_READY = "reservation_ready";
     String PLEASE_CHANGE_PASSWORD = "please_change_password";
+    String HOLD = "hold";
+    String REQUEST_READY = "request_ready";
+    String READINGROOM = "readingroom";
+    String REQUEST_PROGRESS = "request_progress";
+    String RESERVED_POS = "reserved_pos";
 
     /**
      * Returns the translated string identified by identifier

@@ -1,0 +1,82 @@
+{
+  "record": {
+    "format": "Buch",
+    "title": "JUnit-Profiwissen: effizientes Arbeiten mit der Standardbibliothek f&uuml;r automatisierte Tests in Java",
+    "contributor": [
+      "Tamm, Michael [Autor/In]"
+    ],
+    "publisher": [
+      "Heidelberg dpunkt.Verl. 2013 "
+    ],
+    "ispartof": [],
+    "identifier": [
+      "3864900204",
+      "9783864900204"
+    ],
+    "language": [
+      "Deutsch"
+    ],
+    "subject": [
+      "Java",
+      "JUnit"
+    ],
+    "description": [
+      "Literaturverz. S. 351"
+    ],
+    "status": "",
+    "rvk": ""
+  },
+  "id": "0-727434322",
+  "oa": 0,
+  "thumbnail": "",
+  "links": [
+    {
+      "uri": "http://slub.eblib.com/patron/FullRecord.aspx?p=1575685",
+      "note": "Zugang zur Ressource (via ProQuest Ebook Central)",
+      "material": ""
+    },
+    {
+      "uri": "http://www.gbv.de/dms/tib-ub-hannover/727434322.pdf",
+      "note": "Auf PDF zugreifen",
+      "material": "Inhaltsverzeichnis"
+    },
+    {
+      "uri": "http://deposit.d-nb.de/cgi-bin/dokserv?id=4155321&prov=M&dok_var=1&dok_ext=htm",
+      "note": "",
+      "material": "Inhaltstext"
+    }
+  ],
+  "linksRelated": [
+    {
+      "uri": "http://www.gbv.de/dms/tib-ub-hannover/727434322.pdf",
+      "hostLabel": "",
+      "note": "",
+      "material": "Inhaltsverzeichnis"
+    },
+    {
+      "uri": "http://deposit.d-nb.de/cgi-bin/dokserv?id=4155321&prov=M&dok_var=1&dok_ext=htm",
+      "hostLabel": "",
+      "note": "",
+      "material": "Inhaltstext"
+    }
+  ],
+  "linksAccess": [
+    {
+      "uri": "http://wwwdb.dbod.de/login?url=http://slub.eblib.com/patron/FullRecord.aspx?p=1575685",
+      "hostLabel": "Zugang zur Ressource (via ProQuest Ebook Central)",
+      "note": "",
+      "material": ""
+    }
+  ],
+  "linksGeneral": [],
+  "references": [
+    {
+      "text": "Online-Ausgabe",
+      "link": "http://slubdd.de/katalog?libero_mab216187885",
+      "name": "Tamm, Michael: JUnit-Profiwissen",
+      "target": "SLUB"
+    }
+  ],
+  "copies": [],
+  "parts": {}
+}

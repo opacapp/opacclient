@@ -86,4 +86,9 @@
     <string name="description">Description</string>
     <string name="reservation_ready">Ready for pickup</string>
     <string name="please_change_password">The library is asking you to change your password. Please first log in on the library website to change your password, and then enter the new password in the app.</string>
+    <string name="hold">on hold since %s</string>
+    <string name="request_ready">ready for pickup since %s (stack request)</string>
+    <string name="readingroom">ready since %s for usage in library</string>
+    <string name="request_progress">stack request in progress since %s</string>
+    <string name="reserved_pos">reserved, pos. %s</string>
 </resources>
