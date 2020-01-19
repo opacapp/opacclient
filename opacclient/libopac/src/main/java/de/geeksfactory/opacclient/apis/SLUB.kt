@@ -30,6 +30,7 @@ import de.geeksfactory.opacclient.searchfields.TextSearchField
 import de.geeksfactory.opacclient.utils.get
 import de.geeksfactory.opacclient.utils.html
 import de.geeksfactory.opacclient.utils.text
+import okhttp3.FormBody
 import okhttp3.HttpUrl
 import org.joda.time.LocalDate
 import org.joda.time.format.DateTimeFormat
@@ -371,16 +372,17 @@ open class SLUB : OkHttpBaseApi() {
     }
 
     private fun requestAccount(account: Account, action: String, parameters: Map<String, String>? = null): JSONObject {
-        val queryUrlB = HttpUrl.get("$baseurl/mein-konto/?type=1&tx_slubaccount_account[controller]=API")
-                .newBuilder()
-                .addQueryParameter("tx_slubaccount_account[action]", action)
-                .addQueryParameter("tx_slubaccount_account[username]", account.name)
-                .addQueryParameter("tx_slubaccount_account[password]", account.password)
+        val formBody = FormBody.Builder()
+                .add("type", "1")
+                .add("tx_slubaccount_account[controller]", "API")
+                .add("tx_slubaccount_account[action]", action)
+                .add("tx_slubaccount_account[username]", account.name)
+                .add("tx_slubaccount_account[password]", account.password)
         parameters?.map {
-            queryUrlB.addQueryParameter(it.key, it.value)
+            formBody.add(it.key, it.value)
         }
         try {
-            return JSONObject(httpGet(queryUrlB.build().toString(), ENCODING)).also {
+            return JSONObject(httpPost("$baseurl/mein-konto/", formBody.build(), ENCODING)).also {
                 if (it.optInt("status") != 1) {
                     throw OpacApi.OpacErrorException(stringProvider.getFormattedString(
                             StringProvider.UNKNOWN_ERROR_ACCOUNT_WITH_DESCRIPTION,
