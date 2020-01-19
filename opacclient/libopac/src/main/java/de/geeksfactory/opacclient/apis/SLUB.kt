@@ -403,7 +403,7 @@ open class SLUB : OkHttpBaseApi() {
     }
 
     override fun getSupportFlags(): Int {
-        return 0
+        return OpacApi.SUPPORT_FLAG_ENDLESS_SCROLLING
     }
 
     override fun getSupportedLanguages(): Set<String>? {
