@@ -360,7 +360,7 @@
     <string name="history_status_finished_1">vom %1$s für 1 Tag</string>
     <string name="history_status_lending_1">seit %1$s für 1 Tag</string>
     <string name="history_first_date">Beginn Ausleihe</string>
-    <string name="history_last_date">Ende Ausleihe</string>
+    <string name="history_last_date">Rückgabedatum</string>
     <string name="info_history_updated_count">Import abgeschlossen, %1$d Einträge hinzugefügt, %2$d geändert</string>
     <string name="history_maintain">Führe Chronik aller ausgeliehenen Medien</string>
     <string name="history_maintain_off">Speichere keine Liste aller jemals ausgeliehenen Medien</string>
@@ -372,4 +372,5 @@
     <string name="history_header_sort">%1$d Medien, %2$s %3$s sortiert</string>
     <string name="sort_direction_asc">aufsteigend</string>
     <string name="sort_direction_desc">absteigend</string>
+    <string name="history_prolongCount">Anzahl Verlängerungen</string>
 </resources>

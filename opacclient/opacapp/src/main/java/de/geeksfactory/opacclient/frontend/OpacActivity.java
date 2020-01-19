@@ -336,7 +336,11 @@ public abstract class OpacActivity extends AppCompatActivity
             boolean historyMaintain = prefs.isHistoryMaintain();
             // oder über SharedPreferences mit "string"
             // boolean historyMaintain = sp.getBoolean("history_maintain", true);
+
+            // item disablen
             drawer.getMenu().findItem(R.id.nav_history).setEnabled(historyMaintain);
+            // oder ganz verstecken?
+            // drawer.getMenu().findItem(R.id.nav_history).setVisible(historyMaintain);
         }
     }
 

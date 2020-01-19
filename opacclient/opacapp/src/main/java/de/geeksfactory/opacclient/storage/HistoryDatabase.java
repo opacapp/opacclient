@@ -31,6 +31,7 @@ public class HistoryDatabase extends SQLiteOpenHelper {
     public static final String HIST_COL_MEDIA_NR = "medianr";
     public static final String HIST_COL_TITLE = "title";
     public static final String HIST_COL_AUTHOR = "author";
+    public static final String HIST_COL_COVER = "cover";
     public static final String HIST_COL_MEDIA_TYPE = "mediatype";
     public static final String HIST_COL_FIRST_DATE = "firstDate";
     public static final String HIST_COL_LAST_DATE = "lastDate";
@@ -64,7 +65,7 @@ public class HistoryDatabase extends SQLiteOpenHelper {
                     HIST_COL_AUTHOR,
                     "format",
                     "status",
-                    "cover",
+                    HIST_COL_COVER,
                     HIST_COL_MEDIA_TYPE,
                     "homeBranch",
                     "lendingBranch",
@@ -85,7 +86,7 @@ public class HistoryDatabase extends SQLiteOpenHelper {
             "\t" + HIST_COL_AUTHOR + " text,\n" +
             "\tformat text,\n" +
             "\tstatus text,\n" +
-            "\tcover text,\n" +
+            "\t" + HIST_COL_COVER + " text,\n" +
             "\t" + HIST_COL_MEDIA_TYPE + " text,\n" +
             "\thomeBranch text,\n" +
             "\tlendingBranch text,\n" +

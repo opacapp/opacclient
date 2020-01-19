@@ -105,7 +105,7 @@
     <string name="star_wait">Please wait for the details to load.</string>
     <string name="star_unsupported">We could not obtain enough information about this item to add it to your list.</string>
     <string name="starred_welcome">This is your favorites list. You can add items by clicking the star on a detail page. The list is saved separately for every library you use.</string>
-    <string name="history_welcome">This is lending history. It keeps a list of all items you have lent in the past. The list is saved separately for every library you use.</string>
+    <string name="history_welcome">This is your lending history. It keeps a list of all items you have lent in the past. The list is saved separately for every library you use.</string>
     <string name="share">Share</string>
     <string name="share_wait">Please wait for the details to load.</string>
     <string name="share_notsupported">Not supported in this library.</string>
@@ -190,7 +190,7 @@
     <string name="sort_history">Sort</string>
     <string name="sort_history_title">by title</string>
     <string name="sort_history_author">by author</string>
-    <string name="sort_history_firstDate">by start lending</string>
+    <string name="sort_history_firstDate">by start date</string>
     <string name="sort_history_lastDate">by return date</string>
     <string name="sort_history_duration">by lending duration</string>
     <string name="sort_history_prolongCount">by no. of renewals</string>
@@ -332,6 +332,7 @@
     <string name="history_status_finished_1">from %1$s for 1 day</string>
     <string name="history_first_date">Start lending</string>
     <string name="history_last_date">Return date</string>
+    <string name="history_prolongCount">no. of renewals</string>
     <string name="history_maintain">Maintain history lent items</string>
     <string name="history_maintain_on">Store title, author, begin-date, end-date ... of all lent items</string>
     <string name="history_maintain_off">Do not store a history off all lent items</string>

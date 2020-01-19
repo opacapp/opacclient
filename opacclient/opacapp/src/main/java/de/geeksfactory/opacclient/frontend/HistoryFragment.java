@@ -94,6 +94,9 @@ public class HistoryFragment extends Fragment implements
         LoaderCallbacks<Cursor>, AccountSelectedListener {
 
     private static final String STATE_ACTIVATED_POSITION = "activated_position";
+    private static final String STATE_SORT_DIRECTION = "sort_direction";
+    private static final String STATE_SORT_OPTION = "sort_option";
+
     private static final String JSON_LIBRARY_NAME = "library_name";
     private static final String JSON_HISTORY_LIST = "history_list";
     private static final int REQUEST_CODE_EXPORT = 123;
@@ -111,6 +114,9 @@ public class HistoryFragment extends Fragment implements
     private TextView tvWelcome;
     private TextView tvHistoryHeader;
     private HistoryItem historyItem;
+
+    private boolean showMediatype = true;
+    private boolean showCover = true;
 
     private enum EnumSortDirection {
 
@@ -249,11 +255,22 @@ public class HistoryFragment extends Fragment implements
                      .initLoader(LOADER_ID, null, this);
         listView.setAdapter(adapter);
 
-        // Restore the previously serialized activated item position.
-        if (savedInstanceState != null
-                && savedInstanceState.containsKey(STATE_ACTIVATED_POSITION)) {
-            setActivatedPosition(savedInstanceState
-                    .getInt(STATE_ACTIVATED_POSITION));
+        if (savedInstanceState != null) {
+            // Restore the previously serialized activated item position.
+            if (savedInstanceState.containsKey(STATE_ACTIVATED_POSITION)) {
+                setActivatedPosition(savedInstanceState
+                        .getInt(STATE_ACTIVATED_POSITION));
+            }
+
+            // Restore the previously serialized sorting of the items
+            if (savedInstanceState.containsKey(STATE_SORT_DIRECTION)) {
+                currentSortDirection = EnumSortDirection.valueOf(savedInstanceState
+                        .getString(STATE_SORT_DIRECTION));
+            }
+            if (savedInstanceState.containsKey(STATE_SORT_OPTION)) {
+                currentSortOption = EnumSortOption.valueOf(savedInstanceState
+                        .getString(STATE_SORT_OPTION));
+            }
         }
 
         setActivateOnItemClick(((OpacActivity) getActivity()).isTablet());
@@ -398,6 +415,12 @@ public class HistoryFragment extends Fragment implements
             if (currentSortOption != null) {
                 sortOrder = currentSortOption.column + " " + currentSortDirection.sqlText;
             }
+
+            HistoryDataSource data = new HistoryDataSource(getActivity());
+            showMediatype = (data.getCountItemsWithMediatype() > 0);
+            showCover = (data.getCountItemsWithCover() > 0);
+            // Hinweis: listitem_history_item ivCover.visibility default ist GONE
+
             return new CursorLoader(getActivity(),
                     app.getHistoryProviderHistoryUri(), HistoryDatabase.COLUMNS,
                     HistoryDatabase.HIST_WHERE_LIB, new String[]{app
@@ -698,6 +721,13 @@ public class HistoryFragment extends Fragment implements
             // Serialize and persist the activated item position.
             outState.putInt(STATE_ACTIVATED_POSITION, activatedPosition);
         }
+
+        if (currentSortDirection != null) {
+            outState.putString(STATE_SORT_DIRECTION, currentSortDirection.name());
+        }
+        if (currentSortOption != null) {
+            outState.putString(STATE_SORT_OPTION, currentSortOption.name());
+        }
     }
 
     public interface Callback {
@@ -739,6 +769,22 @@ public class HistoryFragment extends Fragment implements
                 tvTitleAndAuthor.setText("");
             }
             */
+
+            // Spalte Cover ausblenden, wenn alle HistoryItems ohne MediaType sind
+            ImageView ivCover = (ImageView) view.findViewById(R.id.ivCover);
+            if ( showCover ) {
+                ivCover.setVisibility(View.VISIBLE);
+            } else {
+                ivCover.setVisibility(View.GONE);
+            }
+
+            // Spalte Mediatype ausblenden, wenn alle HistoryItems ohne MediaType sind
+            ImageView ivMediaType = (ImageView) view.findViewById(R.id.ivMediaType);
+            if ( showMediatype ) {
+                ivMediaType.setVisibility(View.VISIBLE);
+            } else {
+                ivMediaType.setVisibility(View.GONE);
+            }
 
             TextView tvStatus = (TextView) view.findViewById(R.id.tvStatus);
             TextView tvBranch = (TextView) view.findViewById(R.id.tvBranch);

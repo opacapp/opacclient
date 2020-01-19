@@ -115,6 +115,7 @@ public class HistoryDataSource {
                 // nicht mehr ausgeliehen
                 // -> update lending = false
                 historyItem.setLending(false);
+                historyItem.setStatus(null);
                 this.updateHistoryItem(historyItem);
             }
         }
@@ -289,9 +290,9 @@ public class HistoryDataSource {
         putOrNull(values, HistoryDatabase.HIST_COL_AUTHOR, item.getAuthor());
         putOrNull(values, "format", item.getFormat());
         putOrNull(values, "status", item.getStatus());
-        putOrNull(values, "cover", item.getCover());
+        putOrNull(values, HistoryDatabase.HIST_COL_COVER, item.getCover());
         SearchResult.MediaType mediaType = item.getMediaType();
-        putOrNull(values, "mediatype", mediaType != null ? mediaType.toString() : null);
+        putOrNull(values, HistoryDatabase.HIST_COL_MEDIA_TYPE, mediaType != null ? mediaType.toString() : null);
     }
 
     private ContentValues createContentValues(HistoryItem historyItem) {
@@ -621,6 +622,38 @@ public class HistoryDataSource {
                 .query(historyProviderUri,
                         new String[]{"count(*)"},
                         null, null, null);
+        cursor.moveToFirst();
+        int count = 0;
+        if (!cursor.isAfterLast()) {
+            count = cursor.getInt(0);
+        }
+        cursor.close();
+        return count;
+    }
+
+    public int getCountItemsWithMediatype() {
+        Cursor cursor = context
+                .getContentResolver()
+                .query(historyProviderUri,
+                        new String[]{"count(*)"},
+                        HistoryDatabase.HIST_COL_MEDIA_TYPE + " is not null"
+                        , null, null);
+        cursor.moveToFirst();
+        int count = 0;
+        if (!cursor.isAfterLast()) {
+            count = cursor.getInt(0);
+        }
+        cursor.close();
+        return count;
+    }
+
+    public int getCountItemsWithCover() {
+        Cursor cursor = context
+                .getContentResolver()
+                .query(historyProviderUri,
+                        new String[]{"count(*)"},
+                        HistoryDatabase.HIST_COL_COVER + " is not null"
+                        , null, null);
         cursor.moveToFirst();
         int count = 0;
         if (!cursor.isAfterLast()) {
