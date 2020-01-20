@@ -557,7 +557,7 @@ public interface OpacApi {
         /**
          * If {@link #getStatus()} is <code>CONFIRMATION_NEEDED</code>, this gives you more
          * information to display to the user. This is a list of unknown length. Every list entry
-         * is an array of strings that of size one or two (which can vary between the elements of
+         * is an array of strings of size one or two (which can vary between the elements of
          * the list). If the size of such an array A is two, then A[0] contains a description of
          * A[1], e.g. <code>A = {"Fee", "2 EUR"}</code> or <code>A = {"Pickup location", "Central library"}</code>.
          * If the size is only one, it is a general message to be shown, e.g.
