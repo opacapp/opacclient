@@ -125,7 +125,7 @@ public class DetailedItem implements CoverHolder {
     }
 
     /**
-     * Set details (like author, summary, …).
+     * Get details (like author, summary, …).
      *
      * @return List of Details
      * @see Detail
@@ -165,6 +165,16 @@ public class DetailedItem implements CoverHolder {
     }
 
     /**
+     * Set list of child items (e.g. volumes of a series) available
+     *
+     * @param volumes List of child items available
+     * @see #addVolume(Volume)
+     */
+    public void setVolumes(List<Volume> volumes) { 
+        this.volumes = volumes;
+    }
+
+    /**
      * Add a detail
      *
      * @see Detail
@@ -177,7 +187,7 @@ public class DetailedItem implements CoverHolder {
      * Add a copy.
      *
      * @param copy An object representing a copy
-     * @see Detail
+     * @see Copy
      */
     public void addCopy(Copy copy) {
         copies.add(copy);

@@ -291,6 +291,7 @@ public class WebOpacNet extends OkHttpBaseApi implements OpacApi {
     @Override
     public DetailedItem getResultById(String id, String homebranch)
             throws IOException, OpacErrorException {
+        if (!initialised) start();
         String json = httpGet(opac_url + "/de/mobile/GetDetail.ashx?id=" + id + "&orientation=1",
                 getDefaultEncoding());
         return parse_detail(json);
@@ -383,10 +384,21 @@ public class WebOpacNet extends OkHttpBaseApi implements OpacApi {
                 result.addCopy(copy);
             }
 
-            result.setReservable(true); // we don't know if it's reservable until we try
-            // there is some logic in the JavaScript code that determines whether the reservation
-            // button is shown or not, but it is more complicated to implement as it depends on the
-            // configuration of the OPAC
+            if ("True".equals(config.optString("reservnurausleihe"))) {
+                // reservations can only be performed if the media is lent
+                try {
+                    boolean reservable = json.getInt("totalverf") == 0 &&
+                            (json.getInt("totalentl") > 0 || json.getInt("totalresv") > 0);
+                    result.setReservable(reservable);
+                } catch (JSONException e) {
+                    result.setReservable(true);
+                }
+                // There are some more conditions under which the reservation button is hidden in
+                // the OPAC's JS code, depending on the library configuration and user permissions.
+                // We have not implemented those here yet.
+            } else {
+                result.setReservable(true);
+            }
 
             return result;
 
