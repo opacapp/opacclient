@@ -556,7 +556,7 @@ public interface OpacApi {
 
         /**
          * If {@link #getStatus()} is <code>CONFIRMATION_NEEDED</code>, this gives you more
-         * information to display to the user. This is a list of of unknown length. Every list entry
+         * information to display to the user. This is a list of unknown length. Every list entry
          * is an array of strings that of size one or two (which can vary between the elements of
          * the list). If the size of such an array A is two, then A[0] contains a description of
          * A[1], e.g. <code>A = {"Fee", "2 EUR"}</code> or <code>A = {"Pickup location", "Central library"}</code>.
@@ -580,7 +580,7 @@ public interface OpacApi {
         }
 
         /**
-         * @return A optional message, e.g. to explain an error status code
+         * @return An optional message, e.g. to explain an error status code
          */
         public String getMessage() {
             return message;
@@ -607,7 +607,7 @@ public interface OpacApi {
              */
             EXTERNAL,
             /**
-             * An error occured
+             * An error occurred
              */
             ERROR,
             /**
@@ -619,7 +619,7 @@ public interface OpacApi {
              */
             CONFIRMATION_NEEDED,
             /**
-             * We need the user's emaila ddress
+             * We need the user's email address
              */
             EMAIL_NEEDED
         }
