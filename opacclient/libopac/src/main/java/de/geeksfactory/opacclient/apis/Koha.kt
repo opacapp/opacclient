@@ -158,8 +158,8 @@ open class Koha : OkHttpBaseApi() {
 
         // filter fields
         val fieldsets = doc.select("#advsearches fieldset")
-        val tabs = doc.select("#advsearches .ui-tabs-nav li")
-        val filterFields = fieldsets.zip(tabs).map { (tab, fieldset) ->
+        val tabs = doc.select("#advsearches > ul > li")
+        val filterFields = fieldsets.zip(tabs).map { (fieldset, tab) ->
             val title = tab.text.trim()
             val checkboxes = fieldset.select("input[type=checkbox]")
             DropdownSearchField().apply {
