@@ -639,8 +639,10 @@ public class OpenAccountScraper extends OpenSearch {
         data.setValidUntil(
                 doc.select("[id$=ucPatronAccountView_LblMembershipValidUntilData]").text().trim());
 
-        if (doc.select(".dnnFormWarning").size() > 0) {
-            data.setWarning(doc.select(".dnnFormWarning").text().trim());
+        Elements warnings =
+                doc.select(".dnnFormWarning:not([style*=display: none] .dnnFormWarning)");
+        if (warnings.size() > 0) {
+            data.setWarning(warnings.text().trim());
         } else if (doc.select("[id$=patronAccountExtensionMessage]").size() > 0) {
             data.setWarning(
                     doc.select("[id$=patronAccountExtensionMessage]").first().text().trim());
