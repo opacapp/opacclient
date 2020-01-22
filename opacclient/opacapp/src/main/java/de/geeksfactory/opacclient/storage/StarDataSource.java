@@ -32,8 +32,6 @@ import java.util.Map.Entry;
 
 import de.geeksfactory.opacclient.OpacClient;
 import de.geeksfactory.opacclient.objects.SearchResult;
-import de.geeksfactory.opacclient.objects.Starred;
-import de.geeksfactory.opacclient.searchfields.SearchField;
 
 public class StarDataSource {
 
