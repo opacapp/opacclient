@@ -19,7 +19,9 @@
  * ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER 
  * DEALINGS IN THE SOFTWARE.
  */
-package de.geeksfactory.opacclient.objects;
+package de.geeksfactory.opacclient.storage;
+
+import de.geeksfactory.opacclient.objects.SearchResult;
 
 /**
  * Object representing a bookmarked item. Not part of the API you are interested
