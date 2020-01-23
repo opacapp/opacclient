@@ -3,6 +3,7 @@ package de.geeksfactory.opacclient.apis
 import com.shazam.shazamcrest.matcher.Matchers.sameBeanAs
 import de.geeksfactory.opacclient.i18n.StringProvider
 import de.geeksfactory.opacclient.i18n.StringProvider.*
+import de.geeksfactory.opacclient.networking.HttpClientFactory
 import de.geeksfactory.opacclient.objects.*
 import org.hamcrest.MatcherAssert.assertThat
 import org.hamcrest.Matchers.*
@@ -10,7 +11,13 @@ import org.joda.time.LocalDate
 import org.joda.time.format.DateTimeFormat
 import org.json.JSONObject
 import org.junit.Assert.*
+import org.junit.Rule
 import org.junit.Test
+import org.junit.rules.ExpectedException
+import org.junit.runner.RunWith
+import org.junit.runners.Parameterized
+import org.mockito.Matchers
+import org.mockito.Mockito
 
 private class TestStringProvider : StringProvider {
     override fun getString(identifier: String?): String {
@@ -314,5 +321,56 @@ class SLUBSearchTest() : BaseHtmlTest() {
 
         assertThat(item, sameBeanAs(expected).ignoring("details"))
         assertThat(HashSet(expected.details), sameBeanAs(HashSet(item.details)))
+    }
+}
+
+@RunWith(Parameterized::class)
+class SLUBAccountMockTest(private val response: String,
+                                     private val expectedException: Class<out Exception?>?,
+                                     private val expectedExceptionMsg: String?) : BaseHtmlTest() {
+    private val slub = Mockito.spy(SLUB::class.java)
+    init {
+        slub.init(Library().apply {
+            data = JSONObject().apply {
+                put("baseurl", "https://test.de")
+            }
+        }, HttpClientFactory("test"))
+    }
+    private val account = Account().apply {
+        name = "x"
+        password = "x"
+    }
+
+    @JvmField
+    @Rule
+    var thrown: ExpectedException = ExpectedException.none()
+
+    @Test
+    fun testCheckAccountData() {
+        Mockito.doReturn(response).`when`(slub).httpPost(Matchers.any(), Matchers.any(), Matchers.any())
+        if (expectedException != null) {
+            thrown.expect(expectedException)
+            thrown.expectMessage(expectedExceptionMsg)
+        }
+
+        slub.requestAccount(account, "", null)
+    }
+
+    companion object {
+        @JvmStatic
+        @Parameterized.Parameters
+        fun data() = listOf(
+                // validate: status as string
+                arrayOf("{\"status\":\"1\",\"message\":\"credentials_are_valid\"}", null, null),
+                arrayOf("{\"message\":\"error_credentials_invalid\",\"arguments\":{\"controller\":\"API\",\"action\":\"validate\",\"username\":\"123456\"},\"status\":\"-1\"}", OpacApi.OpacErrorException::class.java, "error_credentials_invalid"),
+                // POST not accepted, malformed request, e.g. invalid action
+                arrayOf("<!doctype html><title>.</title>", OpacApi.OpacErrorException::class.java, "Request didn't return JSON object"),
+                // delete: status as int or string
+                arrayOf("{\"status\":1,\"message\":\"Reservation deleted\"}", null, null),
+                arrayOf("{\"status\":\"-1\",\"message\":\"Item not reserved\"}", OpacApi.OpacErrorException::class.java, "Item not reserved"),
+                // pickup: status as boolean
+                arrayOf("{\"status\":true,\"message\":\"n\\/a\"}", null, null),
+                arrayOf("{\"status\":false,\"message\":\"Ungültige Barcodenummer\"}", OpacApi.OpacErrorException::class.java, "Ungültige Barcodenummer")
+        )
     }
 }

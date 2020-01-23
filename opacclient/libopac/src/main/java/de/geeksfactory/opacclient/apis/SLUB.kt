@@ -371,7 +371,7 @@ open class SLUB : OkHttpBaseApi() {
         }
     }
 
-    private fun requestAccount(account: Account, action: String, parameters: Map<String, String>? = null): JSONObject {
+    internal fun requestAccount(account: Account, action: String, parameters: Map<String, String>? = null): JSONObject {
         val formBody = FormBody.Builder()
                 .add("type", "1")
                 .add("tx_slubaccount_account[controller]", "API")
@@ -383,7 +383,7 @@ open class SLUB : OkHttpBaseApi() {
         }
         try {
             return JSONObject(httpPost("$baseurl/mein-konto/", formBody.build(), ENCODING)).also {
-                if (it.optInt("status") != 1) {
+                if (!(it.optInt("status") == 1 || it.optBoolean("status"))) {
                     throw OpacApi.OpacErrorException(stringProvider.getFormattedString(
                             StringProvider.UNKNOWN_ERROR_ACCOUNT_WITH_DESCRIPTION,
                             it.optString("message", "error requesting account data")))
