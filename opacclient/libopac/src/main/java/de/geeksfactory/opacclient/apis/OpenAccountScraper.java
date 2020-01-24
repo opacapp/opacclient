@@ -336,7 +336,7 @@ public class OpenAccountScraper extends OpenSearch {
                             "[id$=messagePopup_lblMessage]")
                                 .text().trim();
             if (message.length() > 1 &&
-                    !message.contains("Ihre Verlängerung wurde durchgeführt.")) {
+                    !message.equals("Ihre Verlängerung wurde erfolgreich durchgeführt.")) {
                 return new ProlongResult(MultiStepResult.Status.ERROR, message);
             } else {
                 return new ProlongResult(MultiStepResult.Status.OK);
