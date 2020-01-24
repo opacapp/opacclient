@@ -264,8 +264,24 @@ public class HistoryFragment extends Fragment implements
         return view;
     }
 
+    public void storeState(Bundle outState) {
+
+        if (outState == null) return;
+
+        if (activatedPosition != AdapterView.INVALID_POSITION) {
+            // Serialize and persist the activated item position.
+            outState.putInt(STATE_ACTIVATED_POSITION, activatedPosition);
+        }
+
+        if (currentSortDirection != null) {
+            outState.putString(STATE_SORT_DIRECTION, currentSortDirection.name());
+        }
+        if (currentSortOption != null) {
+            outState.putString(STATE_SORT_OPTION, currentSortOption.name());
+        }
+    }
     // Restores the previously serialized state (position and sorting)
-    private void restoreState(Bundle savedInstanceState) {
+    public void restoreState(Bundle savedInstanceState) {
 
         if (savedInstanceState == null) return;
 
@@ -739,17 +755,8 @@ public class HistoryFragment extends Fragment implements
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        if (activatedPosition != AdapterView.INVALID_POSITION) {
-            // Serialize and persist the activated item position.
-            outState.putInt(STATE_ACTIVATED_POSITION, activatedPosition);
-        }
 
-        if (currentSortDirection != null) {
-            outState.putString(STATE_SORT_DIRECTION, currentSortDirection.name());
-        }
-        if (currentSortOption != null) {
-            outState.putString(STATE_SORT_OPTION, currentSortOption.name());
-        }
+        storeState(outState);
     }
 
     public interface Callback {

@@ -93,8 +93,7 @@ public abstract class OpacActivity extends AppCompatActivity
     protected CharSequence title;
 
     protected Fragment fragment;
-    protected Fragment historyFragment;
-    private final static String HISTORY_FRAGMENT = "historyFragment";
+    protected HistoryFragment historyFragment;
     protected boolean hasDrawer = false;
     protected Toolbar toolbar;
     private boolean twoPane;
@@ -145,6 +144,10 @@ public abstract class OpacActivity extends AppCompatActivity
         setupDrawer();
         setupAccountSwitcher();
 
+        if (historyFragment == null) {
+            historyFragment = new HistoryFragment();
+        }
+
         if (savedInstanceState != null) {
             setTwoPane(savedInstanceState.getBoolean("twoPane"));
             setFabVisible(savedInstanceState.getBoolean("fabVisible"));
@@ -159,10 +162,8 @@ public abstract class OpacActivity extends AppCompatActivity
                 getSupportFragmentManager().beginTransaction()
                                            .replace(R.id.content_frame, fragment).commit();
             }
-            if (savedInstanceState.containsKey(HISTORY_FRAGMENT)) {
-                historyFragment = getSupportFragmentManager()
-                        .getFragment(savedInstanceState, HISTORY_FRAGMENT);
-            }
+
+            historyFragment.restoreState(savedInstanceState);
         }
         fixStatusBarFlashing();
     }
@@ -729,12 +730,11 @@ public abstract class OpacActivity extends AppCompatActivity
             getSupportFragmentManager().putFragment(outState, "fragment",
                     fragment);
         }
-        if (historyFragment != null) {
-            getSupportFragmentManager().putFragment(outState, HISTORY_FRAGMENT,
-                    historyFragment);
-        }
         if (title != null) {
             outState.putCharSequence("title", title);
+        }
+        if (historyFragment != null) {
+            historyFragment.storeState(outState);
         }
     }
 
