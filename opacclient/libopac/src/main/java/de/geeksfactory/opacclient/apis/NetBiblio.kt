@@ -251,7 +251,7 @@ open class NetBiblio : OkHttpBaseApi() {
 
     protected fun parseDetail(doc: Document, id: String): DetailedItem {
         return DetailedItem().apply {
-            title = doc.select(".wo-marc-title").first().text
+            title = doc.select(".wo-marc-title, .wo-list-content-no-label[style*=\"font-weight: bold\"]").first().text
             this.id = id
             cover = doc.select(".wo-cover").first()?.attr("src")
             details.addAll(doc.select("#lst-fullview_Details .wo-list-label").toList()
