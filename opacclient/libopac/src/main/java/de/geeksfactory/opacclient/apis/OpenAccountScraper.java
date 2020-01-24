@@ -86,7 +86,7 @@ public class OpenAccountScraper extends OpenSearch {
                 }
             case ACTION_PICKUP_BRANCH:
                 // pickup branch was chosen by the user, select it and continue with copy selection
-                resSelectPickupBranch(selection);
+                resSelectPickupBranch(selection, item);
                 return resCopySelection(item, account, reservationDoc);
             case ACTION_COPY:
                 // copy was chosen by the user, select it and check confirmation
@@ -237,7 +237,7 @@ public class OpenAccountScraper extends OpenSearch {
         }
     }
 
-    private void resSelectPickupBranch(String selection) throws IOException {
+    private void resSelectPickupBranch(String selection, DetailedItem item) throws IOException {
         Element select = reservationDoc.select(
                 "select[id$=DdlPickupBranches], select[id$=DdlPickupBranchesMediumBased]").first();
         for (Element opt : select.select("option")) {
@@ -249,12 +249,25 @@ public class OpenAccountScraper extends OpenSearch {
         }
 
         FormElement form = (FormElement) reservationDoc.select("form").first();
-        MultipartBody data = formData(form, null).build();
+        MultipartBody data = formData(form, "popupSelectPickupBranch$btnDefault").build();
         String postUrl = form.attr("abs:action");
         reservationDoc.setBaseUri(opac_url);
         String html = httpPost(postUrl, data, "UTF-8");
         reservationDoc = Jsoup.parse(html);
         reservationDoc.setBaseUri(postUrl);
+
+        if (reservationDoc.select("table[id$=grdViewMediumCopies]").size() == 0) {
+            // strange bug in Mannheim: we are catapulted back to the search page.
+            // pickup branch has still been selected. So we just go back to the detail page.
+            try {
+                html = httpGet(opac_url + "/" +
+                        this.data.getJSONObject("urls").getString("simple_search") + NO_MOBILE +
+                        "&id=" + item.getId(), getDefaultEncoding());
+                reservationDoc = Jsoup.parse(html);
+                reservationDoc.setBaseUri(opac_url);
+            } catch (JSONException ignored) {
+            }
+        }
     }
 
     private ReservationResult resPickupBranchSelection(Document doc) throws IOException {
@@ -323,7 +336,7 @@ public class OpenAccountScraper extends OpenSearch {
                             "[id$=messagePopup_lblMessage]")
                                 .text().trim();
             if (message.length() > 1 &&
-                    !message.contains("Ihre Verlängerung wurde durchgeführt.")) {
+                    !message.equals("Ihre Verlängerung wurde erfolgreich durchgeführt.")) {
                 return new ProlongResult(MultiStepResult.Status.ERROR, message);
             } else {
                 return new ProlongResult(MultiStepResult.Status.OK);
