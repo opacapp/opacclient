@@ -94,6 +94,7 @@ public abstract class OpacActivity extends AppCompatActivity
 
     protected Fragment fragment;
     protected Fragment historyFragment;
+    private final static String HISTORY_FRAGMENT = "historyFragment";
     protected boolean hasDrawer = false;
     protected Toolbar toolbar;
     private boolean twoPane;
@@ -158,7 +159,10 @@ public abstract class OpacActivity extends AppCompatActivity
                 getSupportFragmentManager().beginTransaction()
                                            .replace(R.id.content_frame, fragment).commit();
             }
-            historyFragment = getSupportFragmentManager().getFragment(savedInstanceState, "historyFragment");
+            if (savedInstanceState.containsKey(HISTORY_FRAGMENT)) {
+                historyFragment = getSupportFragmentManager()
+                        .getFragment(savedInstanceState, HISTORY_FRAGMENT);
+            }
         }
         fixStatusBarFlashing();
     }
@@ -726,8 +730,8 @@ public abstract class OpacActivity extends AppCompatActivity
                     fragment);
         }
         if (historyFragment != null) {
-            getSupportFragmentManager().putFragment(outState, "historyFragment",
-                    fragment);
+            getSupportFragmentManager().putFragment(outState, HISTORY_FRAGMENT,
+                    historyFragment);
         }
         if (title != null) {
             outState.putCharSequence("title", title);
