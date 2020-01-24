@@ -256,21 +256,7 @@ public class HistoryFragment extends Fragment implements
         listView.setAdapter(adapter);
 
         if (savedInstanceState != null) {
-            // Restore the previously serialized activated item position.
-            if (savedInstanceState.containsKey(STATE_ACTIVATED_POSITION)) {
-                setActivatedPosition(savedInstanceState
-                        .getInt(STATE_ACTIVATED_POSITION));
-            }
-
-            // Restore the previously serialized sorting of the items
-            if (savedInstanceState.containsKey(STATE_SORT_DIRECTION)) {
-                currentSortDirection = EnumSortDirection.valueOf(savedInstanceState
-                        .getString(STATE_SORT_DIRECTION));
-            }
-            if (savedInstanceState.containsKey(STATE_SORT_OPTION)) {
-                currentSortOption = EnumSortOption.valueOf(savedInstanceState
-                        .getString(STATE_SORT_OPTION));
-            }
+            restoreState(savedInstanceState);
         }
 
         setActivateOnItemClick(((OpacActivity) getActivity()).isTablet());
@@ -278,7 +264,33 @@ public class HistoryFragment extends Fragment implements
         return view;
     }
 
+    // Restores the previously serialized state (position and sorting)
+    private void restoreState(Bundle savedInstanceState) {
+
+        if (savedInstanceState == null) return;
+
+        // Restores the previously serialized item position
+        if (savedInstanceState.containsKey(STATE_ACTIVATED_POSITION)) {
+            setActivatedPosition(savedInstanceState
+                    .getInt(STATE_ACTIVATED_POSITION));
+        }
+
+        // Restore the previously serialized sorting of the items
+        if (savedInstanceState.containsKey(STATE_SORT_DIRECTION)) {
+            currentSortDirection = EnumSortDirection.valueOf(savedInstanceState
+                    .getString(STATE_SORT_DIRECTION));
+        }
+        if (savedInstanceState.containsKey(STATE_SORT_OPTION)) {
+            currentSortOption = EnumSortOption.valueOf(savedInstanceState
+                    .getString(STATE_SORT_OPTION));
+        }
+    }
     private void updateHeader() {
+        // getString needs context
+        if (getContext() == null) {
+            return;
+        }
+
         String text = null;
         int countItems = adapter.getCount();
         if (currentSortOption == null) {
@@ -712,6 +724,16 @@ public class HistoryFragment extends Fragment implements
         }
 
         activatedPosition = position;
+    }
+
+    // siehe https://stackoverflow.com/questions/15313598/how-to-correctly-save-instance-state-of-fragments-in-back-stack
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        if (savedInstanceState != null) {
+            //Restore the fragment's state here
+            restoreState(savedInstanceState);
+        }
     }
 
     @Override

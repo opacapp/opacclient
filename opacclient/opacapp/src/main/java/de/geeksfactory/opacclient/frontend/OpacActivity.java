@@ -93,6 +93,7 @@ public abstract class OpacActivity extends AppCompatActivity
     protected CharSequence title;
 
     protected Fragment fragment;
+    protected Fragment historyFragment;
     protected boolean hasDrawer = false;
     protected Toolbar toolbar;
     private boolean twoPane;
@@ -157,6 +158,7 @@ public abstract class OpacActivity extends AppCompatActivity
                 getSupportFragmentManager().beginTransaction()
                                            .replace(R.id.content_frame, fragment).commit();
             }
+            historyFragment = getSupportFragmentManager().getFragment(savedInstanceState, "historyFragment");
         }
         fixStatusBarFlashing();
     }
@@ -438,7 +440,10 @@ public abstract class OpacActivity extends AppCompatActivity
             setTwoPane(true);
             setFabVisible(false);
         } else if (id == R.id.nav_history) {
-            fragment = new HistoryFragment();
+            if (historyFragment == null) {
+                historyFragment = new HistoryFragment();
+            }
+            fragment = historyFragment;
             setTwoPane(true);
             setFabVisible(false);
         } else if (id == R.id.nav_info) {
@@ -718,6 +723,10 @@ public abstract class OpacActivity extends AppCompatActivity
         outState.putInt("selectedItemId", selectedItemId);
         if (fragment != null) {
             getSupportFragmentManager().putFragment(outState, "fragment",
+                    fragment);
+        }
+        if (historyFragment != null) {
+            getSupportFragmentManager().putFragment(outState, "historyFragment",
                     fragment);
         }
         if (title != null) {
