@@ -29,8 +29,10 @@ public class HistoryDatabase extends SQLiteOpenHelper {
 
     public static final String HIST_COL_HISTORY_ID = "historyId";
     public static final String HIST_COL_MEDIA_NR = "medianr";
+    public static final String HIST_COL_BIB = "bib";
     public static final String HIST_COL_TITLE = "title";
     public static final String HIST_COL_AUTHOR = "author";
+    public static final String HIST_COL_FORMAT = "format";
     public static final String HIST_COL_COVER = "cover";
     public static final String HIST_COL_MEDIA_TYPE = "mediatype";
     public static final String HIST_COL_FIRST_DATE = "firstDate";
@@ -60,11 +62,10 @@ public class HistoryDatabase extends SQLiteOpenHelper {
                     HIST_COL_LAST_DATE,
                     HIST_COL_LENDING,
                     HIST_COL_MEDIA_NR,
-                    "bib",
+                    HIST_COL_BIB,
                     HIST_COL_TITLE,
                     HIST_COL_AUTHOR,
-                    "format",
-                    "status",
+                    HIST_COL_FORMAT,
                     HIST_COL_COVER,
                     HIST_COL_MEDIA_TYPE,
                     "homeBranch",
@@ -79,13 +80,12 @@ public class HistoryDatabase extends SQLiteOpenHelper {
             "\t" + HIST_COL_HISTORY_ID + " integer primary key autoincrement,\n" +
             "\t" + HIST_COL_FIRST_DATE + " date,\n" +
             "\t" + HIST_COL_LAST_DATE + " date,\n" +
-            "\tlending boolean,\n" +
+            "\t" + HIST_COL_LENDING + " boolean,\n" +
             "\t" + HIST_COL_MEDIA_NR + " text,\n" +
-            "\tbib text,\n" +
+            "\t" + HIST_COL_BIB + " text,\n" +
             "\t" + HIST_COL_TITLE + " text,\n" +
             "\t" + HIST_COL_AUTHOR + " text,\n" +
-            "\tformat text,\n" +
-            "\tstatus text,\n" +
+            "\t" + HIST_COL_FORMAT + " text,\n" +
             "\t" + HIST_COL_COVER + " text,\n" +
             "\t" + HIST_COL_MEDIA_TYPE + " text,\n" +
             "\thomeBranch text,\n" +
@@ -98,7 +98,8 @@ public class HistoryDatabase extends SQLiteOpenHelper {
 
 
     private static final String DATABASE_NAME = "history.db";
-    private static final int DATABASE_VERSION = 1; // REPLACE ONUPGRADE IF YOU
+//  private static final int DATABASE_VERSION = 1; // initial
+    private static final int DATABASE_VERSION = 2; // Column status removed
 
     public HistoryDatabase(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -116,34 +117,31 @@ public class HistoryDatabase extends SQLiteOpenHelper {
                 + oldVersion + " to " + newVersion
                 + ", which will destroy all old data");
 
-        final String createTemp =
-                "create table tempTable (\n" +
-                        "\t" + HIST_COL_HISTORY_ID + " integer primary key autoincrement,\n" +
-                        "\t" + HIST_COL_FIRST_DATE + " date,\n" +
-                        "\t" + HIST_COL_LAST_DATE + " date,\n" +
-                        "\t" + HIST_COL_LENDING + " boolean,\n" +
-                        "\t" + HIST_COL_MEDIA_NR + " text,\n" +
-                        "\tbib text,\n" +
-                        "\t" + HIST_COL_TITLE + " text,\n" +
-                        "\t" + HIST_COL_AUTHOR + " text,\n" +
-                        "\tformat text,\n" +
-                        "\tstatus text,\n" +
-                        "\tcover text,\n" +
-                        "\t" + HIST_COL_MEDIA_TYPE + " text,\n" +
-                        "\thomeBranch text,\n" +
-                        "\tlendingBranch text,\n" +
-                        "\tebook boolean,\n" +
-                        "\tbarcode text,\n" +
-                        "\t" + HIST_COL_DEADLINE + " date,\n" +
-                        "\t" + HIST_COL_PROLONG_COUNT + " integer\n" +
-                        ");";
+        // 1. rename historyTable to oldTable
+        db.execSQL("alter table " + HIST_TABLE + " rename to oldTable ;");
 
-        db.execSQL(createTemp);
-        db.execSQL("insert into tempTable select * from " + HIST_TABLE + ";");
-        db.execSQL("drop table " + HIST_TABLE + ";");
+        // 2. historyTable neu anlegen
         onCreate(db);
-        db.execSQL("insert into " + HIST_TABLE + " select * from tempTable;");
-        db.execSQL("drop table tempTable;");
-    }
 
+        // insert/select der relevanten Spalten vorbereiten
+        StringBuffer sb = new StringBuffer("insert into " + HIST_TABLE + " select ");
+        sb.append(HIST_COL_HISTORY_ID);
+        sb.append(", ");
+        // i = 1, damit "as _id" nicht verwendet wird
+        for (int i = 1; i < COLUMNS.length; i++) {
+            sb.append(COLUMNS[i]);
+            sb.append(", ");
+        }
+        // letztes Komma entfernen
+        sb.setLength(sb.length()-2);
+        sb.append(" from oldTable ;");
+        final String insertHistory = sb.toString();
+        Log.i(HistoryDatabase.class.getName(), "insert history: " + insertHistory);
+
+        // 3. Daten von oldTable nach (neuem) historyTable kopieren
+        db.execSQL(insertHistory);
+
+        // 4. drop oldTable
+        db.execSQL("drop table oldTable;");
+    }
 }

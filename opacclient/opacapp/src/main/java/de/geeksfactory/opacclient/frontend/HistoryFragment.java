@@ -243,7 +243,6 @@ public class HistoryFragment extends Fragment implements
                     }
                 } else {
 //                  callback.showDetail(item.getMNr());
-                    item.setStatus(null);
                     showDetailActivity(item, view);
                 }
             }

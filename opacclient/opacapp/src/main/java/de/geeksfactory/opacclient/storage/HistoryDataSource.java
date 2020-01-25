@@ -115,7 +115,6 @@ public class HistoryDataSource {
                 // nicht mehr ausgeliehen
                 // -> update lending = false
                 historyItem.setLending(false);
-                historyItem.setStatus(null);
                 this.updateHistoryItem(historyItem);
             }
         }
@@ -220,7 +219,7 @@ public class HistoryDataSource {
                 case HistoryDatabase.HIST_COL_LENDING:
                 case "ebook":
                     // boolean wie int
-                case "prolongCount":
+                case HistoryDatabase.HIST_COL_PROLONG_COUNT:
                     // Integer
                     jsonItem.put(col, Integer.toString(cursor.getInt(i++)));
                     break;
@@ -257,7 +256,6 @@ public class HistoryDataSource {
         item.setTitle(cursor.getString(i++));
         item.setAuthor(cursor.getString(i++));
         item.setFormat(cursor.getString(i++));
-        item.setStatus(cursor.getString(i++));
         item.setCover(cursor.getString(i++));
         String mds = cursor.getString(i++);
         if (mds != null) {
@@ -288,8 +286,7 @@ public class HistoryDataSource {
         putOrNull(values, HistoryDatabase.HIST_COL_MEDIA_NR, item.getId());
         putOrNull(values, HistoryDatabase.HIST_COL_TITLE, item.getTitle());
         putOrNull(values, HistoryDatabase.HIST_COL_AUTHOR, item.getAuthor());
-        putOrNull(values, "format", item.getFormat());
-        putOrNull(values, "status", item.getStatus());
+        putOrNull(values, HistoryDatabase.HIST_COL_FORMAT, item.getFormat());
         putOrNull(values, HistoryDatabase.HIST_COL_COVER, item.getCover());
         SearchResult.MediaType mediaType = item.getMediaType();
         putOrNull(values, HistoryDatabase.HIST_COL_MEDIA_TYPE, mediaType != null ? mediaType.toString() : null);
@@ -302,13 +299,13 @@ public class HistoryDataSource {
         putOrNull(values, HistoryDatabase.HIST_COL_FIRST_DATE, historyItem.getFirstDate());
         putOrNull(values, HistoryDatabase.HIST_COL_LAST_DATE, historyItem.getLastDate());
         putOrNull(values, HistoryDatabase.HIST_COL_LENDING, historyItem.isLending());
-        putOrNull(values, "bib", historyItem.getBib());
+        putOrNull(values, HistoryDatabase.HIST_COL_BIB, historyItem.getBib());
         putOrNull(values, "homeBranch", historyItem.getHomeBranch());
         putOrNull(values, "lendingBranch", historyItem.getLendingBranch());
         putOrNull(values, "ebook", historyItem.isEbook());
         putOrNull(values, "barcode", historyItem.getBarcode());
         putOrNull(values, HistoryDatabase.HIST_COL_DEADLINE, historyItem.getDeadline());
-        values.put("prolongCount", historyItem.getProlongCount());
+        values.put(HistoryDatabase.HIST_COL_PROLONG_COUNT, historyItem.getProlongCount());
 
         return values;
     }
@@ -331,7 +328,7 @@ public class HistoryDataSource {
 
     public void insertHistoryItem(String bib, JSONObject item) throws JSONException {
         ContentValues values = new ContentValues();
-        values.put("bib", bib);
+        values.put(HistoryDatabase.HIST_COL_BIB, bib);
 
         Iterator<String> keys = item.keys();
         while (keys.hasNext()) {
@@ -343,7 +340,7 @@ public class HistoryDataSource {
                     boolean b = (1 == item.getInt(key));
                     putOrNull(values, key, b);
                     break;
-                case "prolongCount":
+                case HistoryDatabase.HIST_COL_PROLONG_COUNT:
                     // Integer
                     try {
                         int i = item.getInt(key);
@@ -382,7 +379,7 @@ public class HistoryDataSource {
         putOrNull(values, HistoryDatabase.HIST_COL_LAST_DATE, LocalDate.now());
         putOrNull(values, HistoryDatabase.HIST_COL_LENDING, true);
 
-        putOrNull(values, "bib", bib);
+        putOrNull(values, HistoryDatabase.HIST_COL_BIB, bib);
         putOrNull(values, "homeBranch", lentItem.getHomeBranch());
         putOrNull(values, "lendingBranch", lentItem.getLendingBranch());
         putOrNull(values, "ebook", lentItem.isEbook());
@@ -666,7 +663,7 @@ public class HistoryDataSource {
     public void renameLibraries(Map<String, String> map) {
         for (Entry<String, String> entry : map.entrySet()) {
             ContentValues cv = new ContentValues();
-            cv.put("bib", entry.getValue());
+            cv.put(HistoryDatabase.HIST_COL_BIB, entry.getValue());
 
             context.getContentResolver()
                    .update(historyProviderUri,
