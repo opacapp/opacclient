@@ -88,9 +88,12 @@ public class HistoryDataSource {
                     foundItem.setLastDate(LocalDate.now());
                 }
                 if (!lentItem.getDeadline().equals(foundItem.getDeadline())) {
+                    // Deadline hat sich geändert, d.h. verlängert
                     int count = foundItem.getProlongCount();
                     count++;
                     foundItem.setProlongCount(count);
+                    // neue Deadline übernehmen
+                    foundItem.setDeadline(lentItem.getDeadline());
                 }
 
                 this.updateHistoryItem(foundItem);
