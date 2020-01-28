@@ -250,6 +250,17 @@ public class HistoryFragment extends Fragment implements
         listView.setClickable(true);
         listView.setTextFilterEnabled(true);
 
+        SharedPreferences sp = PreferenceManager
+                .getDefaultSharedPreferences(getContext());
+        String sortOptionS = sp.getString(STATE_SORT_OPTION, null);
+        if (sortOptionS != null) {
+            currentSortOption = EnumSortOption.valueOf(sortOptionS);
+        }
+        String sortDirectionS = sp.getString(STATE_SORT_DIRECTION, null);
+        if (sortDirectionS != null) {
+            currentSortDirection = EnumSortDirection.valueOf(sortDirectionS);
+        }
+
         getActivity().getSupportLoaderManager()
                      .initLoader(LOADER_ID, null, this);
         listView.setAdapter(adapter);
@@ -262,6 +273,27 @@ public class HistoryFragment extends Fragment implements
 
         return view;
     }
+
+    @Override
+    public void onPause() {
+
+        if (getContext() != null) {
+            SharedPreferences sp = PreferenceManager
+                    .getDefaultSharedPreferences(getContext());
+            SharedPreferences.Editor editor = sp.edit();
+
+            if (currentSortOption != null) {
+                editor.putString(STATE_SORT_OPTION, currentSortOption.name());
+            }
+            if (currentSortDirection != null) {
+                editor.putString(STATE_SORT_DIRECTION, currentSortDirection.name());
+            }
+            editor.apply();
+        }
+
+        super.onPause();
+    }
+
 
     public void storeState(Bundle outState) {
 
@@ -478,30 +510,64 @@ public class HistoryFragment extends Fragment implements
         intent.setType("text/plain");
         intent.addFlags(CompatibilityUtils.getNewDocumentIntentFlag());
 
+        HistoryDataSource data = new HistoryDataSource(getActivity());
+        boolean withMediatype = (0<data.getCountItemsWithMediatype());
+
         StringBuilder text = new StringBuilder();
 
-        HistoryDataSource data = new HistoryDataSource(getActivity());
+        // Bibliothek
+//      text.append(app.getLibrary().getIdent());
+//      text.append(";");
+//      text.append(app.getLibrary().getTitle());
+        text.append(app.getLibrary().getDisplayName());
+        text.append("\n");
+
+        // Überschriftszeile
+        appendColumn(text, getString(R.string.title));
+        appendColumn(text, getString(R.string.author));
+        if (withMediatype) {
+            appendColumn(text, getString(R.string.mediatype));
+        }
+        // endColumn(text, getString(R.string.accountdata_lent_home_branch));
+        appendColumn(text, getString(R.string.branch));
+        appendColumn(text, getString(R.string.history_first_date));
+        appendColumn(text, getString(R.string.history_last_date));
+        appendColumn(text, getString(R.string.history_prolongCount));
+        text.append("\n");
+
+        // für Start- und Endedatum
+        DateTimeFormatter fmt = DateTimeFormat.shortDate();
+
+        // Je Item eine Zeile
         List<HistoryItem> items = data.getAllItems(app.getLibrary().getIdent());
         for (HistoryItem item : items) {
-            text.append(item.getTitle());
-            text.append("\n");
-            String shareUrl;
-            try {
-                shareUrl = app.getApi().getShareUrl(item.getId(),
-                        item.getTitle());
-            } catch (OpacClient.LibraryRemovedException e) {
-                return;
+
+            appendColumn(text, item.getTitle());
+            appendColumn(text, item.getAuthor());
+            if (withMediatype) {
+                if (item.getMediaType() == null) {
+                    appendColumn(text, "");
+                } else {
+                    appendColumn(text, item.getMediaType().toString());
+                }
             }
-            if (shareUrl != null) {
-                text.append(shareUrl);
-                text.append("\n");
-            }
+            appendColumn(text, item.getHomeBranch());
+            appendColumn(text, fmt.print(item.getFirstDate()));
+            appendColumn(text, fmt.print(item.getLastDate()));
+            appendColumn(text, fmt.print(item.getProlongCount()));
+
             text.append("\n");
         }
 
         intent.putExtra(Intent.EXTRA_TEXT, text.toString().trim());
-        startActivity(Intent.createChooser(intent,
-                getResources().getString(R.string.share)));
+        startActivity(Intent.createChooser(intent, getResources().getString(R.string.share)));
+    }
+
+    private void appendColumn(StringBuilder text, String value) {
+        if (value != null) {
+            text.append(value);
+        }
+        text.append(";");
     }
 
     public void exportToStorage() {
