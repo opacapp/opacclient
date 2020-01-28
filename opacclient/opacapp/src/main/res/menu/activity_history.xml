@@ -35,12 +35,6 @@
         </menu>
     </item>
     <item
-        android:id="@+id/action_export"
-        android:icon="@drawable/ic_share_toolbar_24dp"
-        app:showAsAction="ifRoom"
-        android:title="@string/share_starred">
-    </item>
-    <item
         android:id="@+id/action_export_to_storage"
         app:showAsAction="never"
         android:title="@string/export_starred_to_storage">
@@ -49,6 +43,12 @@
         android:id="@+id/action_import_from_storage"
         app:showAsAction="never"
         android:title="@string/import_starred_from_storage">
+    </item>
+    <item
+        android:id="@+id/action_export"
+        android:icon="@drawable/ic_share_toolbar_24dp"
+        app:showAsAction="never"
+        android:title="@string/share_starred">
     </item>
     <item
         android:id="@+id/action_remove_all"
