@@ -1,0 +1,98 @@
+{
+  "record": {
+    "format": "Buch",
+    "title": "Der F&uuml;rstenzug zu Dresden: Denkmal und Geschichte des Hauses Wettin",
+    "contributor": [
+      "Blaschke, Karlheinz [Autor/In]",
+      "Beyer, Klaus G. [Ill.]"
+    ],
+    "publisher": [
+      "Leipzig Jena Berlin Urania-Verl. 1991 "
+    ],
+    "ispartof": [],
+    "identifier": [
+      "3332003771",
+      "9783332003772"
+    ],
+    "language": [
+      "Deutsch"
+    ],
+    "subject": [
+      "Walther, Wilhelm",
+      "Albertiner",
+      "Albertiner",
+      "Fries",
+      "Walther, Wilhelm"
+    ],
+    "description": [
+      "Literaturverz. S. 222 - 224"
+    ],
+    "status": "",
+    "rvk": ""
+  },
+  "id": "0-276023927",
+  "oa": 0,
+  "thumbnail": "",
+  "links": [],
+  "linksRelated": [],
+  "linksAccess": [],
+  "linksGeneral": [],
+  "references": [],
+  "copies": [
+    {
+      "barcode": "10059731",
+      "location": "Zentralbibliothek",
+      "location_code": "zell1",
+      "sublocation": "Freihand",
+      "shelfmark": "LK 24099 B644",
+      "mediatype": "B",
+      "3d": "LK 24099 B644",
+      "3d_link": "https://3d.slub-dresden.de/viewer?project_id=3&search_key=LK%2024099%20B644&language=de&search_context1=zell1&search_context2=FH1&exemplar_id=10059731",
+      "issue": "",
+      "colorcode": "3",
+      "statusphrase": "Ausgeliehen, Vormerken m&ouml;glich",
+      "link": "",
+      "status": "N",
+      "duedate": "05.02.2020",
+      "vormerken": "1",
+      "bestellen": "0"
+    },
+    {
+      "barcode": "30523028",
+      "location": "ZwB Erziehungswissenschaften",
+      "location_code": "bebel1",
+      "sublocation": "Freihand",
+      "shelfmark": "NR 6400 B644 F9",
+      "mediatype": "B",
+      "3d": "",
+      "3d_link": "",
+      "issue": "",
+      "colorcode": "1",
+      "statusphrase": "Benutzung nur im Haus, Versand per Fernleihe m&ouml;glich",
+      "link": "",
+      "status": "P1",
+      "duedate": "",
+      "vormerken": "0",
+      "bestellen": "0"
+    },
+    {
+      "barcode": "20065307",
+      "location": "Zentralbibliothek",
+      "location_code": "zell1",
+      "sublocation": "Magazin",
+      "shelfmark": "65.4.653.b",
+      "mediatype": "B",
+      "3d": "",
+      "3d_link": "",
+      "issue": "",
+      "colorcode": "2",
+      "statusphrase": "Ausleihbar, bitte bestellen",
+      "link": "",
+      "status": "NM",
+      "duedate": "",
+      "vormerken": "0",
+      "bestellen": "1"
+    }
+  ],
+  "parts": {}
+}
