@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (C) 2020 by Steffen Rehberg under the MIT license:
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -48,7 +48,7 @@ import org.jsoup.parser.Parser
  */
 open class SLUB : OkHttpBaseApi() {
     protected lateinit var baseurl: String
-    protected val ENCODING = "UTF-8"
+    private val ENCODING = "UTF-8"
     protected lateinit var query: List<SearchQuery>
 
     private val mediaTypes = mapOf(
@@ -200,13 +200,11 @@ open class SLUB : OkHttpBaseApi() {
             this.id = id
             val record = json.optJSONObject("record")
             for (key in record.keys()) {
-                val v = record.get(key as String)
-                var value = when (v) {
+                var value = when (val v = record.get(key as String)) {
                     is String -> v
                     is Int -> v.toString()
                     is JSONArray -> 0.until(v.length()).map {
-                        val arrayItem = v.get(it)
-                        when (arrayItem) {
+                        when (val arrayItem = v.get(it)) {
                             is String -> arrayItem
                             is JSONObject -> arrayItem.optString("title").also {
                                 // if item is part of multiple collections, collectionsId holds the last one
@@ -219,7 +217,7 @@ open class SLUB : OkHttpBaseApi() {
                 }
                 if (value.isNotEmpty()) {
                     value = Parser.unescapeEntities(value, false)
-                    if (key.equals("title")) {
+                    if (key == "title") {
                         title = value
                     }
                     addDetail(Detail(fieldCaptions[key], value))
@@ -231,7 +229,7 @@ open class SLUB : OkHttpBaseApi() {
                 }
             }
             // links and references
-            for (link in listOf<String>("linksRelated", "linksAccess", "linksGeneral")){
+            for (link in listOf("linksRelated", "linksAccess", "linksGeneral")){
                 val linkArray = json.optJSONArray(link)
                 linkArray.run { 0.until(length()).map { optJSONObject(it) } }.map{
                     // assuming that only on of material, note or hostlabel is set
@@ -248,7 +246,7 @@ open class SLUB : OkHttpBaseApi() {
             // copies
             val cps = json.opt("copies")
             if (cps is JSONArray) {
-                getCopies(cps, dateFormat)?.let { copies = it }
+                getCopies(cps, dateFormat).let { copies = it }
             } else {  // multiple arrays
                 val copiesList = mutableListOf<Copy>()
                 for (key in (cps as JSONObject).keys()) {
@@ -262,7 +260,7 @@ open class SLUB : OkHttpBaseApi() {
             isReservable = hasReservableCopies
             // volumes
             volumes = json.optJSONObject("parts")?.optJSONArray("records")?.run {
-                0.until(length()).map { optJSONObject(it) }?.map {
+                0.until(length()).map { optJSONObject(it) }.map {
                     Volume(it.optString("id"),
                             "${it.optString("part")} ${Parser.unescapeEntities(it.optString("name"),false)}")
                 }
@@ -397,7 +395,7 @@ open class SLUB : OkHttpBaseApi() {
     internal fun parseAccountData(account: Account, json: JSONObject): AccountData {
         val fmt = DateTimeFormat.shortDate()
         fun getReservations(items: JSONObject?): MutableList<ReservedItem> {
-            val types = listOf<String>("hold", "request_ready", "readingroom", "request_progress", "reserve")
+            val types = listOf("hold", "request_ready", "readingroom", "request_progress", "reserve")
             // "requests" is a copy of "request_ready" + "readingroom" + "request_progress"
             val reservationsList = mutableListOf<ReservedItem>()
             for (type in types) {
@@ -470,11 +468,9 @@ open class SLUB : OkHttpBaseApi() {
                                 it.optInt("X_is_reserved") != 0 -> "vorgemerkt"
                                 else -> null
                             }
-                            isRenewable = if (it.optInt("X_is_renewable") == 1) {  // TODO: X_is_flrenewable for ill items
+                            if (it.optInt("X_is_renewable") == 1) {   // TODO: X_is_flrenewable for ill items
+                                isRenewable = true
                                 prolongData = barcode
-                                true
-                            } else {
-                                false
                             }
                         }
                     } ?: emptyList()
