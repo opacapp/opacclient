@@ -85,8 +85,8 @@ private class TestStringProvider : StringProvider {
     }
 }
 
-class SLUBAccountTest() : BaseHtmlTest() {
-    var slub = SLUB()
+class SLUBAccountTest : BaseHtmlTest() {
+    private var slub = SLUB()
 
     init {
         slub.stringProvider = TestStringProvider()
@@ -174,8 +174,8 @@ class SLUBAccountTest() : BaseHtmlTest() {
     }
 }
 
-class SLUBSearchTest() : BaseHtmlTest() {
-    var slub = SLUB()
+class SLUBSearchTest : BaseHtmlTest() {
+    private var slub = SLUB()
 
     @Test
     fun testParseEmptySearchResults() {
@@ -279,7 +279,7 @@ class SLUBSearchTest() : BaseHtmlTest() {
     @Test
     fun testParseResultByIdMultipleParts() {
         val json = JSONObject(readResource("/slub/search/item-multiple_parts_item.json"))
-        val volumes = listOf<Volume>(
+        val volumes = listOf(
                 Volume("0-1453040935", "[3]: Principles of digital image processing"),
                 Volume("0-1347927328", "[2]: Principles of digital image processing"),
                 Volume("0-1347930884", "[1]: Principles of digital image processing")
