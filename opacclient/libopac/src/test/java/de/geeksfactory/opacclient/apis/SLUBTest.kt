@@ -1,3 +1,24 @@
+/*
+ * Copyright (C) 2020 by Steffen Rehberg under the MIT license:
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"),
+ * to deal in the Software without restriction, including without limitation
+ * the rights to use, copy, modify, merge, publish, distribute, sublicense,
+ * and/or sell copies of the Software, and to permit persons to whom the Software
+ * is furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+ * IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
+ * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,
+ * ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
+ * DEALINGS IN THE SOFTWARE.
+ */
 package de.geeksfactory.opacclient.apis
 
 import com.shazam.shazamcrest.matcher.Matchers.sameBeanAs
@@ -5,6 +26,8 @@ import de.geeksfactory.opacclient.i18n.StringProvider
 import de.geeksfactory.opacclient.i18n.StringProvider.*
 import de.geeksfactory.opacclient.networking.HttpClientFactory
 import de.geeksfactory.opacclient.objects.*
+import okhttp3.FormBody
+import okhttp3.RequestBody
 import org.hamcrest.MatcherAssert.assertThat
 import org.hamcrest.Matchers.*
 import org.joda.time.LocalDate
@@ -16,8 +39,28 @@ import org.junit.Test
 import org.junit.rules.ExpectedException
 import org.junit.runner.RunWith
 import org.junit.runners.Parameterized
+import org.junit.runners.Suite
+import org.mockito.AdditionalMatchers.or
+import org.mockito.ArgumentMatcher
 import org.mockito.Matchers
+import org.mockito.Matchers.argThat
 import org.mockito.Mockito
+import org.mockito.Mockito.verify
+
+/**
+ * Tests for SLUB API
+ *
+ * @author Steffen Rehberg, Jan 2020
+ */
+@RunWith(Suite::class)
+@Suite.SuiteClasses(
+        SLUBAccountTest::class,
+        SLUBSearchTest::class,
+        SLUBAccountMockTest::class,
+        SLUBReservationMockTest::class,
+        SLUBAccountValidateMockTest::class
+)
+class SLUBAllTests
 
 private class TestStringProvider : StringProvider {
     override fun getString(identifier: String?): String {
@@ -215,6 +258,7 @@ class SLUBSearchTest() : BaseHtmlTest() {
             branch = "Zentralbibliothek"
             status = "Bestellen zur Benutzung im Haus, kein Versand per Fernleihe, nur Kopienlieferung"
             shelfmark = "19 4 01339 0 0024 1 01"
+            resInfo = "stackRequest\t10418078"
         }
         val copyLast = Copy().apply {
             barcode = "33364639"
@@ -222,6 +266,7 @@ class SLUBSearchTest() : BaseHtmlTest() {
             branch = "Zentralbibliothek"
             status = "Bestellen zur Benutzung im Haus, kein Versand per Fernleihe, nur Kopienlieferung"
             shelfmark = "19 4 01339 1 1969 1 01"
+            resInfo = "stackRequest\t33364639"
         }
 
         val item = slub.parseResultById(json.getString("id"), json)
@@ -322,13 +367,66 @@ class SLUBSearchTest() : BaseHtmlTest() {
         assertThat(item, sameBeanAs(expected).ignoring("details"))
         assertThat(HashSet(expected.details), sameBeanAs(HashSet(item.details)))
     }
+
+    @Test
+    fun testParseResultByIdResinfo() {
+        val json = JSONObject(readResource("/slub/search/item-for-reserve&request.json"))
+        val expected = DetailedItem().apply {
+            addDetail(Detail("Medientyp", "Buch"))
+            addDetail(Detail("Titel", "Der Fürstenzug zu Dresden: Denkmal und Geschichte des Hauses Wettin"))
+            title = "Der Fürstenzug zu Dresden: Denkmal und Geschichte des Hauses Wettin"
+            addDetail(Detail("Beteiligte", "Blaschke, Karlheinz [Autor/In]; Beyer, Klaus G. [Ill.]"))
+            addDetail(Detail("Erschienen", "Leipzig Jena Berlin Urania-Verl. 1991 "))
+            addDetail(Detail("ISBN", "3332003771; 9783332003772"))
+            addDetail(Detail("Sprache", "Deutsch"))
+            addDetail(Detail("Schlagwörter", "Walther, Wilhelm; Albertiner; Albertiner; Fries; Walther, Wilhelm"))
+            addDetail(Detail("Beschreibung", "Literaturverz. S. 222 - 224"))
+            id = "0-276023927"
+            copies = arrayListOf(
+                    Copy().apply {
+                        barcode = "10059731"
+                        department = "Freihand"
+                        branch = "Zentralbibliothek"
+                        status = "Ausgeliehen, Vormerken möglich"
+                        shelfmark = "LK 24099 B644"
+                        returnDate = LocalDate(2020, 2, 5)
+                        resInfo = "reserve\t10059731"
+                    },
+
+                    Copy().apply {
+                        barcode = "30523028"
+                        department = "Freihand"
+                        branch = "ZwB Erziehungswissenschaften"
+                        status = "Benutzung nur im Haus, Versand per Fernleihe möglich"
+                        shelfmark = "NR 6400 B644 F9"
+                    },
+                    Copy().apply {
+                        barcode = "20065307"
+                        department = "Magazin"
+                        branch = "Zentralbibliothek"
+                        status = "Ausleihbar, bitte bestellen"
+                        shelfmark = "65.4.653.b"
+                        resInfo = "stackRequest\t20065307"
+                    }
+            )
+            isReservable = true
+        }
+
+        val item = slub.parseResultById(json.getString("id"), json)
+
+        assertThat(item, sameBeanAs(expected).ignoring("details"))
+        assertThat(HashSet(expected.details), sameBeanAs(HashSet(item.details)))
+    }
 }
 
 @RunWith(Parameterized::class)
-class SLUBAccountMockTest(private val response: String,
-                                     private val expectedException: Class<out Exception?>?,
-                                     private val expectedExceptionMsg: String?) : BaseHtmlTest() {
+class SLUBAccountMockTest(@Suppress("unused") private val name: String,
+                          private val response: String,
+                          private val expectedMessage: String?,
+                          private val expectedException: Class<out Exception?>?,
+                          private val expectedExceptionMsg: String?) : BaseHtmlTest() {
     private val slub = Mockito.spy(SLUB::class.java)
+
     init {
         slub.init(Library().apply {
             data = JSONObject().apply {
@@ -336,6 +434,7 @@ class SLUBAccountMockTest(private val response: String,
             }
         }, HttpClientFactory("test"))
     }
+
     private val account = Account().apply {
         name = "x"
         password = "x"
@@ -353,24 +452,268 @@ class SLUBAccountMockTest(private val response: String,
             thrown.expectMessage(expectedExceptionMsg)
         }
 
-        slub.requestAccount(account, "", null)
+        val actual = slub.requestAccount(account, "", null)
+        assertEquals(expectedMessage, actual.optString("message"))
     }
 
     companion object {
         @JvmStatic
-        @Parameterized.Parameters
+        @Parameterized.Parameters(name = "{0}")
         fun data() = listOf(
                 // validate: status as string
-                arrayOf("{\"status\":\"1\",\"message\":\"credentials_are_valid\"}", null, null),
-                arrayOf("{\"message\":\"error_credentials_invalid\",\"arguments\":{\"controller\":\"API\",\"action\":\"validate\",\"username\":\"123456\"},\"status\":\"-1\"}", OpacApi.OpacErrorException::class.java, "error_credentials_invalid"),
+                arrayOf("String - OK", "{\"status\":\"1\",\"message\":\"credentials_are_valid\"}", "credentials_are_valid", null, null),
+                arrayOf("String - Error", "{\"message\":\"error_credentials_invalid\",\"arguments\":{\"controller\":\"API\",\"action\":\"validate\",\"username\":\"123456\"},\"status\":\"-1\"}", null, OpacApi.OpacErrorException::class.java, "error_credentials_invalid"),
                 // POST not accepted, malformed request, e.g. invalid action
-                arrayOf("<!doctype html><title>.</title>", OpacApi.OpacErrorException::class.java, "Request didn't return JSON object"),
+                arrayOf("Malformed", "<!doctype html><title>.</title>", null, OpacApi.OpacErrorException::class.java, "Request didn't return JSON object"),
                 // delete: status as int or string
-                arrayOf("{\"status\":1,\"message\":\"Reservation deleted\"}", null, null),
-                arrayOf("{\"status\":\"-1\",\"message\":\"Item not reserved\"}", OpacApi.OpacErrorException::class.java, "Item not reserved"),
+                arrayOf("Int/string - OK", "{\"status\":1,\"message\":\"Reservation deleted\"}", "Reservation deleted", null, null),
+                arrayOf("Int/string - Error", "{\"status\":\"-1\",\"message\":\"Item not reserved\"}", null, OpacApi.OpacErrorException::class.java, "Item not reserved"),
                 // pickup: status as boolean
-                arrayOf("{\"status\":true,\"message\":\"n\\/a\"}", null, null),
-                arrayOf("{\"status\":false,\"message\":\"Ungültige Barcodenummer\"}", OpacApi.OpacErrorException::class.java, "Ungültige Barcodenummer")
+                arrayOf("Boolean - OK", "{\"status\":true,\"message\":\"n\\/a\"}", "n/a", null, null),
+                arrayOf("Boolean - Error", "{\"status\":false,\"message\":\"Ungültige Barcodenummer\"}", null, OpacApi.OpacErrorException::class.java, "Ungültige Barcodenummer")
         )
     }
+}
+
+@RunWith(Parameterized::class)
+class SLUBReservationMockTest(@Suppress("unused") private val name: String,
+                              private val item: DetailedItem,
+                              private val useraction: Int,
+                              private val selection: String?,
+                              private val responsePickup: String?,
+                              private val responseReserveOrRequest: String?,
+                              private val expectedResult: OpacApi.ReservationResult) : BaseHtmlTest() {
+    private val slub = Mockito.spy(SLUB::class.java)
+
+    init {
+        slub.init(Library().apply {
+            data = JSONObject().apply {
+                put("baseurl", "https://test.de")
+            }
+        }, HttpClientFactory("test"))
+    }
+
+    private val account = Account().apply {
+        name = "123456"
+        password = "x"
+    }
+
+    @Test
+    fun testReservation() {
+        if (responsePickup != null) {
+            Mockito.doReturn(responsePickup).`when`(slub).httpPost(Matchers.any(),
+                    argThat(IsRequestBodyWithAction("pickup")), Matchers.any())
+        }
+        if (responseReserveOrRequest != null) {
+            Mockito.doReturn(responseReserveOrRequest).`when`(slub).httpPost(Matchers.any(),
+                    or(argThat(IsRequestBodyWithAction("stackRequest")),
+                            argThat(IsRequestBodyWithAction("reserve"))), Matchers.any())
+        }
+
+        val result = slub.reservation(item, account, useraction, selection)
+        assertThat(result, sameBeanAs(expectedResult))
+    }
+
+    companion object {
+        // this item has already been tested in testParseResultByIdResinfo so we can rely on parseResultById here
+        private val json = JSONObject(BaseHtmlTest().readResource("/slub/search/item-for-reserve&request.json"))
+        private val itemRequestAndReserve = SLUB().parseResultById(json.getString("id"), json)
+        private val itemRequest = SLUB().parseResultById(json.getString("id"), json)
+        private val itemReserve = SLUB().parseResultById(json.getString("id"), json)
+        private val itemNone = SLUB().parseResultById(json.getString("id"), json)
+
+        init {
+            itemRequest.apply {
+                copies = copies.filter {
+                    it.resInfo?.startsWith("stackRequest") ?: false
+                }
+            }
+            itemReserve.apply {
+                copies = copies.filter {
+                    it.resInfo?.startsWith("reserve") ?: false
+                }
+            }
+            itemNone.apply { copies = copies.filter { it.resInfo == null } }
+        }
+
+        @JvmStatic
+        @Parameterized.Parameters(name = "{0}")
+        fun data() = listOf(
+                arrayOf("Single reservable copy (with multiple pickup branches)",
+                        itemReserve,
+                        0,
+                        null,
+                        null,
+                        null,
+                        OpacApi.ReservationResult(OpacApi.MultiStepResult.Status.SELECTION_NEEDED).apply {
+                            actionIdentifier = OpacApi.ReservationResult.ACTION_BRANCH
+                            this.selection = listOf(
+                                    mapOf("key" to "reserve\t10059731\tzell1", "value" to "Zentralbibliothek"),
+                                    mapOf("key" to "reserve\t10059731\tbebel1", "value" to "ZwB Erziehungswissenschaften"),
+                                    mapOf("key" to "reserve\t10059731\tberg1", "value" to "ZwB Rechtswissenschaft"),
+                                    mapOf("key" to "reserve\t10059731\tfied1", "value" to "ZwB Medizin"),
+                                    mapOf("key" to "reserve\t10059731\ttha1", "value" to "ZwB Forstwissenschaft"),
+                                    mapOf("key" to "reserve\t10059731\tzell9", "value" to "Bereichsbibliothek Drepunct")
+                            )
+                        }
+                ),
+                arrayOf("Make reservation (for selected pickup branch)",
+                        itemReserve,
+                        OpacApi.ReservationResult.ACTION_BRANCH,
+                        "reserve\t10059731\tbebel1",
+                        null,
+                        "{\"status\":1,\"message\":\"Ihre Vormerkung wurde vorgenommen|Diese Vormerkung läuft ab am 23 Apr 2020|Position in der Vormerkerliste 1\",\"arguments\":{\"controller\":\"API\",\"action\":\"reserve\",\"barcode\":\"10059731\",\"username\":\"123456\",\"PickupBranch\":\"zell1\"}}",
+                        OpacApi.ReservationResult(OpacApi.MultiStepResult.Status.OK, "Ihre Vormerkung wurde vorgenommen|Diese Vormerkung läuft ab am 23 Apr 2020|Position in der Vormerkerliste 1")
+                ),
+                arrayOf("Single requestable copy with single pickup point",
+                        itemRequest,
+                        0,
+                        null,
+                        "{\"status\":true,\"message\":\"n\\/a\",\"PickupPoints\":[\"a01\"],\"arguments\":{\"controller\":\"API\",\"action\":\"pickup\",\"barcode\":\"20065307\",\"username\":\"123456\"}}",
+                        "{\"status\":true,\"message\":\"Magazinbestellung wurde erfolgreich hinzugefügt.\",\"requestID\":\"2116982\",\"pickupPoint\":\"Zentralbibliothek Ebene 0 SB-Regal\",\"arguments\":{\"controller\":\"API\",\"action\":\"stackRequest\",\"barcode\":\"20065307\",\"username\":\"123456\",\"pickupPoint\":\"a01\"}}",
+                        OpacApi.ReservationResult(OpacApi.MultiStepResult.Status.OK, "Magazinbestellung wurde erfolgreich hinzugefügt.")
+                ),
+                arrayOf("Single requestable copy with multiple pickup points",
+                        itemRequest,
+                        0,
+                        null,
+                        "{\"status\":true,\"message\":\"n\\/a\",\"PickupPoints\":[\"a01\",\"a13\"],\"arguments\":{\"controller\":\"API\",\"action\":\"pickup\",\"barcode\":\"20065307\",\"username\":\"123456\"}}",
+                        null,
+                        OpacApi.ReservationResult(OpacApi.MultiStepResult.Status.SELECTION_NEEDED).apply {
+                            actionIdentifier = OpacApi.ReservationResult.ACTION_BRANCH
+                            this.selection = listOf(
+                                    mapOf("key" to "stackRequest\t20065307\ta01", "value" to "Zentralbibliothek Ebene 0 SB-Regal"),
+                                    mapOf("key" to "stackRequest\t20065307\ta13", "value" to "Zentralbibliothek, Servicetheke")
+                            )
+                        }
+                ),
+                arrayOf("Single requestable copy with multiple pickup points including unknown ones",
+                        itemRequest,
+                        0,
+                        null,
+                        "{\"status\":true,\"message\":\"n\\/a\",\"PickupPoints\":[\"a01\",\"xxx\"],\"arguments\":{\"controller\":\"API\",\"action\":\"pickup\",\"barcode\":\"20065307\",\"username\":\"123456\"}}",
+                        null,
+                        OpacApi.ReservationResult(OpacApi.MultiStepResult.Status.SELECTION_NEEDED).apply {
+                            actionIdentifier = OpacApi.ReservationResult.ACTION_BRANCH
+                            this.selection = listOf(
+                                    mapOf("key" to "stackRequest\t20065307\ta01", "value" to "Zentralbibliothek Ebene 0 SB-Regal"),
+                                    mapOf("key" to "stackRequest\t20065307\txxx", "value" to "xxx")
+                            )
+                        }
+                ),
+                arrayOf("Make stack request for selected pickup point",
+                        itemRequest,
+                        OpacApi.ReservationResult.ACTION_BRANCH,
+                        "stackRequest\t20065307\ta01",
+                        null,
+                        "{\"status\":true,\"message\":\"Magazinbestellung wurde erfolgreich hinzugefügt.\",\"requestID\":\"2116982\",\"pickupPoint\":\"Zentralbibliothek Ebene 0 SB-Regal\",\"arguments\":{\"controller\":\"API\",\"action\":\"stackRequest\",\"barcode\":\"20065307\",\"username\":\"123456\",\"pickupPoint\":\"a01\"}}",
+                        OpacApi.ReservationResult(OpacApi.MultiStepResult.Status.OK, "Magazinbestellung wurde erfolgreich hinzugefügt.")
+                ),
+                arrayOf("Multiple requestable or reservable copies",
+                        itemRequestAndReserve,
+                        0,
+                        null,
+                        null,
+                        null,
+                        OpacApi.ReservationResult(OpacApi.MultiStepResult.Status.SELECTION_NEEDED, "copy").apply {
+                            actionIdentifier = OpacApi.ReservationResult.ACTION_USER + 1
+                            this.selection = listOf(
+                                    mapOf("key" to "reserve\t10059731", "value" to "Zentralbibliothek: Ausgeliehen, Vormerken möglich"),
+                                    mapOf("key" to "stackRequest\t20065307", "value" to "Zentralbibliothek: Ausleihbar, bitte bestellen"))
+                        }
+                ),
+                arrayOf("Selected reservable copy (with multiple pickup branches)",
+                        itemRequestAndReserve,
+                        OpacApi.ReservationResult.ACTION_USER + 1, // == ACTION_COPY
+                        "reserve\t10059731",
+                        null,
+                        null,
+                        OpacApi.ReservationResult(OpacApi.MultiStepResult.Status.SELECTION_NEEDED).apply {
+                            actionIdentifier = OpacApi.ReservationResult.ACTION_BRANCH
+                            this.selection = listOf(
+                                    mapOf("key" to "reserve\t10059731\tzell1", "value" to "Zentralbibliothek"),
+                                    mapOf("key" to "reserve\t10059731\tbebel1", "value" to "ZwB Erziehungswissenschaften"),
+                                    mapOf("key" to "reserve\t10059731\tberg1", "value" to "ZwB Rechtswissenschaft"),
+                                    mapOf("key" to "reserve\t10059731\tfied1", "value" to "ZwB Medizin"),
+                                    mapOf("key" to "reserve\t10059731\ttha1", "value" to "ZwB Forstwissenschaft"),
+                                    mapOf("key" to "reserve\t10059731\tzell9", "value" to "Bereichsbibliothek Drepunct")
+                            )
+                        }
+                ),
+                arrayOf("Selected requestable copy with single pickup point",
+                        itemRequestAndReserve,
+                        OpacApi.ReservationResult.ACTION_USER + 1,  // == ACTION_COPY
+                        "stackRequest\t20065307",
+                        "{\"status\":true,\"message\":\"n\\/a\",\"PickupPoints\":[\"a01\"],\"arguments\":{\"controller\":\"API\",\"action\":\"pickup\",\"barcode\":\"20065307\",\"username\":\"123456\"}}",
+                        "{\"status\":true,\"message\":\"Magazinbestellung wurde erfolgreich hinzugefügt.\",\"requestID\":\"2116982\",\"pickupPoint\":\"Zentralbibliothek Ebene 0 SB-Regal\",\"arguments\":{\"controller\":\"API\",\"action\":\"stackRequest\",\"barcode\":\"20065307\",\"username\":\"123456\",\"pickupPoint\":\"a01\"}}",
+                        OpacApi.ReservationResult(OpacApi.MultiStepResult.Status.OK, "Magazinbestellung wurde erfolgreich hinzugefügt.")
+                ),
+                // "selected requestable copy wiht multiple pickup ponits" doesn't need to be tested as it's the same process as "Selected reservable copy (with multiple pickup branches)"
+                arrayOf("No requestable or reservable copies",
+                        itemNone,
+                        0,
+                        null,
+                        null,
+                        null,
+                        OpacApi.ReservationResult(OpacApi.MultiStepResult.Status.ERROR, "no_copy_reservable")
+                ),
+                arrayOf("Error getting pickup points",
+                        itemRequest,
+                        0,
+                        null,
+                        "",
+                        null,
+                        OpacApi.ReservationResult(OpacApi.MultiStepResult.Status.ERROR, "unknown_error_account_with_description accountRequest didn't return JSON object: A JSONObject text must begin with '{' at character 0")
+                )
+        )
+    }
+}
+
+class SLUBAccountValidateMockTest : BaseHtmlTest() {
+    private val slub = Mockito.spy(SLUB::class.java)
+
+    init {
+        slub.init(Library().apply {
+            data = JSONObject().apply {
+                put("baseurl", "test")
+            }
+        }, HttpClientFactory("test"))
+    }
+
+    private val account = Account().apply {
+        name = "x"
+        password = "x"
+    }
+
+    @Test
+    fun testCheckAccountData() {
+        val response = "{\"status\":\"1\",\"message\":\"credentials_are_valid\"}"
+        Mockito.doReturn(response).`when`(slub).httpPost(Matchers.any(), Matchers.any(), Matchers.any())
+
+        slub.checkAccountData(account)
+        verify(slub).httpPost(Matchers.any(), argThat(IsRequestBodyWithAction("validate")), Matchers.any())
+    }
+}
+
+class IsRequestBodyWithAction(private val action: String) : ArgumentMatcher<RequestBody>() {
+    override fun matches(arg: Any ): Boolean {
+        val fb = arg as FormBody?
+        for(i in 0 until (fb?.size() ?: 0)){
+            if (fb!!.value(i) == action)
+                return true
+        }
+        return false
+    }
+}
+
+class IsRequestBodyWithActionTest {
+    val fb: FormBody = FormBody.Builder().add("name", "value").build()
+    @Test
+    fun `matcher matches`() = assertTrue(IsRequestBodyWithAction("value").matches(fb))
+
+    @Test
+    fun `matcher doesn't match`() = assertFalse(IsRequestBodyWithAction("").matches(fb))
+
+    @Test
+    fun `matcher doesn't match empty formbody`() = assertFalse(IsRequestBodyWithAction("").matches(FormBody.Builder().build()))
 }

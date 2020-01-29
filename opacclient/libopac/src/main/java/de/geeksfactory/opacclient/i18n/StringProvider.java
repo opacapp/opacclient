@@ -90,6 +90,7 @@ public interface StringProvider {
     String READINGROOM = "readingroom";
     String REQUEST_PROGRESS = "request_progress";
     String RESERVED_POS = "reserved_pos";
+    String COPY = "copy";
 
     /**
      * Returns the translated string identified by identifier

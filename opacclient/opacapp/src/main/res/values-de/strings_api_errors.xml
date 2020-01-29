@@ -90,4 +90,5 @@
   <string name="readingroom">liegt seit %s zur Benutzung in Bibliothek bereit</string>
   <string name="request_progress">Magazinbestellung seit %s in Arbeit</string>
   <string name="reserved_pos">vorgemerkt, Pos. %s</string>
+  <string name="copy">Exemplar</string>
 </resources>

@@ -83,6 +83,21 @@ open class SLUB : OkHttpBaseApi() {
             "linksGeneral" to "Link"
     )
 
+    private val ACTION_COPY = OpacApi.MultiStepResult.ACTION_USER + 1
+    private val pickupPoints = mapOf(
+            "a01" to "Zentralbibliothek Ebene 0 SB-Regal",
+            "a02" to "Zentralbibliothek, Ebene -1, IP Musik Mediathek",
+            "a03" to "Zentralbibliothek, Ebene -1, Lesesaal Sondersammlungen",
+            "a05" to "Zentralbibliothek, Ebene -2, Lesesaal Kartensammlung",
+            "a06" to "ZwB Rechtswissenschaft",
+            "a07" to "ZwB Erziehungswissenschaft",
+            "a08" to "ZwB Medizin",
+            "a09" to "ZwB Forstwissenschaft",
+            "a10" to "Bereichsbibliothek Drepunct",
+            "a13" to "Zentralbibliothek, Servicetheke",
+            "a14" to "Zentralbibliothek, Ebene -1, SB-Regal Zeitungen"
+    )
+
     override fun init(library: Library, factory: HttpClientFactory) {
         super.init(library, factory)
         baseurl = library.data.getString("baseurl")
@@ -153,6 +168,7 @@ open class SLUB : OkHttpBaseApi() {
 
     internal fun parseResultById(id:String, json: JSONObject): DetailedItem {
         val dateFormat = DateTimeFormat.forPattern("dd.MM.yyyy")
+        var hasReservableCopies = false
         fun getCopies(copiesArray: JSONArray, df: DateTimeFormatter): List<Copy> =
                 copiesArray.run { 0.until(length()).map { optJSONObject(it) } }
                         .map {
@@ -167,8 +183,14 @@ open class SLUB : OkHttpBaseApi() {
                                         returnDate = df.parseLocalDate(this)
                                     }
                                 }
+                                // stack requests and reservations for items on loan are both handled as "reservations" in libopac
+                                if (it.getString("bestellen") == "1") {
+                                    resInfo = "stackRequest\t$barcode"
+                                    hasReservableCopies = true
+                                }
                                 if (it.getString("vormerken") == "1") {
-                                    resInfo = barcode
+                                    resInfo = "reserve\t$barcode"
+                                    hasReservableCopies = true
                                 }
                                 // reservations: only available for reserved copies, not for reservable copies
                                 // url: not for accessible online resources, only for lendable online copies
@@ -237,6 +259,7 @@ open class SLUB : OkHttpBaseApi() {
                 }
                 copies = copiesList
             }
+            isReservable = hasReservableCopies
             // volumes
             volumes = json.optJSONObject("parts")?.optJSONArray("records")?.run {
                 0.until(length()).map { optJSONObject(it) }?.map {
@@ -253,7 +276,95 @@ open class SLUB : OkHttpBaseApi() {
     }
 
     override fun reservation(item: DetailedItem, account: Account, useraction: Int, selection: String?): OpacApi.ReservationResult {
-        TODO("not implemented")
+        var action = useraction
+        var selected = selection ?: ""
+        // step 1: select copy to request/reserve if there are multiple requestable/reservable copies
+        //         if there's just one requestable/reservable copy then go to step 2
+        if (action == 0 && selection == null) {
+            val reservableCopies = item.copies.filter { it.resInfo != null }
+            when (reservableCopies.size) {
+                0 -> return OpacApi.ReservationResult(OpacApi.MultiStepResult.Status.ERROR,
+                        stringProvider.getString(StringProvider.NO_COPY_RESERVABLE))
+                1 -> {
+                    action = ACTION_COPY
+                    selected = reservableCopies.first().resInfo
+                }
+                else -> {
+                    val options = reservableCopies.map { copy ->
+                        mapOf("key" to copy.resInfo,
+                              "value" to "${copy.branch}: ${copy.status}")
+                    }
+                    return OpacApi.ReservationResult(OpacApi.MultiStepResult.Status.SELECTION_NEEDED,
+                            stringProvider.getString(StringProvider.COPY)).apply {
+                        actionIdentifier = ACTION_COPY
+                        this.selection = options
+                    }
+                }
+            }
+        }
+        // step 2: select pickup branch (reservations) or pickup point (stack requests)
+        //         if there's just one pickup point then go to step 3
+        if (action == ACTION_COPY) {
+            val pickupLocations: Map<String, String>
+            if (selected.startsWith("reserve")) {
+                pickupLocations = mapOf(
+                        "zell1" to "Zentralbibliothek",
+                        "bebel1" to "ZwB Erziehungswissenschaften",
+                        "berg1" to "ZwB Rechtswissenschaft",
+                        "fied1" to "ZwB Medizin",
+                        "tha1" to "ZwB Forstwissenschaft",
+                        "zell9" to "Bereichsbibliothek Drepunct"
+                )
+            } else {
+                val data = selected.split('\t')
+                if (data.size != 2) {
+                    OpacApi.ReservationResult(OpacApi.MultiStepResult.Status.ERROR,
+                            stringProvider.getString(StringProvider.INTERNAL_ERROR))
+                }
+                try {
+                    val json = requestAccount(account, "pickup", mapOf("tx_slubaccount_account[barcode]" to data[1]))
+                    pickupLocations = json.optJSONArray("PickupPoints")?.run {
+                        0.until(length()).map { optString(it) }.map {
+                            it to pickupPoints.getOrElse(it){it}
+                        }
+                    }?.toMap() ?: emptyMap()
+                } catch (e: OpacApi.OpacErrorException) {
+                    return OpacApi.ReservationResult(OpacApi.MultiStepResult.Status.ERROR, e.message)
+                }
+            }
+            when (pickupLocations.size) {
+                0 -> return OpacApi.ReservationResult(OpacApi.MultiStepResult.Status.ERROR,
+                        stringProvider.getString(StringProvider.INTERNAL_ERROR))
+                1 -> {
+                    action = OpacApi.ReservationResult.ACTION_BRANCH
+                    selected += "\t${pickupLocations.keys.first()}"
+                }
+                else -> return OpacApi.ReservationResult(OpacApi.MultiStepResult.Status.SELECTION_NEEDED).apply {
+                    actionIdentifier = OpacApi.ReservationResult.ACTION_BRANCH
+                    this.selection = pickupLocations.map {
+                        mapOf("key" to "$selected\t${it.key}",
+                              "value" to it.value)
+                    }
+                }
+            }
+        }
+        // step 3. make stack request or reservation
+        if (action == OpacApi.ReservationResult.ACTION_BRANCH) {
+            val data = selected.split('\t')
+            if (data.size == 3) {
+                val pickupParameter = if (data[0] == "stackRequest") "pickupPoint" else "PickupBranch"
+                return try {
+                    val json = requestAccount(account, data[0],
+                            mapOf("tx_slubaccount_account[barcode]" to data[1],
+                                  "tx_slubaccount_account[$pickupParameter]" to data[2]))
+                    OpacApi.ReservationResult(OpacApi.MultiStepResult.Status.OK, json.optString("message"))
+                } catch (e: OpacApi.OpacErrorException) {
+                    OpacApi.ReservationResult(OpacApi.MultiStepResult.Status.ERROR, e.message)
+                }
+            }
+        }
+        return OpacApi.ReservationResult(OpacApi.MultiStepResult.Status.ERROR,
+                stringProvider.getString(StringProvider.INTERNAL_ERROR))
     }
 
     override fun prolong(media: String, account: Account, useraction: Int, selection: String?): OpacApi.ProlongResult {
