@@ -241,7 +241,7 @@ public interface OpacApi {
      *                   if the user positively confirmed the action.
      * @param selection  When the method is called for the first time or if useraction is
      *                   <code>ACTION_CONFIRMATION</code>, this parameter is null. If you return
-     *                   <code>SELECTION</code> in your {@link ReservationResult#getStatus()}, this
+     *                   <code>SELECTION_NEEDED</code> in your {@link ReservationResult#getStatus()}, this
      *                   method will be called again with the user's selection present in
      *                   selection.
      * @return A <code>ReservationResult</code> object which has to have the status set.
@@ -266,7 +266,7 @@ public interface OpacApi {
      *                   if the user positively confirmed the action.
      * @param selection  When the method is called for the first time or if useraction is
      *                   <code>ACTION_CONFIRMATION</code>, this parameter is null. If you return
-     *                   <code>SELECTION</code> in your {@link ProlongResult#getStatus()}, this
+     *                   <code>SELECTION_NEEDED</code> in your {@link ProlongResult#getStatus()}, this
      *                   method will be called again with the user's selection present in
      *                   selection.
      * @return A <code>ProlongResult</code> object which has to have the status set.
@@ -307,7 +307,7 @@ public interface OpacApi {
      *                   if the user positively confirmed the action.
      * @param selection  When the method is called for the first time or if useraction is
      *                   <code>ACTION_CONFIRMATION</code>, this parameter is null. If you return
-     *                   <code>SELECTION</code> in your {@link CancelResult#getStatus()}, this
+     *                   <code>SELECTION_NEEDED</code> in your {@link CancelResult#getStatus()}, this
      *                   method will be called again with the user's selection present in
      *                   selection.
      * @return A <code>CancelResult</code> object which has to have the status set.
@@ -557,7 +557,7 @@ public interface OpacApi {
         /**
          * If {@link #getStatus()} is <code>CONFIRMATION_NEEDED</code>, this gives you more
          * information to display to the user. This is a list of unknown length. Every list entry
-         * is an array of strings that of size one or two (which can vary between the elements of
+         * is an array of strings of size one or two (which can vary between the elements of
          * the list). If the size of such an array A is two, then A[0] contains a description of
          * A[1], e.g. <code>A = {"Fee", "2 EUR"}</code> or <code>A = {"Pickup location", "Central library"}</code>.
          * If the size is only one, it is a general message to be shown, e.g.

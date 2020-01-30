@@ -753,7 +753,7 @@ public class TouchPoint extends OkHttpBaseApi implements OpacApi {
                 }
             }
             for (Element tr : copiesDoc
-                    .select(table ? ".data tr:has(td)" : ".data .py-1:has(div)")) {
+                    .select(table ? ".data tr:has(td)" : ".data > div > div:not(.d-none)")) {
                 Copy copy = new Copy();
                 int i = 0;
                 for (Element td : tr.select(table ? "td" : "> div")) {
