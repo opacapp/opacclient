@@ -212,7 +212,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:padding="16dp"
-                    android:visibility="@{item instanceof HistoryItem &amp;&amp; ((HistoryItem) item).lastDate != null ? View.VISIBLE : View.GONE}">
+                    android:visibility="@{(item instanceof HistoryItem) &amp;&amp; (((HistoryItem) item).lastDate != null) &amp;&amp; (!((HistoryItem) item).lending) ? View.VISIBLE : View.GONE}">
 
                     <ImageView
                         android:id="@+id/iconLastDate"
