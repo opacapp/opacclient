@@ -322,10 +322,10 @@ open class SLUB : OkHttpBaseApi() {
                 try {
                     val json = requestAccount(account, "pickup", mapOf("tx_slubaccount_account[barcode]" to data[1]))
                     pickupLocations = json.optJSONArray("PickupPoints")?.run {
-                        0.until(length()).map { optString(it) }.map {
-                            it to pickupPoints.getOrElse(it){it}
+                        0.until(length()).map { optString(it) }.associateWith {
+                            pickupPoints.getOrElse(it) { it }
                         }
-                    }?.toMap() ?: emptyMap()
+                    } ?: emptyMap()
                 } catch (e: OpacApi.OpacErrorException) {
                     return OpacApi.ReservationResult(OpacApi.MultiStepResult.Status.ERROR, e.message)
                 }
