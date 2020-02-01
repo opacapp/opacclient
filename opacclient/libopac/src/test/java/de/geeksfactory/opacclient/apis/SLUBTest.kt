@@ -26,6 +26,9 @@ import de.geeksfactory.opacclient.i18n.StringProvider
 import de.geeksfactory.opacclient.i18n.StringProvider.*
 import de.geeksfactory.opacclient.networking.HttpClientFactory
 import de.geeksfactory.opacclient.objects.*
+import de.geeksfactory.opacclient.searchfields.DropdownSearchField
+import de.geeksfactory.opacclient.searchfields.SearchQuery
+import de.geeksfactory.opacclient.searchfields.TextSearchField
 import okhttp3.FormBody
 import okhttp3.RequestBody
 import org.hamcrest.MatcherAssert.assertThat
@@ -58,7 +61,9 @@ import org.mockito.Mockito.verify
         SLUBSearchTest::class,
         SLUBAccountMockTest::class,
         SLUBReservationMockTest::class,
-        SLUBAccountValidateMockTest::class
+        SLUBAccountValidateMockTest::class,
+        SLUBSearchMockTest::class,
+        SLUBSearchFieldsMockTest::class
 )
 class SLUBAllTests
 
@@ -692,6 +697,101 @@ class SLUBAccountValidateMockTest : BaseHtmlTest() {
 
         slub.checkAccountData(account)
         verify(slub).httpPost(Matchers.any(), argThat(IsRequestBodyWithAction("validate")), Matchers.any())
+    }
+}
+
+@RunWith(Parameterized::class)
+class SLUBSearchMockTest(@Suppress("unused") private val name: String,
+                          private  val query: List<SearchQuery>,
+                          private val expectedQueryUrl: String?,
+                          private val response: String?,
+                          private val expectedResultCount: Int?,
+                          private val expectedException: Class<out Exception?>?,
+                          private val expectedExceptionMsg: String?) : BaseHtmlTest() {
+    private val slub = Mockito.spy(SLUB::class.java)
+
+    init {
+        slub.init(Library().apply {
+            data = JSONObject().apply {
+                put("baseurl", "https://test.de")
+            }
+        }, HttpClientFactory("test"))
+    }
+
+    @JvmField
+    @Rule
+    var thrown: ExpectedException = ExpectedException.none()
+
+    @Test
+    fun testSearch() {
+        Mockito.doReturn(response).`when`(slub).httpGet(Matchers.any(), Matchers.any())
+        if (expectedException != null) {
+            thrown.expect(expectedException)
+            thrown.expectMessage(expectedExceptionMsg)
+        }
+
+        val actual = slub.search(query)
+        assertEquals(expectedResultCount, actual.total_result_count)
+        verify(slub).httpGet(expectedQueryUrl,"UTF-8")
+    }
+
+    companion object {
+        @JvmStatic
+        @Parameterized.Parameters(name = "{0}")
+        fun data() = listOf(
+                arrayOf("Empty query",
+                        emptyList<SearchQuery>(),
+                        null,
+                        null,
+                        0,
+                        OpacApi.OpacErrorException::class.java,
+                        "no_criteria_input"
+                ),
+                arrayOf("Drop-down and text field",
+                        listOf(
+                                SearchQuery(TextSearchField().apply {
+                                    id = "title"
+                                    displayName = "Titel"
+                                }, "Kotlin - Das umfassende Praxis-Handbuch"),
+                                SearchQuery(DropdownSearchField().apply {
+                                    id = "access_facet"
+                                    displayName = "Zugang"
+                                    dropdownValues = listOf(
+                                        DropdownSearchField.Option("Local+Holdings", "physisch"),
+                                        DropdownSearchField.Option("Electronic+Resources", "digital")
+                                    )
+                                }, "Electronic+Resources")
+                        ),
+                        "https://test.de/?type=1369315142&tx_find_find[format]=data&tx_find_find[data-format]=app&tx_find_find[page]=1&tx_find_find[q][title]=Kotlin - Das umfassende Praxis-Handbuch&tx_find_find[facet][access_facet][Electronic+Resources]=1".replace(" ", "%20"),  // correct for  addEncodedQueryParameter
+                        "{\"numFound\":1,\"start\" : 0,\"docs\" : [{\"id\":\"0-1688062912\",\"format\":[\"Book, E-Book\"],\"title\":\"Kotlin - Das umfassende Praxis-Handbuch Szwillus, Karl.\",\"author\":[\"Szwillus, Karl\"],\"creationDate\":\"2019\",\"imprint\":[\"[Erscheinungsort nicht ermittelbar]: mitp Verlag, 2019\"]}]}",
+                        1,
+                        null,
+                        null
+                )
+        )
+    }
+}
+
+
+class SLUBSearchFieldsMockTest : BaseHtmlTest() {
+    private val slub = Mockito.spy(SLUB::class.java)
+
+    init {
+        slub.init(Library().apply {
+            data = JSONObject().apply {
+                put("baseurl", "test")
+            }
+        }, HttpClientFactory("test"))
+    }
+
+    @Test
+    fun testParseSearchFields() {
+        val html = readResource("/slub/SLUB Dresden - Katalog.html")
+        Mockito.doReturn(html).`when`(slub).httpGet(Matchers.any(), Matchers.any())
+
+        val searchFields = slub.parseSearchFields()
+        assertEquals(10, searchFields.filterIsInstance(TextSearchField::class.java).size)
+        assertEquals(1, searchFields.filterIsInstance(DropdownSearchField::class.java).size)
     }
 }
 

@@ -24,6 +24,7 @@ package de.geeksfactory.opacclient.apis
 import de.geeksfactory.opacclient.i18n.StringProvider
 import de.geeksfactory.opacclient.networking.HttpClientFactory
 import de.geeksfactory.opacclient.objects.*
+import de.geeksfactory.opacclient.searchfields.DropdownSearchField
 import de.geeksfactory.opacclient.searchfields.SearchField
 import de.geeksfactory.opacclient.searchfields.SearchQuery
 import de.geeksfactory.opacclient.searchfields.TextSearchField
@@ -109,19 +110,24 @@ open class SLUB : OkHttpBaseApi() {
     }
 
     override fun searchGetPage(page: Int): SearchRequestResult {
-        if (query.size <= 4) {
-            throw OpacApi.OpacErrorException(stringProvider.getString(StringProvider.NO_CRITERIA_INPUT))
-        }
         val queryUrlB = HttpUrl.get("$baseurl/?type=1369315142&tx_find_find[format]=data&tx_find_find[data-format]=app")
                 .newBuilder()
-                .addQueryParameter("tx_find_find[page]", page.toString())
+                .addEncodedQueryParameter("tx_find_find[page]", page.toString())
         for (sq in query) {
             if (sq.value.isNotEmpty()) {
-                queryUrlB.addQueryParameter("tx_find_find[q][${sq.key}]", sq.value)
+                if(sq.searchField is DropdownSearchField){  // access_facet
+                    queryUrlB.addEncodedQueryParameter("tx_find_find[facet][access_facet][${sq.value}]","1")
+                } else{
+                    queryUrlB.addEncodedQueryParameter("tx_find_find[q][${sq.key}]", sq.value)
+                }
             }
         }
+        val queryUrl = queryUrlB.build()
+        if (queryUrl.querySize() <= 4) {
+            throw OpacApi.OpacErrorException(stringProvider.getString(StringProvider.NO_CRITERIA_INPUT))
+        }
         try {
-            return parseSearchResults(JSONObject(httpGet(queryUrlB.build().toString(), ENCODING)))
+            return parseSearchResults(JSONObject(httpGet(queryUrl.toString(), ENCODING)))
         } catch (e: JSONException) {
             throw OpacApi.OpacErrorException(stringProvider.getFormattedString(
                     StringProvider.UNKNOWN_ERROR_WITH_DESCRIPTION,
@@ -527,7 +533,15 @@ open class SLUB : OkHttpBaseApi() {
                 id = it["name"]
                 displayName = it.text
             }
-        }
+        } + listOf(DropdownSearchField().apply {
+            id = "access_facet"
+            displayName = "Zugang"
+            dropdownValues = listOf(
+                    DropdownSearchField.Option("", ""),
+                    DropdownSearchField.Option("Local Holdings", "physisch"),
+                    DropdownSearchField.Option("Electronic Resources", "digital")
+            )
+        })
     }
 
     override fun setLanguage(language: String?) {
