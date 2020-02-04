@@ -111,7 +111,7 @@ dependencies {
     implementation 'androidx.multidex:multidex:2.0.0'
     debugImplementation 'com.facebook.stetho:stetho:1.5.0'
     debugImplementation 'com.facebook.stetho:stetho-okhttp3:1.5.0'
-    debugImplementation 'com.squareup.leakcanary:leakcanary-android:1.4-beta2'
+    debugImplementation 'com.squareup.leakcanary:leakcanary-android:2.1'
     testImplementation 'org.mockito:mockito-core:3.2.0'
     testImplementation 'junit:junit:4.12'
     testImplementation 'com.squareup.okhttp3:okhttp:3.12.1'
