@@ -336,7 +336,8 @@ public class OpenAccountScraper extends OpenSearch {
                             "[id$=messagePopup_lblMessage]")
                                 .text().trim();
             if (message.length() > 1 &&
-                    !message.equals("Ihre Verlängerung wurde erfolgreich durchgeführt.")) {
+                    !message.equals("Ihre Verlängerung wurde erfolgreich durchgeführt.") &&
+                    !message.equals("Ihre Verlängerung wurde durchgeführt.")) {
                 return new ProlongResult(MultiStepResult.Status.ERROR, message);
             } else {
                 return new ProlongResult(MultiStepResult.Status.OK);
@@ -621,6 +622,7 @@ public class OpenAccountScraper extends OpenSearch {
         } else {
             // sometimes (-> Verden), we are redirected to the home page, not to the account page.
             doc = Jsoup.parse(httpGet(opac_url + accountUrl, getDefaultEncoding()));
+            doc.setBaseUri(opac_url + accountUrl);
             if (doc.select("[id$=tpnlReservations_ucReservationsView_grdViewReservations]").first()
                     != null) {
                 return doc;
