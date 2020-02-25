@@ -363,59 +363,54 @@ open class Koha : OkHttpBaseApi() {
 
         val body = FormBody.Builder()
         body.add("place_reserve", "1")
-        if (doc.select("input[name=reserve_mode]").`val`() == "single") {
-            // reserve_mode "single" - seems to only appear for staff accounts in Heilbronn
-            body.add("biblionumbers", "")
-            body.add("selecteditems", "")
-            body.add("reserve_mode", "single")
-            body.add("single_bib", item.id)
-            body.add("expiration_date_${item.id}", "")
-        } else {
+        val reserveMode = doc.select("input[name=reserve_mode]").`val`()
+        body.add("reserve_mode", reserveMode)  // can be "single" or "multi"
+        body.add("single_bib", item.id)
+        body.add("expiration_date_${item.id}", "")
+        val checkboxes = doc.select("input[name=checkitem_${item.id}]")
+        if (checkboxes.size > 0) {
             body.add("biblionumbers", "${item.id}/")
-            body.add("reserve_mode", "multi")
-            body.add("single_bib", item.id)
-            body.add("expiration_date_${item.id}", "")
-            val checkboxes = doc.select("input[name=checkitem_${item.id}]")
-            if (checkboxes.size > 0) {
-                if (checkboxes.first()["value"] == "any") {
-                    body.add("reqtype_${item.id}", "any")
-                    body.add("checkitem_${item.id}", "any")
-                    body.add("selecteditems", "${item.id}///")
+            if (checkboxes.first()["value"] == "any") {
+                body.add("reqtype_${item.id}", "any")
+                body.add("checkitem_${item.id}", "any")
+                body.add("selecteditems", "${item.id}///")
+            } else {
+                if (selectedCopy != null) {
+                    body.add("reqtype_${item.id}", "Specific")
+                    body.add("checkitem_${item.id}", selectedCopy)
+                    body.add("selecteditems", "${item.id}/$selectedCopy//")
                 } else {
-                    if (selectedCopy != null) {
-                        body.add("reqtype_${item.id}", "Specific")
-                        body.add("checkitem_${item.id}", selectedCopy)
-                        body.add("selecteditems", "${item.id}/$selectedCopy//")
-                    } else {
-                        val copies = doc.select(".copiesrow tr:has(td)")
-                        val activeCopies = copies.filter { row ->
-                            !row.select("input").first().hasAttr("disabled")
-                        }
-                        if (copies.size > 0 && activeCopies.isEmpty()) {
-                            return OpacApi.ReservationResult(
-                                    OpacApi.MultiStepResult.Status.ERROR,
-                                    stringProvider.getString(StringProvider.NO_COPY_RESERVABLE)
-                            )
-                        }
-                        // copy selection
+                    val copies = doc.select(".copiesrow tr:has(td)")
+                    val activeCopies = copies.filter { row ->
+                        !row.select("input").first().hasAttr("disabled")
+                    }
+                    if (copies.size > 0 && activeCopies.isEmpty()) {
                         return OpacApi.ReservationResult(
-                                OpacApi.MultiStepResult.Status.SELECTION_NEEDED,
-                                doc.select(".copiesrow caption").text).apply {
-                            actionIdentifier = ACTION_ITEM
-                            setSelection(activeCopies.map { row ->
-                                HashMap<String, String>().apply {
-                                    put("key", row.select("input").first()["value"])
-                                    put("value", "${row.select(".itype").text}\n${row.select("" +
-                                            ".homebranch").text}\n${row.select(".information").text}")
-                                }
-                            })
-                        }
+                                OpacApi.MultiStepResult.Status.ERROR,
+                                stringProvider.getString(StringProvider.NO_COPY_RESERVABLE)
+                        )
+                    }
+                    // copy selection
+                    return OpacApi.ReservationResult(
+                            OpacApi.MultiStepResult.Status.SELECTION_NEEDED,
+                            doc.select(".copiesrow caption").text).apply {
+                        actionIdentifier = ACTION_ITEM
+                        setSelection(activeCopies.map { row ->
+                            HashMap<String, String>().apply {
+                                put("key", row.select("input").first()["value"])
+                                put("value", "${row.select(".itype").text}\n${row.select("" +
+                                        ".homebranch").text}\n${row.select(".information").text}")
+                            }
+                        })
                     }
                 }
-            } else if (doc.select(".holdrow .alert").size > 0) {
-                return OpacApi.ReservationResult(OpacApi.MultiStepResult.Status.ERROR,
-                        doc.select(".holdrow .alert").text().trim())
             }
+        } else if (reserveMode == "single") {
+            body.add("biblionumbers", "")
+            body.add("selecteditems", "")
+        } else if (doc.select(".holdrow .alert").size > 0) {
+            return OpacApi.ReservationResult(OpacApi.MultiStepResult.Status.ERROR,
+                    doc.select(".holdrow .alert").text().trim())
         }
 
         doc = httpPost("$baseurl/cgi-bin/koha/opac-reserve.pl", body.build(), ENCODING).html
