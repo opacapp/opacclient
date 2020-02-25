@@ -71,9 +71,7 @@ public class LentAdapter extends AccountAdapter<LentItem, LentAdapter.ViewHolder
                 builder.append(Html.fromHtml(item.getStatus()));
             }
             setTextOrHide(builder, tvStatus);
-            if (item.getHomeBranch() != null) {
-                setTextOrHide(Html.fromHtml(item.getHomeBranch()), tvBranch);
-            }
+            setTextOrHide(Html.fromHtml(item.getHomeBranch()), tvBranch);
             tvBranch.getViewTreeObserver().addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener() {
                 @Override
                 public boolean onPreDraw () {
