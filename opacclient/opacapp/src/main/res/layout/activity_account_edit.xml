@@ -45,7 +45,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/account_city"
-                    android:textAppearance="@style/TextAppearance.AppCompat.Body2"/>
+                    android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle2" />
 
                 <TextView
                     android:id="@+id/tvCity"
@@ -58,41 +58,15 @@
                     android:textAppearance="@style/TextAppearance.AppCompat.Body1"
                     tools:text="Beispielstadt ·  Beispielbibliothek"/>
 
-                <RelativeLayout
-                    android:id="@+id/rlReplaced"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="8dp"
-                    android:layout_marginTop="8dp"
-                    android:background="@color/note_replacedby"
-                    android:padding="16dp"
-                    android:visibility="gone"
-                    tools:visibility="visible">
-
-                    <ImageView
-                        android:id="@+id/ivReplacedStore"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_alignParentRight="true"
-                        android:layout_centerVertical="true"
-                        android:contentDescription="@string/playstore"
-                        android:src="@drawable/playstore"/>
-
-                    <TextView
-                        android:id="@+id/tvReplacedNote"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_alignParentLeft="true"
-                        android:layout_centerVertical="true"
-                        android:layout_toLeftOf="@+id/ivReplacedStore"
-                        android:text="@string/replacedby"/>
-                </RelativeLayout>
-
+                <include layout="@layout/replacedby"/>
 
                 <com.google.android.material.textfield.TextInputLayout
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="8dp">
+                    android:layout_marginBottom="16dp"
+                    app:helperText="@string/account_label_helper"
+                    app:helperTextEnabled="true">
 
                     <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/etLabel"
@@ -102,7 +76,7 @@
                         android:hint="@string/account_label"
                         android:singleLine="true">
 
-                        <requestFocus/>
+                        <requestFocus />
                     </com.google.android.material.textfield.TextInputEditText>
 
                 </com.google.android.material.textfield.TextInputLayout>
@@ -113,13 +87,20 @@
                     android:id="@+id/rgType"
                     android:layout_marginBottom="8dp">
 
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="@string/account_type"
+                        android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle2" />
+
                     <RadioButton
-                        android:text="@string/account_with_credentials"
+                        android:id="@+id/rbWithCredentials"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:id="@+id/rbWithCredentials"
                         android:layout_weight="1"
-                        android:checked="true"/>
+                        android:checked="true"
+                        android:text="@string/account_with_credentials" />
 
                     <RadioButton
                         android:text="@string/account_anonymous"
@@ -130,61 +111,48 @@
 
                 </RadioGroup>
 
-                <LinearLayout
-                    android:id="@+id/llBarcode"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_marginBottom="8dp">
-
-                    <com.google.android.material.textfield.TextInputLayout
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:id="@+id/tilUsername">
-
-                        <com.google.android.material.textfield.TextInputEditText
-                            android:id="@+id/etName"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:ems="10"
-                            android:hint="@string/account_nr"
-                            android:inputType="textNoSuggestions"
-                            android:singleLine="true"/>
-                    </com.google.android.material.textfield.TextInputLayout>
-
-                    <ImageView
-                        android:id="@+id/ivBarcode"
-                        android:layout_width="wrap_content"
-                        android:layout_height="match_parent"
-                        android:contentDescription="@string/barcodes"
-                        app:srcCompat="@drawable/ic_barcode"
-                        tools:ignore="MissingPrefix"
-                        tools:src="@drawable/ic_barcode"/>
-
-                </LinearLayout>
-
-                <LinearLayout
-                    android:id="@+id/llPassword"
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/tilUsername"
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical">
+                    android:layout_marginLeft="8dp"
+                    app:endIconContentDescription="@string/barcodes"
+                    app:endIconDrawable="@drawable/ic_barcode"
+                    app:endIconMode="custom"
+                    app:endIconTint="@null"
+                    app:startIconDrawable="@drawable/ic_account_24dp"
+                    app:startIconTint="@null">
 
-                    <com.google.android.material.textfield.TextInputLayout
-                        android:id="@+id/tilPassword"
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/etName"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content">
+                        android:layout_height="wrap_content"
+                        android:ems="10"
+                        android:hint="@string/account_nr"
+                        android:inputType="textNoSuggestions"
+                        android:singleLine="true" />
+                </com.google.android.material.textfield.TextInputLayout>
 
-                        <com.google.android.material.textfield.TextInputEditText
-                            android:id="@+id/etPassword"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:ems="10"
-                            android:hint="@string/account_password"
-                            android:imeOptions="actionDone"
-                            android:inputType="textPassword"
-                            android:singleLine="true"/>
-                    </com.google.android.material.textfield.TextInputLayout>
-                </LinearLayout>
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/tilPassword"
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="8dp"
+                    android:layout_marginTop="8dp"
+                    app:startIconDrawable="@drawable/ic_lock_24dp">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/etPassword"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:ems="10"
+                        android:hint="@string/account_password"
+                        android:imeOptions="actionDone"
+                        android:inputType="textPassword"
+                        android:singleLine="true" />
+                </com.google.android.material.textfield.TextInputLayout>
 
                 <TextView
                     android:id="@+id/no_ssl"

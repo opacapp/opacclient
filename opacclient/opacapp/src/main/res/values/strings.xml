@@ -127,7 +127,9 @@
     <string name="accounts">Accounts</string>
     <string name="accounts_edit">Change account</string>
     <string name="accounts_desc">Manage your libraries and membership numbers</string>
+    <string name="account_type">Account type</string>
     <string name="account_label">Label</string>
+    <string name="account_label_helper">optional, only for identifying the account within this app.</string>
     <string name="account_nr">Membership ID/user name</string>
     <string name="account_password">Password</string>
     <string name="account_city">Library</string>
