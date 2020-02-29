@@ -136,7 +136,7 @@ public class AccountEditActivity extends AppCompatActivity {
             if (lib.getReplacedBy() != null && !"".equals(lib.getReplacedBy())
                     && findViewById(R.id.rlReplaced) != null && ((OpacClient) getApplication()).promotePlusApps()) {
                 findViewById(R.id.rlReplaced).setVisibility(View.VISIBLE);
-                findViewById(R.id.ivReplacedStore).setOnClickListener(
+                findViewById(R.id.btnReplacedDownload).setOnClickListener(
                         new OnClickListener() {
                             @Override
                             public void onClick(View v) {
