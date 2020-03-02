@@ -398,18 +398,28 @@ public class OpenAccountScraper extends OpenSearch {
                         continue;
                     }
                     tr.select(".oclc-module-view-small").remove();
+                    // title
                     details.add(new String[]{
                             headtr.child(1).text().trim(),
                             tr.child(1).text().trim(),
                     });
+                    // current deadline
                     details.add(new String[]{
                             headtr.child(4).text().trim(),
                             tr.child(4).text().trim(),
                     });
+                    // new deadline
                     details.add(new String[]{
                             headtr.child(5).text().trim(),
                             tr.child(5).text().trim()
                     });
+                    if (headtr.children().size() > 6) {
+                        // fees
+                        details.add(new String[]{
+                                headtr.child(6).text().trim(),
+                                tr.child(6).text().trim()
+                        });
+                    }
                 }
             }
             res.setDetails(details);
