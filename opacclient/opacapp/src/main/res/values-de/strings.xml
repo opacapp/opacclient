@@ -124,7 +124,9 @@
     <string name="accounts">Konten</string>
     <string name="accounts_edit">Konto bearbeiten</string>
     <string name="accounts_desc">Genutzte Bibliotheken und Mitgliedsnummern verwalten</string>
+    <string name="account_type">Kontotyp</string>
     <string name="account_label">Bezeichnung</string>
+    <string name="account_label_helper">optional, nur zur Identifikation des Kontos in dieser App.</string>
     <string name="account_nr">Ausweisnummer/-name</string>
     <string name="account_password">Passwort</string>
     <string name="account_city">Bibliothek</string>
@@ -183,7 +185,8 @@
     <string name="setting_nfc_desc">Experimentell. Nur mit wenigen Geräten und Bibliotheken.</string>
     <string name="notification_problems">Benachrichtigungen funktionieren u.U. nicht</string>
     <string name="no_results">Die Suchanfrage lieferte keine Ergebnisse.</string>
-    <string name="replacedby">Diese Bibliothek verfügt neuerdings über eine eigene Android-App mit erweitertem Funktionsumfang. Wir empfehlen dir, auf diese spezielle App zu wechseln. Klicke zum Download einfach rechts auf das Play Store Icon.</string>
+    <string name="replacedby">Diese Bibliothek verfügt neuerdings über eine eigene Android-App mit erweitertem Funktionsumfang. Wir empfehlen dir, auf diese spezielle App zu wechseln.</string>
+    <string name="replacedby_download">Download</string>
     <string name="email_address">E-Mail-Adresse</string>
     <string name="email_address_description">Benötigt für E-Book-Reservierungen</string>
     <string name="accchange_sorry">Account-Wechsel hier leider nicht möglich, bitte neu suchen.</string>

@@ -38,6 +38,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import androidx.cardview.widget.CardView;
 import androidx.fragment.app.Fragment;
 import de.geeksfactory.opacclient.OpacClient;
 import de.geeksfactory.opacclient.R;
@@ -70,8 +71,9 @@ public class SearchFragment extends Fragment implements AccountSelectedListener 
 
     protected LinearLayout llFormFields, llAdvancedFields, llExpand;
     protected EditText etSimpleSearch;
-    protected RelativeLayout rlReplaced;
-    protected ImageView ivReplacedStore, ivExpandIcon;
+    protected CardView rlReplaced;
+    protected Button btnReplacedDownload;
+    protected ImageView ivExpandIcon;
     protected ScrollView scroll;
     protected ProgressBar progressBar;
     protected RelativeLayout rlSimpleSearch, rlOuter;
@@ -114,20 +116,20 @@ public class SearchFragment extends Fragment implements AccountSelectedListener 
     }
 
     protected void findViews() {
-        llFormFields = (LinearLayout) view.findViewById(R.id.llFormFields);
-        llAdvancedFields = (LinearLayout) view.findViewById(R.id.llAdvancedFields);
-        etSimpleSearch = (EditText) view.findViewById(R.id.etSimpleSearch);
-        rlReplaced = (RelativeLayout) view.findViewById(R.id.rlReplaced);
-        ivReplacedStore = (ImageView) view.findViewById(R.id.ivReplacedStore);
-        llExpand = (LinearLayout) view.findViewById(R.id.llExpand);
-        scroll = (ScrollView) view.findViewById(R.id.scroll);
-        progressBar = (ProgressBar) view.findViewById(R.id.progressBar);
-        rlSimpleSearch = (RelativeLayout) view.findViewById(R.id.rlSimpleSearch);
-        tvSearchAdvHeader = (TextView) view.findViewById(R.id.tvSearchAdvHeader);
-        rlOuter = (RelativeLayout) view.findViewById(R.id.rlOuter);
-        ivExpandIcon = (ImageView) view.findViewById(R.id.ivExpandIcon);
-        tvExpandString = (TextView) view.findViewById(R.id.tvExpandString);
-        errorView = (ViewGroup) view.findViewById(R.id.error_view);
+        llFormFields = view.findViewById(R.id.llFormFields);
+        llAdvancedFields = view.findViewById(R.id.llAdvancedFields);
+        etSimpleSearch = view.findViewById(R.id.etSimpleSearch);
+        rlReplaced = view.findViewById(R.id.rlReplaced);
+        btnReplacedDownload = view.findViewById(R.id.btnReplacedDownload);
+        llExpand = view.findViewById(R.id.llExpand);
+        scroll = view.findViewById(R.id.scroll);
+        progressBar = view.findViewById(R.id.progressBar);
+        rlSimpleSearch = view.findViewById(R.id.rlSimpleSearch);
+        tvSearchAdvHeader = view.findViewById(R.id.tvSearchAdvHeader);
+        rlOuter = view.findViewById(R.id.rlOuter);
+        ivExpandIcon = view.findViewById(R.id.ivExpandIcon);
+        tvExpandString = view.findViewById(R.id.tvExpandString);
+        errorView = view.findViewById(R.id.error_view);
     }
 
     @Override
@@ -162,21 +164,21 @@ public class SearchFragment extends Fragment implements AccountSelectedListener 
             if (field instanceof TextSearchField && ((TextSearchField) field).isFreeSearch()) {
                 etSimpleSearch.setText("");
             }
-            ViewGroup v = (ViewGroup) view.findViewWithTag(field.getId());
+            ViewGroup v = view.findViewWithTag(field.getId());
             if (v == null) {
                 continue;
             }
             if (field instanceof TextSearchField) {
-                EditText text = (EditText) v.findViewById(R.id.edittext);
+                EditText text = v.findViewById(R.id.edittext);
                 text.setText("");
             } else if (field instanceof BarcodeSearchField) {
-                EditText text = (EditText) v.findViewById(R.id.edittext);
+                EditText text = v.findViewById(R.id.edittext);
                 text.setText("");
             } else if (field instanceof DropdownSearchField) {
-                Spinner spinner = (Spinner) v.findViewById(R.id.spinner);
+                Spinner spinner = v.findViewById(R.id.spinner);
                 spinner.setSelection(0);
             } else if (field instanceof CheckboxSearchField) {
-                CheckBox checkbox = (CheckBox) v.findViewById(R.id.checkbox);
+                CheckBox checkbox = v.findViewById(R.id.checkbox);
                 checkbox.setChecked(false);
             }
         }
@@ -187,7 +189,7 @@ public class SearchFragment extends Fragment implements AccountSelectedListener 
         if (app.getLibrary().getReplacedBy() != null && !"".equals(app.getLibrary().getReplacedBy())
                 && sp.getInt(skey, 0) < 5 && app.promotePlusApps()) {
             rlReplaced.setVisibility(View.VISIBLE);
-            ivReplacedStore.setOnClickListener(
+            btnReplacedDownload.setOnClickListener(
                     new OnClickListener() {
                         @Override
                         public void onClick(View v) {
@@ -239,9 +241,9 @@ public class SearchFragment extends Fragment implements AccountSelectedListener 
                 } else {
                     v = (ViewGroup) getActivity().getLayoutInflater().inflate(
                             R.layout.searchfield_text, llFormFields, false);
-                    TextView title = (TextView) v.findViewById(R.id.title);
+                    TextView title = v.findViewById(R.id.title);
                     title.setText(textSearchField.getDisplayName());
-                    EditText edittext = (EditText) v
+                    EditText edittext = v
                             .findViewById(R.id.edittext);
                     edittext.setHint(textSearchField.getHint());
                     if (((TextSearchField) field).isNumber()) {
@@ -252,7 +254,7 @@ public class SearchFragment extends Fragment implements AccountSelectedListener 
                             && !(fields.get(i - 1) instanceof TextSearchField &&
                             ((TextSearchField) fields
                                     .get(i - 1)).isFreeSearch())) {
-                        ViewGroup before = (ViewGroup) view
+                        ViewGroup before = view
                                 .findViewWithTag(fields.get(i - 1).getId());
                         llFormFields.removeView(before);
                         llAdvancedFields.removeView(before);
@@ -270,11 +272,11 @@ public class SearchFragment extends Fragment implements AccountSelectedListener 
                 BarcodeSearchField bcSearchField = (BarcodeSearchField) field;
                 v = (ViewGroup) getActivity().getLayoutInflater().inflate(
                         R.layout.searchfield_barcode, llFormFields, false);
-                TextView title = (TextView) v.findViewById(R.id.title);
+                TextView title = v.findViewById(R.id.title);
                 title.setText(bcSearchField.getDisplayName());
-                EditText edittext = (EditText) v.findViewById(R.id.edittext);
+                EditText edittext = v.findViewById(R.id.edittext);
                 edittext.setHint(bcSearchField.getHint());
-                ImageView ivBarcode = (ImageView) v
+                ImageView ivBarcode = v
                         .findViewById(R.id.ivBarcode);
                 ivBarcode.setOnClickListener(new OnClickListener() {
                     @Override
@@ -288,7 +290,7 @@ public class SearchFragment extends Fragment implements AccountSelectedListener 
                         &&
                         !(fields.get(i - 1) instanceof TextSearchField && ((TextSearchField) fields
                                 .get(i - 1)).isFreeSearch())) {
-                    ViewGroup before = (ViewGroup) view.findViewWithTag(fields
+                    ViewGroup before = view.findViewWithTag(fields
                             .get(i - 1).getId());
                     llFormFields.removeView(before);
                     llAdvancedFields.removeView(before);
@@ -301,9 +303,9 @@ public class SearchFragment extends Fragment implements AccountSelectedListener 
                 }
                 v = (ViewGroup) getActivity().getLayoutInflater().inflate(
                         R.layout.searchfield_dropdown, llFormFields, false);
-                TextView title = (TextView) v.findViewById(R.id.title);
+                TextView title = v.findViewById(R.id.title);
                 title.setText(ddSearchField.getDisplayName());
-                Spinner spinner = (Spinner) v.findViewById(R.id.spinner);
+                Spinner spinner = v.findViewById(R.id.spinner);
                 spinner.setAdapter(
                         ((OpacActivity) getActivity()).new MetaAdapter<DropdownSearchField.Option>(
                                 getActivity(), ddSearchField.getDropdownValues(),
@@ -340,7 +342,7 @@ public class SearchFragment extends Fragment implements AccountSelectedListener 
                 CheckboxSearchField cbSearchField = (CheckboxSearchField) field;
                 v = (ViewGroup) getActivity().getLayoutInflater().inflate(
                         R.layout.searchfield_checkbox, llFormFields, false);
-                CheckBox checkbox = (CheckBox) v.findViewById(R.id.checkbox);
+                CheckBox checkbox = v.findViewById(R.id.checkbox);
                 checkbox.setText(cbSearchField.getDisplayName());
             }
             if (v != null) {
@@ -394,7 +396,7 @@ public class SearchFragment extends Fragment implements AccountSelectedListener 
         left.setLayoutParams(params);
         right.setLayoutParams(params);
 
-        TextView title = (TextView) right.findViewById(R.id.title);
+        TextView title = right.findViewById(R.id.title);
         if (title != null) {
             title.setText("");
         }
@@ -455,7 +457,7 @@ public class SearchFragment extends Fragment implements AccountSelectedListener 
         errorView.removeAllViews();
         View connError = getActivity().getLayoutInflater().inflate(
                 R.layout.error_connectivity, errorView);
-        Button btnRetry = (Button) connError.findViewById(R.id.btRetry);
+        Button btnRetry = connError.findViewById(R.id.btRetry);
         if (retry) {
             btnRetry.setVisibility(View.VISIBLE);
             btnRetry.setOnClickListener(new OnClickListener() {
@@ -544,18 +546,18 @@ public class SearchFragment extends Fragment implements AccountSelectedListener 
                 continue;
             }
 
-            ViewGroup v = (ViewGroup) view.findViewWithTag(field.getId());
+            ViewGroup v = view.findViewWithTag(field.getId());
             if (v == null) {
                 continue;
             }
             if (field instanceof TextSearchField) {
-                EditText text = (EditText) v.findViewById(R.id.edittext);
+                EditText text = v.findViewById(R.id.edittext);
                 query.put(field.getId(), text.getEditableText().toString());
             } else if (field instanceof BarcodeSearchField) {
-                EditText text = (EditText) v.findViewById(R.id.edittext);
+                EditText text = v.findViewById(R.id.edittext);
                 query.put(field.getId(), text.getEditableText().toString());
             } else if (field instanceof DropdownSearchField) {
-                Spinner spinner = (Spinner) v.findViewById(R.id.spinner);
+                Spinner spinner = v.findViewById(R.id.spinner);
                 if (spinner.getSelectedItemPosition() > 0) {
                     query.put(field.getId(),
                             ((DropdownSearchField) field).getDropdownValues()
@@ -563,7 +565,7 @@ public class SearchFragment extends Fragment implements AccountSelectedListener 
                                                          .getKey());
                 }
             } else if (field instanceof CheckboxSearchField) {
-                CheckBox checkbox = (CheckBox) v.findViewById(R.id.checkbox);
+                CheckBox checkbox = v.findViewById(R.id.checkbox);
                 query.put(field.getId(), String.valueOf(checkbox.isChecked()));
             }
         }
@@ -580,25 +582,25 @@ public class SearchFragment extends Fragment implements AccountSelectedListener 
             if (!field.isVisible()) {
                 continue;
             }
-            ViewGroup v = (ViewGroup) view.findViewWithTag(field.getId());
+            ViewGroup v = view.findViewWithTag(field.getId());
             if (field instanceof TextSearchField) {
                 EditText text;
                 if (((TextSearchField) field).isFreeSearch()) {
                     text = etSimpleSearch;
                 } else {
                     if (v == null) continue;
-                    text = (EditText) v.findViewById(R.id.edittext);
+                    text = v.findViewById(R.id.edittext);
                 }
                 query.add(new SearchQuery(field, text.getEditableText()
                                                      .toString().trim()));
             } else if (field instanceof BarcodeSearchField) {
                 if (v == null) continue;
-                EditText text = (EditText) v.findViewById(R.id.edittext);
+                EditText text = v.findViewById(R.id.edittext);
                 query.add(new SearchQuery(field, text.getEditableText()
                                                      .toString().trim()));
             } else if (field instanceof DropdownSearchField) {
                 if (v == null) continue;
-                Spinner spinner = (Spinner) v.findViewById(R.id.spinner);
+                Spinner spinner = v.findViewById(R.id.spinner);
                 if (spinner.getSelectedItemPosition() != -1) {
                     String key = ((DropdownSearchField) field)
                             .getDropdownValues()
@@ -609,7 +611,7 @@ public class SearchFragment extends Fragment implements AccountSelectedListener 
                 }
             } else if (field instanceof CheckboxSearchField) {
                 if (v == null) continue;
-                CheckBox checkbox = (CheckBox) v.findViewById(R.id.checkbox);
+                CheckBox checkbox = v.findViewById(R.id.checkbox);
                 query.add(new SearchQuery(field, String.valueOf(checkbox
                         .isChecked())));
             }
@@ -628,11 +630,11 @@ public class SearchFragment extends Fragment implements AccountSelectedListener 
             }
             if (field instanceof DropdownSearchField
                     && field.getMeaning() == Meaning.HOME_BRANCH) {
-                ViewGroup v = (ViewGroup) view.findViewWithTag(field.getId());
+                ViewGroup v = view.findViewWithTag(field.getId());
                 if (v == null) {
                     continue;
                 }
-                Spinner spinner = (Spinner) v.findViewById(R.id.spinner);
+                Spinner spinner = v.findViewById(R.id.spinner);
                 String homeBranch = ((DropdownSearchField) field)
                         .getDropdownValues()
                         .get(spinner.getSelectedItemPosition()).getKey();
@@ -660,7 +662,7 @@ public class SearchFragment extends Fragment implements AccountSelectedListener 
             if (!field.isVisible()) {
                 continue;
             }
-            ViewGroup v = (ViewGroup) view.findViewWithTag(field.getId());
+            ViewGroup v = view.findViewWithTag(field.getId());
             if (v == null) {
                 continue;
             }
@@ -669,14 +671,14 @@ public class SearchFragment extends Fragment implements AccountSelectedListener 
                 if (((TextSearchField) field).isFreeSearch()) {
                     text = etSimpleSearch;
                 } else {
-                    text = (EditText) v.findViewById(R.id.edittext);
+                    text = v.findViewById(R.id.edittext);
                 }
                 text.setText(query.getString(field.getId()));
             } else if (field instanceof BarcodeSearchField) {
-                EditText text = (EditText) v.findViewById(R.id.edittext);
+                EditText text = v.findViewById(R.id.edittext);
                 text.setText(query.getString(field.getId()));
             } else if (field instanceof DropdownSearchField) {
-                Spinner spinner = (Spinner) v.findViewById(R.id.spinner);
+                Spinner spinner = v.findViewById(R.id.spinner);
                 int i = 0;
                 if (((DropdownSearchField) field).getDropdownValues() == null) {
                     continue;
@@ -690,16 +692,16 @@ public class SearchFragment extends Fragment implements AccountSelectedListener 
                     i++;
                 }
             } else if (field instanceof CheckboxSearchField) {
-                CheckBox checkbox = (CheckBox) v.findViewById(R.id.checkbox);
+                CheckBox checkbox = v.findViewById(R.id.checkbox);
                 checkbox.setChecked(Boolean.valueOf(query.getString(field
                         .getId())));
             }
         }
 
         if (barcodeScanningField != null && scanResult != null) {
-            ViewGroup v = (ViewGroup) view
+            ViewGroup v = view
                     .findViewWithTag(barcodeScanningField);
-            EditText text = (EditText) v.findViewById(R.id.edittext);
+            EditText text = v.findViewById(R.id.edittext);
             text.setText(scanResult.getContents());
             barcodeScanningField = null;
             scanResult = null;
@@ -755,7 +757,7 @@ public class SearchFragment extends Fragment implements AccountSelectedListener 
     }
 
     public interface Callback {
-        public void scanBarcode();
+        void scanBarcode();
     }
 
     protected class LoadSearchFieldsTask extends

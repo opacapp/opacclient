@@ -1372,6 +1372,12 @@ public class TouchPoint extends OkHttpBaseApi implements OpacApi {
             }
         }
 
+        Element changePasswordForm =
+                doc.select("form[action$=methodToCall=changePassword]").first();
+        if (changePasswordForm != null) {
+            throw new OpacErrorException(stringProvider.getString("please_change_password"));
+        }
+
         logged_in = System.currentTimeMillis();
         logged_in_as = acc;
 
