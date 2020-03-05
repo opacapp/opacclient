@@ -445,9 +445,9 @@ public class TouchPoint extends OkHttpBaseApi implements OpacApi {
         for (int i = 0; i < table.size(); i++) {
             Element tr = table.get(i);
             SearchResult sr = new SearchResult();
-            if (tr.select(".icn, img[width=32]").size() > 0) {
-                String[] fparts = tr.select(".icn, img[width=32]").first()
-                                    .attr("src").split("/");
+            Element icon = tr.select(".icn, img[width=32], .icon img").first();
+            if (icon != null) {
+                String[] fparts = icon.attr("src").split("/");
                 String fname = fparts[fparts.length - 1];
                 String changedFname = fname.toLowerCase(Locale.GERMAN)
                                            .replace(".jpg", "").replace(".gif", "")
@@ -523,8 +523,14 @@ public class TouchPoint extends OkHttpBaseApi implements OpacApi {
                             url + "?" + URLEncodedUtils.format(map, "UTF-8"),
                             ENCODING).replace("\r\n", "").trim();
                     Document loanStatusDoc = Jsoup.parse(loanStatusHtml);
-                    String loanstatus = loanStatusDoc.text()
-                                                     .replace("\u00bb", "").trim();
+
+                    String loanstatus;
+                    if (loanStatusDoc.select("a").size() == 1) {
+                        loanstatus = loanStatusDoc.select("a").first().text();
+                    } else {
+                        loanstatus = loanStatusDoc.text();
+                    }
+                    loanstatus = loanstatus.replace("\u00bb", "").trim();
 
                     if ((loanstatus.startsWith("entliehen")
                             && loanstatus.contains("keine Vormerkung möglich") || loanstatus
@@ -744,10 +750,12 @@ public class TouchPoint extends OkHttpBaseApi implements OpacApi {
             for (Element th : copiesDoc.select(table ? ".data tr th" : ".data div.d-none > div")) {
                 if (th.text().contains("Zweigstelle")) {
                     table_keys.add("branch");
-                } else if (th.text().contains("Status")) {
+                } else if (th.text().contains("Status") || th.text().contains("Leihstatus")) {
                     table_keys.add("status");
                 } else if (th.text().contains("Signatur")) {
                     table_keys.add("signature");
+                } else if (th.text().contains("Mediennummer")) {
+                    table_keys.add("barcode");
                 } else {
                     table_keys.add(null);
                 }
@@ -777,8 +785,9 @@ public class TouchPoint extends OkHttpBaseApi implements OpacApi {
                 reservationDoc.setBaseUri(opac_url);
                 if (reservationDoc.select("a[href*=requestItem.do]").size() == 1) {
                     result.setReservable(true);
-                    result.setReservation_info(reservationDoc.select("a")
-                                                             .first().attr("abs:href"));
+                    result.setReservation_info(
+                            reservationDoc.select("a[href*=requestItem.do]")
+                                          .first().attr("abs:href"));
                 } else if (reservationDoc.select("form[action*=requestItem.do]").size() == 1) {
                     // seen at UB Erlangen-Nürnberg
                     result.setReservable(true);
