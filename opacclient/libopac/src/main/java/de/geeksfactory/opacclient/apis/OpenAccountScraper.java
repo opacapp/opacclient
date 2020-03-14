@@ -26,6 +26,7 @@ import java.util.regex.Pattern;
 import de.geeksfactory.opacclient.i18n.StringProvider;
 import de.geeksfactory.opacclient.objects.Account;
 import de.geeksfactory.opacclient.objects.AccountData;
+import de.geeksfactory.opacclient.objects.AccountItem;
 import de.geeksfactory.opacclient.objects.Copy;
 import de.geeksfactory.opacclient.objects.DetailedItem;
 import de.geeksfactory.opacclient.objects.LentItem;
@@ -679,51 +680,12 @@ public class OpenAccountScraper extends OpenSearch {
     private void parse_reservations(AccountData data, Document doc) {
         List<ReservedItem> res = new ArrayList<>();
         data.setReservations(res);
-        DateTimeFormatter fmt = DateTimeFormat.forPattern("dd.MM.yyyy");
 
         Element pendingTable =
                 doc.select("[id$=tpnlReservations_ucReservationsView_grdViewReservations]").first();
         if (pendingTable.select(".GridViewInnerBorderNoData, span[id$=LblNoDataReturned]").size() ==
                 0) {
-            for (Element row : pendingTable.select("tr")) {
-                if (row.select("th").size() > 0) {
-                    continue;
-                }
-                int offset = 0;
-
-                Elements cols = row.children();
-                if (row.select("input[name*=chkSelect]").size() == 0 && cols.size() == 4) {
-                    // e.g. Verden, cancelling not possible
-                    offset = -1;
-                }
-                ReservedItem item = new ReservedItem();
-
-                if (cols.get(1 + offset).select("img").size() > 0) {
-                    String[] sources =
-                            cols.get(1 + offset).select("img").attr("sources").split("\\|");
-                    for (String s : sources) {
-                        if (s.startsWith("http")) {
-                            item.setCover(s);
-                            break;
-                        }
-                    }
-                }
-
-                item.setTitle(cols.get(2 + offset).text().trim());
-                if (cols.get(2 + offset).select("a").size() > 0) {
-                    Map<String, String> params = getQueryParamsFirst(
-                            cols.get(2 + offset).select("a").first().absUrl("href"));
-                    item.setId(params.get("id"));
-                }
-                item.setAuthor(cols.get(3 + offset).text().trim());
-                item.setFormat(cols.get(4 + offset).text().trim());
-
-                if (row.select("input[name*=chkSelect]").size() > 0) {
-                    item.setCancelData(item.getId());
-                }
-
-                res.add(item);
-            }
+            parseReservationsTable(res, pendingTable);
         }
 
         // Ready
@@ -731,54 +693,116 @@ public class OpenAccountScraper extends OpenSearch {
         Element readyTable =
                 doc.select("[id$=tpnlReservations_ucReservationsView_grdViewReadyForPickups]")
                    .first();
-        if (readyTable.select(".GridViewInnerBorderNoData, span[id$=LblNoDataReturned]").size() ==
-                0) {
-            for (Element row : readyTable.select("tr")) {
-                if (row.select("th").size() > 0) {
-                    continue;
-                }
-                Elements cols = row.children();
-                ReservedItem item = new ReservedItem();
+        if (readyTable.select(".GridViewInnerBorderNoData, span[id$=LblNoDataReturned]")
+                      .size() == 0) {
+            parseReadyTable(res, readyTable);
+        }
 
-                if (cols.get(0).select("img").size() > 0) {
-                    String[] sources = cols.get(0).select("img").attr("sources").split("\\|");
-                    for (String s : sources) {
-                        if (s.startsWith("http") && !s.contains("/vlb.de") &&
-                                !s.contains("www.buchhandel.de")) {
-                            item.setCover(s);
-                            break;
-                        }
-                    }
-                    if (item.getCover() == null &&
-                            cols.get(0).select("img").hasAttr("devsources")) {
-                        String[] devsources =
-                                cols.get(0).select("img").attr("devsources").split("\\|");
-                        for (String s : devsources) {
-                            if (s.startsWith("http") && !s.contains("/vlb.de") &&
-                                    !s.contains("www.buchhandel.de")) {
-                                item.setCover(s);
-                                break;
-                            }
-                        }
-                    }
-                }
+        // ready interlibrary loans (seen in Bielefeld, untested)
+        Element interlibraryTable =
+                doc.select("[id$=tpnlRemoteLoans_ucRemoteLoansView_grdViewRemoteReadyForPickups]")
+                   .first();
+        if (interlibraryTable != null &&
+                interlibraryTable.select(".GridViewInnerBorderNoData, span[id$=LblNoDataReturned]")
+                                 .size() == 0) {
+            parseReadyTable(res, interlibraryTable);
+        }
+    }
 
-                item.setTitle(cols.get(1).text().trim());
-                if (cols.get(1).select("a").size() > 0) {
-                    Map<String, String> params =
-                            getQueryParamsFirst(cols.get(1).select("a").first().absUrl("href"));
-                    item.setId(params.get("id"));
+    private void parseReservationsTable(List<ReservedItem> res, Element pendingTable) {
+        for (Element row : pendingTable.select("tr")) {
+            if (row.select("th").size() > 0) {
+                continue;
+            }
+            int offset = 0;
+
+            Elements cols = row.children();
+            if (row.select("input[name*=chkSelect]").size() == 0 && cols.size() == 4) {
+                // e.g. Verden, cancelling not possible
+                offset = -1;
+            }
+            ReservedItem item = new ReservedItem();
+
+            if (cols.get(1 + offset).select("img").size() > 0) {
+                String[] sources =
+                        cols.get(1 + offset).select("img").attr("sources").split("\\|");
+                for (String s : sources) {
+                    if (s.startsWith("http")) {
+                        item.setCover(s);
+                        break;
+                    }
                 }
-                item.setAuthor(cols.get(2).text().trim());
-                item.setFormat(cols.get(3).text().trim());
-                item.setBranch(cols.get(4).text().trim());
-                try {
-                    item.setExpirationDate(fmt.parseLocalDate(cols.get(5).text().trim()));
-                } catch (IllegalArgumentException e) {
-                    // Ignore
+            }
+
+            item.setTitle(cols.get(2 + offset).text().trim());
+            if (cols.get(2 + offset).select("a").size() > 0) {
+                Map<String, String> params = getQueryParamsFirst(
+                        cols.get(2 + offset).select("a").first().absUrl("href"));
+                item.setId(params.get("id"));
+            }
+            item.setAuthor(cols.get(3 + offset).text().trim());
+            item.setFormat(cols.get(4 + offset).text().trim());
+
+            if (row.select("input[name*=chkSelect]").size() > 0) {
+                item.setCancelData(item.getId());
+            }
+
+            res.add(item);
+        }
+    }
+
+    private void parseReadyTable(List<ReservedItem> res, Element readyTable) {
+        DateTimeFormatter fmt = DateTimeFormat.forPattern("dd.MM.yyyy");
+        for (Element row : readyTable.select("tr")) {
+            if (row.select("th").size() > 0) {
+                continue;
+            }
+            Elements cols = row.children();
+            ReservedItem item = new ReservedItem();
+
+            Element coverColumn = cols.get(0);
+            parseAccountCover(item, coverColumn);
+
+            item.setTitle(cols.get(1).text().trim());
+            if (cols.get(1).select("a").size() > 0) {
+                Map<String, String> params =
+                        getQueryParamsFirst(cols.get(1).select("a").first().absUrl("href"));
+                item.setId(params.get("id"));
+            }
+            item.setAuthor(cols.get(2).text().trim());
+            item.setFormat(cols.get(3).text().trim());
+            item.setBranch(cols.get(4).text().trim());
+            try {
+                item.setExpirationDate(fmt.parseLocalDate(cols.get(5).text().trim()));
+            } catch (IllegalArgumentException e) {
+                // Ignore
+            }
+            item.setStatus("Bereitgestellt");
+            res.add(item);
+        }
+    }
+
+    private void parseAccountCover(AccountItem item, Element coverColumn) {
+        if (coverColumn.select("img").size() > 0) {
+            String[] sources = coverColumn.select("img").attr("sources").split("\\|");
+            for (String s : sources) {
+                if (s.startsWith("http") && !s.contains("/vlb.de") &&
+                        !s.contains("www.buchhandel.de")) {
+                    item.setCover(s);
+                    break;
                 }
-                item.setStatus("Bereitgestellt");
-                res.add(item);
+            }
+            if (item.getCover() == null &&
+                    coverColumn.select("img").hasAttr("devsources")) {
+                String[] devsources =
+                        coverColumn.select("img").attr("devsources").split("\\|");
+                for (String s : devsources) {
+                    if (s.startsWith("http") && !s.contains("/vlb.de") &&
+                            !s.contains("www.buchhandel.de")) {
+                        item.setCover(s);
+                        break;
+                    }
+                }
             }
         }
     }
@@ -787,10 +811,21 @@ public class OpenAccountScraper extends OpenSearch {
         List<LentItem> lent = new ArrayList<>();
         data.setLent(lent);
         Element table = doc.select("[id$=tpnlLoans_ucLoansView_grdViewLoans]").first();
-        if (table.select(".GridViewInnerBorderNoData, span[id$=LblNoDataReturned]").size() > 0) {
-            return;
+        if (table.select(".GridViewInnerBorderNoData, span[id$=LblNoDataReturned]").size() == 0) {
+            parseLentTable(doc, account, lent, table);
         }
 
+        // interlibrary loans (seen in Bielefeld)
+        Element interlibraryTable =
+                doc.select("[id$=tpnlRemoteLoans_ucRemoteLoansView_grdViewRemoteLoans]").first();
+        if (interlibraryTable != null &&
+                interlibraryTable.select(".GridViewInnerBorderNoData, span[id$=LblNoDataReturned]")
+                                 .size() == 0) {
+            parseLentTable(doc, account, lent, interlibraryTable);
+        }
+    }
+
+    private void parseLentTable(Document doc, Account account, List<LentItem> lent, Element table) {
         DateTimeFormatter fmt = DateTimeFormat.forPattern("dd.MM.yyyy");
 
         Map<String, Integer> colmap = new HashMap<>();
@@ -835,30 +870,9 @@ public class OpenAccountScraper extends OpenSearch {
             Elements cols = row.children();
             final LentItem item = new LentItem();
 
-            if (colmap.containsKey("cover") &&
-                    cols.get(colmap.get("cover")).select("img").size() > 0) {
-                String[] sources =
-                        cols.get(colmap.get("cover")).select("img").attr("sources").split("\\|");
-                for (String s : sources) {
-                    if (s.startsWith("http") && !s.contains("/vlb.de") &&
-                            !s.contains("www.buchhandel.de")) {
-                        item.setCover(s);
-                        break;
-                    }
-                }
-                if (item.getCover() == null &&
-                        cols.get(colmap.get("cover")).select("img").hasAttr("devsources")) {
-                    String[] devsources =
-                            cols.get(colmap.get("cover")).select("img").attr("devsources")
-                                .split("\\|");
-                    for (String s : devsources) {
-                        if (s.startsWith("http") && !s.contains("/vlb.de") &&
-                                !s.contains("www.buchhandel.de")) {
-                            item.setCover(s);
-                            break;
-                        }
-                    }
-                }
+            if (colmap.containsKey("cover")) {
+                Element coverColumn = cols.get(colmap.get("cover"));
+                parseAccountCover(item, coverColumn);
             }
 
             row.select(".oclc-module-label").remove();
