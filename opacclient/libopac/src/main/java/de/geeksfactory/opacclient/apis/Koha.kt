@@ -327,6 +327,7 @@ open class Koha : OkHttpBaseApi() {
     }
 
     var reservationFeeConfirmed = false
+    var selectedCopy: String? = null
     val ACTION_ITEM = 101
 
     override fun reservation(item: DetailedItem, account: Account, useraction: Int, selection: String?): OpacApi.ReservationResult {
@@ -336,10 +337,11 @@ open class Koha : OkHttpBaseApi() {
             return OpacApi.ReservationResult(OpacApi.MultiStepResult.Status.ERROR, e.message)
         }
 
-        var selectedCopy: String? = null
-
         when (useraction) {
-            0 -> reservationFeeConfirmed = false
+            0 -> {
+                reservationFeeConfirmed = false
+                selectedCopy = null
+            }
             OpacApi.MultiStepResult.ACTION_CONFIRMATION -> reservationFeeConfirmed = true
             ACTION_ITEM -> selectedCopy = selection
         }
@@ -349,14 +351,7 @@ open class Koha : OkHttpBaseApi() {
         if (doc.select(".alert").size > 0) {
             val alert = doc.select(".alert").first()
             val message = alert.text
-            if (alert.id() == "reserve_fee") {
-                if (!reservationFeeConfirmed) {
-                    val res = OpacApi.ReservationResult(
-                            OpacApi.MultiStepResult.Status.CONFIRMATION_NEEDED)
-                    res.details = arrayListOf(arrayOf(message))
-                    return res
-                }
-            } else {
+            if (alert.id() != "reserve_fee") {
                 return OpacApi.ReservationResult(OpacApi.MultiStepResult.Status.ERROR, message)
             }
         }
@@ -411,6 +406,17 @@ open class Koha : OkHttpBaseApi() {
         } else if (doc.select(".holdrow .alert").size > 0) {
             return OpacApi.ReservationResult(OpacApi.MultiStepResult.Status.ERROR,
                     doc.select(".holdrow .alert").text().trim())
+        }
+
+        if (!reservationFeeConfirmed && doc.select(".alert").size > 0) {
+            val alert = doc.select(".alert").first()
+            val message = alert.text
+            if (alert.id() == "reserve_fee") {
+                val res = OpacApi.ReservationResult(
+                        OpacApi.MultiStepResult.Status.CONFIRMATION_NEEDED)
+                res.details = arrayListOf(arrayOf(message))
+                return res
+            }
         }
 
         doc = httpPost("$baseurl/cgi-bin/koha/opac-reserve.pl", body.build(), ENCODING).html
