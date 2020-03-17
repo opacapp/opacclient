@@ -21,7 +21,7 @@
         android:background="@drawable/toolbar_shadow"/>
 
     <FrameLayout
-        android:layout_width="720dp"
+        android:layout_width="560dp"
         android:layout_height="match_parent"
         android:layout_below="@id/toolbar"
         android:layout_centerHorizontal="true"
