@@ -97,7 +97,7 @@ open class NetBiblio : OkHttpBaseApi() {
                     textBoxes.mapIndexed { i, field ->
                         TextSearchField().apply {
                             id = field["name"]
-                            displayName = if (i == 0) title else ""
+                            displayName = title
                             hint = (field.previousSibling() as TextNode).text.trim()
                             isHalfWidth = i == 1
                         }
