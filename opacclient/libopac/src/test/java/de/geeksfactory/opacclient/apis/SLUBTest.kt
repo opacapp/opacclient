@@ -344,8 +344,8 @@ class SLUBSearchTest : BaseHtmlTest() {
             addDetail(Detail("Schlagwörter", "Java; JUnit"))
             addDetail(Detail("Beschreibung", "Literaturverz. S. 351"))
             id = "0-727434322"
-            addDetail(Detail("Inhaltsverzeichnis","http://www.gbv.de/dms/tib-ub-hannover/727434322.pdf"))
-            addDetail(Detail("Inhaltstext","http://deposit.d-nb.de/cgi-bin/dokserv?id=4155321&prov=M&dok_var=1&dok_ext=htm"))
+            addDetail(Detail("Inhaltsverzeichnis", "http://www.gbv.de/dms/tib-ub-hannover/727434322.pdf"))
+            addDetail(Detail("Inhaltstext", "http://deposit.d-nb.de/cgi-bin/dokserv?id=4155321&prov=M&dok_var=1&dok_ext=htm"))
             addDetail(Detail("Zugang zur Ressource (via ProQuest Ebook Central)", "http://wwwdb.dbod.de/login?url=http://slub.eblib.com/patron/FullRecord.aspx?p=1575685"))
             addDetail(Detail("Online-Ausgabe", "Tamm, Michael: JUnit-Profiwissen (SLUB)"))
         }
@@ -707,12 +707,12 @@ class SLUBAccountValidateMockTest : BaseHtmlTest() {
 
 @RunWith(Parameterized::class)
 class SLUBSearchMockTest(@Suppress("unused") private val name: String,
-                          private  val query: List<SearchQuery>,
-                          private val expectedQueryUrl: String?,
-                          private val response: String?,
-                          private val expectedResultCount: Int?,
-                          private val expectedException: Class<out Exception?>?,
-                          private val expectedExceptionMsg: String?) : BaseHtmlTest() {
+                         private val query: List<SearchQuery>,
+                         private val expectedQueryUrl: String?,
+                         private val response: String?,
+                         private val expectedResultCount: Int?,
+                         private val expectedException: Class<out Exception?>?,
+                         private val expectedExceptionMsg: String?) : BaseHtmlTest() {
     private val slub = Mockito.spy(SLUB::class.java)
 
     init {
@@ -738,7 +738,7 @@ class SLUBSearchMockTest(@Suppress("unused") private val name: String,
 
         val actual = slub.search(query)
         assertEquals(expectedResultCount, actual.total_result_count)
-        verify(slub).httpGet(expectedQueryUrl,"UTF-8")
+        verify(slub).httpGet(expectedQueryUrl, "UTF-8")
     }
 
     companion object {
@@ -763,8 +763,8 @@ class SLUBSearchMockTest(@Suppress("unused") private val name: String,
                                     id = "access_facet"
                                     displayName = "Zugang"
                                     dropdownValues = listOf(
-                                        DropdownSearchField.Option("Local+Holdings", "physisch"),
-                                        DropdownSearchField.Option("Electronic+Resources", "digital")
+                                            DropdownSearchField.Option("Local+Holdings", "physisch"),
+                                            DropdownSearchField.Option("Electronic+Resources", "digital")
                                     )
                                 }, "Electronic+Resources")
                         ),
@@ -884,9 +884,9 @@ class SLUBSearchFieldsMockTest : BaseHtmlTest() {
 }
 
 class IsRequestBodyWithAction(private val action: String) : ArgumentMatcher<RequestBody>() {
-    override fun matches(arg: Any ): Boolean {
+    override fun matches(arg: Any): Boolean {
         val fb = arg as FormBody?
-        for(i in 0 until (fb?.size() ?: 0)){
+        for (i in 0 until (fb?.size() ?: 0)) {
             if (fb!!.value(i) == action)
                 return true
         }
@@ -896,6 +896,7 @@ class IsRequestBodyWithAction(private val action: String) : ArgumentMatcher<Requ
 
 class IsRequestBodyWithActionTest {
     val fb: FormBody = FormBody.Builder().add("name", "value").build()
+
     @Test
     fun `matcher matches`() = assertTrue(IsRequestBodyWithAction("value").matches(fb))
 

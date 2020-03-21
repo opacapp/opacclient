@@ -117,9 +117,9 @@ open class SLUB : OkHttpBaseApi() {
                 .addEncodedQueryParameter("tx_find_find[page]", page.toString())
         for (sq in query) {
             if (sq.value.isNotEmpty()) {
-                if(sq.searchField is DropdownSearchField){  // access_facet
-                    queryUrlB.addEncodedQueryParameter("tx_find_find[facet][access_facet][${sq.value}]","1")
-                } else{
+                if (sq.searchField is DropdownSearchField) {  // access_facet
+                    queryUrlB.addEncodedQueryParameter("tx_find_find[facet][access_facet][${sq.value}]", "1")
+                } else {
                     queryUrlB.addEncodedQueryParameter("tx_find_find[q][${sq.key}]", sq.value)
                 }
             }
@@ -137,7 +137,7 @@ open class SLUB : OkHttpBaseApi() {
         }
     }
 
-    internal fun parseSearchResults(json: JSONObject): SearchRequestResult{
+    internal fun parseSearchResults(json: JSONObject): SearchRequestResult {
         val searchresults = json.optJSONArray("docs")?.let { 0.until(it.length()).map { i -> it.optJSONObject(i) } }
                 ?.map {
                     SearchResult().apply {
@@ -163,7 +163,7 @@ open class SLUB : OkHttpBaseApi() {
     override fun getResultById(id: String, homebranch: String?): DetailedItem {
         val json: JSONObject
         try {
-             json = JSONObject(httpGet(
+            json = JSONObject(httpGet(
                     "$baseurl/id/$id/?type=1369315142&tx_find_find[format]=data&tx_find_find[data-format]=app",
                     ENCODING))
         } catch (e: JSONException) {
@@ -174,7 +174,7 @@ open class SLUB : OkHttpBaseApi() {
         return parseResultById(id, json)
     }
 
-    internal fun parseResultById(id:String, json: JSONObject): DetailedItem {
+    internal fun parseResultById(id: String, json: JSONObject): DetailedItem {
         val dateFormat = DateTimeFormat.forPattern("dd.MM.yyyy")
         var hasReservableCopies = false
         fun getCopies(copiesArray: JSONArray, df: DateTimeFormatter): List<Copy> =
@@ -237,19 +237,19 @@ open class SLUB : OkHttpBaseApi() {
                 }
             }
             // links and references
-            for (link in listOf("linksRelated", "linksAccess", "linksGeneral")){
+            for (link in listOf("linksRelated", "linksAccess", "linksGeneral")) {
                 val linkArray = json.optJSONArray(link)
-                linkArray.run { 0.until(length()).map { optJSONObject(it) } }.map{
+                linkArray.run { 0.until(length()).map { optJSONObject(it) } }.map {
                     // assuming that only on of material, note or hostlabel is set
                     val key = with(it.optString("material") + it.optString("note") + it.optString("hostLabel")) {
                         if (isEmpty()) fieldCaptions[link] else this
                     }
-                    addDetail(Detail( key, it.optString("uri")))
+                    addDetail(Detail(key, it.optString("uri")))
                 }
             }
-            json.optJSONArray("references").run { 0.until(length()).map { optJSONObject(it) } }.map{
+            json.optJSONArray("references").run { 0.until(length()).map { optJSONObject(it) } }.map {
                 // TODO: usually links to old SLUB catalogue, does it make sense to add the link?
-                addDetail(Detail( it.optString("text"), "${it.optString("name")} (${it.optString("target")})"))
+                addDetail(Detail(it.optString("text"), "${it.optString("name")} (${it.optString("target")})"))
             }
             // copies
             val cps = json.opt("copies")
@@ -270,7 +270,7 @@ open class SLUB : OkHttpBaseApi() {
             volumes = json.optJSONObject("parts")?.optJSONArray("records")?.run {
                 0.until(length()).map { optJSONObject(it) }.map {
                     Volume(it.optString("id"),
-                            "${it.optString("part")} ${Parser.unescapeEntities(it.optString("name"),false)}")
+                            "${it.optString("part")} ${Parser.unescapeEntities(it.optString("name"), false)}")
                 }
             } ?: emptyList()
         }
@@ -298,7 +298,7 @@ open class SLUB : OkHttpBaseApi() {
                 else -> {
                     val options = reservableCopies.map { copy ->
                         mapOf("key" to copy.resInfo,
-                              "value" to "${copy.branch}: ${copy.status}")
+                                "value" to "${copy.branch}: ${copy.status}")
                     }
                     return OpacApi.ReservationResult(OpacApi.MultiStepResult.Status.SELECTION_NEEDED,
                             stringProvider.getString(StringProvider.COPY)).apply {
@@ -349,7 +349,7 @@ open class SLUB : OkHttpBaseApi() {
                     actionIdentifier = OpacApi.ReservationResult.ACTION_BRANCH
                     this.selection = pickupLocations.map {
                         mapOf("key" to "$selected\t${it.key}",
-                              "value" to it.value)
+                                "value" to it.value)
                     }
                 }
             }
@@ -362,7 +362,7 @@ open class SLUB : OkHttpBaseApi() {
                 return try {
                     val json = requestAccount(account, data[0],
                             mapOf("tx_slubaccount_account[barcode]" to data[1],
-                                  "tx_slubaccount_account[$pickupParameter]" to data[2]))
+                                    "tx_slubaccount_account[$pickupParameter]" to data[2]))
                     OpacApi.ReservationResult(OpacApi.MultiStepResult.Status.OK, json.optString("message"))
                 } catch (e: OpacApi.OpacErrorException) {
                     OpacApi.ReservationResult(OpacApi.MultiStepResult.Status.ERROR, e.message)
@@ -430,7 +430,7 @@ open class SLUB : OkHttpBaseApi() {
                                 author = it.optJSONArray("X_author")?.optString(0)
                                 //id = it.optString("label")  // TODO: get details from here via /bc --> redirects to /id, from there get the proper id
                                 format = it.optString("X_medientyp")
-                                status = when(type){  // TODO: maybe we need time (LocalDateTime) too make an educated guess on actual ready date for stack requests
+                                status = when (type) {  // TODO: maybe we need time (LocalDateTime) too make an educated guess on actual ready date for stack requests
                                     "hold" -> stringProvider.getFormattedString(StringProvider.HOLD,
                                             fmt.print(LocalDate(it.optString("X_date_reserved").substring(0, 10))))
                                     "request_ready" -> stringProvider.getFormattedString(StringProvider.REQUEST_READY,
