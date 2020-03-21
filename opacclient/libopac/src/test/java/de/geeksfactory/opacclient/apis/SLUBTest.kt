@@ -47,6 +47,7 @@ import org.mockito.AdditionalMatchers.or
 import org.mockito.ArgumentMatcher
 import org.mockito.Matchers
 import org.mockito.Matchers.argThat
+import org.mockito.Matchers.eq
 import org.mockito.Mockito
 import org.mockito.Mockito.verify
 
@@ -63,7 +64,8 @@ import org.mockito.Mockito.verify
         SLUBReservationMockTest::class,
         SLUBAccountValidateMockTest::class,
         SLUBSearchMockTest::class,
-        SLUBSearchFieldsMockTest::class
+        SLUBSearchFieldsMockTest::class,
+        SLUBProlongMockTest::class
 )
 class SLUBAllTests
 
@@ -121,7 +123,7 @@ class SLUBAccountTest : BaseHtmlTest() {
             //id = "31626878"
             barcode = "31626878"
             isRenewable = true
-            prolongData = barcode
+            prolongData = "$format\t$barcode"
         }
         val reserveditem1 = ReservedItem().apply {
             // reserve
@@ -436,6 +438,7 @@ class SLUBAccountMockTest(@Suppress("unused") private val name: String,
         slub.init(Library().apply {
             data = JSONObject().apply {
                 put("baseurl", "https://test.de")
+                put("illrenewurl", "https://test-renew.de")
             }
         }, HttpClientFactory("test"))
     }
@@ -494,6 +497,7 @@ class SLUBReservationMockTest(@Suppress("unused") private val name: String,
         slub.init(Library().apply {
             data = JSONObject().apply {
                 put("baseurl", "https://test.de")
+                put("illrenewurl", "https://test-renew.de")
             }
         }, HttpClientFactory("test"))
     }
@@ -681,6 +685,7 @@ class SLUBAccountValidateMockTest : BaseHtmlTest() {
         slub.init(Library().apply {
             data = JSONObject().apply {
                 put("baseurl", "test")
+                put("illrenewurl", "https://test-renew.de")
             }
         }, HttpClientFactory("test"))
     }
@@ -714,6 +719,7 @@ class SLUBSearchMockTest(@Suppress("unused") private val name: String,
         slub.init(Library().apply {
             data = JSONObject().apply {
                 put("baseurl", "https://test.de")
+                put("illrenewurl", "https://test-renew.de")
             }
         }, HttpClientFactory("test"))
     }
@@ -772,6 +778,87 @@ class SLUBSearchMockTest(@Suppress("unused") private val name: String,
     }
 }
 
+@RunWith(Parameterized::class)
+class SLUBProlongMockTest(@Suppress("unused") private val name: String,
+                          private val media: String,
+                          private val expectedQueryUrl: String?,
+                          private val expectedRequestBody: RequestBody,
+                          private val response: String?,
+                          private val expectedResult: OpacApi.MultiStepResult,
+                          private val expectedException: Class<out Exception?>?,
+                          private val expectedExceptionMsg: String?) : BaseHtmlTest() {
+    private val slub = Mockito.spy(SLUB::class.java)
+
+    init {
+        slub.init(Library().apply {
+            data = JSONObject().apply {
+                put("baseurl", "https://test.de")
+                put("illrenewurl", "https://test-renew.de")
+            }
+        }, HttpClientFactory("test"))
+    }
+
+    private val account = Account().apply {
+        name = "123456"
+        password = "x"
+    }
+
+    @JvmField
+    @Rule
+    var thrown: ExpectedException = ExpectedException.none()
+
+    @Test
+    fun testProlong() {
+        Mockito.doReturn(response).`when`(slub).httpPost(Matchers.any(), Matchers.any(), Matchers.any())
+        if (expectedException != null) {
+            thrown.expect(expectedException)
+            thrown.expectMessage(expectedExceptionMsg)
+        }
+
+        val actualResult = slub.prolong(media, account, 0, null)
+        assertThat(actualResult, sameBeanAs(expectedResult))
+        verify(slub).httpPost(eq(expectedQueryUrl), argThat(sameBeanAs(expectedRequestBody)), eq("UTF-8"))
+    }
+
+    companion object {
+        private val illRenewResponse = BaseHtmlTest().readResource("/slub/account/ill-renew.html")
+
+        @JvmStatic
+        @Parameterized.Parameters(name = "{0}")
+        fun data() = listOf(
+                arrayOf("Regular item",
+                        "B\t20148242",
+                        "https://test.de/mein-konto/",
+                        FormBody.Builder()
+                                .add("type", "1")
+                                .add("tx_slubaccount_account[controller]", "API")
+                                .add("tx_slubaccount_account[action]", "renew")
+                                .add("tx_slubaccount_account[username]", "123456")
+                                .add("tx_slubaccount_account[password]", "x")
+                                .add("tx_slubaccount_account[renewals][0]", "20148242")
+                                .build(),
+                        "{\"status\":\"1\",\"arguments\":{\"controller\":\"API\",\"action\":\"renew\",\"username\":\"123456\",\"renewals\":[\"20148242\"]}}",
+                        OpacApi.ProlongResult(OpacApi.MultiStepResult.Status.OK),
+                        null,
+                        null
+                ),
+                arrayOf("Interlibrary loan item",
+                        "FL\t12022302N",
+                        "https://test-renew.de",
+                        FormBody.Builder()
+                                .add("bc", "12022302N")
+                                .add("uid", "123456")
+                                .add("clang", "DE")
+                                .add("action", "send")
+                                .build(),
+                        illRenewResponse,
+                        OpacApi.ProlongResult(OpacApi.MultiStepResult.Status.OK, "Ihr Verlängerungswunsch wurde gesendet."),
+                        null,
+                        null
+                )
+        )
+    }
+}
 
 class SLUBSearchFieldsMockTest : BaseHtmlTest() {
     private val slub = Mockito.spy(SLUB::class.java)
@@ -780,6 +867,7 @@ class SLUBSearchFieldsMockTest : BaseHtmlTest() {
         slub.init(Library().apply {
             data = JSONObject().apply {
                 put("baseurl", "test")
+                put("illrenewurl", "https://test-renew.de")
             }
         }, HttpClientFactory("test"))
     }

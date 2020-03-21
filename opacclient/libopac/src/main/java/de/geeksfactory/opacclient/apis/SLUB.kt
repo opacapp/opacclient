@@ -49,6 +49,7 @@ import org.jsoup.parser.Parser
  */
 open class SLUB : OkHttpBaseApi() {
     protected lateinit var baseurl: String
+    protected lateinit var illRenewUrl: String
     private val ENCODING = "UTF-8"
     protected lateinit var query: List<SearchQuery>
 
@@ -102,6 +103,7 @@ open class SLUB : OkHttpBaseApi() {
     override fun init(library: Library, factory: HttpClientFactory) {
         super.init(library, factory)
         baseurl = library.data.getString("baseurl")
+        illRenewUrl = library.data.getString("illrenewurl")
     }
 
     override fun search(query: List<SearchQuery>): SearchRequestResult {
@@ -372,9 +374,24 @@ open class SLUB : OkHttpBaseApi() {
     }
 
     override fun prolong(media: String, account: Account, useraction: Int, selection: String?): OpacApi.ProlongResult {
+        val data = media.split('\t')
+        if (data.size != 2) {
+            OpacApi.ProlongResult(OpacApi.MultiStepResult.Status.ERROR, "internal error")
+        }
         return try {
-            requestAccount(account, "renew", mapOf("tx_slubaccount_account[renewals][0]" to media))
-            OpacApi.ProlongResult(OpacApi.MultiStepResult.Status.OK)
+            if (data[0] == "FL") {
+                val formBody = FormBody.Builder()
+                        .add("bc", data[1])
+                        .add("uid", account.name)
+                        .add("clang", "DE")
+                        .add("action", "send")
+                        .build()
+                val result = httpPost(illRenewUrl, formBody, ENCODING).html
+                OpacApi.ProlongResult(OpacApi.MultiStepResult.Status.OK, result.select("p:last-of-type").text())
+            } else {
+                requestAccount(account, "renew", mapOf("tx_slubaccount_account[renewals][0]" to data[1]))
+                OpacApi.ProlongResult(OpacApi.MultiStepResult.Status.OK)
+            }
         } catch (e: Exception) {
             OpacApi.ProlongResult(OpacApi.MultiStepResult.Status.ERROR, e.message)
         }
@@ -476,7 +493,7 @@ open class SLUB : OkHttpBaseApi() {
                             }
                             if (it.optInt("X_is_renewable") == 1) {   // TODO: X_is_flrenewable for ill items
                                 isRenewable = true
-                                prolongData = barcode
+                                prolongData = "$format\t$barcode"
                             }
                         }
                     } ?: emptyList()
