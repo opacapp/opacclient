@@ -545,9 +545,9 @@ open class SLUB : OkHttpBaseApi() {
 
     override fun parseSearchFields(): List<SearchField> {
         val doc = httpGet(baseurl, ENCODING).html
-        return doc.select("ul#search-in-field-options li").map {
+        return doc.select("ul#search-in-field-recreated-list li").map {
             TextSearchField().apply {
-                id = it["name"]
+                id = it["id"]
                 displayName = it.text
             }
         } + listOf(DropdownSearchField().apply {
