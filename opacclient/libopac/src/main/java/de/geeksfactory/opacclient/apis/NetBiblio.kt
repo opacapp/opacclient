@@ -291,7 +291,7 @@ open class NetBiblio : OkHttpBaseApi() {
                                 "" -> {
                                 }
                                 "Bibliothek" -> branch = data
-                                "Aktueller Standort" -> location = data
+                                "Aktueller Standort", "Standorte" -> location = data
                                 "Signatur", "Call number", "Cote" -> shelfmark = data
                                 "Verfügbarkeit", "Disposability", "Disponsibilité" -> status = data
                                 "Fälligkeitsdatum", "Due date", "Date d'échéance" ->
