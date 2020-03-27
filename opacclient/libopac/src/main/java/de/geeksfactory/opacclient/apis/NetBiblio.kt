@@ -283,24 +283,38 @@ open class NetBiblio : OkHttpBaseApi() {
             val df = DateTimeFormat.forPattern("dd.MM.yyyy")
             copies = doc.select(".wo-grid-table > tbody > tr").map { row ->
                 Copy().apply {
+                    var lastType: String? = null
                     row.select("td").zip(copyCols).forEach { (col, header) ->
                         val headers = header.split(" / ").map { it.trim() }
                         val data = col.html().split("<br>").map { it.html.text.trim() }
-                        headers.zip(data).forEach { (type, data) ->
+                        for ((type, content) in headers.zip(data)) {
+                            println("$type $content $lastType")
+                            if (content.isEmpty()) {
+                                if (type.isNotEmpty()) lastType = type
+                                continue
+                            }
                             when (type) {
                                 "" -> {
+                                    when (lastType) {
+                                        "Aktueller Standort", "Standorte" -> {
+                                            // Bern: multiple location columns
+                                            if (location != null) {
+                                                location += " · $content"
+                                            }
+                                        }
+                                    }
                                 }
-                                "Bibliothek" -> branch = data
-                                "Aktueller Standort", "Standorte" -> location = data
-                                "Signatur", "Call number", "Cote" -> shelfmark = data
-                                "Verfügbarkeit", "Disposability", "Disponsibilité" -> status = data
+                                "Bibliothek" -> branch = content
+                                "Aktueller Standort", "Standorte" -> location = content
+                                "Signatur", "Call number", "Cote" -> shelfmark = content
+                                "Verfügbarkeit", "Disposability", "Disponsibilité" -> status = content
                                 "Fälligkeitsdatum", "Due date", "Date d'échéance" ->
-                                    returnDate = if (data.isEmpty()) {
+                                    returnDate = if (content.isEmpty()) {
                                         null
                                     } else {
-                                        df.parseLocalDate(data)
+                                        df.parseLocalDate(content)
                                     }
-                                "Anz. Res." -> reservations = data
+                                "Anz. Res." -> reservations = content
                                 "Reservieren", "Reserve", "Réserver" -> {
                                     val button = col.select("a").first()
                                     if (button != null) {
@@ -308,8 +322,9 @@ open class NetBiblio : OkHttpBaseApi() {
                                         isReservable = true
                                     }
                                 }
-                                "Exemplarnr", "Item number", "No d'exemplaire" -> barcode = data
+                                "Exemplarnr", "Item number", "No d'exemplaire" -> barcode = content
                             }
+                            if (type.isNotEmpty()) lastType = type
                         }
                     }
                 }
