@@ -315,7 +315,7 @@ open class NetBiblio : OkHttpBaseApi() {
                                         df.parseLocalDate(content)
                                     }
                                 "Anz. Res." -> reservations = content
-                                "Reservieren", "Reserve", "Réserver" -> {
+                                "Reservieren", "Reserve", "Réserver", "Bestellen", "Commander" -> {
                                     val button = col.select("a").first()
                                     if (button != null) {
                                         resInfo = BaseApi.getQueryParamsFirst(button.attr("href"))["selectedItems"]
@@ -338,10 +338,15 @@ open class NetBiblio : OkHttpBaseApi() {
 
     var reservationItemId: String? = null
     var reservationAdressId: String? = null
+    var reservationKind: String? = null
 
     override fun reservation(item: DetailedItem, account: Account, useraction: Int,
                              selection: String?): OpacApi.ReservationResult? {
         if (useraction == 0 && selection == null) {
+            reservationAdressId = null
+            reservationItemId = null
+            reservationKind = null
+
             // step 1: select item
             val reservableCopies = item.copies.filter { it.resInfo != null }
             when (reservableCopies.size) {
@@ -369,14 +374,17 @@ open class NetBiblio : OkHttpBaseApi() {
             }
             val warning = doc.select("label:has(.wo-reservationkind[checked])").text
             reservationAdressId = doc.select("input[name=AddessId]").first().`val`()
+            reservationKind = doc.select(".wo-reservationkind[checked]").`val`()
+            if (reservationKind!!.isEmpty()) reservationKind = "Reservation"
             return OpacApi.ReservationResult(OpacApi.MultiStepResult.Status.CONFIRMATION_NEEDED).apply {
                 details = listOf(arrayOf(warning))
             }
         } else if (useraction == OpacApi.MultiStepResult.ACTION_CONFIRMATION) {
+
             val body = FormBody.Builder()
                     .add("ItemID", reservationItemId!!)
-                    .add("ReservationKind", "Reservation") // TODO: maybe don't hardcode this
-                    .add("AddessId" /* sic! */, reservationAdressId)
+                    .add("ReservationKind", reservationKind!!)
+                    .add("AddessId" /* sic! */, reservationAdressId!!)
                     .build()
 
             val doc = httpPost("$opacUrl/account/makeitemreservation", body, ENCODING).html
