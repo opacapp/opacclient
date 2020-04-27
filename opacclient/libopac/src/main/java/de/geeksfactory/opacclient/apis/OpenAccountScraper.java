@@ -677,7 +677,7 @@ public class OpenAccountScraper extends OpenSearch {
         return data;
     }
 
-    private void parse_reservations(AccountData data, Document doc) {
+    void parse_reservations(AccountData data, Document doc) {
         List<ReservedItem> res = new ArrayList<>();
         data.setReservations(res);
 
@@ -753,29 +753,71 @@ public class OpenAccountScraper extends OpenSearch {
 
     private void parseReadyTable(List<ReservedItem> res, Element readyTable) {
         DateTimeFormatter fmt = DateTimeFormat.forPattern("dd.MM.yyyy");
+
+        Map<String, Integer> colmap = new HashMap<>();
         for (Element row : readyTable.select("tr")) {
             if (row.select("th").size() > 0) {
+                int i = 0;
+                for (Element th : row.select("th")) {
+                    String th_html = th.html();
+                    if (th_html.contains("Sort$Title")) {
+                        colmap.put("title", i);
+                    } else if (th_html.contains("Sort$Author")) {
+                        colmap.put("author", i);
+                    } else if (th_html.contains("Sort$MediaGroup")) {
+                        colmap.put("format", i);
+                    } else if (th_html.contains("Sort$DueDate")) {
+                        colmap.put("expiration", i);
+                    }
+                    i++;
+                }
                 continue;
             }
+
+            if (colmap.isEmpty()) {
+                colmap.put("cover", 0);
+                colmap.put("title", 1);
+                colmap.put("author", 2);
+                colmap.put("format", 3);
+                colmap.put("branch", 4);
+                colmap.put("expiration", 5);
+            } else {
+                colmap.put("cover", 0);
+            }
+
             Elements cols = row.children();
             ReservedItem item = new ReservedItem();
 
-            Element coverColumn = cols.get(0);
-            parseAccountCover(item, coverColumn);
-
-            item.setTitle(cols.get(1).text().trim());
-            if (cols.get(1).select("a").size() > 0) {
-                Map<String, String> params =
-                        getQueryParamsFirst(cols.get(1).select("a").first().absUrl("href"));
-                item.setId(params.get("id"));
+            if (colmap.containsKey("cover")) {
+                Element coverColumn = cols.get(colmap.get("cover"));
+                parseAccountCover(item, coverColumn);
             }
-            item.setAuthor(cols.get(2).text().trim());
-            item.setFormat(cols.get(3).text().trim());
-            item.setBranch(cols.get(4).text().trim());
-            try {
-                item.setExpirationDate(fmt.parseLocalDate(cols.get(5).text().trim()));
-            } catch (IllegalArgumentException e) {
-                // Ignore
+            if (colmap.containsKey("title")) {
+                Element col = cols.get(colmap.get("title"));
+                item.setTitle(col.text().trim());
+                if (col.select("a").size() > 0) {
+                    Map<String, String> params =
+                            getQueryParamsFirst(col.select("a").first().absUrl("href"));
+                    item.setId(params.get("id"));
+                }
+            }
+            if (colmap.containsKey("author")) {
+                item.setAuthor(cols.get(colmap.get("author")).text().trim());
+            }
+            if (colmap.containsKey("format")) {
+                item.setFormat(cols.get(colmap.get("format")).text().trim());
+            }
+            if (colmap.containsKey("branch")) {
+                item.setBranch(cols.get(colmap.get("branch")).text().trim());
+            }
+            if (colmap.containsKey("expiration")) {
+                try {
+                    Element col = cols.get(colmap.get("expiration"));
+                    String value = col.text().replace("Aktuelle Frist: ", "").trim();
+                    item.setExpirationDate(fmt.parseLocalDate(value));
+                } catch (IllegalArgumentException e) {
+                    // Ignore
+                }
             }
             item.setStatus("Bereitgestellt");
             res.add(item);
@@ -807,7 +849,7 @@ public class OpenAccountScraper extends OpenSearch {
         }
     }
 
-    private void parse_lent(AccountData data, Document doc, Account account) {
+    void parse_lent(AccountData data, Document doc, Account account) {
         List<LentItem> lent = new ArrayList<>();
         data.setLent(lent);
         Element table = doc.select("[id$=tpnlLoans_ucLoansView_grdViewLoans]").first();
