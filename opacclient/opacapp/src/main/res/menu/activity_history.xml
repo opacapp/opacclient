@@ -37,18 +37,18 @@
     <item
         android:id="@+id/action_export_to_storage"
         app:showAsAction="never"
-        android:title="@string/export_starred_to_storage">
+        android:title="@string/export_history_to_storage">
     </item>
     <item
         android:id="@+id/action_import_from_storage"
         app:showAsAction="never"
-        android:title="@string/import_starred_from_storage">
+        android:title="@string/import_history_from_storage">
     </item>
     <item
         android:id="@+id/action_export"
         android:icon="@drawable/ic_share_toolbar_24dp"
         app:showAsAction="never"
-        android:title="@string/share_starred">
+        android:title="@string/share_history">
     </item>
     <item
         android:id="@+id/action_remove_all"
