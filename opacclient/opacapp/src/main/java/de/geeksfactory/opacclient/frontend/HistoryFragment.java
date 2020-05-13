@@ -554,7 +554,7 @@ public class HistoryFragment extends Fragment implements
             appendColumn(text, item.getHomeBranch());
             appendColumn(text, fmt.print(item.getFirstDate()));
             appendColumn(text, fmt.print(item.getLastDate()));
-            appendColumn(text, fmt.print(item.getProlongCount()));
+            appendColumn(text, Integer.toString(item.getProlongCount()));
 
             text.append("\n");
         }
