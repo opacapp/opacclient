@@ -852,11 +852,12 @@ public class OpenSearch extends OkHttpBaseApi implements OpacApi {
                 String scr = scripttag.html();
                 if (scr.contains("LoadCatalogueViewDependantCataloguesAsync")) {
                     Pattern portalIdPattern = Pattern.compile(
-                            ".*LoadCatalogueViewDependantCataloguesAsync\\([^,]*,[^,]*," +
-                                    "[^,]*,[^,]*,[^,]*,[^0-9,]*([0-9]+)[^0-9,]*,.*\\).*");
+                            ".*LoadCatalogueViewDependantCataloguesAsync\\('([^,]*)',[^,]*,[^,]*," +
+                                    "[^,]*,[^,]*,[^0-9,]*([0-9]+)[^0-9,]*,.*\\).*");
                     Matcher portalIdMatcher = portalIdPattern.matcher(scr);
                     if (portalIdMatcher.find()) {
-                        portalId = Integer.parseInt(portalIdMatcher.group(1));
+                        url = getAbsoluteUrl(opac_url, portalIdMatcher.group(1));
+                        portalId = Integer.parseInt(portalIdMatcher.group(2));
                     }
                 }
             }
@@ -883,6 +884,17 @@ public class OpenSearch extends OkHttpBaseApi implements OpacApi {
                 e.printStackTrace();
             }
         }
+        // additional volumes directly in HTMl without AJAX call (e.g. Bielefeld)
+        Elements links = doc.select("a[id*=_lstVolumes_TitleHyperLink_]");
+        for (Element link : links) {
+            Map<String, String> params = getQueryParamsFirst(link.attr("href"));
+            String title = link.text();
+            item.addVolume(new Volume(
+                    params.get("id"),
+                    title
+            ));
+        }
+
         return item;
     }
 

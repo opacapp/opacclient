@@ -145,15 +145,17 @@ open class Arena : OkHttpBaseApi() {
     }
 
     internal fun getAjaxUrls(doc: Document): Map<String, String> {
-        val regex = Regex(Regex.escape(
-                "<script type=\"text/javascript\">Wicket.Event.add(window,\"domready\",function(b){var a=wicketAjaxGet(\"")
-                + "([^\"]+)"
-                + Regex.escape("\",function(){}.bind(this),function(){}.bind(this),function(){return Wicket.\$(\"")
-                + "([^\"]+)"
-                + Regex.escape("\")!=null}.bind(this))});</script>"))
-        return regex.findAll(doc.html()).associate { match ->
-            Pair(match.groups[2]!!.value, match.groups[1]!!.value)
+        val scripts = doc.select("script").map { it.html() }
+        val regex = Regex("wicketAjaxGet\\(['\"]([^\"']+)[\"'](?:.|[\\r\\n])*Wicket\\.\\\$\\([\"']([^\"']+)[\"']\\)\\s*!=\\s*null;?\\}\\.bind\\(this\\)\\)")
+
+        val map = HashMap<String, String>()
+        scripts.forEach { script ->
+            regex.findAll(script).forEach { match ->
+                val url = match.groups[1]!!.value.replace("\\x3d", "=").replace("\\x26", "&")
+                map[match.groups[2]!!.value] = url
+            }
         }
+        return map
     }
 
     override fun filterResults(filter: Filter, option: Filter.Option): SearchRequestResult {
@@ -409,7 +411,8 @@ open class Arena : OkHttpBaseApi() {
     }
 
     private fun getUrl(id: String) =
-            "$opacUrl/results?p_p_id=searchResult_WAR_arenaportlets&p_r_p_687834046_search_item_id=$id"
+            "$opacUrl/results?p_p_id=searchResult_WAR_arenaportlets" +
+                    "&p_r_p_arena_urn%3Aarena_search_item_id=$id"
 
     override fun getSupportFlags(): Int {
         return OpacApi.SUPPORT_FLAG_ENDLESS_SCROLLING

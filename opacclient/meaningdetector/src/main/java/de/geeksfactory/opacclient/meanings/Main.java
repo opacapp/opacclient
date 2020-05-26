@@ -37,7 +37,16 @@ public class Main {
 
     public static void main(String[] args) throws IOException, JSONException {
         Security.addProvider(new BouncyCastleProvider());
-        Collection<String[]> libraries = libraries();
+        Collection<String[]> libraries;
+        if (args.length > 0) {
+            libraries = new ArrayList<>();
+            for (String arg : args) {
+                libraries.add(new String[]{arg});
+            }
+        } else {
+            libraries = libraries();
+        }
+
         Set<String> ignored = new MeaningDetectorImpl(null).getIgnoredFields();
         Scanner in = new Scanner(System.in);
         final ExecutorService service = Executors.newFixedThreadPool(25);

@@ -97,7 +97,7 @@ open class NetBiblio : OkHttpBaseApi() {
                     textBoxes.mapIndexed { i, field ->
                         TextSearchField().apply {
                             id = field["name"]
-                            displayName = if (i == 0) title else ""
+                            displayName = title
                             hint = (field.previousSibling() as TextNode).text.trim()
                             isHalfWidth = i == 1
                         }
@@ -283,33 +283,48 @@ open class NetBiblio : OkHttpBaseApi() {
             val df = DateTimeFormat.forPattern("dd.MM.yyyy")
             copies = doc.select(".wo-grid-table > tbody > tr").map { row ->
                 Copy().apply {
+                    var lastType: String? = null
                     row.select("td").zip(copyCols).forEach { (col, header) ->
                         val headers = header.split(" / ").map { it.trim() }
                         val data = col.html().split("<br>").map { it.html.text.trim() }
-                        headers.zip(data).forEach { (type, data) ->
+                        for ((type, content) in headers.zip(data)) {
+                            println("$type $content $lastType")
+                            if (content.isEmpty()) {
+                                if (type.isNotEmpty()) lastType = type
+                                continue
+                            }
                             when (type) {
                                 "" -> {
+                                    when (lastType) {
+                                        "Aktueller Standort", "Standorte" -> {
+                                            // Bern: multiple location columns
+                                            if (location != null) {
+                                                location += " · $content"
+                                            }
+                                        }
+                                    }
                                 }
-                                "Bibliothek" -> branch = data
-                                "Aktueller Standort" -> location = data
-                                "Signatur", "Call number", "Cote" -> shelfmark = data
-                                "Verfügbarkeit", "Disposability", "Disponsibilité" -> status = data
+                                "Bibliothek" -> branch = content
+                                "Aktueller Standort", "Standorte" -> location = content
+                                "Signatur", "Call number", "Cote" -> shelfmark = content
+                                "Verfügbarkeit", "Disposability", "Disponsibilité" -> status = content
                                 "Fälligkeitsdatum", "Due date", "Date d'échéance" ->
-                                    returnDate = if (data.isEmpty()) {
+                                    returnDate = if (content.isEmpty()) {
                                         null
                                     } else {
-                                        df.parseLocalDate(data)
+                                        df.parseLocalDate(content)
                                     }
-                                "Anz. Res." -> reservations = data
-                                "Reservieren", "Reserve", "Réserver" -> {
+                                "Anz. Res." -> reservations = content
+                                "Reservieren", "Reserve", "Réserver", "Bestellen", "Commander" -> {
                                     val button = col.select("a").first()
                                     if (button != null) {
                                         resInfo = BaseApi.getQueryParamsFirst(button.attr("href"))["selectedItems"]
                                         isReservable = true
                                     }
                                 }
-                                "Exemplarnr", "Item number", "No d'exemplaire" -> barcode = data
+                                "Exemplarnr", "Item number", "No d'exemplaire" -> barcode = content
                             }
+                            if (type.isNotEmpty()) lastType = type
                         }
                     }
                 }
@@ -323,10 +338,15 @@ open class NetBiblio : OkHttpBaseApi() {
 
     var reservationItemId: String? = null
     var reservationAdressId: String? = null
+    var reservationKind: String? = null
 
     override fun reservation(item: DetailedItem, account: Account, useraction: Int,
                              selection: String?): OpacApi.ReservationResult? {
         if (useraction == 0 && selection == null) {
+            reservationAdressId = null
+            reservationItemId = null
+            reservationKind = null
+
             // step 1: select item
             val reservableCopies = item.copies.filter { it.resInfo != null }
             when (reservableCopies.size) {
@@ -354,14 +374,17 @@ open class NetBiblio : OkHttpBaseApi() {
             }
             val warning = doc.select("label:has(.wo-reservationkind[checked])").text
             reservationAdressId = doc.select("input[name=AddessId]").first().`val`()
+            reservationKind = doc.select(".wo-reservationkind[checked]").`val`()
+            if (reservationKind!!.isEmpty()) reservationKind = "Reservation"
             return OpacApi.ReservationResult(OpacApi.MultiStepResult.Status.CONFIRMATION_NEEDED).apply {
                 details = listOf(arrayOf(warning))
             }
         } else if (useraction == OpacApi.MultiStepResult.ACTION_CONFIRMATION) {
+
             val body = FormBody.Builder()
                     .add("ItemID", reservationItemId!!)
-                    .add("ReservationKind", "Reservation") // TODO: maybe don't hardcode this
-                    .add("AddessId" /* sic! */, reservationAdressId)
+                    .add("ReservationKind", reservationKind!!)
+                    .add("AddessId" /* sic! */, reservationAdressId!!)
                     .build()
 
             val doc = httpPost("$opacUrl/account/makeitemreservation", body, ENCODING).html
