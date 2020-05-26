@@ -411,7 +411,8 @@ open class Arena : OkHttpBaseApi() {
     }
 
     private fun getUrl(id: String) =
-            "$opacUrl/results?p_p_id=searchResult_WAR_arenaportlet&p_r_p_arena_urn%3Aarena_search_item_id=$id"
+            "$opacUrl/results?p_p_id=searchResult_WAR_arenaportlets" +
+                    "&p_r_p_arena_urn%3Aarena_search_item_id=$id"
 
     override fun getSupportFlags(): Int {
         return OpacApi.SUPPORT_FLAG_ENDLESS_SCROLLING
