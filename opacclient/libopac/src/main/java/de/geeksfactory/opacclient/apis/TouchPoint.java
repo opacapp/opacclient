@@ -893,6 +893,10 @@ public class TouchPoint extends OkHttpBaseApi implements OpacApi {
         if (doc.select(".message-error").size() > 0) {
             return new ReservationResult(MultiStepResult.Status.ERROR, doc
                     .select(".message-error").first().text());
+        } else if (doc.select(".message-confirm").size() > 0) {
+            // if no further inputs are needed, reservation is already finished here
+            // seen in HS Augsburg
+            return new ReservationResult(MultiStepResult.Status.OK);
         }
         FormBody.Builder body = new FormBody.Builder();
         body.add("methodToCall", "requestItem");
