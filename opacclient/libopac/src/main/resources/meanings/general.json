@@ -148,6 +148,7 @@
         "Name/Autor",
         "Autor/Hrsg.",
         "Verfasser (nur 1)",
+        "Autor/-in",
         "Autor/in",
         "Verfasser/-in",
         "Verfasser, Hrsg.",
@@ -212,7 +213,8 @@
         "Suchwort",
         "[ALW]",
         "Suche über alle Felder",
-        "Bibliothekskatalog"
+        "Bibliothekskatalog",
+        "Schlüsselwörter"
     ],
     "AVAILABLE": [
         "verfügbar",

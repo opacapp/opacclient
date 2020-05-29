@@ -40,7 +40,7 @@ open class Arena : OkHttpBaseApi() {
                 .map { container ->
             TextSearchField().apply {
                 id = container.select("input").first()["name"]
-                displayName = container.select("span").first().text()
+                displayName = container.select("span, label").first().text()
             }
         }
 
