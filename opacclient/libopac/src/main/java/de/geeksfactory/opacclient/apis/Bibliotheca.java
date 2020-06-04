@@ -1199,6 +1199,9 @@ public class Bibliotheca extends OkHttpBaseApi {
             } else if (text.matches("Ausweis g.ltig bis:.*")) {
                 text = text.replaceAll("Ausweis g.ltig bis:[^A-Za-z0-9]+", "");
                 res.setValidUntil(text);
+            } else if (text.matches(".*Ausweis wieder verl.ngern.*")) {
+                // account not valid anymore, show warning
+                res.setWarning(text);
             }
         }
 
