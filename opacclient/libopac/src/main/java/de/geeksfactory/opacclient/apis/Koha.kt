@@ -70,7 +70,8 @@ open class Koha : OkHttpBaseApi() {
     )
 
     protected open fun parseSearch(doc: Document, page: Int): SearchRequestResult {
-        if (doc.select("#noresultsfound").first() != null) {
+        if (doc.select("#noresultsfound").first() != null
+                || doc.select(".span12:contains(Keine Treffer)").first() != null) {
             return SearchRequestResult(emptyList(), 0, page)
         } else if (doc.select("select[name=idx]").size > 1) {
             // We're back on the search page, no valid (likely empty) query
