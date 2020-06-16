@@ -33,6 +33,7 @@ import org.jsoup.select.Elements;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
+import java.nio.charset.Charset;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -109,12 +110,14 @@ public class IOpac extends OkHttpBaseApi implements OpacApi {
     protected int results_total;
 
     protected boolean newShareLinks;
+    private Charset iso88591;
 
     @Override
     public void init(Library lib, HttpClientFactory httpClientFactory) {
         super.init(lib, httpClientFactory);
 
         this.data = lib.getData();
+        iso88591 = Charset.forName("ISO-8859-1");
 
         try {
             this.opac_url = data.getString("baseurl");
@@ -144,7 +147,7 @@ public class IOpac extends OkHttpBaseApi implements OpacApi {
             start();
         }
 
-        FormBody.Builder params = new FormBody.Builder();
+        FormBody.Builder params = new FormBody.Builder(iso88591);
 
         int index = 0;
         start();
@@ -562,7 +565,7 @@ public class IOpac extends OkHttpBaseApi implements OpacApi {
         }
 
         Element form = doc.select("form[name=form1]").first();
-        FormBody.Builder params = new FormBody.Builder();
+        FormBody.Builder params = new FormBody.Builder(iso88591);
         params.add("sleKndNr", account.getName());
         params.add("slePw", account.getPassword());
         params.add("pshLogin", "Reservieren");
@@ -762,7 +765,7 @@ public class IOpac extends OkHttpBaseApi implements OpacApi {
     }
 
     private Document getAccountPage(Account account) throws IOException {
-        FormBody.Builder params = new FormBody.Builder();
+        FormBody.Builder params = new FormBody.Builder(iso88591);
         params.add("sleKndNr", account.getName());
         params.add("slePw", account.getPassword());
         params.add("pshLogin", "Login");
