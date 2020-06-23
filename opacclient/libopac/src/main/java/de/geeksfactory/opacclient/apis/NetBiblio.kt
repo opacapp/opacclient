@@ -294,7 +294,7 @@ open class NetBiblio : OkHttpBaseApi() {
                                 continue
                             }
                             when (type) {
-                                "" -> {
+                                "", "Stockwerk" -> {
                                     when (lastType) {
                                         "Aktueller Standort", "Standorte" -> {
                                             // Bern: multiple location columns
