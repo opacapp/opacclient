@@ -296,7 +296,7 @@ open class NetBiblio : OkHttpBaseApi() {
                             when (type) {
                                 "", "Stockwerk" -> {
                                     when (lastType) {
-                                        "Aktueller Standort", "Standorte" -> {
+                                        "Aktueller Standort", "Standorte", "Standort" -> {
                                             // Bern: multiple location columns
                                             if (location != null) {
                                                 location += " · $content"
@@ -305,7 +305,7 @@ open class NetBiblio : OkHttpBaseApi() {
                                     }
                                 }
                                 "Bibliothek" -> branch = content
-                                "Aktueller Standort", "Standorte" -> location = content
+                                "Aktueller Standort", "Standorte", "Standort" -> location = content
                                 "Signatur", "Call number", "Cote" -> shelfmark = content
                                 "Verfügbarkeit", "Disposability", "Disponsibilité" -> status = content
                                 "Fälligkeitsdatum", "Due date", "Date d'échéance" ->
