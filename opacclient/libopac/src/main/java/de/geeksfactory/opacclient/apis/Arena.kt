@@ -112,7 +112,7 @@ open class Arena : OkHttpBaseApi() {
         return SearchRequestResult(results, count, page)
     }
 
-    protected fun parseSearchResult(record: Element, coverAjaxUrls: Map<String, String>):
+    protected fun parseSearchResult(record: Element, ajaxUrls: Map<String, String>):
             SearchResult {
         return SearchResult().apply {
             val title = record.select(".arena-record-title").text
@@ -121,8 +121,28 @@ open class Arena : OkHttpBaseApi() {
 
             innerhtml = "<b>$title</b><br>$author ${year ?: ""}"
             id = record.select(".arena-record-id").first().text
-            cover = getCover(record, coverAjaxUrls)
+            cover = getCover(record, ajaxUrls)
+            status = getSearchResultStatus(record, ajaxUrls)
         }
+    }
+
+    private fun getSearchResultStatus(record: Element, ajaxUrls: Map<String, String>? = null): SearchResult.Status {
+        val statusHolder = record.select(".arena-record-right").first()
+        if (statusHolder != null) {
+            val id = statusHolder.parent()["id"]
+            if (ajaxUrls != null && ajaxUrls.containsKey(id)) {
+                // get status via ajax
+                val xml = httpGet(ajaxUrls[id], ENCODING).html
+                val html = xml.select("component").first().text.html
+                val status = html.select(".arena-record-availability > a > span").first()?.classNames()
+                if (status != null && status.contains("arena-notavailable")) {
+                    return SearchResult.Status.RED
+                } else if (status != null && status.contains("arena-available")) {
+                    return SearchResult.Status.GREEN
+                }
+            }
+        }
+        return SearchResult.Status.UNKNOWN
     }
 
     internal fun getCover(record: Element, coverAjaxUrls: Map<String, String>? = null): String? {
