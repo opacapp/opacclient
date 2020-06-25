@@ -248,8 +248,25 @@ open class Arena : OkHttpBaseApi() {
     override fun reservation(item: DetailedItem, account: Account, useraction: Int, selection: String?): OpacApi.ReservationResult {
         login(account)
         val details = httpGet(getUrl(item.id), ENCODING).html
-        val url = details.select(" a[href*=reservationButton]").first()?.attr("href")
-        val doc = httpGet(url, ENCODING).html
+        val resButton = details.select(" a[href*=reservationButton]").first()
+                ?: return OpacApi.ReservationResult(OpacApi.MultiStepResult.Status.ERROR,
+                        stringProvider.getString(StringProvider.INTERNAL_ERROR))
+
+        var doc: Document? = null
+        if (resButton.hasAttr("onclick")) {
+            val js = resButton.attr("onclick")
+            // AJAX reservation form: fetch HTML which is embedded in XML
+            val url = Regex("wicketAjaxGet\\('([^']+)',").find(js)?.groups?.get(1)?.value
+            if (url != null) {
+                val xmlDoc = httpGet(url, ENCODING).html
+                doc = xmlDoc.select("component").first().text.html
+            }
+        }
+        if (doc == null) {
+            // fallback: non-JS form (currently does not work in Ludwigsburg, 25.06.2020)
+            val url = resButton.attr("href")
+            doc = httpGet(url, ENCODING).html
+        }
         val form = doc.select("form[action*=reservationForm]").first()
         if (selection == null) {
             return OpacApi.ReservationResult(OpacApi.MultiStepResult.Status.SELECTION_NEEDED).apply {
