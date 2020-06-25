@@ -228,7 +228,14 @@ open class Arena : OkHttpBaseApi() {
             }
 
             id = doc.select(".arena-record-id").first().text
-            cover = doc.select(".arena-detail-cover img").first()?.absUrl("href")
+            val coverTag = doc.select(".arena-detail-cover img").first()
+            if (coverTag != null) {
+                cover = if (coverTag.hasAttr("href")) {
+                    coverTag.absUrl("href")
+                } else {
+                    coverTag.absUrl("src")
+                }
+            }
             copies = holdingsDoc?.select(".arena-row")?.map { row ->
                 Copy().apply {
                     department = row.select(".arena-holding-department .arena-value").text
