@@ -28,7 +28,7 @@ class JsonFilesTask extends DefaultTask {
         GFileUtils.mkdirs(new File(bibsDir))
         GFileUtils.cleanDirectory(new File(bibsDir))
         for (int i = 0; i < data.length(); i++) {
-            JSONObject library = data.get(i);
+            JSONObject library = data.get(i)
             String id = library.getString("_id")
             library.remove("_id")
             File file = new File(bibsDir, id + ".json")
