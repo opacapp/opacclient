@@ -13,10 +13,12 @@ import org.jsoup.nodes.TextNode;
 import org.jsoup.select.Elements;
 
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -144,6 +146,30 @@ public class VuFind extends OkHttpBaseApi {
         }
     }
 
+    private String getHiddenFilters(boolean string) {
+        // SmartBib multilibrary catalog with VuFind 5: needs to pass library name to every URL
+        String library = data.optString("library");
+        boolean hiddenfilters = data.optBoolean("hiddenfilters");
+        if (library != null && hiddenfilters) {
+            if (string) {
+                try {
+                    return URLEncoder.encode("hiddenFilters[]", "UTF-8") + "=" +
+                            URLEncoder.encode("collection:" + library, "UTF-8");
+                } catch (UnsupportedEncodingException e) {
+                    return "";
+                }
+            } else {
+                return "collection:" + library;
+            }
+        } else {
+            if (string) {
+                return "";
+            } else {
+                return null;
+            }
+        }
+    }
+
     protected HttpUrl.Builder buildSearchParams(List<SearchQuery> query, HttpUrl.Builder builder) {
         builder.addQueryParameter("sort", "relevance");
         builder.addQueryParameter("join", "AND");
@@ -174,6 +200,11 @@ public class VuFind extends OkHttpBaseApi {
                 builder.addQueryParameter("bool0[]", "AND");
                 builder.addQueryParameter("lookfor0[]", singleQuery.getValue());
             }
+        }
+
+        String hiddenfilters = getHiddenFilters(false);
+        if (hiddenfilters != null) {
+            builder.addQueryParameter("hiddenFilters[]", hiddenfilters);
         }
 
         return builder;
@@ -586,14 +617,16 @@ public class VuFind extends OkHttpBaseApi {
     public void start() throws IOException {
         super.start();
         FormBody body = new FormBody.Builder().add("mylang", languageCode).build();
-        httpPost(opac_url + "/Search/Advanced", body, getDefaultEncoding());
+        httpPost(opac_url + "/Search/Advanced?" + getHiddenFilters(true), body,
+                getDefaultEncoding());
     }
 
     @Override
     public List<SearchField> parseSearchFields()
             throws IOException, OpacErrorException, JSONException {
         start();
-        String html = httpGet(opac_url + "/Search/Advanced?mylang = " + languageCode,
+        String html = httpGet(opac_url + "/Search/Advanced?mylang=" + languageCode + "&" +
+                        getHiddenFilters(true),
                 getDefaultEncoding());
         Document doc = Jsoup.parse(html);
 
@@ -691,9 +724,9 @@ public class VuFind extends OkHttpBaseApi {
     public String getShareUrl(String id, String title) {
         if (id.contains(":")) {
             String[] parts = id.split(":");
-            return opac_url + "/" + parts[0] + "Record/" + parts[1];
+            return opac_url + "/" + parts[0] + "Record/" + parts[1] + "?" + getHiddenFilters(true);
         } else {
-            return opac_url + "/Record/" + id;
+            return opac_url + "/Record/" + id + "?" + getHiddenFilters(true);
         }
     }
 
