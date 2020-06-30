@@ -1,17 +1,24 @@
 language: android
 jdk: oraclejdk8
 sudo: false
+
 android:
-    components:
-        - tools
-        - build-tools-28.0.3
-        - android-28
-        - extra-android-m2repository
-        - platform-tools
+  components:
+    - tools
+    - platform-tools
+    - build-tools-29.0.3
+    - android-28
+    - extra-android-m2repository
+
+  licenses:
+    - 'android-sdk-license-.+'
+    - 'android-sdk-preview-license-.+'
+
 script:
-    - cd opacclient
-    - ./gradlew lintGooglePlayServicesDebug test jacocoRootReport coveralls
-    - cat opacapp/build/reports/lint-results-googlePlayServicesDebug.xml
+  - cd opacclient
+  - ./gradlew lintGooglePlayServicesDebug test jacocoRootReport coveralls
+  - cat opacapp/build/reports/lint-results-googlePlayServicesDebug.xml
+
 cache:
-    directories:
-        - $HOME/.gradle
+  directories:
+    - $HOME/.gradle
