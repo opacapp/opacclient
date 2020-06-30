@@ -31,7 +31,7 @@ import android.content.res.Configuration;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
-import android.preference.PreferenceManager;
+import androidx.preference.PreferenceManager;
 import android.transition.TransitionInflater;
 import android.util.DisplayMetrics;
 import android.view.Gravity;
