@@ -68,7 +68,7 @@ import de.geeksfactory.opacclient.utils.ErrorReporter;
 import de.geeksfactory.opacclient.webservice.LibraryConfigUpdateService;
 import de.geeksfactory.opacclient.webservice.WebService;
 import de.geeksfactory.opacclient.webservice.WebServiceManager;
-import io.sentry.Sentry;
+import io.sentry.core.Sentry;
 
 public class LibraryListActivity extends AppCompatActivity
         implements ActivityCompat.OnRequestPermissionsResultCallback {
@@ -811,7 +811,7 @@ public class LibraryListActivity extends AppCompatActivity
                             "updated config for " + String.valueOf(count) + " libraries");
                     ((OpacClient) getApplication()).resetCache();
                     if (!BuildConfig.DEBUG) {
-                        Sentry.getContext().addExtra(OpacClient.SENTRY_DATA_VERSION,
+                        Sentry.setExtra(OpacClient.SENTRY_DATA_VERSION,
                                 prefs.getLastLibraryConfigUpdate().toString());
                     }
                 } catch (IOException | JSONException ignore) {
