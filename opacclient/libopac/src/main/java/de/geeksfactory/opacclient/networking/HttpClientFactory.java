@@ -392,7 +392,7 @@ public class HttpClientFactory {
                     final HttpHost target = clientContext.getTargetHost();
                     Asserts.notNull(target, "Target host");
                     final URI requestURI = new URI(request.getRequestLine().getUri());
-                    final URI absoluteRequestURI = URIUtils.rewriteURI(requestURI, target, false);
+                    final URI absoluteRequestURI = URIUtils.rewriteURI(requestURI, target);
                     uri = URIUtils.resolve(absoluteRequestURI, uri);
                 }
             } catch (final URISyntaxException ex) {

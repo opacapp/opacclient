@@ -184,9 +184,9 @@ public class AccountEditActivity extends AppCompatActivity {
         }
 
         if (account.getPassword() == null || account.getPassword().equals("")) {
-            ((TextInputLayout) findViewById(R.id.tilPassword)).setPasswordVisibilityToggleEnabled(true);
+            ((TextInputLayout) findViewById(R.id.tilPassword)).setEndIconMode(TextInputLayout.END_ICON_PASSWORD_TOGGLE);
         } else {
-            ((TextInputLayout) findViewById(R.id.tilPassword)).setPasswordVisibilityToggleEnabled(false);
+            ((TextInputLayout) findViewById(R.id.tilPassword)).setEndIconMode(TextInputLayout.END_ICON_NONE);
         }
 
     }

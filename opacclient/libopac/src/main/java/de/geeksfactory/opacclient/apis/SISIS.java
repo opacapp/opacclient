@@ -18,6 +18,7 @@
  */
 package de.geeksfactory.opacclient.apis;
 
+import org.apache.commons.codec.Charsets;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.utils.URLEncodedUtils;
@@ -435,7 +436,7 @@ public class SISIS extends OkHttpBaseApi implements OpacApi {
                 try {
                     List<NameValuePair> anyurl = URLEncodedUtils.parse(
                             new URI(node.attr("href").replace(" ", "%20")
-                                        .replace("&amp;", "&")), ENCODING);
+                                        .replace("&amp;", "&")), Charsets.UTF_8);
                     for (NameValuePair nv : anyurl) {
                         if (nv.getName().equals("identifier")) {
                             identifier = nv.getValue();
@@ -557,7 +558,7 @@ public class SISIS extends OkHttpBaseApi implements OpacApi {
                 try {
                     description = new StringBuilder();
                     z3988data = URLEncodedUtils.parse(new URI("http://dummy/?"
-                            + tr.select("span.Z3988").attr("title")), "UTF-8");
+                            + tr.select("span.Z3988").attr("title")), Charsets.UTF_8);
                     for (NameValuePair nv : z3988data) {
                         if (nv.getValue() != null) {
                             if (!nv.getValue().trim().equals("")) {
@@ -1069,7 +1070,7 @@ public class SISIS extends OkHttpBaseApi implements OpacApi {
             int elcount = links.size();
             for (int eli = 0; eli < elcount; eli++) {
                 List<NameValuePair> anyurl = URLEncodedUtils.parse(new URI(
-                        links.get(eli).attr("href")), "UTF-8");
+                        links.get(eli).attr("href")), Charsets.UTF_8);
                 for (NameValuePair nv : anyurl) {
                     if (nv.getName().equals("methodToCall")
                             && nv.getValue().equals("parentSearch")) {

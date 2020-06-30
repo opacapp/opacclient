@@ -126,7 +126,7 @@ public class LentAdapter extends AccountAdapter<LentItem, LentAdapter.ViewHolder
                     }
                 });
                 ivProlong.setVisibility(View.VISIBLE);
-                ViewCompat.setAlpha(ivProlong, item.isRenewable() ? 1f : 0.4f);
+                ivProlong.setAlpha(item.isRenewable() ? 1f : 0.4f);
                 ivDownload.setVisibility(View.GONE);
             } else if (item.getDownloadData() != null &&
                     api != null && api instanceof EbookServiceApi) {

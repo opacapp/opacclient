@@ -21,6 +21,7 @@
  */
 package de.geeksfactory.opacclient.apis;
 
+import org.apache.commons.codec.Charsets;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.utils.URLEncodedUtils;
 import org.joda.time.DateTime;
@@ -526,7 +527,7 @@ public class Bibliotheca extends OkHttpBaseApi {
                         if (tr.child(1).select("a").size() > 0) {
                             Element link = tr.child(1).select("a").first();
                             List<NameValuePair> query = URLEncodedUtils.parse(
-                                    new URI(link.absUrl("href")), "UTF-8");
+                                    new URI(link.absUrl("href")), Charsets.UTF_8);
                             for (NameValuePair q : query) {
                                 if (q.getName().equals("MedienNr")) {
                                     result.setCollectionId(q.getValue());
