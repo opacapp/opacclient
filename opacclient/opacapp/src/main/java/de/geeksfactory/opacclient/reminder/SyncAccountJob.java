@@ -21,7 +21,7 @@ package de.geeksfactory.opacclient.reminder;
 import android.app.Service;
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.preference.PreferenceManager;
+import androidx.preference.PreferenceManager;
 import android.util.Log;
 
 import org.joda.time.DateTime;

@@ -20,7 +20,7 @@ package de.geeksfactory.opacclient.storage;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.preference.PreferenceManager;
+import androidx.preference.PreferenceManager;
 
 import org.joda.time.DateTime;
 
