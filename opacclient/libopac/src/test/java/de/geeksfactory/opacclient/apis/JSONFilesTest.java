@@ -17,9 +17,10 @@ import de.geeksfactory.opacclient.utils.JsonKeyIterator;
 
 import static org.hamcrest.CoreMatchers.anyOf;
 import static org.hamcrest.CoreMatchers.instanceOf;
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
-import static org.hamcrest.Matchers.isIn;
-import static org.junit.Assert.assertThat;
+import static org.hamcrest.Matchers.in;
+import static org.hamcrest.Matchers.is;
 
 /**
  * Tests validity of JSON files shipped with libopac
@@ -75,7 +76,7 @@ public class JSONFilesTest extends BaseHtmlTest {
             String key = (String) iterator.next();
             if (!bibliothecaHeadersLent.isNull(key)) {
                 String value = bibliothecaHeadersLent.getString(key);
-                assertThat(value, anyOf(isIn(keys_both), isIn(keys_lent)));
+                assertThat(value, anyOf(is(in(keys_both)), is(in(keys_lent))));
             }
         }
     }
@@ -87,7 +88,7 @@ public class JSONFilesTest extends BaseHtmlTest {
             String key = (String) iterator.next();
             if (!bibliothecaHeadersReservations.isNull(key)) {
                 String value = bibliothecaHeadersReservations.getString(key);
-                assertThat(value, anyOf(isIn(keys_both), isIn(keys_reservations)));
+                assertThat(value, anyOf(is(in(keys_both)), is(in(keys_reservations))));
             }
         }
     }
@@ -99,7 +100,7 @@ public class JSONFilesTest extends BaseHtmlTest {
             String key = (String) iterator.next();
             if (!biber1992HeadersLent.isNull(key)) {
                 String value = biber1992HeadersLent.getString(key);
-                assertThat(value, anyOf(isIn(keys_both), isIn(keys_lent),
+                assertThat(value, anyOf(is(in(keys_both)), is(in(keys_lent)),
                         equalTo("author+title"), equalTo("renewals_number")));
             }
         }
@@ -112,7 +113,7 @@ public class JSONFilesTest extends BaseHtmlTest {
             String key = (String) iterator.next();
             if (!biber1992HeadersReservations.isNull(key)) {
                 String value = biber1992HeadersReservations.getString(key);
-                assertThat(value, anyOf(isIn(keys_both), isIn(keys_reservations),
+                assertThat(value, anyOf(is(in(keys_both)), is(in(keys_reservations)),
                         equalTo("author+title"), equalTo("renewals_number")));
             }
         }
@@ -133,17 +134,17 @@ public class JSONFilesTest extends BaseHtmlTest {
             boolean arrayLayout = firstValue instanceof JSONArray;
 
             if (arrayLayout) {
-                assertThat(firstKey, isIn(keys_meaning));
+                assertThat(firstKey, is(in(keys_meaning)));
                 while (iter.hasNext()) {
                     String key = iter.next();
-                    assertThat(key, isIn(keys_meaning));
+                    assertThat(key, is(in(keys_meaning)));
                 }
             } else {
-                assertThat((String) firstValue, isIn(keys_meaning));
+                assertThat((String) firstValue, is(in(keys_meaning)));
                 while (iter.hasNext()) {
                     String key = iter.next();
                     String val = json.getString(key);
-                    assertThat(val, isIn(keys_meaning));
+                    assertThat(val, is(in(keys_meaning)));
                 }
             }
         }
