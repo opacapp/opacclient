@@ -21,6 +21,7 @@
  */
 package de.geeksfactory.opacclient.apis;
 
+import org.apache.commons.codec.Charsets;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.utils.URLEncodedUtils;
 import org.apache.http.message.BasicNameValuePair;
@@ -427,7 +428,7 @@ public class TouchPoint extends OkHttpBaseApi implements OpacApi {
                 try {
                     List<NameValuePair> anyurl = URLEncodedUtils.parse(
                             new URI(node.attr("href").replace(" ", "%20")
-                                        .replace("&amp;", "&")), ENCODING);
+                                        .replace("&amp;", "&")), Charsets.UTF_8);
                     for (NameValuePair nv : anyurl) {
                         if (nv.getName().equals("identifier")) {
                             identifier = nv.getValue();
@@ -813,7 +814,7 @@ public class TouchPoint extends OkHttpBaseApi implements OpacApi {
             int elcount = links.size();
             for (int eli = 0; eli < elcount; eli++) {
                 List<NameValuePair> anyurl = URLEncodedUtils.parse(new URI(
-                        links.get(eli).attr("href")), "UTF-8");
+                        links.get(eli).attr("href")), Charsets.UTF_8);
                 for (NameValuePair nv : anyurl) {
                     if (nv.getName().equals("methodToCall")
                             && nv.getValue().equals("volumeSearch")) {

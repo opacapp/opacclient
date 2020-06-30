@@ -274,7 +274,7 @@ public abstract class OpacActivity extends AppCompatActivity
                     };
 
             // Set the drawer toggle as the DrawerListener
-            drawerLayout.setDrawerListener(new DrawerLayout.DrawerListener() {
+            drawerLayout.addDrawerListener(new DrawerLayout.DrawerListener() {
                 @Override
                 public void onDrawerSlide(View drawerView, float slideOffset) {
                     drawerToggle.onDrawerSlide(drawerView, slideOffset);

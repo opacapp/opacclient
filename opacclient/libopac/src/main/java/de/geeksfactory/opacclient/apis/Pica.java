@@ -21,6 +21,7 @@
  */
 package de.geeksfactory.opacclient.apis;
 
+import org.apache.commons.codec.Charsets;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.utils.URLEncodedUtils;
 import org.apache.http.message.BasicNameValuePair;
@@ -286,7 +287,7 @@ public abstract class Pica extends OkHttpBaseApi implements OpacApi {
                 haslink = true;
                 try {
                     List<NameValuePair> anyurl = URLEncodedUtils.parse(new URI(
-                            node.attr("href")), getDefaultEncoding());
+                            node.attr("href")), Charsets.UTF_8);
                     for (NameValuePair nv : anyurl) {
                         if (nv.getName().equals("identifier")) {
                             // identifier = nv.getValue();

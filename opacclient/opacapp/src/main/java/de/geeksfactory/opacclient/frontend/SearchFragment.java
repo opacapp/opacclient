@@ -2,6 +2,7 @@ package de.geeksfactory.opacclient.frontend;
 
 import android.app.Activity;
 import android.content.ActivityNotFoundException;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager.NameNotFoundException;
@@ -414,9 +415,9 @@ public class SearchFragment extends Fragment implements AccountSelectedListener 
         }
 
         SearchFieldDataSource dataSource = new JsonSearchFieldDataSource(app);
-        int versionCode = 0;
+        long versionCode = 0;
         try {
-            versionCode = getActivity().getPackageManager().getPackageInfo(getActivity().getPackageName(), 0).versionCode;
+            versionCode = getActivity().getPackageManager().getPackageInfo(getActivity().getPackageName(), 0).getLongVersionCode();
         } catch (NameNotFoundException e) {
         }
         String language = getActivity().getResources().getConfiguration().locale
@@ -512,10 +513,10 @@ public class SearchFragment extends Fragment implements AccountSelectedListener 
         if (fields == null) {
             SearchFieldDataSource dataSource = new JsonSearchFieldDataSource(
                     app);
-            int versionCode = 0;
+            long versionCode = 0;
             try {
                 versionCode = app.getPackageManager().getPackageInfo(
-                        app.getPackageName(), 0).versionCode;
+                        app.getPackageName(), 0).getLongVersionCode();
             } catch (NameNotFoundException e) {
                 // should not happen
                 e.printStackTrace();
@@ -709,12 +710,12 @@ public class SearchFragment extends Fragment implements AccountSelectedListener 
     }
 
     @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
+    public void onAttach(Context context) {
+        super.onAttach(context);
         try {
-            callback = (Callback) activity;
+            callback = (Callback) context;
         } catch (ClassCastException e) {
-            throw new ClassCastException(activity.toString()
+            throw new ClassCastException(context.toString()
                     + " must implement SearchFragment.Callback");
         }
     }

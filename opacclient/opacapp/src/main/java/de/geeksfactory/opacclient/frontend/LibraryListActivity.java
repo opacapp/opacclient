@@ -152,7 +152,7 @@ public class LibraryListActivity extends AppCompatActivity
             @Override
             public void onClick(View v) {
                 if (fragment instanceof LocatedLibraryListFragment) {
-                    MenuItemCompat.collapseActionView(searchItem);
+                    searchItem.collapseActionView();
                     showListCountries(true);
                     tvLocateString.setText(R.string.geolocate);
                     ivLocationIcon.setImageResource(R.drawable.ic_locate_24dp);
@@ -184,7 +184,7 @@ public class LibraryListActivity extends AppCompatActivity
         // Get the SearchView and set the searchable configuration
         SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
         searchItem = menu.findItem(R.id.action_search);
-        searchView = (SearchView) MenuItemCompat.getActionView(searchItem);
+        searchView = (SearchView) searchItem.getActionView();
         // Assumes current activity is the searchable activity
         searchView.setSearchableInfo(searchManager
                 .getSearchableInfo(getComponentName()));
