@@ -76,9 +76,8 @@ import de.geeksfactory.opacclient.utils.Utils;
 import de.geeksfactory.opacclient.webservice.LibraryConfigUpdateService;
 import de.geeksfactory.opacclient.webservice.UpdateHandler;
 import de.geeksfactory.opacclient.webservice.WebserviceReportHandler;
-import io.sentry.Sentry;
-import io.sentry.SentryUncaughtExceptionHandler;
-import io.sentry.android.AndroidSentryClientFactory;
+import io.sentry.android.core.SentryAndroid;
+import io.sentry.core.Sentry;
 
 public class OpacClient extends Application {
 
@@ -248,7 +247,7 @@ public class OpacClient extends Application {
         sp.edit().putLong(OpacClient.PREF_SELECTED_ACCOUNT, id).apply();
         resetCache();
         if (getLibrary() != null && !BuildConfig.DEBUG) {
-            Sentry.getContext().addTag(SENTRY_LIBRARY, getLibrary().getIdent());
+            Sentry.setTag(SENTRY_LIBRARY, getLibrary().getIdent());
         }
     }
 
@@ -375,18 +374,17 @@ public class OpacClient extends Application {
         sp = PreferenceManager.getDefaultSharedPreferences(this);
 
         if (!BuildConfig.DEBUG) {
-            Sentry.init(new AndroidSentryClientFactory(this));
+            SentryAndroid.init(this);
             if (getLibrary() != null) {
-                Sentry.getContext().addTag(SENTRY_LIBRARY, getLibrary().getIdent());
+                Sentry.setTag(SENTRY_LIBRARY, getLibrary().getIdent());
             }
             DateTime lastUpdate = new PreferenceDataSource(getApplicationContext())
                     .getLastLibraryConfigUpdate();
-            Sentry.getContext().addExtra(
+            Sentry.setExtra(
                     SENTRY_DATA_VERSION, lastUpdate != null ? lastUpdate.toString() : "null");
-            Sentry.getContext().addExtra(
+            Sentry.setExtra(
                     SENTRY_PACKAGE, getPackageName()
             );
-            SentryUncaughtExceptionHandler.setup();
         }
 
         DebugTools.init(this);

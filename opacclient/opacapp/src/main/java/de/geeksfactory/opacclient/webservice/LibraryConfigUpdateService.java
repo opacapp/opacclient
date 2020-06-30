@@ -36,7 +36,7 @@ import de.geeksfactory.opacclient.OpacClient;
 import de.geeksfactory.opacclient.storage.JsonSearchFieldDataSource;
 import de.geeksfactory.opacclient.storage.PreferenceDataSource;
 import de.geeksfactory.opacclient.utils.ErrorReporter;
-import io.sentry.Sentry;
+import io.sentry.core.Sentry;
 
 public class LibraryConfigUpdateService extends IntentService {
     private static final String NAME = "LibraryConfigUpdateService";
@@ -60,7 +60,7 @@ public class LibraryConfigUpdateService extends IntentService {
                     service, prefs, new FileOutput(filesDir), new JsonSearchFieldDataSource(this));
             if (!BuildConfig.DEBUG) {
                 DateTime lastUpdate = prefs.getLastLibraryConfigUpdate();
-                Sentry.getContext().addExtra(OpacClient.SENTRY_DATA_VERSION, lastUpdate != null ?
+                Sentry.setExtra(OpacClient.SENTRY_DATA_VERSION, lastUpdate != null ?
                         lastUpdate.toString() : "null");
             }
             if (BuildConfig.DEBUG) {
