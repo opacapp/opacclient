@@ -44,10 +44,8 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.FrameLayout;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -247,6 +245,9 @@ public class AccountFragment extends Fragment implements
                 @Override
                 public void onInflateComplete(View view, ViewGroup parent) {
                     findHeaderViews(view);
+                    if (accountData != null) {
+                        new Handler().post(() -> display(accountData, fromcache));
+                    }
                 }
             }));
             joiner.add(
@@ -255,6 +256,9 @@ public class AccountFragment extends Fragment implements
                                 @Override
                                 public void onInflateComplete(View view, ViewGroup parent) {
                                     findErrorWarningViews(view);
+                                    if (accountData != null) {
+                                        new Handler().post(() -> display(accountData, fromcache));
+                                    }
                                 }
                             }));
             joiner.add(
@@ -262,6 +266,9 @@ public class AccountFragment extends Fragment implements
                         @Override
                         public void onInflateComplete(View view, ViewGroup parent) {
                             findLentHeader(view);
+                            if (accountData != null) {
+                                new Handler().post(() -> display(accountData, fromcache));
+                            }
                         }
                     }));
             lentEmpty = new JoinableLayout(R.layout.listitem_account_empty_lent);
