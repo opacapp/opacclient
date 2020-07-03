@@ -1183,18 +1183,15 @@ public class Bibliotheca extends OkHttpBaseApi {
 
         for (Element row : doc.select(".kontozeile_center, div[align=center]")) {
             String text = row.text().trim();
-            if (text.matches(
-                    ".*Ausstehende Geb.+hren:[^0-9]+([0-9.,]+)[^0-9€A-Z]*(€|EUR|CHF|Fr.).*")) {
-                text = text
-                        .replaceAll(
-                                ".*Ausstehende Geb.+hren:[^0-9]+([0-9.," +
-                                        "]+)[^0-9€A-Z]*(€|EUR|CHF|Fr.).*",
-                                "$1 $2");
+            String feesRegex =
+                    ".*(?:Ausstehende Geb.+hren|Geb.+hrenkonto):[^0-9]+([0-9.,]+)[^0-9€A-Z]*" +
+                            "(€|EUR|CHF|Fr.).*";
+            if (text.matches(feesRegex)) {
+                text = text.replaceAll(feesRegex, "$1 $2");
                 res.setPendingFees(text);
             }
             if (text.matches("Ihr Ausweis ist g.ltig bis:.*")) {
-                text = text.replaceAll(
-                        "Ihr Ausweis ist g.ltig bis:[^A-Za-z0-9]+", "");
+                text = text.replaceAll("Ihr Ausweis ist g.ltig bis:[^A-Za-z0-9]+", "");
                 res.setValidUntil(text);
             } else if (text.matches("Ausweis g.ltig bis:.*")) {
                 text = text.replaceAll("Ausweis g.ltig bis:[^A-Za-z0-9]+", "");
