@@ -111,6 +111,7 @@ dependencies {
     implementation 'joda-time:joda-time:2.10.6'
     implementation 'su.j2e:rv-joiner:1.0.9'
     implementation 'com.squareup.okhttp3:okhttp:3.12.12'
+    implementation 'com.squareup.okhttp3:okhttp-urlconnection:3.12.12'
     implementation 'com.squareup.retrofit2:retrofit:2.6.4'
     implementation 'com.squareup.retrofit2:converter-moshi:2.6.4'
     implementation 'com.samskivert:jmustache:1.15'
