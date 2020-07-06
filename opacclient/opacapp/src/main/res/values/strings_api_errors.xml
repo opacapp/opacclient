@@ -86,4 +86,6 @@
     <string name="description">Description</string>
     <string name="reservation_ready">Ready for pickup</string>
     <string name="please_change_password">The library is asking you to change your password. Please first log in on the library website to change your password, and then enter the new password in the app.</string>
+    <string name="prolong_all_not_possible">Renewing all items is not possible at the moment.</string>
+    <string name="prolong_all_no_items">No items are renewable.</string>
 </resources>

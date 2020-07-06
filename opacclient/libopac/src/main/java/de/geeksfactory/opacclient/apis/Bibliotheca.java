@@ -895,9 +895,19 @@ public class Bibliotheca extends OkHttpBaseApi {
                         e.getMessage());
             }
         }
-        String html = httpGet(opac_url + "/index.asp?target=alleverl",
-                getDefaultEncoding());
+
+        // load account page to check whether "prolong all" button is present
+        String html = httpGet(opac_url + "/index.asp?kontofenster=start", getDefaultEncoding());
         Document doc = Jsoup.parse(html);
+
+        if (doc.select("a[href$=target=alleverl]").size() == 0) {
+            return new ProlongAllResult(MultiStepResult.Status.ERROR,
+                    stringProvider.getString(StringProvider.PROLONG_ALL_NOT_POSSIBLE));
+        }
+
+        // prolong all
+        html = httpGet(opac_url + "/index.asp?target=alleverl", getDefaultEncoding());
+        doc = Jsoup.parse(html);
 
         if (doc.getElementsByClass("kontomeldung").size() == 1) {
             String err = doc.getElementsByClass("kontomeldung").get(0).text();
@@ -942,13 +952,20 @@ public class Bibliotheca extends OkHttpBaseApi {
             }
 
             if (doc.select("input#make_allvl").size() > 0) {
-                FormBody.Builder formData = new FormBody.Builder(Charset.forName(getDefaultEncoding()));
+                FormBody.Builder formData =
+                        new FormBody.Builder(Charset.forName(getDefaultEncoding()));
                 formData.add("target", "make_allvl_flag");
                 formData.add("make_allvl", "Bestaetigung");
                 httpPost(opac_url + "/index.asp", formData.build(), getDefaultEncoding());
             }
 
-            return new ProlongAllResult(MultiStepResult.Status.OK, result);
+            if (result.size() > 0) {
+                return new ProlongAllResult(MultiStepResult.Status.OK, result);
+            } else {
+                // no items were prolonged
+                return new ProlongAllResult(MultiStepResult.Status.ERROR,
+                        stringProvider.getString(StringProvider.PROLONG_ALL_NO_ITEMS));
+            }
         }
 
         return new ProlongAllResult(MultiStepResult.Status.ERROR,
@@ -998,7 +1015,6 @@ public class Bibliotheca extends OkHttpBaseApi {
             start();
         }
 
-        List<NameValuePair> nameValuePairs;
         String html = httpGet(opac_url + "/index.asp?kontofenster=start",
                 "ISO-8859-1");
         Document doc = Jsoup.parse(html);
