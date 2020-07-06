@@ -51,7 +51,7 @@ public class JsonSearchFieldDataSource implements SearchFieldDataSource {
                 object.put(
                         KEY_VERSION,
                         context.getPackageManager().getPackageInfo(
-                                context.getPackageName(), 0).getLongVersionCode());
+                                context.getPackageName(), 0).versionCode);
             } catch (NameNotFoundException e) {
                 // should never happen
                 e.printStackTrace();

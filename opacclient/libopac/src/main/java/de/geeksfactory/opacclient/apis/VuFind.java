@@ -1,6 +1,5 @@
 package de.geeksfactory.opacclient.apis;
 
-import org.apache.commons.codec.Charsets;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.utils.URLEncodedUtils;
 import org.joda.time.format.DateTimeFormat;
@@ -257,7 +256,7 @@ public class VuFind extends OkHttpBaseApi {
                 try {
                     StringBuilder description = new StringBuilder();
                     z3988data = URLEncodedUtils.parse(new URI("http://dummy/?"
-                            + z3988el.select("span.Z3988").attr("title")), Charsets.UTF_8);
+                            + z3988el.select("span.Z3988").attr("title")), "UTF-8");
                     String title = null;
                     String year = null;
                     String author = null;
