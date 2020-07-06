@@ -37,6 +37,11 @@ Thumbs.db
 .gradle
 /opacclient/.idea/*
 /opacclient/**/build/
+/opacclient/opacapp/foss/debug
+/opacclient/opacapp/foss/release
+/opacclient/opacapp/googlePlayServices/debug
+/opacclient/opacapp/googlePlayServices/release
+
 /.idea/*
 *.iml
 .DS_Store
