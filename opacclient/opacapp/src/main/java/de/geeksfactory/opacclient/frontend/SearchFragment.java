@@ -415,9 +415,9 @@ public class SearchFragment extends Fragment implements AccountSelectedListener 
         }
 
         SearchFieldDataSource dataSource = new JsonSearchFieldDataSource(app);
-        long versionCode = 0;
+        int versionCode = 0;
         try {
-            versionCode = getActivity().getPackageManager().getPackageInfo(getActivity().getPackageName(), 0).getLongVersionCode();
+            versionCode = getActivity().getPackageManager().getPackageInfo(getActivity().getPackageName(), 0).versionCode;
         } catch (NameNotFoundException e) {
         }
         String language = getActivity().getResources().getConfiguration().locale
@@ -513,10 +513,10 @@ public class SearchFragment extends Fragment implements AccountSelectedListener 
         if (fields == null) {
             SearchFieldDataSource dataSource = new JsonSearchFieldDataSource(
                     app);
-            long versionCode = 0;
+            int versionCode = 0;
             try {
                 versionCode = app.getPackageManager().getPackageInfo(
-                        app.getPackageName(), 0).getLongVersionCode();
+                        app.getPackageName(), 0).versionCode;
             } catch (NameNotFoundException e) {
                 // should not happen
                 e.printStackTrace();
