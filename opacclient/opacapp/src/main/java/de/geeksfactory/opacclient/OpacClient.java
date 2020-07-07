@@ -29,7 +29,6 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Bundle;
-import androidx.preference.PreferenceManager;
 import android.util.Log;
 
 import org.joda.time.DateTime;
@@ -53,6 +52,7 @@ import java.util.Set;
 import androidx.annotation.NonNull;
 import androidx.core.app.ActivityCompat;
 import androidx.multidex.MultiDex;
+import androidx.preference.PreferenceManager;
 import de.geeksfactory.opacclient.apis.OpacApi;
 import de.geeksfactory.opacclient.frontend.AccountListActivity;
 import de.geeksfactory.opacclient.frontend.LibraryListActivity;
@@ -373,8 +373,10 @@ public class OpacClient extends Application {
 
         sp = PreferenceManager.getDefaultSharedPreferences(this);
 
-        if (!BuildConfig.DEBUG) {
-            SentryAndroid.init(this);
+        if (BuildConfig.SENTRY_DSN != null) {
+            SentryAndroid.init(this, options -> {
+                options.setDsn(BuildConfig.SENTRY_DSN);
+            });
             if (getLibrary() != null) {
                 Sentry.setTag(SENTRY_LIBRARY, getLibrary().getIdent());
             }
