@@ -26,16 +26,27 @@ android {
         }
     }
 
+    // load Sentry configuration from sentry.properties file, if it exists
+    def sentryProps = new Properties()
+    def sentryPropsFile = project.rootProject.file("sentry.properties")
+    String dsn = null;
+    if (sentryPropsFile.exists()) {
+        sentryProps.load(sentryPropsFile.newDataInputStream())
+        dsn = sentryProps.getProperty("dsn")
+    }
+
     buildTypes {
         release {
             minifyEnabled true
             signingConfig signingConfigs.release
             proguardFiles 'proguard-rules.txt'
+            buildConfigField("String", "SENTRY_DSN", dsn != null ? "\"$dsn\"" : "null")
         }
         debug {
             debuggable true
             applicationIdSuffix ".debug"
             versionNameSuffix "-debug"
+            buildConfigField("String", "SENTRY_DSN", "null")
         }
     }
 
