@@ -237,6 +237,8 @@ public class VuFind extends OkHttpBaseApi {
             rescount = Integer.parseInt(
                     doc.select(".resulthead strong").get(2).text().replace(",", "")
                        .replace(".", ""));
+        } else if (doc.select(".search-stats").size() == 1) {
+            rescount = Integer.parseInt(doc.select(".search-stats strong").get(1).text());
         }
         List<SearchResult> reslist = new ArrayList<>();
 
