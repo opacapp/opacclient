@@ -191,7 +191,7 @@ public class VuFind extends OkHttpBaseApi {
                         // selected)
                         builder.addQueryParameter("filter[]", singleQuery.getValue());
                     }
-                } else {
+                } else if (!singleQuery.getValue().equals("")) {
                     builder.addQueryParameter("filter[]", singleQuery.getValue());
                 }
             } else {
