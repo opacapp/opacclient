@@ -148,7 +148,7 @@ public class VuFind extends OkHttpBaseApi {
 
     private String getHiddenFilters(boolean string) {
         // SmartBib multilibrary catalog with VuFind 5: needs to pass library name to every URL
-        String library = data.optString("library");
+        String library = data.optString("library_long");
         boolean hiddenfilters = data.optBoolean("hiddenfilters");
         if (library != null && hiddenfilters) {
             if (string) {
@@ -270,6 +270,7 @@ public class VuFind extends OkHttpBaseApi {
                                         title = nv.getValue();
                                         break;
                                     case "rft.au":
+                                    case "rft.creator":
                                         author = nv.getValue();
                                         break;
                                     case "rft.date":
@@ -878,8 +879,20 @@ public class VuFind extends OkHttpBaseApi {
         Document doc = Jsoup.parse(httpPost(opac_url + "/MyResearch/CheckedOut", builder.build(),
                 getDefaultEncoding()));
 
-        Element record =
-                doc.select("input[type=checkbox][value=" + media + "]").first().parent().parent();
+        // try to find the prolonged record to get success or error message
+        Element record;
+        Element checkbox = doc.select("input[type=checkbox][value=" + media + "]").first();
+        if (checkbox != null) {
+            record = checkbox.parent().parent();
+        } else {
+            record = doc.select("#record" + media).first();
+        }
+
+        if (record == null) {
+            return new ProlongResult(MultiStepResult.Status.ERROR,
+                    stringProvider.getString(StringProvider.INTERNAL_ERROR));
+        }
+
         if (record.select(".alert-success").size() == 1) {
             return new ProlongResult(MultiStepResult.Status.OK);
         } else {
@@ -1011,59 +1024,108 @@ public class VuFind extends OkHttpBaseApi {
 
     static List<LentItem> parse_lent(Document doc) {
         List<LentItem> lent = new ArrayList<>();
-        for (Element record : doc.select("#record")) {
+        for (Element record : doc.select("div[id^=record]")) {
             LentItem item = new LentItem();
-            String type = null;
-            boolean title = true;
-            boolean statusAfter = false;
-            Element dataColumn = record.select("> div").last();
-            for (Node node : dataColumn.childNodes()) {
-                if (node instanceof Element && ((Element) node).tagName().equals("strong")) {
-                    Element el = (Element) node;
-                    if (title) {
-                        item.setTitle(el.text());
-                        title = false;
-                    } else if (statusAfter) {
-                        // return date
-                        String text = el.text().replace("Bis", "").replace("Until", "").trim();
-                        item.setDeadline(
-                                DateTimeFormat.forPattern("dd.MM.yyyy").parseLocalDate(text));
-                    } else {
-                        type = el.text().replace(":", "").trim();
-                        String nextText = el.nextElementSibling().text();
-                        if (nextText.startsWith("Bis") || nextText.startsWith("Until")) {
-                            statusAfter = true;
+            if (record.select("span.Z3988").size() > 0) {
+                // vuFind 5 / smartBib new
+                String z3988data = record.select("span.Z3988").attr("title");
+                HttpUrl url = HttpUrl.parse("http://dummy/?" + z3988data);
+                if (url != null) {
+                    for (int i = 0; i < url.querySize(); i++) {
+                        String key = url.queryParameterName(i);
+                        String value = url.queryParameterValue(i);
+                        switch (key) {
+                            case "rft.btitle":
+                            case "rft.atitle":
+                            case "rft.title":
+                                item.setTitle(value);
+                                break;
+                            case "rft.au":
+                            case "rft.creator":
+                                item.setAuthor(value);
+                                break;
+                            case "rft.format":
+                                item.setFormat(value);
+                                break;
                         }
                     }
-                } else if (node instanceof TextNode) {
-                    String text = ((TextNode) node).text().trim();
-                    if (text.equals("")) continue;
-                    if (text.endsWith(",")) text = text.substring(0, text.length() - 1).trim();
+                }
 
-                    if (statusAfter) {
-                        String[] split = text.split(",");
-                        if (split.length == 2) {
-                            text = split[0].trim();
-                            item.setStatus(split[1].trim());
-                        }
+                Element link = record.select("a[href*=Record]").first();
+                if (link != null) {
+                    item.setId(link.attr("href"));
+                }
+
+                Element due = record.select(
+                        "strong:contains(Rückgabedatum), strong:contains(Due date), " +
+                                "strong:contains(Fecha de Vencimiento), strong:contains(Délais " +
+                                "d'emprunt), strong:contains(Data di scadenza)")
+                                    .first();
+                if (due != null) {
+                    String text = due.text().replaceAll("[^\\d.]", "");
+                    item.setDeadline(DateTimeFormat.forPattern("dd.MM.yyyy").parseLocalDate(text));
+                }
+
+                for (TextNode node : record.select(".media-body").first().textNodes()) {
+                    if (node.text().matches("\\s*\\d+\\s*/\\s*\\d+\\s*")) {
+                        Element label = (Element) node.previousSibling();
+                        item.setStatus(label.text() + node.text());
                     }
+                }
+            } else {
+                // old style
+                String type = null;
+                boolean title = true;
+                boolean statusAfter = false;
+                Element dataColumn = record.select("> div").last();
+                for (Node node : dataColumn.childNodes()) {
+                    if (node instanceof Element && ((Element) node).tagName().equals("strong")) {
+                        Element el = (Element) node;
+                        if (title) {
+                            item.setTitle(el.text());
+                            title = false;
+                        } else if (statusAfter) {
+                            // return date
+                            String text = el.text().replace("Bis", "").replace("Until", "").trim();
+                            item.setDeadline(
+                                    DateTimeFormat.forPattern("dd.MM.yyyy").parseLocalDate(text));
+                        } else {
+                            type = el.text().replace(":", "").trim();
+                            String nextText = el.nextElementSibling().text();
+                            if (nextText.startsWith("Bis") || nextText.startsWith("Until")) {
+                                statusAfter = true;
+                            }
+                        }
+                    } else if (node instanceof TextNode) {
+                        String text = ((TextNode) node).text().trim();
+                        if (text.equals("")) continue;
+                        if (text.endsWith(",")) text = text.substring(0, text.length() - 1).trim();
 
-                    if (type == null) {
-                        item.setAuthor(text.replaceFirst("\\[([^\\]]*)\\]", "$1"));
-                    } else {
-                        switch (type) {
-                            case "Zweigstelle":
-                            case "Borrowing Location":
-                                item.setLendingBranch(text);
-                                break;
-                            case "Medientyp":
-                            case "Media type":
-                                item.setFormat(text);
-                                break;
-                            case "Buchungsnummer":
-                            case "barcode":
-                                item.setBarcode(text);
-                                break;
+                        if (statusAfter) {
+                            String[] split = text.split(",");
+                            if (split.length == 2) {
+                                text = split[0].trim();
+                                item.setStatus(split[1].trim());
+                            }
+                        }
+
+                        if (type == null) {
+                            item.setAuthor(text.replaceFirst("\\[([^\\]]*)\\]", "$1"));
+                        } else {
+                            switch (type) {
+                                case "Zweigstelle":
+                                case "Borrowing Location":
+                                    item.setLendingBranch(text);
+                                    break;
+                                case "Medientyp":
+                                case "Media type":
+                                    item.setFormat(text);
+                                    break;
+                                case "Buchungsnummer":
+                                case "barcode":
+                                    item.setBarcode(text);
+                                    break;
+                            }
                         }
                     }
                 }
@@ -1130,7 +1192,7 @@ public class VuFind extends OkHttpBaseApi {
             }
 
             Element checkbox = record.select("input[type=checkbox]").first();
-            if (!checkbox.hasAttr("disabled")) {
+            if (checkbox != null && !checkbox.hasAttr("disabled")) {
                 item.setCancelData(checkbox.val());
             }
 
@@ -1154,7 +1216,15 @@ public class VuFind extends OkHttpBaseApi {
         }
 
         if (data.has("library")) {
-            builder.add("library_select", data.optString("library"));
+            Element field = loginForm
+                    .select("select[name=target], select[name=library_select]").first();
+            String name = field != null ? field.attr("name") : "library_select";
+            builder.add(name, data.optString("library"));
+        }
+
+        Element submit = loginForm.select("input[type=submit]").first();
+        if (submit != null) {
+            builder.add(submit.attr("name"), submit.attr("value"));
         }
 
         doc = Jsoup.parse(
