@@ -685,7 +685,13 @@ public class VuFind extends OkHttpBaseApi {
             String meaning = id;
             if (library != null &&
                     (meaning.equals("limit_collection") || meaning.equals("limit_building"))) {
-                field.addDropdownValue(OPTION_ALL, stringProvider.getString(StringProvider.ALL));
+                if (data.optBoolean("hiddenfilters") && meaning.equals("limit_collection")) {
+                    // smartBib VuFind 5 does not need the library selection field (library fixed)
+                    continue;
+                } else {
+                    field.addDropdownValue(OPTION_ALL,
+                            stringProvider.getString(StringProvider.ALL));
+                }
             } else {
                 field.addDropdownValue("", "");
             }
