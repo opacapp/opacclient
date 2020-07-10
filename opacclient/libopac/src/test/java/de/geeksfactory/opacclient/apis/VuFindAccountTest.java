@@ -27,7 +27,8 @@ public class VuFindAccountTest extends BaseHtmlTest {
     }
 
     private static final String[] FILES =
-            new String[]{"kreisre.html", "kreisre-ebook.html", "kreisre-ebookonly.html"};
+            new String[]{"kreisre.html", "kreisre-ebook.html", "kreisre-ebookonly.html",
+                    "haan.html"};
 
     @Parameterized.Parameters(name = "{0}")
     public static Collection<String[]> files() {
@@ -52,7 +53,7 @@ public class VuFindAccountTest extends BaseHtmlTest {
                 assertFalse(item.isRenewable());
                 assertNull(item.getProlongData());
             } else {
-                assertContainsData(item.getBarcode());
+                if (!file.equals("haan.html")) assertContainsData(item.getBarcode());
                 assertContainsData(item.getStatus());
             }
         }
