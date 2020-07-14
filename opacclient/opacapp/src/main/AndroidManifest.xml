@@ -140,12 +140,6 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="de.geeksfactory.opacclient.frontend.AccountListActivity"/>
         </activity>
-        <!--activity
-            android:name="org.acra.CrashReportDialog"
-            android:excludeFromRecents="true"
-            android:finishOnTaskLaunch="true"
-            android:launchMode="singleInstance"
-            android:theme="@style/Theme.MaterialComponents.Light.Dialog"/-->
         <activity
             android:name="de.geeksfactory.opacclient.frontend.SnoozeDatePickerActivity"
             android:theme="@style/Theme.Opacapp.Transparent"/>
