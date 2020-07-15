@@ -441,7 +441,7 @@ public class VuFind extends OkHttpBaseApi {
                 String text = tr.child(1).text();
                 if (tr.child(1).select("a").size() > 0) {
                     String href = tr.child(1).select("a").attr("href");
-                    if (!href.startsWith("/") && !text.contains(data.getString("baseurl"))) {
+                    if (!href.trim().startsWith("/") && !text.contains(data.getString("baseurl"))) {
                         text += " " + href;
                     }
                 }
