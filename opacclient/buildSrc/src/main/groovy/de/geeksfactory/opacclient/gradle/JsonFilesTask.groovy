@@ -26,7 +26,8 @@ class JsonFilesTask extends DefaultTask {
         String response = conn.inputStream.getText("UTF-8")
         JSONArray data = new JSONArray(response)
         GFileUtils.mkdirs(new File(bibsDir))
-        GFileUtils.cleanDirectory(new File(bibsDir))
+        GFileUtils.deleteDirectory(new File(bibsDir))
+        GFileUtils.mkdirs(new File(bibsDir))
         for (int i = 0; i < data.length(); i++) {
             JSONObject library = data.get(i)
             String id = library.getString("_id")
