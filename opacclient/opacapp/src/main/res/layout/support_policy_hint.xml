@@ -28,17 +28,17 @@
 
         <Button
             android:id="@+id/btMoreInfo"
-            style="@style/Widget.AppCompat.Button.Borderless"
+            style="@style/Widget.MaterialComponents.Button.TextButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/support_policy_more_info" />
 
         <Button
+            android:id="@+id/btGotIt"
+            style="@style/Widget.MaterialComponents.Button.TextButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/toggle_notice_button"
-            android:id="@+id/btGotIt"
-            style="@style/Widget.AppCompat.Button.Borderless" />
+            android:text="@string/toggle_notice_button" />
 
     </LinearLayout>
 
