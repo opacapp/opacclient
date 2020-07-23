@@ -129,6 +129,7 @@ dependencies {
     implementation 'com.github.johan12345:material-intro:a7791652d9'
     implementation 'com.github.bumptech.glide:glide:3.8.0'
     implementation 'com.github.bumptech.glide:okhttp3-integration:1.5.0@aar'
+    implementation 'net.sourceforge.streamsupport:streamsupport-cfuture:1.7.2'
 
 // Flavor
     googlePlayServicesImplementation 'com.google.android.gms:play-services-basement:17.3.0'
