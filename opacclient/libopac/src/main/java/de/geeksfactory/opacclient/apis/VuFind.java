@@ -1063,7 +1063,10 @@ public class VuFind extends OkHttpBaseApi {
                                     .first();
                 if (due != null) {
                     String text = due.text().replaceAll("[^\\d.]", "");
-                    item.setDeadline(DateTimeFormat.forPattern("dd.MM.yyyy").parseLocalDate(text));
+                    if (!text.isEmpty()) {
+                        item.setDeadline(
+                                DateTimeFormat.forPattern("dd.MM.yyyy").parseLocalDate(text));
+                    }
                 }
 
                 for (TextNode node : record.select(".media-body").first().textNodes()) {
@@ -1071,6 +1074,11 @@ public class VuFind extends OkHttpBaseApi {
                         Element label = (Element) node.previousSibling();
                         item.setStatus(label.text() + node.text());
                     }
+                }
+
+                Element alert = record.select(".alert").first();
+                if (alert != null) {
+                    item.setStatus(alert.text());
                 }
             } else {
                 // old style
@@ -1186,7 +1194,9 @@ public class VuFind extends OkHttpBaseApi {
             }
 
             Elements available = record.select(
-                    "strong:contains(Abholbereit), strong:contains(Available for pickup)");
+                    "strong:contains(Abholbereit), " +
+                            "strong:contains(Available for pickup), " +
+                            ".text-success");
             if (available.size() > 0) {
                 item.setStatus(available.first().text().replace(":", "").trim());
             }
