@@ -74,6 +74,7 @@ public class VuFind extends OkHttpBaseApi {
 
     protected String res_branch;
     protected String res_url;
+    protected String res_hashCode;
 
     static {
         languageCodes.put("de", "de");
@@ -787,6 +788,7 @@ public class VuFind extends OkHttpBaseApi {
                     login(account);
                 } catch (OpacErrorException e) {
                     res_branch = null;
+                    res_hashCode = null;
                     res_url = null;
                     return new ReservationResult(MultiStepResult.Status.ERROR, e.getMessage());
                 }
@@ -798,6 +800,7 @@ public class VuFind extends OkHttpBaseApi {
                             doc.select(".placehold").first().absUrl("href").replace("#tabnav", "");
                 } else {
                     res_branch = null;
+                    res_hashCode = null;
                     res_url = null;
                     return new ReservationResult(MultiStepResult.Status.ERROR,
                             stringProvider.getString(StringProvider.NO_COPY_RESERVABLE));
@@ -808,6 +811,20 @@ public class VuFind extends OkHttpBaseApi {
 
         if (useraction == 0) {
             Document doc = Jsoup.parse(httpGet(res_url, getDefaultEncoding()));
+
+            if (doc.select("form[name=loginForm]").size() > 0) {
+                // message "you need to be logged in first"
+                try {
+                    login(account);
+                } catch (OpacErrorException e) {
+                    res_branch = null;
+                    res_hashCode = null;
+                    res_url = null;
+                    return new ReservationResult(MultiStepResult.Status.ERROR, e.getMessage());
+                }
+                return reservation(item, account, useraction, selection);
+            }
+
             Element pickup = doc.select("#pickUpLocation").first();
 
             // does a pickup branch need to be selected?
@@ -842,6 +859,9 @@ public class VuFind extends OkHttpBaseApi {
             form.add("placeHold", "Confirm");
             Document doc = Jsoup.parse(httpPost(res_url, form.build(), getDefaultEncoding()));
 
+            Element hashcode = doc.select("input[name=gatheredDetails[hashcode]]").first();
+            if (hashcode != null) res_hashCode = hashcode.val();
+
             ReservationResult res =
                     new ReservationResult(MultiStepResult.Status.CONFIRMATION_NEEDED);
             List<String[]> details = new ArrayList<>();
@@ -853,6 +873,7 @@ public class VuFind extends OkHttpBaseApi {
             form.add("confirmed-checkbox", "true");
             form.add("confirmed", "true");
             if (res_branch != null) form.add("gatheredDetails[pickUpLocation]", res_branch);
+            if (res_hashCode != null) form.add("gatheredDetails[hashcode]", res_hashCode);
             form.add("placeHold", "Confirm");
             Document doc = Jsoup.parse(httpPost(res_url, form.build(), getDefaultEncoding()));
 
