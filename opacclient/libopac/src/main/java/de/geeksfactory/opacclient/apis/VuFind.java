@@ -1059,6 +1059,7 @@ public class VuFind extends OkHttpBaseApi {
                             case "rft.btitle":
                             case "rft.atitle":
                             case "rft.title":
+                                if (value.isEmpty()) value = "Kein Titel verfügbar";
                                 item.setTitle(value);
                                 break;
                             case "rft.au":
