@@ -894,19 +894,25 @@ public class VuFind extends OkHttpBaseApi {
             return new ProlongResult(MultiStepResult.Status.ERROR, e.getMessage());
         }
 
+        String[] split = media.split("\\|");
+        String prolongData = split[1];
+        String recordId = split[0];
+
         FormBody.Builder builder = new FormBody.Builder();
         builder.add("renewSelected", "Verlängern");
-        builder.add("renewSelectedIDS[]", media);
+        builder.add("renewSelectedIDS[]", prolongData);
         Document doc = Jsoup.parse(httpPost(opac_url + "/MyResearch/CheckedOut", builder.build(),
                 getDefaultEncoding()));
 
         // try to find the prolonged record to get success or error message
         Element record;
-        Element checkbox = doc.select("input[type=checkbox][value=" + media + "]").first();
+        Element checkbox = doc.select("input[type=checkbox][value=" + prolongData + "]").first();
         if (checkbox != null) {
             record = checkbox.parent().parent();
         } else {
-            record = doc.select("#record" + media).first();
+            // selecting using # seems to not work if there is a . in the id,
+            // so use div[id=...] instead
+            record = doc.select("div[id=" + recordId + "]").first();
         }
 
         if (record == null) {
@@ -1163,7 +1169,7 @@ public class VuFind extends OkHttpBaseApi {
 
             Element checkbox = record.select("input[type=checkbox]").first();
             if (checkbox != null && !"".equals(checkbox.val())) {
-                item.setProlongData(checkbox.val());
+                item.setProlongData(record.attr("id") + "|" + checkbox.val());
                 item.setRenewable(!checkbox.hasAttr("disabled"));
             } else {
                 item.setRenewable(false);
