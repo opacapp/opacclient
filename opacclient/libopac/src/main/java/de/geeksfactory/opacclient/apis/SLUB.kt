@@ -486,14 +486,16 @@ open class SLUB : OkHttpBaseApi() {
                             format = it.optString("X_medientyp")
                             //id = it.optString("label")  // TODO: get details from here via /bc --> redirects to /id, from there get the proper id
                             barcode = it.optString("X_barcode")
-                            status = when {
-                                it.optInt("renewals") == 2 -> "2x verlängert"
-                                it.optInt("X_is_reserved") != 0 -> "vorgemerkt"
-                                else -> null
-                            }
                             if (it.optInt("X_is_renewable") == 1) {   // TODO: X_is_flrenewable for ill items
                                 isRenewable = true
                                 prolongData = "$format\t$barcode"
+                            } else {
+                                isRenewable = false
+                                status = when {
+                                    it.optInt("X_is_reserved") != 0 -> "vorgemerkt" // TODO: change to translatable string
+                                    it.optInt("renewals") > 0 -> "${it.optInt("renewals")}x verlängert"  // TODO: change to translatable string
+                                    else -> null
+                                }
                             }
                         }
                     } ?: emptyList()
@@ -539,7 +541,7 @@ open class SLUB : OkHttpBaseApi() {
     }
 
     override fun getSupportedLanguages(): Set<String>? {
-        //TODO("not implemented") 
+        //TODO("not implemented")
         return null
     }
 

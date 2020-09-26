@@ -157,7 +157,6 @@ class SLUBAccountTest : BaseHtmlTest() {
         assertEquals(2, accountdata.lent.size)
         assertEquals(3, accountdata.reservations.size)
         assertThat(lentitem1, samePropertyValuesAs(accountdata.lent[0]))
-        assertEquals("vorgemerkt", accountdata.lent[1].status)
         assertThat(accountdata.reservations, hasItems(sameBeanAs(reserveditem1),
                 sameBeanAs(reserveditem2), sameBeanAs(reserveditem3)))
     }
@@ -178,6 +177,20 @@ class SLUBAccountTest : BaseHtmlTest() {
         assertEquals(0, accountdata.lent.size)
         assertEquals(1, accountdata.reservations.size)
         assertThat(reserveditem, samePropertyValuesAs(accountdata.reservations[0]))
+    }
+
+    @Test
+    fun testParseAccountDataStatus() {
+        val json = JSONObject(readResource("/slub/account/account-status.json"))
+
+        val accountdata = slub.parseAccountData(Account(), json)
+
+        assertEquals("9x verlängert", accountdata.lent[0].status)
+        assertEquals("vorgemerkt", accountdata.lent[1].status)
+        assertEquals(null, accountdata.lent[2].status)
+        assertEquals(false, accountdata.lent[0].isRenewable)
+        assertEquals(false, accountdata.lent[1].isRenewable)
+        assertEquals(true, accountdata.lent[2].isRenewable)
     }
 }
 
