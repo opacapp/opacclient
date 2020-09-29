@@ -37,9 +37,7 @@ import org.joda.time.LocalDate
 import org.joda.time.format.DateTimeFormat
 import org.json.JSONObject
 import org.junit.Assert.*
-import org.junit.Rule
 import org.junit.Test
-import org.junit.rules.ExpectedException
 import org.junit.runner.RunWith
 import org.junit.runners.Parameterized
 import org.junit.runners.Suite
@@ -50,6 +48,7 @@ import org.mockito.Matchers.argThat
 import org.mockito.Matchers.eq
 import org.mockito.Mockito
 import org.mockito.Mockito.verify
+import kotlin.collections.HashSet
 
 /**
  * Tests for SLUB API
@@ -461,20 +460,18 @@ class SLUBAccountMockTest(@Suppress("unused") private val name: String,
         password = "x"
     }
 
-    @JvmField
-    @Rule
-    var thrown: ExpectedException = ExpectedException.none()
-
     @Test
     fun testCheckAccountData() {
         Mockito.doReturn(response).`when`(slub).httpPost(Matchers.any(), Matchers.any(), Matchers.any())
         if (expectedException != null) {
-            thrown.expect(expectedException)
-            thrown.expectMessage(expectedExceptionMsg)
+            val thrown = assertThrows(expectedExceptionMsg,
+                    expectedException,
+                    { slub.requestAccount(account, "", null) })
+            assertTrue(thrown!!.message!!.contains(expectedExceptionMsg!!))
+        } else {
+            val actual = slub.requestAccount(account, "", null)
+            assertEquals(expectedMessage, actual.optString("message"))
         }
-
-        val actual = slub.requestAccount(account, "", null)
-        assertEquals(expectedMessage, actual.optString("message"))
     }
 
     companion object {
@@ -737,21 +734,19 @@ class SLUBSearchMockTest(@Suppress("unused") private val name: String,
         }, HttpClientFactory("test"))
     }
 
-    @JvmField
-    @Rule
-    var thrown: ExpectedException = ExpectedException.none()
-
     @Test
     fun testSearch() {
         Mockito.doReturn(response).`when`(slub).httpGet(Matchers.any(), Matchers.any())
         if (expectedException != null) {
-            thrown.expect(expectedException)
-            thrown.expectMessage(expectedExceptionMsg)
+            val thrown = assertThrows(expectedExceptionMsg,
+                    expectedException,
+                    { slub.search(query) })
+            assertTrue(thrown!!.message!!.contains(expectedExceptionMsg!!))
+        } else {
+            val actual = slub.search(query)
+            assertEquals(expectedResultCount, actual.total_result_count)
+            verify(slub).httpGet(expectedQueryUrl, "UTF-8")
         }
-
-        val actual = slub.search(query)
-        assertEquals(expectedResultCount, actual.total_result_count)
-        verify(slub).httpGet(expectedQueryUrl, "UTF-8")
     }
 
     companion object {
@@ -816,21 +811,19 @@ class SLUBProlongMockTest(@Suppress("unused") private val name: String,
         password = "x"
     }
 
-    @JvmField
-    @Rule
-    var thrown: ExpectedException = ExpectedException.none()
-
     @Test
     fun testProlong() {
         Mockito.doReturn(response).`when`(slub).httpPost(Matchers.any(), Matchers.any(), Matchers.any())
         if (expectedException != null) {
-            thrown.expect(expectedException)
-            thrown.expectMessage(expectedExceptionMsg)
+            val thrown = assertThrows(expectedExceptionMsg,
+                    expectedException,
+                    { slub.prolong(media, account, 0, null) })
+            assertTrue(thrown!!.message!!.contains(expectedExceptionMsg!!))
+        } else {
+            val actualResult = slub.prolong(media, account, 0, null)
+            assertThat(actualResult, sameBeanAs(expectedResult))
+            verify(slub).httpPost(eq(expectedQueryUrl), argThat(sameBeanAs(expectedRequestBody)), eq("UTF-8"))
         }
-
-        val actualResult = slub.prolong(media, account, 0, null)
-        assertThat(actualResult, sameBeanAs(expectedResult))
-        verify(slub).httpPost(eq(expectedQueryUrl), argThat(sameBeanAs(expectedRequestBody)), eq("UTF-8"))
     }
 
     companion object {
