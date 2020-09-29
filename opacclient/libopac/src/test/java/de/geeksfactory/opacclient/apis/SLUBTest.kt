@@ -887,7 +887,7 @@ class SLUBSearchFieldsMockTest : BaseHtmlTest() {
 
     @Test
     fun testParseSearchFields() {
-        val html = readResource("/slub/SLUB Dresden: Startseite.html")
+        val html = readResource("/slub/SLUB Dresden Startseite.html")
         Mockito.doReturn(html).`when`(slub).httpGet(Matchers.any(), Matchers.any())
 
         val searchFields = slub.parseSearchFields()
