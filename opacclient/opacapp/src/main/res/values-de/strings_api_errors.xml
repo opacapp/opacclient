@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
   <!--These strings may be shown as unused by Android Lint, but are in fact used by the AndroidStringProvider class-->
   <plurals name="limited_num_of_criteria">
     <item quantity="one">Diese Bibliothek unterstützt nur bis zu ein benutztes Suchkriterium.</item>
@@ -92,7 +92,7 @@
   <string name="readingroom">liegt seit %s zur Benutzung in Bibliothek bereit</string>
   <string name="request_progress">Magazinbestellung seit %s in Arbeit</string>
   <string name="reserved_pos">vorgemerkt, Pos. %s</string>
-  <string name="copy">Exemplar</string>
+  <string name="copy" tools:override="true">Exemplar</string>
   <string name="reserved">vorgemerkt</string>
   <string name="renewed">%dx verlängert</string>
 </resources>

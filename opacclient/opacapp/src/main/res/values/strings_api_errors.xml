@@ -93,7 +93,7 @@
     <string name="readingroom">ready since %s for usage in library</string>
     <string name="request_progress">stack request in progress since %s</string>
     <string name="reserved_pos">reserved, pos. %s</string>
-    <string name="copy">Copy</string>
+    <string name="copy" tools:override="true">Copy</string>
     <string name="reserved">reserved</string>
     <string name="renewed">%dx renewed</string>
 </resources>
