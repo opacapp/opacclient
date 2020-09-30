@@ -492,8 +492,9 @@ open class SLUB : OkHttpBaseApi() {
                             } else {
                                 isRenewable = false
                                 status = when {
-                                    it.optInt("X_is_reserved") != 0 -> "vorgemerkt" // TODO: change to translatable string
-                                    it.optInt("renewals") > 0 -> "${it.optInt("renewals")}x verlängert"  // TODO: change to translatable string
+                                    it.optInt("X_is_reserved") != 0 -> stringProvider.getString(StringProvider.RESERVED)
+                                    it.optInt("renewals") > 0 -> stringProvider.getFormattedString(
+                                            StringProvider.RENEWED, it.optInt("renewals"))
                                     else -> null
                                 }
                             }

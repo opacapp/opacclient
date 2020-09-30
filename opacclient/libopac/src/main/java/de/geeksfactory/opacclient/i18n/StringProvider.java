@@ -93,6 +93,8 @@ public interface StringProvider {
     String REQUEST_PROGRESS = "request_progress";
     String RESERVED_POS = "reserved_pos";
     String COPY = "copy";
+    String RESERVED = "reserved";
+    String RENEWED = "renewed";
 
     /**
      * Returns the translated string identified by identifier

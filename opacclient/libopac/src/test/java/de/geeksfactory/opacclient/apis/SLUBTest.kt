@@ -70,7 +70,10 @@ class SLUBAllTests
 
 private class TestStringProvider : StringProvider {
     override fun getString(identifier: String?): String {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        return when (identifier) {
+            RESERVED -> "vorgemerkt"
+            else -> identifier!!
+        }
     }
 
     override fun getFormattedString(identifier: String?, vararg args: Any?): String {
@@ -78,6 +81,7 @@ private class TestStringProvider : StringProvider {
             RESERVED_POS -> String.format("vorgemerkt, Pos. %s", *args)
             HOLD -> String.format("liegt seit %s bereit", *args)
             REQUEST_READY -> String.format("seit %s abholbereit (Magazinbestellung)", *args)
+            RENEWED -> String.format("%dx verlängert", *args)
             else -> identifier!!
         }
     }

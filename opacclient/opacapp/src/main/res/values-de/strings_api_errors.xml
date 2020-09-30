@@ -93,4 +93,6 @@
   <string name="request_progress">Magazinbestellung seit %s in Arbeit</string>
   <string name="reserved_pos">vorgemerkt, Pos. %s</string>
   <string name="copy">Exemplar</string>
+  <string name="reserved">vorgemerkt</string>
+  <string name="renewed">%dx verlängert</string>
 </resources>
