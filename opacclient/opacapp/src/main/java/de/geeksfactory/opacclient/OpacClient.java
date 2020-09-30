@@ -29,7 +29,6 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.util.Log;
 
 import org.joda.time.DateTime;
@@ -53,6 +52,7 @@ import java.util.Set;
 import androidx.annotation.NonNull;
 import androidx.core.app.ActivityCompat;
 import androidx.multidex.MultiDex;
+import androidx.preference.PreferenceManager;
 import de.geeksfactory.opacclient.apis.OpacApi;
 import de.geeksfactory.opacclient.frontend.AccountListActivity;
 import de.geeksfactory.opacclient.frontend.LibraryListActivity;
@@ -76,9 +76,8 @@ import de.geeksfactory.opacclient.utils.Utils;
 import de.geeksfactory.opacclient.webservice.LibraryConfigUpdateService;
 import de.geeksfactory.opacclient.webservice.UpdateHandler;
 import de.geeksfactory.opacclient.webservice.WebserviceReportHandler;
-import io.sentry.Sentry;
-import io.sentry.SentryUncaughtExceptionHandler;
-import io.sentry.android.AndroidSentryClientFactory;
+import io.sentry.android.core.SentryAndroid;
+import io.sentry.core.Sentry;
 
 public class OpacClient extends Application {
 
@@ -207,7 +206,7 @@ public class OpacClient extends Application {
         currentLang = getResources().getConfiguration().locale.getLanguage();
         return OpacApiFactory
                 .create(lib, new AndroidStringProvider(), new AndroidHttpClientFactory(),
-                        currentLang, new WebserviceReportHandler());
+                        currentLang, new WebserviceReportHandler(getApplicationContext()));
     }
 
     private OpacApi initApi(Library lib) throws LibraryRemovedException {
@@ -248,7 +247,7 @@ public class OpacClient extends Application {
         sp.edit().putLong(OpacClient.PREF_SELECTED_ACCOUNT, id).apply();
         resetCache();
         if (getLibrary() != null && !BuildConfig.DEBUG) {
-            Sentry.getContext().addTag(SENTRY_LIBRARY, getLibrary().getIdent());
+            Sentry.setTag(SENTRY_LIBRARY, getLibrary().getIdent());
         }
     }
 
@@ -374,19 +373,20 @@ public class OpacClient extends Application {
 
         sp = PreferenceManager.getDefaultSharedPreferences(this);
 
-        if (!BuildConfig.DEBUG) {
-            Sentry.init(new AndroidSentryClientFactory(this));
+        if (BuildConfig.SENTRY_DSN != null) {
+            SentryAndroid.init(this, options -> {
+                options.setDsn(BuildConfig.SENTRY_DSN);
+            });
             if (getLibrary() != null) {
-                Sentry.getContext().addTag(SENTRY_LIBRARY, getLibrary().getIdent());
+                Sentry.setTag(SENTRY_LIBRARY, getLibrary().getIdent());
             }
             DateTime lastUpdate = new PreferenceDataSource(getApplicationContext())
                     .getLastLibraryConfigUpdate();
-            Sentry.getContext().addExtra(
+            Sentry.setExtra(
                     SENTRY_DATA_VERSION, lastUpdate != null ? lastUpdate.toString() : "null");
-            Sentry.getContext().addExtra(
+            Sentry.setExtra(
                     SENTRY_PACKAGE, getPackageName()
             );
-            SentryUncaughtExceptionHandler.setup();
         }
 
         DebugTools.init(this);

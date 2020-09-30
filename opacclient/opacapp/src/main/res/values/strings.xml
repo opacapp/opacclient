@@ -127,7 +127,9 @@
     <string name="accounts">Accounts</string>
     <string name="accounts_edit">Change account</string>
     <string name="accounts_desc">Manage your libraries and membership numbers</string>
+    <string name="account_type">Account type</string>
     <string name="account_label">Label</string>
+    <string name="account_label_helper">optional, only for identifying the account within this app.</string>
     <string name="account_nr">Membership ID/user name</string>
     <string name="account_password">Password</string>
     <string name="account_city">Library</string>
@@ -193,7 +195,8 @@
     <string name="setting_nfc_desc">Experimental. Only on some devices and in some libraries.</string>
     <string name="notification_problems">Notifications might be broken.</string>
     <string name="no_results">The search returned no results.</string>
-    <string name="replacedby">This library now has an own app with extended features. We recommend using this special app. Click on the Play Store Icon on the right to download it</string>
+    <string name="replacedby">This library now has an own app with extended features. We recommend using this special app.</string>
+    <string name="replacedby_download">Download</string>
     <string name="email_address">Email address</string>
     <string name="email_address_description">Required for e-book reservations</string>
     <string name="accchange_sorry">Switching accounts failed, please start a new search.</string>

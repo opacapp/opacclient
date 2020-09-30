@@ -35,12 +35,16 @@ assets/buildnum.txt
 Thumbs.db
 
 .gradle
-local.properties
 /opacclient/.idea/*
+/opacclient/**/build/
+/opacclient/opacapp/foss/debug
+/opacclient/opacapp/foss/release
+/opacclient/opacapp/googlePlayServices/debug
+/opacclient/opacapp/googlePlayServices/release
+
 /.idea/*
 *.iml
 .DS_Store
-build/
 .ropeproject/
 
 upload.sh

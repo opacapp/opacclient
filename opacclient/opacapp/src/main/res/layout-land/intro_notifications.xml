@@ -17,7 +17,7 @@
 
     </FrameLayout>
 
-    <androidx.legacy.widget.Space
+    <Space
         android:layout_width="@dimen/mi_baseline"
         android:layout_height="wrap_content"/>
 

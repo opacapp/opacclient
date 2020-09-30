@@ -13,7 +13,7 @@ import android.net.ConnectivityManager;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
+import androidx.preference.PreferenceManager;
 import android.print.PrintAttributes;
 import android.print.PrintDocumentAdapter;
 import android.print.PrintManager;
@@ -232,16 +232,16 @@ public class SearchResultDetailFragment extends Fragment
     }
 
     @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
-        app = (OpacClient) activity.getApplication();
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        app = (OpacClient) context.getApplicationContext();
         // Activities containing this fragment must implement its callbacks.
-        if (!(activity instanceof Callbacks)) {
+        if (!(context instanceof Callbacks)) {
             throw new IllegalStateException(
                     "Activity must implement fragment's callbacks.");
         }
 
-        callbacks = (Callbacks) activity;
+        callbacks = (Callbacks) context;
     }
 
     @Override

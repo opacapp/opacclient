@@ -13,14 +13,15 @@ configurations {
 
 dependencies {
     implementation project(':libopac')
-    implementation fileTree(dir: 'libs', include: ['*.jar'])
-    implementation 'junit:junit:4.12'
-    unitTestImplementation "junit:junit:4.+"
-    implementation 'org.bouncycastle:bcprov-jdk15on:1.51'
-    implementation 'org.jsoup:jsoup:1.8.3'
+// Other
+    implementation 'junit:junit:4.13'
+    implementation 'org.bouncycastle:bcprov-jdk15on:1.65.01'
+    implementation 'org.jsoup:jsoup:1.13.1'
+// Unit testing
+    unitTestImplementation 'junit:junit:4.13'
 }
 
-task unitTest(type:Test, dependsOn: assemble) {
+task unitTest(type: Test, dependsOn: assemble) {
     description = "run unit tests"
     testClassesDirs = project.sourceSets.unitTest.output.classesDirs
     classpath = project.sourceSets.unitTest.runtimeClasspath

@@ -24,6 +24,7 @@ package de.geeksfactory.opacclient.apis
 import de.geeksfactory.opacclient.i18n.StringProvider
 import de.geeksfactory.opacclient.networking.HttpClientFactory
 import de.geeksfactory.opacclient.objects.*
+import de.geeksfactory.opacclient.searchfields.DropdownSearchField
 import de.geeksfactory.opacclient.searchfields.SearchField
 import de.geeksfactory.opacclient.searchfields.SearchQuery
 import de.geeksfactory.opacclient.searchfields.TextSearchField
@@ -48,6 +49,7 @@ import org.jsoup.parser.Parser
  */
 open class SLUB : OkHttpBaseApi() {
     protected lateinit var baseurl: String
+    protected lateinit var illRenewUrl: String
     private val ENCODING = "UTF-8"
     protected lateinit var query: List<SearchQuery>
 
@@ -101,6 +103,7 @@ open class SLUB : OkHttpBaseApi() {
     override fun init(library: Library, factory: HttpClientFactory) {
         super.init(library, factory)
         baseurl = library.data.getString("baseurl")
+        illRenewUrl = library.data.getString("illrenewurl")
     }
 
     override fun search(query: List<SearchQuery>): SearchRequestResult {
@@ -109,19 +112,24 @@ open class SLUB : OkHttpBaseApi() {
     }
 
     override fun searchGetPage(page: Int): SearchRequestResult {
-        if (query.size <= 4) {
-            throw OpacApi.OpacErrorException(stringProvider.getString(StringProvider.NO_CRITERIA_INPUT))
-        }
         val queryUrlB = HttpUrl.get("$baseurl/?type=1369315142&tx_find_find[format]=data&tx_find_find[data-format]=app")
                 .newBuilder()
-                .addQueryParameter("tx_find_find[page]", page.toString())
+                .addEncodedQueryParameter("tx_find_find[page]", page.toString())
         for (sq in query) {
             if (sq.value.isNotEmpty()) {
-                queryUrlB.addQueryParameter("tx_find_find[q][${sq.key}]", sq.value)
+                if (sq.searchField is DropdownSearchField) {  // access_facet
+                    queryUrlB.addEncodedQueryParameter("tx_find_find[facet][access_facet][${sq.value}]", "1")
+                } else {
+                    queryUrlB.addEncodedQueryParameter("tx_find_find[q][${sq.key}]", sq.value)
+                }
             }
         }
+        val queryUrl = queryUrlB.build()
+        if (queryUrl.querySize() <= 4) {
+            throw OpacApi.OpacErrorException(stringProvider.getString(StringProvider.NO_CRITERIA_INPUT))
+        }
         try {
-            return parseSearchResults(JSONObject(httpGet(queryUrlB.build().toString(), ENCODING)))
+            return parseSearchResults(JSONObject(httpGet(queryUrl.toString(), ENCODING)))
         } catch (e: JSONException) {
             throw OpacApi.OpacErrorException(stringProvider.getFormattedString(
                     StringProvider.UNKNOWN_ERROR_WITH_DESCRIPTION,
@@ -129,7 +137,7 @@ open class SLUB : OkHttpBaseApi() {
         }
     }
 
-    internal fun parseSearchResults(json: JSONObject): SearchRequestResult{
+    internal fun parseSearchResults(json: JSONObject): SearchRequestResult {
         val searchresults = json.optJSONArray("docs")?.let { 0.until(it.length()).map { i -> it.optJSONObject(i) } }
                 ?.map {
                     SearchResult().apply {
@@ -155,7 +163,7 @@ open class SLUB : OkHttpBaseApi() {
     override fun getResultById(id: String, homebranch: String?): DetailedItem {
         val json: JSONObject
         try {
-             json = JSONObject(httpGet(
+            json = JSONObject(httpGet(
                     "$baseurl/id/$id/?type=1369315142&tx_find_find[format]=data&tx_find_find[data-format]=app",
                     ENCODING))
         } catch (e: JSONException) {
@@ -166,7 +174,7 @@ open class SLUB : OkHttpBaseApi() {
         return parseResultById(id, json)
     }
 
-    internal fun parseResultById(id:String, json: JSONObject): DetailedItem {
+    internal fun parseResultById(id: String, json: JSONObject): DetailedItem {
         val dateFormat = DateTimeFormat.forPattern("dd.MM.yyyy")
         var hasReservableCopies = false
         fun getCopies(copiesArray: JSONArray, df: DateTimeFormatter): List<Copy> =
@@ -229,19 +237,19 @@ open class SLUB : OkHttpBaseApi() {
                 }
             }
             // links and references
-            for (link in listOf("linksRelated", "linksAccess", "linksGeneral")){
+            for (link in listOf("linksRelated", "linksAccess", "linksGeneral")) {
                 val linkArray = json.optJSONArray(link)
-                linkArray.run { 0.until(length()).map { optJSONObject(it) } }.map{
+                linkArray.run { 0.until(length()).map { optJSONObject(it) } }.map {
                     // assuming that only on of material, note or hostlabel is set
                     val key = with(it.optString("material") + it.optString("note") + it.optString("hostLabel")) {
                         if (isEmpty()) fieldCaptions[link] else this
                     }
-                    addDetail(Detail( key, it.optString("uri")))
+                    addDetail(Detail(key, it.optString("uri")))
                 }
             }
-            json.optJSONArray("references").run { 0.until(length()).map { optJSONObject(it) } }.map{
+            json.optJSONArray("references").run { 0.until(length()).map { optJSONObject(it) } }.map {
                 // TODO: usually links to old SLUB catalogue, does it make sense to add the link?
-                addDetail(Detail( it.optString("text"), "${it.optString("name")} (${it.optString("target")})"))
+                addDetail(Detail(it.optString("text"), "${it.optString("name")} (${it.optString("target")})"))
             }
             // copies
             val cps = json.opt("copies")
@@ -262,7 +270,7 @@ open class SLUB : OkHttpBaseApi() {
             volumes = json.optJSONObject("parts")?.optJSONArray("records")?.run {
                 0.until(length()).map { optJSONObject(it) }.map {
                     Volume(it.optString("id"),
-                            "${it.optString("part")} ${Parser.unescapeEntities(it.optString("name"),false)}")
+                            "${it.optString("part")} ${Parser.unescapeEntities(it.optString("name"), false)}")
                 }
             } ?: emptyList()
         }
@@ -290,7 +298,7 @@ open class SLUB : OkHttpBaseApi() {
                 else -> {
                     val options = reservableCopies.map { copy ->
                         mapOf("key" to copy.resInfo,
-                              "value" to "${copy.branch}: ${copy.status}")
+                                "value" to "${copy.branch}: ${copy.status}")
                     }
                     return OpacApi.ReservationResult(OpacApi.MultiStepResult.Status.SELECTION_NEEDED,
                             stringProvider.getString(StringProvider.COPY)).apply {
@@ -341,7 +349,7 @@ open class SLUB : OkHttpBaseApi() {
                     actionIdentifier = OpacApi.ReservationResult.ACTION_BRANCH
                     this.selection = pickupLocations.map {
                         mapOf("key" to "$selected\t${it.key}",
-                              "value" to it.value)
+                                "value" to it.value)
                     }
                 }
             }
@@ -354,7 +362,7 @@ open class SLUB : OkHttpBaseApi() {
                 return try {
                     val json = requestAccount(account, data[0],
                             mapOf("tx_slubaccount_account[barcode]" to data[1],
-                                  "tx_slubaccount_account[$pickupParameter]" to data[2]))
+                                    "tx_slubaccount_account[$pickupParameter]" to data[2]))
                     OpacApi.ReservationResult(OpacApi.MultiStepResult.Status.OK, json.optString("message"))
                 } catch (e: OpacApi.OpacErrorException) {
                     OpacApi.ReservationResult(OpacApi.MultiStepResult.Status.ERROR, e.message)
@@ -366,9 +374,24 @@ open class SLUB : OkHttpBaseApi() {
     }
 
     override fun prolong(media: String, account: Account, useraction: Int, selection: String?): OpacApi.ProlongResult {
+        val data = media.split('\t')
+        if (data.size != 2) {
+            OpacApi.ProlongResult(OpacApi.MultiStepResult.Status.ERROR, "internal error")
+        }
         return try {
-            requestAccount(account, "renew", mapOf("tx_slubaccount_account[renewals][0]" to media))
-            OpacApi.ProlongResult(OpacApi.MultiStepResult.Status.OK)
+            if (data[0] == "FL") {
+                val formBody = FormBody.Builder()
+                        .add("bc", data[1])
+                        .add("uid", account.name)
+                        .add("clang", "DE")
+                        .add("action", "send")
+                        .build()
+                val result = httpPost(illRenewUrl, formBody, ENCODING).html
+                OpacApi.ProlongResult(OpacApi.MultiStepResult.Status.OK, result.select("p:last-of-type").text())
+            } else {
+                requestAccount(account, "renew", mapOf("tx_slubaccount_account[renewals][0]" to data[1]))
+                OpacApi.ProlongResult(OpacApi.MultiStepResult.Status.OK)
+            }
         } catch (e: Exception) {
             OpacApi.ProlongResult(OpacApi.MultiStepResult.Status.ERROR, e.message)
         }
@@ -407,7 +430,7 @@ open class SLUB : OkHttpBaseApi() {
                                 author = it.optJSONArray("X_author")?.optString(0)
                                 //id = it.optString("label")  // TODO: get details from here via /bc --> redirects to /id, from there get the proper id
                                 format = it.optString("X_medientyp")
-                                status = when(type){  // TODO: maybe we need time (LocalDateTime) too make an educated guess on actual ready date for stack requests
+                                status = when (type) {  // TODO: maybe we need time (LocalDateTime) too make an educated guess on actual ready date for stack requests
                                     "hold" -> stringProvider.getFormattedString(StringProvider.HOLD,
                                             fmt.print(LocalDate(it.optString("X_date_reserved").substring(0, 10))))
                                     "request_ready" -> stringProvider.getFormattedString(StringProvider.REQUEST_READY,
@@ -463,14 +486,16 @@ open class SLUB : OkHttpBaseApi() {
                             format = it.optString("X_medientyp")
                             //id = it.optString("label")  // TODO: get details from here via /bc --> redirects to /id, from there get the proper id
                             barcode = it.optString("X_barcode")
-                            status = when {
-                                it.optInt("renewals") == 2 -> "2x verlängert"
-                                it.optInt("X_is_reserved") != 0 -> "vorgemerkt"
-                                else -> null
-                            }
                             if (it.optInt("X_is_renewable") == 1) {   // TODO: X_is_flrenewable for ill items
                                 isRenewable = true
-                                prolongData = barcode
+                                prolongData = "$format\t$barcode"
+                            } else {
+                                isRenewable = false
+                                status = when {
+                                    it.optInt("X_is_reserved") != 0 -> "vorgemerkt" // TODO: change to translatable string
+                                    it.optInt("renewals") > 0 -> "${it.optInt("renewals")}x verlängert"  // TODO: change to translatable string
+                                    else -> null
+                                }
                             }
                         }
                     } ?: emptyList()
@@ -516,18 +541,26 @@ open class SLUB : OkHttpBaseApi() {
     }
 
     override fun getSupportedLanguages(): Set<String>? {
-        //TODO("not implemented") 
+        //TODO("not implemented")
         return null
     }
 
     override fun parseSearchFields(): List<SearchField> {
         val doc = httpGet(baseurl, ENCODING).html
-        return doc.select("ul#search-in-field-options li").map {
+        return doc.select("ul#search-in-field-recreated-list li").map {
             TextSearchField().apply {
-                id = it["name"]
+                id = it["id"]
                 displayName = it.text
             }
-        }
+        } + listOf(DropdownSearchField().apply {
+            id = "access_facet"
+            displayName = "Zugang"
+            dropdownValues = listOf(
+                    DropdownSearchField.Option("", ""),
+                    DropdownSearchField.Option("Local Holdings", "physisch"),
+                    DropdownSearchField.Option("Electronic Resources", "digital")
+            )
+        })
     }
 
     override fun setLanguage(language: String?) {

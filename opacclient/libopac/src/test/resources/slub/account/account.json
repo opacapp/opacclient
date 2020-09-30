@@ -84,7 +84,7 @@
         "X_internal_date_due": "65161",
         "X_date_due": "2019-05-28",
         "X_days_to_due": "14",
-        "X_is_reserved": 1,
+        "X_is_reserved": 0,
         "X_is_renewable": 1,
         "X_is_flrenewable": 0,
         "X_rsn": 15864711

@@ -68,7 +68,7 @@ import de.geeksfactory.opacclient.utils.ErrorReporter;
 import de.geeksfactory.opacclient.webservice.LibraryConfigUpdateService;
 import de.geeksfactory.opacclient.webservice.WebService;
 import de.geeksfactory.opacclient.webservice.WebServiceManager;
-import io.sentry.Sentry;
+import io.sentry.core.Sentry;
 
 public class LibraryListActivity extends AppCompatActivity
         implements ActivityCompat.OnRequestPermissionsResultCallback {
@@ -152,7 +152,7 @@ public class LibraryListActivity extends AppCompatActivity
             @Override
             public void onClick(View v) {
                 if (fragment instanceof LocatedLibraryListFragment) {
-                    MenuItemCompat.collapseActionView(searchItem);
+                    searchItem.collapseActionView();
                     showListCountries(true);
                     tvLocateString.setText(R.string.geolocate);
                     ivLocationIcon.setImageResource(R.drawable.ic_locate_24dp);
@@ -184,7 +184,7 @@ public class LibraryListActivity extends AppCompatActivity
         // Get the SearchView and set the searchable configuration
         SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
         searchItem = menu.findItem(R.id.action_search);
-        searchView = (SearchView) MenuItemCompat.getActionView(searchItem);
+        searchView = (SearchView) searchItem.getActionView();
         // Assumes current activity is the searchable activity
         searchView.setSearchableInfo(searchManager
                 .getSearchableInfo(getComponentName()));
@@ -811,7 +811,7 @@ public class LibraryListActivity extends AppCompatActivity
                             "updated config for " + String.valueOf(count) + " libraries");
                     ((OpacClient) getApplication()).resetCache();
                     if (!BuildConfig.DEBUG) {
-                        Sentry.getContext().addExtra(OpacClient.SENTRY_DATA_VERSION,
+                        Sentry.setExtra(OpacClient.SENTRY_DATA_VERSION,
                                 prefs.getLastLibraryConfigUpdate().toString());
                     }
                 } catch (IOException | JSONException ignore) {

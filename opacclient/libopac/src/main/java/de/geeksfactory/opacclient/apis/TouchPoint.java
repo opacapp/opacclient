@@ -445,9 +445,9 @@ public class TouchPoint extends OkHttpBaseApi implements OpacApi {
         for (int i = 0; i < table.size(); i++) {
             Element tr = table.get(i);
             SearchResult sr = new SearchResult();
-            if (tr.select(".icn, img[width=32]").size() > 0) {
-                String[] fparts = tr.select(".icn, img[width=32]").first()
-                                    .attr("src").split("/");
+            Element icon = tr.select(".icn, img[width=32], .icon img").first();
+            if (icon != null) {
+                String[] fparts = icon.attr("src").split("/");
                 String fname = fparts[fparts.length - 1];
                 String changedFname = fname.toLowerCase(Locale.GERMAN)
                                            .replace(".jpg", "").replace(".gif", "")
@@ -523,8 +523,14 @@ public class TouchPoint extends OkHttpBaseApi implements OpacApi {
                             url + "?" + URLEncodedUtils.format(map, "UTF-8"),
                             ENCODING).replace("\r\n", "").trim();
                     Document loanStatusDoc = Jsoup.parse(loanStatusHtml);
-                    String loanstatus = loanStatusDoc.text()
-                                                     .replace("\u00bb", "").trim();
+
+                    String loanstatus;
+                    if (loanStatusDoc.select("a").size() == 1) {
+                        loanstatus = loanStatusDoc.select("a").first().text();
+                    } else {
+                        loanstatus = loanStatusDoc.text();
+                    }
+                    loanstatus = loanstatus.replace("\u00bb", "").trim();
 
                     if ((loanstatus.startsWith("entliehen")
                             && loanstatus.contains("keine Vormerkung möglich") || loanstatus
@@ -725,28 +731,40 @@ public class TouchPoint extends OkHttpBaseApi implements OpacApi {
         }
 
         // Copies
-        String copiesParameter = doc.select("div[id^=ajax_holdings_url")
-                                    .attr("ajaxParameter").replace("&amp;", "");
+        String copiesParameter = doc.select("div[id^=ajax_holdings_url]")
+                                    .attr("ajaxParameter");
+        if ("".equals(copiesParameter)) {
+            copiesParameter = doc.select("div[id^=ajax_holdings_url]")
+                                 .attr("data-ajaxParameter");
+        }
+        copiesParameter = copiesParameter.replace("&amp;", "");
         if (!"".equals(copiesParameter)) {
             String copiesHtml = httpGet(opac_url + "/" + copiesParameter,
                     ENCODING);
             Document copiesDoc = Jsoup.parse(copiesHtml);
             List<String> table_keys = new ArrayList<>();
-            for (Element th : copiesDoc.select(".data tr th")) {
+
+            // newer versions (e.g. Chemnitz) use divs instead of tables
+            boolean table = copiesDoc.select(".data tr th").size() > 0;
+
+            for (Element th : copiesDoc.select(table ? ".data tr th" : ".data div.d-none > div")) {
                 if (th.text().contains("Zweigstelle")) {
                     table_keys.add("branch");
-                } else if (th.text().contains("Status")) {
+                } else if (th.text().contains("Status") || th.text().contains("Leihstatus")) {
                     table_keys.add("status");
                 } else if (th.text().contains("Signatur")) {
                     table_keys.add("signature");
+                } else if (th.text().contains("Mediennummer")) {
+                    table_keys.add("barcode");
                 } else {
                     table_keys.add(null);
                 }
             }
-            for (Element tr : copiesDoc.select(".data tr:has(td)")) {
+            for (Element tr : copiesDoc
+                    .select(table ? ".data tr:has(td)" : ".data > div > div:not(.d-none)")) {
                 Copy copy = new Copy();
                 int i = 0;
-                for (Element td : tr.select("td")) {
+                for (Element td : tr.select(table ? "td" : "> div")) {
                     if (table_keys.get(i) != null) {
                         copy.set(table_keys.get(i), td.text().trim());
                     }
@@ -767,8 +785,9 @@ public class TouchPoint extends OkHttpBaseApi implements OpacApi {
                 reservationDoc.setBaseUri(opac_url);
                 if (reservationDoc.select("a[href*=requestItem.do]").size() == 1) {
                     result.setReservable(true);
-                    result.setReservation_info(reservationDoc.select("a")
-                                                             .first().attr("abs:href"));
+                    result.setReservation_info(
+                            reservationDoc.select("a[href*=requestItem.do]")
+                                          .first().attr("abs:href"));
                 } else if (reservationDoc.select("form[action*=requestItem.do]").size() == 1) {
                     // seen at UB Erlangen-Nürnberg
                     result.setReservable(true);
@@ -874,6 +893,10 @@ public class TouchPoint extends OkHttpBaseApi implements OpacApi {
         if (doc.select(".message-error").size() > 0) {
             return new ReservationResult(MultiStepResult.Status.ERROR, doc
                     .select(".message-error").first().text());
+        } else if (doc.select(".message-confirm").size() > 0) {
+            // if no further inputs are needed, reservation is already finished here
+            // seen in HS Augsburg
+            return new ReservationResult(MultiStepResult.Status.OK);
         }
         FormBody.Builder body = new FormBody.Builder();
         body.add("methodToCall", "requestItem");
@@ -1360,6 +1383,12 @@ public class TouchPoint extends OkHttpBaseApi implements OpacApi {
             } else {
                 throw new OpacErrorException(doc.getElementsByClass("alert").get(0).text());
             }
+        }
+
+        Element changePasswordForm =
+                doc.select("form[action$=methodToCall=changePassword]").first();
+        if (changePasswordForm != null) {
+            throw new OpacErrorException(stringProvider.getString("please_change_password"));
         }
 
         logged_in = System.currentTimeMillis();

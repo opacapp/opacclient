@@ -40,7 +40,7 @@ open class Arena : OkHttpBaseApi() {
                 .map { container ->
             TextSearchField().apply {
                 id = container.select("input").first()["name"]
-                displayName = container.select("span").first().text()
+                displayName = container.select("span, label").first().text()
             }
         }
 
@@ -112,7 +112,7 @@ open class Arena : OkHttpBaseApi() {
         return SearchRequestResult(results, count, page)
     }
 
-    protected fun parseSearchResult(record: Element, coverAjaxUrls: Map<String, String>):
+    protected fun parseSearchResult(record: Element, ajaxUrls: Map<String, String>):
             SearchResult {
         return SearchResult().apply {
             val title = record.select(".arena-record-title").text
@@ -121,8 +121,28 @@ open class Arena : OkHttpBaseApi() {
 
             innerhtml = "<b>$title</b><br>$author ${year ?: ""}"
             id = record.select(".arena-record-id").first().text
-            cover = getCover(record, coverAjaxUrls)
+            cover = getCover(record, ajaxUrls)
+            status = getSearchResultStatus(record, ajaxUrls)
         }
+    }
+
+    private fun getSearchResultStatus(record: Element, ajaxUrls: Map<String, String>? = null): SearchResult.Status {
+        val statusHolder = record.select(".arena-record-right").first()
+        if (statusHolder != null) {
+            val id = statusHolder.parent()["id"]
+            if (ajaxUrls != null && ajaxUrls.containsKey(id)) {
+                // get status via ajax
+                val xml = httpGet(ajaxUrls[id], ENCODING).html
+                val html = xml.select("component").first().text.html
+                val status = html.select(".arena-record-availability > a > span").first()?.classNames()
+                if (status != null && status.contains("arena-notavailable")) {
+                    return SearchResult.Status.RED
+                } else if (status != null && status.contains("arena-available")) {
+                    return SearchResult.Status.GREEN
+                }
+            }
+        }
+        return SearchResult.Status.UNKNOWN
     }
 
     internal fun getCover(record: Element, coverAjaxUrls: Map<String, String>? = null): String? {
@@ -145,15 +165,17 @@ open class Arena : OkHttpBaseApi() {
     }
 
     internal fun getAjaxUrls(doc: Document): Map<String, String> {
-        val regex = Regex(Regex.escape(
-                "<script type=\"text/javascript\">Wicket.Event.add(window,\"domready\",function(b){var a=wicketAjaxGet(\"")
-                + "([^\"]+)"
-                + Regex.escape("\",function(){}.bind(this),function(){}.bind(this),function(){return Wicket.\$(\"")
-                + "([^\"]+)"
-                + Regex.escape("\")!=null}.bind(this))});</script>"))
-        return regex.findAll(doc.html()).associate { match ->
-            Pair(match.groups[2]!!.value, match.groups[1]!!.value)
+        val scripts = doc.select("script").map { it.html() }
+        val regex = Regex("wicketAjaxGet\\(['\"]([^\"']+)[\"'](?:.|[\\r\\n])*Wicket\\.\\\$\\([\"']([^\"']+)[\"']\\)\\s*!=\\s*null;?\\}\\.bind\\(this\\)\\)")
+
+        val map = HashMap<String, String>()
+        scripts.forEach { script ->
+            regex.findAll(script).forEach { match ->
+                val url = match.groups[1]!!.value.replace("\\x3d", "=").replace("\\x26", "&")
+                map[match.groups[2]!!.value] = url
+            }
         }
+        return map
     }
 
     override fun filterResults(filter: Filter, option: Filter.Option): SearchRequestResult {
@@ -226,7 +248,14 @@ open class Arena : OkHttpBaseApi() {
             }
 
             id = doc.select(".arena-record-id").first().text
-            cover = doc.select(".arena-detail-cover img").first()?.absUrl("href")
+            val coverTag = doc.select(".arena-detail-cover img").first()
+            if (coverTag != null) {
+                cover = if (coverTag.hasAttr("href")) {
+                    coverTag.absUrl("href")
+                } else {
+                    coverTag.absUrl("src")
+                }
+            }
             copies = holdingsDoc?.select(".arena-row")?.map { row ->
                 Copy().apply {
                     department = row.select(".arena-holding-department .arena-value").text
@@ -246,8 +275,25 @@ open class Arena : OkHttpBaseApi() {
     override fun reservation(item: DetailedItem, account: Account, useraction: Int, selection: String?): OpacApi.ReservationResult {
         login(account)
         val details = httpGet(getUrl(item.id), ENCODING).html
-        val url = details.select(" a[href*=reservationButton]").first()?.attr("href")
-        val doc = httpGet(url, ENCODING).html
+        val resButton = details.select(" a[href*=reservationButton]").first()
+                ?: return OpacApi.ReservationResult(OpacApi.MultiStepResult.Status.ERROR,
+                        stringProvider.getString(StringProvider.INTERNAL_ERROR))
+
+        var doc: Document? = null
+        if (resButton.hasAttr("onclick")) {
+            val js = resButton.attr("onclick")
+            // AJAX reservation form: fetch HTML which is embedded in XML
+            val url = Regex("wicketAjaxGet\\('([^']+)',").find(js)?.groups?.get(1)?.value
+            if (url != null) {
+                val xmlDoc = httpGet(url, ENCODING).html
+                doc = xmlDoc.select("component").first().text.html
+            }
+        }
+        if (doc == null) {
+            // fallback: non-JS form (currently does not work in Ludwigsburg, 25.06.2020)
+            val url = resButton.attr("href")
+            doc = httpGet(url, ENCODING).html
+        }
         val form = doc.select("form[action*=reservationForm]").first()
         if (selection == null) {
             return OpacApi.ReservationResult(OpacApi.MultiStepResult.Status.SELECTION_NEEDED).apply {
@@ -409,7 +455,8 @@ open class Arena : OkHttpBaseApi() {
     }
 
     private fun getUrl(id: String) =
-            "$opacUrl/results?p_p_id=searchResult_WAR_arenaportlets&p_r_p_687834046_search_item_id=$id"
+            "$opacUrl/results?p_p_id=searchResult_WAR_arenaportlets" +
+                    "&p_r_p_arena_urn%3Aarena_search_item_id=$id"
 
     override fun getSupportFlags(): Int {
         return OpacApi.SUPPORT_FLAG_ENDLESS_SCROLLING

@@ -1,8 +1,8 @@
 package de.geeksfactory.opacclient.gradle
 
+import org.apache.commons.io.FileUtils
 import org.gradle.api.DefaultTask
 import org.gradle.api.tasks.TaskAction
-import org.gradle.util.GFileUtils
 import org.json.JSONArray
 import org.json.JSONObject
 
@@ -25,10 +25,10 @@ class JsonFilesTask extends DefaultTask {
         conn.setSSLSocketFactory(createSSLSocketFactory())
         String response = conn.inputStream.getText("UTF-8")
         JSONArray data = new JSONArray(response)
-        GFileUtils.mkdirs(new File(bibsDir))
-        GFileUtils.cleanDirectory(new File(bibsDir))
+        new File(bibsDir).mkdirs()
+        FileUtils.cleanDirectory(new File(bibsDir))
         for (int i = 0; i < data.length(); i++) {
-            JSONObject library = data.get(i);
+            JSONObject library = data.get(i)
             String id = library.getString("_id")
             library.remove("_id")
             File file = new File(bibsDir, id + ".json")

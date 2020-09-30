@@ -7,7 +7,7 @@ import org.apache.http.client.CookieStore;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
-import org.apache.http.client.protocol.ClientContext;
+import org.apache.http.client.protocol.HttpClientContext;
 import org.apache.http.client.utils.URIBuilder;
 import org.apache.http.protocol.BasicHttpContext;
 import org.apache.http.protocol.HttpContext;
@@ -71,7 +71,7 @@ public abstract class ApacheBaseApi extends BaseApi {
                 // Create local HTTP context
                 HttpContext localContext = new BasicHttpContext();
                 // Bind custom cookie store to the local context
-                localContext.setAttribute(ClientContext.COOKIE_STORE,
+                localContext.setAttribute(HttpClientContext.COOKIE_STORE,
                         cookieStore);
 
                 response = http_client.execute(httpget, localContext);
@@ -190,7 +190,7 @@ public abstract class ApacheBaseApi extends BaseApi {
                 // Create local HTTP context
                 HttpContext localContext = new BasicHttpContext();
                 // Bind custom cookie store to the local context
-                localContext.setAttribute(ClientContext.COOKIE_STORE,
+                localContext.setAttribute(HttpClientContext.COOKIE_STORE,
                         cookieStore);
 
                 response = http_client.execute(httppost, localContext);

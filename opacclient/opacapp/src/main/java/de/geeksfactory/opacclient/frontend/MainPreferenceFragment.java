@@ -221,8 +221,8 @@ public class MainPreferenceFragment extends PreferenceFragmentCompat {
     }
 
     private void showDialog(DialogFragment newFragment) {
-        FragmentTransaction ft = getFragmentManager().beginTransaction();
-        Fragment prev = getFragmentManager().findFragmentByTag(TAG_DIALOG);
+        FragmentTransaction ft = getParentFragmentManager().beginTransaction();
+        Fragment prev = getParentFragmentManager().findFragmentByTag(TAG_DIALOG);
         if (prev != null) {
             ft.remove(prev);
         }
@@ -232,8 +232,8 @@ public class MainPreferenceFragment extends PreferenceFragmentCompat {
 
     private void removeDialogs() {
         try {
-            FragmentTransaction ft = getFragmentManager().beginTransaction();
-            Fragment prev = getFragmentManager().findFragmentByTag(TAG_DIALOG);
+            FragmentTransaction ft = getParentFragmentManager().beginTransaction();
+            Fragment prev = getParentFragmentManager().findFragmentByTag(TAG_DIALOG);
             if (prev != null) {
                 ft.remove(prev);
             }

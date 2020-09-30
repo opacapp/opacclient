@@ -1,5 +1,6 @@
 {
     "": null,
+    "Abgabefrist": "returndate",
     "Anzahl Verl\u00e4ngerungen": "status",
     "Anz.Verl.": "status",
     "Ausleihdatum": null,
@@ -8,6 +9,7 @@
     "Ausleihstelle": "lendingbranch",
     "Author": "author",
     "Autor": "author",
+    "Autor(in)": "author",
     "Barcode": "barcode",
     "Barcode No": "barcode",
     "Barcode-Nr.": "barcode",

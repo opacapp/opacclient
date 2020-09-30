@@ -85,6 +85,8 @@ public interface StringProvider {
     String DESCRIPTION = "description";
     String RESERVATION_READY = "reservation_ready";
     String PLEASE_CHANGE_PASSWORD = "please_change_password";
+    String PROLONG_ALL_NOT_POSSIBLE = "prolong_all_not_possible";
+    String PROLONG_ALL_NO_ITEMS = "prolong_all_no_items";
     String HOLD = "hold";
     String REQUEST_READY = "request_ready";
     String READINGROOM = "readingroom";

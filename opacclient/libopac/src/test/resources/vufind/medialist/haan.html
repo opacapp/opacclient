@@ -1,0 +1,433 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+    <meta http-equiv="Content-Type" content="text&#x2F;html&#x3B;&#x20;charset&#x3D;UTF-8">
+    <meta name="Generator" content="VuFind&#x20;5.1.0">
+    <title>Checked out items</title>        <!-- RTL styling -->
+    <link href="&#x2F;themes&#x2F;smartbib&#x2F;css&#x2F;compiled.css&#x3F;_&#x3D;1586155343"
+          media="all" rel="stylesheet" type="text&#x2F;css">
+    <link href="&#x2F;themes&#x2F;bootstrap3&#x2F;css&#x2F;print.css&#x3F;_&#x3D;1548956213"
+          media="print" rel="stylesheet" type="text&#x2F;css">
+    <!--[if lt IE 10]><link href="&#x2F;themes&#x2F;bootstrap3&#x2F;css&#x2F;flex-fallback.css&#x3F;_&#x3D;1548956213" media="" rel="stylesheet" type="text&#x2F;css"><![endif]-->
+    <link href="&#x2F;themes&#x2F;smartbib&#x2F;images&#x2F;fav.png&#x3F;_&#x3D;1585065639"
+          rel="shortcut&#x20;icon" type="image&#x2F;x-icon">
+    <link href="&#x2F;Search&#x2F;OpenSearch&#x3F;method&#x3D;describe" rel="search"
+          type="application&#x2F;opensearchdescription&#x2B;xml"
+          title="Library&#x20;catalog&#x20;search">
+    <script type="text&#x2F;javascript">
+    //<!--
+    var userIsLoggedIn = true;
+    //-->
+
+    </script>
+    <script type="text&#x2F;javascript"
+            src="&#x2F;themes&#x2F;bootstrap3&#x2F;js&#x2F;vendor&#x2F;jquery.min.js&#x3F;_&#x3D;1548956213"></script>
+    <script type="text&#x2F;javascript"
+            src="&#x2F;themes&#x2F;bootstrap3&#x2F;js&#x2F;vendor&#x2F;bootstrap.min.js&#x3F;_&#x3D;1548956213"></script>
+    <script type="text&#x2F;javascript"
+            src="&#x2F;themes&#x2F;bootstrap3&#x2F;js&#x2F;vendor&#x2F;bootstrap-accessibility.min.js&#x3F;_&#x3D;1548956213"></script>
+    <script type="text&#x2F;javascript"
+            src="&#x2F;themes&#x2F;bootstrap3&#x2F;js&#x2F;vendor&#x2F;validator.min.js&#x3F;_&#x3D;1548956213"></script>
+    <script type="text&#x2F;javascript"
+            src="&#x2F;themes&#x2F;bootstrap3&#x2F;js&#x2F;lib&#x2F;form-attr-polyfill.js&#x3F;_&#x3D;1548956213"></script>
+    <script type="text&#x2F;javascript"
+            src="&#x2F;themes&#x2F;bootstrap3&#x2F;js&#x2F;lib&#x2F;autocomplete.js&#x3F;_&#x3D;1548956213"></script>
+    <script type="text&#x2F;javascript"
+            src="&#x2F;themes&#x2F;bootstrap3&#x2F;js&#x2F;common.js&#x3F;_&#x3D;1548956213"></script>
+    <script type="text&#x2F;javascript"
+            src="&#x2F;themes&#x2F;bootstrap3&#x2F;js&#x2F;lightbox.js&#x3F;_&#x3D;1548956213"></script>
+    <script type="text&#x2F;javascript"
+            src="&#x2F;themes&#x2F;smartbib&#x2F;js&#x2F;smartbib.js&#x3F;_&#x3D;1585065639"></script>
+    <script type="text&#x2F;javascript"
+            src="&#x2F;themes&#x2F;bootstrap3&#x2F;js&#x2F;account_ajax.js&#x3F;_&#x3D;1548956213"></script>
+    <script type="text&#x2F;javascript">
+    //<!--
+    VuFind.path = '';
+VuFind.defaultSearchBackend = 'Solr';
+VuFind.addTranslations({"add_tag_success": "Tags saved","bulk_email_success": "Your item(s) were e-mailed","bulk_noitems_advice": "No items were selected. Please click on a checkbox next to an item and try again.","bulk_save_success": "Your item(s) were saved successfully","close": "close","collection_empty": "No items to display.","error_occurred": "Error","go_to_list": "Go to List","hold_available": "Available for pickup","libphonenumber_invalid": "Phone number invalid","libphonenumber_invalidcountry": "Invalid country calling code","libphonenumber_invalidregion": "Invalid region code:","libphonenumber_notanumber": "The string supplied did not seem to be a phone number","libphonenumber_toolong": "The string supplied is too long to be a phone number","libphonenumber_tooshort": "The string supplied is too short to be a phone number","libphonenumber_tooshortidd": "Phone number too short after IDD","loading": "Loading","more": "more","number_thousands_separator": ",","sms_success": "Message sent.","Phone number invalid": "Phone number invalid","Invalid country calling code": "Invalid country calling code","Invalid region code": "Invalid region code:","The string supplied did not seem to be a phone number": "The string supplied did not seem to be a phone number","The string supplied is too long to be a phone number": "The string supplied is too long to be a phone number","The string supplied is too short to be a phone number": "The string supplied is too short to be a phone number","Phone number too short after IDD": "Phone number too short after IDD","account_has_alerts": "Your account has alerts","Checked Out Items": "Checked out items","ill_request_available": "Available for Pickup","renew_item_due_tooltip": "Items due soon","renew_item_overdue_tooltip": "Items overdue","request_in_transit": "In Transit to Pickup Location","storage_retrieval_request_available": "Available for Pickup"});
+    //-->
+
+    </script>
+</head>
+<body class="template-dir-myresearch template-name-checkedout ">
+<header class="hidden-print">
+    <a class="sr-only" href="#content">Skip to content</a>
+    <div class="library container navbar">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse"
+                    data-target="#library-collapse">
+                <span class="sr-only">Toggle navigation</span>
+                <i class="fa fa-bars" aria-hidden="true"></i>
+            </button>
+            <a class="navbar-brand lang-de" href="/?hiddenFilters%5B%5D=collection%3A"></a>
+        </div>
+        <div class="navbar-collapse collapse" id="library-collapse">
+            <nav>
+                <ul role="navigation" class="nav navbar-nav navbar-right flip">
+                    <li class="libraryOptions langenfeld">
+                        <a class="btn btn-primary" href="/?hiddenFilters%5B%5D=collection%3A"><i
+                                class="fa fa-book" aria-hidden="true"></i> Verbund</a>
+                    </li>
+                    <li class="libraryOptions erkrath">
+                        <a class="btn btn-default"
+                           href="/?hiddenFilters%5B%5D=collection%3AErkrath"><i id="account-icon"
+                                                                                class="fa fa-book"
+                                                                                aria-hidden="true"></i> Erkrath</a>
+                    </li>
+                    <li class="libraryOptions haan">
+                        <a class="btn btn-default" href="/?hiddenFilters%5B%5D=collection%3AHaan"><i
+                                id="account-icon" class="fa fa-book"
+                                aria-hidden="true"></i> Haan</a>
+                    </li>
+                    <li class="libraryOptions heiligenhaus">
+                        <a class="btn btn-default"
+                           href="/?hiddenFilters%5B%5D=collection%3AHeiligenhaus"><i
+                                id="account-icon" class="fa fa-book"
+                                aria-hidden="true"></i> Heiligenhaus</a>
+                    </li>
+                    <li class="libraryOptions hilden">
+                        <a class="btn btn-default" href="/?hiddenFilters%5B%5D=collection%3AHilden"><i
+                                id="account-icon" class="fa fa-book" aria-hidden="true"></i> Hilden</a>
+                    </li>
+                    <li class="libraryOptions langenfeld">
+                        <a class="btn btn-default"
+                           href="/?hiddenFilters%5B%5D=collection%3ALangenfeld" class="logout"><i
+                                class="fa fa-book" aria-hidden="true"></i> Langenfeld</a>
+                    </li>
+                    <li class="libraryOptions mettmann">
+                        <a class="btn btn-default"
+                           href="/?hiddenFilters%5B%5D=collection%3AMettmann"><i id="account-icon"
+                                                                                 class="fa fa-book"
+                                                                                 aria-hidden="true"></i> Mettmann</a>
+                    </li>
+                    <li class="libraryOptions monheim">
+                        <a class="btn btn-default"
+                           href="/?hiddenFilters%5B%5D=collection%3AMonheim"><i id="account-icon"
+                                                                                class="fa fa-book"
+                                                                                aria-hidden="true"></i> Monheim</a>
+                    </li>
+                    <li class="libraryOptions velbert">
+                        <a class="btn btn-default"
+                           href="/?hiddenFilters%5B%5D=collection%3AVelbert"><i class="fa fa-book"
+                                                                                aria-hidden="true"></i> Velbert</a>
+                    </li>
+                    <li class="libraryOptions wuelfrath">
+                        <a class="btn btn-default"
+                           href="/?hiddenFilters%5B%5D=collection%3AWülfrath"><i id="account-icon"
+                                                                                 class="fa fa-book"
+                                                                                 aria-hidden="true"></i> Wülfrath</a>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+    </div>
+    <div class="banner container navbar">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse"
+                    data-target="#header-collapse">
+                <span class="sr-only">Toggle navigation</span>
+                <i class="fa fa-bars" aria-hidden="true"></i>
+            </button>
+            <a class="navbar-brand lang-en" href="/"><img src="/themes/smartbib/images/mettmann.svg"
+                                                          height="32"/></a>
+        </div>
+        <div class="collapse navbar-collapse" id="header-collapse">
+            <nav>
+                <ul role="navigation" class="nav navbar-nav navbar-right flip">
+                    <li class="logoutOptions">
+                        <a href="/MyResearch/Home?redirect=0"><i id="account-icon"
+                                                                 class="fa fa-user-circle"
+                                                                 aria-hidden="true"></i> Your account</a>
+                    </li>
+                    <li class="logoutOptions">
+                        <a href="/MyResearch/Logout" class="logout"><i class="fa fa-sign-out"
+                                                                       aria-hidden="true"></i> Log Out</a>
+                    </li>
+                    <li id="loginOptions" class="hidden">
+                        <a href="/MyResearch/UserLogin?library=" data-lightbox><i
+                                class="fa fa-sign-in" aria-hidden="true"></i> Login</a>
+                    </li>
+
+
+                    <li class="language dropdown">
+                        <form method="post" name="langForm" id="langForm">
+                            <input type="hidden" name="mylang"/>
+                        </form>
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">Language <b
+                                class="caret"></b></a>
+                        <ul class="dropdown-menu">
+                            <li class="active"><a href="#"
+                                                  onClick="document.langForm.mylang.value='en';document.langForm.submit()">English</a>
+                            </li>
+                            <li><a href="#"
+                                   onClick="document.langForm.mylang.value='de';document.langForm.submit()">Deutsch</a>
+                            </li>
+                            <li><a href="#"
+                                   onClick="document.langForm.mylang.value='es';document.langForm.submit()">Español</a>
+                            </li>
+                            <li><a href="#"
+                                   onClick="document.langForm.mylang.value='fr';document.langForm.submit()">Français</a>
+                            </li>
+                            <li><a href="#"
+                                   onClick="document.langForm.mylang.value='it';document.langForm.submit()">Italiano</a>
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+    </div>
+    <div class="search container navbar">
+        <nav class="nav searchbox hidden-print">
+            <form id="searchForm" class="searchForm navbar-form navbar-left flip" method="get"
+                  action="/Search/Results" name="searchForm" autocomplete="off">
+                <input id="searchForm_lookfor" class="searchForm_lookfor form-control search-query"
+                       type="text" name="lookfor" value="" aria-label="Search terms"/>
+                <select id="searchForm_type" class="searchForm_type form-control" name="type"
+                        data-native-menu="false" aria-label="Search type">
+                    <option value="AllFields">All fields</option>
+                    <option value="Title">Title</option>
+                    <option value="Author">Author</option>
+                    <option value="Subject">Subject</option>
+                    <option value="CallNumber">Systematik</option>
+                    <option value="ISN">ISBN/ISSN</option>
+                </select>
+                <button type="submit" class="btn btn-primary"><i class="fa fa-search"
+                                                                 aria-hidden="true"></i> Find
+                </button>
+                <a href="/Search/Advanced" class="btn btn-link" rel="nofollow">Advanced</a>
+
+            </form>
+        </nav>
+    </div>
+</header>
+<nav class="breadcrumbs">
+    <div class="container">
+        <ul class="breadcrumb hidden-print">
+            <li><a href="/MyResearch/Home">Your account</a></li>
+            <li class="active">Checked out items</li>
+        </ul>
+    </div>
+</nav>
+<div role="main" class="main">
+    <div id="content" class="container">
+
+        <div class="mainbody left">
+            <h2>Your checked out items</h2>
+
+
+            <nav class="search-header hidden-print">
+            </nav>
+            <form name="renewals" method="post" id="renewals">
+                <div class="toolbar">
+                    <div class="checkbox">
+                        <label>
+                            <input type="checkbox" name="selectAll" class="checkbox-select-all"/>
+                            Select page </label>
+                        <input type="submit" class="btn btn-default" id="renewSelected"
+                               name="renewSelected" value="Renew item"/>
+                        <input type="submit" class="btn btn-default" id="renewAll" name="renewAll"
+                               value="Renew all items"/>
+                    </div>
+                </div>
+
+
+                <div id="recordHAAN.0065139" class="result">
+                    <div class="checkbox">
+                        <label> </label>
+                    </div>
+
+                    <div class="media">
+                        <div class="media-body">
+                            <a href="/Record/HAAN.0065139"
+                               class="title">Die Frauen von Andros : Roman</a><br/>
+                            by:
+                            <a href="  /Author/Home?author=Karystiani%2C+Ioanna">Karystiani, Ioanna</a><br/>
+                            <span class="format roman">Roman</span>
+                            <br/>
+
+
+                            <strong>Renewed:</strong> 2 / 2 <br/>
+
+
+                            <strong>Due date: 07.08.2020</strong>
+
+                            <div class="alert alert-info">Maximale Anzahl an aufeinanderfolgenden Verlängerungen erreicht</div>
+                        </div>
+                    </div>
+                    <span class="Z3988"
+                          title="url_ver&#x3D;Z39.88-2004&amp;ctx_ver&#x3D;Z39.88-2004&amp;ctx_enc&#x3D;info&#x25;3Aofi&#x25;2Fenc&#x25;3AUTF-8&amp;rfr_id&#x3D;info&#x25;3Asid&#x25;2Fvufind.svn.sourceforge.net&#x25;3Agenerator&amp;rft.title&#x3D;Die&#x2B;Frauen&#x2B;von&#x2B;Andros&#x2B;&#x25;3A&#x2B;Roman&amp;rft.date&#x3D;2004&amp;rft_val_fmt&#x3D;info&#x25;3Aofi&#x25;2Ffmt&#x25;3Akev&#x25;3Amtx&#x25;3Adc&amp;rft.creator&#x3D;Karystiani&#x25;2C&#x2B;Ioanna&amp;rft.pub&#x3D;Suhrkamp&amp;rft.format&#x3D;Roman"></span>
+                </div>
+                <div id="recordHAAN.0085441" class="result">
+                    <div class="checkbox">
+                        <label> </label>
+                    </div>
+
+                    <div class="media">
+                        <div class="media-body">
+                            <a href="/Record/HAAN.0085441"
+                               class="title">Stille Wasser : Commissario Brunettis sechsundzwanzigster Fall ; Roman</a><br/>
+                            by:
+                            <a href="  /Author/Home?author=Leon%2C+Donna">Leon, Donna</a><br/>
+                            <span class="format roman">Roman</span>
+                            <br/>
+
+
+                            <strong>Renewed:</strong> 1 / 1 <br/>
+
+
+                            <strong>Due date: 01.08.2020</strong>
+
+                            <div class="alert alert-info">No renewal for the item.</div>
+                        </div>
+                    </div>
+                    <span class="Z3988"
+                          title="url_ver&#x3D;Z39.88-2004&amp;ctx_ver&#x3D;Z39.88-2004&amp;ctx_enc&#x3D;info&#x25;3Aofi&#x25;2Fenc&#x25;3AUTF-8&amp;rfr_id&#x3D;info&#x25;3Asid&#x25;2Fvufind.svn.sourceforge.net&#x25;3Agenerator&amp;rft.title&#x3D;Stille&#x2B;Wasser&#x2B;&#x25;3A&#x2B;Commissario&#x2B;Brunettis&#x2B;sechsundzwanzigster&#x2B;Fall&#x2B;&#x25;3B&#x2B;Roman&amp;rft.date&#x3D;2017&amp;rft_val_fmt&#x3D;info&#x25;3Aofi&#x25;2Ffmt&#x25;3Akev&#x25;3Amtx&#x25;3Adc&amp;rft.creator&#x3D;Leon&#x25;2C&#x2B;Donna&amp;rft.pub&#x3D;Diogenes&amp;rft.format&#x3D;Roman"></span>
+                </div>
+                <div id="recordHAAN.0087601" class="result">
+                    <div class="checkbox">
+                        <label> </label>
+                    </div>
+
+                    <div class="media">
+                        <div class="media-body">
+                            <a href="/Record/HAAN.0087601"
+                               class="title">Chip : das Computer-Magazin</a><br/>
+                            <span class="format zeitschriften">Zeitschriften</span>
+                            <br/>
+
+
+                            <strong>Renewed:</strong> 1 / 1 <br/>
+
+
+                            <strong>Due date: 01.08.2020</strong>
+
+                            <div class="alert alert-info">No renewal for the item.</div>
+                        </div>
+                    </div>
+                    <span class="Z3988"
+                          title="url_ver&#x3D;Z39.88-2004&amp;ctx_ver&#x3D;Z39.88-2004&amp;ctx_enc&#x3D;info&#x25;3Aofi&#x25;2Fenc&#x25;3AUTF-8&amp;rfr_id&#x3D;info&#x25;3Asid&#x25;2Fvufind.svn.sourceforge.net&#x25;3Agenerator&amp;rft.title&#x3D;Chip&#x2B;&#x25;3A&#x2B;das&#x2B;Computer-Magazin&amp;rft.date&#x3D;2018&amp;rft_val_fmt&#x3D;info&#x25;3Aofi&#x25;2Ffmt&#x25;3Akev&#x25;3Amtx&#x25;3Adc&amp;rft.creator&#x3D;&amp;rft.pub&#x3D;Vogel&amp;rft.format&#x3D;Zeitschriften"></span>
+                </div>
+            </form>
+        </div>
+
+        <div class="sidebar right hidden-print">
+            <h4>Your account</h4>
+            <div class="myresearch-menu account-menu">
+                <a href="/MyResearch/Favorites">
+                    <i class="fa fa-fw fa-star" aria-hidden="true"></i> Favorites </a>
+                <a href="/MyResearch/CheckedOut" class="flex checkedout active">
+                    <span class="flex-col"><i class="fa fa-fw fa-book" aria-hidden="true"></i>&nbsp;Checked out items</span>
+                    <!-- span class="badge">3</span -->
+                    <span class="checkedout-status status hidden"><i class="fa fa-spin fa-spinner"
+                                                                     aria-hidden="true"></i></span>
+                </a>
+                <a href="/MyResearch/Holds" class="flex">
+                    <span class="flex-col"><i class="fa fa-fw fa-flag" aria-hidden="true"></i>&nbsp;Holds and recalls</span>
+                    <span class="badge">2</span>
+                    <span class="holds-status status hidden"><i class="fa fa-spin fa-spinner"
+                                                                aria-hidden="true"></i></span>
+                </a>
+
+                <a href="/MyResearch/Fines" class="flex">
+                    <span class="flex-col"><i class="fa fa-fw fa-eur" aria-hidden="true"></i>&nbsp;Fines</span>
+                    <!-- span class="badge">20,00 €&nbsp;&nbsp;</span -->
+                    <span class="fines-status status hidden"><i class="fa fa-spin fa-spinner"
+                                                                aria-hidden="true"></i></span>
+                </a>
+                <a href="/MyResearch/Profile">
+                    <i class="fa fa-fw fa-user" aria-hidden="true"></i> Profile </a>
+                <a href="/Search/History?require_login">
+                    <i class="fa fa-fw fa-search" aria-hidden="true"></i> Your saved searches </a>
+                <a href="/MyResearch/Logout">
+                    <i class="fa fa-fw fa-sign-out" aria-hidden="true"></i> Log Out </a>
+            </div>
+            <h4>Your Lists</h4>
+            <div class="myresearch-menu">
+                <a href="/MyResearch/Favorites">
+                    <i class="fa fa-fw fa-star" aria-hidden="true"></i> Your favorites </a>
+                <a href="/MyResearch/MyList/55">
+                    Bestellung <span class="badge">0</span>
+                </a>
+                <a href="/MyResearch/EditList/NEW">
+                    <i class="fa fa-fw fa-plus" aria-hidden="true"></i> Create a list </a>
+            </div>
+        </div>
+    </div>
+</div>
+<footer class="hidden-print">
+    <div class="footer-container">
+        <div class="footer-column">
+            <p><strong>Search options</strong></p>
+            <ul>
+                <!--li><a href="/Search/Results&filter[]=news:Neuheiten">New items</a></li-->
+                <!--li><a href="/Search/Advanced">Professional search</a></li-->
+                <li><a href="/Help/Home?topic=search&amp;_=1594404020" data-lightbox
+                       class="help-link">Search tips</a></li>
+                <li><a href="/Alphabrowse/Home">Browse alphabetically</a></li>
+                <li><a href="/Search/History?require_login=yes">My search history</a></li>
+                <li><a href="/">Homepage</a></li>
+            </ul>
+        </div>
+
+        <div class="footer-column">
+            <p><strong>Find more</strong></p>
+            <ul>
+                <!--<li><a href="https://www1.onleihe.de/kreis-mettmann/frontend/welcome,51-0-0-100-0-0-1-0-0-0-0.html" >Onleihe in Kreis Mettmann</a></li>-->
+                <!--li><a href="https://www.digibib.net/template/search?SID=MASTER:c34981e3b58741950a73b9d211344eca&LOCATION=METTBIB" target=blank>DigiBib</a></li-->
+
+                <li><a href="https://www1.onleihe.de/kreis-mettmann"
+                       target=blank>Onleihe in Kreis Mettmann</a></li>
+                <li><a href="https://www.digibib.net/Digibib?LOCATION=METTBIB"
+                       target=blank>DigiBib</a></li>
+                <li><a href="https://nrw.edupool.de/home?standort=ME&pid=p4tj2fdikeb7pmesfnch7kfgg2"
+                       target=blank>Medienzentrum Kreis Mettmann</a></li>
+                <li><a href="https://www.digento.de/login/21139/21139.html"
+                       target=blank>BIBNET-Press</a></li>
+            </ul>
+        </div>
+
+        <div class="footer-column">
+            <p><strong>Need help?</strong></p>
+            <ul>
+                <li><a href="/Pages/Homepages" title="Homepages">Homepages of the libraries</a></li>
+                <li><a href="/Pages/vorschlag" title="Mail to Library">Mail to Library</a></li>
+                <li><a href="/Pages/Ueberuns" title="About us">About us</a></li>
+                <li><a href="/Pages/Impressum"
+                       title="Imprint / Privacy Policy">Imprint / Privacy Policy</a></li>
+
+                <!-- <li><a href="/Browse/Home">Browse the catalog</a></li> -->
+                <!-- <li><a href="/Search/NewItem">New items</a></li>-->
+            </ul>
+        </div>
+
+        <div class="footer-column"><p><strong></strong></p>
+            </br>
+            <strong>Gefördert vom</strong>
+            <img src="/themes/smartbib/images/MKW_AK_Farbig_RGB.png"/>
+            <!-- zu gross, incl. gefördert vom img src="/themes/smartbib/images/Förderhinweis_MKW_AK_Farbig_CMYK_18_09_03.jpg" /-->
+            </br>
+            Powered by VuFind and <b id="gkdgreen">subkom GmbH</b></div>
+
+    </div>
+
+    <div class="poweredby">
+    </div>
+</footer>
+<!-- MODAL IN CASE WE NEED ONE -->
+<div id="modal" class="modal fade hidden-print" tabindex="-1" role="dialog"
+     aria-labelledby="modalTitle" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;
+            </button>
+            <div class="modal-body">Loading...</div>
+        </div>
+    </div>
+</div>
+<div class="offcanvas-overlay" data-toggle="offcanvas"></div>
+</body>
+</html>

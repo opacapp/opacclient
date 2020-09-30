@@ -74,6 +74,8 @@ import de.geeksfactory.opacclient.searchfields.TextSearchField;
 import java8.util.concurrent.CompletableFuture;
 import okhttp3.FormBody;
 
+import static org.jsoup.parser.Parser.unescapeEntities;
+
 /**
  * OpacApi implementation for Web Opacs of the SISIS SunRise product, developed by OCLC.
  *
@@ -433,7 +435,7 @@ public class SISIS extends OkHttpBaseApi implements OpacApi {
                 try {
                     List<NameValuePair> anyurl = URLEncodedUtils.parse(
                             new URI(node.attr("href").replace(" ", "%20")
-                                        .replace("&amp;", "&")), ENCODING);
+                                    .replace("&amp;", "&")), ENCODING);
                     for (NameValuePair nv : anyurl) {
                         if (nv.getName().equals("identifier")) {
                             identifier = nv.getValue();
@@ -1570,12 +1572,13 @@ public class SISIS extends OkHttpBaseApi implements OpacApi {
                 if (col1split.length > 2 && col1split[2].contains("&nbsp;/&nbsp;")) {
                     String[] barcodeAndJournalIssue = col1split[2].split("&nbsp;/&nbsp;");
                     item.setBarcode(barcodeAndJournalIssue[0].trim());
+                    String issue = unescapeEntities(barcodeAndJournalIssue[1].trim(), false);
                     if (item.getTitle() == null || item.getTitle().equals("")) {
                         // no title - set journal issue as title
-                        item.setTitle(barcodeAndJournalIssue[1].trim());
+                        item.setTitle(issue);
                     } else {
                         // append journal issue to title
-                        item.setTitle(item.getTitle() + " " + barcodeAndJournalIssue[1]);
+                        item.setTitle(item.getTitle() + " " + issue);
                     }
                 }
 

@@ -8,4 +8,5 @@ dependencies {
     implementation gradleApi()
     implementation localGroovy()
     implementation 'org.json:json:20090211'
+    implementation 'commons-io:commons-io:2.7'
 }

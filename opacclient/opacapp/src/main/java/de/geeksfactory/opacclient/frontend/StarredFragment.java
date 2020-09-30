@@ -29,7 +29,8 @@ import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
+import androidx.loader.app.LoaderManager;
+import androidx.preference.PreferenceManager;
 import android.text.Html;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -71,13 +72,13 @@ import de.geeksfactory.opacclient.R;
 import de.geeksfactory.opacclient.frontend.OpacActivity.AccountSelectedListener;
 import de.geeksfactory.opacclient.objects.Account;
 import de.geeksfactory.opacclient.objects.SearchResult;
-import de.geeksfactory.opacclient.objects.Starred;
 import de.geeksfactory.opacclient.searchfields.SearchField;
 import de.geeksfactory.opacclient.searchfields.SearchField.Meaning;
 import de.geeksfactory.opacclient.searchfields.SearchQuery;
 import de.geeksfactory.opacclient.storage.JsonSearchFieldDataSource;
 import de.geeksfactory.opacclient.storage.StarDataSource;
 import de.geeksfactory.opacclient.storage.StarDatabase;
+import de.geeksfactory.opacclient.storage.Starred;
 import de.geeksfactory.opacclient.utils.CompatibilityUtils;
 
 public class StarredFragment extends Fragment implements
@@ -163,7 +164,7 @@ public class StarredFragment extends Fragment implements
         listView.setClickable(true);
         listView.setTextFilterEnabled(true);
 
-        getActivity().getSupportLoaderManager()
+        LoaderManager.getInstance(this)
                      .initLoader(0, null, this);
         listView.setAdapter(adapter);
 
@@ -203,7 +204,7 @@ public class StarredFragment extends Fragment implements
 
     @Override
     public void accountSelected(Account account) {
-        getActivity().getSupportLoaderManager().restartLoader(0, null, this);
+        LoaderManager.getInstance(this).restartLoader(0, null, this);
     }
 
     public void remove(Starred item) {
@@ -463,19 +464,19 @@ public class StarredFragment extends Fragment implements
     }
 
     @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
+    public void onAttach(Context context) {
+        super.onAttach(context);
         try {
-            callback = (Callback) activity;
+            callback = (Callback) context;
         } catch (ClassCastException e) {
-            throw new ClassCastException(activity.toString()
+            throw new ClassCastException(context.toString()
                     + " must implement SearchFragment.Callback");
         }
     }
 
     @Override
     public void onResume() {
-        getActivity().getSupportLoaderManager().restartLoader(0, null, this);
+        LoaderManager.getInstance(this).restartLoader(0, null, this);
         super.onResume();
     }
 

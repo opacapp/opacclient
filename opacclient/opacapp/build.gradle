@@ -10,17 +10,11 @@ android {
         applicationId "de.geeksfactory.opacclient"
         minSdkVersion 15
         targetSdkVersion 28
-        multiDexEnabled true
-        versionCode 213
-        versionName "6.2.2"
-        vectorDrawables.useSupportLibrary = true
-    }
+        versionCode 220
+        versionName "6.3.0"
 
-    lintOptions {
-        // disable 'AndroidLintRtlHardcoded' // Throws an "Unknown issue id" for me
-        disable 'MissingTranslation'
-        disable 'UnusedAttribute'
-        warning 'InvalidPackage'
+        multiDexEnabled true
+        vectorDrawables.useSupportLibrary = true
     }
 
     signingConfigs {
@@ -32,16 +26,27 @@ android {
         }
     }
 
+    // load Sentry configuration from sentry.properties file, if it exists
+    def sentryProps = new Properties()
+    def sentryPropsFile = project.rootProject.file("sentry.properties")
+    String dsn = null;
+    if (sentryPropsFile.exists()) {
+        sentryProps.load(sentryPropsFile.newDataInputStream())
+        dsn = sentryProps.getProperty("dsn")
+    }
+
     buildTypes {
         release {
             minifyEnabled true
             signingConfig signingConfigs.release
             proguardFiles 'proguard-rules.txt'
+            buildConfigField("String", "SENTRY_DSN", dsn != null ? "\"$dsn\"" : "null")
         }
         debug {
             debuggable true
             applicationIdSuffix ".debug"
             versionNameSuffix "-debug"
+            buildConfigField("String", "SENTRY_DSN", "null")
         }
     }
 
@@ -53,6 +58,12 @@ android {
         foss {
             dimension "dependencies"
         }
+    }
+
+    lintOptions {
+        // disable 'AndroidLintRtlHardcoded' // Throws an "Unknown issue id" for me
+        disable 'MissingTranslation', 'UnusedAttribute'
+        warning 'InvalidPackage'
     }
 
     compileOptions {
@@ -74,8 +85,8 @@ android {
         unitTests.returnDefaultValues = true
     }
 
-    dataBinding {
-        enabled = true
+    buildFeatures {
+        dataBinding = true
     }
 }
 
@@ -83,44 +94,57 @@ dependencies {
     implementation(project(':libopac')) {
         transitive = false
     }
-    implementation "org.jetbrains.kotlin:kotlin-stdlib:1.3.11"
-    implementation 'io.sentry:sentry-android:1.7.16'
-    implementation 'org.jsoup:jsoup:1.8.3'
-    implementation 'com.github.opacapp:material-components-android:d290745a71'
-    implementation 'androidx.legacy:legacy-support-v4:1.0.0'
-    implementation 'androidx.percentlayout:percentlayout:1.0.0'
-    implementation 'androidx.appcompat:appcompat:1.0.2'
-    implementation 'androidx.palette:palette:1.0.0'
-    implementation 'androidx.cardview:cardview:1.0.0'
-    implementation 'androidx.preference:preference:1.0.0'
-    implementation 'org.apmem.tools:layouts:1.10@aar'
-    implementation 'org.apache.httpcomponents:httpclient-android:4.3.5.1'
-    implementation 'joda-time:joda-time:2.9.9'
-    implementation 'org.joda:joda-convert:1.8'
-    implementation 'su.j2e:rv-joiner:1.0.6'
-    implementation 'com.squareup.okhttp3:okhttp:3.12.1'
-    implementation 'com.squareup.okhttp3:okhttp-urlconnection:3.10.0'
-    implementation 'com.squareup.retrofit2:retrofit:2.3.0'
-    implementation 'com.squareup.retrofit2:converter-moshi:2.1.0'
-    implementation 'com.samskivert:jmustache:1.13'
-    implementation 'com.github.johan12345:material-intro:a7791652d9'
-    implementation 'com.github.bumptech.glide:glide:3.8.0'
-    implementation 'com.github.bumptech.glide:okhttp3-integration:1.5.0@aar'
-    implementation 'androidx.work:work-runtime:2.2.0'
-    implementation 'net.sourceforge.streamsupport:streamsupport-cfuture:1.6.0'
-    implementation 'androidx.multidex:multidex:2.0.0'
-    debugImplementation 'com.facebook.stetho:stetho:1.5.0'
-    debugImplementation 'com.facebook.stetho:stetho-okhttp3:1.5.0'
-    debugImplementation 'com.squareup.leakcanary:leakcanary-android:1.4-beta2'
-    testImplementation 'org.mockito:mockito-core:3.2.0'
-    testImplementation 'junit:junit:4.12'
-    testImplementation 'com.squareup.okhttp3:okhttp:3.12.1'
-    testImplementation 'com.squareup.retrofit2:retrofit-mock:2.3.0'
-    testImplementation 'commons-io:commons-io:2.5'
-    googlePlayServicesImplementation 'com.google.android.gms:play-services-safetynet:15.0.1'
+
+// Local
     // We don't want to rely on the CommonsWare Maven repo, so we include these libraries as JARs
     implementation files('libs/adapter-1.0.1.jar')
     implementation files('libs/endless-1.2.3.jar')
+
+// Kotlin
+    implementation 'org.jetbrains.kotlin:kotlin-stdlib:1.3.72'
+
+// AndroidX
+    implementation 'androidx.appcompat:appcompat:1.1.0'
+    implementation 'androidx.cardview:cardview:1.0.0'
+    implementation 'androidx.multidex:multidex:2.0.1'
+    implementation 'androidx.palette:palette:1.0.0'
+    implementation 'androidx.percentlayout:percentlayout:1.0.0'
+    implementation 'androidx.preference:preference:1.1.1'
+    implementation 'androidx.swiperefreshlayout:swiperefreshlayout:1.1.0'
+    implementation 'androidx.work:work-runtime:2.3.4'
+    implementation 'com.google.android.material:material:1.2.0-rc01'
+
+// Other
+    implementation 'io.sentry:sentry-android-core:2.2.0'
+    implementation 'org.jsoup:jsoup:1.8.3'
+    implementation 'org.apmem.tools:layouts:1.10@aar'
+    implementation 'org.apache.httpcomponents:httpclient-android:4.3.5.1'
+    implementation 'joda-time:joda-time:2.10.6'
+    implementation 'su.j2e:rv-joiner:1.0.9'
+    implementation 'com.squareup.okhttp3:okhttp:3.12.12'
+    implementation 'com.squareup.okhttp3:okhttp-urlconnection:3.12.12'
+    implementation 'com.squareup.retrofit2:retrofit:2.6.4'
+    implementation 'com.squareup.retrofit2:converter-moshi:2.6.4'
+    implementation 'com.samskivert:jmustache:1.15'
+    implementation 'com.github.johan12345:material-intro:a7791652d9'
+    implementation 'com.github.bumptech.glide:glide:3.8.0'
+    implementation 'com.github.bumptech.glide:okhttp3-integration:1.5.0@aar'
+    implementation 'net.sourceforge.streamsupport:streamsupport-cfuture:1.7.2'
+
+// Flavor
+    googlePlayServicesImplementation 'com.google.android.gms:play-services-basement:17.3.0'
+
+// Debug
+    debugImplementation 'com.facebook.stetho:stetho:1.5.1'
+    debugImplementation 'com.facebook.stetho:stetho-okhttp3:1.5.1'
+    //debugImplementation 'com.squareup.leakcanary:leakcanary-android:x.y'
+
+// Testing
+    testImplementation 'org.mockito:mockito-core:3.3.3'
+    testImplementation 'junit:junit:4.13'
+    testImplementation 'com.squareup.okhttp3:okhttp:3.12.12'
+    testImplementation 'com.squareup.retrofit2:retrofit-mock:2.6.4'
+    testImplementation 'commons-io:commons-io:2.7'
 }
 
 jacoco {
@@ -140,9 +164,9 @@ task jacocoTestReport(type: JacocoReport, dependsOn: 'testGooglePlayServicesDebu
     def debugTree = fileTree(dir: "${buildDir}/intermediates/classes/googlePlayServicesDebug", excludes: fileFilter)
     def mainSrc = "${project.projectDir}/src/main/java"
 
-    sourceDirectories = files([mainSrc])
-    classDirectories = files([debugTree])
-    executionData = files("${buildDir}/jacoco/testGooglePlayServicesDebugUnitTest.exec")
+    sourceDirectories.setFrom(files([mainSrc]))
+    classDirectories.setFrom(files([debugTree]))
+    executionData.setFrom(files("${buildDir}/jacoco/testGooglePlayServicesDebugUnitTest.exec"))
 }
 
 task downloadJson(type: JsonFilesTask)

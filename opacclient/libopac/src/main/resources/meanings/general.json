@@ -86,7 +86,14 @@
         "Benutzergruppe",
         "Interessenskreis",
         "Zielgruppe",
-        "Lesestufe"
+      "Lesestufe",
+      "Sachthema/Stoffkreis",
+      "Altersstufe",
+      "Sachthema/Stoffkreis",
+      "Altersstufe",
+      "Sachthema/Stoffkreis",
+      "Altersstufe",
+      "Age"
     ],
     "BARCODE": [
         "Barcode",
@@ -141,6 +148,7 @@
         "Name/Autor",
         "Autor/Hrsg.",
         "Verfasser (nur 1)",
+        "Autor/-in",
         "Autor/in",
         "Verfasser/-in",
         "Verfasser, Hrsg.",
@@ -205,7 +213,8 @@
         "Suchwort",
         "[ALW]",
         "Suche über alle Felder",
-        "Bibliothekskatalog"
+        "Bibliothekskatalog",
+        "Schlüsselwörter"
     ],
     "AVAILABLE": [
         "verfügbar",
@@ -222,9 +231,9 @@
         "  sort by",
         "  sorteer op"
     ],
-    "DATABASE": [
-        "Datenbanken"
-    ],
+  "DATABASE": [
+    "Datenbanken"
+  ],
     "ISBN": [
         "ISBN",
         "ISBN, ISSN u.a.",
@@ -254,7 +263,10 @@
         "ISSN (periodieken)",
         "ISBN, ISSN",
         "ISBN (Eingabe mit Bindestrichen)",
-        "ISBN/ISBN-13/EAN"
+      "ISBN/ISBN-13/EAN",
+      "ISBN/ISSN/ISMN/EAN",
+      "ISBN/ISSN/ISMN/EAN",
+      "ISBN/ISSN/ISMN/EAN"
     ],
     "YEAR": [
         "Jahr",
@@ -298,7 +310,8 @@
         "Art der Veröffentlichung",
         "type of document ",
         "type de document ",
-        "Medientyp auswählen"
+      "Medientyp auswählen",
+      "Media type"
     ],
     "HOME_BRANCH": [
         "Aktuelle Zweigstelle",
@@ -335,6 +348,7 @@
         "Titel (-stichwörter)",
         "Titel (Stichwort)",
         "titelwoorden",
+      "Title",
         "title (keywords)",
         "title words",
         "Mots titre",

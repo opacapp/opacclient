@@ -21,7 +21,7 @@ package de.geeksfactory.opacclient.reminder;
 import android.app.Service;
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.preference.PreferenceManager;
+import androidx.preference.PreferenceManager;
 import android.util.Log;
 
 import org.joda.time.DateTime;
@@ -54,7 +54,7 @@ import de.geeksfactory.opacclient.storage.PreferenceDataSource;
 import de.geeksfactory.opacclient.webservice.LibraryConfigUpdateService;
 import de.geeksfactory.opacclient.webservice.WebService;
 import de.geeksfactory.opacclient.webservice.WebServiceManager;
-import io.sentry.Sentry;
+import io.sentry.core.Sentry;
 
 public class SyncAccountJob extends Worker {
 
@@ -189,7 +189,7 @@ public class SyncAccountJob extends Worker {
             Log.d(TAG, "updated config for " + String.valueOf(count) + " libraries");
             getApp().resetCache();
             if (!BuildConfig.DEBUG) {
-                Sentry.getContext().addExtra(OpacClient.SENTRY_DATA_VERSION,
+                Sentry.setExtra(OpacClient.SENTRY_DATA_VERSION,
                         prefs.getLastLibraryConfigUpdate().toString());
             }
         } catch (IOException | JSONException ignore) {

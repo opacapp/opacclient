@@ -9,7 +9,7 @@
  *
  * The above copyright notice and this permission notice shall be included in all copies or
  * substantial portions of the Software.
- * 
+ *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT
  * NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
  * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
@@ -63,6 +63,7 @@ import de.geeksfactory.opacclient.searchfields.DropdownSearchField;
 import de.geeksfactory.opacclient.searchfields.SearchField;
 import de.geeksfactory.opacclient.searchfields.SearchQuery;
 import de.geeksfactory.opacclient.searchfields.TextSearchField;
+import de.geeksfactory.opacclient.utils.Base64;
 import java8.util.concurrent.CompletableFuture;
 import okhttp3.Headers;
 import okhttp3.MediaType;
@@ -307,21 +308,61 @@ public class OpenSearch extends OkHttpBaseApi implements OpacApi {
         if (queue.size() > 0) {
             final String url = queue.get(0);
             queue.remove(0);
-            return asyncGet(url, false)
-                    .handle((response, throwable) -> {
-                        response.close();
-                        if (throwable == null) {
-                            result.setCover(url);
-                        } else {
-                            assignBestCover(result, queue).join();
-                        }
-                        return null;
-                    });
+            if (url.startsWith("ajax|")) {
+                return assignAjaxCover(result, queue, url);
+            } else {
+                return asyncGet(url, false)
+                        .handle((response, throwable) -> {
+                            response.close();
+                            if (throwable == null) {
+                                result.setCover(url);
+                            } else {
+                                assignBestCover(result, queue).join();
+                            }
+                            return null;
+                        });
+            }
         } else {
             // we don't have any more URLs in the queue
             CompletableFuture<Void> future = new CompletableFuture<>();
             future.complete(null);
             return future;
+        }
+    }
+
+    private CompletableFuture<Void> assignAjaxCover(CoverHolder result, List<String> queue,
+            String url) {
+        String[] data = url.split("\\|");
+        String ajaxUrl = data[1];
+        String payload = data[2];
+        try {
+            JSONObject json = new JSONObject();
+            json.put("data", payload);
+            return asyncPost(ajaxUrl, RequestBody.create(MEDIA_TYPE_JSON, json.toString()),
+                    false)
+                    .handle((response, throwable) -> {
+                        try {
+                            if (throwable == null) {
+                                JSONObject coverData = new JSONObject(response.body().string());
+                                String coverUrl =
+                                        coverData.getJSONObject("d").getString("CoverUrl");
+                                if (coverUrl.startsWith("data")) {
+                                    byte[] bytes = Base64.decode(
+                                            coverUrl.substring(coverUrl.indexOf(",") + 1));
+                                    result.setCoverBitmap(bytes);
+                                } else {
+                                    result.setCover(coverUrl);
+                                }
+                            } else {
+                                assignBestCover(result, queue).join();
+                            }
+                        } catch (JSONException | IOException e) {
+                            assignBestCover(result, queue).join();
+                        }
+                        return null;
+                    });
+        } catch (JSONException e) {
+            return assignBestCover(result, queue);
         }
     }
 
@@ -574,32 +615,36 @@ public class OpenSearch extends OkHttpBaseApi implements OpacApi {
         // nSiteId=11|c|SetNoCover|a|/DesktopModules/OCLC.OPEN.PL.DNN
         // .BaseLibrary/StyleSheets/Images/Fallbacks/emptyURL.gif?4.2.0.0|a|
         List<String> alternatives = new ArrayList<>();
+        parseCoverParts(parts, alternatives);
 
+        if (img.hasAttr("devsources")) {
+            parts = img.attr("devsources").split("\\|");
+            parseCoverParts(parts, alternatives);
+        }
+        return alternatives;
+    }
+
+    private void parseCoverParts(String[] parts, List<String> out) {
         for (int i = 0; i + 2 < parts.length; i++) {
             if (parts[i].equals("SetSimpleCover")) {
                 String url = parts[i + 2].replace("&amp;", "&");
                 try {
-                    alternatives.add(new URL(new URL(opac_url), url).toString());
+                    out.add(new URL(new URL(opac_url), url).toString());
+                } catch (MalformedURLException ignored) {
+
+                }
+            } else if (parts[i].equals("SetCoverByAjax")) {
+                String url = parts[i + 2].replace("&amp;", "&");
+                String payload = parts[i + 4];
+                try {
+                    out.add("ajax|"
+                            + new URL(new URL(opac_url), url).toString()
+                            + "|" + payload);
                 } catch (MalformedURLException ignored) {
 
                 }
             }
         }
-
-        if (img.hasAttr("devsources")) {
-            parts = img.attr("devsources").split("\\|");
-            for (int i = 0; i + 2 < parts.length; i++) {
-                if (parts[i].equals("SetSimpleCover")) {
-                    String url = parts[i + 2].replace("&amp;", "&");
-                    try {
-                        alternatives.add(new URL(new URL(opac_url), url).toString());
-                    } catch (MalformedURLException ignored) {
-
-                    }
-                }
-            }
-        }
-        return alternatives;
     }
 
     private String numberToText(int number) {
@@ -852,11 +897,12 @@ public class OpenSearch extends OkHttpBaseApi implements OpacApi {
                 String scr = scripttag.html();
                 if (scr.contains("LoadCatalogueViewDependantCataloguesAsync")) {
                     Pattern portalIdPattern = Pattern.compile(
-                            ".*LoadCatalogueViewDependantCataloguesAsync\\([^,]*,[^,]*," +
-                                    "[^,]*,[^,]*,[^,]*,[^0-9,]*([0-9]+)[^0-9,]*,.*\\).*");
+                            ".*LoadCatalogueViewDependantCataloguesAsync\\('([^,]*)',[^,]*,[^,]*," +
+                                    "[^,]*,[^,]*,[^0-9,]*([0-9]+)[^0-9,]*,.*\\).*");
                     Matcher portalIdMatcher = portalIdPattern.matcher(scr);
                     if (portalIdMatcher.find()) {
-                        portalId = Integer.parseInt(portalIdMatcher.group(1));
+                        url = getAbsoluteUrl(opac_url, portalIdMatcher.group(1));
+                        portalId = Integer.parseInt(portalIdMatcher.group(2));
                     }
                 }
             }
@@ -883,6 +929,17 @@ public class OpenSearch extends OkHttpBaseApi implements OpacApi {
                 e.printStackTrace();
             }
         }
+        // additional volumes directly in HTMl without AJAX call (e.g. Bielefeld)
+        Elements links = doc.select("a[id*=_lstVolumes_TitleHyperLink_]");
+        for (Element link : links) {
+            Map<String, String> params = getQueryParamsFirst(link.attr("href"));
+            String title = link.text();
+            item.addVolume(new Volume(
+                    params.get("id"),
+                    title
+            ));
+        }
+
         return item;
     }
 

@@ -71,8 +71,6 @@ public class AccountEditActivity extends AppCompatActivity {
     private EditText etLabel;
     private EditText etName;
     private EditText etPassword;
-    private View passwordContainer;
-    private View usernameContainer;
     private TextInputLayout tilPassword;
     private TextInputLayout tilUsername;
     private RadioGroup rgType;
@@ -88,26 +86,20 @@ public class AccountEditActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(getLayoutResource());
 
-        setSupportActionBar((Toolbar) findViewById(R.id.toolbar));
+        setSupportActionBar(findViewById(R.id.toolbar));
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        ImageView image = (ImageView) findViewById(R.id.ivBarcode);
-        image.setOnClickListener(new OnClickListener() {
-            public void onClick(View v) {
-                BarcodeScanIntegrator integrator = new BarcodeScanIntegrator(AccountEditActivity.this);
-                integrator.initiateScan();
-            }
+        etLabel = findViewById(R.id.etLabel);
+        etName = findViewById(R.id.etName);
+        etPassword = findViewById(R.id.etPassword);
+        tilUsername = findViewById(R.id.tilUsername);
+        tilPassword = findViewById(R.id.tilPassword);
+        rgType = findViewById(R.id.rgType);
 
+        tilUsername.setEndIconOnClickListener(v -> {
+            BarcodeScanIntegrator integrator = new BarcodeScanIntegrator(AccountEditActivity.this);
+            integrator.initiateScan();
         });
-
-        etLabel = (EditText) findViewById(R.id.etLabel);
-        etName = (EditText) findViewById(R.id.etName);
-        etPassword = (EditText) findViewById(R.id.etPassword);
-        usernameContainer = findViewById(R.id.llBarcode);
-        tilUsername = (TextInputLayout) findViewById(R.id.tilUsername);
-        passwordContainer = findViewById(R.id.llPassword);
-        tilPassword = (TextInputLayout) findViewById(R.id.tilPassword);
-        rgType = (RadioGroup) findViewById(R.id.rgType);
 
         AccountDataSource data = new AccountDataSource(this);
         account = data.getAccount(getIntent().getLongExtra(EXTRA_ACCOUNT_ID, -1));
@@ -137,14 +129,14 @@ public class AccountEditActivity extends AppCompatActivity {
             lib = ((OpacClient) getApplication()).getLibrary(account
                     .getLibrary());
             if (findViewById(R.id.tvCity) != null) {
-                TextView tvCity = (TextView) findViewById(R.id.tvCity);
+                TextView tvCity = findViewById(R.id.tvCity);
                 tvCity.setText(lib.getDisplayName());
             }
 
             if (lib.getReplacedBy() != null && !"".equals(lib.getReplacedBy())
                     && findViewById(R.id.rlReplaced) != null && ((OpacClient) getApplication()).promotePlusApps()) {
                 findViewById(R.id.rlReplaced).setVisibility(View.VISIBLE);
-                findViewById(R.id.ivReplacedStore).setOnClickListener(
+                findViewById(R.id.btnReplacedDownload).setOnClickListener(
                         new OnClickListener() {
                             @Override
                             public void onClick(View v) {
@@ -175,11 +167,11 @@ public class AccountEditActivity extends AppCompatActivity {
             @Override
             public void onCheckedChanged(RadioGroup radioGroup, int i) {
                 if (i == R.id.rbAnonymous) {
-                    passwordContainer.setVisibility(View.GONE);
-                    usernameContainer.setVisibility(View.GONE);
+                    tilUsername.setVisibility(View.GONE);
+                    tilPassword.setVisibility(View.GONE);
                 } else if (i == R.id.rbWithCredentials) {
-                    passwordContainer.setVisibility(View.VISIBLE);
-                    usernameContainer.setVisibility(View.VISIBLE);
+                    tilUsername.setVisibility(View.VISIBLE);
+                    tilPassword.setVisibility(View.VISIBLE);
                 }
                 refreshSslWarning();
             }
@@ -192,9 +184,9 @@ public class AccountEditActivity extends AppCompatActivity {
         }
 
         if (account.getPassword() == null || account.getPassword().equals("")) {
-            ((TextInputLayout) findViewById(R.id.tilPassword)).setPasswordVisibilityToggleEnabled(true);
+            ((TextInputLayout) findViewById(R.id.tilPassword)).setEndIconMode(TextInputLayout.END_ICON_PASSWORD_TOGGLE);
         } else {
-            ((TextInputLayout) findViewById(R.id.tilPassword)).setPasswordVisibilityToggleEnabled(false);
+            ((TextInputLayout) findViewById(R.id.tilPassword)).setEndIconMode(TextInputLayout.END_ICON_NONE);
         }
 
     }
@@ -383,7 +375,7 @@ public class AccountEditActivity extends AppCompatActivity {
     }
 
     public void setProgress(boolean show, boolean animate) {
-        ProgressBar progress = (ProgressBar) findViewById(R.id.progressBar);
+        ProgressBar progress = findViewById(R.id.progressBar);
         View content = findViewById(R.id.svAccount);
 
         if (show) {

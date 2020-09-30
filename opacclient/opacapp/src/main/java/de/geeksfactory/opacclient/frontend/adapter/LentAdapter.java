@@ -1,7 +1,7 @@
 package de.geeksfactory.opacclient.frontend.adapter;
 
 import android.content.SharedPreferences;
-import android.preference.PreferenceManager;
+import androidx.preference.PreferenceManager;
 import android.text.Html;
 import android.text.SpannableStringBuilder;
 import android.text.style.ForegroundColorSpan;
@@ -71,9 +71,9 @@ public class LentAdapter extends AccountAdapter<LentItem, LentAdapter.ViewHolder
                 builder.append(Html.fromHtml(item.getStatus()));
             }
             setTextOrHide(builder, tvStatus);
-            if (item.getHomeBranch() != null) {
-                setTextOrHide(Html.fromHtml(item.getHomeBranch()), tvBranch);
-            }
+            CharSequence homeBranchHtml = item.getHomeBranch() != null ?
+                    Html.fromHtml(item.getHomeBranch()) : null;
+            setTextOrHide(homeBranchHtml, tvBranch);
             tvBranch.getViewTreeObserver().addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener() {
                 @Override
                 public boolean onPreDraw () {
@@ -126,7 +126,7 @@ public class LentAdapter extends AccountAdapter<LentItem, LentAdapter.ViewHolder
                     }
                 });
                 ivProlong.setVisibility(View.VISIBLE);
-                ViewCompat.setAlpha(ivProlong, item.isRenewable() ? 1f : 0.4f);
+                ivProlong.setAlpha(item.isRenewable() ? 1f : 0.4f);
                 ivDownload.setVisibility(View.GONE);
             } else if (item.getDownloadData() != null &&
                     api != null && api instanceof EbookServiceApi) {

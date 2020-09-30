@@ -30,7 +30,7 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
-import android.preference.PreferenceManager;
+import androidx.preference.PreferenceManager;
 import android.text.Html;
 import android.text.method.LinkMovementMethod;
 import android.view.LayoutInflater;
@@ -44,10 +44,8 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.FrameLayout;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -65,6 +63,7 @@ import java.util.Map;
 import java.util.Set;
 
 import androidx.appcompat.app.AlertDialog;
+import androidx.cardview.widget.CardView;
 import androidx.core.app.ActivityCompat;
 import androidx.core.app.ActivityOptionsCompat;
 import androidx.fragment.app.Fragment;
@@ -128,8 +127,8 @@ public class AccountFragment extends Fragment implements
             tvValidUntil, tvAge, tvLentHeader, tvWarning, tvAccCity, tvAccUser, tvAccLabel,
             tvErrBodyA, tvErrHeadA, tvErrBodyU;
     protected LentAdapter lentAdapter;
-    protected RelativeLayout rlReplaced;
-    protected ImageView ivReplacedStore;
+    protected CardView rlReplaced;
+    protected Button btnReplacedDownload;
     protected ReservationsAdapter resAdapter;
     protected AccountData accountData;
     private LoadTask lt;
@@ -186,19 +185,19 @@ public class AccountFragment extends Fragment implements
     }
 
     private void findViews() {
-        swipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.swipe_container);
-        errorView = (FrameLayout) view.findViewById(R.id.error_view);
+        swipeRefreshLayout = view.findViewById(R.id.swipe_container);
+        errorView = view.findViewById(R.id.error_view);
         unsupportedErrorView = view.findViewById(R.id.unsupported_error);
         answerErrorView = view.findViewById(R.id.answer_error);
-        llLoading = (LinearLayout) view.findViewById(R.id.llLoading);
-        tvErrBodyU = (TextView) view.findViewById(R.id.tvErrBodyU);
-        btPrefs = (Button) view.findViewById(R.id.btPrefs);
-        tvErrHeadA = (TextView) view.findViewById(R.id.tvErrHeadA);
-        tvErrBodyA = (TextView) view.findViewById(R.id.tvErrBodyA);
-        tvLentEmpty = (TextView) view.findViewById(R.id.emptyLent);
-        rlReplaced = (RelativeLayout) view.findViewById(R.id.rlReplaced);
-        ivReplacedStore = (ImageView) view.findViewById(R.id.ivReplacedStore);
-        tvReservationsEmpty = (TextView) view.findViewById(R.id.emptyReservations);
+        llLoading = view.findViewById(R.id.llLoading);
+        tvErrBodyU = view.findViewById(R.id.tvErrBodyU);
+        btPrefs = view.findViewById(R.id.btPrefs);
+        tvErrHeadA = view.findViewById(R.id.tvErrHeadA);
+        tvErrBodyA = view.findViewById(R.id.tvErrBodyA);
+        tvLentEmpty = view.findViewById(R.id.emptyLent);
+        rlReplaced = view.findViewById(R.id.rlReplaced);
+        btnReplacedDownload = view.findViewById(R.id.btnReplacedDownload);
+        tvReservationsEmpty = view.findViewById(R.id.emptyReservations);
 
         lentAdapter = new LentAdapter(this);
         try {
@@ -220,12 +219,12 @@ public class AccountFragment extends Fragment implements
 
         if (view.findViewById(R.id.rlAccHeader) != null) {
             // tablet
-            RecyclerView rvLent = (RecyclerView) view.findViewById(R.id.rvLent);
+            RecyclerView rvLent = view.findViewById(R.id.rvLent);
             rvLent.setLayoutManager(new LinearLayoutManager(getActivity()));
             rvLent.setAdapter(lentAdapter);
             rvLent.addItemDecoration(new AccountDividerItemDecoration(getContext(), null));
 
-            RecyclerView rvReservations = (RecyclerView) view.findViewById(R.id.rvReservations);
+            RecyclerView rvReservations = view.findViewById(R.id.rvReservations);
             rvReservations.setLayoutManager(new LinearLayoutManager(getActivity()));
             rvReservations.setAdapter(resAdapter);
             rvReservations.addItemDecoration(new AccountDividerItemDecoration(getContext(), null));
@@ -237,7 +236,7 @@ public class AccountFragment extends Fragment implements
             findFooterViews(view);
         } else {
             // phone
-            RecyclerView rv = (RecyclerView) view.findViewById(R.id.rvAccountData);
+            RecyclerView rv = view.findViewById(R.id.rvAccountData);
             rv.setLayoutManager(new LinearLayoutManager(getActivity()));
             RvJoiner joiner = new RvJoiner();
             rv.addItemDecoration(new AccountDividerItemDecoration(getContext(), joiner));
@@ -246,6 +245,9 @@ public class AccountFragment extends Fragment implements
                 @Override
                 public void onInflateComplete(View view, ViewGroup parent) {
                     findHeaderViews(view);
+                    if (accountData != null) {
+                        new Handler().post(() -> display(accountData, fromcache));
+                    }
                 }
             }));
             joiner.add(
@@ -254,6 +256,9 @@ public class AccountFragment extends Fragment implements
                                 @Override
                                 public void onInflateComplete(View view, ViewGroup parent) {
                                     findErrorWarningViews(view);
+                                    if (accountData != null) {
+                                        new Handler().post(() -> display(accountData, fromcache));
+                                    }
                                 }
                             }));
             joiner.add(
@@ -261,6 +266,9 @@ public class AccountFragment extends Fragment implements
                         @Override
                         public void onInflateComplete(View view, ViewGroup parent) {
                             findLentHeader(view);
+                            if (accountData != null) {
+                                new Handler().post(() -> display(accountData, fromcache));
+                            }
                         }
                     }));
             lentEmpty = new JoinableLayout(R.layout.listitem_account_empty_lent);
@@ -288,33 +296,33 @@ public class AccountFragment extends Fragment implements
     }
 
     private void findFooterViews(View view) {
-        tvAge = (TextView) view.findViewById(R.id.tvAge);
+        tvAge = view.findViewById(R.id.tvAge);
         displayAge();
     }
 
     private void findResHeader(View view) {
-        tvResHeader = (TextView) view.findViewById(R.id.tvResHeader);
+        tvResHeader = view.findViewById(R.id.tvResHeader);
         displayResHeader();
     }
 
     private void findLentHeader(View view) {
-        tvLentHeader = (TextView) view.findViewById(R.id.tvLentHeader);
+        tvLentHeader = view.findViewById(R.id.tvLentHeader);
         displayLentHeader();
     }
 
     private void findErrorWarningViews(View view) {
-        tvError = (TextView) view.findViewById(R.id.tvError);
-        tvWarning = (TextView) view.findViewById(R.id.tvWarning);
+        tvError = view.findViewById(R.id.tvError);
+        tvWarning = view.findViewById(R.id.tvWarning);
     }
 
     private void findHeaderViews(View view) {
-        tvAccLabel = (TextView) view.findViewById(R.id.tvAccLabel);
-        tvAccUser = (TextView) view.findViewById(R.id.tvAccUser);
-        tvAccCity = (TextView) view.findViewById(R.id.tvAccCity);
-        tvPendingFeesLabel = (TextView) view.findViewById(R.id.tvPendingFeesLabel);
-        tvPendingFees = (TextView) view.findViewById(R.id.tvPendingFees);
-        tvValidUntilLabel = (TextView) view.findViewById(R.id.tvValidUntilLabel);
-        tvValidUntil = (TextView) view.findViewById(R.id.tvValidUntil);
+        tvAccLabel = view.findViewById(R.id.tvAccLabel);
+        tvAccUser = view.findViewById(R.id.tvAccUser);
+        tvAccCity = view.findViewById(R.id.tvAccCity);
+        tvPendingFeesLabel = view.findViewById(R.id.tvPendingFeesLabel);
+        tvPendingFees = view.findViewById(R.id.tvPendingFees);
+        tvValidUntilLabel = view.findViewById(R.id.tvValidUntilLabel);
+        tvValidUntil = view.findViewById(R.id.tvValidUntil);
         displayHeader();
     }
 
@@ -478,20 +486,17 @@ public class AccountFragment extends Fragment implements
             if (app.getLibrary().getReplacedBy() != null && !"".equals(app.getLibrary().getReplacedBy()) && app.promotePlusApps()) {
                 rlReplaced.setVisibility(View.VISIBLE);
                 tvErrBodyU.setVisibility(View.GONE);
-                ivReplacedStore.setOnClickListener(
-                        new OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                try {
-                                    Intent i = new Intent(Intent.ACTION_VIEW,
-                                            Uri.parse(app.getLibrary().getReplacedBy()
-                                                         .replace("https://play.google.com/store/apps/details?id=", "market://details?id=")));
-                                    startActivity(i);
-                                } catch (ActivityNotFoundException e) {
-                                    Intent i = new Intent(Intent.ACTION_VIEW,
-                                            Uri.parse(app.getLibrary().getReplacedBy()));
-                                    startActivity(i);
-                                }
+                btnReplacedDownload.setOnClickListener(
+                        v -> {
+                            try {
+                                Intent i = new Intent(Intent.ACTION_VIEW,
+                                        Uri.parse(app.getLibrary().getReplacedBy()
+                                                     .replace("https://play.google.com/store/apps/details?id=", "market://details?id=")));
+                                startActivity(i);
+                            } catch (ActivityNotFoundException e) {
+                                Intent i = new Intent(Intent.ACTION_VIEW,
+                                        Uri.parse(app.getLibrary().getReplacedBy()));
+                                startActivity(i);
                             }
                         });
             } else {
@@ -690,7 +695,7 @@ public class AccountFragment extends Fragment implements
                     getActivity());
             View content = getActivity().getLayoutInflater()
                                         .inflate(R.layout.dialog_prolong_confirm, null);
-            final CheckBox check = (CheckBox) content.findViewById(R.id.check_box1);
+            final CheckBox check = content.findViewById(R.id.check_box1);
             builder.setView(content)
                    .setCancelable(false)
                    .setNegativeButton(R.string.cancel,
@@ -968,14 +973,14 @@ public class AccountFragment extends Fragment implements
             return;
         }
         if (getView() != null) {
-            final FrameLayout errorView = (FrameLayout) getView().findViewById(
+            final FrameLayout errorView = getView().findViewById(
                     R.id.error_view);
             errorView.removeAllViews();
             View connError = getActivity().getLayoutInflater().inflate(
                     R.layout.error_connectivity, errorView);
 
-            TextView tvErrBody = (TextView) connError.findViewById(R.id.tvErrBody);
-            Button btnRetry = (Button) connError.findViewById(R.id.btRetry);
+            TextView tvErrBody = connError.findViewById(R.id.tvErrBody);
+            Button btnRetry = connError.findViewById(R.id.btRetry);
             btnRetry.setVisibility(View.VISIBLE);
             if (e != null && e instanceof SSLSecurityException) {
                 tvErrBody.setText(R.string.connection_error_detail_security);
@@ -1310,7 +1315,7 @@ public class AccountFragment extends Fragment implements
                     LayoutInflater inflater = getActivity().getLayoutInflater();
                     View view = inflater.inflate(R.layout.dialog_simple_list, null, false);
 
-                    ListView lv = (ListView) view.findViewById(R.id.lvBibs);
+                    ListView lv = view.findViewById(R.id.lvBibs);
 
                     lv.setAdapter(new ProlongAllResultAdapter(getActivity(), res.getResults()));
                     switch (result.getActionIdentifier()) {
@@ -1712,11 +1717,11 @@ public class AccountFragment extends Fragment implements
                 view = contentView;
             }
 
-            TextView tvAuthor = (TextView) view.findViewById(R.id.tvAuthor);
-            TextView tvTitle = (TextView) view.findViewById(R.id.tvTitle);
-            TextView tvOld = (TextView) view.findViewById(R.id.tvOld);
-            TextView tvNew = (TextView) view.findViewById(R.id.tvNew);
-            TextView tvMsg = (TextView) view.findViewById(R.id.tvMsg);
+            TextView tvAuthor = view.findViewById(R.id.tvAuthor);
+            TextView tvTitle = view.findViewById(R.id.tvTitle);
+            TextView tvOld = view.findViewById(R.id.tvOld);
+            TextView tvNew = view.findViewById(R.id.tvNew);
+            TextView tvMsg = view.findViewById(R.id.tvMsg);
 
             tvAuthor.setVisibility(item
                     .containsKey(ProlongAllResult.KEY_LINE_AUTHOR) ? View.VISIBLE

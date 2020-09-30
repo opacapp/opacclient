@@ -31,7 +31,7 @@ import android.content.res.Configuration;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
-import android.preference.PreferenceManager;
+import androidx.preference.PreferenceManager;
 import android.transition.TransitionInflater;
 import android.util.DisplayMetrics;
 import android.view.Gravity;
@@ -274,7 +274,7 @@ public abstract class OpacActivity extends AppCompatActivity
                     };
 
             // Set the drawer toggle as the DrawerListener
-            drawerLayout.setDrawerListener(new DrawerLayout.DrawerListener() {
+            drawerLayout.addDrawerListener(new DrawerLayout.DrawerListener() {
                 @Override
                 public void onDrawerSlide(View drawerView, float slideOffset) {
                     drawerToggle.onDrawerSlide(drawerView, slideOffset);

@@ -70,7 +70,8 @@ open class Koha : OkHttpBaseApi() {
     )
 
     protected open fun parseSearch(doc: Document, page: Int): SearchRequestResult {
-        if (doc.select("#noresultsfound").first() != null) {
+        if (doc.select("#noresultsfound").first() != null
+                || doc.select(".span12:contains(Keine Treffer)").first() != null) {
             return SearchRequestResult(emptyList(), 0, page)
         } else if (doc.select("select[name=idx]").size > 1) {
             // We're back on the search page, no valid (likely empty) query
@@ -158,8 +159,8 @@ open class Koha : OkHttpBaseApi() {
 
         // filter fields
         val fieldsets = doc.select("#advsearches fieldset")
-        val tabs = doc.select("#advsearches .ui-tabs-nav li")
-        val filterFields = fieldsets.zip(tabs).map { (tab, fieldset) ->
+        val tabs = doc.select("#advsearches > ul > li")
+        val filterFields = fieldsets.zip(tabs).map { (fieldset, tab) ->
             val title = tab.text.trim()
             val checkboxes = fieldset.select("input[type=checkbox]")
             DropdownSearchField().apply {
@@ -327,6 +328,7 @@ open class Koha : OkHttpBaseApi() {
     }
 
     var reservationFeeConfirmed = false
+    var selectedCopy: String? = null
     val ACTION_ITEM = 101
 
     override fun reservation(item: DetailedItem, account: Account, useraction: Int, selection: String?): OpacApi.ReservationResult {
@@ -336,10 +338,11 @@ open class Koha : OkHttpBaseApi() {
             return OpacApi.ReservationResult(OpacApi.MultiStepResult.Status.ERROR, e.message)
         }
 
-        var selectedCopy: String? = null
-
         when (useraction) {
-            0 -> reservationFeeConfirmed = false
+            0 -> {
+                reservationFeeConfirmed = false
+                selectedCopy = null
+            }
             OpacApi.MultiStepResult.ACTION_CONFIRMATION -> reservationFeeConfirmed = true
             ACTION_ITEM -> selectedCopy = selection
         }
@@ -349,72 +352,71 @@ open class Koha : OkHttpBaseApi() {
         if (doc.select(".alert").size > 0) {
             val alert = doc.select(".alert").first()
             val message = alert.text
-            if (alert.id() == "reserve_fee") {
-                if (!reservationFeeConfirmed) {
-                    val res = OpacApi.ReservationResult(
-                            OpacApi.MultiStepResult.Status.CONFIRMATION_NEEDED)
-                    res.details = arrayListOf(arrayOf(message))
-                    return res
-                }
-            } else {
+            if (alert.id() != "reserve_fee") {
                 return OpacApi.ReservationResult(OpacApi.MultiStepResult.Status.ERROR, message)
             }
         }
 
         val body = FormBody.Builder()
         body.add("place_reserve", "1")
-        if (doc.select("input[name=reserve_mode]").`val`() == "single") {
-            // reserve_mode "single" - seems to only appear for staff accounts in Heilbronn
-            body.add("biblionumbers", "")
-            body.add("selecteditems", "")
-            body.add("reserve_mode", "single")
-            body.add("single_bib", item.id)
-            body.add("expiration_date_${item.id}", "")
-        } else {
+        val reserveMode = doc.select("input[name=reserve_mode]").`val`()
+        body.add("reserve_mode", reserveMode)  // can be "single" or "multi"
+        body.add("single_bib", item.id)
+        body.add("expiration_date_${item.id}", "")
+        val checkboxes = doc.select("input[name=checkitem_${item.id}]")
+        if (checkboxes.size > 0) {
             body.add("biblionumbers", "${item.id}/")
-            body.add("reserve_mode", "multi")
-            body.add("single_bib", item.id)
-            body.add("expiration_date_${item.id}", "")
-            val checkboxes = doc.select("input[name=checkitem_${item.id}]")
-            if (checkboxes.size > 0) {
-                if (checkboxes.first()["value"] == "any") {
-                    body.add("reqtype_${item.id}", "any")
-                    body.add("checkitem_${item.id}", "any")
-                    body.add("selecteditems", "${item.id}///")
+            if (checkboxes.first()["value"] == "any") {
+                body.add("reqtype_${item.id}", "any")
+                body.add("checkitem_${item.id}", "any")
+                body.add("selecteditems", "${item.id}///")
+            } else {
+                if (selectedCopy != null) {
+                    body.add("reqtype_${item.id}", "Specific")
+                    body.add("checkitem_${item.id}", selectedCopy)
+                    body.add("selecteditems", "${item.id}/$selectedCopy//")
                 } else {
-                    if (selectedCopy != null) {
-                        body.add("reqtype_${item.id}", "Specific")
-                        body.add("checkitem_${item.id}", selectedCopy)
-                        body.add("selecteditems", "${item.id}/$selectedCopy//")
-                    } else {
-                        val copies = doc.select(".copiesrow tr:has(td)")
-                        val activeCopies = copies.filter { row ->
-                            !row.select("input").first().hasAttr("disabled")
-                        }
-                        if (copies.size > 0 && activeCopies.isEmpty()) {
-                            return OpacApi.ReservationResult(
-                                    OpacApi.MultiStepResult.Status.ERROR,
-                                    stringProvider.getString(StringProvider.NO_COPY_RESERVABLE)
-                            )
-                        }
-                        // copy selection
+                    val copies = doc.select(".copiesrow tr:has(td)")
+                    val activeCopies = copies.filter { row ->
+                        !row.select("input").first().hasAttr("disabled")
+                    }
+                    if (copies.size > 0 && activeCopies.isEmpty()) {
                         return OpacApi.ReservationResult(
-                                OpacApi.MultiStepResult.Status.SELECTION_NEEDED,
-                                doc.select(".copiesrow caption").text).apply {
-                            actionIdentifier = ACTION_ITEM
-                            setSelection(activeCopies.map { row ->
-                                HashMap<String, String>().apply {
-                                    put("key", row.select("input").first()["value"])
-                                    put("value", "${row.select(".itype").text}\n${row.select("" +
-                                            ".homebranch").text}\n${row.select(".information").text}")
-                                }
-                            })
-                        }
+                                OpacApi.MultiStepResult.Status.ERROR,
+                                stringProvider.getString(StringProvider.NO_COPY_RESERVABLE)
+                        )
+                    }
+                    // copy selection
+                    return OpacApi.ReservationResult(
+                            OpacApi.MultiStepResult.Status.SELECTION_NEEDED,
+                            doc.select(".copiesrow caption").text).apply {
+                        actionIdentifier = ACTION_ITEM
+                        setSelection(activeCopies.map { row ->
+                            HashMap<String, String>().apply {
+                                put("key", row.select("input").first()["value"])
+                                put("value", "${row.select(".itype").text}\n${row.select("" +
+                                        ".homebranch").text}\n${row.select(".information").text}")
+                            }
+                        })
                     }
                 }
-            } else if (doc.select(".holdrow .alert").size > 0) {
-                return OpacApi.ReservationResult(OpacApi.MultiStepResult.Status.ERROR,
-                        doc.select(".holdrow .alert").text().trim())
+            }
+        } else if (reserveMode == "single") {
+            body.add("biblionumbers", "")
+            body.add("selecteditems", "")
+        } else if (doc.select(".holdrow .alert").size > 0) {
+            return OpacApi.ReservationResult(OpacApi.MultiStepResult.Status.ERROR,
+                    doc.select(".holdrow .alert").text().trim())
+        }
+
+        if (!reservationFeeConfirmed && doc.select(".alert").size > 0) {
+            val alert = doc.select(".alert").first()
+            val message = alert.text
+            if (alert.id() == "reserve_fee") {
+                val res = OpacApi.ReservationResult(
+                        OpacApi.MultiStepResult.Status.CONFIRMATION_NEEDED)
+                res.details = arrayListOf(arrayOf(message))
+                return res
             }
         }
 

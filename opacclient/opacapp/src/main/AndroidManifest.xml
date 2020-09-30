@@ -141,12 +141,6 @@
                 android:value="de.geeksfactory.opacclient.frontend.AccountListActivity"/>
         </activity>
         <activity
-            android:name="org.acra.CrashReportDialog"
-            android:excludeFromRecents="true"
-            android:finishOnTaskLaunch="true"
-            android:launchMode="singleInstance"
-            android:theme="@style/Theme.MaterialComponents.Light.Dialog"/>
-        <activity
             android:name="de.geeksfactory.opacclient.frontend.SnoozeDatePickerActivity"
             android:theme="@style/Theme.Opacapp.Transparent"/>
         <activity
@@ -166,16 +160,20 @@
             </intent-filter>
         </receiver>
 
-        <receiver android:name="de.geeksfactory.opacclient.reminder.ReminderBroadcastReceiver"/>
+        <receiver android:name="de.geeksfactory.opacclient.reminder.ReminderBroadcastReceiver" />
 
         <provider
             android:name="de.geeksfactory.opacclient.storage.StarContentProvider"
             android:authorities="${applicationId}.starprovider"
-            android:exported="false"/>
+            android:exported="false" />
 
         <meta-data
             android:name="de.geeksfactory.opacclient.networking.CustomSSLGlideModule"
-            android:value="GlideModule"/>
+            android:value="GlideModule" />
+
+        <meta-data
+            android:name="io.sentry.auto-init"
+            android:value="false" />
     </application>
 
 </manifest>
