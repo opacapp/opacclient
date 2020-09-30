@@ -301,7 +301,7 @@ open class SLUB : OkHttpBaseApi() {
                                 "value" to "${copy.branch}: ${copy.status}")
                     }
                     return OpacApi.ReservationResult(OpacApi.MultiStepResult.Status.SELECTION_NEEDED,
-                            stringProvider.getString(StringProvider.COPY)).apply {
+                            stringProvider.getString(StringProvider.ITEM_COPY)).apply {
                         actionIdentifier = ACTION_COPY
                         this.selection = options
                     }

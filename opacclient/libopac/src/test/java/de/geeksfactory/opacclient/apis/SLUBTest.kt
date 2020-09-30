@@ -638,7 +638,7 @@ class SLUBReservationMockTest(@Suppress("unused") private val name: String,
                         null,
                         null,
                         null,
-                        OpacApi.ReservationResult(OpacApi.MultiStepResult.Status.SELECTION_NEEDED, "copy").apply {
+                        OpacApi.ReservationResult(OpacApi.MultiStepResult.Status.SELECTION_NEEDED, "item_copy").apply {
                             actionIdentifier = OpacApi.ReservationResult.ACTION_USER + 1
                             this.selection = listOf(
                                     mapOf("key" to "reserve\t10059731", "value" to "Zentralbibliothek: Ausgeliehen, Vormerken möglich"),

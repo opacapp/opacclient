@@ -92,7 +92,7 @@ public interface StringProvider {
     String READINGROOM = "readingroom";
     String REQUEST_PROGRESS = "request_progress";
     String RESERVED_POS = "reserved_pos";
-    String COPY = "copy";
+    String ITEM_COPY = "item_copy";
     String RESERVED = "reserved";
     String RENEWED = "renewed";
 
