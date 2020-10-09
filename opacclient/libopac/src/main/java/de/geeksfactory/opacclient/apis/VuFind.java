@@ -515,6 +515,8 @@ public class VuFind extends OkHttpBaseApi {
         } else {
             tab = doc.select(".recordsubcontent, .tab-container, .volumes-tab").first();
         }
+        if (tab == null) return;
+
         Element table = tab.select("table").first();
         for (Element link : table.select("tr a")) {
             Volume volume = new Volume();
@@ -624,6 +626,7 @@ public class VuFind extends OkHttpBaseApi {
             }
         } else if ("smartbib".equals(copystyle)) {
             Element table = doc.select(".holdings-tab table").first();
+            if (table == null) return;
             for (Element tr : table.select("tr")) {
                 Elements columns = tr.select("td");
                 if (columns.size() == 0) continue; // header
