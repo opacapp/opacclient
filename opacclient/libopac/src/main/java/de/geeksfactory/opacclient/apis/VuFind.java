@@ -392,16 +392,39 @@ public class VuFind extends OkHttpBaseApi {
                             getDefaultEncoding());
             detailsDoc = Jsoup.parse(detailsUrl);
             detailsDoc.setBaseUri(detailsUrl);
+        } else if (doc.select(".description").size() > 0 &&
+                doc.select(".description-tab").size() == 0) {
+            // load description tab via AJAX, seen in bibnet.smartbib.de
+            detailsDoc = loadAjaxTab(id, "description");
+        }
+
+        Document volumesDoc = null;
+        if (doc.select(".volumes").size() > 0 && doc.select(".volumes-tab").size() == 0) {
+            // load volumes tab via AJAX, seen in bibnet.smartbib.de
+            volumesDoc = loadAjaxTab(id, "volumes");
         }
 
         try {
-            return parseDetail(id, doc, data, detailsDoc);
+            return parseDetail(id, doc, data, detailsDoc, volumesDoc);
         } catch (JSONException e) {
             throw new RuntimeException(e);
         }
     }
 
-    static DetailedItem parseDetail(String id, Document doc, JSONObject data, Document detailsDoc)
+    private Document loadAjaxTab(String id, String tab) {
+        FormBody body = new FormBody.Builder().add("tab", tab).build();
+        try {
+            String volumesHtml =
+                    httpPost(opac_url + "/Record/" + id + "/AjaxTab", body, getDefaultEncoding());
+            return Jsoup.parse(volumesHtml);
+        } catch (IOException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    static DetailedItem parseDetail(String id, Document doc, JSONObject data, Document detailsDoc,
+            Document volumesDoc)
             throws OpacErrorException, JSONException {
         if (doc.select("p.error, p.errorMsg, .alert-error").size() > 0) {
             throw new OpacErrorException(doc.select("p.error, p.errorMsg, .alert-error").text());
@@ -452,11 +475,8 @@ public class VuFind extends OkHttpBaseApi {
         if (head != null) res.addDetail(new Detail(head, value.toString()));
 
         try {
-            if (doc.select("#Volumes, .volumes").size() > 0) {
-                parseVolumes(res, doc, data);
-            } else {
-                parseCopies(res, doc, data);
-            }
+            parseVolumes(res, doc, volumesDoc);
+            parseCopies(res, doc, data);
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -484,13 +504,18 @@ public class VuFind extends OkHttpBaseApi {
         return res;
     }
 
-    private static void parseVolumes(DetailedItem res, Document doc, JSONObject data) {
+    private static void parseVolumes(DetailedItem res, Document doc, Document volumesDoc) {
         // only tested in Münster
         // e.g. https://www.stadt-muenster.de/opac2/Record/0900944
         // and Kreis Recklinghausen
         // e.g. https://www.bib-kreisre.de/Record/HERT.0564417
-        Element table = doc.select(".recordsubcontent, .tab-container, .volumes-tab").first()
-                           .select("table").first();
+        Element tab;
+        if (volumesDoc != null) {
+            tab = volumesDoc;
+        } else {
+            tab = doc.select(".recordsubcontent, .tab-container, .volumes-tab").first();
+        }
+        Element table = tab.select("table").first();
         for (Element link : table.select("tr a")) {
             Volume volume = new Volume();
             Matcher matcher = idPattern.matcher(link.attr("href"));
