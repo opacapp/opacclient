@@ -64,7 +64,8 @@ import kotlin.collections.HashSet
         SLUBAccountValidateMockTest::class,
         SLUBSearchMockTest::class,
         SLUBSearchFieldsMockTest::class,
-        SLUBProlongMockTest::class
+        SLUBProlongMockTest::class,
+        SLUBCancelMockTest::class
 )
 class SLUBAllTests
 
@@ -862,6 +863,62 @@ class SLUBProlongMockTest(@Suppress("unused") private val name: String,
                         OpacApi.ProlongResult(OpacApi.MultiStepResult.Status.OK, "Ihr Verlängerungswunsch wurde gesendet."),
                         null,
                         null
+                )
+        )
+    }
+}
+
+@RunWith(Parameterized::class)
+class SLUBCancelMockTest(@Suppress("unused") private val name: String,
+                         private val media: String,
+                         private val response: String?,
+                         private val expectedResult: OpacApi.MultiStepResult) : BaseHtmlTest() {
+    private val slub = Mockito.spy(SLUB::class.java)
+
+    init {
+        slub.init(Library().apply {
+            data = JSONObject().apply {
+                put("baseurl", "https://test.de")
+                put("illrenewurl", "https://test-renew.de")
+            }
+        }, HttpClientFactory("test"))
+    }
+
+    private val account = Account().apply {
+        name = "123456"
+        password = "x"
+    }
+
+    @Test
+    fun testCancel() {
+        val expectedRequestBody = FormBody.Builder()
+                .add("type", "1")
+                .add("tx_slubaccount_account[controller]", "API")
+                .add("tx_slubaccount_account[action]", "delete")
+                .add("tx_slubaccount_account[username]", "123456")
+                .add("tx_slubaccount_account[password]", "x")
+                .add("tx_slubaccount_account[delete][0]", media)
+                .build()
+        Mockito.doReturn(response).`when`(slub).httpPost(Matchers.any(), Matchers.any(), Matchers.any())
+        val actualResult = slub.cancel(media, account, 0, null)
+        assertThat(actualResult, sameBeanAs(expectedResult))
+        verify(slub).httpPost(eq("https://test.de/mein-konto/"), argThat(sameBeanAs(expectedRequestBody)), eq("UTF-8"))
+    }
+
+    companion object {
+
+        @JvmStatic
+        @Parameterized.Parameters(name = "{0}")
+        fun data() = listOf(
+                arrayOf("OK",
+                        "31481285_1",
+                        "{\"status\":1,\"message\":\"Reservation Deleted\",\"arguments\":{\"controller\":\"API\",\"action\":\"delete\",\"username\":\"123456\",\"delete\":[\"31481285_1\"]}} ",
+                        OpacApi.CancelResult(OpacApi.MultiStepResult.Status.OK)
+                ),
+                arrayOf("Error (item was not reserved)",
+                        "31481285_1",
+                        "{\"status\":\"-1\",\"message\":\"Item not reserved\",\"arguments\":{\"controller\":\"API\",\"action\":\"delete\",\"username\":\"123456\",\"delete\":[\"31481285_1\"]}}",
+                        OpacApi.CancelResult(OpacApi.MultiStepResult.Status.ERROR, "unknown_error_account_with_description Item not reserved")
                 )
         )
     }
