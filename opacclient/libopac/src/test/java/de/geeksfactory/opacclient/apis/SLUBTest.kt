@@ -468,9 +468,8 @@ class SLUBAccountMockTest(@Suppress("unused") private val name: String,
     fun testCheckAccountData() {
         Mockito.doReturn(response).`when`(slub).httpPost(Matchers.any(), Matchers.any(), Matchers.any())
         if (expectedException != null) {
-            val thrown = assertThrows(expectedExceptionMsg,
-                    expectedException,
-                    { slub.requestAccount(account, "", null) })
+            val thrown = assertThrows(expectedExceptionMsg, expectedException
+            ) { slub.requestAccount(account, "", null) }
             assertTrue(thrown!!.message!!.contains(expectedExceptionMsg!!))
         } else {
             val actual = slub.requestAccount(account, "", null)
@@ -671,7 +670,7 @@ class SLUBReservationMockTest(@Suppress("unused") private val name: String,
                         "{\"status\":true,\"message\":\"Magazinbestellung wurde erfolgreich hinzugefügt.\",\"requestID\":\"2116982\",\"pickupPoint\":\"Zentralbibliothek Ebene 0 SB-Regal\",\"arguments\":{\"controller\":\"API\",\"action\":\"stackRequest\",\"barcode\":\"20065307\",\"username\":\"123456\",\"pickupPoint\":\"a01\"}}",
                         OpacApi.ReservationResult(OpacApi.MultiStepResult.Status.OK, "Magazinbestellung wurde erfolgreich hinzugefügt.")
                 ),
-                // "selected requestable copy wiht multiple pickup ponits" doesn't need to be tested as it's the same process as "Selected reservable copy (with multiple pickup branches)"
+                // "selected requestable copy with multiple pickup points" doesn't need to be tested as it's the same process as "Selected reservable copy (with multiple pickup branches)"
                 arrayOf("No requestable or reservable copies",
                         itemNone,
                         0,
@@ -742,9 +741,8 @@ class SLUBSearchMockTest(@Suppress("unused") private val name: String,
     fun testSearch() {
         Mockito.doReturn(response).`when`(slub).httpGet(Matchers.any(), Matchers.any())
         if (expectedException != null) {
-            val thrown = assertThrows(expectedExceptionMsg,
-                    expectedException,
-                    { slub.search(query) })
+            val thrown = assertThrows(expectedExceptionMsg, expectedException
+            ) { slub.search(query) }
             assertTrue(thrown!!.message!!.contains(expectedExceptionMsg!!))
         } else {
             val actual = slub.search(query)
@@ -819,9 +817,8 @@ class SLUBProlongMockTest(@Suppress("unused") private val name: String,
     fun testProlong() {
         Mockito.doReturn(response).`when`(slub).httpPost(Matchers.any(), Matchers.any(), Matchers.any())
         if (expectedException != null) {
-            val thrown = assertThrows(expectedExceptionMsg,
-                    expectedException,
-                    { slub.prolong(media, account, 0, null) })
+            val thrown = assertThrows(expectedExceptionMsg, expectedException
+            ) { slub.prolong(media, account, 0, null) }
             assertTrue(thrown!!.message!!.contains(expectedExceptionMsg!!))
         } else {
             val actualResult = slub.prolong(media, account, 0, null)
