@@ -93,6 +93,7 @@ public class Adis extends OkHttpBaseApi implements OpacApi {
     protected Document s_reusedoc;
     protected String s_nextbutton = "$Toolbar_5";
     protected String s_previousbutton = "$Toolbar_4";
+    protected List<NameValuePair> advancedSearchFormBody = null;
 
     public static Map<String, List<String>> getQueryParams(String url) {
         try {
@@ -202,6 +203,24 @@ public class Adis extends OkHttpBaseApi implements OpacApi {
                     s_sid = objid_matcher.group(1);
                 }
             }
+            if (s_exts == null && doc.select("input.search-adv").size() > 0) {
+                // Advanced search does not exist in menu, use account menu item to get s_exts.
+                // advanced search is accessed through a HTTP POST.
+                // example: HfM Karlsruhe.
+                for (Element navitem : doc.select("#unav li a, #hnav li a, .tree_ul li a")) {
+                    if (navitem.text().contains("Konto")) {
+                        s_exts = getQueryParams(navitem.attr("href")).get("sp");
+                        break;
+                    }
+                }
+
+                Element input = doc.select("input.search-adv").first();
+                updatePageform(doc);
+                List<NameValuePair> nvpairs = s_pageform;
+                nvpairs.add(new BasicNameValuePair(input.attr("name"), input.attr("value")));
+                advancedSearchFormBody = nvpairs;
+                s_pageform = null;
+            }
             if (s_exts == null) {
                 s_exts = Collections.singletonList("SS6");
             }
@@ -210,6 +229,15 @@ public class Adis extends OkHttpBaseApi implements OpacApi {
             throw new RuntimeException(e);
         }
         super.start();
+    }
+
+    private Document getAdvancedSearchDoc() throws IOException {
+        if (advancedSearchFormBody != null) {
+            return htmlPost(opac_url + ";jsessionid=" + s_sid, advancedSearchFormBody);
+        } else {
+            return htmlGet(opac_url + ";jsessionid=" + s_sid + "?service="
+                    + s_service + getSpParams());
+        }
     }
 
     @Override
@@ -224,8 +252,7 @@ public class Adis extends OkHttpBaseApi implements OpacApi {
         // TODO: There are also libraries with a different search form,
         // s_exts=SS2 instead of s_exts=SS6
         // e.g. munich. Treat them differently!
-        Document doc = htmlGet(opac_url + ";jsessionid=" + s_sid + "?service="
-                + s_service + getSpParams());
+        Document doc = getAdvancedSearchDoc();
 
         int dropdownTextCount = 0;
         int totalCount = 0;
@@ -1623,7 +1650,10 @@ public class Adis extends OkHttpBaseApi implements OpacApi {
                         .attr("value")));
             }
         }
-        Element inputSend = doc.select("input[type=submit]").first();
+        Element inputSend = doc.select("input[type=submit][value=Anmelden]").first();
+        if (inputSend == null) {
+            inputSend = doc.select("input[type=submit]").first();
+        }
         form.add(new BasicNameValuePair(inputSend.attr("name"), inputSend
                 .attr("value")));
 
@@ -1658,8 +1688,7 @@ public class Adis extends OkHttpBaseApi implements OpacApi {
             JSONException {
         start();
 
-        Document doc = htmlGet(opac_url + ";jsessionid=" + s_sid + "?service="
-                + s_service + getSpParams());
+        Document doc = getAdvancedSearchDoc();
 
         List<SearchField> fields = new ArrayList<>();
         // dropdown to select which field you want to search in
@@ -1675,7 +1704,7 @@ public class Adis extends OkHttpBaseApi implements OpacApi {
             // Damit doppelte Optionen nicht mehrfach auftauchen
             // (bei Stadtbücherei Stuttgart der Fall)
             if (fieldIds.contains(opt.attr("value"))) continue;
-            
+
             TextSearchField field = new TextSearchField();
             field.setId(opt.attr("value"));
             field.setDisplayName(opt.text());
