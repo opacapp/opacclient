@@ -22,8 +22,7 @@
 package de.geeksfactory.opacclient.apis
 
 import com.shazam.shazamcrest.matcher.Matchers.sameBeanAs
-import de.geeksfactory.opacclient.i18n.StringProvider
-import de.geeksfactory.opacclient.i18n.StringProvider.*
+import de.geeksfactory.opacclient.i18n.DummyStringProvider
 import de.geeksfactory.opacclient.networking.HttpClientFactory
 import de.geeksfactory.opacclient.objects.*
 import de.geeksfactory.opacclient.searchfields.DropdownSearchField
@@ -69,38 +68,11 @@ import kotlin.collections.HashSet
 )
 class SLUBAllTests
 
-private class TestStringProvider : StringProvider {
-    override fun getString(identifier: String?): String {
-        return when (identifier) {
-            RESERVED -> "vorgemerkt"
-            else -> identifier!!
-        }
-    }
-
-    override fun getFormattedString(identifier: String?, vararg args: Any?): String {
-        return when (identifier) {
-            RESERVED_POS -> String.format("vorgemerkt, Pos. %s", *args)
-            HOLD -> String.format("liegt seit %s bereit", *args)
-            REQUEST_READY -> String.format("seit %s abholbereit (Magazinbestellung)", *args)
-            RENEWED -> String.format("%dx verlängert", *args)
-            else -> identifier!!
-        }
-    }
-
-    override fun getQuantityString(identifier: String?, count: Int, vararg args: Any?): String {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-    }
-
-    override fun getMediaTypeName(mediaType: SearchResult.MediaType?): String {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-    }
-}
-
 class SLUBAccountTest : BaseHtmlTest() {
     private var slub = SLUB()
 
     init {
-        slub.stringProvider = TestStringProvider()
+        slub.stringProvider = DummyStringProvider()
     }
 
     @Test
@@ -135,7 +107,7 @@ class SLUBAccountTest : BaseHtmlTest() {
             author = "Mitchell, Alan"
             format = "B"
             //id = "30963742"
-            status = "vorgemerkt, Pos. 1"
+            status = "reserved_pos 1"
             cancelData = "30963742_1"
         }
         val reserveditem2 = ReservedItem().apply {
@@ -145,7 +117,7 @@ class SLUBAccountTest : BaseHtmlTest() {
             format = "B"
             //id = "34778398"
             branch = "ZwB Forstwissenschaft"
-            status = String.format("liegt seit %s bereit", fmt.print(LocalDate("2019-05-10")))
+            status = String.format("hold %s", fmt.print(LocalDate("2019-05-10")))
         }
         val reserveditem3 = ReservedItem().apply {
             // request ready
@@ -154,7 +126,7 @@ class SLUBAccountTest : BaseHtmlTest() {
             format = "B"
             //id = "20550495"
             branch = "Zentralbibliothek Ebene 0 SB-Regal"
-            status = String.format("seit %s abholbereit (Magazinbestellung)", fmt.print(LocalDate("2019-05-04")))
+            status = String.format("request_ready %s", fmt.print(LocalDate("2019-05-04")))
         }
         val accountdata = slub.parseAccountData(Account(), json)
 
@@ -189,8 +161,8 @@ class SLUBAccountTest : BaseHtmlTest() {
 
         val accountdata = slub.parseAccountData(Account(), json)
 
-        assertEquals("9x verlängert", accountdata.lent[0].status)
-        assertEquals("vorgemerkt", accountdata.lent[1].status)
+        assertEquals("renewed 9", accountdata.lent[0].status)
+        assertEquals("reserved", accountdata.lent[1].status)
         assertEquals(null, accountdata.lent[2].status)
         assertEquals(false, accountdata.lent[0].isRenewable)
         assertEquals(false, accountdata.lent[1].isRenewable)
