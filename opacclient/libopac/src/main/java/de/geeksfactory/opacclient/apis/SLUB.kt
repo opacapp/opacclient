@@ -379,7 +379,7 @@ open class SLUB : OkHttpBaseApi() {
             OpacApi.ProlongResult(OpacApi.MultiStepResult.Status.ERROR, "internal error")
         }
         return try {
-            if (data[0] == "FL") {
+            if (data[0] == "FL") {   // inter-library loan (FL = Fernleihe) renewal request
                 val formBody = FormBody.Builder()
                         .add("bc", data[1])
                         .add("uid", account.name)
@@ -388,7 +388,7 @@ open class SLUB : OkHttpBaseApi() {
                         .build()
                 val result = httpPost(illRenewUrl, formBody, ENCODING).html
                 OpacApi.ProlongResult(OpacApi.MultiStepResult.Status.OK, result.select("p:last-of-type").text())
-            } else {
+            } else {                // regular, i.e. SLUB item renewal
                 requestAccount(account, "renew", mapOf("tx_slubaccount_account[renewals][0]" to data[1]))
                 OpacApi.ProlongResult(OpacApi.MultiStepResult.Status.OK)
             }
