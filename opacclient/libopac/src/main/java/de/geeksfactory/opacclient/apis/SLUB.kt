@@ -511,9 +511,7 @@ open class SLUB : OkHttpBaseApi() {
                 .add("tx_slubaccount_account[action]", action)
                 .add("tx_slubaccount_account[username]", account.name)
                 .add("tx_slubaccount_account[password]", account.password)
-        parameters?.map {
-            formBody.add(it.key, it.value)
-        }
+        parameters?.forEach { formBody.add(it.key, it.value) }
         try {
             return JSONObject(httpPost("$baseurl/mein-konto/", formBody.build(), ENCODING)).also {
                 if (!(it.optInt("status") == 1 || it.optBoolean("status"))) {
