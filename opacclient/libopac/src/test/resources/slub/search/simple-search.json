@@ -17,18 +17,14 @@
       ]
     },
     {
-      "id": "dswarm-141-NzE4NjM5",
+      "id": "123",
       "format": [
-        "Video"
+        "???"
       ],
-      "title": "Learning JUnit 5",
-      "author": [
-        "Boni García"
-      ],
-      "creationDate": "2018",
-      "imprint": [
-        "Carpenteria : Lynda, 2018"
-      ]
+      "title": "Title with \" and &",
+      "author": [],
+      "creationDate": "2222",
+      "imprint": []
     }
   ],
   "facets": {

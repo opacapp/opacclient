@@ -147,8 +147,9 @@ open class SLUB : OkHttpBaseApi() {
                                 innerhtml += "<br>(${this})"
                             }
                         }
-                        type = mediaTypes[it.optJSONArray("format")?.optString(0)]
-                        id = it.optString("id")
+                        type = mediaTypes[it.getJSONArray("format").optString(0)]
+                                ?: SearchResult.MediaType.NONE
+                        id = it.getString("id")
                     }
                 }
         //TODO: get status (one request per item!)

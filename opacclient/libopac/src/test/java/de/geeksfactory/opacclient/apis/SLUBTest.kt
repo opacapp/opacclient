@@ -191,11 +191,17 @@ class SLUBSearchTest : BaseHtmlTest() {
             type = SearchResult.MediaType.BOOK
             id = "0-1014939550"
         }
+        val result2 = SearchResult().apply {
+            innerhtml = """<b>Title with " and &</b><br><br>(2222)"""
+            type = SearchResult.MediaType.NONE
+            id = "123"
+        }
 
         val searchresults = slub.parseSearchResults(json)
 
         assertEquals(2, searchresults.total_result_count)
         assertThat(result1, samePropertyValuesAs(searchresults.results[0]))
+        assertThat(result2, samePropertyValuesAs(searchresults.results[1]))
     }
 
     @Test
