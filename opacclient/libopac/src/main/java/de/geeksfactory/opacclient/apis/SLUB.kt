@@ -138,12 +138,11 @@ open class SLUB : OkHttpBaseApi() {
     }
 
     internal fun parseSearchResults(json: JSONObject): SearchRequestResult {
-        val searchresults = json.optJSONArray("docs")?.let { 0.until(it.length()).map { i -> it.optJSONObject(i) } }
-                ?.map {
+        val searchresults = json.getJSONArray("docs").let { 0.until(it.length()).map { i -> it.getJSONObject(i) } }
+                .map {
                     SearchResult().apply {
-                        innerhtml = "<b>${it.optString("title")}</b><br>${it.optJSONArray("author")?.optString(0)
-                                ?: ""}"
-                        it.optString("creationDate")?.run {
+                        innerhtml = "<b>${it.getString("title")}</b><br>${it.getJSONArray("author").optString(0)}"
+                        it.getString("creationDate").run {
                             if (this != "null") {
                                 innerhtml += "<br>(${this})"
                             }
@@ -153,7 +152,7 @@ open class SLUB : OkHttpBaseApi() {
                     }
                 }
         //TODO: get status (one request per item!)
-        return SearchRequestResult(searchresults, json.optInt("numFound"), 1)
+        return SearchRequestResult(searchresults, json.getInt("numFound"), 1)
     }
 
     override fun filterResults(filter: Filter, option: Filter.Option): SearchRequestResult {
@@ -206,7 +205,7 @@ open class SLUB : OkHttpBaseApi() {
                         }
         return DetailedItem().apply {
             this.id = id
-            val record = json.optJSONObject("record")
+            val record = json.getJSONObject("record")
             for (key in record.keys()) {
                 var value = when (val v = record.get(key as String)) {
                     is String -> v
@@ -231,14 +230,14 @@ open class SLUB : OkHttpBaseApi() {
                     addDetail(Detail(fieldCaptions[key], value))
                 }
             }
-            json.optString("thumbnail")?.run {
+            json.getString("thumbnail")?.run {
                 if (this != "") {
                     cover = this
                 }
             }
             // links and references
             for (link in listOf("linksRelated", "linksAccess", "linksGeneral")) {
-                val linkArray = json.optJSONArray(link)
+                val linkArray = json.getJSONArray(link)
                 linkArray.run { 0.until(length()).map { optJSONObject(it) } }.map {
                     // assuming that only on of material, note or hostlabel is set
                     val key = with(it.optString("material") + it.optString("note") + it.optString("hostLabel")) {
@@ -247,12 +246,12 @@ open class SLUB : OkHttpBaseApi() {
                     addDetail(Detail(key, it.optString("uri")))
                 }
             }
-            json.optJSONArray("references").run { 0.until(length()).map { optJSONObject(it) } }.map {
+            json.getJSONArray("references").run { 0.until(length()).map { optJSONObject(it) } }.map {
                 // TODO: usually links to old SLUB catalogue, does it make sense to add the link?
                 addDetail(Detail(it.optString("text"), "${it.optString("name")} (${it.optString("target")})"))
             }
             // copies
-            val cps = json.opt("copies")
+            val cps = json.get("copies")
             if (cps is JSONArray) {
                 getCopies(cps, dateFormat).let { copies = it }
             } else {  // multiple arrays
@@ -473,8 +472,8 @@ open class SLUB : OkHttpBaseApi() {
         }
 
         return AccountData(account.id).apply {
-            pendingFees = json.optJSONObject("fees")?.optString("topay_list")
-            validUntil = json.optJSONObject("memberInfo")?.optString("expires")
+            pendingFees = json.getJSONObject("fees").getString("topay_list")
+            validUntil = json.getJSONObject("memberInfo").getString("expires")
                     ?.substring(0, 10)?.let { fmt.print(LocalDate(it)) }
             lent = json.optJSONObject("items")?.optJSONArray("loan")    // TODO: plus permanent loans? (need example)
                     ?.run { 0.until(length()).map { optJSONObject(it) } }
