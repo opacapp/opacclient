@@ -476,7 +476,9 @@ public class VuFind extends OkHttpBaseApi {
 
         try {
             parseVolumes(res, doc, volumesDoc);
-            parseCopies(res, doc, data);
+            if (res.getVolumes().size() == 0) {
+                parseCopies(res, doc, data);
+            }
         } catch (JSONException e) {
             e.printStackTrace();
         }

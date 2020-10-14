@@ -1,0 +1,628 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+    <meta http-equiv="Content-Type" content="text&#x2F;html&#x3B;&#x20;charset&#x3D;UTF-8">
+    <meta name="Generator" content="VuFind&#x20;5.1.0">
+    <title>Exemplare: test</title>        <!-- RTL styling -->
+    <link href="&#x2F;themes&#x2F;smartbib&#x2F;css&#x2F;compiled.css&#x3F;_&#x3D;1586155343"
+          media="all" rel="stylesheet" type="text&#x2F;css">
+    <link href="&#x2F;themes&#x2F;bootstrap3&#x2F;css&#x2F;print.css&#x3F;_&#x3D;1548956213"
+          media="print" rel="stylesheet" type="text&#x2F;css">
+    <!--[if lt IE 10]><link href="&#x2F;themes&#x2F;bootstrap3&#x2F;css&#x2F;flex-fallback.css&#x3F;_&#x3D;1548956213" media="" rel="stylesheet" type="text&#x2F;css"><![endif]-->
+    <link href="&#x2F;Record&#x2F;LANG.0442465&#x2F;RDF" rel="alternate"
+          type="application&#x2F;rdf&#x2B;xml" title="RDF&#x20;Representation">
+    <link href="&#x2F;themes&#x2F;smartbib&#x2F;images&#x2F;fav.png&#x3F;_&#x3D;1585065639"
+          rel="shortcut&#x20;icon" type="image&#x2F;x-icon">
+    <link href="&#x2F;Search&#x2F;OpenSearch&#x3F;method&#x3D;describe" rel="search"
+          type="application&#x2F;opensearchdescription&#x2B;xml" title="Bibliothekskatalogsuche">
+    <script type="text&#x2F;javascript">
+    //<!--
+    var userIsLoggedIn = false;
+    //-->
+
+    </script>
+    <script type="text&#x2F;javascript"
+            src="&#x2F;themes&#x2F;bootstrap3&#x2F;js&#x2F;vendor&#x2F;jquery.min.js&#x3F;_&#x3D;1548956213"></script>
+    <script type="text&#x2F;javascript"
+            src="&#x2F;themes&#x2F;bootstrap3&#x2F;js&#x2F;vendor&#x2F;bootstrap.min.js&#x3F;_&#x3D;1548956213"></script>
+    <script type="text&#x2F;javascript"
+            src="&#x2F;themes&#x2F;bootstrap3&#x2F;js&#x2F;vendor&#x2F;bootstrap-accessibility.min.js&#x3F;_&#x3D;1548956213"></script>
+    <script type="text&#x2F;javascript"
+            src="&#x2F;themes&#x2F;bootstrap3&#x2F;js&#x2F;vendor&#x2F;validator.min.js&#x3F;_&#x3D;1548956213"></script>
+    <script type="text&#x2F;javascript"
+            src="&#x2F;themes&#x2F;bootstrap3&#x2F;js&#x2F;lib&#x2F;form-attr-polyfill.js&#x3F;_&#x3D;1548956213"></script>
+    <script type="text&#x2F;javascript"
+            src="&#x2F;themes&#x2F;bootstrap3&#x2F;js&#x2F;lib&#x2F;autocomplete.js&#x3F;_&#x3D;1548956213"></script>
+    <script type="text&#x2F;javascript"
+            src="&#x2F;themes&#x2F;bootstrap3&#x2F;js&#x2F;common.js&#x3F;_&#x3D;1548956213"></script>
+    <script type="text&#x2F;javascript"
+            src="&#x2F;themes&#x2F;bootstrap3&#x2F;js&#x2F;lightbox.js&#x3F;_&#x3D;1548956213"></script>
+    <script type="text&#x2F;javascript"
+            src="&#x2F;themes&#x2F;smartbib&#x2F;js&#x2F;smartbib.js&#x3F;_&#x3D;1585065639"></script>
+    <script type="text&#x2F;javascript"
+            src="&#x2F;themes&#x2F;bootstrap3&#x2F;js&#x2F;record.js&#x3F;_&#x3D;1548956213"></script>
+    <script type="text&#x2F;javascript"
+            src="&#x2F;themes&#x2F;bootstrap3&#x2F;js&#x2F;check_save_statuses.js&#x3F;_&#x3D;1548956213"></script>
+    <script type="text&#x2F;javascript"
+            src="&#x2F;themes&#x2F;bootstrap3&#x2F;js&#x2F;account_ajax.js&#x3F;_&#x3D;1548956213"></script>
+    <script type="text&#x2F;javascript">
+    //<!--
+    VuFind.path = '';
+VuFind.defaultSearchBackend = 'Solr';
+VuFind.addTranslations({"add_tag_success": "Schlagwörter gespeichert","bulk_email_success": "Ihre Auswahl wurde per E-Mail verschickt","bulk_noitems_advice": "Es wurde nichts ausgewählt. Klicken Sie bitte in eine Auswahlbox neben einem Eintrag und versuchen Sie es erneut.","bulk_save_success": "Ihre Auswahl wurde erfolgreich gespeichert","close": "schließen","collection_empty": "Keine Inhalte anzuzeigen","error_occurred": "Es ist ein Fehler aufgetreten","go_to_list": "Zurück zur Liste","hold_available": "Abholbereit","libphonenumber_invalid": "Ungültige Telefonnummer","libphonenumber_invalidcountry": "Ungültige Landesvorwahl","libphonenumber_invalidregion": "Ungültige Vorwahl:","libphonenumber_notanumber": "Die Eingabe scheint keine Telefonnummer zu sein","libphonenumber_toolong": "Die Eingabe ist zu lang für eine Telefonnummer","libphonenumber_tooshort": "Die Eingabe ist zu kurz für eine Telefonnumer","libphonenumber_tooshortidd": "Die Telefonnumer nach der internationalen Direktwahl ist zu kurz","loading": "wird geladen...","more": "mehr","number_thousands_separator": ".","sms_success": "Nachricht gesendet","Phone number invalid": "Ungültige Telefonnummer","Invalid country calling code": "Ungültige Landesvorwahl","Invalid region code": "Ungültige Vorwahl:","The string supplied did not seem to be a phone number": "Die Eingabe scheint keine Telefonnummer zu sein","The string supplied is too long to be a phone number": "Die Eingabe ist zu lang für eine Telefonnummer","The string supplied is too short to be a phone number": "Die Eingabe ist zu kurz für eine Telefonnumer","Phone number too short after IDD": "Die Telefonnumer nach der internationalen Direktwahl ist zu kurz","account_has_alerts": "Warnmeldungen für ihr Konto vorhanden","Checked Out Items": "Ausgeliehene Medien","ill_request_available": "Abholbereit","renew_item_due_tooltip": "Bald fällige Ausleihen","renew_item_overdue_tooltip": "Überfällige Ausleihen","request_in_transit": "Unterwegs zum Abholort","storage_retrieval_request_available": "Abholbereit"});
+    //-->
+
+    </script>
+</head>
+<body class="template-dir-record template-name-view ">
+<header class="hidden-print">
+    <a class="sr-only" href="#content">Weiter zum Inhalt</a>
+    <div class="library container navbar">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse"
+                    data-target="#library-collapse">
+                <span class="sr-only">Toggle navigation</span>
+                <i class="fa fa-bars" aria-hidden="true"></i>
+            </button>
+            <a class="navbar-brand lang-de" href="/?hiddenFilters%5B%5D=collection%3A"></a>
+        </div>
+        <div class="navbar-collapse collapse" id="library-collapse">
+            <nav>
+                <ul role="navigation" class="nav navbar-nav navbar-right flip">
+                    <li class="libraryOptions langenfeld">
+                        <a class="btn btn-default" href="/?hiddenFilters%5B%5D=collection%3A"><i
+                                class="fa fa-book" aria-hidden="true"></i> Verbund</a>
+                    </li>
+                    <li class="libraryOptions erkrath">
+                        <a class="btn btn-default"
+                           href="/?hiddenFilters%5B%5D=collection%3AErkrath"><i id="account-icon"
+                                                                                class="fa fa-book"
+                                                                                aria-hidden="true"></i> Erkrath</a>
+                    </li>
+                    <li class="libraryOptions haan">
+                        <a class="btn btn-default" href="/?hiddenFilters%5B%5D=collection%3AHaan"><i
+                                id="account-icon" class="fa fa-book"
+                                aria-hidden="true"></i> Haan</a>
+                    </li>
+                    <li class="libraryOptions heiligenhaus">
+                        <a class="btn btn-default"
+                           href="/?hiddenFilters%5B%5D=collection%3AHeiligenhaus"><i
+                                id="account-icon" class="fa fa-book"
+                                aria-hidden="true"></i> Heiligenhaus</a>
+                    </li>
+                    <li class="libraryOptions hilden">
+                        <a class="btn btn-default" href="/?hiddenFilters%5B%5D=collection%3AHilden"><i
+                                id="account-icon" class="fa fa-book" aria-hidden="true"></i> Hilden</a>
+                    </li>
+                    <li class="libraryOptions langenfeld">
+                        <a class="btn btn-primary"
+                           href="/?hiddenFilters%5B%5D=collection%3ALangenfeld" class="logout"><i
+                                class="fa fa-book" aria-hidden="true"></i> Langenfeld</a>
+                    </li>
+                    <li class="libraryOptions mettmann">
+                        <a class="btn btn-default"
+                           href="/?hiddenFilters%5B%5D=collection%3AMettmann"><i id="account-icon"
+                                                                                 class="fa fa-book"
+                                                                                 aria-hidden="true"></i> Mettmann</a>
+                    </li>
+                    <li class="libraryOptions monheim">
+                        <a class="btn btn-default"
+                           href="/?hiddenFilters%5B%5D=collection%3AMonheim"><i id="account-icon"
+                                                                                class="fa fa-book"
+                                                                                aria-hidden="true"></i> Monheim</a>
+                    </li>
+                    <li class="libraryOptions velbert">
+                        <a class="btn btn-default"
+                           href="/?hiddenFilters%5B%5D=collection%3AVelbert"><i class="fa fa-book"
+                                                                                aria-hidden="true"></i> Velbert</a>
+                    </li>
+                    <li class="libraryOptions wuelfrath">
+                        <a class="btn btn-default"
+                           href="/?hiddenFilters%5B%5D=collection%3AWülfrath"><i id="account-icon"
+                                                                                 class="fa fa-book"
+                                                                                 aria-hidden="true"></i> Wülfrath</a>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+    </div>
+    <div class="banner container navbar">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse"
+                    data-target="#header-collapse">
+                <span class="sr-only">Toggle navigation</span>
+                <i class="fa fa-bars" aria-hidden="true"></i>
+            </button>
+            <a class="navbar-brand lang-de" href="/"><img src="/themes/smartbib/images/mettmann.svg"
+                                                          height="32"/></a>
+        </div>
+        <div class="collapse navbar-collapse" id="header-collapse">
+            <nav>
+                <ul role="navigation" class="nav navbar-nav navbar-right flip">
+                    <li class="logoutOptions hidden">
+                        <a href="/MyResearch/Home?redirect=0"><i id="account-icon"
+                                                                 class="fa fa-user-circle"
+                                                                 aria-hidden="true"></i> Mein Konto</a>
+                    </li>
+                    <li class="logoutOptions hidden">
+                        <a href="/MyResearch/Logout" class="logout"><i class="fa fa-sign-out"
+                                                                       aria-hidden="true"></i> Abmelden</a>
+                    </li>
+                    <li id="loginOptions">
+                        <a href="/MyResearch/UserLogin?library=Langenfeld" data-lightbox><i
+                                class="fa fa-sign-in" aria-hidden="true"></i> Anmelden</a>
+                    </li>
+
+
+                    <li class="language dropdown">
+                        <form method="post" name="langForm" id="langForm">
+                            <input type="hidden" name="mylang"/>
+                        </form>
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">Sprache <b
+                                class="caret"></b></a>
+                        <ul class="dropdown-menu">
+                            <li><a href="#"
+                                   onClick="document.langForm.mylang.value='en';document.langForm.submit()">English</a>
+                            </li>
+                            <li class="active"><a href="#"
+                                                  onClick="document.langForm.mylang.value='de';document.langForm.submit()">Deutsch</a>
+                            </li>
+                            <li><a href="#"
+                                   onClick="document.langForm.mylang.value='es';document.langForm.submit()">Español</a>
+                            </li>
+                            <li><a href="#"
+                                   onClick="document.langForm.mylang.value='fr';document.langForm.submit()">Français</a>
+                            </li>
+                            <li><a href="#"
+                                   onClick="document.langForm.mylang.value='it';document.langForm.submit()">Italiano</a>
+                            </li>
+                            <li><a href="#"
+                                   onClick="document.langForm.mylang.value='tr';document.langForm.submit()">Türkçe</a>
+                            </li>
+                            <li><a href="#"
+                                   onClick="document.langForm.mylang.value='el';document.langForm.submit()">Ελληνικά</a>
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+    </div>
+    <div class="search container navbar">
+        <nav class="nav searchbox hidden-print">
+            <form id="searchForm" class="searchForm navbar-form navbar-left flip" method="get"
+                  action="/Search/Results" name="searchForm" autocomplete="off">
+                <input id="searchForm_lookfor" class="searchForm_lookfor form-control search-query"
+                       type="text" name="lookfor" value="" aria-label="Suchbegriffe"/>
+                <select id="searchForm_type" class="searchForm_type form-control" name="type"
+                        data-native-menu="false" aria-label="Search type">
+                    <option value="AllFields">überall</option>
+                    <option value="Title">Titel</option>
+                    <option value="Author">Person</option>
+                    <option value="Subject">Schlagwort</option>
+                    <option value="CallNumber">Systematik</option>
+                    <option value="ISN">ISBN/ISSN</option>
+                </select>
+                <button type="submit" class="btn btn-primary"><i class="fa fa-search"
+                                                                 aria-hidden="true"></i> suchen
+                </button>
+                <a href="/Search/Advanced?hiddenFilters%5B%5D=collection%3ALangenfeld"
+                   class="btn btn-link" rel="nofollow">Profisuche</a>
+
+                <input type="hidden" name="hiddenFilters[]" value="collection:Langenfeld"/>
+                <input type="hidden" name="limit" value="20"/></form>
+        </nav>
+    </div>
+</header>
+<nav class="breadcrumbs">
+    <div class="container">
+        <ul class="breadcrumb hidden-print">
+            <li>
+                <a href="/Search/Results?hiddenFilters%5B%5D=collection%3A%22Langenfeld%22&amp;lookfor=test&amp;type=AllFields">Trefferliste</a>
+            </li>
+            <li class="active"><a href="/Record/LANG.0442465">test</a></li>
+            <li class="active">Exemplare</li>
+        </ul>
+    </div>
+</nav>
+<div role="main" class="main">
+    <div id="content" class="container">
+
+        <ul class="pager hidden-print">
+            <li>
+                <a href="/Record/LANG.0396448" title="First Search Result"
+                   rel="nofollow">&laquo; Erste</a>
+            </li>
+            <li>
+                <a href="/Record/LANG.0429259" title="Previous Search Result"
+                   rel="nofollow">&laquo; Voriger</a>
+            </li>
+            #4 von 449 Treffer
+            <li>
+                <a href="/Record/LANG.0443073" title="Next Search Result"
+                   rel="nofollow">Nächster &raquo;</a>
+            </li>
+            <li>
+                <a href="/Record/ONLH.0421120" title="Last Search Result"
+                   rel="nofollow">Letzte &raquo;</a>
+            </li>
+        </ul>
+
+        <ul class="record-nav nav nav-pills hidden-print">
+            <li><a class="cite-record" data-lightbox href="/Record/LANG.0442465/Cite"
+                   rel="nofollow"><i class="fa fa-asterisk" aria-hidden="true"></i> Zitieren</a>
+            </li>
+            <li><a class="mail-record" data-lightbox href="/Record/LANG.0442465/Email"
+                   rel="nofollow"><i class="fa fa-envelope"
+                                     aria-hidden="true"></i> Als E-Mail versenden</a></li>
+
+            <li class="dropdown">
+                <a class="export-toggle dropdown-toggle" data-toggle="dropdown"
+                   href="/Record/LANG.0442465/Export" rel="nofollow"><i class="fa fa-list-alt"
+                                                                        aria-hidden="true"></i> Datensatz exportieren</a>
+                <ul class="dropdown-menu" role="menu">
+                    <li><a target="RefWorksMain" href="/Record/LANG.0442465/Export?style=RefWorks"
+                           rel="nofollow">Exportieren nach RefWorks</a></li>
+                    <li><a target="EndNoteWebMain"
+                           href="/Record/LANG.0442465/Export?style=EndNoteWeb"
+                           rel="nofollow">Exportieren nach EndNoteWeb</a></li>
+                    <li><a href="/Record/LANG.0442465/Export?style=EndNote"
+                           rel="nofollow">Exportieren nach EndNote</a></li>
+                    <li><a href="/Record/LANG.0442465/Export?style=MARCXML"
+                           rel="nofollow">Exportieren nach MARCXML</a></li>
+                    <li><a href="/Record/LANG.0442465/Export?style=RDF"
+                           rel="nofollow">Exportieren nach RDF</a></li>
+                </ul>
+            </li>
+
+            <li>
+                <a class="save-record" data-lightbox href="/Record/LANG.0442465/Save"
+                   rel="nofollow"><i class="fa fa-star" aria-hidden="true"></i> Zu den Favoriten</a>
+            </li>
+        </ul>
+
+        <div class="record sourceSolr">
+            <div class="mainbody left">
+                <input type="hidden" value="LANG.0442465" class="hiddenId"/>
+                <input type="hidden" value="Solr" class="hiddenSource"/>
+                <div class="media" vocab="http://schema.org/" resource="#record"
+                     typeof="CreativeWork Product">
+                    <div class="media-left medium img-col">
+                        <a href="https&#x3A;&#x2F;&#x2F;www.buchhandel.de&#x2F;buch&#x2F;"
+                           data-lightbox-image> <img alt="Cover" data-linkpreview="true"
+                                                     class="recordcover"
+                                                     src="&#x2F;Cover&#x2F;Show&#x3F;author&#x3D;&amp;callnumber&#x3D;&amp;size&#x3D;medium&amp;title&#x3D;test.&#x2B;&#x25;282018&#x25;29&amp;recordid&#x3D;LANG.0442465&amp;source&#x3D;Solr"/>
+                        </a>
+
+                    </div>
+                    <div class="media-body">
+
+                        <h3 property="name">test (2018) </h3>
+
+
+                        <div class="savedLists">
+                            <strong>Gespeichert in:</strong>
+                        </div>
+
+                        <table class="table table-striped">
+                            <caption class="sr-only">Bibliographische Detailangaben</caption>
+                            <tr>
+                                <th>Veröffentlicht in:</th>
+                                <td><a href="/Record/LANG.0429258">test</a></td>
+                            </tr>
+                            <tr>
+                                <th>Medientyp:</th>
+                                <td><span class="format zeitschriften">Zeitschriften</span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th>Veröffentlicht:</th>
+                                <td><span property="publisher" typeof="Organization">
+      </span>
+                                    <span property="publicationDate">2018</span>
+                                    <br/></td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+
+                <a name="tabnav"></a>
+                <div class="record-tabs">
+                    <ul class="nav nav-tabs">
+                        <li class="record-tab holdings active initiallyActive" data-tab="holdings">
+                            <a href="/Record/LANG.0442465/Holdings#tabnav">Exemplare</a>
+                        </li>
+                        <li class="record-tab description" data-tab="description">
+                            <a href="/Record/LANG.0442465/Description#tabnav">Beschreibung</a>
+                        </li>
+                        <li class="record-tab similar" data-tab="similar">
+                            <a href="/Record/LANG.0442465/Similar#tabnav">Ähnliche Einträge</a>
+                        </li>
+                        <li class="record-tab details" data-tab="details">
+                            <a href="/Record/LANG.0442465/Details#tabnav">Internformat</a>
+                        </li>
+                        <li class="record-tab volumes" data-tab="volumes">
+                            <a href="/Record/LANG.0442465/Volumes#tabnav">Journale</a>
+                        </li>
+                        <li class="record-tab solr" data-tab="solr">
+                            <a href="/Record/LANG.0442465/Solr#tabnav">Internformat</a>
+                        </li>
+                    </ul>
+
+                    <div class="tab-content">
+                        <div class="tab-pane active holdings-tab">
+
+
+                            <div class="alert alert-info">
+                                <a href="/Record/LANG.0442465/Interloan?login=true&amp;catalogLogin=true"
+                                   data-lightbox>Fernleihe</a>
+                            </div>
+                            <div class="alert alert-info">
+                                <a class="placehold" data-lightbox title="Bestellen"
+                                   href="/Record/LANG.0442465/Hold?id=LANG.0442465&amp;hashKey=932313e4372e3eb78e45b73b3121e9ad#tabnav"><i
+                                        class="fa fa-flag" aria-hidden="true"></i>&nbsp;Vorbestellen</a>
+                            </div>
+                            <!-- pre>Array
+                            (
+                                [blocks] =>
+                                [holdings] => Array
+                                    (
+                                        [Langenfeld] => Array
+                                            (
+                                                [items] => Array
+                                                    (
+                                                        [0] => Array
+                                                            (
+                                                                [id] => LANG.0442465
+                                                                [barcode] =>
+                                                                [callnumber] => Zeitschrift
+                                                                [item_notes] => Array
+                                                                    (
+                                                                        [0] => Erdgeschoss
+                                                                        [1] => Bibliothek
+                                                                    )
+
+                                                                [status] => In Bearbeitung
+                                                                [location] => Langenfeld
+                                                                [reserve] => N
+                                                                [duedate] =>
+                                                                [is_holdable] =>
+                                                                [availability] =>
+                                                            )
+
+                                                        [1] => Array
+                                                            (
+                                                                [id] => LANG.0442465
+                                                                [barcode] =>
+                                                                [callnumber] => Zeitschrift
+                                                                [item_notes] => Array
+                                                                    (
+                                                                        [0] => Erdgeschoss
+                                                                        [1] => Bibliothek
+                                                                    )
+
+                                                                [status] => In Bearbeitung
+                                                                [location] => Langenfeld
+                                                                [reserve] => N
+                                                                [duedate] =>
+                                                                [is_holdable] =>
+                                                                [availability] =>
+                                                            )
+
+                                                    )
+
+                                                [location] => Langenfeld
+                                                [locationhref] =>
+                                            )
+
+                                    )
+
+                            )
+                            </pre -->
+                            <table class="table table-striped">
+                                <caption class="sr-only">Bestandesangaben von</caption>
+                                <thead>
+                                <tr>
+                                    <th>Bibliothek</th>
+                                    <th>Bereich</th>
+                                    <th>Standort</th>
+                                    <th>Buchungsnr.</th>
+                                    <th>Verfügbarkeit</th>
+                                </tr>
+                                </thead>
+                                <!-- h3>
+                                        Langenfeld  </h3 -->
+                                <tr vocab="http://schema.org/" typeof="Offer">
+                                    <td class="copy-number">Langenfeld<!-- Exemplar -->
+                                    </td>
+                                    <td>
+                                        Erdgeschoss Bibliothek
+                                    </td>
+                                    <td>
+                                        Zeitschrift <br/>
+                                    </td>
+                                    <td>
+                                    </td>
+                                    <td>
+                                        <span class="text-danger">In Bearbeitung<link
+                                                property="availability"
+                                                href="http://schema.org/OutOfStock"/></span>
+                                        <!--
+    <div class="item-notes">
+<b>Anmerkungen:</b>
+<ul>
+                <li>Erdgeschoss</li>
+                <li>Bibliothek</li>
+            </ul>
+</div>
+-->
+                                        <meta property="seller" content="Langenfeld"/>
+                                        <meta property="sku" content="Zeitschrift"/>
+                                        <link property="businessFunction"
+                                              href="http://purl.org/goodrelations/v1#LeaseOut"/>
+                                        <link property="itemOffered" href="#record"/>
+                                    </td>
+                                </tr>
+                                <tr vocab="http://schema.org/" typeof="Offer">
+                                    <td class="copy-number">Langenfeld<!-- Exemplar -->
+                                    </td>
+                                    <td>
+                                        Erdgeschoss Bibliothek
+                                    </td>
+                                    <td>
+                                        Zeitschrift <br/>
+                                    </td>
+                                    <td>
+                                    </td>
+                                    <td>
+                                        <span class="text-danger">In Bearbeitung<link
+                                                property="availability"
+                                                href="http://schema.org/OutOfStock"/></span>
+                                        <!--
+    <div class="item-notes">
+<b>Anmerkungen:</b>
+<ul>
+                <li>Erdgeschoss</li>
+                <li>Bibliothek</li>
+            </ul>
+</div>
+-->
+                                        <meta property="seller" content="Langenfeld"/>
+                                        <meta property="sku" content="Zeitschrift"/>
+                                        <link property="businessFunction"
+                                              href="http://purl.org/goodrelations/v1#LeaseOut"/>
+                                        <link property="itemOffered" href="#record"/>
+                                    </td>
+                                </tr>
+                            </table>
+
+                        </div>
+                    </div>
+                </div>
+
+                <span class="Z3988"
+                      title="url_ver&#x3D;Z39.88-2004&amp;ctx_ver&#x3D;Z39.88-2004&amp;ctx_enc&#x3D;info&#x25;3Aofi&#x25;2Fenc&#x25;3AUTF-8&amp;rfr_id&#x3D;info&#x25;3Asid&#x25;2Fvufind.svn.sourceforge.net&#x25;3Agenerator&amp;rft.title&#x3D;test.&#x2B;&#x25;282018&#x25;29&amp;rft.date&#x3D;2018&amp;rft_val_fmt&#x3D;info&#x25;3Aofi&#x25;2Ffmt&#x25;3Akev&#x25;3Amtx&#x25;3Adc&amp;rft.creator&#x3D;&amp;rft.format&#x3D;Zeitschriften"></span>
+            </div>
+
+            <div class="sidebar right hidden-print">
+                <h4>Ähnliche Einträge</h4>
+                <ul class="list-group">
+                    <li class="list-group-item">
+                        <i class="fa fa-x fa-zeitschriften" title="Zeitschriften"></i>
+                        <a href="/Record/LANG.0429259">
+                            test. (2018)01 </a>
+                        <br/>Veröffentlicht: (2018)
+                    </li>
+                    <li class="list-group-item">
+                        <i class="fa fa-x fa-zeitschriften" title="Zeitschriften"></i>
+                        <a href="/Record/LANG.0443073">
+                            test. (2018)11 </a>
+                        <br/>Veröffentlicht: (2018)
+                    </li>
+                    <li class="list-group-item">
+                        <i class="fa fa-x fa-zeitschriften" title="Zeitschriften"></i>
+                        <a href="/Record/LANG.0443745">
+                            test. (2018)12 </a>
+                        <br/>Veröffentlicht: (2018)
+                    </li>
+                    <li class="list-group-item">
+                        <i class="fa fa-x fa-zeitschriften" title="Zeitschriften"></i>
+                        <a href="/Record/LANG.0526099">
+                            test. (2018)11 </a>
+                        <br/>Veröffentlicht: (2018)
+                    </li>
+                    <li class="list-group-item">
+                        <i class="fa fa-x fa-zeitschriften" title="Zeitschriften"></i>
+                        <a href="/Record/METT.2005443">
+                            Test. (2018)09 </a>
+                        <br/>Veröffentlicht: (2018)
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <script type="text&#x2F;javascript">
+    //<!--
+    $(document).ready(recordDocReady);
+    //-->
+
+        </script>
+    </div>
+</div>
+<footer class="hidden-print">
+    <div class="footer-container">
+        <div class="footer-column">
+            <p><strong>Suchoptionen</strong></p>
+            <ul>
+                <!--li><a href="/Search/Results?hiddenFilters%5B%5D=collection%3ALangenfeld&filter[]=news:Neuheiten">Neu in den Bibliotheken</a></li-->
+                <!--li><a href="/Search/Advanced">Profisuche</a></li-->
+                <li><a href="/Help/Home?topic=search&amp;_=1602694036" data-lightbox
+                       class="help-link">Suchtipps</a></li>
+                <li><a href="/Alphabrowse/Home">Alphabetisch suchen</a></li>
+                <li><a href="/Search/History?require_login=yes">Mein Suchverlauf</a></li>
+                <li><a href="/">Startseite</a></li>
+            </ul>
+        </div>
+
+        <div class="footer-column">
+            <p><strong>Weitere Suchoptionen</strong></p>
+            <ul>
+                <!--<li><a href="https://www1.onleihe.de/kreis-mettmann/frontend/welcome,51-0-0-100-0-0-1-0-0-0-0.html" >Onleihe im Kreis Mettmann</a></li>-->
+                <!--li><a href="https://www.digibib.net/template/search?SID=MASTER:c34981e3b58741950a73b9d211344eca&LOCATION=METTBIB" target=blank>DigiBib</a></li-->
+
+                <li><a href="https://www1.onleihe.de/kreis-mettmann"
+                       target=blank>Onleihe im Kreis Mettmann</a></li>
+                <li><a href="https://www.digibib.net/Digibib?LOCATION=METTBIB"
+                       target=blank>DigiBib</a></li>
+                <li><a href="https://nrw.edupool.de/home?standort=ME&pid=p4tj2fdikeb7pmesfnch7kfgg2"
+                       target=blank>Medienzentrum Kreis Mettmann</a></li>
+                <li><a href="https://www.digento.de/login/21139/21139.html"
+                       target=blank>BIBNET-Press</a></li>
+            </ul>
+        </div>
+
+        <div class="footer-column">
+            <p><strong>Hilfe</strong></p>
+            <ul>
+                <li><a href="/Pages/Homepages" title="Homepages">Homepages Ihrer Bibliotheken</a>
+                </li>
+                <li><a href="/Pages/vorschlag"
+                       title="Mail an die Bibliothek">Mail an die Bibliothek</a></li>
+                <li><a href="/Pages/Ueberuns" title="Über uns">Über uns</a></li>
+                <li><a href="/Pages/Impressum"
+                       title="Impressum / Datenschutz">Impressum / Datenschutz</a></li>
+
+                <!-- <li><a href="/Browse/Home">Katalog durchsuchen</a></li> -->
+                <!-- <li><a href="/Search/NewItem">Neu in den Bibliotheken</a></li>-->
+            </ul>
+        </div>
+
+        <div class="footer-column"><p><strong></strong></p>
+            </br>
+            <strong>Gefördert vom</strong>
+            <img src="/themes/smartbib/images/MKW_AK_Farbig_RGB.png"/>
+            <!-- zu gross, incl. gefördert vom img src="/themes/smartbib/images/Förderhinweis_MKW_AK_Farbig_CMYK_18_09_03.jpg" /-->
+            </br>
+            Powered by VuFind and <b id="gkdgreen">subkom GmbH</b></div>
+
+    </div>
+
+    <div class="poweredby">
+    </div>
+</footer>
+<!-- MODAL IN CASE WE NEED ONE -->
+<div id="modal" class="modal fade hidden-print" tabindex="-1" role="dialog"
+     aria-labelledby="modalTitle" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;
+            </button>
+            <div class="modal-body">wird geladen......</div>
+        </div>
+    </div>
+</div>
+<div class="offcanvas-overlay" data-toggle="offcanvas"></div>
+</body>
+</html>

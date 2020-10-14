@@ -29,7 +29,7 @@ public class VuFindSearchTest extends BaseHtmlTest {
 
     private static final String[] FILES =
             new String[]{"muenster_volumes.html", "muenster_copies.html", "kreisre_volumes.html",
-                    "kreisre_copies.html"};
+                    "kreisre_copies.html", "kreismettmann_magazine.html"};
 
     @Parameterized.Parameters(name = "{0}")
     public static Collection<String[]> files() {
@@ -49,7 +49,7 @@ public class VuFindSearchTest extends BaseHtmlTest {
 
         if (html == null) return; // we may not have all files for all libraries
         DetailedItem result = VuFind.parseDetail("0", Jsoup.parse(html), getData(file),
-                htmlDesc != null ? Jsoup.parse(htmlDesc) : null);
+                htmlDesc != null ? Jsoup.parse(htmlDesc) : null, null);
         for (Copy copy : result.getCopies()) {
             assertContainsData(copy.getStatus());
             assertNullOrNotEmpty(copy.getBarcode());
@@ -84,6 +84,7 @@ public class VuFindSearchTest extends BaseHtmlTest {
                         "    }");
             case "kreisre_volumes.html":
             case "kreisre_copies.html":
+            case "kreismettmann_magazine.html":
                 return new JSONObject(("{\"copystyle\":\"smartbib\"}"));
         }
         return null;
@@ -99,6 +100,8 @@ public class VuFindSearchTest extends BaseHtmlTest {
                 return "Test 2017 :";
             case "kreisre_copies.html":
                 return "Der 4-Farben-Mensch : der Weg zum inneren Gleichgewicht";
+            case "kreismettmann_magazine.html":
+                return "test (2018)";
         }
         return null;
     }
