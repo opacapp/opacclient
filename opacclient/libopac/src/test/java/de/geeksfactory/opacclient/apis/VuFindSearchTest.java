@@ -49,7 +49,7 @@ public class VuFindSearchTest extends BaseHtmlTest {
 
         if (html == null) return; // we may not have all files for all libraries
         DetailedItem result = VuFind.parseDetail("0", Jsoup.parse(html), getData(file),
-                htmlDesc != null ? Jsoup.parse(htmlDesc) : null);
+                htmlDesc != null ? Jsoup.parse(htmlDesc) : null, null);
         for (Copy copy : result.getCopies()) {
             assertContainsData(copy.getStatus());
             assertNullOrNotEmpty(copy.getBarcode());
