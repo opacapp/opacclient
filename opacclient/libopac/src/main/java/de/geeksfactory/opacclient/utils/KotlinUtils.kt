@@ -1,5 +1,6 @@
 package de.geeksfactory.opacclient.utils
 
+import org.json.JSONArray
 import org.json.JSONObject
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
@@ -23,3 +24,10 @@ val Elements.text: String
 
 val TextNode.text: String
     get() = this.text()
+
+// JSONArray extension functions
+inline fun <reified T, R> JSONArray.map(transform: (T) -> R): List<R> =
+        (0..length()).map { i -> transform(get(i) as T) }
+
+inline fun <reified T> JSONArray.forEach(function: (T) -> Unit) =
+        (0..length()).forEach { i -> function(get(i) as T) }
