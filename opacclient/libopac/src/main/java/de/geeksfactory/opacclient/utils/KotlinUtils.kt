@@ -27,7 +27,7 @@ val TextNode.text: String
 
 // JSONArray extension functions
 inline fun <reified T, R> JSONArray.map(transform: (T) -> R): List<R> =
-        (0..length()).map { i -> transform(get(i) as T) }
+        (0.until(length())).map { i -> transform(get(i) as T) }
 
 inline fun <reified T> JSONArray.forEach(function: (T) -> Unit) =
-        (0..length()).forEach { i -> function(get(i) as T) }
+        (0.until(length())).forEach { i -> function(get(i) as T) }
