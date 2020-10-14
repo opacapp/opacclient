@@ -629,16 +629,63 @@ public class VuFind extends OkHttpBaseApi {
         } else if ("smartbib".equals(copystyle)) {
             Element table = doc.select(".holdings-tab table").first();
             if (table == null) return;
-            for (Element tr : table.select("tr")) {
-                Elements columns = tr.select("td");
-                if (columns.size() == 0) continue; // header
-                Copy copy = new Copy();
-                copy.setBranch(columns.get(0).text());
-                copy.setLocation(columns.get(1).text());
-                copy.setShelfmark(columns.get(2).text());
-                copy.setStatus(columns.get(3).text());
-                copy.setReservations(columns.get(4).text());
-                res.addCopy(copy);
+
+            List<String> headers = new ArrayList<>();
+            boolean ok = true;
+            for (Element th : table.select("th")) {
+                switch (th.text()) {
+                    case "Bibliothek":
+                    case "Bücherei":
+                        headers.add("branch");
+                        break;
+                    case "Bereich":
+                        headers.add("department");
+                        break;
+                    case "Standort":
+                        headers.add("location");
+                        break;
+                    case "Buchungsnr.":
+                    case "Signatur":
+                        headers.add("barcode");
+                        break;
+                    case "Verfügbarkeit":
+                    case "Status":
+                        headers.add("status");
+                        break;
+                    case "Vorbestellungen":
+                        headers.add("reservations");
+                        break;
+                    default:
+                        ok = false;
+                        break;
+                }
+            }
+
+            if (ok) {
+                for (Element tr : table.select("tr")) {
+                    Elements columns = tr.select("td");
+                    if (columns.size() == 0) continue; // header
+                    Copy copy = new Copy();
+                    for (int i = 0; i < columns.size(); i++) {
+                        String text = columns.get(i).text();
+                        if (text.isEmpty()) continue;
+                        copy.set(headers.get(i), text);
+                    }
+                    res.addCopy(copy);
+                }
+            } else {
+                // headers couldn't be detected, fall back to default
+                for (Element tr : table.select("tr")) {
+                    Elements columns = tr.select("td");
+                    if (columns.size() == 0) continue; // header
+                    Copy copy = new Copy();
+                    copy.setBranch(columns.get(0).text());
+                    copy.setLocation(columns.get(1).text());
+                    copy.setShelfmark(columns.get(2).text());
+                    copy.setStatus(columns.get(3).text());
+                    copy.setReservations(columns.get(4).text());
+                    res.addCopy(copy);
+                }
             }
         }
     }
