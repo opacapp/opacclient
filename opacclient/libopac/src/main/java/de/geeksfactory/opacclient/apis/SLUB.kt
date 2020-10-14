@@ -28,9 +28,7 @@ import de.geeksfactory.opacclient.searchfields.DropdownSearchField
 import de.geeksfactory.opacclient.searchfields.SearchField
 import de.geeksfactory.opacclient.searchfields.SearchQuery
 import de.geeksfactory.opacclient.searchfields.TextSearchField
-import de.geeksfactory.opacclient.utils.get
-import de.geeksfactory.opacclient.utils.html
-import de.geeksfactory.opacclient.utils.text
+import de.geeksfactory.opacclient.utils.*
 import okhttp3.FormBody
 import okhttp3.HttpUrl
 import org.joda.time.LocalDate
@@ -138,20 +136,19 @@ open class SLUB : OkHttpBaseApi() {
     }
 
     internal fun parseSearchResults(json: JSONObject): SearchRequestResult {
-        val searchresults = json.getJSONArray("docs").let { 0.until(it.length()).map { i -> it.getJSONObject(i) } }
-                .map {
-                    SearchResult().apply {
-                        innerhtml = "<b>${it.getString("title")}</b><br>${it.getJSONArray("author").optString(0)}"
-                        it.getString("creationDate").run {
-                            if (this != "null") {
-                                innerhtml += "<br>(${this})"
-                            }
-                        }
-                        type = mediaTypes[it.getJSONArray("format").optString(0)]
-                                ?: SearchResult.MediaType.NONE
-                        id = it.getString("id")
+        val searchresults = json.getJSONArray("docs").map<JSONObject, SearchResult> {
+            SearchResult().apply {
+                innerhtml = "<b>${it.getString("title")}</b><br>${it.getJSONArray("author").optString(0)}"
+                it.getString("creationDate").run {
+                    if (this != "null") {
+                        innerhtml += "<br>(${this})"
                     }
                 }
+                type = mediaTypes[it.getJSONArray("format").optString(0)]
+                        ?: SearchResult.MediaType.NONE
+                id = it.getString("id")
+            }
+        }
         //TODO: get status (one request per item!)
         return SearchRequestResult(searchresults, json.getInt("numFound"), 1)
     }
@@ -178,32 +175,31 @@ open class SLUB : OkHttpBaseApi() {
         val dateFormat = DateTimeFormat.forPattern("dd.MM.yyyy")
         var hasReservableCopies = false
         fun getCopies(copiesArray: JSONArray, df: DateTimeFormatter): List<Copy> =
-                copiesArray.run { 0.until(length()).map { optJSONObject(it) } }
-                        .map {
-                            Copy().apply {
-                                barcode = it.getString("barcode")
-                                branch = it.getString("location")
-                                department = it.getString("sublocation") // or location = ...
-                                shelfmark = it.getString("shelfmark")
-                                status = Jsoup.parse(it.getString("statusphrase")).text()
-                                it.getString("duedate").run {
-                                    if (isNotEmpty()) {
-                                        returnDate = df.parseLocalDate(this)
-                                    }
-                                }
-                                // stack requests and reservations for items on loan are both handled as "reservations" in libopac
-                                if (it.getString("bestellen") == "1") {
-                                    resInfo = "stackRequest\t$barcode"
-                                    hasReservableCopies = true
-                                }
-                                if (it.getString("vormerken") == "1") {
-                                    resInfo = "reserve\t$barcode"
-                                    hasReservableCopies = true
-                                }
-                                // reservations: only available for reserved copies, not for reservable copies
-                                // url: not for accessible online resources, only for lendable online copies
+                copiesArray.map<JSONObject, Copy> {
+                    Copy().apply {
+                        barcode = it.getString("barcode")
+                        branch = it.getString("location")
+                        department = it.getString("sublocation") // or location = ...
+                        shelfmark = it.getString("shelfmark")
+                        status = Jsoup.parse(it.getString("statusphrase")).text()
+                        it.getString("duedate").run {
+                            if (isNotEmpty()) {
+                                returnDate = df.parseLocalDate(this)
                             }
                         }
+                        // stack requests and reservations for items on loan are both handled as "reservations" in libopac
+                        if (it.getString("bestellen") == "1") {
+                            resInfo = "stackRequest\t$barcode"
+                            hasReservableCopies = true
+                        }
+                        if (it.getString("vormerken") == "1") {
+                            resInfo = "reserve\t$barcode"
+                            hasReservableCopies = true
+                        }
+                        // reservations: only available for reserved copies, not for reservable copies
+                        // url: not for accessible online resources, only for lendable online copies
+                    }
+                }
         return DetailedItem().apply {
             this.id = id
             val record = json.getJSONObject("record")
@@ -216,7 +212,7 @@ open class SLUB : OkHttpBaseApi() {
                             is String -> arrayItem
                             is JSONObject -> arrayItem.optString("title").also {
                                 // if item is part of multiple collections, collectionsId holds the last one
-                                collectionId = arrayItem.optString(("id"), null)
+                                collectionId = arrayItem.optString("id", null)
                             }
                             else -> null
                         }
@@ -238,8 +234,7 @@ open class SLUB : OkHttpBaseApi() {
             }
             // links and references
             for (link in listOf("linksRelated", "linksAccess", "linksGeneral")) {
-                val linkArray = json.getJSONArray(link)
-                linkArray.run { 0.until(length()).map { optJSONObject(it) } }.map {
+                json.getJSONArray(link).forEach<JSONObject> {
                     // assuming that only on of material, note or hostlabel is set
                     val key = with(it.optString("material") + it.optString("note") + it.optString("hostLabel")) {
                         if (isEmpty()) fieldCaptions[link] else this
@@ -247,7 +242,7 @@ open class SLUB : OkHttpBaseApi() {
                     addDetail(Detail(key, it.optString("uri")))
                 }
             }
-            json.getJSONArray("references").run { 0.until(length()).map { optJSONObject(it) } }.map {
+            json.getJSONArray("references").forEach<JSONObject> {
                 // TODO: usually links to old SLUB catalogue, does it make sense to add the link?
                 addDetail(Detail(it.optString("text"), "${it.optString("name")} (${it.optString("target")})"))
             }
@@ -267,11 +262,10 @@ open class SLUB : OkHttpBaseApi() {
             }
             isReservable = hasReservableCopies
             // volumes
-            volumes = json.optJSONObject("parts")?.optJSONArray("records")?.run {
-                0.until(length()).map { optJSONObject(it) }.map {
-                    Volume(it.optString("id"),
-                            "${it.optString("part")} ${Parser.unescapeEntities(it.optString("name"), false)}")
-                }
+            volumes = json.optJSONObject("parts")?.optJSONArray("records")?.map<JSONObject, Volume> {
+                Volume(it.optString("id"),
+                        "${it.optString("part")} ${Parser.unescapeEntities(it.optString("name"), false)}")
+
             } ?: emptyList()
         }
     }
@@ -422,51 +416,43 @@ open class SLUB : OkHttpBaseApi() {
             // "requests" is a copy of "request_ready" + "readingroom" + "request_progress"
             val reservationsList = mutableListOf<ReservedItem>()
             for (type in types) {
-                items?.optJSONArray(type)?.let {
-                    for (i in 0 until it.length()) {
-                        reservationsList.add(it.getJSONObject(i).let {
-                            ReservedItem().apply {
-                                title = it.optString("about")
-                                author = it.optJSONArray("X_author")?.optString(0)
-                                //id = it.optString("label")  // TODO: get details from here via /bc --> redirects to /id, from there get the proper id
-                                format = it.optString("X_medientyp")
-                                status = when (type) {  // TODO: maybe we need time (LocalDateTime) too make an educated guess on actual ready date for stack requests
-                                    "hold" -> stringProvider.getFormattedString(StringProvider.HOLD,
-                                            fmt.print(LocalDate(it.optString("X_date_reserved").substring(0, 10))))
-                                    "request_ready" -> stringProvider.getFormattedString(StringProvider.REQUEST_READY,
-                                            fmt.print(LocalDate(it.optString("X_date_requested").substring(0, 10))))
-                                    "readingroom" -> stringProvider.getFormattedString(StringProvider.READINGROOM,
-                                            fmt.print(LocalDate(it.optString("X_date_provided").substring(0, 10))))
-                                    "request_progress" -> stringProvider.getFormattedString(StringProvider.REQUEST_PROGRESS,
-                                            fmt.print(LocalDate(it.optString("X_date_requested").substring(0, 10))))
-                                    "reserve" -> stringProvider.getFormattedString(StringProvider.RESERVED_POS,
-                                            it.optInt("X_queue_number"))
-                                    else -> null
-                                }
-                                branch = it.optString("X_pickup_desc", null)
-                                if (type == "reserve") {
-                                    cancelData = "${it.optString("label")}_${it.getInt("X_delete_number")}"
-                                }
-                            }
-                        })
-                    }
-                }
-            }
-            items?.optJSONArray("ill")?.let {
-                for (i in 0 until it.length()) {
-                    reservationsList.add(it.getJSONObject(i).let {
-                        ReservedItem().apply {
-                            title = it.optString("Titel")
-                            author = it.optString("Autor")
-                            //id = it.optString("Fernleih_ID") --> this id is of no use whatsoever
-                            it.optString("Medientyp")?.run {
-                                if (length > 0) format = this
-                            }
-                            branch = it.optString("Zweigstelle")
-                            status = it.optString("Status_DESC")
+                items?.optJSONArray(type)?.forEach<JSONObject> {
+                    reservationsList.add(ReservedItem().apply {
+                        title = it.optString("about")
+                        author = it.optJSONArray("X_author")?.optString(0)
+                        //id = it.optString("label")  // TODO: get details from here via /bc --> redirects to /id, from there get the proper id
+                        format = it.optString("X_medientyp")
+                        status = when (type) {  // TODO: maybe we need time (LocalDateTime) too make an educated guess on actual ready date for stack requests
+                            "hold" -> stringProvider.getFormattedString(StringProvider.HOLD,
+                                    fmt.print(LocalDate(it.optString("X_date_reserved").substring(0, 10))))
+                            "request_ready" -> stringProvider.getFormattedString(StringProvider.REQUEST_READY,
+                                    fmt.print(LocalDate(it.optString("X_date_requested").substring(0, 10))))
+                            "readingroom" -> stringProvider.getFormattedString(StringProvider.READINGROOM,
+                                    fmt.print(LocalDate(it.optString("X_date_provided").substring(0, 10))))
+                            "request_progress" -> stringProvider.getFormattedString(StringProvider.REQUEST_PROGRESS,
+                                    fmt.print(LocalDate(it.optString("X_date_requested").substring(0, 10))))
+                            "reserve" -> stringProvider.getFormattedString(StringProvider.RESERVED_POS,
+                                    it.optInt("X_queue_number"))
+                            else -> null
+                        }
+                        branch = it.optString("X_pickup_desc", null)
+                        if (type == "reserve") {
+                            cancelData = "${it.optString("label")}_${it.getInt("X_delete_number")}"
                         }
                     })
                 }
+            }
+            items?.optJSONArray("ill")?.forEach<JSONObject> {
+                reservationsList.add(ReservedItem().apply {
+                    title = it.optString("Titel")
+                    author = it.optString("Autor")
+                    //id = it.optString("Fernleih_ID") --> this id is of no use whatsoever
+                    it.optString("Medientyp")?.run {
+                        if (length > 0) format = this
+                    }
+                    branch = it.optString("Zweigstelle")
+                    status = it.optString("Status_DESC")
+                })
             }
 
             return reservationsList
@@ -477,8 +463,7 @@ open class SLUB : OkHttpBaseApi() {
             validUntil = json.getJSONObject("memberInfo").getString("expires")
                     ?.substring(0, 10)?.let { fmt.print(LocalDate(it)) }
             lent = json.optJSONObject("items")?.optJSONArray("loan")    // TODO: plus permanent loans? (need example)
-                    ?.run { 0.until(length()).map { optJSONObject(it) } }
-                    ?.map {
+                    ?.map<JSONObject, LentItem> {
                         LentItem().apply {
                             title = it.optString("about")
                             author = it.optJSONArray("X_author")?.optString(0)
