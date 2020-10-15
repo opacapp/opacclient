@@ -87,6 +87,14 @@ public interface StringProvider {
     String PLEASE_CHANGE_PASSWORD = "please_change_password";
     String PROLONG_ALL_NOT_POSSIBLE = "prolong_all_not_possible";
     String PROLONG_ALL_NO_ITEMS = "prolong_all_no_items";
+    String HOLD = "hold";
+    String REQUEST_READY = "request_ready";
+    String READINGROOM = "readingroom";
+    String REQUEST_PROGRESS = "request_progress";
+    String RESERVED_POS = "reserved_pos";
+    String ITEM_COPY = "item_copy";
+    String RESERVED = "reserved";
+    String RENEWED = "renewed";
 
     /**
      * Returns the translated string identified by identifier

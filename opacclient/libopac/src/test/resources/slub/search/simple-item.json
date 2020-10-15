@@ -1,0 +1,78 @@
+{
+  "record": {
+    "format": "Buch",
+    "title": "Unit-Tests mit JUnit",
+    "contributor": [
+      "Hunt, Andrew",
+      "Thomas, David [Autor/In]"
+    ],
+    "publisher": [
+      "München Wien Hanser 2004 "
+    ],
+    "ispartof": [
+      {
+        "id": "0-1183957874",
+        "title": "Pragmatisch Programmieren; 2"
+      }
+    ],
+    "identifier": [
+      "3446228241",
+      "3446404694",
+      "9783446404694",
+      "9783446228245"
+    ],
+    "language": [
+      "Deutsch"
+    ],
+    "subject": [
+      "Quellcode",
+      "Softwaretest",
+      "JUnit"
+    ],
+    "description": "",
+    "status": "",
+    "rvk": ""
+  },
+  "id": "0-1182402208",
+  "oa": 0,
+  "thumbnail": "",
+  "links": [
+    {
+      "uri": "http://d-nb.info/970689268/04",
+      "note": "",
+      "material": "Inhaltsverzeichnis"
+    }
+  ],
+  "linksRelated": [
+    {
+      "uri": "http://d-nb.info/970689268/04",
+      "hostLabel": "",
+      "note": "",
+      "material": "Inhaltsverzeichnis"
+    }
+  ],
+  "linksAccess": [],
+  "linksGeneral": [],
+  "references": [],
+  "copies": [
+    {
+      "barcode": "31541466",
+      "location": "Bereichsbibliothek DrePunct",
+      "location_code": "zell9",
+      "sublocation": "Freihand",
+      "shelfmark": "ST 233 H939",
+      "mediatype": "B",
+      "3d": "ST 233 H939",
+      "3d_link": "https://3d.slub-dresden.de/viewer?project_id=3&search_key=ST%20233%20H939&language=de&search_context1=zell9&search_context2=FH1&exemplar_id=31541466",
+      "issue": "",
+      "colorcode": "1",
+      "statusphrase": "Ausleihbar",
+      "link": "",
+      "status": "N",
+      "duedate": "",
+      "vormerken": "0",
+      "bestellen": "0"
+    }
+  ],
+  "parts": {}
+}

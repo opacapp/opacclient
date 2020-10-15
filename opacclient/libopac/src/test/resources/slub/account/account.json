@@ -1,0 +1,190 @@
+{
+  "status": "1",
+  "userID": "1234567",
+  "memberInfo": {
+    "name": " Max Mustermann",
+    "email": "max.mustermann@googlemail.com",
+    "address": "Musterstr. 1, 01069 Dresden",
+    "expires": "2099-01-01T00:00:00Z",
+    "status": "N",
+    "X_status_desc": "Normal",
+    "X_name": {
+      "givenname": "Max",
+      "surname": "Mustermann"
+    },
+    "X_post_address": {
+      "street_1": "Musterstr. 1",
+      "plz": "01069",
+      "ort": "Dresden"
+    },
+    "X_residental_address": [],
+    "X_alternative_address": [],
+    "X_date_of_joining": "2000-01-01T00:00:00Z",
+    "X_date_of_last_issue_int": "65143",
+    "X_date_of_last_issue_ext": "2019-05-10",
+    "X_gender": "M",
+    "X_branch": "zell1",
+    "X_branch_desc": "Zentralbibliothek",
+    "X_category": "NE",
+    "X_category_desc": "Normal Email",
+    "X_blacklists": [],
+    "X_notes": [],
+    "X_webopac_notes": [],
+    "type": "NE"
+  },
+  "items": {
+    "loan": [
+      {
+        "status": 3,
+        "about": "¬Der¬ neue Kosmos-Baumführer",
+        "label": "31626878",
+        "queue": "0",
+        "renewals": 0,
+        "starttime": "2019-05-05T15:45:39Z",
+        "endtime": "2019-06-02T22:00:00Z",
+        "X_status_desc": "on loan",
+        "X_barcode": "31626878",
+        "X_author": [
+          "Bachofer, Mark",
+          "Mayer, Joachim"
+        ],
+        "X_medientyp": "B",
+        "X_exstatus": "N",
+        "X_exstatus_desc": "Ausleihbar   ",
+        "X_shelfLocation": "WL 9825 B124",
+        "X_internal_date_issued": "65138,63939",
+        "X_date_issued": "2019-05-05 17:45:39",
+        "X_internal_date_due": "65167",
+        "X_date_due": "2019-06-03",
+        "X_days_to_due": "20",
+        "X_is_reserved": 0,
+        "X_is_renewable": 1,
+        "X_is_flrenewable": 0,
+        "X_rsn": 13840872
+      },
+      {
+        "status": 3,
+        "about": "Bäume bestimmen",
+        "label": "33121334",
+        "queue": "0",
+        "renewals": 0,
+        "starttime": "2019-04-30T10:37:11Z",
+        "endtime": "2019-05-27T22:00:00Z",
+        "X_status_desc": "on loan",
+        "X_barcode": "33121334",
+        "X_author": [
+          "Lüder, Rita"
+        ],
+        "X_medientyp": "B",
+        "X_exstatus": "N",
+        "X_exstatus_desc": "Ausleihbar   ",
+        "X_shelfLocation": "WL 9825 L948",
+        "X_internal_date_issued": "65133,45431",
+        "X_date_issued": "2019-04-30 12:37:11",
+        "X_internal_date_due": "65161",
+        "X_date_due": "2019-05-28",
+        "X_days_to_due": "14",
+        "X_is_reserved": 0,
+        "X_is_renewable": 1,
+        "X_is_flrenewable": 0,
+        "X_rsn": 15864711
+      }
+    ],
+    "reserve": [
+      {
+        "status": 1,
+        "about": "Pareys Buch der Bäume",
+        "label": "30963742",
+        "starttime": "2019-05-10T07:11:09Z",
+        "X_queue_number": 1,
+        "X_delete_number": 1,
+        "X_author": [
+          "Mitchell, Alan",
+          "Wilkinson, John",
+          "Schütt, Peter ¬[Übers.]¬"
+        ],
+        "X_status_desc": "reserved",
+        "X_medientyp": "B",
+        "X_exstatus": "N",
+        "X_exstatus_desc": "Ausleihbar   ",
+        "X_internal_date_reserved": "65143,33069",
+        "X_date_reserved": "2019-05-10 09:11:09",
+        "X_provided": 0,
+        "X_rsn": 963145
+      }
+    ],
+    "hold": [
+      {
+        "status": 4,
+        "about": "Welcher Baum ist das?",
+        "label": "34778398",
+        "starttime": "2019-05-09T22:00:00Z",
+        "X_status_desc": "on hold",
+        "X_pickup_code": "tha1",
+        "X_pickup_desc": "ZwB Forstwissenschaft",
+        "X_medientyp": "B",
+        "X_exstatus": "N",
+        "X_exstatus_desc": "Ausleihbar   ",
+        "X_ill_duedate": "",
+        "X_ill_request_id": "",
+        "X_author": [
+          "Mayer, Joachim ¬[VerfasserIn]¬",
+          "Schwegler, Heinz Werner ¬[VerfasserIn]¬"
+        ],
+        "X_internal_date_reserved": "65143",
+        "X_date_reserved": "2019-05-10",
+        "X_provided": 0,
+        "X_rsn": 16605483
+      }
+    ],
+    "request_ready": [
+      {
+        "status": 1,
+        "about": "Englische Synonyme als Fehlerquellen",
+        "label": "20550495",
+        "starttime": "2019-05-04T06:35:39Z",
+        "X_status_desc": "requested",
+        "X_author": [
+          "Meyer, Jürgen",
+          "Schulz, Gisela"
+        ],
+        "X_stackid": "2038188",
+        "X_systemmessage": "http://libero6.slub-dresden.de:57772/csp/user/paia/coremsg.csp?patronid=4222666&msgid=2038188",
+        "X_medientyp": "B",
+        "X_exstatus": "NM",
+        "X_exstatus_desc": "Ausleihbar   ",
+        "X_internal_date_requested": "65137,30939",
+        "X_date_requested": "2019-05-04 08:35:39",
+        "X_pickup_code": "a01",
+        "X_pickup_desc": "Zentralbibliothek Ebene 0 SB-Regal",
+        "X_stacklocation": "m002",
+        "X_request": "l",
+        "X_request_desc": "liegt bereit",
+        "X_rsn": 1494121
+      }
+    ]
+  },
+  "fees": {
+    "amount": "0,00 EUR",
+    "subset": "open",
+    "amount_list": "0,00 EUR",
+    "paid_all": "0,00 EUR",
+    "paid_list": "0,00 EUR",
+    "fee_all": "0,00 EUR",
+    "fee_list": "0,00 EUR",
+    "topay_all": "0,00 EUR",
+    "topay_list": "0,00 EUR",
+    "overdue_paid": "0,00 EUR",
+    "overdue_fee": "0,00 EUR",
+    "ill_paid": "0,00 EUR",
+    "ill_fee": "0,00 EUR",
+    "other_paid": "0,00 EUR",
+    "other_fee": "0,00 EUR",
+    "fee": []
+  },
+  "arguments": {
+    "controller": "API",
+    "action": "account",
+    "username": "1234567"
+  }
+}

@@ -1,0 +1,47 @@
+{
+  "numFound": 0,
+  "start": 0,
+  "docs": [],
+  "facets": {
+    "access_facet": {
+      "translation": "Zugang",
+      "values": []
+    },
+    "format_de15": {
+      "translation": "Medientyp",
+      "values": []
+    },
+    "publishDateSort": {
+      "translation": "Erscheinungsjahr",
+      "values": []
+    },
+    "branch": {
+      "translation": "Standort",
+      "values": []
+    },
+    "language": {
+      "translation": "Sprache",
+      "values": []
+    },
+    "thema": {
+      "translation": "Fachgebiet",
+      "values": []
+    },
+    "author": {
+      "translation": "Person/Institution",
+      "values": []
+    },
+    "facet_music_notation_de14": {
+      "translation": "musikalische Ausgabeform",
+      "values": []
+    },
+    "music_heading_browse": {
+      "translation": "musikalische Besetzung",
+      "values": []
+    },
+    "mega_collection": {
+      "translation": "Kollektion",
+      "values": []
+    }
+  }
+}

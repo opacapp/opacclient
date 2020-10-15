@@ -1,0 +1,76 @@
+{
+  "record": {
+    "format": "Buch",
+    "title": "Principles of digital image processing",
+    "contributor": [
+      "Burger, Wilhelm",
+      "Burge, Mark James [Autor/In]"
+    ],
+    "publisher": [
+      "London Springer 20XX "
+    ],
+    "ispartof": [
+      {
+        "title": "Undergraduate topics in computer science"
+      }
+    ],
+    "identifier": "",
+    "language": [
+      "Englisch"
+    ],
+    "subject": "",
+    "description": "",
+    "status": "",
+    "rvk": ""
+  },
+  "id": "0-1393168353",
+  "oa": 0,
+  "thumbnail": "",
+  "links": [],
+  "linksRelated": [],
+  "linksAccess": [],
+  "linksGeneral": [],
+  "references": [],
+  "copies": [],
+  "parts": {
+    "title": "Mehrbändiges Werk",
+    "records": [
+      {
+        "author": [
+          "Burger, Wilhelm",
+          "Burge, Mark J."
+        ],
+        "author2": [],
+        "part": "[3]:",
+        "id": "0-1453040935",
+        "name": "Principles of digital image processing",
+        "imprint": "London, Springer, 2013",
+        "sequence": "[3]"
+      },
+      {
+        "author": [
+          "Burger, Wilhelm",
+          "Burge, Mark James"
+        ],
+        "author2": [],
+        "part": "[2]:",
+        "id": "0-1347927328",
+        "name": "Principles of digital image processing",
+        "imprint": "London, Springer, 2009",
+        "sequence": "[2]"
+      },
+      {
+        "author": [
+          "Burger, Wilhelm",
+          "Burge, Mark James"
+        ],
+        "author2": [],
+        "part": "[1]:",
+        "id": "0-1347930884",
+        "name": "Principles of digital image processing",
+        "imprint": "London, Springer, 2009",
+        "sequence": "[1]"
+      }
+    ]
+  }
+}

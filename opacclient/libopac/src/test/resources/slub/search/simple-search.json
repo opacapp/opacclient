@@ -1,0 +1,127 @@
+{
+  "numFound": 2,
+  "start": 0,
+  "docs": [
+    {
+      "id": "0-1014939550",
+      "format": [
+        "Book, E-Book"
+      ],
+      "title": "Mastering software testing with JUnit 5 comprehensive guide to develop high quality Java applications Boni García",
+      "author": [
+        "Garcia, Boni"
+      ],
+      "creationDate": "2017",
+      "imprint": [
+        "Birmingham, UK: Packt Publishing, 2017"
+      ]
+    },
+    {
+      "id": "123",
+      "format": [
+        "???"
+      ],
+      "title": "Title with \" and &",
+      "author": [],
+      "creationDate": "2222",
+      "imprint": []
+    }
+  ],
+  "facets": {
+    "access_facet": {
+      "translation": "Zugang",
+      "values": {
+        "Electronic Resources": {
+          "translation": "Online-Ressourcen",
+          "values": 2
+        }
+      }
+    },
+    "format_de15": {
+      "translation": "Medientyp",
+      "values": {
+        "Book, E-Book": {
+          "translation": "Bücher",
+          "values": 1
+        },
+        "Video": {
+          "translation": "Video",
+          "values": 1
+        }
+      }
+    },
+    "publishDateSort": {
+      "translation": "Erscheinungsjahr",
+      "values": {
+        "2017": {
+          "translation": "2017",
+          "values": 1
+        },
+        "2018": {
+          "translation": "2018",
+          "values": 1
+        }
+      }
+    },
+    "branch": {
+      "translation": "Standort",
+      "values": []
+    },
+    "language": {
+      "translation": "Sprache",
+      "values": {
+        "English": {
+          "translation": "Englisch",
+          "values": 2
+        }
+      }
+    },
+    "thema": {
+      "translation": "Fachgebiet",
+      "values": {
+        "Informatik": {
+          "translation": "Informatik",
+          "values": 1
+        },
+        "Mathematik": {
+          "translation": "Mathematik",
+          "values": 1
+        }
+      }
+    },
+    "author": {
+      "translation": "Person/Institution",
+      "values": {
+        "Boni García": {
+          "translation": "Boni García",
+          "values": 1
+        },
+        "Garcia, Boni": {
+          "translation": "Garcia, Boni",
+          "values": 1
+        }
+      }
+    },
+    "facet_music_notation_de14": {
+      "translation": "musikalische Ausgabeform",
+      "values": []
+    },
+    "music_heading_browse": {
+      "translation": "musikalische Besetzung",
+      "values": []
+    },
+    "mega_collection": {
+      "translation": "Kollektion",
+      "values": {
+        "Lynda.com Englisch": {
+          "translation": "Lynda.com Englisch",
+          "values": 1
+        },
+        "Verbunddaten SWB": {
+          "translation": "Verbunddaten SWB",
+          "values": 1
+        }
+      }
+    }
+  }
+}
