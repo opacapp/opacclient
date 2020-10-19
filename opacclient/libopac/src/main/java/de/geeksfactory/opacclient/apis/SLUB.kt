@@ -146,7 +146,7 @@ open class SLUB : OkHttpBaseApi() {
                 }
                 type = mediaTypes[it.getJSONArray("format").optString(0)]
                         ?: SearchResult.MediaType.NONE
-                id = it.getString("id")
+                id = "id/${it.getString("id")}"
             }
         }
         //TODO: get status (one request per item!)
@@ -161,7 +161,7 @@ open class SLUB : OkHttpBaseApi() {
         val json: JSONObject
         try {
             json = JSONObject(httpGet(
-                    "$baseurl/id/$id/?type=1369315142&tx_find_find[format]=data&tx_find_find[data-format]=app",
+                    "$baseurl/$id/?type=1369315142&tx_find_find[format]=data&tx_find_find[data-format]=app",
                     ENCODING))
         } catch (e: JSONException) {
             throw OpacApi.OpacErrorException(stringProvider.getFormattedString(
@@ -212,7 +212,9 @@ open class SLUB : OkHttpBaseApi() {
                             is String -> arrayItem
                             is JSONObject -> arrayItem.optString("title").also {
                                 // if item is part of multiple collections, collectionsId holds the last one
-                                collectionId = arrayItem.optString("id", null)
+                                arrayItem.optString("id", null)?.let {
+                                    collectionId = "id/$it"
+                                }
                             }
                             else -> null
                         }
@@ -517,7 +519,7 @@ open class SLUB : OkHttpBaseApi() {
     }
 
     override fun getShareUrl(id: String?, title: String?): String {
-        return "$baseurl/id/$id"
+        return "$baseurl/$id"
     }
 
     override fun getSupportFlags(): Int {
