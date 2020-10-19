@@ -823,7 +823,7 @@ public class OpenSearch extends OkHttpBaseApi implements OpacApi {
                         "div[id$=CatalogueDetailView] .oclc-searchmodule-detail-data div:has" +
                         "(span+a), " +
                         "div[id$=CatalogueDetailView] .oclc-searchmodule-detail-data " +
-                        "div[id$=divLinks]";
+                        "div[id$=divLinks]:has(span)";
         for (Element detail : doc.select(DETAIL_SELECTOR)) {
             String name = detail.select("span").get(0).text().replace(": ", "");
             String value = "";
