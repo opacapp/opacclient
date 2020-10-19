@@ -64,6 +64,7 @@ import org.mockito.Mockito.*
         SLUBAccountValidateMockTest::class,
         SLUBSearchMockTest::class,
         SLUBSearchFieldsMockTest::class,
+        SLUBGetResultByIdMockTest::class,
         SLUBProlongMockTest::class,
         SLUBCancelMockTest::class
 )
@@ -784,6 +785,37 @@ class SLUBSearchMockTest(@Suppress("unused") private val name: String,
                         null
                 )
         )
+    }
+}
+
+class SLUBGetResultByIdMockTest() : BaseHtmlTest() {
+    private val slub = Mockito.spy(SLUB::class.java)
+
+    init {
+        slub.init(Library().apply {
+            data = JSONObject().apply {
+                put("baseurl", "https://test.de")
+                put("illrenewurl", "https://test-renew.de")
+            }
+        }, HttpClientFactory("test"))
+    }
+
+    @Test
+    fun testJSONError() {
+        Mockito.doReturn("xxx").`when`(slub).httpGet(Matchers.any(), Matchers.any())
+        val thrown = assertThrows(null, OpacApi.OpacErrorException::class.java
+        ) { slub.getResultById("id/0", null) }
+        assertTrue(thrown!!.message!!.contains("search returned malformed JSON object:"))
+    }
+
+    @Test
+    fun testIdIdentifier() {
+        val response = """{"record":{"title":"The title"},"id":"123","thumbnail":"","links":[],"linksRelated":[],
+                            |"linksAccess":[],"linksGeneral":[],"references":[],"copies":[],"parts":{}}""".trimMargin()
+        Mockito.doReturn(response).`when`(slub).httpGet(Matchers.any(), Matchers.any())
+        val actual = slub.getResultById("id/123", null)
+        verify(slub).httpGet("https://test.de/id/123/?type=1369315142&tx_find_find[format]=data&tx_find_find[data-format]=app", "UTF-8")
+        assertEquals("id/123", actual.id)
     }
 }
 
