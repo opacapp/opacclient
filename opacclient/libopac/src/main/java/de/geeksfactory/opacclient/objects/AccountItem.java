@@ -2,7 +2,7 @@ package de.geeksfactory.opacclient.objects;
 
 import java.io.Serializable;
 
-public abstract class AccountItem implements Serializable {
+public abstract class AccountItem implements Serializable, CoverHolder {
     protected long account;
     protected String title;
     protected String author;
@@ -12,6 +12,7 @@ public abstract class AccountItem implements Serializable {
     protected String status;
     protected Long dbId;
     protected String cover;
+    protected byte[] coverBitmap;
 
     /**
      * @return The ID of the account this item is associated with
@@ -144,6 +145,20 @@ public abstract class AccountItem implements Serializable {
      */
     public void setCover(String cover) {
         this.cover = cover;
+    }
+
+    /**
+     * @return A cover Bitmap for this item. Optional.
+     */
+    public byte[] getCoverBitmap() {
+        return coverBitmap;
+    }
+
+    /**
+     * Set a cover Bitmap for this item. Optional.
+     */
+    public void setCoverBitmap(byte[] cover) {
+        this.coverBitmap = cover;
     }
 
     /**

@@ -255,6 +255,7 @@ public class AccountDataSource {
         String mediatype = cursor.getString(cursor.getColumnIndex("mediatype"));
         item.setMediaType(mediatype != null ? SearchResult.MediaType.valueOf(mediatype) : null);
         item.setCover(cursor.getString(cursor.getColumnIndex("cover")));
+        item.setCoverBitmap(cursor.getBlob(cursor.getColumnIndex("coverBitmap")));
     }
 
     private ContentValues lentItemToContentValues(LentItem item, long accountId) {
@@ -291,6 +292,7 @@ public class AccountDataSource {
         putOrNull(cv, "itemid", item.getId());
         putOrNull(cv, "status", item.getStatus());
         putOrNull(cv, "cover", item.getCover());
+        putOrNull(cv, "coverBitmap", item.getCoverBitmap());
         putOrNull(cv, "mediatype",
                 item.getMediaType() != null ? item.getMediaType().toString() : null);
     }
@@ -304,6 +306,14 @@ public class AccountDataSource {
     }
 
     private void putOrNull(ContentValues cv, String key, String value) {
+        if (value != null) {
+            cv.put(key, value);
+        } else {
+            cv.putNull(key);
+        }
+    }
+
+    private void putOrNull(ContentValues cv, String key, byte[] value) {
         if (value != null) {
             cv.put(key, value);
         } else {

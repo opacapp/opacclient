@@ -30,7 +30,6 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
-import androidx.preference.PreferenceManager;
 import android.text.Html;
 import android.text.method.LinkMovementMethod;
 import android.view.LayoutInflater;
@@ -67,6 +66,7 @@ import androidx.cardview.widget.CardView;
 import androidx.core.app.ActivityCompat;
 import androidx.core.app.ActivityOptionsCompat;
 import androidx.fragment.app.Fragment;
+import androidx.preference.PreferenceManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
@@ -1203,10 +1203,16 @@ public class AccountFragment extends Fragment implements
 
         boolean hideCovers = true;
         for (LentItem item : result.getLent()) {
-            if (item.getMediaType() != null || item.getCover() != null) hideCovers = false;
+            if (item.getMediaType() != null || item.getCover() != null ||
+                    item.getCoverBitmap() != null) {
+                hideCovers = false;
+            }
         }
         for (ReservedItem item : result.getReservations()) {
-            if (item.getMediaType() != null || item.getCover() != null) hideCovers = false;
+            if (item.getMediaType() != null || item.getCover() != null ||
+                    item.getCoverBitmap() != null) {
+                hideCovers = false;
+            }
         }
         lentAdapter.setCoversHidden(hideCovers);
         resAdapter.setCoversHidden(hideCovers);

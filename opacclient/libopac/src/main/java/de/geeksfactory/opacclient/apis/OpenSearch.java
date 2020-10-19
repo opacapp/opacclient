@@ -607,7 +607,7 @@ public class OpenSearch extends OkHttpBaseApi implements OpacApi {
         public String ebookRestUrl;
     }
 
-    private List<String> getCoverUrlList(Element img) {
+    protected List<String> getCoverUrlList(Element img) {
         String[] parts = img.attr("sources").split("\\|");
         // Example: SetSimpleCover|a|https://vlb.de/GetBlob.aspx?strIsbn=9783868511291&amp;
         // size=S|a|http://www.buchhandel.de/default.aspx?strframe=titelsuche&amp;

@@ -26,7 +26,6 @@ import java.util.regex.Pattern;
 import de.geeksfactory.opacclient.i18n.StringProvider;
 import de.geeksfactory.opacclient.objects.Account;
 import de.geeksfactory.opacclient.objects.AccountData;
-import de.geeksfactory.opacclient.objects.AccountItem;
 import de.geeksfactory.opacclient.objects.Copy;
 import de.geeksfactory.opacclient.objects.DetailedItem;
 import de.geeksfactory.opacclient.objects.LentItem;
@@ -710,6 +709,7 @@ public class OpenAccountScraper extends OpenSearch {
     }
 
     private void parseReservationsTable(List<ReservedItem> res, Element pendingTable) {
+        List<CompletableFuture> futures = new ArrayList<>();
         for (Element row : pendingTable.select("tr")) {
             if (row.select("th").size() > 0) {
                 continue;
@@ -724,14 +724,8 @@ public class OpenAccountScraper extends OpenSearch {
             ReservedItem item = new ReservedItem();
 
             if (cols.get(1 + offset).select("img").size() > 0) {
-                String[] sources =
-                        cols.get(1 + offset).select("img").attr("sources").split("\\|");
-                for (String s : sources) {
-                    if (s.startsWith("http")) {
-                        item.setCover(s);
-                        break;
-                    }
-                }
+                futures.add(assignBestCover(item, getCoverUrlList(
+                        cols.get(1 + offset).select("img[id*=coverView]").first())));
             }
 
             item.setTitle(cols.get(2 + offset).text().trim());
@@ -749,10 +743,12 @@ public class OpenAccountScraper extends OpenSearch {
 
             res.add(item);
         }
+        CompletableFuture.allOf(futures.toArray(new CompletableFuture[0])).join();
     }
 
     private void parseReadyTable(List<ReservedItem> res, Element readyTable) {
         DateTimeFormatter fmt = DateTimeFormat.forPattern("dd.MM.yyyy");
+        List<CompletableFuture> futures = new ArrayList<>();
 
         Map<String, Integer> colmap = new HashMap<>();
         for (Element row : readyTable.select("tr")) {
@@ -790,7 +786,8 @@ public class OpenAccountScraper extends OpenSearch {
 
             if (colmap.containsKey("cover")) {
                 Element coverColumn = cols.get(colmap.get("cover"));
-                parseAccountCover(item, coverColumn);
+                futures.add(assignBestCover(item,
+                        getCoverUrlList(coverColumn.select("img[id*=coverView]").first())));
             }
             if (colmap.containsKey("title")) {
                 Element col = cols.get(colmap.get("title"));
@@ -822,31 +819,7 @@ public class OpenAccountScraper extends OpenSearch {
             item.setStatus("Bereitgestellt");
             res.add(item);
         }
-    }
-
-    private void parseAccountCover(AccountItem item, Element coverColumn) {
-        if (coverColumn.select("img").size() > 0) {
-            String[] sources = coverColumn.select("img").attr("sources").split("\\|");
-            for (String s : sources) {
-                if (s.startsWith("http") && !s.contains("/vlb.de") &&
-                        !s.contains("www.buchhandel.de")) {
-                    item.setCover(s);
-                    break;
-                }
-            }
-            if (item.getCover() == null &&
-                    coverColumn.select("img").hasAttr("devsources")) {
-                String[] devsources =
-                        coverColumn.select("img").attr("devsources").split("\\|");
-                for (String s : devsources) {
-                    if (s.startsWith("http") && !s.contains("/vlb.de") &&
-                            !s.contains("www.buchhandel.de")) {
-                        item.setCover(s);
-                        break;
-                    }
-                }
-            }
-        }
+        CompletableFuture.allOf(futures.toArray(new CompletableFuture[0])).join();
     }
 
     void parse_lent(AccountData data, Document doc, Account account) {
@@ -869,6 +842,7 @@ public class OpenAccountScraper extends OpenSearch {
 
     private void parseLentTable(Document doc, Account account, List<LentItem> lent, Element table) {
         DateTimeFormatter fmt = DateTimeFormat.forPattern("dd.MM.yyyy");
+        List<CompletableFuture> futures = new ArrayList<>();
 
         Map<String, Integer> colmap = new HashMap<>();
         Map<String, LentItem> copyIds = new HashMap<>();
@@ -914,7 +888,8 @@ public class OpenAccountScraper extends OpenSearch {
 
             if (colmap.containsKey("cover")) {
                 Element coverColumn = cols.get(colmap.get("cover"));
-                parseAccountCover(item, coverColumn);
+                futures.add(assignBestCover(item,
+                        getCoverUrlList(coverColumn.select("img[id*=coverView]").first())));
             }
 
             row.select(".oclc-module-label").remove();
@@ -963,7 +938,7 @@ public class OpenAccountScraper extends OpenSearch {
             lent.add(item);
         }
 
-
+        CompletableFuture.allOf(futures.toArray(new CompletableFuture[0])).join();
         fetchProlongability(copyIds, doc, account);
     }
 

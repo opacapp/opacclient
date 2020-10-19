@@ -27,6 +27,7 @@ import de.geeksfactory.opacclient.apis.OpacApi;
 import de.geeksfactory.opacclient.frontend.ResultsAdapter;
 import de.geeksfactory.opacclient.i18n.AndroidStringProvider;
 import de.geeksfactory.opacclient.objects.AccountItem;
+import de.geeksfactory.opacclient.utils.BitmapUtils;
 import de.geeksfactory.opacclient.utils.ISBNTools;
 
 public abstract class AccountAdapter<I extends AccountItem, VH extends AccountAdapter.ViewHolder<I>>
@@ -125,7 +126,7 @@ public abstract class AccountAdapter<I extends AccountItem, VH extends AccountAd
                 ivMediaType.setVisibility(View.GONE);
                 ivCover.setVisibility(View.GONE);
             } else {
-                if (item.getCover() != null) {
+                if (item.getCover() != null || item.getCoverBitmap() != null) {
                     showCover(item);
                 } else {
                     showMediaTypeIcon(item);
@@ -137,28 +138,32 @@ public abstract class AccountAdapter<I extends AccountItem, VH extends AccountAd
             ivCover.setVisibility(View.VISIBLE);
             ivMediaType.setVisibility(View.GONE);
 
-            Drawable loading = VectorDrawableCompat
-                    .create(context.getResources(), R.drawable.ic_loading, null);
-            Glide.with(context).using(new ISBNToolsUrlLoader(context))
-                 .load(item.getCover())
-                 .placeholder(loading)
-                 .crossFade()
-                 .listener(new RequestListener<String, GlideDrawable>() {
-                     @Override
-                     public boolean onException(Exception e, String model,
-                             Target<GlideDrawable> target, boolean isFirstResource) {
-                         showMediaTypeIcon(item);
-                         return true;
-                     }
+            if (item.getCoverBitmap() != null) {
+                ivCover.setImageBitmap(BitmapUtils.bitmapFromBytes(item.getCoverBitmap()));
+            } else {
+                Drawable loading = VectorDrawableCompat
+                        .create(context.getResources(), R.drawable.ic_loading, null);
+                Glide.with(context).using(new ISBNToolsUrlLoader(context))
+                     .load(item.getCover())
+                     .placeholder(loading)
+                     .crossFade()
+                     .listener(new RequestListener<String, GlideDrawable>() {
+                         @Override
+                         public boolean onException(Exception e, String model,
+                                 Target<GlideDrawable> target, boolean isFirstResource) {
+                             showMediaTypeIcon(item);
+                             return true;
+                         }
 
-                     @Override
-                     public boolean onResourceReady(GlideDrawable resource, String model,
-                             Target<GlideDrawable> target, boolean isFromMemoryCache,
-                             boolean isFirstResource) {
-                         return false;
-                     }
-                 })
-                 .into(ivCover);
+                         @Override
+                         public boolean onResourceReady(GlideDrawable resource, String model,
+                                 Target<GlideDrawable> target, boolean isFromMemoryCache,
+                                 boolean isFirstResource) {
+                             return false;
+                         }
+                     })
+                     .into(ivCover);
+            }
         }
 
         private void showMediaTypeIcon(I item) {
