@@ -313,8 +313,8 @@ public class OpenSearch extends OkHttpBaseApi implements OpacApi {
             } else {
                 return asyncGet(url, false)
                         .handle((response, throwable) -> {
-                            response.close();
-                            if (throwable == null) {
+                            if (response != null) response.close();
+                            if (throwable == null && response != null) {
                                 result.setCover(url);
                             } else {
                                 assignBestCover(result, queue).join();
