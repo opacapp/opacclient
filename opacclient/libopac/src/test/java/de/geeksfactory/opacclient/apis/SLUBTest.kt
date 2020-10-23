@@ -246,7 +246,7 @@ class SLUBSearchTest : BaseHtmlTest() {
             collectionId = "id/0-1183957874"
         }
 
-        val item = slub.parseResultById("id/${json.getString("id")}", json)
+        val item = slub.parseResultById(json)
 
         //details are in unspecified order, see https://stackoverflow.com/a/4920304/3944322
         assertThat(item, sameBeanAs(expected).ignoring("details"))
@@ -273,7 +273,7 @@ class SLUBSearchTest : BaseHtmlTest() {
             resInfo = "stackRequest\t33364639"
         }
 
-        val item = slub.parseResultById("id/${json.getString("id")}", json)
+        val item = slub.parseResultById( json)
 
         assertEquals(19, item.copies.size)
         // the copies arrays may occur in any order
@@ -290,7 +290,7 @@ class SLUBSearchTest : BaseHtmlTest() {
         )
 
         // is part of "Undergraduate topics in computer science" but no id (--> collectionid) given
-        val item = slub.parseResultById("id/${json.getString("id")}", json)
+        val item = slub.parseResultById( json)
 
         assertThat(volumes, sameBeanAs(item.volumes))
         assertNull(item.collectionId)
@@ -301,7 +301,7 @@ class SLUBSearchTest : BaseHtmlTest() {
         val json = JSONObject(readResource("/slub/search/item-with_umlaute_in_title_and_volumes.json"))
         val volume = Volume("0-1149529121", "(inse,5): in 6 Bänden")
 
-        val item = slub.parseResultById("id/${json.getString("id")}", json)
+        val item = slub.parseResultById( json)
 
         assertEquals("Urania-Tierreich: in 6 Bänden", item.title)
         assertThat(item.volumes, hasItem(sameBeanAs(volume)))
@@ -321,7 +321,7 @@ class SLUBSearchTest : BaseHtmlTest() {
             addDetail(Detail("In der Deutschen Fotothek ansehen", "http://www.deutschefotothek.de/obj33055810.html"))
         }
 
-        val item = slub.parseResultById("id/${json.getString("id")}", json)
+        val item = slub.parseResultById(json)
 
         assertThat(item, sameBeanAs(expected).ignoring("details"))
         assertThat(HashSet(expected.details), sameBeanAs(HashSet(item.details)))
@@ -347,7 +347,7 @@ class SLUBSearchTest : BaseHtmlTest() {
             addDetail(Detail("Online-Ausgabe", "Tamm, Michael: JUnit-Profiwissen (SLUB)"))
         }
 
-        val item = slub.parseResultById("id/${json.getString("id")}", json)
+        val item = slub.parseResultById(json)
 
         assertThat(item, sameBeanAs(expected).ignoring("details"))
         assertThat(HashSet(expected.details), sameBeanAs(HashSet(item.details)))
@@ -366,7 +366,7 @@ class SLUBSearchTest : BaseHtmlTest() {
             addDetail(Detail("Link", "http://pqdtopen.proquest.com/#viewpdf?dispub=3477638"))
         }
 
-        val item = slub.parseResultById("id/${json.getString("id")}", json)
+        val item = slub.parseResultById(json)
 
         assertThat(item, sameBeanAs(expected).ignoring("details"))
         assertThat(HashSet(expected.details), sameBeanAs(HashSet(item.details)))
@@ -416,7 +416,7 @@ class SLUBSearchTest : BaseHtmlTest() {
             isReservable = true
         }
 
-        val item = slub.parseResultById("id/${json.getString("id")}", json)
+        val item = slub.parseResultById(json)
 
         assertThat(item, sameBeanAs(expected).ignoring("details"))
         assertThat(HashSet(expected.details), sameBeanAs(HashSet(item.details)))
@@ -539,10 +539,10 @@ class SLUBReservationMockTest(@Suppress("unused") private val name: String,
     companion object {
         // this item has already been tested in testParseResultByIdResinfo so we can rely on parseResultById here
         private val json = JSONObject(BaseHtmlTest().readResource("/slub/search/item-for-reserve&request.json"))
-        private val itemRequestAndReserve = SLUB().parseResultById(json.getString("id"), json)
-        private val itemRequest = SLUB().parseResultById(json.getString("id"), json)
-        private val itemReserve = SLUB().parseResultById(json.getString("id"), json)
-        private val itemNone = SLUB().parseResultById(json.getString("id"), json)
+        private val itemRequestAndReserve = SLUB().parseResultById(json)
+        private val itemRequest = SLUB().parseResultById(json)
+        private val itemReserve = SLUB().parseResultById(json)
+        private val itemNone = SLUB().parseResultById(json)
 
         init {
             itemRequest.apply {

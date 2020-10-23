@@ -168,10 +168,10 @@ open class SLUB : OkHttpBaseApi() {
                     StringProvider.UNKNOWN_ERROR_WITH_DESCRIPTION,
                     "search returned malformed JSON object: ${e.message}"))
         }
-        return parseResultById(id, json)
+        return parseResultById(json)
     }
 
-    internal fun parseResultById(id: String, json: JSONObject): DetailedItem {
+    internal fun parseResultById(json: JSONObject): DetailedItem {
         val dateFormat = DateTimeFormat.forPattern("dd.MM.yyyy")
         var hasReservableCopies = false
         fun getCopies(copiesArray: JSONArray, df: DateTimeFormatter): List<Copy> =
@@ -201,7 +201,7 @@ open class SLUB : OkHttpBaseApi() {
                     }
                 }
         return DetailedItem().apply {
-            this.id = id
+            this.id = "id/${json.getString("id")}"
             val record = json.getJSONObject("record")
             for (key in record.keys()) {
                 var value = when (val v = record.get(key as String)) {
