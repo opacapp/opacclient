@@ -46,7 +46,6 @@ import org.mockito.ArgumentMatcher
 import org.mockito.Matchers
 import org.mockito.Matchers.argThat
 import org.mockito.Matchers.eq
-import org.mockito.Mockito
 import org.mockito.Mockito.*
 
 
@@ -424,7 +423,7 @@ class SLUBSearchTest : BaseHtmlTest() {
     }
 }
 
-class SLUBMiscellaneousTests() : BaseHtmlTest() {
+class SLUBMiscellaneousTests : BaseHtmlTest() {
     private var slub = SLUB()
 
     init {
@@ -449,7 +448,7 @@ class SLUBAccountMockTest(@Suppress("unused") private val name: String,
                           private val expectedMessage: String?,
                           private val expectedException: Class<out Exception?>?,
                           private val expectedExceptionMsg: String?) : BaseHtmlTest() {
-    private val slub = Mockito.spy(SLUB::class.java)
+    private val slub = spy(SLUB::class.java)
 
     init {
         slub.init(Library().apply {
@@ -467,7 +466,7 @@ class SLUBAccountMockTest(@Suppress("unused") private val name: String,
 
     @Test
     fun testCheckAccountData() {
-        Mockito.doReturn(response).`when`(slub).httpPost(Matchers.any(), Matchers.any(), Matchers.any())
+        doReturn(response).`when`(slub).httpPost(Matchers.any(), Matchers.any(), Matchers.any())
         if (expectedException != null) {
             val thrown = assertThrows(expectedExceptionMsg, expectedException
             ) { slub.requestAccount(account, "", null) }
@@ -505,7 +504,7 @@ class SLUBReservationMockTest(@Suppress("unused") private val name: String,
                               private val responsePickup: String?,
                               private val responseReserveOrRequest: String?,
                               private val expectedResult: OpacApi.ReservationResult) : BaseHtmlTest() {
-    private val slub = Mockito.spy(SLUB::class.java)
+    private val slub = spy(SLUB::class.java)
 
     init {
         slub.init(Library().apply {
@@ -524,11 +523,11 @@ class SLUBReservationMockTest(@Suppress("unused") private val name: String,
     @Test
     fun testReservation() {
         if (responsePickup != null) {
-            Mockito.doReturn(responsePickup).`when`(slub).httpPost(Matchers.any(),
+            doReturn(responsePickup).`when`(slub).httpPost(Matchers.any(),
                     argThat(IsRequestBodyWithAction("pickup")), Matchers.any())
         }
         if (responseReserveOrRequest != null) {
-            Mockito.doReturn(responseReserveOrRequest).`when`(slub).httpPost(Matchers.any(),
+            doReturn(responseReserveOrRequest).`when`(slub).httpPost(Matchers.any(),
                     or(argThat(IsRequestBodyWithAction("stackRequest")),
                             argThat(IsRequestBodyWithAction("reserve"))), Matchers.any())
         }
@@ -693,7 +692,7 @@ class SLUBReservationMockTest(@Suppress("unused") private val name: String,
 }
 
 class SLUBAccountValidateMockTest : BaseHtmlTest() {
-    private val slub = Mockito.spy(SLUB::class.java)
+    private val slub = spy(SLUB::class.java)
 
     init {
         slub.init(Library().apply {
@@ -712,7 +711,7 @@ class SLUBAccountValidateMockTest : BaseHtmlTest() {
     @Test
     fun testCheckAccountData() {
         val response = "{\"status\":\"1\",\"message\":\"credentials_are_valid\"}"
-        Mockito.doReturn(response).`when`(slub).httpPost(Matchers.any(), Matchers.any(), Matchers.any())
+        doReturn(response).`when`(slub).httpPost(Matchers.any(), Matchers.any(), Matchers.any())
 
         slub.checkAccountData(account)
         verify(slub).httpPost(Matchers.any(), argThat(IsRequestBodyWithAction("validate")), Matchers.any())
@@ -727,7 +726,7 @@ class SLUBSearchMockTest(@Suppress("unused") private val name: String,
                          private val expectedResultCount: Int?,
                          private val expectedException: Class<out Exception?>?,
                          private val expectedExceptionMsg: String?) : BaseHtmlTest() {
-    private val slub = Mockito.spy(SLUB::class.java)
+    private val slub = spy(SLUB::class.java)
 
     init {
         slub.init(Library().apply {
@@ -740,7 +739,7 @@ class SLUBSearchMockTest(@Suppress("unused") private val name: String,
 
     @Test
     fun testSearch() {
-        Mockito.doReturn(response).`when`(slub).httpGet(Matchers.any(), Matchers.any())
+        doReturn(response).`when`(slub).httpGet(Matchers.any(), Matchers.any())
         if (expectedException != null) {
             val thrown = assertThrows(expectedExceptionMsg, expectedException
             ) { slub.search(query) }
@@ -789,8 +788,8 @@ class SLUBSearchMockTest(@Suppress("unused") private val name: String,
     }
 }
 
-class SLUBGetResultByIdMockTest() : BaseHtmlTest() {
-    private val slub = Mockito.spy(SLUB::class.java)
+class SLUBGetResultByIdMockTest : BaseHtmlTest() {
+    private val slub = spy(SLUB::class.java)
 
     private class ClientDoesntFollowRedirects : ArgumentMatcher<OkHttpClient?>() {
         override fun matches(argument: Any): Boolean {
@@ -809,7 +808,7 @@ class SLUBGetResultByIdMockTest() : BaseHtmlTest() {
 
     @Test
     fun testJSONError() {
-        Mockito.doReturn("xxx").`when`(slub).httpGet(Matchers.any(), Matchers.any())
+        doReturn("xxx").`when`(slub).httpGet(Matchers.any(), Matchers.any())
         val thrown = assertThrows(null, OpacApi.OpacErrorException::class.java
         ) { slub.getResultById("id/0", null) }
         assertTrue(thrown!!.message!!.contains("search returned malformed JSON object:"))
@@ -819,7 +818,7 @@ class SLUBGetResultByIdMockTest() : BaseHtmlTest() {
     fun testIdIdentifier() {
         val response = """{"record":{"title":"The title"},"id":"123","thumbnail":"","links":[],"linksRelated":[],
                             |"linksAccess":[],"linksGeneral":[],"references":[],"copies":[],"parts":{}}""".trimMargin()
-        Mockito.doReturn(response).`when`(slub).httpGet(Matchers.any(), Matchers.any())
+        doReturn(response).`when`(slub).httpGet(Matchers.any(), Matchers.any())
         val actual = slub.getResultById("id/123", null)
         verify(slub).httpGet("https://test.de/id/123/?type=1369315142&tx_find_find[format]=data&tx_find_find[data-format]=app", "UTF-8")
         verify(slub, never()).httpHead(any(), any(), any(), any())
@@ -828,11 +827,11 @@ class SLUBGetResultByIdMockTest() : BaseHtmlTest() {
 
     @Test
     fun testBcIdentifier() {
-        Mockito.doReturn("https://test.de/id/123/").`when`(slub).httpHead(Matchers.any(),
+        doReturn("https://test.de/id/123/").`when`(slub).httpHead(Matchers.any(),
                 Matchers.any(), Matchers.any(), Matchers.any())
         val response = """{"record":{"title":"The title"},"id":"123","thumbnail":"","links":[],"linksRelated":[],
                             |"linksAccess":[],"linksGeneral":[],"references":[],"copies":[],"parts":{}}""".trimMargin()
-        Mockito.doReturn(response).`when`(slub).httpGet(Matchers.any(), Matchers.any())
+        doReturn(response).`when`(slub).httpGet(Matchers.any(), Matchers.any())
         val actual = slub.getResultById("bc/456", null)
         verify(slub).httpHead(eq("https://test.de/bc/456/"), eq("Location"), eq(""),
                 argThat(ClientDoesntFollowRedirects()))
@@ -850,7 +849,7 @@ class SLUBProlongMockTest(@Suppress("unused") private val name: String,
                           private val expectedResult: OpacApi.MultiStepResult,
                           private val expectedException: Class<out Exception?>?,
                           private val expectedExceptionMsg: String?) : BaseHtmlTest() {
-    private val slub = Mockito.spy(SLUB::class.java)
+    private val slub = spy(SLUB::class.java)
 
     init {
         slub.init(Library().apply {
@@ -868,7 +867,7 @@ class SLUBProlongMockTest(@Suppress("unused") private val name: String,
 
     @Test
     fun testProlong() {
-        Mockito.doReturn(response).`when`(slub).httpPost(Matchers.any(), Matchers.any(), Matchers.any())
+        doReturn(response).`when`(slub).httpPost(Matchers.any(), Matchers.any(), Matchers.any())
         if (expectedException != null) {
             val thrown = assertThrows(expectedExceptionMsg, expectedException
             ) { slub.prolong(media, account, 0, null) }
@@ -925,7 +924,7 @@ class SLUBCancelMockTest(@Suppress("unused") private val name: String,
                          private val media: String,
                          private val response: String?,
                          private val expectedResult: OpacApi.MultiStepResult) : BaseHtmlTest() {
-    private val slub = Mockito.spy(SLUB::class.java)
+    private val slub = spy(SLUB::class.java)
 
     init {
         slub.init(Library().apply {
@@ -951,7 +950,7 @@ class SLUBCancelMockTest(@Suppress("unused") private val name: String,
                 .add("tx_slubaccount_account[password]", "x")
                 .add("tx_slubaccount_account[delete][0]", media)
                 .build()
-        Mockito.doReturn(response).`when`(slub).httpPost(Matchers.any(), Matchers.any(), Matchers.any())
+        doReturn(response).`when`(slub).httpPost(Matchers.any(), Matchers.any(), Matchers.any())
         val actualResult = slub.cancel(media, account, 0, null)
         assertThat(actualResult, sameBeanAs(expectedResult))
         verify(slub).httpPost(eq("https://test.de/mein-konto/"), argThat(sameBeanAs(expectedRequestBody)), eq("UTF-8"))
@@ -977,7 +976,7 @@ class SLUBCancelMockTest(@Suppress("unused") private val name: String,
 }
 
 class SLUBSearchFieldsMockTest : BaseHtmlTest() {
-    private val slub = Mockito.spy(SLUB::class.java)
+    private val slub = spy(SLUB::class.java)
 
     init {
         slub.init(Library().apply {
@@ -991,7 +990,7 @@ class SLUBSearchFieldsMockTest : BaseHtmlTest() {
     @Test
     fun testParseSearchFields() {
         val html = readResource("/slub/SLUB Dresden Startseite.html")
-        Mockito.doReturn(html).`when`(slub).httpGet(Matchers.any(), Matchers.any())
+        doReturn(html).`when`(slub).httpGet(Matchers.any(), Matchers.any())
 
         val searchFields = slub.parseSearchFields()
         assertEquals(10, searchFields.filterIsInstance(TextSearchField::class.java).size)
