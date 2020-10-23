@@ -29,6 +29,7 @@ import de.geeksfactory.opacclient.searchfields.DropdownSearchField
 import de.geeksfactory.opacclient.searchfields.SearchQuery
 import de.geeksfactory.opacclient.searchfields.TextSearchField
 import okhttp3.FormBody
+import okhttp3.OkHttpClient
 import okhttp3.RequestBody
 import org.hamcrest.MatcherAssert.assertThat
 import org.hamcrest.Matchers.*
@@ -98,7 +99,7 @@ class SLUBAccountTest : BaseHtmlTest() {
             author = "Bachofer, Mark"
             setDeadline("2019-06-03")
             format = "B"
-            //id = "31626878"
+            id = "bc/31626878"
             barcode = "31626878"
             isRenewable = true
             prolongData = "$format\t$barcode"
@@ -108,7 +109,7 @@ class SLUBAccountTest : BaseHtmlTest() {
             title = "Pareys Buch der Bäume"
             author = "Mitchell, Alan"
             format = "B"
-            //id = "30963742"
+            id = "bc/30963742"
             status = "reserved_pos 1"
             cancelData = "30963742_1"
         }
@@ -117,7 +118,7 @@ class SLUBAccountTest : BaseHtmlTest() {
             title = "Welcher Baum ist das?"
             author = "Mayer, Joachim ¬[VerfasserIn]¬"
             format = "B"
-            //id = "34778398"
+            id = "bc/34778398"
             branch = "ZwB Forstwissenschaft"
             status = String.format("hold %s", fmt.print(LocalDate("2019-05-10")))
         }
@@ -126,7 +127,7 @@ class SLUBAccountTest : BaseHtmlTest() {
             title = "Englische Synonyme als Fehlerquellen"
             author = "Meyer, Jürgen"
             format = "B"
-            //id = "20550495"
+            id = "bc/20550495"
             branch = "Zentralbibliothek Ebene 0 SB-Regal"
             status = String.format("request_ready %s", fmt.print(LocalDate("2019-05-04")))
         }
@@ -273,7 +274,7 @@ class SLUBSearchTest : BaseHtmlTest() {
             resInfo = "stackRequest\t33364639"
         }
 
-        val item = slub.parseResultById( json)
+        val item = slub.parseResultById(json)
 
         assertEquals(19, item.copies.size)
         // the copies arrays may occur in any order
@@ -290,7 +291,7 @@ class SLUBSearchTest : BaseHtmlTest() {
         )
 
         // is part of "Undergraduate topics in computer science" but no id (--> collectionid) given
-        val item = slub.parseResultById( json)
+        val item = slub.parseResultById(json)
 
         assertThat(volumes, sameBeanAs(item.volumes))
         assertNull(item.collectionId)
@@ -301,7 +302,7 @@ class SLUBSearchTest : BaseHtmlTest() {
         val json = JSONObject(readResource("/slub/search/item-with_umlaute_in_title_and_volumes.json"))
         val volume = Volume("0-1149529121", "(inse,5): in 6 Bänden")
 
-        val item = slub.parseResultById( json)
+        val item = slub.parseResultById(json)
 
         assertEquals("Urania-Tierreich: in 6 Bänden", item.title)
         assertThat(item.volumes, hasItem(sameBeanAs(volume)))
@@ -791,6 +792,12 @@ class SLUBSearchMockTest(@Suppress("unused") private val name: String,
 class SLUBGetResultByIdMockTest() : BaseHtmlTest() {
     private val slub = Mockito.spy(SLUB::class.java)
 
+    private class ClientDoesntFollowRedirects : ArgumentMatcher<OkHttpClient?>() {
+        override fun matches(argument: Any): Boolean {
+            return !(argument as OkHttpClient).followRedirects()
+        }
+    }
+
     init {
         slub.init(Library().apply {
             data = JSONObject().apply {
@@ -814,6 +821,21 @@ class SLUBGetResultByIdMockTest() : BaseHtmlTest() {
                             |"linksAccess":[],"linksGeneral":[],"references":[],"copies":[],"parts":{}}""".trimMargin()
         Mockito.doReturn(response).`when`(slub).httpGet(Matchers.any(), Matchers.any())
         val actual = slub.getResultById("id/123", null)
+        verify(slub).httpGet("https://test.de/id/123/?type=1369315142&tx_find_find[format]=data&tx_find_find[data-format]=app", "UTF-8")
+        verify(slub, never()).httpHead(any(), any(), any(), any())
+        assertEquals("id/123", actual.id)
+    }
+
+    @Test
+    fun testBcIdentifier() {
+        Mockito.doReturn("https://test.de/id/123/").`when`(slub).httpHead(Matchers.any(),
+                Matchers.any(), Matchers.any(), Matchers.any())
+        val response = """{"record":{"title":"The title"},"id":"123","thumbnail":"","links":[],"linksRelated":[],
+                            |"linksAccess":[],"linksGeneral":[],"references":[],"copies":[],"parts":{}}""".trimMargin()
+        Mockito.doReturn(response).`when`(slub).httpGet(Matchers.any(), Matchers.any())
+        val actual = slub.getResultById("bc/456", null)
+        verify(slub).httpHead(eq("https://test.de/bc/456/"), eq("Location"), eq(""),
+                argThat(ClientDoesntFollowRedirects()))
         verify(slub).httpGet("https://test.de/id/123/?type=1369315142&tx_find_find[format]=data&tx_find_find[data-format]=app", "UTF-8")
         assertEquals("id/123", actual.id)
     }

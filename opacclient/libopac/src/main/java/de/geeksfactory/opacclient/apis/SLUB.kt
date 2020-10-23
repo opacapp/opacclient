@@ -159,10 +159,17 @@ open class SLUB : OkHttpBaseApi() {
 
     override fun getResultById(id: String, homebranch: String?): DetailedItem {
         val json: JSONObject
+        val url =
+                if (id.startsWith("id")) {
+                    "$baseurl/$id/"
+                } else {
+                    val noRedirectClient = http_client.newBuilder()
+                            .followRedirects(false)
+                            .build()
+                    httpHead("$baseurl/$id/", "Location", "", noRedirectClient)
+                } + "?type=1369315142&tx_find_find[format]=data&tx_find_find[data-format]=app"
         try {
-            json = JSONObject(httpGet(
-                    "$baseurl/$id/?type=1369315142&tx_find_find[format]=data&tx_find_find[data-format]=app",
-                    ENCODING))
+            json = JSONObject(httpGet(url, ENCODING))
         } catch (e: JSONException) {
             throw OpacApi.OpacErrorException(stringProvider.getFormattedString(
                     StringProvider.UNKNOWN_ERROR_WITH_DESCRIPTION,
@@ -422,7 +429,7 @@ open class SLUB : OkHttpBaseApi() {
                     reservationsList.add(ReservedItem().apply {
                         title = it.optString("about")
                         author = it.optJSONArray("X_author")?.optString(0)
-                        //id = it.optString("label")  // TODO: get details from here via /bc --> redirects to /id, from there get the proper id
+                        id = "bc/${it.optString("label")}"
                         format = it.optString("X_medientyp")
                         status = when (type) {  // TODO: maybe we need time (LocalDateTime) too make an educated guess on actual ready date for stack requests
                             "hold" -> stringProvider.getFormattedString(StringProvider.HOLD,
@@ -471,7 +478,7 @@ open class SLUB : OkHttpBaseApi() {
                             author = it.optJSONArray("X_author")?.optString(0)
                             setDeadline(it.optString("X_date_due"))
                             format = it.optString("X_medientyp")
-                            //id = it.optString("label")  // TODO: get details from here via /bc --> redirects to /id, from there get the proper id
+                            id = "bc/${it.optString("label")}"
                             barcode = it.optString("X_barcode")
                             if (it.optInt("X_is_renewable") == 1) {   // TODO: X_is_flrenewable for ill items
                                 isRenewable = true
