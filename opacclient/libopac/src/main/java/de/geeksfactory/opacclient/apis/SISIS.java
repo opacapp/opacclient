@@ -196,6 +196,8 @@ public class SISIS extends OkHttpBaseApi implements OpacApi {
     protected long logged_in;
     protected Account logged_in_as;
     protected static final String ENCODING = "UTF-8";
+    protected static final Pattern coverPattern = Pattern.compile(
+            "\\$\\.ajax\\(\\{\\s*url:\\s*'(?:/webOPACClient/)?(jsp/result/cover.jsp\\?[^']+)'");
 
     protected String getDefaultEncoding() {
         return ENCODING;
@@ -472,9 +474,7 @@ public class SISIS extends OkHttpBaseApi implements OpacApi {
 
             // covers loaded with AJAX (seen in Wuppertal)
             if (tr.children().size() > 3 && tr.child(3).html().contains("jsp/result/cover.jsp")) {
-                Pattern pattern = Pattern.compile(
-                        "\\$\\.ajax\\(\\{\\s*url:\\s*'(jsp/result/cover.jsp\\?[^']+)',");
-                Matcher matcher = pattern.matcher(tr.child(3).html());
+                Matcher matcher = coverPattern.matcher(tr.child(3).html());
                 if (matcher.find()) {
                     String url = opac_url + "/" + matcher.group(1);
                     futures.add(CompletableFuture.runAsync(() -> {
@@ -744,8 +744,6 @@ public class SISIS extends OkHttpBaseApi implements OpacApi {
                 ENCODING);
 
         String coverJs = null;
-        Pattern coverPattern = Pattern.compile("\\$\\.ajax\\(\\{[\\n\\s]*url: '(jsp/result/cover" +
-                ".jsp\\?[^']+')");
         Matcher coverMatcher = coverPattern.matcher(html);
         if (coverMatcher.find()) {
             coverJs = httpGet(opac_url + "/" + coverMatcher.group(1), ENCODING);
