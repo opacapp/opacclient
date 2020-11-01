@@ -71,6 +71,8 @@
 
     <style name="TextAppearance.Opacapp.ExpandedMediaTitle" parent="TextAppearance.AppCompat.Widget.ActionBar.Title">
         <item name="android:textSize">26sp</item>
+        <item name="android:shadowRadius">15</item>
+        <item name="android:shadowColor">@android:color/black</item>
     </style>
 
     <style name="ThemeOverlay.Opacapp.ActionBar"
