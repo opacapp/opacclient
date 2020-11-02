@@ -234,12 +234,17 @@ public class VuFind extends OkHttpBaseApi {
         }
 
         int rescount = -1;
+        String rescountStr = null;
         if (doc.select(".resulthead").size() == 1) {
-            rescount = Integer.parseInt(
-                    doc.select(".resulthead strong").get(2).text().replace(",", "")
-                       .replace(".", ""));
+            rescountStr = doc.select(".resulthead strong").get(2).text();
         } else if (doc.select(".search-stats").size() == 1) {
-            rescount = Integer.parseInt(doc.select(".search-stats strong").get(1).text());
+            rescountStr = doc.select(".search-stats strong").get(1).text();
+        }
+        if (rescountStr != null) {
+            // remove 1000s separator (e.g. 1.000 -> 1000)
+            rescountStr = rescountStr.replace(",", "")
+                                     .replace(".", "");
+            rescount = Integer.parseInt(rescountStr);
         }
         List<SearchResult> reslist = new ArrayList<>();
 
