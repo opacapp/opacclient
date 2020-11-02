@@ -838,6 +838,32 @@ class SLUBGetResultByIdMockTest : BaseHtmlTest() {
         verify(slub).httpGet("https://test.de/id/123/?type=1369315142&tx_find_find[format]=data&tx_find_find[data-format]=app", "UTF-8")
         assertEquals("id/123", actual.id)
     }
+
+    @Test
+    fun testRsnIdentifier() {
+        doReturn("https://test.de/id/123/").`when`(slub).httpHead(Matchers.any(),
+                Matchers.any(), Matchers.any(), Matchers.any())
+        val response = """{"record":{"title":"The title"},"id":"123","thumbnail":"","links":[],"linksRelated":[],
+                            |"linksAccess":[],"linksGeneral":[],"references":[],"copies":[],"parts":{}}""".trimMargin()
+        doReturn(response).`when`(slub).httpGet(Matchers.any(), Matchers.any())
+        val actual = slub.getResultById("rsn/456", null)
+        verify(slub).httpHead(eq("https://test.de/rsn/456/"), eq("Location"), eq(""),
+                argThat(ClientDoesntFollowRedirects()))
+        verify(slub).httpGet("https://test.de/id/123/?type=1369315142&tx_find_find[format]=data&tx_find_find[data-format]=app", "UTF-8")
+        assertEquals("id/123", actual.id)
+    }
+
+    @Test
+    fun testLegacyIdentifier() {
+        // id without prefix, e.g. from old favorites list
+        val response = """{"record":{"title":"The title"},"id":"123","thumbnail":"","links":[],"linksRelated":[],
+                            |"linksAccess":[],"linksGeneral":[],"references":[],"copies":[],"parts":{}}""".trimMargin()
+        doReturn(response).`when`(slub).httpGet(Matchers.any(), Matchers.any())
+        val actual = slub.getResultById("123", null)
+        verify(slub).httpGet("https://test.de/id/123/?type=1369315142&tx_find_find[format]=data&tx_find_find[data-format]=app", "UTF-8")
+        verify(slub, never()).httpHead(any(), any(), any(), any())
+        assertEquals("id/123", actual.id)
+    }
 }
 
 @RunWith(Parameterized::class)

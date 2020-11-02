@@ -159,15 +159,22 @@ open class SLUB : OkHttpBaseApi() {
 
     override fun getResultById(id: String, homebranch: String?): DetailedItem {
         val json: JSONObject
-        val url =
-                if (id.startsWith("id")) {
-                    "$baseurl/$id/"
-                } else {
-                    val noRedirectClient = http_client.newBuilder()
-                            .followRedirects(false)
-                            .build()
-                    httpHead("$baseurl/$id/", "Location", "", noRedirectClient)
-                } + "?type=1369315142&tx_find_find[format]=data&tx_find_find[data-format]=app"
+        val url = when {
+            id.startsWith("id/") ->
+                "$baseurl/$id/"
+            id.startsWith("bc/") || id.startsWith("rsn/") ->
+                http_client.newBuilder()
+                        .followRedirects(false)
+                        .build()
+                        .run {
+                            httpHead("$baseurl/$id/",
+                                    "Location",
+                                    "",
+                                    this)
+                        }
+            else -> // legacy case: id identifier without prefix
+                "$baseurl/id/$id/"
+        } + "?type=1369315142&tx_find_find[format]=data&tx_find_find[data-format]=app"
         try {
             json = JSONObject(httpGet(url, ENCODING))
         } catch (e: JSONException) {
