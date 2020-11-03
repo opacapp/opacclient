@@ -222,6 +222,70 @@ public abstract class OkHttpBaseApi extends BaseApi {
         }
     }
 
+    /**
+     * Perform a HTTP HEAD request to a given URL
+     *
+     * @param url           URL to fetch
+     * @param name          Name of the header field
+     * @param defaultValue  Default value of this header field
+     * @param ignore_errors If true, status codes above 400 do not raise an exception
+     * @param client        Http client to use
+     * @return              Answer content
+     * @throws NotReachableException Thrown when server returns a HTTP status code greater or equal
+     *                               than 400.
+     */
+    public String httpHead(String url, String name, String defaultValue, boolean ignore_errors,
+            OkHttpClient client) throws IOException {
+        Request request = new Request.Builder()
+                .url(cleanUrl(url))
+                .header("Accept", "*/*")
+                .header("User-Agent", getUserAgent())
+                .head()
+                .build();
+
+        try {
+            Response response = client.newCall(request).execute();
+
+            if (!ignore_errors && response.code() >= 400) {
+                throw new NotReachableException(response.message());
+            }
+
+            return response.header(name, defaultValue);
+        } catch (javax.net.ssl.SSLPeerUnverifiedException e) {
+            logHttpError(e);
+            throw new SSLSecurityException(e.getMessage());
+        } catch (javax.net.ssl.SSLException e) {
+            // Can be "Not trusted server certificate" or can be a
+            // aborted/interrupted handshake/connection
+            if (e.getMessage().contains("timed out")
+                    || e.getMessage().contains("reset by")) {
+                logHttpError(e);
+                throw new NotReachableException(e.getMessage());
+            } else {
+                logHttpError(e);
+                throw new SSLSecurityException(e.getMessage());
+            }
+        } catch (InterruptedIOException e) {
+            logHttpError(e);
+            throw new NotReachableException(e.getMessage());
+        } catch (UnknownHostException e) {
+            throw new NotReachableException(e.getMessage());
+        } catch (IOException e) {
+            if (e.getMessage() != null
+                    && e.getMessage().contains("Request aborted")) {
+                logHttpError(e);
+                throw new NotReachableException(e.getMessage());
+            } else {
+                throw e;
+            }
+        }
+    }
+
+    public String httpHead(String url, String name, String defaultValue, OkHttpClient client)
+            throws IOException {
+        return httpHead(url, name, defaultValue, false, client);
+    }
+
     public CompletableFuture<Response> asyncPost(String url, RequestBody data,
             final boolean ignore_errors) {
         Request request = new Request.Builder()

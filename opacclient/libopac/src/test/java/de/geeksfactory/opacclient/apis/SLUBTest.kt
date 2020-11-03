@@ -29,6 +29,7 @@ import de.geeksfactory.opacclient.searchfields.DropdownSearchField
 import de.geeksfactory.opacclient.searchfields.SearchQuery
 import de.geeksfactory.opacclient.searchfields.TextSearchField
 import okhttp3.FormBody
+import okhttp3.OkHttpClient
 import okhttp3.RequestBody
 import org.hamcrest.MatcherAssert.assertThat
 import org.hamcrest.Matchers.*
@@ -45,9 +46,8 @@ import org.mockito.ArgumentMatcher
 import org.mockito.Matchers
 import org.mockito.Matchers.argThat
 import org.mockito.Matchers.eq
-import org.mockito.Mockito
-import org.mockito.Mockito.verify
-import kotlin.collections.HashSet
+import org.mockito.Mockito.*
+
 
 /**
  * Tests for SLUB API
@@ -58,11 +58,13 @@ import kotlin.collections.HashSet
 @Suite.SuiteClasses(
         SLUBAccountTest::class,
         SLUBSearchTest::class,
+        SLUBMiscellaneousTests::class,
         SLUBAccountMockTest::class,
         SLUBReservationMockTest::class,
         SLUBAccountValidateMockTest::class,
         SLUBSearchMockTest::class,
         SLUBSearchFieldsMockTest::class,
+        SLUBGetResultByIdMockTest::class,
         SLUBProlongMockTest::class,
         SLUBCancelMockTest::class
 )
@@ -96,7 +98,7 @@ class SLUBAccountTest : BaseHtmlTest() {
             author = "Bachofer, Mark"
             setDeadline("2019-06-03")
             format = "B"
-            //id = "31626878"
+            id = "bc/31626878"
             barcode = "31626878"
             isRenewable = true
             prolongData = "$format\t$barcode"
@@ -106,7 +108,7 @@ class SLUBAccountTest : BaseHtmlTest() {
             title = "Pareys Buch der Bäume"
             author = "Mitchell, Alan"
             format = "B"
-            //id = "30963742"
+            id = "bc/30963742"
             status = "reserved_pos 1"
             cancelData = "30963742_1"
         }
@@ -115,7 +117,7 @@ class SLUBAccountTest : BaseHtmlTest() {
             title = "Welcher Baum ist das?"
             author = "Mayer, Joachim ¬[VerfasserIn]¬"
             format = "B"
-            //id = "34778398"
+            id = "bc/34778398"
             branch = "ZwB Forstwissenschaft"
             status = String.format("hold %s", fmt.print(LocalDate("2019-05-10")))
         }
@@ -124,7 +126,7 @@ class SLUBAccountTest : BaseHtmlTest() {
             title = "Englische Synonyme als Fehlerquellen"
             author = "Meyer, Jürgen"
             format = "B"
-            //id = "20550495"
+            id = "bc/20550495"
             branch = "Zentralbibliothek Ebene 0 SB-Regal"
             status = String.format("request_ready %s", fmt.print(LocalDate("2019-05-04")))
         }
@@ -189,12 +191,12 @@ class SLUBSearchTest : BaseHtmlTest() {
         val result1 = SearchResult().apply {
             innerhtml = "<b>Mastering software testing with JUnit 5 comprehensive guide to develop high quality Java applications Boni García</b><br>Garcia, Boni<br>(2017)"
             type = SearchResult.MediaType.BOOK
-            id = "0-1014939550"
+            id = "id/0-1014939550"
         }
         val result2 = SearchResult().apply {
             innerhtml = """<b>Title with " and &</b><br><br>(2222)"""
             type = SearchResult.MediaType.NONE
-            id = "123"
+            id = "id/123"
         }
 
         val searchresults = slub.parseSearchResults(json)
@@ -210,7 +212,7 @@ class SLUBSearchTest : BaseHtmlTest() {
         val result1 = SearchResult().apply {
             innerhtml = "<b>Tu en hagiois patros hēmōn Maximu tu homologetu Hapanta = S.P.N. Maximi Confessoris Opera omnia eruta, Latine transl., notisque ill. opera et studio Francisci Combefis. Adauxit Franciscus Oehler. Accurante et denuo recognoscente J.-P. Migne</b><br>Maximus Confessor"
             type = SearchResult.MediaType.BOOK
-            id = "0-1093989777"
+            id = "id/0-1093989777"
         }
 
         val searchresults = slub.parseSearchResults(json)
@@ -233,7 +235,7 @@ class SLUBSearchTest : BaseHtmlTest() {
             addDetail(Detail("Sprache", "Deutsch"))
             addDetail(Detail("Schlagwörter", "Quellcode; Softwaretest; JUnit"))
             addDetail(Detail("Inhaltsverzeichnis", "http://d-nb.info/970689268/04"))
-            id = "0-1182402208"
+            id = "id/0-1182402208"
             copies = arrayListOf(Copy().apply {
                 barcode = "31541466"
                 department = "Freihand"
@@ -241,10 +243,10 @@ class SLUBSearchTest : BaseHtmlTest() {
                 status = "Ausleihbar"
                 shelfmark = "ST 233 H939"
             })
-            collectionId = "0-1183957874"
+            collectionId = "id/0-1183957874"
         }
 
-        val item = slub.parseResultById(json.getString("id"), json)
+        val item = slub.parseResultById(json)
 
         //details are in unspecified order, see https://stackoverflow.com/a/4920304/3944322
         assertThat(item, sameBeanAs(expected).ignoring("details"))
@@ -271,7 +273,7 @@ class SLUBSearchTest : BaseHtmlTest() {
             resInfo = "stackRequest\t33364639"
         }
 
-        val item = slub.parseResultById(json.getString("id"), json)
+        val item = slub.parseResultById(json)
 
         assertEquals(19, item.copies.size)
         // the copies arrays may occur in any order
@@ -288,7 +290,7 @@ class SLUBSearchTest : BaseHtmlTest() {
         )
 
         // is part of "Undergraduate topics in computer science" but no id (--> collectionid) given
-        val item = slub.parseResultById(json.getString("id"), json)
+        val item = slub.parseResultById(json)
 
         assertThat(volumes, sameBeanAs(item.volumes))
         assertNull(item.collectionId)
@@ -299,7 +301,7 @@ class SLUBSearchTest : BaseHtmlTest() {
         val json = JSONObject(readResource("/slub/search/item-with_umlaute_in_title_and_volumes.json"))
         val volume = Volume("0-1149529121", "(inse,5): in 6 Bänden")
 
-        val item = slub.parseResultById(json.getString("id"), json)
+        val item = slub.parseResultById(json)
 
         assertEquals("Urania-Tierreich: in 6 Bänden", item.title)
         assertThat(item.volumes, hasItem(sameBeanAs(volume)))
@@ -314,12 +316,12 @@ class SLUBSearchTest : BaseHtmlTest() {
             title = "Maya"
             addDetail(Detail("Sprache", "Kein linguistischer Inhalt"))
             addDetail(Detail("Schlagwörter", "Skulptur; Statue; Ortskatalog zur Kunst und Architektur"))
-            id = "dswarm-67-b2FpOmRldXRzY2hlZm90b3RoZWsuZGU6YTg0NTA6Om9ianwzMzA1NTgxMHxkZl9oYXVwdGthdGFsb2dfMDEwMDMzNg"
+            id = "id/dswarm-67-b2FpOmRldXRzY2hlZm90b3RoZWsuZGU6YTg0NTA6Om9ianwzMzA1NTgxMHxkZl9oYXVwdGthdGFsb2dfMDEwMDMzNg"
             cover = "http://fotothek.slub-dresden.de/thumbs/df_hauptkatalog_0100336.jpg"
             addDetail(Detail("In der Deutschen Fotothek ansehen", "http://www.deutschefotothek.de/obj33055810.html"))
         }
 
-        val item = slub.parseResultById(json.getString("id"), json)
+        val item = slub.parseResultById(json)
 
         assertThat(item, sameBeanAs(expected).ignoring("details"))
         assertThat(HashSet(expected.details), sameBeanAs(HashSet(item.details)))
@@ -338,14 +340,14 @@ class SLUBSearchTest : BaseHtmlTest() {
             addDetail(Detail("Sprache", "Deutsch"))
             addDetail(Detail("Schlagwörter", "Java; JUnit"))
             addDetail(Detail("Beschreibung", "Literaturverz. S. 351"))
-            id = "0-727434322"
+            id = "id/0-727434322"
             addDetail(Detail("Inhaltsverzeichnis", "http://www.gbv.de/dms/tib-ub-hannover/727434322.pdf"))
             addDetail(Detail("Inhaltstext", "http://deposit.d-nb.de/cgi-bin/dokserv?id=4155321&prov=M&dok_var=1&dok_ext=htm"))
             addDetail(Detail("Zugang zur Ressource (via ProQuest Ebook Central)", "http://wwwdb.dbod.de/login?url=http://slub.eblib.com/patron/FullRecord.aspx?p=1575685"))
             addDetail(Detail("Online-Ausgabe", "Tamm, Michael: JUnit-Profiwissen (SLUB)"))
         }
 
-        val item = slub.parseResultById(json.getString("id"), json)
+        val item = slub.parseResultById(json)
 
         assertThat(item, sameBeanAs(expected).ignoring("details"))
         assertThat(HashSet(expected.details), sameBeanAs(HashSet(item.details)))
@@ -360,11 +362,11 @@ class SLUBSearchTest : BaseHtmlTest() {
             title = "A Study of Classic Maya Rulership"
             addDetail(Detail("Sprache", "Englisch"))
             addDetail(Detail("Schlagwörter", "Archaeology; Latin American history; Ancient history; Native American studies"))
-            id = "ai-34-b2FpOnBxZHRvYWkucHJvcXVlc3QuY29tOjM0Nzc2Mzg"
+            id = "id/ai-34-b2FpOnBxZHRvYWkucHJvcXVlc3QuY29tOjM0Nzc2Mzg"
             addDetail(Detail("Link", "http://pqdtopen.proquest.com/#viewpdf?dispub=3477638"))
         }
 
-        val item = slub.parseResultById(json.getString("id"), json)
+        val item = slub.parseResultById(json)
 
         assertThat(item, sameBeanAs(expected).ignoring("details"))
         assertThat(HashSet(expected.details), sameBeanAs(HashSet(item.details)))
@@ -383,7 +385,7 @@ class SLUBSearchTest : BaseHtmlTest() {
             addDetail(Detail("Sprache", "Deutsch"))
             addDetail(Detail("Schlagwörter", "Walther, Wilhelm; Albertiner; Albertiner; Fries; Walther, Wilhelm"))
             addDetail(Detail("Beschreibung", "Literaturverz. S. 222 - 224"))
-            id = "0-276023927"
+            id = "id/0-276023927"
             copies = arrayListOf(
                     Copy().apply {
                         barcode = "10059731"
@@ -414,10 +416,29 @@ class SLUBSearchTest : BaseHtmlTest() {
             isReservable = true
         }
 
-        val item = slub.parseResultById(json.getString("id"), json)
+        val item = slub.parseResultById(json)
 
         assertThat(item, sameBeanAs(expected).ignoring("details"))
         assertThat(HashSet(expected.details), sameBeanAs(HashSet(item.details)))
+    }
+}
+
+class SLUBMiscellaneousTests : BaseHtmlTest() {
+    private var slub = SLUB()
+
+    init {
+        slub.init(Library().apply {
+            data = JSONObject().apply {
+                put("baseurl", "https://test.de")
+                put("illrenewurl", "https://test-renew.de")
+            }
+        }, HttpClientFactory("test"))
+    }
+
+    @Test
+    fun testGetShareUrl() {
+        val expected = slub.getShareUrl("id/123", "not used")
+        assertEquals(expected, "https://test.de/id/123")
     }
 }
 
@@ -427,7 +448,7 @@ class SLUBAccountMockTest(@Suppress("unused") private val name: String,
                           private val expectedMessage: String?,
                           private val expectedException: Class<out Exception?>?,
                           private val expectedExceptionMsg: String?) : BaseHtmlTest() {
-    private val slub = Mockito.spy(SLUB::class.java)
+    private val slub = spy(SLUB::class.java)
 
     init {
         slub.init(Library().apply {
@@ -445,7 +466,7 @@ class SLUBAccountMockTest(@Suppress("unused") private val name: String,
 
     @Test
     fun testCheckAccountData() {
-        Mockito.doReturn(response).`when`(slub).httpPost(Matchers.any(), Matchers.any(), Matchers.any())
+        doReturn(response).`when`(slub).httpPost(Matchers.any(), Matchers.any(), Matchers.any())
         if (expectedException != null) {
             val thrown = assertThrows(expectedExceptionMsg, expectedException
             ) { slub.requestAccount(account, "", null) }
@@ -483,7 +504,7 @@ class SLUBReservationMockTest(@Suppress("unused") private val name: String,
                               private val responsePickup: String?,
                               private val responseReserveOrRequest: String?,
                               private val expectedResult: OpacApi.ReservationResult) : BaseHtmlTest() {
-    private val slub = Mockito.spy(SLUB::class.java)
+    private val slub = spy(SLUB::class.java)
 
     init {
         slub.init(Library().apply {
@@ -502,11 +523,11 @@ class SLUBReservationMockTest(@Suppress("unused") private val name: String,
     @Test
     fun testReservation() {
         if (responsePickup != null) {
-            Mockito.doReturn(responsePickup).`when`(slub).httpPost(Matchers.any(),
+            doReturn(responsePickup).`when`(slub).httpPost(Matchers.any(),
                     argThat(IsRequestBodyWithAction("pickup")), Matchers.any())
         }
         if (responseReserveOrRequest != null) {
-            Mockito.doReturn(responseReserveOrRequest).`when`(slub).httpPost(Matchers.any(),
+            doReturn(responseReserveOrRequest).`when`(slub).httpPost(Matchers.any(),
                     or(argThat(IsRequestBodyWithAction("stackRequest")),
                             argThat(IsRequestBodyWithAction("reserve"))), Matchers.any())
         }
@@ -518,10 +539,10 @@ class SLUBReservationMockTest(@Suppress("unused") private val name: String,
     companion object {
         // this item has already been tested in testParseResultByIdResinfo so we can rely on parseResultById here
         private val json = JSONObject(BaseHtmlTest().readResource("/slub/search/item-for-reserve&request.json"))
-        private val itemRequestAndReserve = SLUB().parseResultById(json.getString("id"), json)
-        private val itemRequest = SLUB().parseResultById(json.getString("id"), json)
-        private val itemReserve = SLUB().parseResultById(json.getString("id"), json)
-        private val itemNone = SLUB().parseResultById(json.getString("id"), json)
+        private val itemRequestAndReserve = SLUB().parseResultById(json)
+        private val itemRequest = SLUB().parseResultById(json)
+        private val itemReserve = SLUB().parseResultById(json)
+        private val itemNone = SLUB().parseResultById(json)
 
         init {
             itemRequest.apply {
@@ -671,7 +692,7 @@ class SLUBReservationMockTest(@Suppress("unused") private val name: String,
 }
 
 class SLUBAccountValidateMockTest : BaseHtmlTest() {
-    private val slub = Mockito.spy(SLUB::class.java)
+    private val slub = spy(SLUB::class.java)
 
     init {
         slub.init(Library().apply {
@@ -690,7 +711,7 @@ class SLUBAccountValidateMockTest : BaseHtmlTest() {
     @Test
     fun testCheckAccountData() {
         val response = "{\"status\":\"1\",\"message\":\"credentials_are_valid\"}"
-        Mockito.doReturn(response).`when`(slub).httpPost(Matchers.any(), Matchers.any(), Matchers.any())
+        doReturn(response).`when`(slub).httpPost(Matchers.any(), Matchers.any(), Matchers.any())
 
         slub.checkAccountData(account)
         verify(slub).httpPost(Matchers.any(), argThat(IsRequestBodyWithAction("validate")), Matchers.any())
@@ -705,7 +726,7 @@ class SLUBSearchMockTest(@Suppress("unused") private val name: String,
                          private val expectedResultCount: Int?,
                          private val expectedException: Class<out Exception?>?,
                          private val expectedExceptionMsg: String?) : BaseHtmlTest() {
-    private val slub = Mockito.spy(SLUB::class.java)
+    private val slub = spy(SLUB::class.java)
 
     init {
         slub.init(Library().apply {
@@ -718,7 +739,7 @@ class SLUBSearchMockTest(@Suppress("unused") private val name: String,
 
     @Test
     fun testSearch() {
-        Mockito.doReturn(response).`when`(slub).httpGet(Matchers.any(), Matchers.any())
+        doReturn(response).`when`(slub).httpGet(Matchers.any(), Matchers.any())
         if (expectedException != null) {
             val thrown = assertThrows(expectedExceptionMsg, expectedException
             ) { slub.search(query) }
@@ -767,6 +788,84 @@ class SLUBSearchMockTest(@Suppress("unused") private val name: String,
     }
 }
 
+class SLUBGetResultByIdMockTest : BaseHtmlTest() {
+    private val slub = spy(SLUB::class.java)
+
+    private class ClientDoesntFollowRedirects : ArgumentMatcher<OkHttpClient?>() {
+        override fun matches(argument: Any): Boolean {
+            return !(argument as OkHttpClient).followRedirects()
+        }
+    }
+
+    init {
+        slub.init(Library().apply {
+            data = JSONObject().apply {
+                put("baseurl", "https://test.de")
+                put("illrenewurl", "https://test-renew.de")
+            }
+        }, HttpClientFactory("test"))
+    }
+
+    @Test
+    fun testJSONError() {
+        doReturn("xxx").`when`(slub).httpGet(Matchers.any(), Matchers.any())
+        val thrown = assertThrows(null, OpacApi.OpacErrorException::class.java
+        ) { slub.getResultById("id/0", null) }
+        assertTrue(thrown!!.message!!.contains("search returned malformed JSON object:"))
+    }
+
+    @Test
+    fun testIdIdentifier() {
+        val response = """{"record":{"title":"The title"},"id":"123","thumbnail":"","links":[],"linksRelated":[],
+                            |"linksAccess":[],"linksGeneral":[],"references":[],"copies":[],"parts":{}}""".trimMargin()
+        doReturn(response).`when`(slub).httpGet(Matchers.any(), Matchers.any())
+        val actual = slub.getResultById("id/123", null)
+        verify(slub).httpGet("https://test.de/id/123/?type=1369315142&tx_find_find[format]=data&tx_find_find[data-format]=app", "UTF-8")
+        verify(slub, never()).httpHead(any(), any(), any(), any())
+        assertEquals("id/123", actual.id)
+    }
+
+    @Test
+    fun testBcIdentifier() {
+        doReturn("https://test.de/id/123/").`when`(slub).httpHead(Matchers.any(),
+                Matchers.any(), Matchers.any(), Matchers.any())
+        val response = """{"record":{"title":"The title"},"id":"123","thumbnail":"","links":[],"linksRelated":[],
+                            |"linksAccess":[],"linksGeneral":[],"references":[],"copies":[],"parts":{}}""".trimMargin()
+        doReturn(response).`when`(slub).httpGet(Matchers.any(), Matchers.any())
+        val actual = slub.getResultById("bc/456", null)
+        verify(slub).httpHead(eq("https://test.de/bc/456/"), eq("Location"), eq(""),
+                argThat(ClientDoesntFollowRedirects()))
+        verify(slub).httpGet("https://test.de/id/123/?type=1369315142&tx_find_find[format]=data&tx_find_find[data-format]=app", "UTF-8")
+        assertEquals("id/123", actual.id)
+    }
+
+    @Test
+    fun testRsnIdentifier() {
+        doReturn("https://test.de/id/123/").`when`(slub).httpHead(Matchers.any(),
+                Matchers.any(), Matchers.any(), Matchers.any())
+        val response = """{"record":{"title":"The title"},"id":"123","thumbnail":"","links":[],"linksRelated":[],
+                            |"linksAccess":[],"linksGeneral":[],"references":[],"copies":[],"parts":{}}""".trimMargin()
+        doReturn(response).`when`(slub).httpGet(Matchers.any(), Matchers.any())
+        val actual = slub.getResultById("rsn/456", null)
+        verify(slub).httpHead(eq("https://test.de/rsn/456/"), eq("Location"), eq(""),
+                argThat(ClientDoesntFollowRedirects()))
+        verify(slub).httpGet("https://test.de/id/123/?type=1369315142&tx_find_find[format]=data&tx_find_find[data-format]=app", "UTF-8")
+        assertEquals("id/123", actual.id)
+    }
+
+    @Test
+    fun testLegacyIdentifier() {
+        // id without prefix, e.g. from old favorites list
+        val response = """{"record":{"title":"The title"},"id":"123","thumbnail":"","links":[],"linksRelated":[],
+                            |"linksAccess":[],"linksGeneral":[],"references":[],"copies":[],"parts":{}}""".trimMargin()
+        doReturn(response).`when`(slub).httpGet(Matchers.any(), Matchers.any())
+        val actual = slub.getResultById("123", null)
+        verify(slub).httpGet("https://test.de/id/123/?type=1369315142&tx_find_find[format]=data&tx_find_find[data-format]=app", "UTF-8")
+        verify(slub, never()).httpHead(any(), any(), any(), any())
+        assertEquals("id/123", actual.id)
+    }
+}
+
 @RunWith(Parameterized::class)
 class SLUBProlongMockTest(@Suppress("unused") private val name: String,
                           private val media: String,
@@ -776,7 +875,7 @@ class SLUBProlongMockTest(@Suppress("unused") private val name: String,
                           private val expectedResult: OpacApi.MultiStepResult,
                           private val expectedException: Class<out Exception?>?,
                           private val expectedExceptionMsg: String?) : BaseHtmlTest() {
-    private val slub = Mockito.spy(SLUB::class.java)
+    private val slub = spy(SLUB::class.java)
 
     init {
         slub.init(Library().apply {
@@ -794,7 +893,7 @@ class SLUBProlongMockTest(@Suppress("unused") private val name: String,
 
     @Test
     fun testProlong() {
-        Mockito.doReturn(response).`when`(slub).httpPost(Matchers.any(), Matchers.any(), Matchers.any())
+        doReturn(response).`when`(slub).httpPost(Matchers.any(), Matchers.any(), Matchers.any())
         if (expectedException != null) {
             val thrown = assertThrows(expectedExceptionMsg, expectedException
             ) { slub.prolong(media, account, 0, null) }
@@ -851,7 +950,7 @@ class SLUBCancelMockTest(@Suppress("unused") private val name: String,
                          private val media: String,
                          private val response: String?,
                          private val expectedResult: OpacApi.MultiStepResult) : BaseHtmlTest() {
-    private val slub = Mockito.spy(SLUB::class.java)
+    private val slub = spy(SLUB::class.java)
 
     init {
         slub.init(Library().apply {
@@ -877,7 +976,7 @@ class SLUBCancelMockTest(@Suppress("unused") private val name: String,
                 .add("tx_slubaccount_account[password]", "x")
                 .add("tx_slubaccount_account[delete][0]", media)
                 .build()
-        Mockito.doReturn(response).`when`(slub).httpPost(Matchers.any(), Matchers.any(), Matchers.any())
+        doReturn(response).`when`(slub).httpPost(Matchers.any(), Matchers.any(), Matchers.any())
         val actualResult = slub.cancel(media, account, 0, null)
         assertThat(actualResult, sameBeanAs(expectedResult))
         verify(slub).httpPost(eq("https://test.de/mein-konto/"), argThat(sameBeanAs(expectedRequestBody)), eq("UTF-8"))
@@ -903,7 +1002,7 @@ class SLUBCancelMockTest(@Suppress("unused") private val name: String,
 }
 
 class SLUBSearchFieldsMockTest : BaseHtmlTest() {
-    private val slub = Mockito.spy(SLUB::class.java)
+    private val slub = spy(SLUB::class.java)
 
     init {
         slub.init(Library().apply {
@@ -917,7 +1016,7 @@ class SLUBSearchFieldsMockTest : BaseHtmlTest() {
     @Test
     fun testParseSearchFields() {
         val html = readResource("/slub/SLUB Dresden Startseite.html")
-        Mockito.doReturn(html).`when`(slub).httpGet(Matchers.any(), Matchers.any())
+        doReturn(html).`when`(slub).httpGet(Matchers.any(), Matchers.any())
 
         val searchFields = slub.parseSearchFields()
         assertEquals(10, searchFields.filterIsInstance(TextSearchField::class.java).size)

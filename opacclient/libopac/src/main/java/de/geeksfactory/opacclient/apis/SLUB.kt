@@ -146,7 +146,7 @@ open class SLUB : OkHttpBaseApi() {
                 }
                 type = mediaTypes[it.getJSONArray("format").optString(0)]
                         ?: SearchResult.MediaType.NONE
-                id = it.getString("id")
+                id = "id/${it.getString("id")}"
             }
         }
         //TODO: get status (one request per item!)
@@ -159,19 +159,33 @@ open class SLUB : OkHttpBaseApi() {
 
     override fun getResultById(id: String, homebranch: String?): DetailedItem {
         val json: JSONObject
+        val url = when {
+            id.startsWith("id/") ->
+                "$baseurl/$id/"
+            id.startsWith("bc/") || id.startsWith("rsn/") ->
+                http_client.newBuilder()
+                        .followRedirects(false)
+                        .build()
+                        .run {
+                            httpHead("$baseurl/$id/",
+                                    "Location",
+                                    "",
+                                    this)
+                        }
+            else -> // legacy case: id identifier without prefix
+                "$baseurl/id/$id/"
+        } + "?type=1369315142&tx_find_find[format]=data&tx_find_find[data-format]=app"
         try {
-            json = JSONObject(httpGet(
-                    "$baseurl/id/$id/?type=1369315142&tx_find_find[format]=data&tx_find_find[data-format]=app",
-                    ENCODING))
+            json = JSONObject(httpGet(url, ENCODING))
         } catch (e: JSONException) {
             throw OpacApi.OpacErrorException(stringProvider.getFormattedString(
                     StringProvider.UNKNOWN_ERROR_WITH_DESCRIPTION,
                     "search returned malformed JSON object: ${e.message}"))
         }
-        return parseResultById(id, json)
+        return parseResultById(json)
     }
 
-    internal fun parseResultById(id: String, json: JSONObject): DetailedItem {
+    internal fun parseResultById(json: JSONObject): DetailedItem {
         val dateFormat = DateTimeFormat.forPattern("dd.MM.yyyy")
         var hasReservableCopies = false
         fun getCopies(copiesArray: JSONArray, df: DateTimeFormatter): List<Copy> =
@@ -201,7 +215,7 @@ open class SLUB : OkHttpBaseApi() {
                     }
                 }
         return DetailedItem().apply {
-            this.id = id
+            this.id = "id/${json.getString("id")}"
             val record = json.getJSONObject("record")
             for (key in record.keys()) {
                 var value = when (val v = record.get(key as String)) {
@@ -212,7 +226,9 @@ open class SLUB : OkHttpBaseApi() {
                             is String -> arrayItem
                             is JSONObject -> arrayItem.optString("title").also {
                                 // if item is part of multiple collections, collectionsId holds the last one
-                                collectionId = arrayItem.optString("id", null)
+                                arrayItem.optString("id", null)?.let {
+                                    collectionId = "id/$it"
+                                }
                             }
                             else -> null
                         }
@@ -420,7 +436,7 @@ open class SLUB : OkHttpBaseApi() {
                     reservationsList.add(ReservedItem().apply {
                         title = it.optString("about")
                         author = it.optJSONArray("X_author")?.optString(0)
-                        //id = it.optString("label")  // TODO: get details from here via /bc --> redirects to /id, from there get the proper id
+                        id = "bc/${it.optString("label")}"
                         format = it.optString("X_medientyp")
                         status = when (type) {  // TODO: maybe we need time (LocalDateTime) too make an educated guess on actual ready date for stack requests
                             "hold" -> stringProvider.getFormattedString(StringProvider.HOLD,
@@ -469,7 +485,7 @@ open class SLUB : OkHttpBaseApi() {
                             author = it.optJSONArray("X_author")?.optString(0)
                             setDeadline(it.optString("X_date_due"))
                             format = it.optString("X_medientyp")
-                            //id = it.optString("label")  // TODO: get details from here via /bc --> redirects to /id, from there get the proper id
+                            id = "bc/${it.optString("label")}"
                             barcode = it.optString("X_barcode")
                             if (it.optInt("X_is_renewable") == 1) {   // TODO: X_is_flrenewable for ill items
                                 isRenewable = true
@@ -517,7 +533,7 @@ open class SLUB : OkHttpBaseApi() {
     }
 
     override fun getShareUrl(id: String?, title: String?): String {
-        return "$baseurl/id/$id"
+        return "$baseurl/$id"
     }
 
     override fun getSupportFlags(): Int {
