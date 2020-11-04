@@ -196,8 +196,6 @@ public class SISIS extends OkHttpBaseApi implements OpacApi {
     protected long logged_in;
     protected Account logged_in_as;
     protected static final String ENCODING = "UTF-8";
-    protected static final Pattern coverPattern = Pattern.compile(
-            "\\$\\.ajax\\(\\{\\s*url:\\s*'(?:/webOPACClient/)?(jsp/result/cover.jsp\\?[^']+)'");
 
     protected String getDefaultEncoding() {
         return ENCODING;
@@ -474,9 +472,8 @@ public class SISIS extends OkHttpBaseApi implements OpacApi {
 
             // covers loaded with AJAX (seen in Wuppertal)
             if (tr.children().size() > 3 && tr.child(3).html().contains("jsp/result/cover.jsp")) {
-                Matcher matcher = coverPattern.matcher(tr.child(3).html());
-                if (matcher.find()) {
-                    String url = opac_url + "/" + matcher.group(1);
+                String url = getAjaxCoverUrl(tr.child(3).html());
+                if (url != null ) {
                     futures.add(CompletableFuture.runAsync(() -> {
                         try {
                             String result = httpGet(url, getDefaultEncoding());
@@ -694,6 +691,21 @@ public class SISIS extends OkHttpBaseApi implements OpacApi {
         return new SearchRequestResult(results, results_total, page);
     }
 
+    String getAjaxCoverUrl(String html) {
+        final Pattern coverPattern = Pattern.compile(
+                "\\$\\.ajax\\(\\{\\s*url:\\s*'(.*jsp/result/cover.jsp\\?[^']+)'");
+        Matcher matcher = coverPattern.matcher(html);
+        String url = null;
+        if (matcher.find()) {
+            try {
+                url = new URI(opac_url + "/").resolve(matcher.group(1)).toString();
+            } catch (URISyntaxException | IllegalArgumentException ignoreBadUrl) {
+                // ignore bad url and return null
+            }
+        }
+        return url;
+    }
+
     @Override
     public DetailedItem getResultById(String id, String homebranch)
             throws IOException {
@@ -744,9 +756,9 @@ public class SISIS extends OkHttpBaseApi implements OpacApi {
                 ENCODING);
 
         String coverJs = null;
-        Matcher coverMatcher = coverPattern.matcher(html);
-        if (coverMatcher.find()) {
-            coverJs = httpGet(opac_url + "/" + coverMatcher.group(1), ENCODING);
+        String url = getAjaxCoverUrl(html);
+        if (url != null) {
+            coverJs = httpGet(url, ENCODING);
         }
 
         DetailedItem result = parseDetail(html, html2, html3, coverJs, data, stringProvider);
