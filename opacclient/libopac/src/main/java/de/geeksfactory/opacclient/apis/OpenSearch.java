@@ -35,6 +35,7 @@ import java.net.MalformedURLException;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
@@ -453,6 +454,13 @@ public class OpenSearch extends OkHttpBaseApi implements OpacApi {
             // Some libraries, such as Bern, have labels but no <span id="..Value"> tags
             int j = 0;
             for (Element div : catalogueContent.children()) {
+                for (Element child : div.children()) {
+                    // remove invisible stuff
+                    if (child.hasClass("oclc-screen-reader-only")
+                            || child.attr("style").contains("display: none")) {
+                        child.remove();
+                    }
+                }
                 if (subtitle.equals("") && div.select("span").size() == 0 && j > 0 && j < 3) {
                     subtitle = div.text().trim();
                 }
@@ -608,17 +616,15 @@ public class OpenSearch extends OkHttpBaseApi implements OpacApi {
     }
 
     protected List<String> getCoverUrlList(Element img) {
-        String[] parts = img.attr("sources").split("\\|");
-        // Example: SetSimpleCover|a|https://vlb.de/GetBlob.aspx?strIsbn=9783868511291&amp;
-        // size=S|a|http://www.buchhandel.de/default.aspx?strframe=titelsuche&amp;
-        // caller=vlbPublic&amp;func=DirectIsbnSearch&amp;isbn=9783868511291&amp;
-        // nSiteId=11|c|SetNoCover|a|/DesktopModules/OCLC.OPEN.PL.DNN
-        // .BaseLibrary/StyleSheets/Images/Fallbacks/emptyURL.gif?4.2.0.0|a|
         List<String> alternatives = new ArrayList<>();
-        parseCoverParts(parts, alternatives);
-
-        if (img.hasAttr("devsources")) {
-            parts = img.attr("devsources").split("\\|");
+        for (String attr : Arrays.asList("sources", "devsources",
+                "data-sources", "data-devsources")) {
+            String[] parts = img.attr(attr).split("\\|");
+            // Example: SetSimpleCover|a|https://vlb.de/GetBlob.aspx?strIsbn=9783868511291&amp;
+            // size=S|a|http://www.buchhandel.de/default.aspx?strframe=titelsuche&amp;
+            // caller=vlbPublic&amp;func=DirectIsbnSearch&amp;isbn=9783868511291&amp;
+            // nSiteId=11|c|SetNoCover|a|/DesktopModules/OCLC.OPEN.PL.DNN
+            // .BaseLibrary/StyleSheets/Images/Fallbacks/emptyURL.gif?4.2.0.0|a|
             parseCoverParts(parts, alternatives);
         }
         return alternatives;
@@ -778,7 +784,9 @@ public class OpenSearch extends OkHttpBaseApi implements OpacApi {
         DetailedItem item = new DetailedItem();
 
         // Title and Subtitle
-        item.setTitle(doc.select("span[id$=LblShortDescriptionValue], span[id$=LblTitleValue]").text());
+        item.setTitle(doc.select(
+                "span[id$=LblShortDescriptionValue], span[id$=LblTitleValue], .oclc-override-heading")
+                         .text());
         String subtitle = doc.select("span[id$=LblSubTitleValue]").text();
         if (subtitle.equals("") && doc.select("span[id$=LblShortDescriptionValue]").size() > 0) {
             // Subtitle detection for Bern
