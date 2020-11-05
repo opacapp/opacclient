@@ -11,6 +11,7 @@ import de.geeksfactory.opacclient.objects.Account;
 import de.geeksfactory.opacclient.objects.AccountData;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.doNothing;
@@ -104,5 +105,51 @@ public class SISISTest extends BaseHtmlTest {
         assertEquals(
                 "http://webopac.wuppertal.de/showMVBCover.do?token=2aa75c57-40a7-4c99-b501-d49b39ada7a9",
                 url);
+    }
+
+    @Test
+    public void testGetAjaxCoverUrlRelPath() {
+        // as found at Stadt- und Regionalbibliothek Erfurt
+        String html = "    <!--\n" +
+                "      $.ajax({\n" +
+                "        url: 'jsp/result/cover.jsp?localImg=&isbns=%5B978-3-8317-3282-1%5D&asins=%5B%5D&size=medium&pos=-1_1',\n" +
+                "        dataType: 'script'\n" +
+                "      });\n" +
+                "    //-->";
+        String actual = sisis.getAjaxCoverUrl(html);
+        assertEquals("https://opac.erfurt.de/webOPACClient/jsp/result/cover.jsp?localImg=&isbns=%5B978-3-8317-3282-1%5D&asins=%5B%5D&size=medium&pos=-1_1", actual);
+    }
+
+    @Test
+    public void testGetAjaxCoverUrlAbsPath() {
+        // as found at Städtischen Bibliotheken Dresden
+        String html = "    <!--\n" +
+                "      $.ajax({\n" +
+                "        url: '/webOPACClient/jsp/result/cover.jsp?localImg=&isbns=%5B978-3-8317-3282-1%5D&asins=%5B%5D&size=medium&pos=cover_-1_1',\n" +
+                "        dataType: 'script'\n" +
+                "      });\n" +
+                "    //-->";
+        String actual = sisis.getAjaxCoverUrl(html);
+        assertEquals("https://opac.erfurt.de/webOPACClient/jsp/result/cover.jsp?localImg=&isbns=%5B978-3-8317-3282-1%5D&asins=%5B%5D&size=medium&pos=cover_-1_1", actual);
+    }
+
+    @Test
+    public void testGetAjaxCoverUrlNoPath() {
+        // as found at Stadtbibliothek Riesa (cover images come from amazon)
+        String actual = sisis.getAjaxCoverUrl("");
+        assertNull(actual);
+    }
+
+    @Test
+    public void testGetAjaxCoverUrlBadPath() {
+        // made up example of url with unencoded space
+        String html = "    <!--\n" +
+                "      $.ajax({\n" +
+                "        url: 'jsp/result/cover.jsp?localImg=&isbns= %5B978-3-8317-3282-1%5D&asins=%5B%5D&size=medium&pos=-1_1',\n" +
+                "        dataType: 'script'\n" +
+                "      });\n" +
+                "    //-->";
+        String actual = sisis.getAjaxCoverUrl(html);
+        assertNull(actual);
     }
 }
