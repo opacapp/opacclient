@@ -434,7 +434,7 @@ open class SLUB : OkHttpBaseApi() {
             for (type in types) {
                 items?.optJSONArray(type)?.forEach<JSONObject> {
                     reservationsList.add(ReservedItem().apply {
-                        title = it.optString("about")
+                        title = it.optString("about").replace("¬", "")
                         author = it.optJSONArray("X_author")?.optString(0)
                         id = "bc/${it.optString("label")}"
                         format = it.optString("X_medientyp")
@@ -460,7 +460,7 @@ open class SLUB : OkHttpBaseApi() {
             }
             items?.optJSONArray("ill")?.forEach<JSONObject> {
                 reservationsList.add(ReservedItem().apply {
-                    title = it.optString("Titel")
+                    title = it.optString("Titel").replace("¬", "")
                     author = it.optString("Autor")
                     //id = it.optString("Fernleih_ID") --> this id is of no use whatsoever
                     it.optString("Medientyp")?.run {
@@ -481,7 +481,7 @@ open class SLUB : OkHttpBaseApi() {
             lent = json.optJSONObject("items")?.optJSONArray("loan")    // TODO: plus permanent loans? (need example)
                     ?.map<JSONObject, LentItem> {
                         LentItem().apply {
-                            title = it.optString("about")
+                            title = it.optString("about").replace("¬", "")
                             author = it.optJSONArray("X_author")?.optString(0)
                             setDeadline(it.optString("X_date_due"))
                             format = it.optString("X_medientyp")

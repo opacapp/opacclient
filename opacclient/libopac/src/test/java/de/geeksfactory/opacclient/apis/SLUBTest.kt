@@ -94,7 +94,7 @@ class SLUBAccountTest : BaseHtmlTest() {
         val json = JSONObject(readResource("/slub/account/account.json"))
         val fmt = DateTimeFormat.shortDate()
         val lentitem1 = LentItem().apply {
-            title = "¬Der¬ neue Kosmos-Baumführer"
+            title = "Der neue Kosmos-Baumführer"
             author = "Bachofer, Mark"
             setDeadline("2019-06-03")
             format = "B"
