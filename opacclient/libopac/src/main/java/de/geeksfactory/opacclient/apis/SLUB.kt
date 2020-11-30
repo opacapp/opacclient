@@ -65,7 +65,10 @@ open class SLUB : OkHttpBaseApi() {
             "Electronic Resource (Data Carrier)" to SearchResult.MediaType.EAUDIO,
             "Image" to SearchResult.MediaType.ART,
             "Microform" to SearchResult.MediaType.MICROFORM,
-            "Visual Media" to SearchResult.MediaType.ART
+            "Visual Media" to SearchResult.MediaType.ART,
+            "Electronic Resource" to SearchResult.MediaType.CD_SOFTWARE, // typically CD-ROM or DVD-ROM
+            "Physical Object" to SearchResult.MediaType.DEVICE,
+            "Norm" to SearchResult.MediaType.EDOC
     )
 
     private val fieldCaptions = mapOf(
