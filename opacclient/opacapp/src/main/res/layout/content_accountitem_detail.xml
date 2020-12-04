@@ -11,6 +11,8 @@
 
         <import type="de.geeksfactory.opacclient.objects.ReservedItem"/>
 
+        <import type="de.geeksfactory.opacclient.storage.HistoryItem"/>
+
         <import type="android.view.View"/>
 
         <import type="org.joda.time.format.DateTimeFormat"/>
@@ -120,7 +122,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:padding="16dp"
-                    android:visibility="@{item.status != null ? View.VISIBLE : View.GONE}">
+                    android:visibility="@{ (item instanceof HistoryItem || item.status == null) ? View.GONE : View.VISIBLE}">
 
                     <ImageView
                         android:id="@+id/iconStatus"
@@ -174,6 +176,96 @@
                         android:text="@{item instanceof LentItem &amp;&amp; ((LentItem) item).deadline != null ? DateTimeFormat.shortDate().print(((LentItem) item).deadline) : null}"
                         android:textIsSelectable="true"
                         tools:text="01.01.2017"/>
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="16dp"
+                    android:visibility="@{item instanceof HistoryItem &amp;&amp; ((HistoryItem) item).firstDate != null ? View.VISIBLE : View.GONE}">
+
+                    <ImageView
+                        android:id="@+id/iconFirstDate"
+                        style="@style/detailIcon"
+                        android:contentDescription="@string/history_first_date"
+                        app:srcCompat="@drawable/ic_start_date_24dp"/>
+
+                    <TextView
+                        android:id="@+id/labelFirstDate"
+                        style="@style/detailLabel"
+                        android:layout_toEndOf="@id/iconFirstDate"
+                        android:layout_toRightOf="@id/iconFirstDate"
+                        android:text="@string/history_first_date"/>
+
+                    <TextView
+                        android:id="@+id/valueFirstDate"
+                        style="@style/detailValue"
+                        android:layout_below="@id/labelFirstDate"
+                        android:layout_toEndOf="@id/iconFirstDate"
+                        android:layout_toRightOf="@id/iconFirstDate"
+                        android:text="@{item instanceof HistoryItem &amp;&amp; ((HistoryItem) item).firstDate != null ? DateTimeFormat.shortDate().print(((HistoryItem) item).firstDate) : null}"
+                        android:textIsSelectable="true"
+                        tools:text="12.11.2019"/>
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="16dp"
+                    android:visibility="@{(item instanceof HistoryItem) &amp;&amp; (((HistoryItem) item).lastDate != null) &amp;&amp; (!((HistoryItem) item).lending) ? View.VISIBLE : View.GONE}">
+
+                    <ImageView
+                        android:id="@+id/iconLastDate"
+                        style="@style/detailIcon"
+                        android:contentDescription="@string/history_last_date"
+                        app:srcCompat="@drawable/ic_return_date_24dp"/>
+
+                    <TextView
+                        android:id="@+id/labelLastDate"
+                        style="@style/detailLabel"
+                        android:layout_toEndOf="@id/iconLastDate"
+                        android:layout_toRightOf="@id/iconLastDate"
+                        android:text="@string/history_last_date"/>
+
+                    <TextView
+                        android:id="@+id/valueLastDate"
+                        style="@style/detailValue"
+                        android:layout_below="@id/labelLastDate"
+                        android:layout_toEndOf="@id/iconLastDate"
+                        android:layout_toRightOf="@id/iconLastDate"
+                        android:text="@{item instanceof HistoryItem &amp;&amp; ((HistoryItem) item).lastDate != null ? DateTimeFormat.shortDate().print(((HistoryItem) item).lastDate) : null}"
+                        android:textIsSelectable="true"
+                        tools:text="06.12.2019"/>
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="16dp"
+                    android:visibility="@{item instanceof HistoryItem ? View.VISIBLE : View.GONE}">
+
+                    <ImageView
+                        android:id="@+id/iconProlongCount"
+                        style="@style/detailIcon"
+                        android:contentDescription="@string/history_prolongCount"
+                        app:srcCompat="@drawable/ic_prolong_24dp"/>
+
+                    <TextView
+                        android:id="@+id/labelProlongCount"
+                        style="@style/detailLabel"
+                        android:layout_toEndOf="@id/iconProlongCount"
+                        android:layout_toRightOf="@id/iconProlongCount"
+                        android:text="@string/history_prolongCount"/>
+
+                    <TextView
+                        android:id="@+id/valueProlongCount"
+                        style="@style/detailValue"
+                        android:layout_below="@id/labelProlongCount"
+                        android:layout_toEndOf="@id/iconProlongCount"
+                        android:layout_toRightOf="@id/iconProlongCount"
+                        android:text="@{item instanceof HistoryItem ? Integer.toString(((HistoryItem) item).prolongCount) : null}"
+                        android:textIsSelectable="true"
+                        tools:text="06.12.2019"/>
                 </RelativeLayout>
 
                 <RelativeLayout

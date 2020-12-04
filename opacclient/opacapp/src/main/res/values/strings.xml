@@ -105,6 +105,7 @@
     <string name="star_wait">Please wait for the details to load.</string>
     <string name="star_unsupported">We could not obtain enough information about this item to add it to your list.</string>
     <string name="starred_welcome">This is your favorites list. You can add items by clicking the star on a detail page. The list is saved separately for every library you use.</string>
+    <string name="history_welcome">This is your lending history. It keeps a list of all items you have lent in the past. The list is saved separately for every library you use.</string>
     <string name="share">Share</string>
     <string name="share_wait">Please wait for the details to load.</string>
     <string name="share_notsupported">Not supported in this library.</string>
@@ -116,7 +117,10 @@
     <string name="info_unsupported">We don\'t have any information about this library to show.</string>
     <string name="info_different_library">Selected list is from another library! Try switching to the correct library</string>
     <string name="info_starred_updated">Import complete.</string>
-
+    <string name="info_history_updated">History import complete.</string>
+    <string name="info_history_updated_count">History import complete. %1$d new items, %2$d changed items</string>
+    <string name="history_header">%1$d items</string>
+    <string name="history_header_sort">%1$d items, sorted %2$s %3$s</string>
     <string name="connection_error_detail">The connection to the library server failed. Please check your internet connection. If the problem persists, there may have been a problem on the library server or the app was unable to parse the server\'s response.</string>
     <string name="connection_error_detail_nre">The connection to the library server failed. Please check your internet connection. If the problem persists, there may have been a problem on the library server.</string>
     <string name="retry">Try again</string>
@@ -140,6 +144,7 @@
     <string name="nav_search">Search</string>
     <string name="nav_account">Account</string>
     <string name="nav_starred">Favorites</string>
+    <string name="nav_history">History</string>
     <string name="nav_info">Information</string>
     <string name="nav_hl_other">Miscellaneous</string>
     <string name="nav_settings">Settings</string>
@@ -181,6 +186,18 @@
     <string name="share_starred">Share</string>
     <string name="export_starred_to_storage">Export</string>
     <string name="import_starred_from_storage">Import</string>
+    <string name="share_history">Share</string>
+    <string name="export_history_to_storage">Export</string>
+    <string name="import_history_from_storage">Import</string>
+    <string name="sort_history">Sort</string>
+    <string name="sort_history_title">by title</string>
+    <string name="sort_history_author">by author</string>
+    <string name="sort_history_firstDate">by start date</string>
+    <string name="sort_history_lastDate">by return date</string>
+    <string name="sort_history_duration">by lending duration</string>
+    <string name="sort_history_prolongCount">by no. of renewals</string>
+    <string name="sort_direction_desc">descending</string>
+    <string name="sort_direction_asc">ascending</string>
 
     <string name="export_account">Share as text</string>
     <string name="failed_exporting_file">An error occurred during export. Please try again later.</string>
@@ -310,6 +327,21 @@
     <string name="toggle_notice_button">Got it</string>
     <string name="starred_removed">Removed from favorites</string>
     <string name="starred_removed_undo">Undo</string>
+    <string name="history_removed">Removed from history</string>
+    <string name="history_removed_undo">Undo</string>
+    <string name="history_status_lending">since %1$s for %2$d days</string>
+    <string name="history_status_lending_1">since %1$s for 1 day</string>
+    <string name="history_status_finished">from %1$s for %2$d days</string>
+    <string name="history_status_finished_1">from %1$s for 1 day</string>
+    <string name="history_first_date">Start lending</string>
+    <string name="history_last_date">Return date</string>
+    <string name="history_prolongCount">no. of renewals</string>
+    <string name="history_maintain">Maintain history lent items</string>
+    <string name="history_maintain_on">Store title, author, begin-date, end-date ... of all lent items</string>
+    <string name="history_maintain_off">Do not store a history off all lent items</string>
+    <string name="history_remove_all">Delete All</string>
+    <string name="history_remove_all_sure">Are you sure? (No undo possible)</string>
+    <string name="history_remove_all_prefs">Do you want to delete the history of all libraries? (No undo possible)</string>
     <string name="print">Print</string>
     <string name="print_wait">Please wait for details to load</string>
     <string name="preference_category_library_config">Library data</string>

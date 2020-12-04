@@ -167,6 +167,11 @@
             android:authorities="${applicationId}.starprovider"
             android:exported="false" />
 
+        <provider
+            android:name="de.geeksfactory.opacclient.storage.HistoryContentProvider"
+            android:authorities="${applicationId}.historyprovider"
+            android:exported="false"/>
+
         <meta-data
             android:name="de.geeksfactory.opacclient.networking.CustomSSLGlideModule"
             android:value="GlideModule" />

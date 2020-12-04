@@ -103,6 +103,7 @@ import de.geeksfactory.opacclient.objects.ReservedItem;
 import de.geeksfactory.opacclient.reminder.ReminderHelper;
 import de.geeksfactory.opacclient.reminder.SyncAccountJob;
 import de.geeksfactory.opacclient.storage.AccountDataSource;
+import de.geeksfactory.opacclient.storage.HistoryDataSource;
 import de.geeksfactory.opacclient.storage.PreferenceDataSource;
 import de.geeksfactory.opacclient.ui.AccountDividerItemDecoration;
 import de.geeksfactory.opacclient.utils.ErrorReporter;
@@ -1485,6 +1486,31 @@ public class AccountFragment extends Fragment implements
                 account.setPasswordKnownValid(true);
                 adatasource.update(account);
                 adatasource.storeCachedAccountData(adatasource.getAccount(data.getAccount()), data);
+
+                PreferenceDataSource prefs = null;
+                if (getActivity() == null && OpacClient.getEmergencyContext() != null) {
+                     prefs = new PreferenceDataSource(OpacClient.getEmergencyContext());
+                } else {
+                     prefs = new PreferenceDataSource(getActivity());
+                }
+
+                // Update Lent-History?
+                if (prefs.isHistoryMaintain()) {
+                    HistoryDataSource historyDataSource = null;
+                    if (getActivity() == null) {
+                        if (OpacClient.getEmergencyContext() != null) {
+                            historyDataSource =
+                                    new HistoryDataSource(OpacClient.getEmergencyContext(), app);
+                        }
+                    } else {
+                        historyDataSource = new HistoryDataSource(getActivity());
+                    }
+                    if (historyDataSource != null) {
+                        historyDataSource
+                                .updateLending(adatasource.getAccount(data.getAccount()), data);
+                    }
+                }
+
             } finally {
                 new ReminderHelper(app).generateAlarms();
             }

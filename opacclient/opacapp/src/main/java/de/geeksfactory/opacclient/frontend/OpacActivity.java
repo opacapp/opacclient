@@ -74,6 +74,7 @@ import de.geeksfactory.opacclient.R;
 import de.geeksfactory.opacclient.objects.Account;
 import de.geeksfactory.opacclient.reminder.ReminderHelper;
 import de.geeksfactory.opacclient.storage.AccountDataSource;
+import de.geeksfactory.opacclient.storage.PreferenceDataSource;
 import de.geeksfactory.opacclient.ui.AccountSwitcherNavigationView;
 import de.geeksfactory.opacclient.utils.Utils;
 
@@ -92,6 +93,7 @@ public abstract class OpacActivity extends AppCompatActivity
     protected CharSequence title;
 
     protected Fragment fragment;
+    protected HistoryFragment historyFragment;
     protected boolean hasDrawer = false;
     protected Toolbar toolbar;
     private boolean twoPane;
@@ -142,6 +144,10 @@ public abstract class OpacActivity extends AppCompatActivity
         setupDrawer();
         setupAccountSwitcher();
 
+        if (historyFragment == null) {
+            historyFragment = new HistoryFragment();
+        }
+
         if (savedInstanceState != null) {
             setTwoPane(savedInstanceState.getBoolean("twoPane"));
             setFabVisible(savedInstanceState.getBoolean("fabVisible"));
@@ -156,6 +162,8 @@ public abstract class OpacActivity extends AppCompatActivity
                 getSupportFragmentManager().beginTransaction()
                                            .replace(R.id.content_frame, fragment).commit();
             }
+
+            historyFragment.restoreState(savedInstanceState);
         }
         fixStatusBarFlashing();
     }
@@ -329,6 +337,17 @@ public abstract class OpacActivity extends AppCompatActivity
                 }, 500);
 
             }
+
+            // entweder über PreferenceDataSource, type-safe
+            PreferenceDataSource prefs = new PreferenceDataSource(this);
+            boolean historyMaintain = prefs.isHistoryMaintain();
+            // oder über SharedPreferences mit "string"
+            // boolean historyMaintain = sp.getBoolean("history_maintain", true);
+
+            // item disablen
+            drawer.getMenu().findItem(R.id.nav_history).setEnabled(historyMaintain);
+            // oder ganz verstecken?
+            // drawer.getMenu().findItem(R.id.nav_history).setVisible(historyMaintain);
         }
     }
 
@@ -380,6 +399,8 @@ public abstract class OpacActivity extends AppCompatActivity
             drawer.setCheckedItem(R.id.nav_search);
         } else if (fragment instanceof AccountFragment) {
             drawer.setCheckedItem(R.id.nav_account);
+        } else if (fragment instanceof HistoryFragment) {
+            drawer.setCheckedItem(R.id.nav_history);
         } else if (fragment instanceof StarredFragment) {
             drawer.setCheckedItem(R.id.nav_starred);
         } else if (fragment instanceof InfoFragment) {
@@ -421,6 +442,13 @@ public abstract class OpacActivity extends AppCompatActivity
             setFabVisible(false);
         } else if (id == R.id.nav_starred) {
             fragment = new StarredFragment();
+            setTwoPane(true);
+            setFabVisible(false);
+        } else if (id == R.id.nav_history) {
+            if (historyFragment == null) {
+                historyFragment = new HistoryFragment();
+            }
+            fragment = historyFragment;
             setTwoPane(true);
             setFabVisible(false);
         } else if (id == R.id.nav_info) {
@@ -489,6 +517,9 @@ public abstract class OpacActivity extends AppCompatActivity
                 break;
             case "starred":
                 id = R.id.nav_starred;
+                break;
+            case "history":
+                id = R.id.nav_history;
                 break;
             case "info":
                 id = R.id.nav_info;
@@ -701,6 +732,9 @@ public abstract class OpacActivity extends AppCompatActivity
         }
         if (title != null) {
             outState.putCharSequence("title", title);
+        }
+        if (historyFragment != null) {
+            historyFragment.storeState(outState);
         }
     }
 

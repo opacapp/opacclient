@@ -21,6 +21,7 @@ package de.geeksfactory.opacclient.frontend;
 import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
@@ -32,6 +33,7 @@ import com.google.android.material.snackbar.Snackbar;
 
 import org.joda.time.DateTime;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
@@ -47,6 +49,7 @@ import de.geeksfactory.opacclient.R;
 import de.geeksfactory.opacclient.reminder.ReminderHelper;
 import de.geeksfactory.opacclient.reminder.SyncAccountJob;
 import de.geeksfactory.opacclient.storage.AccountDataSource;
+import de.geeksfactory.opacclient.storage.HistoryDataSource;
 import de.geeksfactory.opacclient.storage.JsonSearchFieldDataSource;
 import de.geeksfactory.opacclient.storage.PreferenceDataSource;
 import de.geeksfactory.opacclient.storage.SearchFieldDataSource;
@@ -130,6 +133,57 @@ public class MainPreferenceFragment extends PreferenceFragmentCompat {
                 public boolean onPreferenceClick(Preference arg0) {
                     SyncAccountJob.runImmediately(getContext());
                     return false;
+                }
+            });
+        }
+
+        Preference historyMaintain = findPreference("history_maintain");
+        if (historyMaintain != null) {
+
+            // OnClickListener für Sicherheitsfrage vor dem Löschen
+            DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    switch (which){
+                        case DialogInterface.BUTTON_POSITIVE:
+                            // Yes button clicked
+                            HistoryDataSource data = new HistoryDataSource(getActivity());
+                            data.removeAll();
+                            break;
+
+                        case DialogInterface.BUTTON_NEGATIVE:
+                            // No button clicked
+                            break;
+                    }
+                }
+            };
+
+            historyMaintain.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
+                @Override
+                public boolean onPreferenceChange(Preference preference, Object newValue) {
+                    boolean newHistoryMaintain = ((Boolean) newValue).booleanValue();
+                    if (newHistoryMaintain) {
+                        // nothing more to do
+                        return true;
+                    }
+
+                    HistoryDataSource data = new HistoryDataSource(getActivity());
+                    if (data.getCountItems() == 0) {
+                        // HistoryDb leer, muss nicht gelöschte werden
+                        return true;
+                    }
+
+                    // Sicherheitsnachfrage
+                    AlertDialog.Builder builder = new AlertDialog.Builder(
+                            getActivity());
+                    builder.setMessage(R.string.history_remove_all_prefs)
+                           .setPositiveButton(R.string.yes, dialogClickListener)
+                           .setNegativeButton(R.string.no, dialogClickListener)
+                           .show();
+
+                    // Behandlung im OnClickListener oben
+
+                    return true;
                 }
             });
         }

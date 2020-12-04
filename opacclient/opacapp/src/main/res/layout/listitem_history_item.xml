@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:animateLayoutChanges="true"
+    android:background="@drawable/ripple"
+    android:orientation="horizontal"
+    android:gravity="center_vertical"
+    android:minHeight="72dp">
+
+    <ImageView
+        android:id="@+id/ivCover"
+        android:layout_width="56dp"
+        android:layout_height="56dp"
+        android:visibility="gone"
+        tools:ignore="ContentDescription"/>
+
+    <ImageView
+        android:id="@+id/ivMediaType"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
+        tools:ignore="ContentDescription"
+        tools:src="@drawable/type_book"/>
+
+    <LinearLayout
+        android:id="@+id/llData"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:layout_marginLeft="4dp"
+        android:layout_marginStart="4dp"
+        android:clickable="false"
+        android:orientation="vertical"
+        android:paddingBottom="4dp"
+        android:paddingTop="4dp">
+
+        <TextView
+            android:id="@+id/tvTitleAndAuthor"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="2dp"
+            android:contentDescription="@string/title_and_author"
+            android:ellipsize="end"
+            android:maxLines="1"
+            tools:text="Harry Potter and the Philosopher's stone, J. K. Rowling"
+            android:textSize="16sp"
+            android:textColor="?android:attr/textColorPrimary"/>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:columnCount="2">
+            <Space
+                android:id="@+id/centerHelper"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_alignParentTop="true"
+                android:layout_centerHorizontal="true"/>
+
+            <TextView
+                android:id="@+id/tvStatus"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:contentDescription="@string/status"
+                android:ellipsize="end"
+                android:maxLines="1"
+                android:textColor="?android:attr/textColorSecondary"
+                android:textSize="14sp"
+                tools:text="27.09.2016 (Some status)" />
+
+            <TextView
+                android:id="@+id/tvBranch"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:visibility="gone"
+                android:layout_toRightOf="@id/centerHelper"
+                android:contentDescription="@string/branch"
+                android:ellipsize="end"
+                android:maxLines="1"
+                android:textColor="?android:attr/textColorSecondary"
+                android:textSize="14sp"
+                tools:text="Branch" />
+        </RelativeLayout>
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/llButtons"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:animateLayoutChanges="true"
+        android:orientation="vertical"
+        android:layout_marginLeft="4dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginTop="12dp"
+        android:layout_marginBottom="12dp">
+
+        <ImageButton
+            android:id="@+id/ivDelete"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:background="@drawable/ripple_unmasked"
+            android:contentDescription="@string/delete"
+            app:srcCompat="@drawable/ic_delete_24dp"
+            tools:src="@drawable/ic_delete_24dp"/>
+    </LinearLayout>
+</LinearLayout>

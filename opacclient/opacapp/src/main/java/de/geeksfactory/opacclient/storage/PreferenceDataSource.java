@@ -112,6 +112,10 @@ public class PreferenceDataSource {
         return sp.getBoolean("on_data_load_covers", true);
     }
 
+    public boolean isHistoryMaintain() {
+        return sp.getBoolean("history_maintain", false);
+    }
+
     public void setAccountPtrHintShown(int number) {
         sp.edit().putInt(ACCOUNT_PTR_HINT_SHOWN, number).apply();
     }
