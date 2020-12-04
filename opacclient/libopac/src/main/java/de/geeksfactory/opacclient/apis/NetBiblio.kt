@@ -415,8 +415,8 @@ open class NetBiblio : OkHttpBaseApi() {
         if (!initialised) start()
         login(account)
 
-        val lentDoc = httpGet("$opacUrl/account/circulations", ENCODING).html
-        val lent = parseItems(lentDoc, ::LentItem)
+        val lentDoc = paginatedGet("$opacUrl/account/circulations")
+        val lent = lentDoc.map { parseItems(it, ::LentItem) }.flatten()
 
         val builder = HttpUrl.parse("$opacUrl/account/renew")!!.newBuilder()
         lent.forEachIndexed { index, item ->
@@ -448,14 +448,28 @@ open class NetBiblio : OkHttpBaseApi() {
         }
     }
 
+    private fun paginatedGet(firstUrl: String?): List<Document> {
+        val res = mutableListOf<Document>()
+        var url = firstUrl
+
+        while (url != null) {
+            val doc = httpGet(url, ENCODING).html
+            doc.setBaseUri(url)
+            res.add(doc)
+            url = doc.select(".pagination .next-page a[href]").not("a[href=#]").first()?.absUrl("href")
+        }
+
+        return res
+    }
+
     override fun account(account: Account): AccountData? {
         if (!initialised) start()
         val login = login(account)
 
         val overview = httpGet("$opacUrl/account", ENCODING).html
-        val resDoc = httpGet("$opacUrl/account/reservations", ENCODING).html
-        val readyDoc = httpGet("$opacUrl/account/orders", ENCODING).html
-        val lentDoc = httpGet("$opacUrl/account/circulations", ENCODING).html
+        val resDoc = paginatedGet("$opacUrl/account/reservations")
+        val readyDoc = paginatedGet("$opacUrl/account/orders")
+        val lentDoc = paginatedGet("$opacUrl/account/circulations")
 
         return AccountData(account.id).apply {
             if (overview.select(".alert").size > 0) {
@@ -472,8 +486,8 @@ open class NetBiblio : OkHttpBaseApi() {
                     ".wo-list-label:contains(Abonnement (Ende)) + .wo-list-content, " +
                             ".wo-list-label:contains(Subscription (end)) + .wo-list-content," +
                             " .wo-list-label:contains(Abonnement (Fin)) + .wo-list-content").first()?.text
-            reservations = parseItems(resDoc, ::ReservedItem) + parseItems(readyDoc, ::ReservedItem, ready = true)
-            lent = parseItems(lentDoc, ::LentItem)
+            reservations = resDoc.map { parseItems(it, ::ReservedItem) }.flatten() + readyDoc.map { parseItems(it, ::ReservedItem, ready = true) }.flatten()
+            lent = lentDoc.map { parseItems(it, ::LentItem) }.flatten()
         }
     }
 
