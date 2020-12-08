@@ -238,7 +238,7 @@ class SLUBSearchTest : BaseHtmlTest() {
             id = "id/0-1182402208"
             copies = arrayListOf(Copy().apply {
                 barcode = "31541466"
-                department = "Freihand"
+                department = "Ausgabe über Ausleihtheke"
                 branch = "Bereichsbibliothek DrePunct"
                 status = "Ausleihbar"
                 shelfmark = "ST 233 H939"

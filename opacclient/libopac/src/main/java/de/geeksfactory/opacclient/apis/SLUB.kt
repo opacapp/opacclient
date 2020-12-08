@@ -196,7 +196,7 @@ open class SLUB : OkHttpBaseApi() {
                     Copy().apply {
                         barcode = it.getString("barcode")
                         branch = it.getString("location")
-                        department = it.getString("sublocation") // or location = ...
+                        department = Parser.unescapeEntities(it.getString("sublocation"), false)
                         shelfmark = it.getString("shelfmark")
                         status = Jsoup.parse(it.getString("statusphrase")).text()
                         it.getString("duedate").run {
