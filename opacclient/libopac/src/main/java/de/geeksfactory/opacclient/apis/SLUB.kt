@@ -189,6 +189,7 @@ open class SLUB : OkHttpBaseApi() {
     }
 
     internal fun parseResultById(json: JSONObject): DetailedItem {
+        val colorcodes = mapOf("1" to "#00CC00", "2" to "#FF8900", "3" to "#CC0000")
         val dateFormat = DateTimeFormat.forPattern("dd.MM.yyyy")
         var hasReservableCopies = false
         fun getCopies(copiesArray: JSONArray, df: DateTimeFormatter): List<Copy> =
@@ -198,7 +199,8 @@ open class SLUB : OkHttpBaseApi() {
                         branch = it.getString("location")
                         department = it.getString("sublocation") // or location = ...
                         shelfmark = it.getString("shelfmark")
-                        status = Jsoup.parse(it.getString("statusphrase")).text()
+                        val color = colorcodes.getOrElse(it.getString("colorcode")) { "#000000" }
+                        status = "<p style=\"color:$color\";>${it.getString("statusphrase")}</p>"
                         it.getString("duedate").run {
                             if (isNotEmpty()) {
                                 returnDate = df.parseLocalDate(this)
@@ -311,7 +313,7 @@ open class SLUB : OkHttpBaseApi() {
                 else -> {
                     val options = reservableCopies.map { copy ->
                         mapOf("key" to copy.resInfo,
-                                "value" to "${copy.branch}: ${copy.status}")
+                                "value" to "${copy.branch}: ${Jsoup.parse(copy.status).text()}")
                     }
                     return OpacApi.ReservationResult(OpacApi.MultiStepResult.Status.SELECTION_NEEDED,
                             stringProvider.getString(StringProvider.ITEM_COPY)).apply {

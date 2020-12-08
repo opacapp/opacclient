@@ -240,7 +240,7 @@ class SLUBSearchTest : BaseHtmlTest() {
                 barcode = "31541466"
                 department = "Freihand"
                 branch = "Bereichsbibliothek DrePunct"
-                status = "Ausleihbar"
+                status = "<p style=\"color:#00CC00\";>Ausleihbar</p>"
                 shelfmark = "ST 233 H939"
             })
             collectionId = "id/0-1183957874"
@@ -260,7 +260,7 @@ class SLUBSearchTest : BaseHtmlTest() {
             barcode = "10418078"
             department = "Magazin Zeitschriften"
             branch = "Zentralbibliothek"
-            status = "Bestellen zur Benutzung im Haus, kein Versand per Fernleihe, nur Kopienlieferung"
+            status = "<p style=\"color:#FF8900\";>Bestellen zur Benutzung im Haus, kein Versand per Fernleihe, nur Kopienlieferung</p>"
             shelfmark = "19 4 01339 0 0024 1 01"
             resInfo = "stackRequest\t10418078"
         }
@@ -268,7 +268,7 @@ class SLUBSearchTest : BaseHtmlTest() {
             barcode = "33364639"
             department = "Magazin Zeitschriften"
             branch = "Zentralbibliothek"
-            status = "Bestellen zur Benutzung im Haus, kein Versand per Fernleihe, nur Kopienlieferung"
+            status = "<p style=\"color:#FF8900\";>Bestellen zur Benutzung im Haus, kein Versand per Fernleihe, nur Kopienlieferung</p>"
             shelfmark = "19 4 01339 1 1969 1 01"
             resInfo = "stackRequest\t33364639"
         }
@@ -391,7 +391,7 @@ class SLUBSearchTest : BaseHtmlTest() {
                         barcode = "10059731"
                         department = "Freihand"
                         branch = "Zentralbibliothek"
-                        status = "Ausgeliehen, Vormerken möglich"
+                        status = "<p style=\"color:#CC0000\";>Ausgeliehen, Vormerken m&ouml;glich</p>"
                         shelfmark = "LK 24099 B644"
                         returnDate = LocalDate(2020, 2, 5)
                         resInfo = "reserve\t10059731"
@@ -401,14 +401,14 @@ class SLUBSearchTest : BaseHtmlTest() {
                         barcode = "30523028"
                         department = "Freihand"
                         branch = "ZwB Erziehungswissenschaften"
-                        status = "Benutzung nur im Haus, Versand per Fernleihe möglich"
+                        status = "<p style=\"color:#00CC00\";>Benutzung nur im Haus, Versand per Fernleihe m&ouml;glich</p>"
                         shelfmark = "NR 6400 B644 F9"
                     },
                     Copy().apply {
                         barcode = "20065307"
                         department = "Magazin"
                         branch = "Zentralbibliothek"
-                        status = "Ausleihbar, bitte bestellen"
+                        status = "<p style=\"color:#FF8900\";>Ausleihbar, bitte bestellen</p>"
                         shelfmark = "65.4.653.b"
                         resInfo = "stackRequest\t20065307"
                     }
