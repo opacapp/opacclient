@@ -2,6 +2,7 @@ package de.geeksfactory.opacclient.frontend;
 
 import android.content.Context;
 import android.text.Html;
+import android.text.method.LinkMovementMethod;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -52,6 +53,7 @@ public class CopiesAdapter extends RecyclerView.Adapter<CopiesAdapter.ViewHolder
     private void setTextOrHide(String text, TextView tv) {
         if (notEmpty(text)) {
             tv.setText(Html.fromHtml(text));
+            tv.setMovementMethod(LinkMovementMethod.getInstance());
             tv.setVisibility(View.VISIBLE);
         } else {
             tv.setVisibility(View.GONE);
