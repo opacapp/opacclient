@@ -61,3 +61,4 @@ opacclient/opacapp/src/main/assets/bibs/*.json
 opacclient/opacapp/src/main/assets/last_library_config_update.txt
 opacclient/opacapp/src/main/resources/sentry.properties
 
+tools/googlemaps_api_key.txt
