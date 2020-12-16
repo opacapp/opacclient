@@ -34,7 +34,7 @@ def getInput(required=False, default=None):
     return inp
 
 
-def loadGeoPossibilities(data, api_key):
+def loadGeoPossibilities(data, api_key=None):
     possibilities = []
 
     if api_key:
