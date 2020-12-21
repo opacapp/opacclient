@@ -337,7 +337,10 @@ public class PicaLBS extends Pica {
         // check if already logged in
         String html = httpGet(lbsUrl + "/LBS_WEB/borrower/borrower.htm",
                 getDefaultLBSEncoding(), true);
-        if (!html.contains("Login") && !html.equals("") && !html.contains("Systemfehler")) return;
+        if (!html.contains("Login") && !html.equals("") && !html.contains("Systemfehler") &&
+                !html.contains("nicht aktiv gewesen")) {
+            return;
+        }
 
         // Get JSESSIONID cookie
         httpGet(lbsUrl + "/LBS_WEB/borrower/borrower.htm?USR=1000&BES=" + db + "&LAN=" + getLang(),
