@@ -833,11 +833,19 @@ public class OpenSearch extends OkHttpBaseApi implements OpacApi {
                         "div[id$=CatalogueDetailView] .oclc-searchmodule-detail-data " +
                         "div[id$=divLinks]:has(span)";
         for (Element detail : doc.select(DETAIL_SELECTOR)) {
+            // skip screen reader only-tags
+            if (detail.attr("style").contains("display:none")) continue;
+
             String name = detail.select("span").get(0).text().replace(": ", "");
             String value = "";
             if (detail.select("a").size() > 0) {
                 int i = 0;
                 for (Element a : detail.select("a")) {
+                    if (a.hasAttr("href") &&
+                            a.attr("href").equals("javascript:void")) {
+                        // do not include JS links
+                        continue;
+                    }
                     if (i != 0) {
                         value += ", ";
                     }
@@ -858,7 +866,8 @@ public class OpenSearch extends OkHttpBaseApi implements OpacApi {
         if (doc.select("div[id$=CatalogueContent]").size() > 0) {
             String name = doc.select("div[id$=CatalogueContent] .oclc-module-header").text();
             String value =
-                    doc.select("div[id$=CatalogueContent] .oclc-searchmodule-detail-annotation")
+                    doc.select("div[id$=CatalogueContent] .oclc-searchmodule-detail-annotation, " +
+                            "div[id$=CatalogueContent] .oclc-module-header ~ div")
                        .text();
             item.addDetail(new Detail(name, value));
         }
