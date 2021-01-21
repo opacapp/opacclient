@@ -22,7 +22,10 @@
 package de.geeksfactory.opacclient.frontend;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.content.Intent;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -98,7 +101,17 @@ public class InfoFragment extends Fragment implements AccountSelectedListener {
         wvInfo.getSettings().setJavaScriptEnabled(true);
         wvInfo.getSettings().setAppCacheMaxSize(5 * 1024 * 1024);
         wvInfo.getSettings().setAppCacheEnabled(true);
-        wvInfo.getSettings().setCacheMode(WebSettings.LOAD_CACHE_ELSE_NETWORK);
+
+        ConnectivityManager cm =
+                (ConnectivityManager) getContext().getSystemService(Activity.CONNECTIVITY_SERVICE);
+        NetworkInfo ni = cm.getActiveNetworkInfo();
+        if (ni != null && ni.isConnected()) {
+            // load from network if online
+            wvInfo.getSettings().setCacheMode(WebSettings.LOAD_DEFAULT);
+        } else {
+            // load from cache if offline
+            wvInfo.getSettings().setCacheMode(WebSettings.LOAD_CACHE_ELSE_NETWORK);
+        }
 
         wvInfo.setWebChromeClient(new WebChromeClient() {
             @Override
