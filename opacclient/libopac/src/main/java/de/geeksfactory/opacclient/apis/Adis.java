@@ -983,8 +983,16 @@ public class Adis extends OkHttpBaseApi implements OpacApi {
                         }
                     }
 
-                    if (doc.select(".message h1").size() > 0) {
-                        String msg = doc.select(".message h1").text().trim();
+                    String msgTest = "";
+                    if ( doc.select(".message h1").size() > 0){
+                        msgTest = doc.select(".message h1").text().trim();
+                    }
+                    else if(doc.select(".hinweis").size() > 0){
+                        msgTest = doc.select(".hinweis").text().trim();
+                    }
+
+                    if ( ! msgTest.isEmpty() ) {
+                        String msg = msgTest;
                         form = new ArrayList<>();
                         for (Element input : doc.select("input")) {
                             if (!"image".equals(input.attr("type"))
@@ -995,7 +1003,8 @@ public class Adis extends OkHttpBaseApi implements OpacApi {
                             }
                         }
                         doc = htmlPost(opac_url + ";jsessionid=" + s_sid, form);
-                        if (!msg.contains("Reservation ist erfolgt")) {
+                        // Reservation || Der Bestellwunsch (Munich)
+                        if (!msg.contains(" ist erfolgt")) {
                             res = new ReservationResult(
                                     MultiStepResult.Status.ERROR, msg);
                         } else {
