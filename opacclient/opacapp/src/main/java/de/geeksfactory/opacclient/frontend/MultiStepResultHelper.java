@@ -124,7 +124,7 @@ public class MultiStepResultHelper<Arg> {
             ((ViewGroup) view.findViewById(R.id.rlConfirm))
                     .removeView(table);
             TextView tv = new TextView(context);
-            tv.setText(Html.fromHtml(result.getDetails().get(0)[0].replaceAll("uuml","uuml;")));
+            tv.setText(result.getDetails().get(0)[0]);
             tv.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT,
                     LayoutParams.WRAP_CONTENT));
             ((ViewGroup) view.findViewById(R.id.rlConfirm)).addView(tv);

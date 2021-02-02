@@ -984,10 +984,9 @@ public class Adis extends OkHttpBaseApi implements OpacApi {
                     }
 
                     String msgTest = "";
-                    if ( doc.select(".message h1").size() > 0){
+                    if (doc.select(".message h1").size() > 0) {
                         msgTest = doc.select(".message h1").text().trim();
-                    }
-                    else if(doc.select(".hinweis").size() > 0){
+                    } else if (doc.select(".hinweis").size() > 0) {
                         msgTest = doc.select(".hinweis").text().trim();
                     }
 
