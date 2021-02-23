@@ -13,6 +13,7 @@ import java.util.List;
 import androidx.recyclerview.widget.RecyclerView;
 import de.geeksfactory.opacclient.R;
 import de.geeksfactory.opacclient.objects.Copy;
+import de.geeksfactory.opacclient.objects.SearchResult;
 
 public class CopiesAdapter extends RecyclerView.Adapter<CopiesAdapter.ViewHolder> {
     private final List<Copy> copies;
@@ -45,6 +46,22 @@ public class CopiesAdapter extends RecyclerView.Adapter<CopiesAdapter.ViewHolder
             holder.tvReturndate.setVisibility(View.VISIBLE);
         } else {
             holder.tvReturndate.setVisibility(View.GONE);
+        }
+        SearchResult.Status statusCode = copy.getStatusCode();
+        if(statusCode != null){
+            switch (statusCode) {
+                case GREEN:
+                    holder.tvStatus.setCompoundDrawablesWithIntrinsicBounds(R.drawable.status_light_green_check, 0,0,0);
+                    break;
+                case RED:
+                    holder.tvStatus.setCompoundDrawablesWithIntrinsicBounds(R.drawable.status_light_red_cross, 0,0,0);
+                    break;
+                case YELLOW:
+                    holder.tvStatus.setCompoundDrawablesWithIntrinsicBounds(R.drawable.status_light_yellow_alert, 0,0,0);
+                    break;
+                default:
+                    holder.tvStatus.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_status_24dp, 0,0,0);
+            }
         }
     }
 

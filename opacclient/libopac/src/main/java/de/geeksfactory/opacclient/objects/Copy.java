@@ -32,6 +32,7 @@ public class Copy {
     private String branch;
     private String issue;
     private String status;
+    private SearchResult.Status statusCode;
     private LocalDate returnDate;
     private String reservations;
     private String shelfmark;
@@ -121,6 +122,20 @@ public class Copy {
      */
     public void setStatus(String status) {
         this.status = status;
+    }
+
+    /**
+     * @return Current status code of a copy or <code>null</code> if not set.
+     */
+    public SearchResult.Status getStatusCode() {
+        return statusCode;
+    }
+
+    /**
+     * @param statusCode Current status code of a copy.
+     */
+    public void setStatusCode(SearchResult.Status statusCode) {
+        this.statusCode = statusCode;
     }
 
     /**
@@ -322,6 +337,7 @@ public class Copy {
                 || getDepartment() != null
                 || getBranch() != null
                 || getStatus() != null
+                || getStatusCode() != null
                 || getReturnDate() != null
                 || getReservations() != null
                 || getShelfmark() != null
@@ -338,6 +354,7 @@ public class Copy {
                 ", department='" + department + '\'' +
                 ", branch='" + branch + '\'' +
                 ", status='" + status + '\'' +
+                ", statusCode='" + statusCode + '\'' +
                 ", returnDate=" + returnDate +
                 ", reservations='" + reservations + '\'' +
                 ", shelfmark='" + shelfmark + '\'' +
