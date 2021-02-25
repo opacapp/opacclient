@@ -96,4 +96,5 @@
     <string name="item_copy">Copy</string>
     <string name="reserved">reserved</string>
     <string name="renewed">%dx renewed</string>
+    <string name="not_yet_renewable">not yet renewable</string>
 </resources>

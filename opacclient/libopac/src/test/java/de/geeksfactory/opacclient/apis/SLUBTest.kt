@@ -140,21 +140,53 @@ class SLUBAccountTest : BaseHtmlTest() {
     }
 
     @Test
-    fun testParseAccountDataIllInProgress() {
-        val json = JSONObject(readResource("/slub/account/account-ill_in_progress.json"))
-        val reserveditem = ReservedItem().apply {
-            title = "Kotlin"
-            author = "Szwillus, Karl"
-            //id = "145073"
-            branch = "zell1"
+    fun testParseAccountDataIll() {
+        val fmt = DateTimeFormat.shortDate()
+        val json = JSONObject(readResource("/slub/account/account-ill.json"))
+        // hold request filed --> show ill in reservations
+        val reserveditem1 = ReservedItem().apply {
+            title = "Title1"
+            author = "Author1"
+            format = "FL"
+            branch = "Zentralbibliothek"
             status = "Bestellung ausgelöst"
         }
-
+        // ready for pickup --> show hold in reservations
+        val reserveditem2 = ReservedItem().apply {
+            title = "Title2"
+            author = ""
+            format = "FL"
+            status = String.format("hold %s", fmt.print(LocalDate("2020-12-04")))
+            branch = "Zentralbibliothek Servicetheke"
+        }
+        // on loan not yet renewable --> show loan in lent items
+        val lentitem1 = LentItem().apply {
+            title = "Title5"
+            author = ""
+            setDeadline("2021-01-08")
+            format = "FL"
+            barcode = "12047398N"
+            isRenewable = false
+            status = "not_yet_renewable"
+        }
+        // on loan renewable --> show loan in lent items
+        val lentitem2 = LentItem().apply {
+            title = "Title6"
+            author = ""
+            setDeadline("2021-01-08")
+            format = "FL"
+            barcode = "12047398N"
+            isRenewable = true
+            prolongData = "FL\t12047398N"
+        }
         val accountdata = slub.parseAccountData(Account(), json)
 
-        assertEquals(0, accountdata.lent.size)
-        assertEquals(1, accountdata.reservations.size)
-        assertThat(reserveditem, samePropertyValuesAs(accountdata.reservations[0]))
+        assertEquals(2, accountdata.reservations.size)
+        assertThat(accountdata.reservations, hasItems(sameBeanAs(reserveditem1),
+                sameBeanAs(reserveditem2)))
+        assertEquals(2, accountdata.lent.size)
+        assertThat(accountdata.lent, hasItems(sameBeanAs(lentitem1),
+                sameBeanAs(lentitem2)))
     }
 
     @Test

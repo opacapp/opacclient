@@ -101,6 +101,15 @@ open class SLUB : OkHttpBaseApi() {
             "a14" to "Zentralbibliothek, Ebene -1, SB-Regal Zeitungen"
     )
 
+    private val pickupLocations = mapOf(
+            "zell1" to "Zentralbibliothek",
+            "bebel1" to "ZwB Erziehungswissenschaften",
+            "berg1" to "ZwB Rechtswissenschaft",
+            "fied1" to "ZwB Medizin",
+            "tha1" to "ZwB Forstwissenschaft",
+            "zell9" to "Bereichsbibliothek Drepunct"
+    )
+
     override fun init(library: Library, factory: HttpClientFactory) {
         super.init(library, factory)
         baseurl = library.data.getString("baseurl")
@@ -326,14 +335,7 @@ open class SLUB : OkHttpBaseApi() {
         if (action == ACTION_COPY) {
             val pickupLocations: Map<String, String>
             if (selected.startsWith("reserve")) {
-                pickupLocations = mapOf(
-                        "zell1" to "Zentralbibliothek",
-                        "bebel1" to "ZwB Erziehungswissenschaften",
-                        "berg1" to "ZwB Rechtswissenschaft",
-                        "fied1" to "ZwB Medizin",
-                        "tha1" to "ZwB Forstwissenschaft",
-                        "zell9" to "Bereichsbibliothek Drepunct"
-                )
+                pickupLocations = this.pickupLocations.toMap()
             } else {
                 val data = selected.split('\t')
                 if (data.size != 2) {
@@ -439,8 +441,10 @@ open class SLUB : OkHttpBaseApi() {
                     reservationsList.add(ReservedItem().apply {
                         title = it.optString("about").replace("¬", "")
                         author = it.optJSONArray("X_author")?.optString(0)
-                        id = "bc/${it.optString("label")}"
                         format = it.optString("X_medientyp")
+                        if (format != "FL"){
+                            id = "bc/${it.optString("label")}"
+                        }
                         status = when (type) {  // TODO: maybe we need time (LocalDateTime) too make an educated guess on actual ready date for stack requests
                             "hold" -> stringProvider.getFormattedString(StringProvider.HOLD,
                                     fmt.print(LocalDate(it.optString("X_date_reserved").substring(0, 10))))
@@ -462,16 +466,20 @@ open class SLUB : OkHttpBaseApi() {
                 }
             }
             items?.optJSONArray("ill")?.forEach<JSONObject> {
-                reservationsList.add(ReservedItem().apply {
-                    title = it.optString("Titel").replace("¬", "")
-                    author = it.optString("Autor")
-                    //id = it.optString("Fernleih_ID") --> this id is of no use whatsoever
-                    it.optString("Medientyp")?.run {
-                        if (length > 0) format = this
-                    }
-                    branch = it.optString("Zweigstelle")
-                    status = it.optString("Status_DESC")
-                })
+                if (it.getString("Status") !in listOf("6", "11", "13", "16")){
+                    reservationsList.add(ReservedItem().apply {
+                        title = it.optString("Titel").replace("¬", "")
+                        author = it.optString("Autor")
+                        //id = it.optString("Fernleih_ID") --> this id is of no use whatsoever
+                        it.optString("Medientyp").run {
+                            format = if (length > 0 && this != "*") this else "FL"
+                        }
+                        branch = it.optString("Zweigstelle").let {
+                            pickupLocations.getOrElse(it) { it }
+                        }
+                        status = it.optString("Status_DESC")
+                    })
+                }
             }
 
             return reservationsList
@@ -488,14 +496,17 @@ open class SLUB : OkHttpBaseApi() {
                             author = it.optJSONArray("X_author")?.optString(0)
                             setDeadline(it.optString("X_date_due"))
                             format = it.optString("X_medientyp")
-                            id = "bc/${it.optString("label")}"
+                            if (format != "FL") {
+                                id = "bc/${it.optString("label")}"
+                            }
                             barcode = it.optString("X_barcode")
-                            if (it.optInt("X_is_renewable") == 1) {   // TODO: X_is_flrenewable for ill items
+                            if (it.optInt("X_is_renewable") == 1) {
                                 isRenewable = true
                                 prolongData = "$format\t$barcode"
                             } else {
                                 isRenewable = false
                                 status = when {
+                                    it.optInt("X_is_flrenewable") == 1 -> stringProvider.getString(StringProvider.NOT_YET_RENEWABLE)
                                     it.optInt("X_is_reserved") != 0 -> stringProvider.getString(StringProvider.RESERVED)
                                     it.optInt("renewals") > 0 -> stringProvider.getFormattedString(
                                             StringProvider.RENEWED, it.optInt("renewals"))
