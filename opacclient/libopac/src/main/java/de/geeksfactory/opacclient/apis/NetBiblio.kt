@@ -20,6 +20,7 @@ import org.jsoup.nodes.Document
 import org.jsoup.nodes.Element
 import org.jsoup.nodes.TextNode
 import java.net.URL
+import java.time.LocalDate
 
 open class NetBiblio : OkHttpBaseApi() {
     protected lateinit var opacUrl: String
@@ -336,66 +337,126 @@ open class NetBiblio : OkHttpBaseApi() {
         return null
     }
 
-    var reservationItemId: String? = null
-    var reservationAdressId: String? = null
-    var reservationKind: String? = null
+    private fun getBestCopy(copies: List<Copy>, branch: String? = null): Copy {
+        return copies.sortedWith(compareBy(
+                { it.returnDate?.toDate()?.time ?: 0L },
+                { if (it.branch == branch) 0 else 1 }
+        )).first()
+    }
 
     override fun reservation(item: DetailedItem, account: Account, useraction: Int,
                              selection: String?): OpacApi.ReservationResult? {
         if (useraction == 0 && selection == null) {
-            reservationAdressId = null
-            reservationItemId = null
-            reservationKind = null
-
-            // step 1: select item
             val reservableCopies = item.copies.filter { it.resInfo != null }
-            when (reservableCopies.size) {
-                0 -> return OpacApi.ReservationResult(OpacApi.MultiStepResult.Status.ERROR, stringProvider.getString(StringProvider.NO_COPY_RESERVABLE))
-                1 -> return reservation(item, account, 1, reservableCopies.first()!!.resInfo)
-                else -> {
-                    val options = reservableCopies.map { copy ->
-                        hashMapOf(
-                                "key" to copy.resInfo,
-                                "value" to "${copy.branch} ${copy.status} ${copy.returnDate}"
+            if (reservableCopies.size == 0) {
+                return OpacApi.ReservationResult(OpacApi.MultiStepResult.Status.ERROR, stringProvider.getString(StringProvider.NO_COPY_RESERVABLE))
+            }
+
+            // select any item, just to know which options we'll get
+            var doc = httpGet("$opacUrl/account/makeitemreservation?selectedItems%5B0%5D=${reservableCopies[0].resInfo}", ENCODING).html
+            if (doc.select("#wo-frm-login").count() > 0) {
+                login(account)
+                doc = httpGet("$opacUrl/account/makeitemreservation?selectedItems%5B0%5D=${reservableCopies[0].resInfo}", ENCODING).html
+            }
+
+            val resKind = doc.select(".wo-reservationkind[checked]").`val`()
+            val resKindText = doc.select("label:has(.wo-reservationkind[checked])").text
+
+            if (doc.select("input[name=CheckoutKind]").size > 0) {
+                // "PickUp" or "Mail", e.g. in Basel
+                // In this case, user should select a checkout kind and maybe a pickup and address location,
+                // but we choose the copy
+                val options = mutableListOf<Map<String, String>>()
+                for (cklabel in doc.select("label:has(input[name=CheckoutKind])")) {
+                    val ck = cklabel.select("input").first().`val`()
+
+                    if (ck == "PickUp") {
+                        val addressId = doc.select("input[name=AddessId]").first().`val`()
+                        for (opt in doc.select("select[name=BranchofficeId] option")) {
+                            val key = JSONObject()
+                            key.put("ItemId", getBestCopy(reservableCopies, opt.text().trim()).resInfo)
+                            key.put("ReservationKind", resKind)
+                            key.put("CheckoutKind", ck)
+                            key.put("BranchofficeId", opt.`val`())
+                            key.put("AddessId" /* sic! */, addressId)
+                            options.add(
+                                    hashMapOf(
+                                            "key" to key.toString(),
+                                            "value" to "${opt.text()} / ${cklabel.text()}"
+                                    )
+                            )
+                        }
+                    } else if (ck == "Mail") {
+                        for (alabel in doc.select("label:has(input[name=AddessId])")) {
+                            val key = JSONObject()
+                            key.put("ItemId", getBestCopy(reservableCopies).resInfo)
+                            key.put("ReservationKind", resKind)
+                            key.put("CheckoutKind", ck)
+                            key.put("AddessId" /* sic! */, alabel.select("input").first().`val`())
+                            options.add(
+                                    0, // insert at beginning
+                                    hashMapOf(
+                                            "key" to key.toString(),
+                                            "value" to "${cklabel.text()} / ${alabel.text()}"
+                                    )
+                            )
+                        }
+                    } else {
+                        // whwatever this is
+                        val addressId = doc.select("input[name=AddessId]").first().`val`()
+                        val key = JSONObject()
+                        key.put("ItemId", getBestCopy(reservableCopies).resInfo)
+                        key.put("ReservationKind", resKind)
+                        key.put("CheckoutKind", ck)
+                        key.put("AddessId" /* sic! */, addressId)
+                        options.add(
+                                hashMapOf(
+                                        "key" to key.toString(),
+                                        "value" to cklabel.text()
+                                )
                         )
                     }
-                    return OpacApi.ReservationResult(OpacApi.MultiStepResult.Status.SELECTION_NEEDED).apply {
-                        actionIdentifier = 1
-                        this.selection = options
-                    }
+                }
+                return OpacApi.ReservationResult(OpacApi.MultiStepResult.Status.SELECTION_NEEDED).apply {
+                    actionIdentifier = OpacApi.ReservationResult.ACTION_BRANCH
+                    this.selection = options
+                }
+            } else {
+                // Reservation, e.g. in Bern
+                // In this case, user should select a copy
+
+                val addressId = doc.select("input[name=AddessId]").first().`val`()
+                val options = reservableCopies.map { copy ->
+                    val key = JSONObject()
+                    key.put("ItemId", copy.resInfo)
+                    key.put("ReservationKind", resKind)
+                    key.put("AddessId" /* sic! */, addressId)
+                    hashMapOf(
+                            "key" to key.toString(),
+                            "value" to "${copy.branch} ${copy.status} ${copy.returnDate} (${resKindText})"
+                    )
+                }
+                return OpacApi.ReservationResult(OpacApi.MultiStepResult.Status.SELECTION_NEEDED).apply {
+                    actionIdentifier = OpacApi.ReservationResult.ACTION_BRANCH
+                    this.selection = options
                 }
             }
-        } else if (useraction == 1) {
-            reservationItemId = selection
-            var doc = httpGet("$opacUrl/account/makeitemreservation?selectedItems%5B0%5D=$selection", ENCODING).html
-            if (doc.select("#wo-frm-login").count() > 0) {
-                login(account);
-                doc = httpGet("$opacUrl/account/makeitemreservation?selectedItems%5B0%5D=$selection", ENCODING).html
-            }
-            val warning = doc.select("label:has(.wo-reservationkind[checked])").text
-            reservationAdressId = doc.select("input[name=AddessId]").first().`val`()
-            reservationKind = doc.select(".wo-reservationkind[checked]").`val`()
-            if (reservationKind!!.isEmpty()) reservationKind = "Reservation"
-            return OpacApi.ReservationResult(OpacApi.MultiStepResult.Status.CONFIRMATION_NEEDED).apply {
-                details = listOf(arrayOf(warning))
-            }
-        } else if (useraction == OpacApi.MultiStepResult.ACTION_CONFIRMATION) {
+        } else if (useraction == OpacApi.ReservationResult.ACTION_BRANCH) {
+            val data = JSONObject(selection)
 
-            val body = FormBody.Builder()
-                    .add("ItemID", reservationItemId!!)
-                    .add("ReservationKind", reservationKind!!)
-                    .add("AddessId" /* sic! */, reservationAdressId!!)
-                    .build()
+            val bodyBuilder = FormBody.Builder()
+            for (k in data.keys().iterator()) {
+                bodyBuilder.add(k as String, data.getString(k))
+            }
 
-            val doc = httpPost("$opacUrl/account/makeitemreservation", body, ENCODING).html
+            val doc = httpPost("$opacUrl/account/makeitemreservation", bodyBuilder.build(), ENCODING).html
             if (doc.select(".alert-success").size == 1) {
                 return OpacApi.ReservationResult(OpacApi.MultiStepResult.Status.OK)
             } else {
                 return OpacApi.ReservationResult(OpacApi.MultiStepResult.Status.ERROR)
             }
-        } else {
-            return OpacApi.ReservationResult(OpacApi.MultiStepResult.Status.ERROR)
         }
+        return OpacApi.ReservationResult(OpacApi.MultiStepResult.Status.ERROR)
     }
 
     override fun prolong(media: String, account: Account, useraction: Int, selection: String?): OpacApi.ProlongResult? {
