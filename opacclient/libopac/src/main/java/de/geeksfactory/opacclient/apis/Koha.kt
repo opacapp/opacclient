@@ -129,7 +129,12 @@ open class Koha : OkHttpBaseApi() {
                 builder.addQueryParameter("idx", q.key)
                 builder.addQueryParameter("q", q.value)
             } else if (q.searchField is DropdownSearchField) {
-                builder.addQueryParameter(q.searchField.data!!.getString("id"), q.value)
+                if (q.value.contains('=')) {
+                    val parts = q.value.split("=")
+                    builder.addQueryParameter(parts[0], parts[1])
+                } else {
+                    builder.addQueryParameter(q.searchField.data!!.getString("id"), q.value)
+                }
             } else if (q.searchField is CheckboxSearchField) {
                 if (q.value!!.toBoolean()) {
                     builder.addQueryParameter("limit", q.key)
@@ -169,7 +174,7 @@ open class Koha : OkHttpBaseApi() {
                 dropdownValues = listOf(DropdownSearchField.Option("", "")) +
                         checkboxes.map { checkbox ->
                             DropdownSearchField.Option(
-                                    checkbox["value"],
+                                    checkbox["name"] + "=" + checkbox["value"],
                                     checkbox.nextElementSibling().text.trim())
                         }
                 data = JSONObject().apply {
