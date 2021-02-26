@@ -119,6 +119,8 @@ public class ResultsAdapter extends ArrayAdapter<SearchResult> {
                 return R.drawable.type_device;
             case MICROFORM:
                 return R.drawable.type_microform;
+            case FIGURINE:
+                return R.drawable.type_figurine;
         }
 
         return R.drawable.type_unknown;

@@ -81,6 +81,7 @@
     <string name="mediatype_evideo">eVideo</string>
     <string name="mediatype_edoc">eDoc</string>
     <string name="mediatype_eaudio">eAudio</string>
+    <string name="mediatype_figurine">Figurine</string>
     <string name="fee_confirmation">Gebühr: %s</string>
     <string name="all">All</string>
     <string name="description">Description</string>
