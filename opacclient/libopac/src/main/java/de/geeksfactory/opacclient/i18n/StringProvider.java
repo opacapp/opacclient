@@ -95,6 +95,7 @@ public interface StringProvider {
     String ITEM_COPY = "item_copy";
     String RESERVED = "reserved";
     String RENEWED = "renewed";
+    String NOT_YET_RENEWABLE = "not_yet_renewable";
 
     /**
      * Returns the translated string identified by identifier
