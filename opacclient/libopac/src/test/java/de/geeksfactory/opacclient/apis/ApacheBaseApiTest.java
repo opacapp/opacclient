@@ -8,15 +8,8 @@ import java.util.Arrays;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.junit.Assert.assertEquals;
 
 public class ApacheBaseApiTest {
-    @Test
-    public void cleanUrlShouldHandleMultipleEqualsSigns() throws Exception {
-        String url = "http://www.example.com/file?param1=value=1&param=value2";
-        assertEquals("http://www.example.com/file?param1=value%3D1&param=value2",
-                ApacheBaseApi.cleanUrl(url));
-    }
 
     @Test
     public void testBuildHttpGetParamsList() throws Exception {

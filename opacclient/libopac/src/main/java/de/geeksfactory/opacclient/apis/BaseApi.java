@@ -485,7 +485,7 @@ public abstract class BaseApi implements OpacApi {
                                 "UTF-8")));
                     } else {
                         params.add(new BasicNameValuePair(URLDecoder.decode(
-                                kv[0], "UTF-8"), ""));
+                                kv[0], "UTF-8"), null));
                     }
                 }
                 url += URLEncodedUtils.format(params, "UTF-8");
