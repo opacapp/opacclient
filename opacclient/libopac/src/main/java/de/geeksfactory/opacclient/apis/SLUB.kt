@@ -175,15 +175,9 @@ open class SLUB : OkHttpBaseApi() {
             id.startsWith("id/") ->
                 "$baseurl/$id/"
             id.startsWith("bc/") || id.startsWith("rsn/") ->
-                http_client.newBuilder()
-                        .followRedirects(false)
-                        .build()
-                        .run {
-                            httpHead("$baseurl/$id/",
-                                    "Location",
-                                    "",
-                                    this)
-                        }
+                httpHead("$baseurl/$id/", false).request().url().toString()
+            id.startsWith("http://slubdd.de/katalog?libero_mab") ->
+                httpHead(id, false).request().url().toString()
             else -> // legacy case: id identifier without prefix
                 "$baseurl/id/$id/"
         } + "?type=1369315142&tx_find_find[format]=data&tx_find_find[data-format]=app"
@@ -260,7 +254,7 @@ open class SLUB : OkHttpBaseApi() {
                     cover = this
                 }
             }
-            // links and references
+            // links
             for (link in listOf("linksRelated", "linksAccess", "linksGeneral")) {
                 json.getJSONArray(link).forEach<JSONObject> {
                     // assuming that only on of material, note or hostlabel is set
@@ -269,10 +263,6 @@ open class SLUB : OkHttpBaseApi() {
                     }
                     addDetail(Detail(key, it.optString("uri")))
                 }
-            }
-            json.getJSONArray("references").forEach<JSONObject> {
-                // TODO: usually links to old SLUB catalogue, does it make sense to add the link?
-                addDetail(Detail(it.optString("text"), "${it.optString("name")} (${it.optString("target")})"))
             }
             // copies
             val cps = json.get("copies")
@@ -290,11 +280,19 @@ open class SLUB : OkHttpBaseApi() {
             }
             isReservable = hasReservableCopies
             // volumes
-            volumes = json.optJSONObject("parts")?.optJSONArray("records")?.map<JSONObject, Volume> {
-                Volume(it.optString("id"),
-                        "${it.optString("part")} ${Parser.unescapeEntities(it.optString("name"), false)}")
-
-            } ?: emptyList()
+            json.getJSONObject("parts").optJSONArray("records")?.forEach<JSONObject> {
+                volumes.add(Volume(it.optString("id"),
+                        "${it.optString("part")} ${Parser.unescapeEntities(it.optString("name"), false)}"))
+            }
+            // references
+            json.getJSONArray("references").forEach<JSONObject> {
+                val link = it.optString("link")
+                if (link.startsWith("http://slubdd.de/katalog?libero_mab")){
+                    addVolume(Volume(link, "${it.optString("text")}:\n${it.optString("name")}"))
+                } else {
+                    addDetail(Detail(it.optString("text"), "${it.optString("name")} (${it.optString("target")})"))
+                }
+            }
         }
     }
 
