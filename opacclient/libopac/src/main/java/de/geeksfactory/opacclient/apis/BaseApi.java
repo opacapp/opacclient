@@ -464,7 +464,7 @@ public abstract class BaseApi implements OpacApi {
      * @param myURL the URL to clean
      * @return cleaned URL
      */
-    public static String cleanUrl(String myURL) {
+    public String cleanUrl(String myURL) {
         String[] parts = myURL.split("\\?");
         String url = parts[0];
         try {
