@@ -122,15 +122,15 @@ open class SLUB : OkHttpBaseApi() {
     }
 
     override fun searchGetPage(page: Int): SearchRequestResult {
-        val queryUrlB = HttpUrl.get("$baseurl/?type=1369315142&tx_find_find[format]=data&tx_find_find[data-format]=app")
+        val queryUrlB = HttpUrl.get("$baseurl/?type=1369315142&tx_find_find%5Bformat%5D=data&tx_find_find%5Bdata-format%5D=app")
                 .newBuilder()
-                .addEncodedQueryParameter("tx_find_find[page]", page.toString())
+                .addQueryParameter("tx_find_find[page]", page.toString())
         for (sq in query) {
             if (sq.value.isNotEmpty()) {
                 if (sq.searchField is DropdownSearchField) {  // access_facet
-                    queryUrlB.addEncodedQueryParameter("tx_find_find[facet][access_facet][${sq.value}]", "1")
+                    queryUrlB.addQueryParameter("tx_find_find[facet][access_facet][${sq.value}]", "1")
                 } else {
-                    queryUrlB.addEncodedQueryParameter("tx_find_find[q][${sq.key}]", sq.value)
+                    queryUrlB.addQueryParameter("tx_find_find[q][${sq.key}]", sq.value)
                 }
             }
         }
@@ -180,7 +180,7 @@ open class SLUB : OkHttpBaseApi() {
                 httpHead(id, false).request().url().toString()
             else -> // legacy case: id identifier without prefix
                 "$baseurl/id/$id/"
-        } + "?type=1369315142&tx_find_find[format]=data&tx_find_find[data-format]=app"
+        } + "?type=1369315142&tx_find_find%5Bformat%5D=data&tx_find_find%5Bdata-format%5D=app"
         try {
             json = JSONObject(httpGet(url, ENCODING))
         } catch (e: JSONException) {
@@ -579,4 +579,7 @@ open class SLUB : OkHttpBaseApi() {
         //TODO("not implemented")
     }
 
+    override fun cleanUrl(url: String): String {
+        return url
+    }
 }

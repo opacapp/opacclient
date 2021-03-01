@@ -808,7 +808,7 @@ class SLUBSearchMockTest(@Suppress("unused") private val name: String,
                                     )
                                 }, "Electronic+Resources")
                         ),
-                        "https://test.de/?type=1369315142&tx_find_find[format]=data&tx_find_find[data-format]=app&tx_find_find[page]=1&tx_find_find[q][title]=Kotlin - Das umfassende Praxis-Handbuch&tx_find_find[facet][access_facet][Electronic+Resources]=1".replace(" ", "%20"),  // correct for  addEncodedQueryParameter
+                        "https://test.de/?type=1369315142&tx_find_find%5Bformat%5D=data&tx_find_find%5Bdata-format%5D=app&tx_find_find%5Bpage%5D=1&tx_find_find%5Bq%5D%5Btitle%5D=Kotlin - Das umfassende Praxis-Handbuch&tx_find_find%5Bfacet%5D%5Baccess_facet%5D%5BElectronic%2BResources%5D=1".replace(" ", "%20"),  // correct for  addEncodedQueryParameter
                         "{\"numFound\":1,\"start\" : 0,\"docs\" : [{\"id\":\"0-1688062912\",\"format\":[\"Book, E-Book\"],\"title\":\"Kotlin - Das umfassende Praxis-Handbuch Szwillus, Karl.\",\"author\":[\"Szwillus, Karl\"],\"creationDate\":\"2019\",\"imprint\":[\"[Erscheinungsort nicht ermittelbar]: mitp Verlag, 2019\"]}]}",
                         1,
                         null,
@@ -852,7 +852,7 @@ class SLUBGetResultByIdMockTest : BaseHtmlTest() {
     fun testIdIdentifier() {
         doReturn(mockGetResponse).`when`(slub).httpGet(Matchers.any(), Matchers.any())
         val actual = slub.getResultById("id/123", null)
-        verify(slub).httpGet("https://test.de/id/123/?type=1369315142&tx_find_find[format]=data&tx_find_find[data-format]=app", "UTF-8")
+        verify(slub).httpGet("https://test.de/id/123/?type=1369315142&tx_find_find%5Bformat%5D=data&tx_find_find%5Bdata-format%5D=app", "UTF-8")
         verify(slub, never()).httpHead(any(), anyBoolean())
         assertEquals("id/123", actual.id)
     }
@@ -863,7 +863,7 @@ class SLUBGetResultByIdMockTest : BaseHtmlTest() {
         doReturn(mockGetResponse).`when`(slub).httpGet(Matchers.any(), Matchers.any())
         val actual = slub.getResultById("bc/456", null)
         verify(slub).httpHead(eq("https://test.de/bc/456/"), eq(false))
-        verify(slub).httpGet("https://test.de/id/123/?type=1369315142&tx_find_find[format]=data&tx_find_find[data-format]=app", "UTF-8")
+        verify(slub).httpGet("https://test.de/id/123/?type=1369315142&tx_find_find%5Bformat%5D=data&tx_find_find%5Bdata-format%5D=app", "UTF-8")
         assertEquals("id/123", actual.id)
     }
 
@@ -873,7 +873,7 @@ class SLUBGetResultByIdMockTest : BaseHtmlTest() {
         doReturn(mockGetResponse).`when`(slub).httpGet(Matchers.any(), Matchers.any())
         val actual = slub.getResultById("rsn/456", null)
         verify(slub).httpHead(eq("https://test.de/rsn/456/"), eq(false))
-        verify(slub).httpGet("https://test.de/id/123/?type=1369315142&tx_find_find[format]=data&tx_find_find[data-format]=app", "UTF-8")
+        verify(slub).httpGet("https://test.de/id/123/?type=1369315142&tx_find_find%5Bformat%5D=data&tx_find_find%5Bdata-format%5D=app", "UTF-8")
         assertEquals("id/123", actual.id)
     }
 
@@ -883,7 +883,7 @@ class SLUBGetResultByIdMockTest : BaseHtmlTest() {
         doReturn(mockGetResponse).`when`(slub).httpGet(Matchers.any(), Matchers.any())
         val actual = slub.getResultById("http://slubdd.de/katalog?libero_mab456", null)
         verify(slub).httpHead(eq("http://slubdd.de/katalog?libero_mab456"), eq(false))
-        verify(slub).httpGet("https://test.de/id/123/?type=1369315142&tx_find_find[format]=data&tx_find_find[data-format]=app", "UTF-8")
+        verify(slub).httpGet("https://test.de/id/123/?type=1369315142&tx_find_find%5Bformat%5D=data&tx_find_find%5Bdata-format%5D=app", "UTF-8")
         assertEquals("id/123", actual.id)
     }
 
@@ -892,7 +892,7 @@ class SLUBGetResultByIdMockTest : BaseHtmlTest() {
         // id without prefix, e.g. from old favorites list
         doReturn(mockGetResponse).`when`(slub).httpGet(Matchers.any(), Matchers.any())
         val actual = slub.getResultById("123", null)
-        verify(slub).httpGet("https://test.de/id/123/?type=1369315142&tx_find_find[format]=data&tx_find_find[data-format]=app", "UTF-8")
+        verify(slub).httpGet("https://test.de/id/123/?type=1369315142&tx_find_find%5Bformat%5D=data&tx_find_find%5Bdata-format%5D=app", "UTF-8")
         verify(slub, never()).httpHead(any(), anyBoolean())
         assertEquals("id/123", actual.id)
     }

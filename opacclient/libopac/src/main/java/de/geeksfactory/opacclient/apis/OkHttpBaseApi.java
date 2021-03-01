@@ -233,7 +233,7 @@ public abstract class OkHttpBaseApi extends BaseApi {
      */
     public Response httpHead(String url, boolean ignore_errors) throws IOException {
         Request request = new Request.Builder()
-                .url(url.contains("=") ? cleanUrl(url) : url)
+                .url(cleanUrl(url))
                 .header("Accept", "*/*")
                 .header("User-Agent", getUserAgent())
                 .head()
