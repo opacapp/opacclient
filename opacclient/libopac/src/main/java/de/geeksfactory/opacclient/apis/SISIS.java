@@ -2027,6 +2027,12 @@ public class SISIS extends OkHttpBaseApi implements OpacApi {
     }
 
     @Override
+    public ProlongAllResult prolongMultiple(List<String> media,
+            Account account, int useraction, String selection) throws IOException {
+        return null;
+    }
+
+    @Override
     public SearchRequestResult filterResults(Filter filter, Option option)
             throws IOException, OpacErrorException {
         // TODO Auto-generated method stub

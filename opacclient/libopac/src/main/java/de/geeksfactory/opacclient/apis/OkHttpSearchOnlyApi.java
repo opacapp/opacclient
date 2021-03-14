@@ -3,6 +3,7 @@ package de.geeksfactory.opacclient.apis;
 import org.json.JSONException;
 
 import java.io.IOException;
+import java.util.List;
 
 import de.geeksfactory.opacclient.objects.Account;
 import de.geeksfactory.opacclient.objects.AccountData;
@@ -29,6 +30,12 @@ public abstract class OkHttpSearchOnlyApi extends OkHttpBaseApi {
     @Override
     public final ProlongAllResult prolongAll(Account account, int useraction, String selection)
             throws IOException {
+        return null;
+    }
+
+    @Override
+    public ProlongAllResult prolongMultiple(List<String> media,
+            Account account, int useraction, String selection) throws IOException {
         return null;
     }
 
