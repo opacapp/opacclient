@@ -83,7 +83,7 @@ public class CopiesAdapter extends RecyclerView.Adapter<CopiesAdapter.ViewHolder
         return text != null && !text.isEmpty();
     }
 
-    public class ViewHolder extends RecyclerView.ViewHolder {
+    public static class ViewHolder extends RecyclerView.ViewHolder {
         public TextView tvBranch;
         public TextView tvDepartment;
         public TextView tvIssue;
