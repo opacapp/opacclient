@@ -1,11 +1,14 @@
 package de.geeksfactory.opacclient.apis;
 
+import org.joda.time.DateTime;
 import org.joda.time.LocalDate;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -32,6 +35,9 @@ public class TestApi extends ApacheBaseApi {
     private Library library;
     private List<SearchResult> list = new ArrayList<>();
     private List<DetailedItem> detailList = new ArrayList<>();
+    private List<LentItem> lentItems = new ArrayList<>();
+    private List<ReservedItem> reservedItems = new ArrayList<>();
+    private Boolean isAfterRenew = false;
 
     @Override
     public void start() throws IOException {
@@ -150,11 +156,30 @@ public class TestApi extends ApacheBaseApi {
         return null;
     }
 
+    private LentItem renew(String Id){
+        if( Id == null){
+            return null;
+        }
+        LentItem[] li = lentItems.toArray(new LentItem[0]);
+        LentItem result = null;
+        for(int i=0;i<lentItems.size();i++){
+            if(li[i].getProlongData().equals(Id)){
+                li[i].setDeadline(li[i].getDeadline().plusDays(14));
+                result = li[i];
+            }
+        }
+        lentItems.clear();
+        lentItems.addAll(Arrays.asList(li));
+        isAfterRenew = true;
+        return result;
+    }
+
     @Override
     public ProlongResult prolong(String media, Account account, int useraction,
             String selection) throws IOException {
         try {
             Thread.sleep(500);
+            renew(media);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
@@ -170,7 +195,20 @@ public class TestApi extends ApacheBaseApi {
     @Override
     public ProlongAllResult prolongMultiple(List<String> media,
             Account account, int useraction, String selection) throws IOException {
-        return null;
+        List<Map<String, String>> result = new ArrayList<>();
+        LentItem renewedItem;
+        for(String id:media){
+            renewedItem = renew(id);
+            if(renewedItem == null){
+                return new ProlongAllResult(MultiStepResult.Status.ERROR, "Error at attempt to renew " + media);
+            }
+            HashMap<String, String> hm = new HashMap<>();
+            hm.put(ProlongAllResult.KEY_LINE_TITLE, renewedItem.getTitle());
+            hm.put(ProlongAllResult.KEY_LINE_AUTHOR, renewedItem.getAuthor());
+            hm.put(ProlongAllResult.KEY_LINE_NEW_RETURNDATE, renewedItem.getDeadline().toString());
+            result.add(hm);
+        }
+        return new ProlongAllResult(MultiStepResult.Status.OK, result);
     }
 
     @Override
@@ -213,29 +251,39 @@ public class TestApi extends ApacheBaseApi {
                 reservations.add(resItem);
             }
         } catch (NotReachableException e) {
-            for (int i = 0; i < 6; i++) {
-                LentItem lentItem = new LentItem();
-                lentItem.setAuthor("Max Mustermann");
-                lentItem.setTitle("Lorem Ipsum");
-                lentItem.setStatus("hier ist der Status");
-                lentItem.setDeadline(new LocalDate(1442564454547L));
-                lentItem.setRenewable(true);
-                lentItem.setProlongData("foo");
-                lentItem.setHomeBranch("Meine Zweigstelle");
-                lentItem.setLendingBranch("Ausleihzweigstelle");
-                lentItem.setBarcode("Barcode");
-                lent.add(lentItem);
+            if(!isAfterRenew){
+                LocalDate today = new DateTime().toLocalDate();
+                for (int i = 0; i < 6; i++) {
+                    LentItem lentItem = new LentItem();
+                    lentItem.setAuthor("Max Mustermann");
+                    lentItem.setTitle("Titel " + i);
+                    lentItem.setStatus("hier ist der Status");
+                    lentItem.setDeadline(today.plusDays(i));
+                    lentItem.setRenewable(true);
+                    lentItem.setProlongData("prolongData_"+i);
+                    lentItem.setHomeBranch("Meine Zweigstelle");
+                    lentItem.setLendingBranch("Ausleihzweigstelle");
+                    lentItem.setBarcode("Barcode");
+                    lent.add(lentItem);
 
-                ReservedItem reservedItem = new ReservedItem();
-                reservedItem.setAuthor("Max Mustermann");
-                reservedItem.setTitle("Lorem Ipsum");
-                reservedItem.setReadyDate(LocalDate.now());
-                reservations.add(reservedItem);
+                    ReservedItem reservedItem = new ReservedItem();
+                    reservedItem.setAuthor("Max Mustermann");
+                    reservedItem.setTitle("Lorem Ipsum");
+                    reservedItem.setReadyDate(LocalDate.now());
+                    reservations.add(reservedItem);
+                }
+                lentItems.clear();
+                lentItems.addAll(lent);
+                data.setLent(lent);
+                reservedItems.clear();
+                reservedItems.addAll(reservations);
+                data.setReservations(reservations);
+            } else {
+                data.setLent(lentItems);
+                data.setReservations(reservedItems);
+                isAfterRenew = false;
             }
         }
-
-        data.setLent(lent);
-        data.setReservations(reservations);
         return data;
     }
 
@@ -261,7 +309,7 @@ public class TestApi extends ApacheBaseApi {
 
     @Override
     public int getSupportFlags() {
-        return 0;
+        return OpacApi.SUPPORT_FLAG_ACCOUNT_PROLONG_MULTIPLE;
     }
 
     @Override
