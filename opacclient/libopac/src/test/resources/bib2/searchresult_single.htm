@@ -1,0 +1,206 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<!-- BIB2-WebOPAC: Rahmenseite -->
+<html>
+<head>
+  <!-- Titel der WebOPAC-Seiten im Web-Browser -->
+  <title>BIB2 WebOPAC</title>
+  <!-- CSS-Stylesheet (individuell anpassbar) -->
+  <link rel="stylesheet" type="text/css" media="all" href="webopac.css">
+  <!-- vom Web-Browser für die WebOPAC-Seiten angezeigtes Icon -->
+  <link rel="shortcut icon" type="image/ico" href="favicon.ico">
+  <!-- verwendeter Zeichensatz des WebOPAC (nicht ändern) -->
+  <meta http-equiv="Content-type" content="text/html;charset=ISO-8859-1">
+  <!-- zusätzliche Html-Header für die Darstellung des Schlagwortkatalogs
+       auf der Startseite (nicht ändern, wenn Sie an der Darstellung des
+       Schlagwortkatalogs nichts ändern wollen) -->
+  
+  <script type="text/javascript">
+   function tricker(){
+   var e=document.getElementById('search');
+   if(!e)return true;
+   if(e.style.display=="none"){
+   e.style.display="inline"
+   } else {
+   e.style.display="none"
+   };
+   var d=document.getElementById('jkui');
+   if(!d)return true;
+   if(d.style.display=="none"){
+   d.style.display="inline"
+   } else {
+   d.style.display="none"
+   };
+   }; //Funktion zum Aufklappen der Suchfelder
+
+
+
+   function del() {
+   document.OPACFORM.sw.value='';
+   document.OPACFORM.ah.value='';
+   document.OPACFORM.F015.value='';
+   document.OPACFORM.C106.value='F003';
+   document.OPACFORM.C105.value='AND';
+   document.OPACFORM.F001.value='';
+   document.OPACFORM.F023.value='';
+   }; //Leert Datenfelder
+
+   aktiv = new Image();
+   aktiv.src = "aktiv.gif";
+
+   function send (){
+
+              document.OPACFORM.submit();};
+   function senden (){
+              var d=document.getElementById('aktiv');
+              if(d.style.display=="none"){
+              d.style.display="block"
+   } else {
+   d.style.display="none"};
+              setTimeout("send ()",5000);}; //Lässt aktiv.gif erscheinen
+  </script>
+</head>
+
+<body>
+ <script type="text/javascript">
+
+
+
+ query = self.location.search;
+  sammlung = new Array();
+  query = query.substr(1, query.length - 1);
+  query = query.replace(/%26/,"&");
+  teile = query.split("&");
+
+
+ if(teile[1]==124&&query!='')
+   {document.write("<div><div class='content'><div><center><table>"); }
+    else{
+document.write('<div id="container"> ');
+document.write('<div class="content" id="main_container">   ');
+document.write('<div><center>                               ');
+document.write('<table width="1000">               ');
+document.write('  <tr><td height="20"></td></tr>    ');
+document.write('  <tr>                             ');
+document.write('    <td>                          ');
+document.write('    </td>                                                                ');
+document.write('  </tr>                                                                  ');
+document.write('  <tr><td height="20"></td></tr>                                         ');
+  };
+  </script>
+
+  <tr>
+    <td width="100%">
+      <!-- Einbindung der darzustellenden Seite: -->
+<!-- BIB2-WebOPAC: Suchergebnisliste -->
+
+<script type="text/javascript">
+  var anzahl = 0;  <!-- Zähler ausgeblendete Zeilen -->
+ </script>
+
+<!-- Anzeige der Suchparameter und Trefferanzahl: -->
+<table width="100%" class="borderless">
+  <tr>
+    <td align="center" style="padding-bottom:5px;">
+      Ihre Suche:
+    </td>
+  </tr>
+  <tr>
+    <td align="center" style="border:1px dotted #0060A0; padding:1px 5px 1px 5px; background-color: #D6ECF6;">
+      Medienart = <span id="ltgreen">Führer</span> <span id="yellow">und</span> Stichwort enthält <span id="ltgreen">'	Kletterführer Frankenjura Band 2 / Deutschland'</span> 
+    </td>
+  </tr>
+  <tr>
+    <td align="center" style="padding-top:5px;">
+      lieferte <b>2</b> Treffer:
+    </td>
+  </tr>
+</table>
+
+
+<!-- Suchergebnisliste: -->
+<table width="100%" class="withborder" style="margin-top: 10px">
+  <tr>
+    <th align="center">#</th>
+    <th align="left"><a class="thlink" href="list?F001=3&amp;C106=F021&amp;%3AStichwort%2BF002%2BF003%2BF004%2BF016%2BF031%2BF032=%09Kletterf%FChrer%20Frankenjura%20Band%202%20%2F%20Deutschland&amp;C109=1969&amp;C105=AND&amp;C102=1548&amp;C107=ASC&amp;C108=0">Signatur</a><br><a class="thlink" href="list?F001=3&amp;C106=F001&amp;%3AStichwort%2BF002%2BF003%2BF004%2BF016%2BF031%2BF032=%09Kletterf%FChrer%20Frankenjura%20Band%202%20%2F%20Deutschland&amp;C109=1969&amp;C105=AND&amp;C102=1548&amp;C107=ASC&amp;C108=0">Medienart</a></th>
+    <th align="left"><a class="thlink" href="list?F001=3&amp;C106=F003&amp;%3AStichwort%2BF002%2BF003%2BF004%2BF016%2BF031%2BF032=%09Kletterf%FChrer%20Frankenjura%20Band%202%20%2F%20Deutschland&amp;C109=1969&amp;C105=AND&amp;C102=1548&amp;C107=DESC&amp;C108=0">Haupttitel&nbsp;&uArr;</a><br><a class="thlink" href="list?F001=3&amp;C106=F004&amp;%3AStichwort%2BF002%2BF003%2BF004%2BF016%2BF031%2BF032=%09Kletterf%FChrer%20Frankenjura%20Band%202%20%2F%20Deutschland&amp;C109=1969&amp;C105=AND&amp;C102=1548&amp;C107=ASC&amp;C108=0">Untertitel</a></th>
+    <th align="left"><a class="thlink" href="list?F001=3&amp;C106=F006&amp;%3AStichwort%2BF002%2BF003%2BF004%2BF016%2BF031%2BF032=%09Kletterf%FChrer%20Frankenjura%20Band%202%20%2F%20Deutschland&amp;C109=1969&amp;C105=AND&amp;C102=1548&amp;C107=ASC&amp;C108=0">Autor</a> / <a class="thlink" href="list?F001=3&amp;C106=F007&amp;%3AStichwort%2BF002%2BF003%2BF004%2BF016%2BF031%2BF032=%09Kletterf%FChrer%20Frankenjura%20Band%202%20%2F%20Deutschland&amp;C109=1969&amp;C105=AND&amp;C102=1548&amp;C107=ASC&amp;C108=0">Hrsg.</a><br><a class="thlink" href="list?F001=3&amp;C106=F011&amp;%3AStichwort%2BF002%2BF003%2BF004%2BF016%2BF031%2BF032=%09Kletterf%FChrer%20Frankenjura%20Band%202%20%2F%20Deutschland&amp;C109=1969&amp;C105=AND&amp;C102=1548&amp;C107=ASC&amp;C108=0">Verlag</a></th>
+    <th align="right">verf&uuml;gbar / vor&nbsp;Ort / insg.</th>
+  </tr>
+  <script type="text/javascript">
+  
+  if (2 != 0) <!-- nicht vorhandene ausblenden -->
+     {
+    document.writeln('<tr class="odd">');
+  document.writeln('  <td align="center"><span id="black">1</span></td>');
+  document.writeln('  <td align="left"><span id="black">F2799A<br>Führer<br></td></span>');
+  document.writeln('  <td align="left"><a style="text-decoration: none" href="detail?F001=3&amp;C106=F003&amp;%3AStichwort%2BF002%2BF003%2BF004%2BF016%2BF031%2BF032=%09Kletterf%FChrer%20Frankenjura%20Band%202%20%2F%20Deutschland&amp;C101=1418294192807246513.0&amp;C109=1969&amp;C105=AND&amp;C102=25221&amp;C108=0">Kletterführer Frankenjura Band 2 / Deutschland</a><br>Kletterführer</td>');
+  document.writeln('  <td align="left"><span id="black">Schwertner, Sebastian<br>Panico Alpinverlagag, Köngen</span></td>');
+  document.writeln('  <td align="right"><span id="green"><b>1</b></span> / 1 / 2</td>');
+  document.writeln('</tr>');
+  }
+  else{
+  anzahl=anzahl+1;    <!-- ausgeblendete zaehlen -->
+  };
+  </script>
+
+
+  <script type="text/javascript">
+  
+  if (5 != 0) <!-- nicht vorhandene ausblenden -->
+     {
+    document.writeln('<tr class="even">');
+  document.writeln('  <td align="center"><span id="black">2</span></td>');
+  document.writeln('  <td align="left"><span id="black">F2799<br>Führer<br></td></span>');
+  document.writeln('  <td align="left"><a style="text-decoration: none" href="detail?F001=3&amp;C106=F003&amp;%3AStichwort%2BF002%2BF003%2BF004%2BF016%2BF031%2BF032=%09Kletterf%FChrer%20Frankenjura%20Band%202%20%2F%20Deutschland&amp;C101=1418294192807246513.0&amp;C109=1969&amp;C105=AND&amp;C102=3924&amp;C108=0">Kletterführer Frankenjura Band 2 / Deutschland</a><br>Kletterführer</td>');
+  document.writeln('  <td align="left"><span id="black">Schwertner, Sebastian<br>Panico Alpinverlagag, Köngen</span></td>');
+  document.writeln('  <td align="right"><span id="green"><b>5</b></span> / 5 / 5</td>');
+  document.writeln('</tr>');
+  }
+  else{
+  anzahl=anzahl+1;    <!-- ausgeblendete zaehlen -->
+  };
+  </script>
+
+
+
+</table>
+<!-- Verweis auf naechste Seite: -->
+
+
+<!-- eventuelle Fehlernachrichten: -->
+<span id="red">
+<br>
+
+
+<script type="text/javascript">
+if (anzahl !=0)
+   {
+    document.writeln('Es werden '+anzahl+' Ergebnisse nicht angezeigt, da die Exemplare ausgesondert oder verschollen sind.');
+    
+
+    };
+</script>
+</span>
+
+<!-- Navigation: -->
+<div style="margin-top: 20px">
+<a class="biglink" href="start?F001=3&amp;C106=F003&amp;%3AStichwort%2BF002%2BF003%2BF004%2BF016%2BF031%2BF032=%09Kletterf%FChrer%20Frankenjura%20Band%202%20%2F%20Deutschland&amp;C101=1418294192807246513.0&amp;C109=1969&amp;C105=AND&amp;C108=0">neue Suche</a>
+</div>
+
+    </td>
+  </tr>
+  <tr>
+    <td class="red">
+      <!-- eventuelle Fehlernachrichten: -->
+      
+      
+    </td>
+    </tr>
+</table>
+</center>
+</div>
+</div>
+</div>
+
+</body>
+</html>

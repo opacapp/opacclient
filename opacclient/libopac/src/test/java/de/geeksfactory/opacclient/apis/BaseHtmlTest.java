@@ -20,10 +20,10 @@ public class BaseHtmlTest {
      * @param is InputStream to read from
      * @return String content of the InputStream
      */
-    private static String convertStreamToString(InputStream is) throws IOException {
+    private static String convertStreamToString(InputStream is, String encoding) throws IOException {
         BufferedReader reader;
         try {
-            reader = new BufferedReader(new InputStreamReader(is, "UTF-8"));
+            reader = new BufferedReader(new InputStreamReader(is, encoding));
         } catch (UnsupportedEncodingException e1) {
             reader = new BufferedReader(new InputStreamReader(is));
         }
@@ -44,15 +44,19 @@ public class BaseHtmlTest {
         return sb.toString();
     }
 
-    protected String readResource(String filename) {
+    protected String readResource(String filename, String encoding) {
         InputStream is = getClass().getResourceAsStream(filename);
         if (is == null) return null;
         try {
-            return convertStreamToString(is);
+            return convertStreamToString(is, encoding);
         } catch (IOException e) {
             e.printStackTrace();
             return null;
         }
+    }
+
+    protected String readResource(String filename){
+        return readResource(filename, "UTF-8");
     }
 
     protected List<String> getResourceFiles(String path) throws IOException {
