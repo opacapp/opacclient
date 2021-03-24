@@ -20,4 +20,9 @@ public interface WebService {
     Call<List<Library>> getLibraryConfigs(@Query("modified_since") DateTime modifiedSince,
             @Query("app_version") int appVersion, @Query("plus_app") Integer plusApp,
             @Query("library_id") String libraryId);
+
+    @GET("androidconfigs/")
+    Call<List<Library>> getLibraryConfigsForGroup(@Query("modified_since") DateTime modifiedSince,
+            @Query("app_version") int appVersion, @Query("plus_app") Integer plusApp,
+            @Query("group") String groupName);
 }
