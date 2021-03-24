@@ -24,6 +24,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.CustomListFragment;
@@ -91,8 +92,8 @@ public class SearchResultListFragment extends CustomListFragment {
     protected SearchStartTask st;
     protected LinearLayout progressContainer;
     protected FrameLayout errorView;
-    private int touchPositionX = 0;
-    private int touchPositionY = 0;
+    protected int touchPositionX = 0;
+    protected int touchPositionY = 0;
 
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the fragment (e.g. upon
@@ -200,15 +201,10 @@ public class SearchResultListFragment extends CustomListFragment {
                     .getInt(STATE_ACTIVATED_POSITION));
         }
 
-        if (savedInstanceState == null && searchresult == null) {
+        if (savedInstanceState == null && wasSearchAlreadyPerformed()) {
             performsearch();
         } else if (searchresult != null) {
-            if (searchresult.getTotal_result_count() >= 0) {
-                ((AppCompatActivity) getActivity()).getSupportActionBar().setSubtitle(
-                        getResources().getQuantityString(R.plurals.result_number,
-                                searchresult.getTotal_result_count(),
-                                searchresult.getTotal_result_count()));
-            }
+            showTotalCountOfPreviousSearchIfAvailable();
         }
 
         getListView().setOnTouchListener(new View.OnTouchListener() {
@@ -218,6 +214,16 @@ public class SearchResultListFragment extends CustomListFragment {
                 return false;
             }
         });
+    }
+
+    protected boolean wasSearchAlreadyPerformed() {
+        return searchresult == null;
+    }
+
+    protected void showTotalCountOfPreviousSearchIfAvailable() {
+        if (searchresult != null && searchresult.getTotal_result_count() >= 0) {
+            showSearchResultCountInActionbar(searchresult.getTotal_result_count());
+        }
     }
 
     @Override
@@ -243,17 +249,17 @@ public class SearchResultListFragment extends CustomListFragment {
     }
 
     @Override
-    public void onListItemClick(ListView listView, View view, int position,
-            long id) {
+    public void onListItemClick(ListView listView, View view, int position, long id) {
         super.onListItemClick(listView, view, position, id);
+        listItemClicked(position, view, searchresult.getResults().get(position));
+    }
 
+    protected void listItemClicked(int position, View clickedView, SearchResult searchResult) {
         setActivatedPosition(position);
 
         // Notify the active callbacks interface (the activity, if the
         // fragment is attached to one) that an item has been selected.
-        callbacks.onItemSelected(searchresult.getResults().get(position),
-                view.findViewById(R.id.ivCover), touchPositionX, touchPositionY);
-
+        callbacks.onItemSelected(searchResult, clickedView.findViewById(R.id.ivCover), touchPositionX, touchPositionY);
     }
 
     @Override
@@ -292,10 +298,7 @@ public class SearchResultListFragment extends CustomListFragment {
             result.setPage(searchresult.getPage_index());
         }
         if (searchresult.getTotal_result_count() >= 0) {
-            ((AppCompatActivity) getActivity()).getSupportActionBar().setSubtitle(
-                    getResources().getQuantityString(R.plurals.result_number,
-                            searchresult.getTotal_result_count(),
-                            searchresult.getTotal_result_count()));
+            showSearchResultCountInActionbar(searchresult.getTotal_result_count());
         }
 
         if (searchresult.getResults().size() == 0
@@ -347,15 +350,25 @@ public class SearchResultListFragment extends CustomListFragment {
 						 * loaded
 						 */
                         if (resultCount >= 0 && getActivity() != null) {
-                            ((AppCompatActivity) getActivity()).getSupportActionBar().setSubtitle(
-                                    getResources().getQuantityString(R.plurals.result_number,
-                                            resultCount, resultCount));
+                            showSearchResultCountInActionbar(resultCount);
                         }
                     }
                 }, api);
         setListAdapter(adapter);
         getListView().setTextFilterEnabled(true);
         setListShown(true);
+    }
+
+    protected void showSearchResultCountInActionbar(int count) {
+        getSupportActionBar().setSubtitle(getResultCountMessage(count));
+    }
+
+    private ActionBar getSupportActionBar() {
+        return ((AppCompatActivity) getActivity()).getSupportActionBar();
+    }
+
+    private String getResultCountMessage(int count) {
+        return getResources().getQuantityString(R.plurals.result_number, count, count);
     }
 
     public void showConnectivityError() {

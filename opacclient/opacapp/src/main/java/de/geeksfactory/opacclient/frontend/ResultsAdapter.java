@@ -2,21 +2,21 @@
  * Copyright (C) 2013 by Raphael Michel under the MIT license:
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
- * of this software and associated documentation files (the "Software"), 
- * to deal in the Software without restriction, including without limitation 
- * the rights to use, copy, modify, merge, publish, distribute, sublicense, 
- * and/or sell copies of the Software, and to permit persons to whom the Software 
+ * of this software and associated documentation files (the "Software"),
+ * to deal in the Software without restriction, including without limitation
+ * the rights to use, copy, modify, merge, publish, distribute, sublicense,
+ * and/or sell copies of the Software, and to permit persons to whom the Software
  * is furnished to do so, subject to the following conditions:
  *
- * The above copyright notice and this permission notice shall be included in 
+ * The above copyright notice and this permission notice shall be included in
  * all copies or substantial portions of the Software.
  *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR 
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, 
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. 
- * IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, 
- * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, 
- * ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER 
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+ * IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
+ * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,
+ * ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
  * DEALINGS IN THE SOFTWARE.
  */
 package de.geeksfactory.opacclient.frontend;
@@ -46,12 +46,10 @@ import de.geeksfactory.opacclient.utils.BitmapUtils;
 
 public class ResultsAdapter extends ArrayAdapter<SearchResult> {
     private List<SearchResult> objects;
-    final int padding8dp;
 
     public ResultsAdapter(Context context, List<SearchResult> objects, OpacApi api) {
         super(context, R.layout.listitem_searchresult, objects);
         this.objects = objects;
-        this.padding8dp = (int)(8 * context.getResources().getDisplayMetrics().density + 0.5f);
     }
 
     @DrawableRes
@@ -151,6 +149,10 @@ public class ResultsAdapter extends ArrayAdapter<SearchResult> {
             view = contentView;
         }
 
+        return bindSearchResultToView(item, view, getContext());
+    }
+
+    public View bindSearchResultToView(SearchResult item, View view, Context context) {
         TextView tv = (TextView) view.findViewById(R.id.tvResult);
         tv.setText(Html.fromHtml(item.getInnerhtml()));
 
@@ -190,7 +192,8 @@ public class ResultsAdapter extends ArrayAdapter<SearchResult> {
         } else if (item.getType() != null && item.getType() != MediaType.NONE) {
             ivCover.setImageResource(getResourceByMediaType(item.getType()));
             ivCover.setVisibility(View.VISIBLE);
-            ivCover.setPadding(padding8dp, padding8dp, padding8dp, padding8dp);
+            int padding = getPadding(context);
+            ivCover.setPadding(padding, padding, padding, padding);
             ivType.setVisibility(View.GONE);
         } else {
             ivCover.setVisibility(View.INVISIBLE);
@@ -221,6 +224,14 @@ public class ResultsAdapter extends ArrayAdapter<SearchResult> {
         return view;
     }
 
+    private static int calculatedPadding = -1;
+    private static int getPadding(Context context) {
+        if(calculatedPadding == -1) {
+            calculatedPadding = (int) (8 * context.getResources().getDisplayMetrics().density + 0.5f);
+        }
+        return calculatedPadding;
+    }
+
     public class LoadCoverTask extends CoverDownloadTask {
         protected ImageView ivCover;
         protected ImageView ivType;
@@ -239,7 +250,8 @@ public class ResultsAdapter extends ArrayAdapter<SearchResult> {
             } else if (item instanceof SearchResult && ((SearchResult) item).getType() != null
                     && ((SearchResult) item).getType() != MediaType.NONE) {
                 ivCover.setImageResource(getResourceByMediaType(((SearchResult) item).getType()));
-                ivCover.setPadding(padding8dp, padding8dp, padding8dp, padding8dp);
+                int padding = getPadding(getContext());
+                ivCover.setPadding(padding, padding, padding, padding);
                 ivCover.setVisibility(View.VISIBLE);
                 ivType.setVisibility(View.GONE);
             } else {

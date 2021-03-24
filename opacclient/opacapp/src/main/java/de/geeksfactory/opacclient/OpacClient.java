@@ -431,4 +431,13 @@ public class OpacClient extends Application {
     public boolean promotePlusApps() {
         return true;
     }
+
+    public OpacApi getApiForLibraryIdent(String libraryIdent) {
+        try {
+            //in open source version we always only use the current selected library
+            return getApi();
+        } catch (de.geeksfactory.opacclient.OpacClient.LibraryRemovedException e) {
+            return null;
+        }
+    }
 }

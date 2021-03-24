@@ -2,7 +2,6 @@ package de.geeksfactory.opacclient.frontend;
 
 import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
-import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -13,7 +12,6 @@ import android.net.ConnectivityManager;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
-import androidx.preference.PreferenceManager;
 import android.print.PrintAttributes;
 import android.print.PrintDocumentAdapter;
 import android.print.PrintManager;
@@ -53,6 +51,7 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.core.net.ConnectivityManagerCompat;
 import androidx.fragment.app.Fragment;
 import androidx.palette.graphics.Palette;
+import androidx.preference.PreferenceManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import de.geeksfactory.opacclient.OpacClient;
@@ -95,6 +94,7 @@ public class SearchResultDetailFragment extends Fragment
      * The fragment argument representing the item ID that this fragment represents.
      */
     public static final String ARG_ITEM_ID = "item_id";
+    public static final String ARG_ITEM_LIBRARY_IDENT = "item_library_ident";
 
     public static final String ARG_ITEM_NR = "item_nr";
     public static final String ARG_ITEM_COVER_BITMAP = "item_cover_bitmap";
@@ -130,6 +130,7 @@ public class SearchResultDetailFragment extends Fragment
      * The detailled item that this fragment represents.
      */
     private DetailedItem item;
+    private String libraryIdent;
     private String id;
     private Integer nr;
     private OpacClient app;
@@ -219,16 +220,23 @@ public class SearchResultDetailFragment extends Fragment
         setProgress(progress, false);
     }
 
-    private void load(int nr, String id) {
+    private void load(String libraryIdent, int nr, String id) {
+        OpacApi apiToUse = app.getApiForLibraryIdent(libraryIdent);
+
+        if(apiToUse == null) {
+            return;
+        }
+
         setProgress(true, true);
+        this.libraryIdent = libraryIdent;
         this.id = id;
         this.nr = nr;
-        ft = new FetchTask(nr, id);
+        ft = new FetchTask(apiToUse, nr, id);
         ft.execute();
     }
 
     private void reload() {
-        load(nr, id);
+        load(libraryIdent, nr, id);
     }
 
     @Override
@@ -249,11 +257,33 @@ public class SearchResultDetailFragment extends Fragment
         super.onViewCreated(view, savedInstanceState);
         if (item != null) {
             display();
-        } else if (getArguments().containsKey(ARG_ITEM_ID)
-                || getArguments().containsKey(ARG_ITEM_NR)) {
-            load(getArguments().getInt(ARG_ITEM_NR),
-                    getArguments().getString(ARG_ITEM_ID));
+        } else if (argumentIdAvailable() || argumentNrAvailable()) {
+            load(getArgumentLibraryIdent(), getArgumentNr(), getArgumentId());
         }
+    }
+
+    private boolean argumentIdAvailable() {
+        return getArguments().containsKey(ARG_ITEM_ID);
+    }
+
+    private boolean argumentNrAvailable() {
+        return getArguments().containsKey(ARG_ITEM_NR);
+    }
+
+    private String getArgumentLibraryIdent() {
+        if(getArguments().containsKey(ARG_ITEM_LIBRARY_IDENT)) {
+            return getArguments().getString(ARG_ITEM_LIBRARY_IDENT);
+        } else {
+            return ""; //allow backward compatibility, in free opac app libraryIdent is not needed
+        }
+    }
+
+    private String getArgumentId() {
+        return getArguments().getString(ARG_ITEM_ID);
+    }
+
+    private int getArgumentNr() {
+        return getArguments().getInt(ARG_ITEM_NR);
     }
 
     @Override
@@ -1245,8 +1275,10 @@ public class SearchResultDetailFragment extends Fragment
         protected boolean success = true;
         protected Integer nr;
         protected String id;
+        protected OpacApi apiToUse;
 
-        public FetchTask(Integer nr, String id) {
+        public FetchTask(OpacApi apiToUse, Integer nr, String id) {
+            this.apiToUse = apiToUse;
             this.nr = nr;
             this.id = id;
         }
@@ -1265,13 +1297,13 @@ public class SearchResultDetailFragment extends Fragment
                     if (getActivity().getIntent().hasExtra("reservation")
                             && getActivity().getIntent().getBooleanExtra(
                             "reservation", false)) {
-                        app.getApi().start();
+                        apiToUse.start();
                     }
 
-                    res = app.getApi().getResultById(id, homebranch);
+                    res = apiToUse.getResultById(id, homebranch);
                     if (res.getId() == null) res.setId(id);
                 } else {
-                    res = app.getApi().getResult(nr);
+                    res = apiToUse.getResult(nr);
                 }
                 if (res.getMediaType() == null && getArguments().containsKey(ARG_ITEM_MEDIATYPE)) {
                     res.setMediaType(SearchResult.MediaType
