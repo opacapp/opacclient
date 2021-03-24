@@ -152,16 +152,16 @@ public class ResultsAdapter extends ArrayAdapter<SearchResult> {
         return bindSearchResultToView(item, view, getContext());
     }
 
-    public View bindSearchResultToView(SearchResult item, View view, Context context) {
+    public static View bindSearchResultToView(SearchResult item, View view, Context context) {
         TextView tv = (TextView) view.findViewById(R.id.tvResult);
         tv.setText(Html.fromHtml(item.getInnerhtml()));
 
         ImageView ivCover = view.findViewById(R.id.ivCover);
         ImageView ivType = view.findViewById(R.id.ivType);
 
-        PreferenceDataSource pds = new PreferenceDataSource(getContext());
+        PreferenceDataSource pds = new PreferenceDataSource(context);
         ConnectivityManager connMgr =
-                (ConnectivityManager) getContext().getSystemService(Context.CONNECTIVITY_SERVICE);
+                (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
 
         if (item.getCoverBitmap() != null) {
             ivCover.setImageBitmap(BitmapUtils.bitmapFromBytes(item.getCoverBitmap()));
@@ -177,7 +177,7 @@ public class ResultsAdapter extends ArrayAdapter<SearchResult> {
         } else if ((pds.isLoadCoversOnDataPreferenceSet()
                 || !ConnectivityManagerCompat.isActiveNetworkMetered(connMgr))
                 && item.getCover() != null) {
-            LoadCoverTask lct = new LoadCoverTask(ivCover, ivType, item);
+            LoadCoverTask lct = new LoadCoverTask(ivCover, ivType, item, context);
             lct.execute();
             ivCover.setImageResource(R.drawable.ic_loading);
             ivCover.setVisibility(View.VISIBLE);
@@ -232,12 +232,12 @@ public class ResultsAdapter extends ArrayAdapter<SearchResult> {
         return calculatedPadding;
     }
 
-    public class LoadCoverTask extends CoverDownloadTask {
+    public static class LoadCoverTask extends CoverDownloadTask {
         protected ImageView ivCover;
         protected ImageView ivType;
 
-        public LoadCoverTask(ImageView ivCover, ImageView ivType, SearchResult item) {
-            super(getContext(), item);
+        public LoadCoverTask(ImageView ivCover, ImageView ivType, SearchResult item, Context context) {
+            super(context, item);
             this.ivCover = ivCover;
             this.ivType = ivType;
         }
@@ -250,7 +250,7 @@ public class ResultsAdapter extends ArrayAdapter<SearchResult> {
             } else if (item instanceof SearchResult && ((SearchResult) item).getType() != null
                     && ((SearchResult) item).getType() != MediaType.NONE) {
                 ivCover.setImageResource(getResourceByMediaType(((SearchResult) item).getType()));
-                int padding = getPadding(getContext());
+                int padding = getPadding(context);
                 ivCover.setPadding(padding, padding, padding, padding);
                 ivCover.setVisibility(View.VISIBLE);
                 ivType.setVisibility(View.GONE);
