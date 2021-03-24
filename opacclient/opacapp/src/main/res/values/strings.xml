@@ -342,4 +342,5 @@
     <string name="support_policy_hint">We provide no free support for use of this library in the
         app, problems that may occur in the future will probably not be fixed.</string>
     <string name="support_policy_more_info">more info</string>
+    <string name="multi_search_finished">Suche beendet</string>
 </resources>

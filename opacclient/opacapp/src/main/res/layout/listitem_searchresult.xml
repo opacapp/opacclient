@@ -5,7 +5,8 @@
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
                 android:background="@drawable/list_selector"
-                android:padding="5dip">
+                android:padding="5dip"
+                style="@style/searchListItem">
 
     <ImageView
         android:id="@+id/ivCover"

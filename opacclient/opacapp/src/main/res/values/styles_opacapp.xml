@@ -116,4 +116,6 @@
         <item name="android:layout_marginTop">8dp</item>
     </style>
 
+    <style name="searchListItem"></style>
+
 </resources>
