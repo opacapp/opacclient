@@ -412,11 +412,6 @@ public class SearchResultDetailFragment extends Fragment
         addSubhead(joiner, R.string.details_head);
         joiner.add(new JoinableAdapter(new DetailsAdapter(item.getDetails(), getActivity())));
 
-        if (item.getCopies().size() != 0) {
-            addSubhead(joiner, R.string.copies_head);
-            joiner.add(new JoinableAdapter(new CopiesAdapter(item.getCopies(), getActivity())));
-        }
-
         if (item.getVolumesearch() != null) {
             addSubhead(joiner, R.string.volumes);
             joiner.add(new JoinableLayout(
@@ -435,6 +430,12 @@ public class SearchResultDetailFragment extends Fragment
             addSubhead(joiner, R.string.volumes);
             joiner.add(new JoinableAdapter(new VolumesAdapter(item.getVolumes(), getActivity())));
         }
+
+        if (item.getCopies().size() != 0) {
+            addSubhead(joiner, R.string.copies_head);
+            joiner.add(new JoinableAdapter(new CopiesAdapter(item.getCopies(), getActivity())));
+        }
+
         rvDetails.setAdapter(joiner.getAdapter());
 
         if (id == null || id.equals("")) {

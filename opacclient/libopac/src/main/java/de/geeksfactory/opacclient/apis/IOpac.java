@@ -682,6 +682,12 @@ public class IOpac extends OkHttpBaseApi implements OpacApi {
     }
 
     @Override
+    public ProlongAllResult prolongMultiple(List<String> media,
+            Account account, int useraction, String selection) throws IOException {
+        return null;
+    }
+
+    @Override
     public CancelResult cancel(String media, Account account, int useraction,
             String selection) throws IOException, OpacErrorException {
         String html = httpGet(opac_url + "/" + media, getDefaultEncoding());

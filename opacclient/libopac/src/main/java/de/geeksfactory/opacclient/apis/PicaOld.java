@@ -275,6 +275,12 @@ public class PicaOld extends Pica {
     }
 
     @Override
+    public ProlongAllResult prolongMultiple(List<String> media,
+            Account account, int useraction, String selection) throws IOException {
+        return null;
+    }
+
+    @Override
     public CancelResult cancel(String media, Account account, int useraction,
             String selection) throws IOException, OpacErrorException {
         FormBody.Builder params = new FormBody.Builder();

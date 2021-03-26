@@ -1,0 +1,197 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<!-- BIB2-WebOPAC: Rahmenseite -->
+<html>
+<head>
+  <!-- Titel der WebOPAC-Seiten im Web-Browser -->
+  <title>BIB2 WebOPAC</title>
+  <!-- CSS-Stylesheet (individuell anpassbar) -->
+  <link rel="stylesheet" type="text/css" media="all" href="webopac.css">
+  <!-- vom Web-Browser für die WebOPAC-Seiten angezeigtes Icon -->
+  <link rel="shortcut icon" type="image/ico" href="favicon.ico">
+  <!-- verwendeter Zeichensatz des WebOPAC (nicht ändern) -->
+  <meta http-equiv="Content-type" content="text/html;charset=ISO-8859-1">
+  <!-- zusätzliche Html-Header für die Darstellung des Schlagwortkatalogs
+       auf der Startseite (nicht ändern, wenn Sie an der Darstellung des
+       Schlagwortkatalogs nichts ändern wollen) -->
+
+  <script type="text/javascript">
+   function tricker(){
+   var e=document.getElementById('search');
+   if(!e)return true;
+   if(e.style.display=="none"){
+   e.style.display="inline"
+   } else {
+   e.style.display="none"
+   };
+   var d=document.getElementById('jkui');
+   if(!d)return true;
+   if(d.style.display=="none"){
+   d.style.display="inline"
+   } else {
+   d.style.display="none"
+   };
+   }; //Funktion zum Aufklappen der Suchfelder
+
+
+
+   function del() {
+   document.OPACFORM.sw.value='';
+   document.OPACFORM.ah.value='';
+   document.OPACFORM.F015.value='';
+   document.OPACFORM.C106.value='F003';
+   document.OPACFORM.C105.value='AND';
+   document.OPACFORM.F001.value='';
+   document.OPACFORM.F023.value='';
+   }; //Leert Datenfelder
+
+   aktiv = new Image();
+   aktiv.src = "aktiv.gif";
+
+   function send (){
+
+              document.OPACFORM.submit();};
+   function senden (){
+              var d=document.getElementById('aktiv');
+              if(d.style.display=="none"){
+              d.style.display="block"
+   } else {
+   d.style.display="none"};
+              setTimeout("send ()",5000);}; //Lässt aktiv.gif erscheinen
+  </script>
+</head>
+
+<body>
+ <script type="text/javascript">
+
+
+
+ query = self.location.search;
+  sammlung = new Array();
+  query = query.substr(1, query.length - 1);
+  query = query.replace(/%26/,"&");
+  teile = query.split("&");
+
+
+ if(teile[1]==124&&query!='')
+   {document.write("<div><div class='content'><div><center><table>"); }
+    else{
+document.write('<div id="container"> ');
+document.write('<div class="content" id="main_container">   ');
+document.write('<div><center>                               ');
+document.write('<table width="1000">               ');
+document.write('  <tr><td height="20"></td></tr>    ');
+document.write('  <tr>                             ');
+document.write('    <td>                          ');
+document.write('    </td>                                                                ');
+document.write('  </tr>                                                                  ');
+document.write('  <tr><td height="20"></td></tr>                                         ');
+  };
+  </script>
+
+  <tr>
+    <td width="100%">
+      <!-- Einbindung der darzustellenden Seite: -->
+<!-- BIB2-WebOPAC: Titelansicht -->
+
+<script type="text/javascript">
+query = self.location.search;
+  sammlung = new Array();
+  query = query.substr(1, query.length - 1);
+  query = query.replace(/%26/,"&");
+  teile = query.split("&");
+
+
+ if(teile[1]==124)
+ {
+ document.write("<table width='325'><tr><td colspan='2'><b>Kletterführer Frankenjura Band 2 / Deutschland</b></td></tr><tr><td colspan='2'>Kletterführer</td></tr><tr><td colspan='2'>von Schwertner, Sebastian</td></tr><tr><td><!--PICTURE()--><img src='title_picture_25221' alt='Titelbild'></td><td></td></tr><tr><td colspan ='2'><a href='detail?" +teile[0]+ "' target='BIB2'><img src='http://bergsteigerbund.de/images/pfeil2_gr_re.gif'>Details</a></td></tr><tr><td colspan='2'><span id='black'><b>1</b></span> Stück zur Zeit ausleihbar.</td></tr></table>");
+ }
+ else{
+document.write('<div style="margin-top: 20px"><a class="biglink" href="start?C106=F003&amp;C101=8072556421187516302.11&amp;C105=AND&amp;F023=15&amp;C102=25221&amp;C108=0">neue Suche</a></div>');
+document.write('<table width="760" class="withborder">');
+document.write('<tr><th colspan="2">Titelansicht</th></tr> ');
+document.write('<!-- Titeldatenfelder: -->                    ');
+document.write('<tr><td width="20%" class="even">Aufnahmedatum:</td><td width="80%">01.01.2019</td></tr>');
+document.write('<tr><td class="even">Medienart:</td><td></td></tr>                               ');
+document.write('<tr><td class="even">Sachgruppe:</td><td></td></tr>                                 ');
+document.write('<tr><td class="even">Signatur:</td><td>X123</td></tr>                                       ');
+document.write('<tr><td class="even">Gesamttitel:</td><td></td></tr>                                      ');
+document.write('<tr><td class="even"><b>Haupttitel:</b></td><td><b>Haupttitel</b></td></tr>                            ');
+document.write('<tr><td class="even">Untertitel:</td><td></td></tr>                                             ');
+document.write('<tr><td class="even">Autor:</td><td></td></tr>                                                     ');
+document.write('<tr><td class="even">Herausgeber:</td><td></td></tr>                                                  ');
+document.write('<tr><td class="even">Ausgabe:</td><td></td></tr>                                                          ');
+document.write('<tr><td class="even">Erscheinungsjahr:</td><td></td></tr>                                                   ');
+document.write('<tr><td class="even">Verlag:</td><td></td></tr>                                                                ');
+document.write('<tr><td class="even">ISBN:</td><td></td></tr>                                                                     ');
+document.write('<tr><td class="even">Schlagwörter:</td><td></td></tr>                                                                ');
+document.write('<tr><td class="even">Ressource:</td><td></td></tr>                                             ');
+document.write('<tr><td class="even">Kurzbeschreibung:</td><td></td></tr>                                                                  ');
+document.write('<tr><td class="even">Notiz:</td><td></td></tr>');
+document.write('<tr><td class="even">Ansicht:</td><td><!--PICTURE()--><img src="title_picture_7502" alt="Titelbild"></td></tr>                 ');
+document.write('<!-- zusammengefasste Bestands-Information: -->                                                                                              ');
+document.write('<tr>                                                                                                                                            ');
+document.write('  <td class="even">Bestand:</td>');
+document.write('  <td>                             ');
+document.write('    <span id="green"><b>1</b></span>');
+document.write('    Exemplar zur Ausleihe verfügbar, 1 vor Ort, 2 insgesamt im Bestand.');
+document.write('  </td>                                                                                                                                    ');
+document.write('</tr>                                                                                                                                      ');
+document.write('<!-- Exemplarauflistung: -->                                                                                                                 ');
+document.write('<tr>                                                                                                                                           ');
+document.write('  <td class="even" valign="top">Exemplarliste:</td>                                                                                              ');
+document.write('  <td>                                                                                                                                              ');
+document.write('    <table border="1" cellpadding="1" cellspacing="0" width="100%">                                                                                    ');
+document.write('      <tr>                                                                                                                                                ');
+document.write('        <th>Signatur</th>                                                                                                                                    ');
+document.write('        <th>Jahr</th>             ');
+document.write('        <th>Standort</th>                                                                                                                                       ');
+document.write('        <th>ausleihbar</th>                                                                                                                                        ');
+document.write('        <th>Rückgabe</th>                                                                                                                                             ');
+document.write('      </tr>');
+document.write('      <tr class="odd">');
+document.write('        <td>X123/1</td>');
+document.write('        <td></td>        ');
+document.write('        <td></td>');
+document.write('        <td align="center"></td>');
+document.write('        <td></td>');
+document.write('      </tr>');
+
+document.write('    </table>');
+document.write('  </td>        ');
+document.write('</tr>             ');
+document.write('</table>             ');
+document.write('<!-- Navigation: -->    ');
+document.write('<div style="margin-top: 10px">');
+document.write('<span style="text-align: left"><a class="biglink" href="location?C106=F003&amp;C109=26220&amp;C101=8072556421187516302.11&amp;C105=AND&amp;F023=15&amp;C102=25221&amp;C108=11">Standort anzeigen</a></span>');
+document.write('</div>');
+document.write('<div style="margin-top: 20px">');
+document.write('<a class="biglink" href="list?C106=F003&amp;C109=26220&amp;C101=8072556421187516302.11&amp;C105=AND&amp;F023=15&amp;C102=25221&amp;C108=11">zurück zur Suchergebnisliste</a>');
+document.write('');
+document.write('</div>');
+document.write('<div style="margin-top: 20px"><a class="biglink" href="start?C106=F003&amp;C109=26220&amp;C101=8072556421187516302.11&amp;C105=AND&amp;F023=15&amp;C102=25221&amp;C108=0">neue Suche</a></div>');
+ };
+
+
+
+
+
+
+</script>
+
+    </td>
+  </tr>
+  <tr>
+    <td class="red">
+      <!-- eventuelle Fehlernachrichten: -->
+
+
+    </td>
+    </tr>
+</table>
+</center>
+</div>
+</div>
+</div>
+
+</body>
+</html>

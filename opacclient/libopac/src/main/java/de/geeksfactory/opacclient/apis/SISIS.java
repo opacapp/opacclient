@@ -1989,6 +1989,7 @@ public class SISIS extends OkHttpBaseApi implements OpacApi {
                     continue;
                 }
                 String nextNodeIs = "";
+                boolean hasTitle = false;
                 for (Node n : td.childNodes()) {
                     String text;
                     if (n instanceof Element) {
@@ -2009,10 +2010,14 @@ public class SISIS extends OkHttpBaseApi implements OpacApi {
                         nextNodeIs = ProlongAllResult.KEY_LINE_NEW_RETURNDATE;
                     } else if (text.contains("Status:")) {
                         nextNodeIs = ProlongAllResult.KEY_LINE_MESSAGE;
-                    } else if (text.contains("Mediennummer:")
-                            || text.contains("Signatur:")) {
+                    } else if (text.contains("Mediennummer:")) {
                         nextNodeIs = "";
+                    } else if (text.contains("Signatur:")) {
+                        nextNodeIs = hasTitle ? "" : ProlongAllResult.KEY_LINE_TITLE;
                     } else if (nextNodeIs.length() > 0) {
+                        if (ProlongAllResult.KEY_LINE_TITLE.equals(nextNodeIs)) {
+                            hasTitle = true;
+                        }
                         line.put(nextNodeIs, text.trim());
                         nextNodeIs = "";
                     }
@@ -2024,6 +2029,12 @@ public class SISIS extends OkHttpBaseApi implements OpacApi {
 
         return new ProlongAllResult(MultiStepResult.Status.ERROR,
                 stringProvider.getString(StringProvider.COULD_NOT_LOAD_ACCOUNT));
+    }
+
+    @Override
+    public ProlongAllResult prolongMultiple(List<String> media,
+            Account account, int useraction, String selection) throws IOException {
+        return null;
     }
 
     @Override

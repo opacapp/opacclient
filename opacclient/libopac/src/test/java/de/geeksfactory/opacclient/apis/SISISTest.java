@@ -6,10 +6,16 @@ import org.junit.Before;
 import org.junit.Test;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import de.geeksfactory.opacclient.objects.Account;
 import de.geeksfactory.opacclient.objects.AccountData;
 
+import static com.shazam.shazamcrest.MatcherAssert.assertThat;
+import static com.shazam.shazamcrest.matcher.Matchers.sameBeanAs;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 import static org.mockito.Matchers.anyString;
@@ -151,5 +157,33 @@ public class SISISTest extends BaseHtmlTest {
                 "    //-->";
         String actual = sisis.getAjaxCoverUrl(html);
         assertNull(actual);
+    }
+
+    @Test
+    public void testProlongAll() throws IOException, OpacApi.OpacErrorException, JSONException {
+        Account acc = new Account();
+        String html = readResource("/sisis/medialist/Dresden-renew_all.html");
+
+        doNothing().when(sisis).start();
+        doReturn(true).when(sisis).login(acc);
+        doReturn(null).when(sisis).account(acc);
+        doReturn(html).when(sisis).httpGet(anyString(), anyString());
+
+        List<Map<String, String>> results = new ArrayList<>();
+        HashMap<String, String> hm1 = new HashMap<>();
+        hm1.put(OpacApi.ProlongAllResult.KEY_LINE_TITLE, "On the come up");
+        hm1.put(OpacApi.ProlongAllResult.KEY_LINE_AUTHOR, "Thomas, Angie ¬[Verfasser]");
+        hm1.put(OpacApi.ProlongAllResult.KEY_LINE_MESSAGE, "Keine Verlängerung, da maximale Anzahl Verlängerungen = 1 erreicht !");
+        hm1.put(OpacApi.ProlongAllResult.KEY_LINE_NEW_RETURNDATE, "17.05.2021");
+        results.add(hm1);
+        HashMap<String, String> hm2 = new HashMap<>();
+        hm2.put(OpacApi.ProlongAllResult.KEY_LINE_TITLE, "LandIdee 21/1");
+        hm2.put(OpacApi.ProlongAllResult.KEY_LINE_MESSAGE, "Keine Verlängerung, da maximale Anzahl Verlängerungen = 1 erreicht !");
+        hm2.put(OpacApi.ProlongAllResult.KEY_LINE_NEW_RETURNDATE, "16.04.2021");
+        results.add(hm2);
+        OpacApi.ProlongAllResult expected = new OpacApi.ProlongAllResult(OpacApi.MultiStepResult.Status.OK, results);
+
+        OpacApi.ProlongAllResult actual = sisis.prolongAll(acc, 0, null);
+        assertThat(actual, sameBeanAs(expected));
     }
 }

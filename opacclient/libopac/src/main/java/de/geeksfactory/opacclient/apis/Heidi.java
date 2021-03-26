@@ -680,6 +680,12 @@ public class Heidi extends ApacheBaseApi implements OpacApi {
     }
 
     @Override
+    public ProlongAllResult prolongMultiple(List<String> media,
+            Account account, int useraction, String selection) throws IOException {
+        return null;
+    }
+
+    @Override
     public CancelResult cancel(String media, Account account, int useraction,
             String selection) throws IOException, OpacErrorException {
         List<NameValuePair> nameValuePairs = new ArrayList<>(2);
