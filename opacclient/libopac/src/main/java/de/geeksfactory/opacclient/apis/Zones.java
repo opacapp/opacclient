@@ -979,6 +979,12 @@ public class Zones extends OkHttpBaseApi {
     }
 
     @Override
+    public ProlongAllResult prolongMultiple(List<String> media,
+            Account account, int useraction, String selection) throws IOException {
+        return null;
+    }
+
+    @Override
     public SearchRequestResult filterResults(Filter filter, Option option) {
         // TODO Auto-generated method stub
         return null;

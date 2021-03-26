@@ -350,6 +350,11 @@ open class Arena : OkHttpBaseApi() {
         return OpacApi.ProlongAllResult(OpacApi.MultiStepResult.Status.ERROR)
     }
 
+    override fun prolongMultiple(media: List<String>,
+                                 account: Account, useraction: Int, selection: String?): OpacApi.ProlongAllResult {
+        return return OpacApi.ProlongAllResult(OpacApi.MultiStepResult.Status.UNSUPPORTED)
+    }
+
     override fun cancel(media: String, account: Account, useraction: Int, selection: String?): OpacApi.CancelResult {
         val resDoc = httpGet("$opacUrl/protected/reservations", ENCODING).html
         val internalError = OpacApi.CancelResult(OpacApi.MultiStepResult.Status.ERROR,

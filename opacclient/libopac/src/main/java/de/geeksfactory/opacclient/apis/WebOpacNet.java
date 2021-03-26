@@ -275,7 +275,7 @@ public class WebOpacNet extends OkHttpBaseApi implements OpacApi {
             if ("True".equals(config.optString("displaydivibib"))) {
                 params.append("&nodibi=0");
             }
-            
+
             params.append("&t=1");
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
@@ -648,6 +648,12 @@ public class WebOpacNet extends OkHttpBaseApi implements OpacApi {
         Buffer buffer = new Buffer();
         body.writeTo(buffer);
         return buffer.readUtf8();
+    }
+
+    @Override
+    public ProlongAllResult prolongMultiple(List<String> media,
+            Account account, int useraction, String selection) throws IOException {
+        return null;
     }
 
     @Override

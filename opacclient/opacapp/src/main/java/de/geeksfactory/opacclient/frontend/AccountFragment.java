@@ -49,12 +49,15 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import org.apache.http.NoHttpResponseException;
+import org.joda.time.Days;
+import org.joda.time.LocalDate;
 import org.joda.time.LocalDateTime;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 import org.json.JSONException;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
@@ -342,6 +345,12 @@ public class AccountFragment extends Fragment implements
         } else {
             menu.findItem(R.id.action_prolong_all).setVisible(false);
         }
+        if (app.getAccount() != null && (
+                api.getSupportFlags() & OpacApi.SUPPORT_FLAG_ACCOUNT_PROLONG_MULTIPLE) != 0) {
+            menu.findItem(R.id.action_prolong_due).setVisible(true);
+        } else {
+            menu.findItem(R.id.action_prolong_due).setVisible(false);
+        }
         menu.findItem(R.id.action_refresh).setVisible(supported);
         super.onCreateOptionsMenu(menu, inflater);
     }
@@ -357,6 +366,8 @@ public class AccountFragment extends Fragment implements
             refresh();
         } else if (item.getItemId() == R.id.action_prolong_all) {
             prolongAllStart();
+        } else if (item.getItemId() == R.id.action_prolong_due) {
+            prolongDueStart();
         } else if (item.getItemId() == R.id.action_export) {
             export();
         }
@@ -1408,6 +1419,171 @@ public class AccountFragment extends Fragment implements
         msrhProlong.start();
     }
 
+    private List<String> getDueItemIDs() {
+        long age = System.currentTimeMillis() - refreshtime;
+        if (refreshing || age > MAX_CACHE_AGE) {
+            Toast.makeText(getActivity(), R.string.account_no_concurrent,
+                    Toast.LENGTH_LONG).show();
+            if (!refreshing) {
+                refresh();
+            }
+            return null;
+        }
+
+        Context ctx = getActivity() != null ? getActivity() : OpacClient
+                .getEmergencyContext();
+        AccountDataSource adatasource = new AccountDataSource(ctx);
+        AccountData data = adatasource.getCachedAccountData(account);
+        if (data == null) {
+            return null;
+        }
+
+        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(ctx);
+        final int tolerance = Integer.parseInt(sp.getString("notification_warning", "3"));
+        List<String> dueItemIDs = new ArrayList<String>();
+        for (LentItem item : data.getLent()) {
+            String prolongData = item.getProlongData();
+            LocalDate dueDate = item.getDeadline();
+            if (prolongData != null && dueDate != null &&
+                    Days.daysBetween(LocalDate.now(), dueDate).getDays() <= tolerance) {
+                dueItemIDs.add(prolongData);
+            }
+        }
+        return dueItemIDs;
+    }
+
+    public void prolongDueStart() {
+        List<String> dueItems = getDueItemIDs();
+        if (dueItems == null) {
+            return;
+        }
+        if (dueItems.size() == 0) {
+            Toast.makeText(getActivity(), R.string.prolong_due_no_items, Toast.LENGTH_LONG).show();
+            return;
+        }
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        builder.setMessage(R.string.prolong_due_confirm).setCancelable(true)
+               .setNegativeButton(R.string.no, new DialogInterface.OnClickListener() {
+                   @Override
+                   public void onClick(DialogInterface d, int id) {
+                       d.cancel();
+                   }
+               }).setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface d, int id) {
+                prolongDueDo(dueItems);
+            }
+        });
+        AlertDialog alert = builder.create();
+        alert.show();
+    }
+
+    public void prolongDueDo(List<String> dueItems) {
+
+        MultiStepResultHelper<List<String>> msrhProlong =
+                new MultiStepResultHelper<>(getActivity(), dueItems,
+                        R.string.doing_prolong_due);
+        msrhProlong.setCallback(new Callback<List<String>>() {
+            @Override
+            public void onSuccess(MultiStepResult result) {
+                if (getActivity() == null) {
+                    return;
+                }
+                ProlongAllResult res = (ProlongAllResult) result;
+                AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+
+                if (res.getResults() != null) {
+                    LayoutInflater inflater = getActivity().getLayoutInflater();
+                    View view = inflater.inflate(R.layout.dialog_simple_list, null, false);
+
+                    ListView lv = view.findViewById(R.id.lvBibs);
+
+                    lv.setAdapter(new ProlongAllResultAdapter(getActivity(), res.getResults()));
+                    switch (result.getActionIdentifier()) {
+                        case ReservationResult.ACTION_BRANCH:
+                            builder.setTitle(R.string.branch);
+                    }
+                    builder.setView(view)
+                           .setNeutralButton(R.string.close, new DialogInterface.OnClickListener() {
+                               @Override
+                               public void onClick(DialogInterface dialog, int id) {
+                                   adialog.cancel();
+                                   invalidateData();
+                               }
+                           });
+                } else {
+                    builder.setMessage(result.getMessage())
+                           .setCancelable(true)
+                           .setNegativeButton(R.string.close,
+                                   new DialogInterface.OnClickListener() {
+                                       @Override
+                                       public void onClick(DialogInterface d,
+                                               int id) {
+                                           d.cancel();
+                                       }
+                                   })
+                           .setOnCancelListener(
+                                   new DialogInterface.OnCancelListener() {
+                                       @Override
+                                       public void onCancel(DialogInterface d) {
+                                           if (d != null) {
+                                               d.cancel();
+                                           }
+                                       }
+                                   });
+                }
+                adialog = builder.create();
+                adialog.show();
+            }
+
+            @Override
+            public void onError(MultiStepResult result) {
+                if (getActivity() == null) {
+                    return;
+                }
+                AlertDialog.Builder builder = new AlertDialog.Builder(
+                        getActivity());
+                builder.setMessage(result.getMessage())
+                       .setCancelable(true)
+                       .setNegativeButton(R.string.close,
+                               new DialogInterface.OnClickListener() {
+                                   @Override
+                                   public void onClick(DialogInterface d,
+                                           int id) {
+                                       d.cancel();
+                                   }
+                               })
+                       .setOnCancelListener(
+                               new DialogInterface.OnCancelListener() {
+                                   @Override
+                                   public void onCancel(DialogInterface d) {
+                                       if (d != null) {
+                                           d.cancel();
+                                       }
+                                   }
+                               });
+                AlertDialog alert = builder.create();
+                alert.show();
+            }
+
+            @Override
+            public void onUnhandledResult(MultiStepResult result) {
+            }
+
+            @Override
+            public void onUserCancel() {
+            }
+
+            @Override
+            public StepTask<?> newTask(MultiStepResultHelper helper, int useraction,
+                    String selection, List<String> argument) {
+                return new ProlongDueTask(helper, useraction, selection, argument);
+            }
+        });
+        msrhProlong.start();
+    }
+
     @Override
     public void onStop() {
         super.onStop();
@@ -1655,6 +1831,56 @@ public class AccountFragment extends Fragment implements
         protected ProlongAllResult doInBackground(Void... voids) {
             try {
                 return app.getApi().prolongAll(account,
+                        useraction, selection);
+            } catch (IOException e) {
+                e.printStackTrace();
+            } catch (Exception e) {
+                ErrorReporter.handleException(e);
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(ProlongAllResult result) {
+            if (getActivity() == null) {
+                return;
+            }
+
+            if (result == null) {
+                AlertDialog.Builder builder = new AlertDialog.Builder(
+                        getActivity());
+                builder.setMessage(R.string.error)
+                       .setCancelable(true)
+                       .setNegativeButton(R.string.close,
+                               new DialogInterface.OnClickListener() {
+                                   @Override
+                                   public void onClick(DialogInterface dialog,
+                                           int id) {
+                                       dialog.cancel();
+                                   }
+                               });
+                AlertDialog alert = builder.create();
+                alert.show();
+            }
+
+            super.onPostExecute(result);
+        }
+    }
+
+    public class ProlongDueTask extends
+            MultiStepResultHelper.StepTask<ProlongAllResult> {
+        private List<String> dueItems;
+
+        public ProlongDueTask(MultiStepResultHelper helper, int useraction, String selection,
+                List<String> dueItems) {
+            super(helper, useraction, selection);
+            this.dueItems = dueItems;
+        }
+
+        @Override
+        protected ProlongAllResult doInBackground(Void... voids) {
+            try {
+                return app.getApi().prolongMultiple(dueItems, account,
                         useraction, selection);
             } catch (IOException e) {
                 e.printStackTrace();

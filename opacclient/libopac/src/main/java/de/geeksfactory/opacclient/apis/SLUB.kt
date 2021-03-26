@@ -416,6 +416,11 @@ open class SLUB : OkHttpBaseApi() {
         return OpacApi.ProlongAllResult(OpacApi.MultiStepResult.Status.UNSUPPORTED)
     }
 
+    override fun prolongMultiple(media: List<String>,
+                                 account: Account, useraction: Int, selection: String?): OpacApi.ProlongAllResult {
+        return return OpacApi.ProlongAllResult(OpacApi.MultiStepResult.Status.UNSUPPORTED)
+    }
+
     override fun cancel(media: String, account: Account, useraction: Int, selection: String?): OpacApi.CancelResult {
         return try {
             requestAccount(account, "delete", mapOf("tx_slubaccount_account[delete][0]" to media))

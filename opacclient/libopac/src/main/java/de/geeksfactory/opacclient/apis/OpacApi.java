@@ -91,6 +91,14 @@ public interface OpacApi {
     int SUPPORT_FLAG_WARN_PROLONG_FEES = 0x0000040;
 
     /**
+     * Availability of the "prolong multiple lent items" feature
+     *
+     * Flag to be present in the result of {@link #getSupportFlags()}.
+     * @since 6.4.0
+     */
+    int SUPPORT_FLAG_ACCOUNT_PROLONG_MULTIPLE = 0x0000080;
+
+    /**
      * May be called on application startup and you are free to call it in our {@link #search}
      * implementation or similar positions. It is commonly used to initialize a session. You MUST
      * NOT rely on it being called and should check by yourself, whether it was already called (if
@@ -288,6 +296,23 @@ public interface OpacApi {
      * @see de.geeksfactory.opacclient.objects.AccountData
      */
     ProlongAllResult prolongAll(Account account, int useraction,
+            String selection) throws IOException;
+
+    /**
+     * Extend the lending period of multiple lent items. Will only be called if your {@link
+     * #getSupportFlags()} implementation's return value contains the {@link
+     * #SUPPORT_FLAG_ACCOUNT_PROLONG_MULTIPLE} flag. If you don't support the feature, just
+     * implement a stub method, like <code>return false;</code>
+     *
+     * This function is always called from a background thread, you can use blocking network
+     * operations in it.
+     *
+     * @return A <code>ProlongAllResult</code> object which has to have the status set.
+     * @see OpacApi#prolong(String, Account, int, String)
+     * @see de.geeksfactory.opacclient.objects.AccountData
+     * @since 6.4.0
+     */
+    ProlongAllResult prolongMultiple(List<String> media, Account account, int useraction,
             String selection) throws IOException;
 
     /**

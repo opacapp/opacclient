@@ -296,6 +296,12 @@ public class SRU extends ApacheBaseApi implements OpacApi {
     }
 
     @Override
+    public ProlongAllResult prolongMultiple(List<String> media,
+            Account account, int useraction, String selection) throws IOException {
+        return null;
+    }
+
+    @Override
     public AccountData account(Account account) throws IOException,
             JSONException, OpacErrorException {
         return null;
