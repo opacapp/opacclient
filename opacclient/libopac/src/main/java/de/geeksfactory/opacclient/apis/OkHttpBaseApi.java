@@ -226,16 +226,12 @@ public abstract class OkHttpBaseApi extends BaseApi {
      * Perform a HTTP HEAD request to a given URL
      *
      * @param url           URL to fetch
-     * @param name          Name of the header field
-     * @param defaultValue  Default value of this header field
      * @param ignore_errors If true, status codes above 400 do not raise an exception
-     * @param client        Http client to use
-     * @return              Answer content
+     * @return              Response
      * @throws NotReachableException Thrown when server returns a HTTP status code greater or equal
      *                               than 400.
      */
-    public String httpHead(String url, String name, String defaultValue, boolean ignore_errors,
-            OkHttpClient client) throws IOException {
+    public Response httpHead(String url, boolean ignore_errors) throws IOException {
         Request request = new Request.Builder()
                 .url(cleanUrl(url))
                 .header("Accept", "*/*")
@@ -244,13 +240,13 @@ public abstract class OkHttpBaseApi extends BaseApi {
                 .build();
 
         try {
-            Response response = client.newCall(request).execute();
+            Response response = http_client.newCall(request).execute();
 
             if (!ignore_errors && response.code() >= 400) {
                 throw new NotReachableException(response.message());
             }
 
-            return response.header(name, defaultValue);
+            return response;
         } catch (javax.net.ssl.SSLPeerUnverifiedException e) {
             logHttpError(e);
             throw new SSLSecurityException(e.getMessage());
@@ -279,11 +275,6 @@ public abstract class OkHttpBaseApi extends BaseApi {
                 throw e;
             }
         }
-    }
-
-    public String httpHead(String url, String name, String defaultValue, OkHttpClient client)
-            throws IOException {
-        return httpHead(url, name, defaultValue, false, client);
     }
 
     public CompletableFuture<Response> asyncPost(String url, RequestBody data,

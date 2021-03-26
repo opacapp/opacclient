@@ -28,9 +28,7 @@ import de.geeksfactory.opacclient.objects.*
 import de.geeksfactory.opacclient.searchfields.DropdownSearchField
 import de.geeksfactory.opacclient.searchfields.SearchQuery
 import de.geeksfactory.opacclient.searchfields.TextSearchField
-import okhttp3.FormBody
-import okhttp3.OkHttpClient
-import okhttp3.RequestBody
+import okhttp3.*
 import org.hamcrest.MatcherAssert.assertThat
 import org.hamcrest.Matchers.*
 import org.joda.time.LocalDate
@@ -376,7 +374,7 @@ class SLUBSearchTest : BaseHtmlTest() {
             addDetail(Detail("Inhaltsverzeichnis", "http://www.gbv.de/dms/tib-ub-hannover/727434322.pdf"))
             addDetail(Detail("Inhaltstext", "http://deposit.d-nb.de/cgi-bin/dokserv?id=4155321&prov=M&dok_var=1&dok_ext=htm"))
             addDetail(Detail("Zugang zur Ressource (via ProQuest Ebook Central)", "http://wwwdb.dbod.de/login?url=http://slub.eblib.com/patron/FullRecord.aspx?p=1575685"))
-            addDetail(Detail("Online-Ausgabe", "Tamm, Michael: JUnit-Profiwissen (SLUB)"))
+            addVolume(Volume("http://slubdd.de/katalog?libero_mab216187885", "Online-Ausgabe:\nTamm, Michael: JUnit-Profiwissen"))
         }
 
         val item = slub.parseResultById(json)
@@ -810,7 +808,7 @@ class SLUBSearchMockTest(@Suppress("unused") private val name: String,
                                     )
                                 }, "Electronic+Resources")
                         ),
-                        "https://test.de/?type=1369315142&tx_find_find[format]=data&tx_find_find[data-format]=app&tx_find_find[page]=1&tx_find_find[q][title]=Kotlin - Das umfassende Praxis-Handbuch&tx_find_find[facet][access_facet][Electronic+Resources]=1".replace(" ", "%20"),  // correct for  addEncodedQueryParameter
+                        "https://test.de/?type=1369315142&tx_find_find%5Bformat%5D=data&tx_find_find%5Bdata-format%5D=app&tx_find_find%5Bpage%5D=1&tx_find_find%5Bq%5D%5Btitle%5D=Kotlin - Das umfassende Praxis-Handbuch&tx_find_find%5Bfacet%5D%5Baccess_facet%5D%5BElectronic%2BResources%5D=1".replace(" ", "%20"),  // correct for  addEncodedQueryParameter
                         "{\"numFound\":1,\"start\" : 0,\"docs\" : [{\"id\":\"0-1688062912\",\"format\":[\"Book, E-Book\"],\"title\":\"Kotlin - Das umfassende Praxis-Handbuch Szwillus, Karl.\",\"author\":[\"Szwillus, Karl\"],\"creationDate\":\"2019\",\"imprint\":[\"[Erscheinungsort nicht ermittelbar]: mitp Verlag, 2019\"]}]}",
                         1,
                         null,
@@ -822,12 +820,16 @@ class SLUBSearchMockTest(@Suppress("unused") private val name: String,
 
 class SLUBGetResultByIdMockTest : BaseHtmlTest() {
     private val slub = spy(SLUB::class.java)
-
-    private class ClientDoesntFollowRedirects : ArgumentMatcher<OkHttpClient?>() {
-        override fun matches(argument: Any): Boolean {
-            return !(argument as OkHttpClient).followRedirects()
-        }
-    }
+    private val mockHeadResponse = Response.Builder()
+            .request(Request.Builder()
+                    .url("https://test.de/id/123/")
+                    .build())
+            .protocol(Protocol.HTTP_2)
+            .code(200)
+            .message("")
+            .build()
+    val mockGetResponse = """{"record":{"title":"The title"},"id":"123","thumbnail":"","links":[],"linksRelated":[],
+                            |"linksAccess":[],"linksGeneral":[],"references":[],"copies":[],"parts":{}}""".trimMargin()
 
     init {
         slub.init(Library().apply {
@@ -848,52 +850,50 @@ class SLUBGetResultByIdMockTest : BaseHtmlTest() {
 
     @Test
     fun testIdIdentifier() {
-        val response = """{"record":{"title":"The title"},"id":"123","thumbnail":"","links":[],"linksRelated":[],
-                            |"linksAccess":[],"linksGeneral":[],"references":[],"copies":[],"parts":{}}""".trimMargin()
-        doReturn(response).`when`(slub).httpGet(Matchers.any(), Matchers.any())
+        doReturn(mockGetResponse).`when`(slub).httpGet(Matchers.any(), Matchers.any())
         val actual = slub.getResultById("id/123", null)
-        verify(slub).httpGet("https://test.de/id/123/?type=1369315142&tx_find_find[format]=data&tx_find_find[data-format]=app", "UTF-8")
-        verify(slub, never()).httpHead(any(), any(), any(), any())
+        verify(slub).httpGet("https://test.de/id/123/?type=1369315142&tx_find_find%5Bformat%5D=data&tx_find_find%5Bdata-format%5D=app", "UTF-8")
+        verify(slub, never()).httpHead(any(), anyBoolean())
         assertEquals("id/123", actual.id)
     }
 
     @Test
     fun testBcIdentifier() {
-        doReturn("https://test.de/id/123/").`when`(slub).httpHead(Matchers.any(),
-                Matchers.any(), Matchers.any(), Matchers.any())
-        val response = """{"record":{"title":"The title"},"id":"123","thumbnail":"","links":[],"linksRelated":[],
-                            |"linksAccess":[],"linksGeneral":[],"references":[],"copies":[],"parts":{}}""".trimMargin()
-        doReturn(response).`when`(slub).httpGet(Matchers.any(), Matchers.any())
+        doReturn(mockHeadResponse).`when`(slub).httpHead(Matchers.any(), Matchers.anyBoolean())
+        doReturn(mockGetResponse).`when`(slub).httpGet(Matchers.any(), Matchers.any())
         val actual = slub.getResultById("bc/456", null)
-        verify(slub).httpHead(eq("https://test.de/bc/456/"), eq("Location"), eq(""),
-                argThat(ClientDoesntFollowRedirects()))
-        verify(slub).httpGet("https://test.de/id/123/?type=1369315142&tx_find_find[format]=data&tx_find_find[data-format]=app", "UTF-8")
+        verify(slub).httpHead(eq("https://test.de/bc/456/"), eq(false))
+        verify(slub).httpGet("https://test.de/id/123/?type=1369315142&tx_find_find%5Bformat%5D=data&tx_find_find%5Bdata-format%5D=app", "UTF-8")
         assertEquals("id/123", actual.id)
     }
 
     @Test
     fun testRsnIdentifier() {
-        doReturn("https://test.de/id/123/").`when`(slub).httpHead(Matchers.any(),
-                Matchers.any(), Matchers.any(), Matchers.any())
-        val response = """{"record":{"title":"The title"},"id":"123","thumbnail":"","links":[],"linksRelated":[],
-                            |"linksAccess":[],"linksGeneral":[],"references":[],"copies":[],"parts":{}}""".trimMargin()
-        doReturn(response).`when`(slub).httpGet(Matchers.any(), Matchers.any())
+        doReturn(mockHeadResponse).`when`(slub).httpHead(Matchers.any(), Matchers.anyBoolean())
+        doReturn(mockGetResponse).`when`(slub).httpGet(Matchers.any(), Matchers.any())
         val actual = slub.getResultById("rsn/456", null)
-        verify(slub).httpHead(eq("https://test.de/rsn/456/"), eq("Location"), eq(""),
-                argThat(ClientDoesntFollowRedirects()))
-        verify(slub).httpGet("https://test.de/id/123/?type=1369315142&tx_find_find[format]=data&tx_find_find[data-format]=app", "UTF-8")
+        verify(slub).httpHead(eq("https://test.de/rsn/456/"), eq(false))
+        verify(slub).httpGet("https://test.de/id/123/?type=1369315142&tx_find_find%5Bformat%5D=data&tx_find_find%5Bdata-format%5D=app", "UTF-8")
+        assertEquals("id/123", actual.id)
+    }
+
+    @Test
+    fun testLibeorIdentifier() {
+        doReturn(mockHeadResponse).`when`(slub).httpHead(Matchers.any(), Matchers.anyBoolean())
+        doReturn(mockGetResponse).`when`(slub).httpGet(Matchers.any(), Matchers.any())
+        val actual = slub.getResultById("http://slubdd.de/katalog?libero_mab456", null)
+        verify(slub).httpHead(eq("http://slubdd.de/katalog?libero_mab456"), eq(false))
+        verify(slub).httpGet("https://test.de/id/123/?type=1369315142&tx_find_find%5Bformat%5D=data&tx_find_find%5Bdata-format%5D=app", "UTF-8")
         assertEquals("id/123", actual.id)
     }
 
     @Test
     fun testLegacyIdentifier() {
         // id without prefix, e.g. from old favorites list
-        val response = """{"record":{"title":"The title"},"id":"123","thumbnail":"","links":[],"linksRelated":[],
-                            |"linksAccess":[],"linksGeneral":[],"references":[],"copies":[],"parts":{}}""".trimMargin()
-        doReturn(response).`when`(slub).httpGet(Matchers.any(), Matchers.any())
+        doReturn(mockGetResponse).`when`(slub).httpGet(Matchers.any(), Matchers.any())
         val actual = slub.getResultById("123", null)
-        verify(slub).httpGet("https://test.de/id/123/?type=1369315142&tx_find_find[format]=data&tx_find_find[data-format]=app", "UTF-8")
-        verify(slub, never()).httpHead(any(), any(), any(), any())
+        verify(slub).httpGet("https://test.de/id/123/?type=1369315142&tx_find_find%5Bformat%5D=data&tx_find_find%5Bdata-format%5D=app", "UTF-8")
+        verify(slub, never()).httpHead(any(), anyBoolean())
         assertEquals("id/123", actual.id)
     }
 }
