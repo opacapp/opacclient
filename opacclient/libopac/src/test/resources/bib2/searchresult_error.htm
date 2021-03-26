@@ -1,0 +1,314 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<!-- BIB2-WebOPAC: Rahmenseite -->
+<html>
+<head>
+  <!-- Titel der WebOPAC-Seiten im Web-Browser -->
+  <title>BIB2 WebOPAC</title>
+  <!-- CSS-Stylesheet (individuell anpassbar) -->
+  <link rel="stylesheet" type="text/css" media="all" href="webopac.css">
+  <!-- vom Web-Browser für die WebOPAC-Seiten angezeigtes Icon -->
+  <link rel="shortcut icon" type="image/ico" href="favicon.ico">
+  <!-- verwendeter Zeichensatz des WebOPAC (nicht ändern) -->
+  <meta http-equiv="Content-type" content="text/html;charset=ISO-8859-1">
+  <!-- zusätzliche Html-Header für die Darstellung des Schlagwortkatalogs
+       auf der Startseite (nicht ändern, wenn Sie an der Darstellung des
+       Schlagwortkatalogs nichts ändern wollen) -->
+    <!-- folgende Zeilen nicht ändern: -->
+  <!-- JavaScript zur Darstellung der Schlagwortkatalog-Baumstruktur: -->
+  <script type="text/javascript" src="treeview/treeview.js"></script>
+  <!-- keine tatsächlich existierende Datei: dynamisch vom WebOPAC-Server
+       erstelltes JavaScript zum Aufbau des Schlagwortkatalogs: -->
+  <script type="text/javascript" src="treeview/bib2keywords.b2k"></script>
+  <!-- JavaScript-Funktion zum Starten der Schlagwortkatalog-Darstellung: -->
+  <script type="text/javascript">function onReady(){setupTreeview();}</script>
+  <!-- JavaScript; stellt fest, wann die HTML-Objektstruktur (DOM) vom
+       Browser fertig aufgebaut wurde und ruft obige Funktion auf: -->
+  <script type="text/javascript" src="treeview/domready.js"></script>
+
+  <script type="text/javascript">
+   function tricker(){
+   var e=document.getElementById('search');
+   if(!e)return true;
+   if(e.style.display=="none"){
+   e.style.display="inline"
+   } else {
+   e.style.display="none"
+   };
+   var d=document.getElementById('jkui');
+   if(!d)return true;
+   if(d.style.display=="none"){
+   d.style.display="inline"
+   } else {
+   d.style.display="none"
+   };
+   }; //Funktion zum Aufklappen der Suchfelder
+
+
+
+   function del() {
+   document.OPACFORM.sw.value='';
+   document.OPACFORM.ah.value='';
+   document.OPACFORM.F015.value='';
+   document.OPACFORM.C106.value='F003';
+   document.OPACFORM.C105.value='AND';
+   document.OPACFORM.F001.value='';
+   document.OPACFORM.F023.value='';
+   }; //Leert Datenfelder
+
+   aktiv = new Image();
+   aktiv.src = "aktiv.gif";
+
+   function send (){
+
+              document.OPACFORM.submit();};
+   function senden (){
+              var d=document.getElementById('aktiv');
+              if(d.style.display=="none"){
+              d.style.display="block"
+   } else {
+   d.style.display="none"};
+              setTimeout("send ()",5000);}; //Lässt aktiv.gif erscheinen
+  </script>
+</head>
+
+<body>
+ <script type="text/javascript">
+
+
+
+ query = self.location.search;
+  sammlung = new Array();
+  query = query.substr(1, query.length - 1);
+  query = query.replace(/%26/,"&");
+  teile = query.split("&");
+
+
+ if(teile[1]==124&&query!='')
+   {document.write("<div><div class='content'><div><center><table>"); }
+    else{
+document.write('<div id="container"> ');
+document.write('<div class="content" id="main_container">   ');
+document.write('<div><center>                               ');
+document.write('<table width="1000">               ');
+document.write('  <tr><td height="20"></td></tr>    ');
+document.write('  <tr>                             ');
+document.write('    <td>                          ');
+document.write('    </td>                                                                ');
+document.write('  </tr>                                                                  ');
+document.write('  <tr><td height="20"></td></tr>                                         ');
+  };
+  </script>
+
+  <tr>
+    <td width="100%">
+      <!-- Einbindung der darzustellenden Seite: -->
+<!-- BIB2-WebOPAC: Suchformular -->
+<form name="OPACFORM" action="list" method="POST">
+<input type="hidden" name="KEYS" value="">
+
+
+
+
+<table>
+  <tr>
+    <th width="100">Suchkriterium</th>
+    <th width="210">Eingabe</th>
+    <th width="350">Buchtipp/Neuanschaffung</th>
+  </tr>
+  <tr><td colspan="4" height="15"></td></tr>
+  <tr>
+    <td colspan="2">
+
+<table>
+  <tr>
+    <td>Stichwort</td>
+    <!-- wird gesucht in: Gesamttitel, Haupttitel, Untertitel, Schlagwörter, Abstract, Notizfeld -->
+    <td><input type="text" style="width: 180px" id="sw" name=":Stichwort+F002+F003+F004+F016+F031+F032" value=""></td>
+  </tr>
+  <tr><td colspan="2" height="10"></td></tr>
+  <tr>
+    <td width="100">Medienart</td>
+    <td width="210"><select name="F001" size="1" style="width: 180px">
+<option value="">(alle)</option>
+<option value="1">Buch</option>
+<option value="2">Karte</option>
+<option value="3">Führer</option>
+<option value="4">Film</option>
+<option value="5">Zeitschrift</option>
+<option value="6">Landkarte</option>
+<option value="7">Datenträger</option>
+<option value="8">Ordner</option>
+<option value="9">Sammelmappe</option>
+<option value="10">Foto</option>
+<option value="11">.keine Angabe</option>
+</select>
+</td>
+  </tr>
+  <tr><td colspan="2" height="10"></td></tr></table>
+  <div id="search" style="display:none">
+  <table>
+  <tr>
+    <td width="100">Sachgruppe</td>
+    <td width="210"><select name="F023" size="1" style="width: 180px">
+<option value="">(alle)</option>
+<option value="1">.keine Angabe</option>
+<option value="2">Alpenvereinsführer</option>
+<option value="3">Berg-, Wander-, Reiseführer</option>
+<option value="4">Bildband</option>
+<option value="5">Biwak</option>
+<option value="6">Campingführer</option>
+<option value="7">Canyoningführer</option>
+<option value="8">CD</option>
+<option value="9">DVD</option>
+<option value="10">Eiskletterführer</option>
+<option value="11">Erlebnisbuch</option>
+<option value="12">Historisch</option>
+<option value="13">Höhlenführer</option>
+<option value="14">Hüttenführer</option>
+<option value="15">Kletterführer</option>
+<option value="16">Klettersteigführer</option>
+<option value="17">Landkarten</option>
+<option value="18">Lehrbuch</option>
+<option value="19">Liederbuch</option>
+<option value="20">Populärwissenschaft</option>
+<option value="21">Sachsen</option>
+<option value="22">Skiführer</option>
+<option value="23">Verein</option>
+<option value="24">VHS</option>
+<option value="25">Video</option>
+<option value="27">Zeitschrift</option>
+<option value="29">Expeditionsberichte</option>
+<option value="30">Festschrift</option>
+<option value="31">Anwesenheitsliste</option>
+<option value="32">Jahrbuch</option>
+<option value="33">Tourenbericht</option>
+<option value="34">Bergfahrtenbuch</option>
+<option value="35">Klubschrift</option>
+<option value="36">Biografie</option>
+<option value="37">KTA</option>
+<option value="38">Foto</option>
+<option value="40">Chronik</option>
+<option value="41">Dokumentensammlung</option>
+<option value="42">Wörterbuch</option>
+<option value="43">Radwanderführer</option>
+</select>
+</td>
+  </tr>
+  <tr><td colspan="2" height="10"></td></tr>
+  <tr>
+    <td>Autor / Hrsg.</td>
+    <td><input type="text" style="width: 180px" id="ah" name="F006+F007" value=""></td>
+  </tr>
+  <tr><td colspan="2" height="10"></td></tr>
+   <tr>
+    <td>ISBN</td>
+    <td><input type="text" style="width: 180px" name="F015" value=""></td>
+  </tr>
+  <tr><td colspan="2" height="10"></td></tr>
+  <tr>
+    <td>Suchmethode</td>
+    <td><select name="C105" size="1" style="width: 180px">
+<option value="AND" selected>Und-Verknüpfung</option>
+<option value="OR">Oder-Verknüpfung</option>
+</select>
+</td>
+  </tr>
+  <tr><td colspan="2" height="10"></td></tr>
+  <tr>
+    <td>Sortierung</td>
+    <td><select name="C106" size="1" style="width: 180px">
+<option value="F003" selected>Titel</option>
+<option value="F004">Untertitel</option>
+<option value="F006">Autor</option>
+<option value="F007">Herausgeber</option>
+<option value="F023">Sachgruppe</option>
+<option value="F001">Medienart</option>
+</select>
+</td>
+  </tr>
+   <tr><td colspan="2" height="10"></td></tr>
+   <td>Signatur</td>
+    <td><input type="text" style="width: 180px" name="F021" value=""></td>
+   <tr><td colspan="2" height="10"></td></tr>
+   <tr><td colspan="2"><a onclick="tricker()" href="javascript:void(0)">-Erweiterte Suche</a></td></tr>
+   </table>
+
+   </div>
+  <table>
+  <tr><td colspan="2" height="10"></td></tr>
+  <tr>
+   <td colspan="2" align="center">
+    <input type="button" value="Suche starten" style="align:middle" onclick="senden ();">
+    <input type="button" value="Eingabe l&ouml;schen" style="align:middle" onclick='parent.BIB2.location="start";'>
+   </td>
+  </tr>
+  <tr>
+   <td colspan="2"><div id="aktiv" style="display: none;"><img src="aktiv.gif" alt="Suche läuft..."></div></td>
+  </tr>
+</table>
+    <div id="jkui" style="display:block">
+    <a onclick="tricker()" href="javascript:void(0)">+Erweiterte Suche</a><br>
+    Mit dem Suchfeld "Stichwort" werden die wichtigsten Textfelder der Mediendatens&auml;tze durchsucht.
+    Man kann dort z.B. ein einzelnes Wort aus dem Titel des Buches eingeben, welches gesucht werden soll.<br>
+    Um eine genauere Suchen durchzuf&uuml;hren bitte auf "+Erweiterte Suche" klicken<br>
+    <a href="hilfe_start.htm">Ausf&uuml;hrliche Anleitung</a></div>
+  </td>
+    <td width="190" style=" margin-left: 5px; ">
+    <script src="empfehlung.js" type="text/javascript"></script>
+    <script type="text/javascript">
+    document.write('<iframe src="detail?C102='+link+'&124" name="empfehlung" width="350" height="350" scrolling="auto" frameborder="0"></iframe>');
+
+</script>
+
+
+
+    </td>
+  </tr>
+  <tr><td colspan="4" height="10"></td></tr>
+  <tr>
+
+    <td colspan="4" class="bred">
+      <!-- eventuelle Fehlermeldungen: -->
+      <span id="bred">
+      Bitte geben Sie wenigstens ein Suchkriterium ein.
+      
+      </span>
+    </td>
+  </tr>
+  <tr><td colspan="4" height="10"></td></tr>
+  <tr>
+    <td colspan="4" align="center">
+      <!-- "Suche starten"-Knopf -->
+
+    </td>
+  </tr>
+</table>
+<script type="text/javascript">
+   document.OPACFORM.F015.value='';
+   document.OPACFORM.C106.value='F003';
+   document.OPACFORM.C105.value='AND';
+   document.OPACFORM.F023.value='';
+   document.OPACFORM.ah.value='';
+   document.OPACFORM.F021.value='';
+</script>
+
+
+</form>
+
+    </td>
+  </tr>
+  <tr>
+    <td class="red">
+      <!-- eventuelle Fehlernachrichten: -->
+      
+      
+    </td>
+    </tr>
+</table>
+</center>
+</div>
+</div>
+</div>
+
+</body>
+</html>
