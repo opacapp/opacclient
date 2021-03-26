@@ -360,6 +360,8 @@ public class SearchResultListFragment extends CustomListFragment {
     }
 
     protected void showSearchResultCountInActionbar(int count) {
+        if(count < 0) count = 0;
+
         getSupportActionBar().setSubtitle(getResultCountMessage(count));
     }
 
@@ -427,6 +429,10 @@ public class SearchResultListFragment extends CustomListFragment {
         } catch (IllegalStateException e) {
             e.printStackTrace();
         }
+    }
+
+    protected boolean isTwoPane() {
+        return callbacks.isTwoPane();
     }
 
     /**
