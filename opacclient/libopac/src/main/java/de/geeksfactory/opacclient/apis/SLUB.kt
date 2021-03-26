@@ -122,15 +122,15 @@ open class SLUB : OkHttpBaseApi() {
     }
 
     override fun searchGetPage(page: Int): SearchRequestResult {
-        val queryUrlB = HttpUrl.get("$baseurl/?type=1369315142&tx_find_find[format]=data&tx_find_find[data-format]=app")
+        val queryUrlB = HttpUrl.get("$baseurl/?type=1369315142&tx_find_find%5Bformat%5D=data&tx_find_find%5Bdata-format%5D=app")
                 .newBuilder()
-                .addEncodedQueryParameter("tx_find_find[page]", page.toString())
+                .addQueryParameter("tx_find_find[page]", page.toString())
         for (sq in query) {
             if (sq.value.isNotEmpty()) {
                 if (sq.searchField is DropdownSearchField) {  // access_facet
-                    queryUrlB.addEncodedQueryParameter("tx_find_find[facet][access_facet][${sq.value}]", "1")
+                    queryUrlB.addQueryParameter("tx_find_find[facet][access_facet][${sq.value}]", "1")
                 } else {
-                    queryUrlB.addEncodedQueryParameter("tx_find_find[q][${sq.key}]", sq.value)
+                    queryUrlB.addQueryParameter("tx_find_find[q][${sq.key}]", sq.value)
                 }
             }
         }
@@ -175,18 +175,12 @@ open class SLUB : OkHttpBaseApi() {
             id.startsWith("id/") ->
                 "$baseurl/$id/"
             id.startsWith("bc/") || id.startsWith("rsn/") ->
-                http_client.newBuilder()
-                        .followRedirects(false)
-                        .build()
-                        .run {
-                            httpHead("$baseurl/$id/",
-                                    "Location",
-                                    "",
-                                    this)
-                        }
+                httpHead("$baseurl/$id/", false).request().url().toString()
+            id.startsWith("http://slubdd.de/katalog?libero_mab") ->
+                httpHead(id, false).request().url().toString()
             else -> // legacy case: id identifier without prefix
                 "$baseurl/id/$id/"
-        } + "?type=1369315142&tx_find_find[format]=data&tx_find_find[data-format]=app"
+        } + "?type=1369315142&tx_find_find%5Bformat%5D=data&tx_find_find%5Bdata-format%5D=app"
         try {
             json = JSONObject(httpGet(url, ENCODING))
         } catch (e: JSONException) {
@@ -198,6 +192,7 @@ open class SLUB : OkHttpBaseApi() {
     }
 
     internal fun parseResultById(json: JSONObject): DetailedItem {
+        val colorcodes = mapOf("1" to SearchResult.Status.GREEN, "2" to SearchResult.Status.YELLOW, "3" to SearchResult.Status.RED)
         val dateFormat = DateTimeFormat.forPattern("dd.MM.yyyy")
         var hasReservableCopies = false
         fun getCopies(copiesArray: JSONArray, df: DateTimeFormatter): List<Copy> =
@@ -208,6 +203,7 @@ open class SLUB : OkHttpBaseApi() {
                         department = Parser.unescapeEntities(it.getString("sublocation"), false)
                         shelfmark = it.getString("shelfmark")
                         status = Jsoup.parse(it.getString("statusphrase")).text()
+                        statusCode = colorcodes.getOrElse(it.getString("colorcode")) { SearchResult.Status.UNKNOWN }
                         it.getString("duedate").run {
                             if (isNotEmpty()) {
                                 returnDate = df.parseLocalDate(this)
@@ -260,7 +256,7 @@ open class SLUB : OkHttpBaseApi() {
                     cover = this
                 }
             }
-            // links and references
+            // links
             for (link in listOf("linksRelated", "linksAccess", "linksGeneral")) {
                 json.getJSONArray(link).forEach<JSONObject> {
                     // assuming that only on of material, note or hostlabel is set
@@ -269,10 +265,6 @@ open class SLUB : OkHttpBaseApi() {
                     }
                     addDetail(Detail(key, it.optString("uri")))
                 }
-            }
-            json.getJSONArray("references").forEach<JSONObject> {
-                // TODO: usually links to old SLUB catalogue, does it make sense to add the link?
-                addDetail(Detail(it.optString("text"), "${it.optString("name")} (${it.optString("target")})"))
             }
             // copies
             val cps = json.get("copies")
@@ -290,11 +282,19 @@ open class SLUB : OkHttpBaseApi() {
             }
             isReservable = hasReservableCopies
             // volumes
-            volumes = json.optJSONObject("parts")?.optJSONArray("records")?.map<JSONObject, Volume> {
-                Volume(it.optString("id"),
-                        "${it.optString("part")} ${Parser.unescapeEntities(it.optString("name"), false)}")
-
-            } ?: emptyList()
+            json.getJSONObject("parts").optJSONArray("records")?.forEach<JSONObject> {
+                volumes.add(Volume(it.optString("id"),
+                        "${it.optString("part")} ${Parser.unescapeEntities(it.optString("name"), false)}"))
+            }
+            // references
+            json.getJSONArray("references").forEach<JSONObject> {
+                val link = it.optString("link")
+                if (link.startsWith("http://slubdd.de/katalog?libero_mab")){
+                    addVolume(Volume(link, "${it.optString("text")}:\n${it.optString("name")}"))
+                } else {
+                    addDetail(Detail(it.optString("text"), "${it.optString("name")} (${it.optString("target")})"))
+                }
+            }
         }
     }
 
@@ -586,4 +586,7 @@ open class SLUB : OkHttpBaseApi() {
         //TODO("not implemented")
     }
 
+    override fun cleanUrl(url: String): String {
+        return url
+    }
 }

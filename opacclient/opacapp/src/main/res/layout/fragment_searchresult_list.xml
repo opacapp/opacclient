@@ -38,6 +38,12 @@
             android:listSelector="@drawable/ripple"
             android:drawSelectorOnTop="true"/>
 
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recycler_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:visibility="gone"/>
+
         <TextView
             android:layout_width="match_parent"
             android:textAppearance="?android:attr/textAppearanceLarge"
@@ -51,5 +57,26 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
     </FrameLayout>
+
+    <ProgressBar
+        android:id="@+id/searchedApisProgressBar"
+        android:visibility="gone"
+        style="?android:attr/progressBarStyleHorizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:indeterminate="false"
+        android:max="100"
+        android:progress="0" />
+
+    <TextView
+        android:id="@+id/multiSearchFinished"
+        android:visibility="gone"
+        android:textSize="16dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="8dp"
+        android:background="#AAFF55"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="16dp"/>
 
 </FrameLayout>

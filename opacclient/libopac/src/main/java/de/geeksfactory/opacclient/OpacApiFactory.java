@@ -20,6 +20,7 @@ package de.geeksfactory.opacclient;
 
 import de.geeksfactory.opacclient.apis.Adis;
 import de.geeksfactory.opacclient.apis.Arena;
+import de.geeksfactory.opacclient.apis.BIB2;
 import de.geeksfactory.opacclient.apis.BiBer1992;
 import de.geeksfactory.opacclient.apis.Bibliotheca;
 import de.geeksfactory.opacclient.apis.Heidi;
@@ -148,6 +149,8 @@ public class OpacApiFactory {
             newApiInstance = new Arena();
         } else if (lib.getApi().equals("slim")) {
             newApiInstance = new SLIM();
+        } else if (lib.getApi().equals("bib2")) {
+            newApiInstance = new BIB2();
         } else if (lib.getApi().equals("test")) {
             newApiInstance = new TestApi();
         } else {

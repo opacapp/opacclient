@@ -1,0 +1,1059 @@
+ 
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!-- START jsp/common/metaHeader.jsp -->
+
+
+
+<html xmlns="http://www.w3.org/1999/xhtml" 
+ xml:lang="de" 
+ lang="de"
+> 
+<head>
+  <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+  <meta http-equiv="pragma" content="no-cache" />
+  <meta http-equiv="expires" content="0" />
+  <meta http-equiv="cache-control" content="no-cache" />
+
+<!--  <link rel="stylesheet" href="/webOPACClient/jsp/common/infoguide.css"  type="text/css" /> -->
+
+  <link rel="shortcut icon" href="/webOPACClient/images/SBD.ico" />
+  <link rel="icon" type="image/png" sizes="196x196" href="/webOPACClient/images/android-icon.png"/>
+  <link rel="apple-touch-icon" href="/webOPACClient/images/apple-touch-icon.png"/>
+  <link rel="apple-touch-icon" sizes="57x57" href="/webOPACClient/images/apple-touch-icon-57.png"/>
+  <link rel="apple-touch-icon" sizes="72x72" href="/webOPACClient/images/apple-touch-icon-72.png"/>
+  <link rel="apple-touch-icon" sizes="76x76" href="/webOPACClient/images/apple-touch-icon-76.png"/>
+  <link rel="apple-touch-icon" sizes="114x114" href="/webOPACClient/images/apple-touch-icon-114.png"/>
+  <link rel="apple-touch-icon" sizes="120x120" href="/webOPACClient/images/apple-touch-icon-120.png"/>
+  <link rel="apple-touch-icon" sizes="144x144" href="/webOPACClient/images/apple-touch-icon-144.png"/>
+  <link rel="apple-touch-icon" sizes="152x152" href="/webOPACClient/images/apple-touch-icon-152.png"/>
+  <link rel="apple-touch-icon" sizes="180x180" href="/webOPACClient/images/apple-touch-icon-180.png"/>
+  <link rel="stylesheet" href="/webOPACClient/js/jquery/jquery.all.css"/>
+  <link rel="stylesheet" href="/webOPACClient/jsp/common/alerts.css"/>
+
+  <meta name="lang" content="de"/>
+  <meta name="description" content="Online-Katalog der Städtischen Bibliotheken Dresden. Medien recherchieren, vormerken und bestellen. Konto einsehen und Leihfristen verlängern."/>
+  <meta name="keywords" content="Dresden, Bibliothek, Stadtbibliothek, Katalog, OPAC, Konto"/>
+  
+  <script src="/webOPACClient/js/jquery/jquery-1.4.2-min.js" type="text/javascript"><!-- --></script>
+  <!-- AjaxQ is a jQuery plugin that implements AJAX request queueing mechanism.  -->
+  <script src="/webOPACClient/js/jquery.ajaxq-0.0.1.js" type="text/javascript"><!-- --></script>
+  <script src="/webOPACClient/js/jquery/jquery-ui-1.7.2.js" type="text/javascript"><!--  --></script>
+  <script src="/webOPACClient/js/jquery/extensions/jquery.infoguide.js" type="text/javascript"><!-- --></script>
+  <script src="/webOPACClient/js/ig.utils.js" type="text/javascript"><!-- --></script>
+  <script src="/webOPACClient/js/jquery/extensions/jquery.autocomplete.js" type="text/javascript"><!-- --></script>
+  <script src="/webOPACClient/js/jstorage.js" type="text/javascript"><!-- --></script>
+  <script src="/webOPACClient/js/common.js" type="text/javascript"><!-- --></script>
+
+
+  <script type="text/javascript">/* <![CDATA[ */
+if (!(typeof globalSettings == "object" && globalSettings instanceof Map)) globalSettings = new Map();
+globalSettings.add({
+"imagePath": "/webOPACClient/images"
+});
+if (!(typeof i18n == "object" && i18n instanceof Map)) i18n = new Map();
+i18n.add({
+"common.header.loading.icon.alt": "Laden",
+"search.searchfield.suggestion.hits": "???de.search.searchfield.suggestion.hits???"
+});
+/* ]]> */</script>
+ 
+
+  
+
+
+
+
+
+
+
+
+
+        
+        
+           <!-- SBD 23.08.2011/09.03.2015 ohne media="screen" sonst Ausdruck ohne CSS, da kein media="print" vorhanden  -->
+           <!-- <link media="screen" rel="stylesheet" href="/webOPACClient/jsp/common/infoguide.css"  type="text/css" /> -->
+            <link rel="stylesheet" href="/webOPACClient/jsp/common/infoguide.css"  type="text/css" />
+            <!--[if IE]>  <link rel="stylesheet" href="/webOPACClient/jsp/common/infoguide.css"  type="text/css" />  <![endif]-->
+            <!--[if IE 7]>
+            <style type="text/css">
+              #tab-content{margin-top:5px;}
+              select {height:auto;}
+              #searchfield input#f1 {width:10em;}
+            </style>
+            <![endif]-->
+        
+  
+  
+
+
+
+
+  
+  
+  <title>
+    
+      Online-Katalog der Städtischen Bibliotheken Dresden
+    
+  </title>
+<!-- Matomo -->
+<script type="text/javascript">
+  var _paq = _paq || [];
+  /* tracker methods like "setCustomDimension" should be called before "trackPageView" */
+  _paq.push(['trackPageView']);
+  _paq.push(['enableLinkTracking']);
+  (function() {
+    var u="//webtracker.dresden.de/";
+    _paq.push(['setTrackerUrl', u+'piwik.php']);
+    _paq.push(['setSiteId', '6']);
+    var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0];
+    g.type='text/javascript'; g.async=true; g.defer=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);
+  })();
+</script>
+<!-- End Matomo Code -->
+</head>
+<!-- END of jsp/common/metaHeader.jsp -->
+<!-- START jsp/useraccount/accountdata/Layout.jsp --> 	
+
+
+
+<body onunload="unBlockAction();">
+
+<script language="javascript" type="text/javascript"
+ src="/webOPACClient/js/stdButton.js">
+</script>
+
+	<div id="pageContainer">
+	  
+		
+		
+ 		
+
+
+
+
+<!-- START jsp/common/header.jsp -->
+
+
+  
+<!-- BEGIN /bsb/mobileOPAC/addMobileFunctionality.jsp -->
+
+
+
+
+
+
+<!-- END /bsb/mobileOPAC/addMobileFunctionality.jsp -->
+
+
+
+
+<div id="branding">
+  <span id="logo">
+    
+    
+      <!-- <img src="/webOPACClient/images/customer.gif" width="84" height="16" alt="webOPAC" title="webOPAC" /> -->
+      <!-- <h1>webOPAC</h1> -->
+      <h1 id="logotext-extern"><img src="/webOPACClient/images/sbd_logo.gif" alt="Logo der St&auml;dtischen Bibliotheken Dresden" />&nbsp;&nbsp;Online-Katalog der <a href="http://www.bibo-dresden.de/" title="Zur Website der St&auml;dtischen Bibliotheken Dresden" target="_blank">St&auml;dtischen Bibliotheken Dresden</a></h1>
+    
+  </span>
+  <div class="info"> 
+    <div>
+      Diese Seite verwendet Cookies. 
+      <a href="#" onclick="return cookieHelp('/webOPACClient');">
+         Weitere Informationen.</a>
+    </div> 
+    <div id="timer" class="textrot">&nbsp;</div>
+  </div>
+</div>
+
+<!-- 
+<div id="ajaxAutoCompletion">solr</div>
+-->
+ 
+<div id="ajaxUrlSolrAutoCompletion">SolrQueryCompletionProxy</div>
+
+
+
+
+
+
+<!-- START jsp/common/timer.jsp -->
+
+
+<script type="text/javascript" language="javascript">
+
+var timeout=(5 * 60 * 1000)  + new Date().getTime();
+timeout-=2000;
+
+var mesg="Diese Sitzung läuft in %VAR% Sek. ab!";
+var toFront=false;
+
+if(mesg.length <= 0 || mesg.indexOf("???") >= 0)
+	mesg="Diese Sitzung läuft in %VAR% Sek. ab!";
+ticker(); 
+
+function ticker()
+{
+  var timeoutID;
+  var s; 
+  var t=timeout - new Date().getTime();
+  t=(t<0)?0:Math.round(t/1000);
+  s=""+ ((t>60)?"":t.toFixed(0));
+ 	if(t <= 60)
+ 	{
+ 		if(toFront == false)
+ 		{
+ 			toFront=true;
+ 			window.focus();
+ 		}
+ 		var msg = mesg.replace("%VAR%", s);
+    document.getElementById("timer").innerHTML = msg;
+ 	}
+  if(t == 0)
+  {
+    window.clearTimeout(timeoutID);
+    window.location.replace("/webOPACClient/jsp/common/timeout.jsp");
+  } 
+  else
+    timeoutID = window.setTimeout("ticker()",(t>60) ? 6000 : 1000);
+}
+</script>
+
+
+<!-- END of jsp/common/timer.jsp --> 
+<!-- END of jsp/common/header.jsp -->
+
+
+		<div id="mainnav">
+			
+
+
+
+
+<!-- START jsp/navigation/mainNavi.jsp --> 
+
+
+<!-- Actual Tiles Context 756 -->
+
+<ul>
+
+
+	<li><a href="/webOPACClient/search.do?methodToCall=start">Suche</a>
+	
+	</li>
+
+
+
+	<li><a href="/webOPACClient/memorizelist.do?methodToCall=show">Merkliste</a></li>
+
+
+
+
+
+
+	<li id="current"><div id="active">Konto</div>
+		
+		<ul>
+			
+					<li id="current2">Kontostand</li>
+			
+			
+			
+			
+					<li><a href="/webOPACClient/userdata.do?methodToCall=showUserData">Benutzerdaten</a></li>
+			
+			
+			
+					<li><a href="/webOPACClient/searchpreferences.do?methodToCall=showSearchpreferences">Sucheinstellungen</a></li>
+			
+	    
+    </ul>
+		
+	</li>
+
+
+
+
+</ul>
+<!-- END of jsp/navigation/mainNavi.jsp --> 
+
+			
+
+
+
+
+
+
+<!-- START jsp/navigation/loginnavi.jsp --> 
+
+<div id="login">
+  
+  
+    <a href="/webOPACClient/login.do?methodToCall=logout">Abmelden</a>
+       <div id="username">
+         <strong class="c1">Benutzernummer</strong> 01234567890
+       </div>
+  
+</div>
+<!-- END of jsp/navigation/loginnavi.jsp --> 
+		</div> 
+		<br class="cleaner" />
+ 		
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- START jsp/navigation/bgnavi.jsp --> 
+<script language="javascript" type="text/javascript"
+ src="/webOPACClient/help/help.js">
+</script>
+
+<div id="bgmainnav">
+<div>
+	<div id="nav2">
+		<ul>
+<!-- activate when myGDPRInfo is replaced by your GDPR link
+     label of menu entry is configured by tag navigation.bgNavi.GDPRInfo.title in application*.properties 
+		<li>
+        <a href="myGDPRInfo" target="GDPRInfo">GDPR Information</a>
+        </li>
+  -->
+      
+        
+          <li>
+            <a href="jsp/navigation/onleihe.jsp" target="emedien" title="(neuer Tab)">zur eBibo-Onleihe</a>
+          </li>
+        
+      
+			
+			
+			<li>
+			  <a href="#" title="Hilfe&nbsp;(neuer Tab)" onclick="return openHelp('/webOPACClient');">
+			   Hilfe</a>
+		  </li>
+  		
+	    	
+		  	
+			   	<li><a href="/webOPACClient/actual.do?methodToCall=show">Neu im Bestand</a></li>
+    		
+    	
+		</ul>
+	</div> 
+  </div> 
+</div>
+<!-- END of jsp/navigation/bgnavi.jsp --> 
+
+ 		<br class="cleaner" />
+		
+
+
+
+
+
+
+
+
+
+
+<!-- START jsp/search/searchbar.jsp --> 
+ 
+<div id="searchfield">
+  <form id="AdvancedSearchForm" method="post" action="/webOPACClient/search.do">
+    <input type="hidden" name="methodToCall" value="submit" />
+    <input type="hidden" name="searchCategories[0]" value="-1" />
+    <input type="hidden" name="CSId" value="1418N42S35e1905fde8fac21ca5a2ab1c8a90cea8c86c30d" />
+    <input type="hidden" name="searchHistory" value="" />
+    <input type="hidden" name="queryString" value="" />
+
+    
+      
+    
+      
+        <input type="hidden" name="searchString[1]" value="" />
+      
+    
+      
+        <input type="hidden" name="searchString[2]" value="" />
+      
+    
+      
+        <input type="hidden" name="searchString[3]" value="" />
+      
+    
+      
+        <input type="hidden" name="searchString[4]" value="" />
+      
+    
+
+    <legend class="hide-content">Sucheingabe</legend>
+    <div class="input-group">
+        <label class="hide-content" for="f1">Suchbegriff</label>
+		<input class="form-control" placeholder="Sucheingabe" type="text" id="f1" name="searchString[0]">
+		  <a href="#" aria-label="Suchen" onclick="document.forms['AdvancedSearchForm'].submit();return false;" class="input-group-addon"><i class="ig-ico ig-ico-search" aria-hidden="true"></i></a>      
+	  </div>
+  </form>  
+</div>
+
+<!-- END of jsp/search/searchbar.jsp -->
+ 
+
+	<form name="UserAccountForm" method="post" action="/webOPACClient/userAccount.do">						
+    
+
+
+
+
+
+
+
+
+
+<!-- START jsp/useraccount/accountdata/actionbar.jsp --> 
+
+
+
+
+
+
+<div id="outputActions">
+ <input type="hidden" name="accountTyp" value="AUSLEIHEN" />
+ <input type="hidden" name="anzPos" value="1" />
+ <input type="hidden" name="methodToCall" value="showAccount" />
+ <input type="hidden" name="CSId" value="1418N42S35e1905fde8fac21ca5a2ab1c8a90cea8c86c30d" />
+ 
+
+
+  
+  <a href="#" id="renewSelect" title="Ausgewählte&nbsp;Einträge verlängern" onclick="return renewSelected();"><i class="ig-ico ig-ico-ca" aria-hidden="true"></i>Ausgewählte verlängern</a>
+  <a href="/webOPACClient/userAccount.do?methodToCall=renewalPossible&amp;renewal=account" id="renewal" title="Konto verlängern" onclick="return blockAction();"><i class="ig-ico ig-ico-ca" aria-hidden="true"></i>Alle&nbsp;verlängern</a>
+
+
+
+
+      
+    <a href="#" id="print" title="Eintr&auml;ge drucken" onclick="return printSubmit();"><i class="ig-ico ig-ico-print" aria-hidden="true"></i>Drucken</a>
+  
+  
+    <a href="#" id="save" title="Eintr&auml;ge lokal speichern" onclick="return saveSubmit();"><i class="ig-ico ig-ico-save" aria-hidden="true"></i>Speichern</a>
+  
+      
+    <a href="/webOPACClient/userAccount.do?methodToCall=mail" id="mail_userAccount" title="Einträge versenden"><i class="ig-ico ig-ico-send" aria-hidden="true"></i>Versenden</a>
+  
+
+
+
+ 
+
+
+
+
+
+
+
+
+</div>
+
+<br class="cleaner" />
+<script src="js/exportdialogs.js" type="text/javascript"><!--  --></script>
+
+<script language="javascript" type="text/javascript">
+/* <![CDATA[ */
+
+
+if(1 == 10)
+{
+	document.forms['UserAccountForm'].action="/webOPACClient/userNCIPAccount.do";
+}
+
+function renewSelected()
+{
+	   document.forms['UserAccountForm'].methodToCall.value="renewSelected";
+	   document.forms['UserAccountForm'].submit();
+	   return false;
+}
+
+function allowFunction()
+{
+	if((true) ||
+		 (false) ||
+		 (false) ||
+		 (false) ||
+		 (false))
+		return true;
+	return false;
+}
+
+function printSubmit()
+{
+	if(!allowFunction())
+		return false;
+   document.forms['UserAccountForm'].methodToCall.value="print";
+   document.forms['UserAccountForm'].target="_blank";
+   document.forms['UserAccountForm'].submit();
+   return false;
+ }
+
+function saveSubmit()
+{
+	  if(!allowFunction())
+		    return false;
+   document.forms['UserAccountForm'].methodToCall.value="save";
+   document.forms['UserAccountForm'].submit();
+   return false;
+ }
+ 
+function deleteHistory()
+{
+	  if(!allowFunction())
+		    return false;
+	  
+	  
+	   deleteList = confirm("Soll die Ausleihhistorie wirklich gelöscht werden?");
+	   if (deleteList == false)
+	       return false;
+	   
+       document.forms['UserAccountForm'].methodToCall.value="deleteHistory";
+       document.forms['UserAccountForm'].submit();
+       return false;
+ }
+/* ]]> */
+</script>
+<!-- END of jsp/useraccount/actionbar.jsp --> 
+
+
+ 	 	<div id="main"> 
+    	<div id="SOWrap"> 
+			  <div id="middle"> 
+	 				
+
+
+
+
+
+
+
+
+<input type="hidden" name="typ" value="">
+
+<style type="text/css">
+#bgtab {width:auto;/*44.9em*/ height:2em;border-top: 1px solid #bbbcbc;}
+* html #bgtab {margin-top:-1px;}
+/* wichtig bei Angabe in em: width:44.9em und nicht 45em, da sonst Verschiebungen (Abstand zw.Hauptnavi und Unternavi!) im Firefox!, zusätzlich keine einheitliche re border */
+#tab-content {border-top:0;}
+table.data {width:100%; border-top:0;}
+</style>
+  
+  <!--[if IE 7]>
+    <style type="text/css">#bgtab {margin-top:5px;}</style>
+  <![endif]-->	
+
+<!-- START jsp/useraccount/accountdata/accountNavi.jsp --> 
+
+
+
+
+
+ 	  <div id="tab">
+      <ul>
+        
+		      <li id="tab1">
+		        <div id="label1">
+			    <a href="#" onclick="return showAccount(1);">Ausleihen
+    			 (2)</a>
+		        </div>
+                
+                  <ul>
+				    <li id="typ1">
+				      <a href="#" onclick="return showAccount(1);">Übersicht</a>
+                    </li>
+                    <li id="typ2">
+                      <a href="#" onclick="return showAccount(2)">Gemahnte Medien</a>
+                    </li>
+				    <li id="typ3">
+                      <a href="#" onclick="return showAccount(3)">Rückgeforderte Medien</a>
+				    </li>
+				    <li id="typ4">
+				      <a href="#" onclick="return showAccount(4)">Verlängerte Medien</a>
+				    </li>
+				    <li id="typ5">
+				      <a href="#" onclick="return showAccount(5)">Fernleihen</a>
+				      </li>
+      			 </ul>
+      		    
+		      </li>
+        
+        
+        	<li id="tab6">
+        	  <div id="label6">
+	  	       <a href="#" onclick="return showAccount(6)">Bestellungen
+		          (0)</a>
+        	  </div>
+        	</li>
+        
+        
+      		<li id="tab7">
+      		  <div id="label7">
+  		       <a href="#" onclick="return showAccount(7)">Vormerkungen
+        		  (0)</a>
+        	 </div>
+      		</li>
+        
+        
+       		<li id="tab8">
+       		  <div id="label8">
+  		       <a href="#" onclick="return showAccount(8)">Gebühren
+        		  &nbsp;(0,00&nbsp;EUR)</a>
+          	</div>
+       		</li>
+        
+
+        
+          
+          <li id="tab10">
+            <div id="label10">
+              <a href="/webOPACClient/userNCIPAccount.do?methodToCall=showAccount&amp;typ=10">eMedien
+                &nbsp;(0/0)</a>
+            </div>
+          </li>
+        
+      
+          
+
+      </ul>
+
+  	</div> <!-- tab -->
+    <div class="cleaner"></div>
+	<div id="bgtab"></div>
+
+<script language="javascript" type="text/javascript">
+/* <![CDATA[ */
+var typ=1;
+
+if(typ >= 1 && typ <= 5)
+{
+	
+  var m_id;
+  var m_TypLabels = new Array();
+
+  m_TypLabels[1]='Übersicht';
+  m_TypLabels[2]='Gemahnte Medien';
+  m_TypLabels[3]='Rückgeforderte Medien';
+  m_TypLabels[4]='Verlängerte Medien';
+  m_TypLabels[5]='Fernleihen';
+
+  m_id=document.getElementById("typ" + typ);
+  if(m_id != null)
+  {
+    m_id.innerHTML=m_TypLabels[typ];
+    m_id.id="current2";
+
+    m_id=document.getElementById("label1");
+    m_id.innerHTML='Ausleihen' +
+                   '&nbsp;(2)';
+    m_id.id="active1";
+
+    m_id=document.getElementById("tab1");
+    m_id.id="current1";
+  }
+}
+else
+{
+  var m_id;
+  var m_TabLabels = new Array();
+
+  m_TabLabels[6]='Bestellungen' +
+		        '&nbsp;(0)';
+  m_TabLabels[7]='Vormerkungen' +
+        		'&nbsp;(0)';
+  m_TabLabels[8]='Gebühren' +
+      		       '&nbsp;(0,00&nbsp;EUR)';
+  m_TabLabels[10]='eMedien' +
+                 '&nbsp;(0/0)';
+  m_TabLabels[9]='Historie' +
+         		'&nbsp;(0)';
+                 
+  m_id=document.getElementById("label" + typ);
+  if(m_id != null)
+  {
+    m_id.innerHTML=m_TabLabels[typ];
+    m_id.id="active1";
+
+    m_id=document.getElementById("tab" + typ);
+    m_id.id="current1";
+  }
+}
+
+function showAccount(id)
+{
+	document.forms['UserAccountForm'].action="/webOPACClient/userAccount.do";	
+	document.forms['UserAccountForm'].methodToCall.value = "showAccount";  
+	document.forms['UserAccountForm'].typ.value = id;
+	document.forms['UserAccountForm'].submit();
+	return false;
+}
+	/* ]]> */
+</script>
+<!-- END of jsp/useraccount/accountdata/accountNavi.jsp -->
+   
+      		<div class="cleaner"></div>
+	 				
+
+
+
+
+
+
+
+
+
+</form>
+<!-- START jsp/circulation/renewalConfirm.jsp -->
+
+
+
+
+<form id="UserAccountForm" method="post" action="/webOPACClient/userAccount.do" onsubmit="return blockAction();">
+<input type="hidden" name="methodToCall" value="showAccount" />
+<input type="hidden" name="CSId" value="1418N42S35e1905fde8fac21ca5a2ab1c8a90cea8c86c30d" />
+
+
+<div class="box">
+  <div class="box-header">
+    <h2>
+      Verl&auml;ngerung
+    </h2>
+  </div><!-- box-header -->
+
+  <fieldset>
+  <div id="myPrint">
+  <table class="formular" style="margin:10px">
+    <tr>
+      <td>
+        <strong class="c2">Datum:</strong>
+        19.03.2021
+        <br/>
+        <strong class="c2">Benutzernummer:</strong>
+        00026919911
+        <br/>
+        <strong class="c2">Zweigstelle:</strong>
+        Zentralbibliothek, Tel. 8648233
+        
+          <br/>
+          <strong class="c2">
+          Verlängerte Medien: 0
+          &nbsp;&nbsp;&nbsp;
+          <span class="textrot">
+            Ablehnungen: 2
+          </span>
+          </strong>
+        
+      </td>
+    </tr>
+    <tr>
+      <td>
+            
+          <input type="button" class="dbutton" id="print" name="print" title="(neuer Tab)" onclick="myPrint('myPrint');" 
+           value="Drucken" />
+          &nbsp;&nbsp;
+         
+        <input type="submit" class="dbutton" style="font-weight:bold"
+         value="OK" />
+ 
+      </td>
+    </tr>
+
+    
+  </table>
+  
+  
+  
+  
+  <table class="data" style="border:0" width: 100%">
+    
+    
+
+    
+      </table>
+	    <h2> 
+  	    Ablehnungen
+		  </h2>
+      <table class="data" style="border:0">
+	  
+
+    
+
+    
+
+    <tr> 
+      <td>
+        <strong class="c2">Titel:</strong>
+        <strong>On the come up</strong>
+        <br/>
+        <strong class="c2">Verfasser:</strong>
+        Thomas, Angie ¬[Verfasser]
+        <br/>
+        <strong class="c2">Mediennummer:</strong>
+        035308621
+        <br/>
+        <strong class="c2">Signatur:</strong>
+        Jugendbuch/Bücherwelt
+        <br/>
+        <strong class="c2">Status:</strong>
+        <strong>Keine Verlängerung, da maximale Anzahl Verlängerungen = 1 erreicht !</strong>
+        <br/>
+        <strong class="c2">Leihfristende:</strong>
+        17.05.2021
+      </td>
+    </tr>
+    
+    
+
+    
+
+    <tr> 
+      <td>
+        <strong class="c2">Titel:</strong>
+        <strong></strong>
+        <br/>
+        <strong class="c2">Verfasser:</strong>
+        
+        <br/>
+        <strong class="c2">Mediennummer:</strong>
+        034057818
+        <br/>
+        <strong class="c2">Signatur:</strong>
+        LandIdee 21/1
+        <br/>
+        <strong class="c2">Status:</strong>
+        <strong>Keine Verlängerung, da maximale Anzahl Verlängerungen = 1 erreicht !</strong>
+        <br/>
+        <strong class="c2">Leihfristende:</strong>
+        16.04.2021
+      </td>
+    </tr>
+    
+    
+
+
+  </table>
+  </div>
+  
+    <table class="info">
+     <tr>
+      <td colspan="2" align="center"> 
+     	 	    
+          <input type="button" class="dbutton" id="print" name="print" title="(neuer Tab)" onclick="myPrint('myPrint');" 
+           value="Drucken" />
+           &nbsp;&nbsp;
+         
+        <input type="submit" class="dbutton" style="font-weight:bold"
+         value="OK" />
+      </td>
+     </tr>
+    </table>
+  
+  <fieldset>
+</div>
+</form>
+
+<script language="javascript" type="text/javascript">
+/* <![CDATA[ */
+if (document.layers)
+ document.captureEvents(Event.KEYDOWN);
+
+document.onkeydown = function (evt)
+{
+  var keyCode = evt ? (evt.which ? evt.which : evt.keyCode) : event.keyCode;
+  if (keyCode == 13 || keyCode == 4100)
+ {
+   return false;
+ }
+}
+
+function myPrint(content) 
+{ 
+ var sOption="toolbar=yes,location=no,directories=yes,menubar=yes,"; 
+     sOption+="scrollbars=yes,width=750,height=600,left=100,top=25"; 
+
+ var sWinHTML = document.getElementById(content).innerHTML; 
+   
+ var winprint=window.open("","",""); 
+     winprint.document.open(); 
+     winprint.document.write('<html><head>');
+     winprint.document.write('<link rel="stylesheet" href="./jsp/common/infoguide.css" type="text/css">');
+     winprint.document.write('</head><body style="background: #fff;"><div class="box" style="margin:10px">'); 
+     winprint.document.write(sWinHTML);          
+     winprint.document.write('</div></body></html>'); 
+     winprint.document.close();
+     winprint.print();
+     winprint.close(); 
+}
+/* ]]> */
+</script>
+<form>
+<!-- END of jsp/circulation/renewalConfirm.jsp -->
+    
+  			</div> <!-- middle -->
+		  </div> <!-- SOWrap -->
+    </form>
+ 	 		<div id="right">
+ 	 			
+
+
+
+
+
+
+<!-- START jsp/useraccount/information.jsp --> 
+
+
+
+	<div class="box3">
+  	<div class="box3-header">
+    	
+    		<h2>Benutzerkonto</h2>
+    	</div>
+    	<div class="box3-content">
+    		
+    			<p>
+    			<strong>Ausweis gültig bis</strong>
+    			<br />
+    			30.09.2099
+    			</p> 
+    		
+    		
+   			
+   		</div>
+  </div>
+
+<!-- END of jsp/useraccount/information.jsp --> 
+ 	 			
+
+
+
+
+<!-- START jsp/common/news.jsp -->
+
+
+	<!-- START jsp/news_info/de_756_39.jsp -->
+		<div class="box3">
+   <div class="box3-header">
+      <h2>Wir haben geöffnet!</h2>
+   </div>
+   <p>
+     <div class="box3-content">
+       <p>Seit 1. März 2021 sind alle Bibliotheken wieder in ihren üblichen Öffnungszeiten, einschließlich Sonnabend geöffnet.</p>
+       <p>Die Bibliothek Südvorstadt bietet wieder zusätzliche Öffnungen ohne Fachpersonal an.</p>
+       <p>Die Serviceangebote sind beschränkt.</p>
+       <p>Der Aufenthalt ist auf maximal 30 Minuten begrenzt.</p>
+       <p><a href="https://www.bibo-dresden.de/de/aktuelles/2021/wiedereroeffnung-der-staedtischen-bibliotheken-am-1-maerz-2021.php" target="_blank" rel="noopener">Informationen zur Wiedereröffnung</a></p>
+     </div>
+   </p>
+</div>
+	<!-- END of jsp/news_info/de_756_39.jsp -->
+
+
+
+
+	<!-- START jsp/news_info/de_756_24.jsp -->
+		<div class="box3">
+   <div class="box3-header">
+      <h2>eBibo – Bibliotheksangebote rund um die Uhr</h2>
+   </div>
+   <p>
+     <div class="box3-content">
+       <p style="text-align:center;"><img src="images/infobox/ebibo-logo.jpg" style="width: 18.3em;" alt="eBibo-Logo" /></p>
+       <p>E-Books, Hörbücher, Zeitschriften, Musik-Streaming, Presseportal – die Angebote unserer eBibo sind auch während der Sonderschließzeit rund um die Uhr verfügbar</p>
+       <p><a href="https://www.ebibo-dresden.de/" title="zur eBibo-Website" target="_blank">www.ebibo-dresden.de</a></p>
+     </div>
+   </p>
+</div>
+	<!-- END of jsp/news_info/de_756_24.jsp -->
+
+
+
+
+	<!-- START jsp/news_info/de_756_5.jsp -->
+		  <div class="box3">
+     <div class="box3-header">
+       <h2>Service</h2>
+     </div>
+     <p>
+       <div class="box3-content">
+         <p><span class="fett">Benachrichtigungen</span> über abholbare Vorbestellungen und Erinnerungen an das Ende der Leihfrist werden auch <span class="fett">als E-Mail oder SMS</span> verschickt.</p>
+         <p>Möchten Sie diesen Service nutzen, dann tragen Sie bitte Ihre E-Mail-Adresse oder Ihre Handy-Nummer in Ihre Nutzerdaten ein. Wählen Sie im 'Konto' > 'Benutzerdaten' > 'Stammdaten' > 'Adressdaten'. Dort steht Ihnen auch ein Hinweistext zur Verfügung.</p>
+       </div>
+     </p>
+  </div>
+	<!-- END of jsp/news_info/de_756_5.jsp -->
+
+
+
+<!-- END of jsp/common/news.jsp --> 
+ 	 		</div> <!-- right -->
+    	<br class="cleaner" />
+    </div> <!-- main -->
+ 		
+
+
+
+
+
+
+
+<!-- START jsp/common/footer.jsp -->
+
+<div id="footer">
+  
+	
+	
+	
+		Bitte melden Sie sich beim Verlassen des Kataloges von Ihrem Bibliothekskonto ab! 
+		<a href="/webOPACClient/login.do?methodToCall=logout" title="Abmelden">Jetzt abmelden.</a>&nbsp;
+	
+  <div id="copyright">
+<!-- ### SBD MG 07.05.2018 ### START Links Impressum/Datenschutz ### -->
+	  <a href="https://www.bibo-dresden.de/de/service/impressum.php" target="_blank" styleClass="external" title="Impressum anzeigen">
+	    Impressum</a> | 
+	  <a href="https://www.bibo-dresden.de/de/service/datenschutz.php" target="_blank" styleClass="external" title="Datenschutzerklärung anzeigen">
+	    Datenschutz</a> | 
+<!-- ### SBD MG 07.05.2018 ### ENDE Links Impressum/Datenschutz ### -->
+	  Copyright &copy; 2018.&nbsp;Alle Rechte vorbehalten.
+	  <img src="/webOPACClient/images/OCLC.jpg" alt="OCLC" title="OCLC" width="54" height="19" />
+  </div>
+  <div class="cleaner"></div>
+
+</div>
+<!-- END of jsp/common/footer.jsp -->
+ 
+ 		
+ 	</div> 
+</body>
+<!-- END of jsp/useraccount/accountdata/Layout.jsp --> 	
+<!-- START jsp/common/metaFooter.jsp -->
+</html>
+<!-- END of jsp/common/metaFooter.jsp -->
+  

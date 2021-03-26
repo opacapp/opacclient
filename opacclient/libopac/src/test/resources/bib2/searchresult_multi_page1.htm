@@ -1,0 +1,1070 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<!-- BIB2-WebOPAC: Rahmenseite -->
+<html>
+<head>
+  <!-- Titel der WebOPAC-Seiten im Web-Browser -->
+  <title>BIB2 WebOPAC</title>
+  <!-- CSS-Stylesheet (individuell anpassbar) -->
+  <link rel="stylesheet" type="text/css" media="all" href="webopac.css">
+  <!-- vom Web-Browser für die WebOPAC-Seiten angezeigtes Icon -->
+  <link rel="shortcut icon" type="image/ico" href="favicon.ico">
+  <!-- verwendeter Zeichensatz des WebOPAC (nicht ändern) -->
+  <meta http-equiv="Content-type" content="text/html;charset=ISO-8859-1">
+  <!-- zusätzliche Html-Header für die Darstellung des Schlagwortkatalogs
+       auf der Startseite (nicht ändern, wenn Sie an der Darstellung des
+       Schlagwortkatalogs nichts ändern wollen) -->
+
+  <script type="text/javascript">
+   function tricker(){
+   var e=document.getElementById('search');
+   if(!e)return true;
+   if(e.style.display=="none"){
+   e.style.display="inline"
+   } else {
+   e.style.display="none"
+   };
+   var d=document.getElementById('jkui');
+   if(!d)return true;
+   if(d.style.display=="none"){
+   d.style.display="inline"
+   } else {
+   d.style.display="none"
+   };
+   }; //Funktion zum Aufklappen der Suchfelder
+
+
+
+   function del() {
+   document.OPACFORM.sw.value='';
+   document.OPACFORM.ah.value='';
+   document.OPACFORM.F015.value='';
+   document.OPACFORM.C106.value='F003';
+   document.OPACFORM.C105.value='AND';
+   document.OPACFORM.F001.value='';
+   document.OPACFORM.F023.value='';
+   }; //Leert Datenfelder
+
+   aktiv = new Image();
+   aktiv.src = "aktiv.gif";
+
+   function send (){
+
+              document.OPACFORM.submit();};
+   function senden (){
+              var d=document.getElementById('aktiv');
+              if(d.style.display=="none"){
+              d.style.display="block"
+   } else {
+   d.style.display="none"};
+              setTimeout("send ()",5000);}; //Lässt aktiv.gif erscheinen
+  </script>
+</head>
+
+<body>
+ <script type="text/javascript">
+
+
+
+ query = self.location.search;
+  sammlung = new Array();
+  query = query.substr(1, query.length - 1);
+  query = query.replace(/%26/,"&");
+  teile = query.split("&");
+
+
+ if(teile[1]==124&&query!='')
+   {document.write("<div><div class='content'><div><center><table>"); }
+    else{
+document.write('<div id="container"> ');
+document.write('<div class="content" id="main_container">   ');
+document.write('<div><center>                               ');
+document.write('<table width="1000">               ');
+document.write('  <tr><td height="20"></td></tr>    ');
+document.write('  <tr>                             ');
+document.write('    <td>                          ');
+document.write('    </td>                                                                ');
+document.write('  </tr>                                                                  ');
+document.write('  <tr><td height="20"></td></tr>                                         ');
+  };
+  </script>
+
+  <tr>
+    <td width="100%">
+      <!-- Einbindung der darzustellenden Seite: -->
+<!-- BIB2-WebOPAC: Suchergebnisliste -->
+
+<script type="text/javascript">
+  var anzahl = 0;  <!-- Zähler ausgeblendete Zeilen -->
+ </script>
+
+<!-- Anzeige der Suchparameter und Trefferanzahl: -->
+<table width="100%" class="borderless">
+  <tr>
+    <td align="center" style="padding-bottom:5px;">
+      Ihre Suche:
+    </td>
+  </tr>
+  <tr>
+    <td align="center" style="border:1px dotted #0060A0; padding:1px 5px 1px 5px; background-color: #D6ECF6;">
+      Medienart = <span id="ltgreen">Führer</span> <span id="yellow">und</span> Sachgruppe = <span id="ltgreen">Klettersteigführer</span>
+    </td>
+  </tr>
+  <tr>
+    <td align="center" style="padding-top:5px;">
+      lieferte <b>73</b> Treffer:
+    </td>
+  </tr>
+</table>
+
+
+<!-- Suchergebnisliste: -->
+<table width="100%" class="withborder" style="margin-top: 10px">
+  <tr>
+    <th align="center">#</th>
+    <th align="left"><a class="thlink" href="list?F001=3&amp;C106=F021&amp;C109=1969&amp;C105=AND&amp;F023=16&amp;C107=ASC&amp;C108=0">Signatur</a><br><a class="thlink" href="list?F001=3&amp;C106=F001&amp;C109=1969&amp;C105=AND&amp;F023=16&amp;C107=ASC&amp;C108=0">Medienart</a></th>
+    <th align="left"><a class="thlink" href="list?F001=3&amp;C106=F003&amp;C109=1969&amp;C105=AND&amp;F023=16&amp;C107=DESC&amp;C108=0">Haupttitel&nbsp;&uArr;</a><br><a class="thlink" href="list?F001=3&amp;C106=F004&amp;C109=1969&amp;C105=AND&amp;F023=16&amp;C107=ASC&amp;C108=0">Untertitel</a></th>
+    <th align="left"><a class="thlink" href="list?F001=3&amp;C106=F006&amp;C109=1969&amp;C105=AND&amp;F023=16&amp;C107=ASC&amp;C108=0">Autor</a> / <a class="thlink" href="list?F001=3&amp;C106=F007&amp;C109=1969&amp;C105=AND&amp;F023=16&amp;C107=ASC&amp;C108=0">Hrsg.</a><br><a class="thlink" href="list?F001=3&amp;C106=F011&amp;C109=1969&amp;C105=AND&amp;F023=16&amp;C107=ASC&amp;C108=0">Verlag</a></th>
+    <th align="right">verf&uuml;gbar / vor&nbsp;Ort / insg.</th>
+  </tr>
+  <script type="text/javascript">
+
+  if (1 != 0) <!-- nicht vorhandene ausblenden -->
+     {
+    document.writeln('<tr class="odd">');
+  document.writeln('  <td align="center"><span id="black">1</span></td>');
+  document.writeln('  <td align="left"><span id="black">F2813<br>Führer<br></td></span>');
+  document.writeln('  <td align="left"><a style="text-decoration: none" href="detail?F001=3&amp;C106=F003&amp;C101=196641492519323672.0&amp;C109=1969&amp;C105=AND&amp;C102=3937&amp;F023=16&amp;C108=0">107 Via Ferrata,  107 Klettersteige</a><br>Klettersteigführer</td>');
+  document.writeln('  <td align="left"><span id="black">Papandreou, Gerard<br>Ditier, Grenoble</span></td>');
+  document.writeln('  <td align="right"><span id="green"><b>1</b></span> / 1 / 1</td>');
+  document.writeln('</tr>');
+  }
+  else{
+  anzahl=anzahl+1;    <!-- ausgeblendete zaehlen -->
+  };
+  </script>
+
+
+  <script type="text/javascript">
+
+  if (1 != 0) <!-- nicht vorhandene ausblenden -->
+     {
+    document.writeln('<tr class="even">');
+  document.writeln('  <td align="center"><span id="black">2</span></td>');
+  document.writeln('  <td align="left"><span id="black"><br>Karte<br>1:25.000</td></span>');
+  document.writeln('  <td align="left"><a style="text-decoration: none" href="detail?F001=3&amp;C106=F003&amp;C101=196641492519323672.0&amp;C109=1969&amp;C105=AND&amp;C102=4003&amp;F023=16&amp;C108=0">7x7 Genussklettersteige</a><br>Klettersteigführer</td>');
+  document.writeln('  <td align="left"><span id="black"><br>Bruckmann Verlag GmbH, München</span></td>');
+  document.writeln('  <td align="right"><span id="red"><b>0</b></span> / 1 / 1</td>');
+  document.writeln('</tr>');
+  }
+  else{
+  anzahl=anzahl+1;    <!-- ausgeblendete zaehlen -->
+  };
+  </script>
+
+
+  <script type="text/javascript">
+
+  if (2 != 0) <!-- nicht vorhandene ausblenden -->
+     {
+    document.writeln('<tr class="odd">');
+  document.writeln('  <td align="center"><span id="black">3</span></td>');
+  document.writeln('  <td align="left"><span id="black">Z13-08/1988<br>Zeitschrift<br></td></span>');
+  document.writeln('  <td align="left"><a style="text-decoration: none" href="detail?F001=3&amp;C106=F003&amp;C101=196641492519323672.0&amp;C109=1969&amp;C105=AND&amp;C102=1690&amp;F023=16&amp;C108=0">Allgäu</a><br>Höhenwege und Klettersteige</td>');
+  document.writeln('  <td align="left"><span id="black">Autor<br>Verlag</span></td>');
+  document.writeln('  <td align="right"><span id="red"><b>0</b></span> / 0 / 2</td>');
+  document.writeln('</tr>');
+  }
+  else{
+  anzahl=anzahl+1;    <!-- ausgeblendete zaehlen -->
+  };
+  </script>
+
+
+  <script type="text/javascript">
+
+  if (2 != 0) <!-- nicht vorhandene ausblenden -->
+     {
+    document.writeln('<tr class="even">');
+  document.writeln('  <td align="center"><span id="black">4</span></td>');
+  document.writeln('  <td align="left"><span id="black">F2137<br>Führer<br></td></span>');
+  document.writeln('  <td align="left"><a style="text-decoration: none" href="detail?F001=3&amp;C106=F003&amp;C101=196641492519323672.0&amp;C109=1969&amp;C105=AND&amp;C102=3279&amp;F023=16&amp;C108=0">Allgäuer Alpen / Hütten+Höhenwege</a><br>Wander- und Klettersteigführer</td>');
+  document.writeln('  <td align="left"><span id="black">Seibert, Dieter<br>Bergverlag Rudolf Rother München</span></td>');
+  document.writeln('  <td align="right"><span id="green"><b>2</b></span> / 2 / 2</td>');
+  document.writeln('</tr>');
+  }
+  else{
+  anzahl=anzahl+1;    <!-- ausgeblendete zaehlen -->
+  };
+  </script>
+
+
+  <script type="text/javascript">
+
+  if (1 != 0) <!-- nicht vorhandene ausblenden -->
+     {
+    document.writeln('<tr class="odd">');
+  document.writeln('  <td align="center"><span id="black">5</span></td>');
+  document.writeln('  <td align="left"><span id="black">F2823A<br>Führer<br></td></span>');
+  document.writeln('  <td align="left"><a style="text-decoration: none" href="detail?F001=3&amp;C106=F003&amp;C101=196641492519323672.0&amp;C109=1969&amp;C105=AND&amp;C102=22085&amp;F023=16&amp;C108=0">Alpine Klettersteige Ostalpen</a><br>70 spannende Touren zwischen Wien, Bodensee und Gardasee</td>');
+  document.writeln('  <td align="left"><span id="black">Zahel, Mark<br>Bergverl. Rother</span></td>');
+  document.writeln('  <td align="right"><span id="green"><b>1</b></span> / 1 / 1</td>');
+  document.writeln('</tr>');
+  }
+  else{
+  anzahl=anzahl+1;    <!-- ausgeblendete zaehlen -->
+  };
+  </script>
+
+
+  <script type="text/javascript">
+
+  if (1 != 0) <!-- nicht vorhandene ausblenden -->
+     {
+    document.writeln('<tr class="even">');
+  document.writeln('  <td align="center"><span id="black">6</span></td>');
+  document.writeln('  <td align="left"><span id="black">F0168<br>Führer<br></td></span>');
+  document.writeln('  <td align="left"><a style="text-decoration: none" href="detail?F001=3&amp;C106=F003&amp;C101=196641492519323672.0&amp;C109=1969&amp;C105=AND&amp;C102=1581&amp;F023=16&amp;C108=0">Bocchette-Weg, Brentagruppe-Dolomiten</a><br>Klettersteigführer</td>');
+  document.writeln('  <td align="left"><span id="black">Strobele, Giovanni<br>Manfrini, Bozen</span></td>');
+  document.writeln('  <td align="right"><span id="green"><b>1</b></span> / 1 / 1</td>');
+  document.writeln('</tr>');
+  }
+  else{
+  anzahl=anzahl+1;    <!-- ausgeblendete zaehlen -->
+  };
+  </script>
+
+
+  <script type="text/javascript">
+
+  if (1 != 0) <!-- nicht vorhandene ausblenden -->
+     {
+    document.writeln('<tr class="odd">');
+  document.writeln('  <td align="center"><span id="black">7</span></td>');
+  document.writeln('  <td align="left"><span id="black">F0171<br>Führer<br></td></span>');
+  document.writeln('  <td align="left"><a style="text-decoration: none" href="detail?F001=3&amp;C106=F003&amp;C101=196641492519323672.0&amp;C109=1969&amp;C105=AND&amp;C102=1583&amp;F023=16&amp;C108=0">Brenta Klettersteigführer</a><br>Klettersteigführer</td>');
+  document.writeln('  <td align="left"><span id="black">Hüsler, Eugen E.<br>Denzel Innsbruck</span></td>');
+  document.writeln('  <td align="right"><span id="green"><b>1</b></span> / 1 / 1</td>');
+  document.writeln('</tr>');
+  }
+  else{
+  anzahl=anzahl+1;    <!-- ausgeblendete zaehlen -->
+  };
+  </script>
+
+
+  <script type="text/javascript">
+
+  if (2 != 0) <!-- nicht vorhandene ausblenden -->
+     {
+    document.writeln('<tr class="even">');
+  document.writeln('  <td align="center"><span id="black">8</span></td>');
+  document.writeln('  <td align="left"><span id="black">F3012<br>Führer<br></td></span>');
+  document.writeln('  <td align="left"><a style="text-decoration: none" href="detail?F001=3&amp;C106=F003&amp;C101=196641492519323672.0&amp;C109=1969&amp;C105=AND&amp;C102=16111&amp;F023=16&amp;C108=0">Der Klettersteigführer Sachsen mit Thüringen, Sachsen-Anhalt und Franken</a><br>die schönsten Steiganlagen in Mitteldeutschland</td>');
+  document.writeln('  <td align="left"><span id="black">Bellmann, Michael<br>Bellmann, Michael</span></td>');
+  document.writeln('  <td align="right"><span id="green"><b>2</b></span> / 2 / 2</td>');
+  document.writeln('</tr>');
+  }
+  else{
+  anzahl=anzahl+1;    <!-- ausgeblendete zaehlen -->
+  };
+  </script>
+
+
+  <script type="text/javascript">
+
+  if (0 != 0) <!-- nicht vorhandene ausblenden -->
+     {
+    document.writeln('<tr class="odd">');
+  document.writeln('  <td align="center"><span id="black">9</span></td>');
+  document.writeln('  <td align="left"><span id="black">F2183<br>Führer<br></td></span>');
+  document.writeln('  <td align="left"><a style="text-decoration: none" href="detail?F001=3&amp;C106=F003&amp;C101=196641492519323672.0&amp;C109=1969&amp;C105=AND&amp;C102=3324&amp;F023=16&amp;C108=0">Die Stubaier Klettersteige mit Klett ...</a><br>Klettersteigführer</td>');
+  document.writeln('  <td align="left"><span id="black"><br>Tourismusverband Neustadt</span></td>');
+  document.writeln('  <td align="right"><span id="red"><b>0</b></span> / 0 / 0</td>');
+  document.writeln('</tr>');
+  }
+  else{
+  anzahl=anzahl+1;    <!-- ausgeblendete zaehlen -->
+  };
+  </script>
+
+
+  <script type="text/javascript">
+
+  if (2 != 0) <!-- nicht vorhandene ausblenden -->
+     {
+    document.writeln('<tr class="even">');
+  document.writeln('  <td align="center"><span id="black">10</span></td>');
+  document.writeln('  <td align="left"><span id="black">F2597<br>Führer<br></td></span>');
+  document.writeln('  <td align="left"><a style="text-decoration: none" href="detail?F001=3&amp;C106=F003&amp;C101=196641492519323672.0&amp;C109=1969&amp;C105=AND&amp;C102=3720&amp;F023=16&amp;C108=0">Dolomiten - Klettersteige mit Brentaregion</a><br>Klettersteigführer</td>');
+  document.writeln('  <td align="left"><span id="black">Hüsler, Eugen E.<br>Verlag Harald Denzel,I</span></td>');
+  document.writeln('  <td align="right"><span id="green"><b>2</b></span> / 2 / 2</td>');
+  document.writeln('</tr>');
+  }
+  else{
+  anzahl=anzahl+1;    <!-- ausgeblendete zaehlen -->
+  };
+  </script>
+
+
+  <script type="text/javascript">
+
+  if (3 != 0) <!-- nicht vorhandene ausblenden -->
+     {
+    document.writeln('<tr class="odd">');
+  document.writeln('  <td align="center"><span id="black">11</span></td>');
+  document.writeln('  <td align="left"><span id="black">F0341<br>Führer<br></td></span>');
+  document.writeln('  <td align="left"><a style="text-decoration: none" href="detail?F001=3&amp;C106=F003&amp;C101=196641492519323672.0&amp;C109=1969&amp;C105=AND&amp;C102=1718&amp;F023=16&amp;C108=0">Dolomiten  Klettersteigführer</a><br>Klettersteigführer</td>');
+  document.writeln('  <td align="left"><span id="black">Höfler/Werner<br>Bergverlag Rother München</span></td>');
+  document.writeln('  <td align="right"><span id="green"><b>3</b></span> / 3 / 3</td>');
+  document.writeln('</tr>');
+  }
+  else{
+  anzahl=anzahl+1;    <!-- ausgeblendete zaehlen -->
+  };
+  </script>
+
+
+  <script type="text/javascript">
+
+  if (1 != 0) <!-- nicht vorhandene ausblenden -->
+     {
+    document.writeln('<tr class="even">');
+  document.writeln('  <td align="center"><span id="black">12</span></td>');
+  document.writeln('  <td align="left"><span id="black">F1470<br>Führer<br></td></span>');
+  document.writeln('  <td align="left"><a style="text-decoration: none" href="detail?F001=3&amp;C106=F003&amp;C101=196641492519323672.0&amp;C109=1969&amp;C105=AND&amp;C102=2669&amp;F023=16&amp;C108=0">Erlebnis Klettersteig.Die 100 schönsten Vie ferrate ...</a><br>Klettersteigführer</td>');
+  document.writeln('  <td align="left"><span id="black">Hüsler, Eugen E.<br>Bruckmann Verlag München</span></td>');
+  document.writeln('  <td align="right"><span id="green"><b>1</b></span> / 1 / 1</td>');
+  document.writeln('</tr>');
+  }
+  else{
+  anzahl=anzahl+1;    <!-- ausgeblendete zaehlen -->
+  };
+  </script>
+
+
+  <script type="text/javascript">
+
+  if (1 != 0) <!-- nicht vorhandene ausblenden -->
+     {
+    document.writeln('<tr class="odd">');
+  document.writeln('  <td align="center"><span id="black">13</span></td>');
+  document.writeln('  <td align="left"><span id="black">F2823<br>Führer<br></td></span>');
+  document.writeln('  <td align="left"><a style="text-decoration: none" href="detail?F001=3&amp;C106=F003&amp;C101=196641492519323672.0&amp;C109=1969&amp;C105=AND&amp;C102=3947&amp;F023=16&amp;C108=0">Extreme Klettersteige in den Ostalpen</a><br>Alpine Klettersteige</td>');
+  document.writeln('  <td align="left"><span id="black">Jentzsch-Rabel, Jentzsch, Wissekal<br>Alpinverlag.Jentzsch-Rabl,Osterndorf</span></td>');
+  document.writeln('  <td align="right"><span id="green"><b>1</b></span> / 1 / 1</td>');
+  document.writeln('</tr>');
+  }
+  else{
+  anzahl=anzahl+1;    <!-- ausgeblendete zaehlen -->
+  };
+  </script>
+
+
+  <script type="text/javascript">
+
+  if (1 != 0) <!-- nicht vorhandene ausblenden -->
+     {
+    document.writeln('<tr class="even">');
+  document.writeln('  <td align="center"><span id="black">14</span></td>');
+  document.writeln('  <td align="left"><span id="black">F3477<br>Führer<br></td></span>');
+  document.writeln('  <td align="left"><a style="text-decoration: none" href="detail?F001=3&amp;C106=F003&amp;C101=196641492519323672.0&amp;C109=1969&amp;C105=AND&amp;C102=23570&amp;F023=16&amp;C108=0">Guide des Via Ferrata</a><br>Haute-Alpes, Alpes de Haute-Provence</td>');
+  document.writeln('  <td align="left"><span id="black"><br>Editions du Fournel</span></td>');
+  document.writeln('  <td align="right"><span id="green"><b>1</b></span> / 1 / 1</td>');
+  document.writeln('</tr>');
+  }
+  else{
+  anzahl=anzahl+1;    <!-- ausgeblendete zaehlen -->
+  };
+  </script>
+
+
+  <script type="text/javascript">
+
+  if (2 != 0) <!-- nicht vorhandene ausblenden -->
+     {
+    document.writeln('<tr class="odd">');
+  document.writeln('  <td align="center"><span id="black">15</span></td>');
+  document.writeln('  <td align="left"><span id="black">F1602<br>Führer<br></td></span>');
+  document.writeln('  <td align="left"><a style="text-decoration: none" href="detail?F001=3&amp;C106=F003&amp;C101=196641492519323672.0&amp;C109=1969&amp;C105=AND&amp;C102=2786&amp;F023=16&amp;C108=0">Hüslers Klettersteigführer Dolomiten</a><br>Klettersteigführer</td>');
+  document.writeln('  <td align="left"><span id="black">Hüsler, Eugen E.<br>München: Bruckmann Verlag</span></td>');
+  document.writeln('  <td align="right"><span id="green"><b>2</b></span> / 2 / 2</td>');
+  document.writeln('</tr>');
+  }
+  else{
+  anzahl=anzahl+1;    <!-- ausgeblendete zaehlen -->
+  };
+  </script>
+
+
+  <script type="text/javascript">
+
+  if (3 != 0) <!-- nicht vorhandene ausblenden -->
+     {
+    document.writeln('<tr class="even">');
+  document.writeln('  <td align="center"><span id="black">16</span></td>');
+  document.writeln('  <td align="left"><span id="black">F2646<br>Führer<br></td></span>');
+  document.writeln('  <td align="left"><a style="text-decoration: none" href="detail?F001=3&amp;C106=F003&amp;C101=196641492519323672.0&amp;C109=1969&amp;C105=AND&amp;C102=3769&amp;F023=16&amp;C108=0">Hüslers Klettersteigführer Gardasee</a><br>Klettersteigführer</td>');
+  document.writeln('  <td align="left"><span id="black">Hüsler, Eugen E.<br>Bruckmann Verl., GmbH, München</span></td>');
+  document.writeln('  <td align="right"><span id="green"><b>3</b></span> / 3 / 3</td>');
+  document.writeln('</tr>');
+  }
+  else{
+  anzahl=anzahl+1;    <!-- ausgeblendete zaehlen -->
+  };
+  </script>
+
+
+  <script type="text/javascript">
+
+  if (2 != 0) <!-- nicht vorhandene ausblenden -->
+     {
+    document.writeln('<tr class="odd">');
+  document.writeln('  <td align="center"><span id="black">17</span></td>');
+  document.writeln('  <td align="left"><span id="black">F0389<br>Führer<br></td></span>');
+  document.writeln('  <td align="left"><a style="text-decoration: none" href="detail?F001=3&amp;C106=F003&amp;C101=196641492519323672.0&amp;C109=1969&amp;C105=AND&amp;C102=3293&amp;F023=16&amp;C108=0">Hüslers Klettersteigführer Nordalpen</a><br>Klettersteigführer</td>');
+  document.writeln('  <td align="left"><span id="black">Hüsler, Eugen E.<br>München: Bruckmann Verlag</span></td>');
+  document.writeln('  <td align="right"><span id="green"><b>2</b></span> / 2 / 2</td>');
+  document.writeln('</tr>');
+  }
+  else{
+  anzahl=anzahl+1;    <!-- ausgeblendete zaehlen -->
+  };
+  </script>
+
+
+  <script type="text/javascript">
+
+  if (3 != 0) <!-- nicht vorhandene ausblenden -->
+     {
+    document.writeln('<tr class="even">');
+  document.writeln('  <td align="center"><span id="black">18</span></td>');
+  document.writeln('  <td align="left"><span id="black">F0626B<br>Führer<br></td></span>');
+  document.writeln('  <td align="left"><a style="text-decoration: none" href="detail?F001=3&amp;C106=F003&amp;C101=196641492519323672.0&amp;C109=1969&amp;C105=AND&amp;C102=15839&amp;F023=16&amp;C108=0">Julische und Steiner Alpen mit Karawanken und Karnischer Hauptkamm</a><br>Klettersteigführer</td>');
+  document.writeln('  <td align="left"><span id="black">Heindl, Hanns<br>Bergverl. Rother</span></td>');
+  document.writeln('  <td align="right"><span id="green"><b>3</b></span> / 3 / 3</td>');
+  document.writeln('</tr>');
+  }
+  else{
+  anzahl=anzahl+1;    <!-- ausgeblendete zaehlen -->
+  };
+  </script>
+
+
+  <script type="text/javascript">
+
+  if (1 != 0) <!-- nicht vorhandene ausblenden -->
+     {
+    document.writeln('<tr class="odd">');
+  document.writeln('  <td align="center"><span id="black">19</span></td>');
+  document.writeln('  <td align="left"><span id="black">F2771<br>Führer<br></td></span>');
+  document.writeln('  <td align="left"><a style="text-decoration: none" href="detail?F001=3&amp;C106=F003&amp;C101=196641492519323672.0&amp;C109=1969&amp;C105=AND&amp;C102=3890&amp;F023=16&amp;C108=0">Karwendel, Rofan Gipfeltouren, Höhenwege, Klettersteige</a><br>Wander- und Klettersteigführer</td>');
+  document.writeln('  <td align="left"><span id="black">Zahel, Mark<br>Bruckmann Verlag, München</span></td>');
+  document.writeln('  <td align="right"><span id="green"><b>1</b></span> / 1 / 1</td>');
+  document.writeln('</tr>');
+  }
+  else{
+  anzahl=anzahl+1;    <!-- ausgeblendete zaehlen -->
+  };
+  </script>
+
+
+  <script type="text/javascript">
+
+  if (1 != 0) <!-- nicht vorhandene ausblenden -->
+     {
+    document.writeln('<tr class="even">');
+  document.writeln('  <td align="center"><span id="black">20</span></td>');
+  document.writeln('  <td align="left"><span id="black">F3331<br>Führer<br></td></span>');
+  document.writeln('  <td align="left"><a style="text-decoration: none" href="detail?F001=3&amp;C106=F003&amp;C101=196641492519323672.0&amp;C109=1969&amp;C105=AND&amp;C102=23963&amp;F023=16&amp;C108=0">Kleittersteige der Dolomiten</a><br></td>');
+  document.writeln('  <td align="left"><span id="black">Sombardier, Pascal<br>BLV Verlagsgesellschaft München</span></td>');
+  document.writeln('  <td align="right"><span id="green"><b>1</b></span> / 1 / 1</td>');
+  document.writeln('</tr>');
+  }
+  else{
+  anzahl=anzahl+1;    <!-- ausgeblendete zaehlen -->
+  };
+  </script>
+
+
+  <script type="text/javascript">
+
+  if (1 != 0) <!-- nicht vorhandene ausblenden -->
+     {
+    document.writeln('<tr class="odd">');
+  document.writeln('  <td align="center"><span id="black">21</span></td>');
+  document.writeln('  <td align="left"><span id="black">F1113<br>Führer<br></td></span>');
+  document.writeln('  <td align="left"><a style="text-decoration: none" href="detail?F001=3&amp;C106=F003&amp;C101=196641492519323672.0&amp;C109=1969&amp;C105=AND&amp;C102=19087&amp;F023=16&amp;C108=0">Klettersteig-Atlas</a><br>Band 1: Italien West</td>');
+  document.writeln('  <td align="left"><span id="black">Hoch, Sascha; Rüttinger, Michael; Zitzmann, Jörg<br>Schall-Verlag, Alland</span></td>');
+  document.writeln('  <td align="right"><span id="green"><b>1</b></span> / 1 / 1</td>');
+  document.writeln('</tr>');
+  }
+  else{
+  anzahl=anzahl+1;    <!-- ausgeblendete zaehlen -->
+  };
+  </script>
+
+
+  <script type="text/javascript">
+
+  if (2 != 0) <!-- nicht vorhandene ausblenden -->
+     {
+    document.writeln('<tr class="even">');
+  document.writeln('  <td align="center"><span id="black">22</span></td>');
+  document.writeln('  <td align="left"><span id="black">F0861<br>Führer<br></td></span>');
+  document.writeln('  <td align="left"><a style="text-decoration: none" href="detail?F001=3&amp;C106=F003&amp;C101=196641492519323672.0&amp;C109=1969&amp;C105=AND&amp;C102=18515&amp;F023=16&amp;C108=0">Klettersteig-Atlas</a><br>Deutschland</td>');
+  document.writeln('  <td align="left"><span id="black">Hoch, Sascha<br>Schall-Verl.</span></td>');
+  document.writeln('  <td align="right"><span id="green"><b>2</b></span> / 2 / 2</td>');
+  document.writeln('</tr>');
+  }
+  else{
+  anzahl=anzahl+1;    <!-- ausgeblendete zaehlen -->
+  };
+  </script>
+
+
+  <script type="text/javascript">
+
+  if (1 != 0) <!-- nicht vorhandene ausblenden -->
+     {
+    document.writeln('<tr class="odd">');
+  document.writeln('  <td align="center"><span id="black">23</span></td>');
+  document.writeln('  <td align="left"><span id="black">F3656<br>Führer<br></td></span>');
+  document.writeln('  <td align="left"><a style="text-decoration: none" href="detail?F001=3&amp;C106=F003&amp;C101=196641492519323672.0&amp;C109=1969&amp;C105=AND&amp;C102=25719&amp;F023=16&amp;C108=0">Klettersteig-Atlas Österreich</a><br>alle lohnenden Klettersteige - von leicht bis extrem schwierig - sowie interessante gesicherte Steige ; [mit vielen neuen Klettersteigen ; viele Toposkizzen und Anforderungsprofile]</td>');
+  document.writeln('  <td align="left"><span id="black">Schall, Kurt<br>Schall Verlag Alland</span></td>');
+  document.writeln('  <td align="right"><span id="green"><b>1</b></span> / 1 / 1</td>');
+  document.writeln('</tr>');
+  }
+  else{
+  anzahl=anzahl+1;    <!-- ausgeblendete zaehlen -->
+  };
+  </script>
+
+
+  <script type="text/javascript">
+
+  if (1 != 0) <!-- nicht vorhandene ausblenden -->
+     {
+    document.writeln('<tr class="even">');
+  document.writeln('  <td align="center"><span id="black">24</span></td>');
+  document.writeln('  <td align="left"><span id="black">F2503<br>Führer<br></td></span>');
+  document.writeln('  <td align="left"><a style="text-decoration: none" href="detail?F001=3&amp;C106=F003&amp;C101=196641492519323672.0&amp;C109=1969&amp;C105=AND&amp;C102=3627&amp;F023=16&amp;C108=0">Klettersteig-Guide Österreich</a><br>Klettersteigführer</td>');
+  document.writeln('  <td align="left"><span id="black">Szepfalusi, Csaba<br>Tyrolia-Verlag Innsbruck</span></td>');
+  document.writeln('  <td align="right"><span id="green"><b>1</b></span> / 1 / 1</td>');
+  document.writeln('</tr>');
+  }
+  else{
+  anzahl=anzahl+1;    <!-- ausgeblendete zaehlen -->
+  };
+  </script>
+
+
+  <script type="text/javascript">
+
+  if (1 != 0) <!-- nicht vorhandene ausblenden -->
+     {
+    document.writeln('<tr class="odd">');
+  document.writeln('  <td align="center"><span id="black">25</span></td>');
+  document.writeln('  <td align="left"><span id="black">F2503A<br>Führer<br></td></span>');
+  document.writeln('  <td align="left"><a style="text-decoration: none" href="detail?F001=3&amp;C106=F003&amp;C101=196641492519323672.0&amp;C109=1969&amp;C105=AND&amp;C102=22652&amp;F023=16&amp;C108=0">Klettersteig-Guide Österreich</a><br>Klettersteigführer</td>');
+  document.writeln('  <td align="left"><span id="black">Szepfalusi, Csaba<br>Tyrolia-Verlag Innsbruck</span></td>');
+  document.writeln('  <td align="right"><span id="green"><b>1</b></span> / 1 / 1</td>');
+  document.writeln('</tr>');
+  }
+  else{
+  anzahl=anzahl+1;    <!-- ausgeblendete zaehlen -->
+  };
+  </script>
+
+
+  <script type="text/javascript">
+
+  if (3 != 0) <!-- nicht vorhandene ausblenden -->
+     {
+    document.writeln('<tr class="even">');
+  document.writeln('  <td align="center"><span id="black">26</span></td>');
+  document.writeln('  <td align="left"><span id="black">F0625<br>Führer<br></td></span>');
+  document.writeln('  <td align="left"><a style="text-decoration: none" href="detail?F001=3&amp;C106=F003&amp;C101=196641492519323672.0&amp;C109=1969&amp;C105=AND&amp;C102=1955&amp;F023=16&amp;C108=0">Klettersteigatlas Alpen</a><br>Klettersteigführer</td>');
+  document.writeln('  <td align="left"><span id="black">Hüsler, Eugen E.<br>Berg bei Bruckmann</span></td>');
+  document.writeln('  <td align="right"><span id="green"><b>3</b></span> / 3 / 3</td>');
+  document.writeln('</tr>');
+  }
+  else{
+  anzahl=anzahl+1;    <!-- ausgeblendete zaehlen -->
+  };
+  </script>
+
+
+  <script type="text/javascript">
+
+  if (1 != 0) <!-- nicht vorhandene ausblenden -->
+     {
+    document.writeln('<tr class="odd">');
+  document.writeln('  <td align="center"><span id="black">27</span></td>');
+  document.writeln('  <td align="left"><span id="black">F2234A<br>Führer<br></td></span>');
+  document.writeln('  <td align="left"><a style="text-decoration: none" href="detail?F001=3&amp;C106=F003&amp;C101=196641492519323672.0&amp;C109=1969&amp;C105=AND&amp;C102=23624&amp;F023=16&amp;C108=0">Klettersteigatlas Alpen</a><br>Über 900 Klettersteige zwischen Wienerwald und Cote d Azur</td>');
+  document.writeln('  <td align="left"><span id="black">Werner, Paul; Kürschner, Iris<br>Bergverlag Rudolf Rother München</span></td>');
+  document.writeln('  <td align="right"><span id="green"><b>1</b></span> / 1 / 1</td>');
+  document.writeln('</tr>');
+  }
+  else{
+  anzahl=anzahl+1;    <!-- ausgeblendete zaehlen -->
+  };
+  </script>
+
+
+  <script type="text/javascript">
+
+  if (3 != 0) <!-- nicht vorhandene ausblenden -->
+     {
+    document.writeln('<tr class="even">');
+  document.writeln('  <td align="center"><span id="black">28</span></td>');
+  document.writeln('  <td align="left"><span id="black">F0356<br>Führer<br></td></span>');
+  document.writeln('  <td align="left"><a style="text-decoration: none" href="detail?F001=3&amp;C106=F003&amp;C101=196641492519323672.0&amp;C109=1969&amp;C105=AND&amp;C102=1731&amp;F023=16&amp;C108=0">Klettersteigatlas  Alpen</a><br>Klettersteigführer</td>');
+  document.writeln('  <td align="left"><span id="black">Werner, Paul<br>Bergverlag Rother München</span></td>');
+  document.writeln('  <td align="right"><span id="green"><b>3</b></span> / 3 / 3</td>');
+  document.writeln('</tr>');
+  }
+  else{
+  anzahl=anzahl+1;    <!-- ausgeblendete zaehlen -->
+  };
+  </script>
+
+
+  <script type="text/javascript">
+
+  if (2 != 0) <!-- nicht vorhandene ausblenden -->
+     {
+    document.writeln('<tr class="odd">');
+  document.writeln('  <td align="center"><span id="black">29</span></td>');
+  document.writeln('  <td align="left"><span id="black">F2234<br>Führer<br></td></span>');
+  document.writeln('  <td align="left"><a style="text-decoration: none" href="detail?F001=3&amp;C106=F003&amp;C101=196641492519323672.0&amp;C109=1969&amp;C105=AND&amp;C102=3361&amp;F023=16&amp;C108=0">Klettersteigatlas Alpen</a><br>Klettersteigführer</td>');
+  document.writeln('  <td align="left"><span id="black">Werner, Paul, Kürschner, Iris<br>Bergverlag Rudolf Rother München</span></td>');
+  document.writeln('  <td align="right"><span id="green"><b>2</b></span> / 2 / 2</td>');
+  document.writeln('</tr>');
+  }
+  else{
+  anzahl=anzahl+1;    <!-- ausgeblendete zaehlen -->
+  };
+  </script>
+
+
+  <script type="text/javascript">
+
+  if (1 != 0) <!-- nicht vorhandene ausblenden -->
+     {
+    document.writeln('<tr class="even">');
+  document.writeln('  <td align="center"><span id="black">30</span></td>');
+  document.writeln('  <td align="left"><span id="black">F2012A<br>Führer<br></td></span>');
+  document.writeln('  <td align="left"><a style="text-decoration: none" href="detail?F001=3&amp;C106=F003&amp;C101=196641492519323672.0&amp;C109=1969&amp;C105=AND&amp;C102=19997&amp;F023=16&amp;C108=0">Klettersteige 1</a><br>Alle Klettersteige der Nordalpen</td>');
+  document.writeln('  <td align="left"><span id="black">Hüsler, Eugen E.<br>Bruckmann</span></td>');
+  document.writeln('  <td align="right"><span id="green"><b>1</b></span> / 1 / 1</td>');
+  document.writeln('</tr>');
+  }
+  else{
+  anzahl=anzahl+1;    <!-- ausgeblendete zaehlen -->
+  };
+  </script>
+
+
+  <script type="text/javascript">
+
+  if (1 != 0) <!-- nicht vorhandene ausblenden -->
+     {
+    document.writeln('<tr class="odd">');
+  document.writeln('  <td align="center"><span id="black">31</span></td>');
+  document.writeln('  <td align="left"><span id="black">F2012B<br>Führer<br></td></span>');
+  document.writeln('  <td align="left"><a style="text-decoration: none" href="detail?F001=3&amp;C106=F003&amp;C101=196641492519323672.0&amp;C109=1969&amp;C105=AND&amp;C102=19998&amp;F023=16&amp;C108=0">Klettersteige 2</a><br>alle Klettersteige der Südalpen</td>');
+  document.writeln('  <td align="left"><span id="black">Hüsler, Eugen E.<br>Bruckmann</span></td>');
+  document.writeln('  <td align="right"><span id="green"><b>1</b></span> / 1 / 1</td>');
+  document.writeln('</tr>');
+  }
+  else{
+  anzahl=anzahl+1;    <!-- ausgeblendete zaehlen -->
+  };
+  </script>
+
+
+  <script type="text/javascript">
+
+  if (1 != 0) <!-- nicht vorhandene ausblenden -->
+     {
+    document.writeln('<tr class="even">');
+  document.writeln('  <td align="center"><span id="black">32</span></td>');
+  document.writeln('  <td align="left"><span id="black">F2210<br>Führer<br></td></span>');
+  document.writeln('  <td align="left"><a style="text-decoration: none" href="detail?F001=3&amp;C106=F003&amp;C101=196641492519323672.0&amp;C109=1969&amp;C105=AND&amp;C102=3351&amp;F023=16&amp;C108=0">Klettersteige am Dachstein</a><br>Klettersteigführer</td>');
+  document.writeln('  <td align="left"><span id="black">Gemeinde Ramsau/Gosau<br>Tourismusverband</span></td>');
+  document.writeln('  <td align="right"><span id="green"><b>1</b></span> / 1 / 1</td>');
+  document.writeln('</tr>');
+  }
+  else{
+  anzahl=anzahl+1;    <!-- ausgeblendete zaehlen -->
+  };
+  </script>
+
+
+  <script type="text/javascript">
+
+  if (4 != 0) <!-- nicht vorhandene ausblenden -->
+     {
+    document.writeln('<tr class="odd">');
+  document.writeln('  <td align="center"><span id="black">33</span></td>');
+  document.writeln('  <td align="left"><span id="black">F3074<br>Führer<br></td></span>');
+  document.writeln('  <td align="left"><a style="text-decoration: none" href="detail?F001=3&amp;C106=F003&amp;C101=196641492519323672.0&amp;C109=1969&amp;C105=AND&amp;C102=21177&amp;F023=16&amp;C108=0">Klettersteige Bayern, Vorarlberg, Tirol, Salzburg</a><br>92 Klettersteige zwischen Rhein und Salzach</td>');
+  document.writeln('  <td align="left"><span id="black">Werner, Paul; Huttenlocher, Thomas<br>Bergverl. Rother</span></td>');
+  document.writeln('  <td align="right"><span id="green"><b>4</b></span> / 4 / 4</td>');
+  document.writeln('</tr>');
+  }
+  else{
+  anzahl=anzahl+1;    <!-- ausgeblendete zaehlen -->
+  };
+  </script>
+
+
+  <script type="text/javascript">
+
+  if (2 != 0) <!-- nicht vorhandene ausblenden -->
+     {
+    document.writeln('<tr class="even">');
+  document.writeln('  <td align="center"><span id="black">34</span></td>');
+  document.writeln('  <td align="left"><span id="black">F0284<br>Führer<br></td></span>');
+  document.writeln('  <td align="left"><a style="text-decoration: none" href="detail?F001=3&amp;C106=F003&amp;C101=196641492519323672.0&amp;C109=1969&amp;C105=AND&amp;C102=1669&amp;F023=16&amp;C108=0">Klettersteige, Das Buch der</a><br>Klettersteigführer</td>');
+  document.writeln('  <td align="left"><span id="black">Seibert, Dieter<br>Bergverlag Rudolf Rother München</span></td>');
+  document.writeln('  <td align="right"><span id="green"><b>2</b></span> / 2 / 2</td>');
+  document.writeln('</tr>');
+  }
+  else{
+  anzahl=anzahl+1;    <!-- ausgeblendete zaehlen -->
+  };
+  </script>
+
+
+  <script type="text/javascript">
+
+  if (1 != 0) <!-- nicht vorhandene ausblenden -->
+     {
+    document.writeln('<tr class="odd">');
+  document.writeln('  <td align="center"><span id="black">35</span></td>');
+  document.writeln('  <td align="left"><span id="black">F1528<br>Führer<br></td></span>');
+  document.writeln('  <td align="left"><a style="text-decoration: none" href="detail?F001=3&amp;C106=F003&amp;C101=196641492519323672.0&amp;C109=1969&amp;C105=AND&amp;C102=1676&amp;F023=16&amp;C108=0">Klettersteige der Dolomiten  -  Die</a><br>Klettersteigführer</td>');
+  document.writeln('  <td align="left"><span id="black">Frass, Hilde<br>Bergverlag Rudolf Rother München</span></td>');
+  document.writeln('  <td align="right"><span id="green"><b>1</b></span> / 1 / 1</td>');
+  document.writeln('</tr>');
+  }
+  else{
+  anzahl=anzahl+1;    <!-- ausgeblendete zaehlen -->
+  };
+  </script>
+
+
+  <script type="text/javascript">
+
+  if (0 != 0) <!-- nicht vorhandene ausblenden -->
+     {
+    document.writeln('<tr class="even">');
+  document.writeln('  <td align="center"><span id="black">36</span></td>');
+  document.writeln('  <td align="left"><span id="black">F0188<br>Führer<br></td></span>');
+  document.writeln('  <td align="left"><a style="text-decoration: none" href="detail?F001=3&amp;C106=F003&amp;C101=196641492519323672.0&amp;C109=1969&amp;C105=AND&amp;C102=1597&amp;F023=16&amp;C108=0">Klettersteige der Nördlichen Kalkalpen / Rother-Wanderführer</a><br>Klettersteigführer</td>');
+  document.writeln('  <td align="left"><span id="black">Werner, Paul<br>Bergverlag Rudolf Rother München</span></td>');
+  document.writeln('  <td align="right"><span id="red"><b>0</b></span> / 0 / 0</td>');
+  document.writeln('</tr>');
+  }
+  else{
+  anzahl=anzahl+1;    <!-- ausgeblendete zaehlen -->
+  };
+  </script>
+
+
+  <script type="text/javascript">
+
+  if (2 != 0) <!-- nicht vorhandene ausblenden -->
+     {
+    document.writeln('<tr class="odd">');
+  document.writeln('  <td align="center"><span id="black">37</span></td>');
+  document.writeln('  <td align="left"><span id="black">F0526<br>Führer<br></td></span>');
+  document.writeln('  <td align="left"><a style="text-decoration: none" href="detail?F001=3&amp;C106=F003&amp;C101=196641492519323672.0&amp;C109=1969&amp;C105=AND&amp;C102=1871&amp;F023=16&amp;C108=0">Klettersteige Dolomiten,Brenta, Italien</a><br>Klettersteigführer</td>');
+  document.writeln('  <td align="left"><span id="black">Schnürer, Sepp<br>BLV Verlagsg.München</span></td>');
+  document.writeln('  <td align="right"><span id="green"><b>2</b></span> / 2 / 2</td>');
+  document.writeln('</tr>');
+  }
+  else{
+  anzahl=anzahl+1;    <!-- ausgeblendete zaehlen -->
+  };
+  </script>
+
+
+  <script type="text/javascript">
+
+  if (1 != 0) <!-- nicht vorhandene ausblenden -->
+     {
+    document.writeln('<tr class="even">');
+  document.writeln('  <td align="center"><span id="black">38</span></td>');
+  document.writeln('  <td align="left"><span id="black">F0904<br>Führer<br></td></span>');
+  document.writeln('  <td align="left"><a style="text-decoration: none" href="detail?F001=3&amp;C106=F003&amp;C101=196641492519323672.0&amp;C109=1969&amp;C105=AND&amp;C102=2193&amp;F023=16&amp;C108=0">Klettersteige Dolomiten, Italien</a><br>Klettersteigführer</td>');
+  document.writeln('  <td align="left"><span id="black">Messner, Reinhold<br>Athesia GmbH Bozen</span></td>');
+  document.writeln('  <td align="right"><span id="green"><b>1</b></span> / 1 / 1</td>');
+  document.writeln('</tr>');
+  }
+  else{
+  anzahl=anzahl+1;    <!-- ausgeblendete zaehlen -->
+  };
+  </script>
+
+
+  <script type="text/javascript">
+
+  if (3 != 0) <!-- nicht vorhandene ausblenden -->
+     {
+    document.writeln('<tr class="odd">');
+  document.writeln('  <td align="center"><span id="black">39</span></td>');
+  document.writeln('  <td align="left"><span id="black">F0607<br>Führer<br></td></span>');
+  document.writeln('  <td align="left"><a style="text-decoration: none" href="detail?F001=3&amp;C106=F003&amp;C101=196641492519323672.0&amp;C109=1969&amp;C105=AND&amp;C102=1938&amp;F023=16&amp;C108=0">Klettersteige Dolomiten Süd,Italien</a><br>Klettersteigführer, Brenta, Gardaseeberge, Pala</td>');
+  document.writeln('  <td align="left"><span id="black">Oberarzbacher, Robert<br>Fleischmann Trento</span></td>');
+  document.writeln('  <td align="right"><span id="green"><b>3</b></span> / 3 / 3</td>');
+  document.writeln('</tr>');
+  }
+  else{
+  anzahl=anzahl+1;    <!-- ausgeblendete zaehlen -->
+  };
+  </script>
+
+
+  <script type="text/javascript">
+
+  if (2 != 0) <!-- nicht vorhandene ausblenden -->
+     {
+    document.writeln('<tr class="even">');
+  document.writeln('  <td align="center"><span id="black">40</span></td>');
+  document.writeln('  <td align="left"><span id="black">F2649<br>Führer<br></td></span>');
+  document.writeln('  <td align="left"><a style="text-decoration: none" href="detail?F001=3&amp;C106=F003&amp;C101=196641492519323672.0&amp;C109=1969&amp;C105=AND&amp;C102=3772&amp;F023=16&amp;C108=0">Klettersteige für Einsteiger.Südtirol,Dolomiten, ...</a><br>Klettersteigführer</td>');
+  document.writeln('  <td align="left"><span id="black">Ladurner, Christjan<br>Tappeiner.BLV Buchverlag München</span></td>');
+  document.writeln('  <td align="right"><span id="green"><b>2</b></span> / 2 / 2</td>');
+  document.writeln('</tr>');
+  }
+  else{
+  anzahl=anzahl+1;    <!-- ausgeblendete zaehlen -->
+  };
+  </script>
+
+
+  <script type="text/javascript">
+
+  if (0 != 0) <!-- nicht vorhandene ausblenden -->
+     {
+    document.writeln('<tr class="odd">');
+  document.writeln('  <td align="center"><span id="black">41</span></td>');
+  document.writeln('  <td align="left"><span id="black">F2647<br>Führer<br></td></span>');
+  document.writeln('  <td align="left"><a style="text-decoration: none" href="detail?F001=3&amp;C106=F003&amp;C101=196641492519323672.0&amp;C109=1969&amp;C105=AND&amp;C102=3770&amp;F023=16&amp;C108=0">Klettersteige für Könner</a><br>Klettersteigführer</td>');
+  document.writeln('  <td align="left"><span id="black">Ladurner, Christjan<br>BLV Buchverlag GmbH& Co.KG München</span></td>');
+  document.writeln('  <td align="right"><span id="red"><b>0</b></span> / 0 / 0</td>');
+  document.writeln('</tr>');
+  }
+  else{
+  anzahl=anzahl+1;    <!-- ausgeblendete zaehlen -->
+  };
+  </script>
+
+
+  <script type="text/javascript">
+
+  if (3 != 0) <!-- nicht vorhandene ausblenden -->
+     {
+    document.writeln('<tr class="even">');
+  document.writeln('  <td align="center"><span id="black">42</span></td>');
+  document.writeln('  <td align="left"><span id="black">F2265<br>Führer<br></td></span>');
+  document.writeln('  <td align="left"><a style="text-decoration: none" href="detail?F001=3&amp;C106=F003&amp;C101=196641492519323672.0&amp;C109=1969&amp;C105=AND&amp;C102=3392&amp;F023=16&amp;C108=0">Klettersteige für Könner.Südtirol-Dolomiten-Gardasee-..</a><br>Klettersteigführer</td>');
+  document.writeln('  <td align="left"><span id="black">Ladurner, Christjan<br>Tappeiner,Lana,BLV Buchverl.München</span></td>');
+  document.writeln('  <td align="right"><span id="green"><b>3</b></span> / 3 / 3</td>');
+  document.writeln('</tr>');
+  }
+  else{
+  anzahl=anzahl+1;    <!-- ausgeblendete zaehlen -->
+  };
+  </script>
+
+
+  <script type="text/javascript">
+
+  if (0 != 0) <!-- nicht vorhandene ausblenden -->
+     {
+    document.writeln('<tr class="odd">');
+  document.writeln('  <td align="center"><span id="black">43</span></td>');
+  document.writeln('  <td align="left"><span id="black">F1102<br>Führer<br></td></span>');
+  document.writeln('  <td align="left"><a style="text-decoration: none" href="detail?F001=3&amp;C106=F003&amp;C101=196641492519323672.0&amp;C109=1969&amp;C105=AND&amp;C102=2364&amp;F023=16&amp;C108=0">Klettersteige Gardasee.Mit Trentiner Bergen u.Mti.Lessi</a><br>Klettersteigführer</td>');
+  document.writeln('  <td align="left"><span id="black">Hüsler, Eugen E.<br>Bruckmannverl.München</span></td>');
+  document.writeln('  <td align="right"><span id="red"><b>0</b></span> / 0 / 0</td>');
+  document.writeln('</tr>');
+  }
+  else{
+  anzahl=anzahl+1;    <!-- ausgeblendete zaehlen -->
+  };
+  </script>
+
+
+  <script type="text/javascript">
+
+  if (2 != 0) <!-- nicht vorhandene ausblenden -->
+     {
+    document.writeln('<tr class="even">');
+  document.writeln('  <td align="center"><span id="black">44</span></td>');
+  document.writeln('  <td align="left"><span id="black">F0162<br>Führer<br></td></span>');
+  document.writeln('  <td align="left"><a style="text-decoration: none" href="detail?F001=3&amp;C106=F003&amp;C101=196641492519323672.0&amp;C109=1969&amp;C105=AND&amp;C102=1976&amp;F023=16&amp;C108=0">Klettersteige in den Dolomiten</a><br>Klettersteigführer</td>');
+  document.writeln('  <td align="left"><span id="black">Kammerer, Heinz<br>Berg bei Bruckmann</span></td>');
+  document.writeln('  <td align="right"><span id="green"><b>2</b></span> / 2 / 2</td>');
+  document.writeln('</tr>');
+  }
+  else{
+  anzahl=anzahl+1;    <!-- ausgeblendete zaehlen -->
+  };
+  </script>
+
+
+  <script type="text/javascript">
+
+  if (1 != 0) <!-- nicht vorhandene ausblenden -->
+     {
+    document.writeln('<tr class="odd">');
+  document.writeln('  <td align="center"><span id="black">45</span></td>');
+  document.writeln('  <td align="left"><span id="black">F1060<br>Führer<br></td></span>');
+  document.writeln('  <td align="left"><a style="text-decoration: none" href="detail?F001=3&amp;C106=F003&amp;C101=196641492519323672.0&amp;C109=1969&amp;C105=AND&amp;C102=2325&amp;F023=16&amp;C108=0">Klettersteige in den Ostalpen zwischen Comer See ...</a><br>Klettersteigführer</td>');
+  document.writeln('  <td align="left"><span id="black">Hüsler, Eugen E.<br>Bruckmann-Verlag</span></td>');
+  document.writeln('  <td align="right"><span id="green"><b>1</b></span> / 1 / 1</td>');
+  document.writeln('</tr>');
+  }
+  else{
+  anzahl=anzahl+1;    <!-- ausgeblendete zaehlen -->
+  };
+  </script>
+
+
+  <script type="text/javascript">
+
+  if (1 != 0) <!-- nicht vorhandene ausblenden -->
+     {
+    document.writeln('<tr class="even">');
+  document.writeln('  <td align="center"><span id="black">46</span></td>');
+  document.writeln('  <td align="left"><span id="black">F3247<br>Führer<br></td></span>');
+  document.writeln('  <td align="left"><a style="text-decoration: none" href="detail?F001=3&amp;C106=F003&amp;C101=196641492519323672.0&amp;C109=1969&amp;C105=AND&amp;C102=24176&amp;F023=16&amp;C108=0">Klettersteige in Osttirol</a><br></td>');
+  document.writeln('  <td align="left"><span id="black">Osttirol Werbung GmbH<br></span></td>');
+  document.writeln('  <td align="right"><span id="green"><b>1</b></span> / 1 / 1</td>');
+  document.writeln('</tr>');
+  }
+  else{
+  anzahl=anzahl+1;    <!-- ausgeblendete zaehlen -->
+  };
+  </script>
+
+
+  <script type="text/javascript">
+
+  if (2 != 0) <!-- nicht vorhandene ausblenden -->
+     {
+    document.writeln('<tr class="odd">');
+  document.writeln('  <td align="center"><span id="black">47</span></td>');
+  document.writeln('  <td align="left"><span id="black">F0626<br>Führer<br></td></span>');
+  document.writeln('  <td align="left"><a style="text-decoration: none" href="detail?F001=3&amp;C106=F003&amp;C101=196641492519323672.0&amp;C109=1969&amp;C105=AND&amp;C102=1956&amp;F023=16&amp;C108=0">Klettersteige Julische Alpen, Slovenien u. Österreich</a><br>Klettersteigführer</td>');
+  document.writeln('  <td align="left"><span id="black">Heindl, Hanns<br>Bergverlag Rudolf Rother München</span></td>');
+  document.writeln('  <td align="right"><span id="green"><b>2</b></span> / 2 / 2</td>');
+  document.writeln('</tr>');
+  }
+  else{
+  anzahl=anzahl+1;    <!-- ausgeblendete zaehlen -->
+  };
+  </script>
+
+
+  <script type="text/javascript">
+
+  if (1 != 0) <!-- nicht vorhandene ausblenden -->
+     {
+    document.writeln('<tr class="even">');
+  document.writeln('  <td align="center"><span id="black">48</span></td>');
+  document.writeln('  <td align="left"><span id="black">F2780<br>Führer<br></td></span>');
+  document.writeln('  <td align="left"><a style="text-decoration: none" href="detail?F001=3&amp;C106=F003&amp;C101=196641492519323672.0&amp;C109=1969&amp;C105=AND&amp;C102=3898&amp;F023=16&amp;C108=0">Klettersteige & leichter Fels / Österreich Ost</a><br>Klettersteigführer</td>');
+  document.writeln('  <td align="left"><span id="black">Schall, Kurt<br>Verlag Kurt Schall, Wien</span></td>');
+  document.writeln('  <td align="right"><span id="green"><b>1</b></span> / 1 / 1</td>');
+  document.writeln('</tr>');
+  }
+  else{
+  anzahl=anzahl+1;    <!-- ausgeblendete zaehlen -->
+  };
+  </script>
+
+
+  <script type="text/javascript">
+
+  if (1 != 0) <!-- nicht vorhandene ausblenden -->
+     {
+    document.writeln('<tr class="odd">');
+  document.writeln('  <td align="center"><span id="black">49</span></td>');
+  document.writeln('  <td align="left"><span id="black">F2768<br>Führer<br></td></span>');
+  document.writeln('  <td align="left"><a style="text-decoration: none" href="detail?F001=3&amp;C106=F003&amp;C101=196641492519323672.0&amp;C109=1969&amp;C105=AND&amp;C102=3887&amp;F023=16&amp;C108=0">Klettersteige Leichter Fels, Österreich West+Süd</a><br>Klettersteigführer</td>');
+  document.writeln('  <td align="left"><span id="black">Schall, Kurt<br>Verlag Kurt Schall, Wien</span></td>');
+  document.writeln('  <td align="right"><span id="green"><b>1</b></span> / 1 / 1</td>');
+  document.writeln('</tr>');
+  }
+  else{
+  anzahl=anzahl+1;    <!-- ausgeblendete zaehlen -->
+  };
+  </script>
+
+
+  <script type="text/javascript">
+
+  if (2 != 0) <!-- nicht vorhandene ausblenden -->
+     {
+    document.writeln('<tr class="even">');
+  document.writeln('  <td align="center"><span id="black">50</span></td>');
+  document.writeln('  <td align="left"><span id="black">F3061<br>Führer<br></td></span>');
+  document.writeln('  <td align="left"><a style="text-decoration: none" href="detail?F001=3&amp;C106=F003&amp;C101=196641492519323672.0&amp;C109=1969&amp;C105=AND&amp;C102=18192&amp;F023=16&amp;C108=0">Klettersteige mit kurzen Zustiegen</a><br>60 Touren in den Alpen, die direkt ans Eisen führen</td>');
+  document.writeln('  <td align="left"><span id="black">Hüsler, Eugen E.<br>Bruckmann</span></td>');
+  document.writeln('  <td align="right"><span id="green"><b>2</b></span> / 2 / 2</td>');
+  document.writeln('</tr>');
+  }
+  else{
+  anzahl=anzahl+1;    <!-- ausgeblendete zaehlen -->
+  };
+  </script>
+
+
+
+</table>
+<!-- Verweis auf naechste Seite: -->
+<p><span style="font-size: 16px; font-weight: 700;" id="yellow">1</span> &nbsp;<a class="biglink" href="list?F001=3&amp;C106=F003&amp;C101=196641492519323672.0&amp;C109=1969&amp;C105=AND&amp;F023=16&amp;C108=1">2</a> &nbsp; <a class="biglink" href="list?F001=3&amp;C106=F003&amp;C101=196641492519323672.0&amp;C109=1969&amp;C105=AND&amp;F023=16&amp;C108=1">Weiter</a></p>
+
+<!-- eventuelle Fehlernachrichten: -->
+<span id="red">
+<br>
+
+
+<script type="text/javascript">
+if (anzahl !=0)
+   {
+    document.writeln('Es werden '+anzahl+' Ergebnisse nicht angezeigt, da die Exemplare ausgesondert oder verschollen sind.');
+
+
+    };
+</script>
+</span>
+
+<!-- Navigation: -->
+<div style="margin-top: 20px">
+<a class="biglink" href="start?F001=3&amp;C106=F003&amp;C101=196641492519323672.0&amp;C109=1969&amp;C105=AND&amp;F023=16&amp;C108=0">neue Suche</a>
+</div>
+
+    </td>
+  </tr>
+  <tr>
+    <td class="red">
+      <!-- eventuelle Fehlernachrichten: -->
+
+
+    </td>
+    </tr>
+</table>
+</center>
+</div>
+</div>
+</div>
+
+</body>
+</html>
