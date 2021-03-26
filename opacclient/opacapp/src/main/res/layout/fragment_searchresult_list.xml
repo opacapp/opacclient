@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-             android:layout_width="match_parent"
-             android:layout_height="match_parent">
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <LinearLayout
         android:id="@+id/progressContainer"
@@ -58,25 +59,81 @@
         android:layout_height="match_parent">
     </FrameLayout>
 
-    <ProgressBar
-        android:id="@+id/searchedApisProgressBar"
-        android:visibility="gone"
-        style="?android:attr/progressBarStyleHorizontal"
+    <androidx.cardview.widget.CardView
+        android:id="@+id/loadingIndicator"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:indeterminate="false"
-        android:max="100"
-        android:progress="0" />
+        android:layout_height="56dp"
+        app:cardBackgroundColor="#FFFFFFFF"
+        android:foreground="?android:attr/selectableItemBackground"
+        android:clickable="true"
+        android:layout_margin="16dp"
+        app:cardCornerRadius="28dp"
+        app:cardElevation="16dp"
+        android:visibility="gone">
 
-    <TextView
-        android:id="@+id/multiSearchFinished"
-        android:visibility="gone"
-        android:textSize="16dp"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:padding="8dp"
-        android:background="#AAFF55"
-        android:layout_gravity="center_horizontal"
-        android:layout_marginTop="16dp"/>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_gravity="center_vertical"
+            android:paddingLeft="16dp">
+            <FrameLayout
+                android:layout_width="40dp"
+                android:layout_height="40dp">
+
+                <com.dinuscxj.progressbar.CircleProgressBar
+                    xmlns:app="http://schemas.android.com/apk/res-auto"
+                    android:id="@+id/loadingIndicatorProgressBar"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    app:progress_style="solid_line"
+                    app:progress_stroke_width="3dp"
+                    app:progress_text_color="#00000000"/>
+
+                <TextView
+                    android:id="@+id/loadingIndicatorProgress"
+                    android:text="44"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="14dp"
+                    android:layout_gravity="center"/>
+
+                <cdflynn.android.library.checkview.CheckView
+                    android:id="@+id/loadingIndicatorCheckMark"
+                    android:layout_width="32dp"
+                    android:layout_height="32dp"
+                    app:checkView_strokeColor="@color/status_yellow"
+                    app:checkView_strokeWidth="2.5dp"
+                    android:layout_gravity="center"/>
+
+            </FrameLayout>
+
+            <FrameLayout
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:layout_marginLeft="16dp"
+                android:layout_marginRight="24dp">
+
+                <TextView
+                    android:id="@+id/loadingIndicatorLabelSearchRunning"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="14dp"
+                    android:layout_gravity="center_vertical" />
+
+                <TextView
+                    android:id="@+id/loadingIndicatorLabelSearchFinished"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="14dp"
+                    android:layout_gravity="center_vertical"
+                    android:visibility="gone"/>
+
+            </FrameLayout>
+        </LinearLayout>
+
+    </androidx.cardview.widget.CardView>
+
 
 </FrameLayout>
