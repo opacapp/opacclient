@@ -43,7 +43,7 @@ class JsonFilesTask extends DefaultTask {
     private SSLSocketFactory createSSLSocketFactory() {
         // Let's Encrypt certificates are not (yet?) trusted by Java JDK :(
         KeyStore keystore = KeyStore.getInstance(KeyStore.getDefaultType())
-        keystore.load(getClass().getClassLoader().getResourceAsStream("letsencrypt_x3.jks"),
+        keystore.load(getClass().getClassLoader().getResourceAsStream("letsencrypt_r3.jks"),
                 "FVVMHEdautxVcb9h4WdeZdMmvUwUHzgh".toCharArray())
         TrustManagerFactory tmf = TrustManagerFactory.getInstance("X509")
         tmf.init(keystore)
