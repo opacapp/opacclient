@@ -351,8 +351,10 @@ public class OpenSearch extends OkHttpBaseApi implements OpacApi {
                                     byte[] bytes = Base64.decode(
                                             coverUrl.substring(coverUrl.indexOf(",") + 1));
                                     result.setCoverBitmap(bytes);
-                                } else {
+                                } else if (!coverData.getJSONObject("d").isNull("CoverUrl")) {
                                     result.setCover(coverUrl);
+                                } else {
+                                    assignBestCover(result, queue).join();
                                 }
                             } else {
                                 assignBestCover(result, queue).join();
