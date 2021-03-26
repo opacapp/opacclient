@@ -192,6 +192,7 @@ open class SLUB : OkHttpBaseApi() {
     }
 
     internal fun parseResultById(json: JSONObject): DetailedItem {
+        val colorcodes = mapOf("1" to SearchResult.Status.GREEN, "2" to SearchResult.Status.YELLOW, "3" to SearchResult.Status.RED)
         val dateFormat = DateTimeFormat.forPattern("dd.MM.yyyy")
         var hasReservableCopies = false
         fun getCopies(copiesArray: JSONArray, df: DateTimeFormatter): List<Copy> =
@@ -202,6 +203,7 @@ open class SLUB : OkHttpBaseApi() {
                         department = Parser.unescapeEntities(it.getString("sublocation"), false)
                         shelfmark = it.getString("shelfmark")
                         status = Jsoup.parse(it.getString("statusphrase")).text()
+                        statusCode = colorcodes.getOrElse(it.getString("colorcode")) { SearchResult.Status.UNKNOWN }
                         it.getString("duedate").run {
                             if (isNotEmpty()) {
                                 returnDate = df.parseLocalDate(this)

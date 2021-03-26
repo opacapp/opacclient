@@ -271,6 +271,7 @@ class SLUBSearchTest : BaseHtmlTest() {
                 department = "Ausgabe über Ausleihtheke"
                 branch = "Bereichsbibliothek DrePunct"
                 status = "Ausleihbar"
+                statusCode = SearchResult.Status.GREEN
                 shelfmark = "ST 233 H939"
             })
             collectionId = "id/0-1183957874"
@@ -291,6 +292,7 @@ class SLUBSearchTest : BaseHtmlTest() {
             department = "Magazin Zeitschriften"
             branch = "Zentralbibliothek"
             status = "Bestellen zur Benutzung im Haus, kein Versand per Fernleihe, nur Kopienlieferung"
+            statusCode = SearchResult.Status.YELLOW
             shelfmark = "19 4 01339 0 0024 1 01"
             resInfo = "stackRequest\t10418078"
         }
@@ -299,6 +301,7 @@ class SLUBSearchTest : BaseHtmlTest() {
             department = "Magazin Zeitschriften"
             branch = "Zentralbibliothek"
             status = "Bestellen zur Benutzung im Haus, kein Versand per Fernleihe, nur Kopienlieferung"
+            statusCode = SearchResult.Status.YELLOW
             shelfmark = "19 4 01339 1 1969 1 01"
             resInfo = "stackRequest\t33364639"
         }
@@ -422,6 +425,7 @@ class SLUBSearchTest : BaseHtmlTest() {
                         department = "Freihand"
                         branch = "Zentralbibliothek"
                         status = "Ausgeliehen, Vormerken möglich"
+                        statusCode = SearchResult.Status.RED
                         shelfmark = "LK 24099 B644"
                         returnDate = LocalDate(2020, 2, 5)
                         resInfo = "reserve\t10059731"
@@ -432,6 +436,7 @@ class SLUBSearchTest : BaseHtmlTest() {
                         department = "Freihand"
                         branch = "ZwB Erziehungswissenschaften"
                         status = "Benutzung nur im Haus, Versand per Fernleihe möglich"
+                        statusCode = SearchResult.Status.GREEN
                         shelfmark = "NR 6400 B644 F9"
                     },
                     Copy().apply {
@@ -439,6 +444,7 @@ class SLUBSearchTest : BaseHtmlTest() {
                         department = "Magazin"
                         branch = "Zentralbibliothek"
                         status = "Ausleihbar, bitte bestellen"
+                        statusCode = SearchResult.Status.YELLOW
                         shelfmark = "65.4.653.b"
                         resInfo = "stackRequest\t20065307"
                     }
