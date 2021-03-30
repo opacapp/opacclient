@@ -418,7 +418,27 @@ open class SLUB : OkHttpBaseApi() {
 
     override fun prolongMultiple(media: List<String>,
                                  account: Account, useraction: Int, selection: String?): OpacApi.ProlongAllResult {
-        return return OpacApi.ProlongAllResult(OpacApi.MultiStepResult.Status.UNSUPPORTED)
+        val (illMedia, localMedia) = media.partition { it.startsWith("FL") }
+        val messages = mutableListOf<String>()
+        var hasError = false
+        if (illMedia.isNotEmpty()) {
+            messages.add(StringProvider.RENEW_ILL_SEPARATELY)
+        }
+        if (localMedia.isNotEmpty()) {
+            try {
+                val parameters = localMedia.mapIndexed { i, e -> "tx_slubaccount_account[renewals][$i]" to e.split('\t')[1] }.toMap()
+                val result = requestAccount(account, "renew", parameters)
+                result.optJSONObject("APIError")?.getString("message")?.let {
+                    messages.add(it)
+                }
+            } catch (e: java.lang.Exception) {
+                messages.add(e.message.toString())
+                hasError = true
+            }
+        }
+        return OpacApi.ProlongAllResult(if (hasError) OpacApi.MultiStepResult.Status.ERROR else OpacApi.MultiStepResult.Status.OK,
+                if (messages.isNotEmpty()) messages.joinToString("\n") else null
+        )
     }
 
     override fun cancel(media: String, account: Account, useraction: Int, selection: String?): OpacApi.CancelResult {
@@ -556,7 +576,7 @@ open class SLUB : OkHttpBaseApi() {
     }
 
     override fun getSupportFlags(): Int {
-        return OpacApi.SUPPORT_FLAG_ENDLESS_SCROLLING
+        return OpacApi.SUPPORT_FLAG_ENDLESS_SCROLLING or OpacApi.SUPPORT_FLAG_ACCOUNT_PROLONG_MULTIPLE
     }
 
     override fun getSupportedLanguages(): Set<String>? {
