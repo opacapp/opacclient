@@ -263,7 +263,17 @@ open class SLUB : OkHttpBaseApi() {
                     val key = with(it.optString("material") + it.optString("note") + it.optString("hostLabel")) {
                         if (isEmpty()) fieldCaptions[link] else this
                     }
-                    addDetail(Detail(key, it.optString("uri")))
+                    if (key == "Cover") {
+                        it.getString("uri").run {
+                            cover = if (startsWith("http://swbplus.bsz-bw.de/") && endsWith("cov.htm")) {
+                                replace(".htm", ".jpg")
+                            } else {
+                                this
+                            }
+                        }
+                    } else {
+                        addDetail(Detail(key, it.getString("uri")))
+                    }
                 }
             }
             // copies

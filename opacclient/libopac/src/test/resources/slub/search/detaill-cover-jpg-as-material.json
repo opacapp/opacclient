@@ -1,0 +1,86 @@
+{
+  "record": {
+    "format": "Buch",
+    "title": "Photography and September 11th: spectacle, memory, trauma",
+    "contributor": [
+      "Good, Jennifer [Autor/In]"
+    ],
+    "publisher": [
+      "London [u.a.] Bloomsbury 2015 "
+    ],
+    "ispartof": [],
+    "identifier": [
+      "9781472533319",
+      "1472533313"
+    ],
+    "language": [
+      "Englisch"
+    ],
+    "subject": [
+      "Elfter September",
+      "Fotografie",
+      "Kollektives Gedächtnis",
+      "Trauma",
+      "Psychologie"
+    ],
+    "description": [
+      "&quot;It is all but impossible to think of September 11th 2001 and not, at the same time, recall an image. The overwhelmingly visual coverage in the world's media pictured a spectacle of terror, from images of the collapsing towers, to injured victims and fatigued firefighters. In the days, weeks and months that followed, this vast collection of photographs continued to circulate relentlessly. This book investigates the psychological impact of those photographs on a stunned American audience. Drawing on trauma theory, this book asks whether the prolonged exposure of audience to photographs was cathartic or damaging. It explores how first the collective memory of the event was established in the American psyche and then argues that through repetitive use of the most powerful pictures, the culture industry created a dangerously simple 9/11 metanarrative. At the same time, people began to reclaim and use photography to process their own feelings, most significantly in 'communities' of photographic memorial websites. Such exercises were widely perceived as democratic and an aid to recovery. This book interrogates that assumption, providing a new understanding of how audiences see and process news photography in times of crisis&quot;--",
+      "&quot;It is all but impossible to think of September 11th 2001 and not, at the same time, recall an image. The overwhelmingly visual coverage in the world's media pictured a spectacle of terror, from images of the collapsing towers, to injured victims and fatigued firefighters. In the days, weeks and months that followed, this vast collection of images continued to circulate relentlessly. This book investigates the psychological impact of those images on a stunned American audience. Drawing on trauma theory, this book asks whether the prolonged exposure of audience to images was cathartic or damaging. It explores how first the collective memory of the event was established in the American psyche and then argues that through repetitive use of the most powerful pictures, the culture industry created a dangerously simple 9/11 metanarrative. At the same time, people began to reclaim and use photography to process their own feelings, most significantly in 'communities' of photographic memorial websites. Such exercises were widely perceived as democratic and an aid to recovery. This book interrogates that assumption, providing a new understanding of how audiences see and process news photography in times of crisis&quot;--"
+    ],
+    "status": "",
+    "rvk": ""
+  },
+  "id": "0-81817546X",
+  "oa": 0,
+  "thumbnail": "",
+  "links": [
+    {
+      "uri": "http://www.netread.com/jcusers2/bk1388/319/9781472533319/image/lgcover.9781472533319.jpg",
+      "note": "",
+      "material": "Cover"
+    },
+    {
+      "uri": "http://swbplus.bsz-bw.de/bsz426082842inh.htm",
+      "note": "",
+      "material": "Inhaltsverzeichnis"
+    }
+  ],
+  "linksRelated": [
+    {
+      "uri": "http://www.netread.com/jcusers2/bk1388/319/9781472533319/image/lgcover.9781472533319.jpg",
+      "hostLabel": "",
+      "note": "",
+      "material": "Cover"
+    },
+    {
+      "uri": "http://swbplus.bsz-bw.de/bsz426082842inh.htm",
+      "hostLabel": "",
+      "note": "",
+      "material": "Inhaltsverzeichnis"
+    }
+  ],
+  "linksAccess": [],
+  "linksGeneral": [],
+  "references": [],
+  "copies": [
+    {
+      "barcode": "34616513",
+      "location": "Zentralbibliothek",
+      "location_code": "zell1",
+      "sublocation": "Freihand",
+      "shelfmark": "AP 95240 G646",
+      "mediatype": "B",
+      "3d": "AP 95240 G646",
+      "3d_link": "https://3d.slub-dresden.de/viewer?project_id=3&search_key=AP%2095240%20G646&language=de&search_context1=zell1&search_context2=FH1&exemplar_id=34616513",
+      "issue": "",
+      "colorcode": "1",
+      "statusphrase": "Ausleihbar",
+      "link": "",
+      "status": "N",
+      "duedate": "",
+      "vormerken": "0",
+      "bestellen": "0"
+    }
+  ],
+  "parts": {}
+}

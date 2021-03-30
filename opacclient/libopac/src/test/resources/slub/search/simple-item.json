@@ -41,6 +41,12 @@
       "uri": "http://d-nb.info/970689268/04",
       "note": "",
       "material": "Inhaltsverzeichnis"
+    },
+    {
+      "uri": "http://vub.de/cover/data/isbn:9783836240956/medium/true/de/vub/cover.jpg",
+      "hostLabel": "",
+      "note": "Cover",
+      "material": ""
     }
   ],
   "linksRelated": [
@@ -49,6 +55,12 @@
       "hostLabel": "",
       "note": "",
       "material": "Inhaltsverzeichnis"
+    },
+    {
+      "uri": "http://vub.de/cover/data/isbn:9783836240956/medium/true/de/vub/cover.jpg",
+      "hostLabel": "",
+      "note": "Cover",
+      "material": ""
     }
   ],
   "linksAccess": [],
