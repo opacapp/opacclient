@@ -498,7 +498,7 @@ open class NetBiblio : OkHttpBaseApi() {
 
     override fun prolongMultiple(media: List<String>,
                                  account: Account, useraction: Int, selection: String?): OpacApi.ProlongAllResult {
-        return return OpacApi.ProlongAllResult(OpacApi.MultiStepResult.Status.UNSUPPORTED)
+        return OpacApi.ProlongAllResult(OpacApi.MultiStepResult.Status.UNSUPPORTED)
     }
 
     override fun cancel(media: String, account: Account, useraction: Int, selection: String?): OpacApi.CancelResult? {
