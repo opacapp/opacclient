@@ -1365,6 +1365,7 @@ public class AccountFragment extends Fragment implements
                                            if (d != null) {
                                                d.cancel();
                                            }
+                                           invalidateData();
                                        }
                                    });
                 }
@@ -1530,6 +1531,7 @@ public class AccountFragment extends Fragment implements
                                            if (d != null) {
                                                d.cancel();
                                            }
+                                           invalidateData();
                                        }
                                    });
                 }
