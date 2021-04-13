@@ -365,7 +365,7 @@ public class SearchResultListFragment extends CustomListFragment {
         getSupportActionBar().setSubtitle(getResultCountMessage(count));
     }
 
-    private ActionBar getSupportActionBar() {
+    protected ActionBar getSupportActionBar() {
         return ((AppCompatActivity) getActivity()).getSupportActionBar();
     }
 

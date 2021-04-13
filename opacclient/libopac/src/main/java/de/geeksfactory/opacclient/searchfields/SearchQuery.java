@@ -27,6 +27,10 @@ public class SearchQuery {
         return field.getId();
     }
 
+    public void setValue(String value) {
+        this.value = value;
+    }
+
     @Override
     public String toString() {
         return "SearchQuery [field=" + field + ", value=" + getValue()

@@ -201,7 +201,7 @@ public class OpacClient extends Application {
         return (networkInfo != null && networkInfo.isConnected());
     }
 
-    public OpacApi getNewApi(Library lib) throws LibraryRemovedException {
+    public synchronized OpacApi getNewApi(Library lib) throws LibraryRemovedException {
         if (!lib.isActive()) throw new LibraryRemovedException();
         currentLang = getResources().getConfiguration().locale.getLanguage();
         return OpacApiFactory

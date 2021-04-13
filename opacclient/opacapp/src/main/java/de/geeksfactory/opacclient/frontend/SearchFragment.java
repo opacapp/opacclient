@@ -1,6 +1,5 @@
 package de.geeksfactory.opacclient.frontend;
 
-import android.app.Activity;
 import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
@@ -9,7 +8,6 @@ import android.content.pm.PackageManager.NameNotFoundException;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import androidx.preference.PreferenceManager;
 import android.text.InputType;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -41,6 +39,7 @@ import java.util.Map;
 
 import androidx.cardview.widget.CardView;
 import androidx.fragment.app.Fragment;
+import androidx.preference.PreferenceManager;
 import de.geeksfactory.opacclient.OpacClient;
 import de.geeksfactory.opacclient.R;
 import de.geeksfactory.opacclient.apis.OpacApi.OpacErrorException;
@@ -431,7 +430,7 @@ public class SearchFragment extends Fragment implements AccountSelectedListener 
                 task.cancel(true);
             }
             Map<String, String> saved = saveQuery();
-            fields = dataSource.getSearchFields(app.getLibrary().getIdent());
+            setSearchFields(dataSource.getSearchFields(app.getLibrary().getIdent()));
             buildSearchForm(savedState != null ? OpacClient.bundleToMap(savedState) : saved);
             savedState = null;
         } else {
@@ -486,7 +485,7 @@ public class SearchFragment extends Fragment implements AccountSelectedListener 
         dataSource.saveSearchFields(app.getLibrary().getIdent(), fields);
     }
 
-    private void executeNewLoadSearchFieldsTask() {
+    protected void executeNewLoadSearchFieldsTask() {
         if (task != null && !task.isCancelled()) {
             task.cancel(true);
         }
@@ -527,8 +526,8 @@ public class SearchFragment extends Fragment implements AccountSelectedListener 
                 if (task != null && !task.isCancelled()) {
                     task.cancel(true);
                 }
-                fields = dataSource
-                        .getSearchFields(app.getLibrary().getIdent());
+                setSearchFields(dataSource.getSearchFields(app.getLibrary().getIdent()));
+
                 if (fields == null) {
                     return null;
                 }
@@ -709,6 +708,10 @@ public class SearchFragment extends Fragment implements AccountSelectedListener 
         }
     }
 
+    protected void setSearchFields(List<SearchField> searchFields) {
+        this.fields = searchFields;
+    }
+
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
@@ -800,7 +803,7 @@ public class SearchFragment extends Fragment implements AccountSelectedListener 
             }
             progress(false);
             if (fields != null) {
-                SearchFragment.this.fields = fields;
+                setSearchFields(fields);
                 buildSearchForm(savedState != null ? OpacClient.bundleToMap(savedState) : null);
                 savedState = null;
             } else {
