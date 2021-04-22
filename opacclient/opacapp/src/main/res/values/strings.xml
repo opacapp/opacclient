@@ -346,5 +346,6 @@
     <string name="prolong_due_confirm">Really renew all due items? In some libraries this might cause fees.</string>
     <string name="doing_prolong_due">Renewable due media are being renewed…</string>
     <string name="prolong_due_no_items">There are no renewable due items.</string>
+    <string name="search_detail_created_account">An anonymous account was created for your.</string>
 
 </resources>

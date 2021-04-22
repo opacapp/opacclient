@@ -80,9 +80,7 @@ public class SearchFragment extends Fragment implements AccountSelectedListener 
     protected TextView tvSearchAdvHeader, tvExpandString;
     protected ViewGroup errorView;
 
-    public SearchFragment() {
-
-    }
+    public SearchFragment() {}
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
