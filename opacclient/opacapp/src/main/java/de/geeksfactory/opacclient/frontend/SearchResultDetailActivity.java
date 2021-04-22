@@ -22,6 +22,7 @@ public class SearchResultDetailActivity extends OpacActivity
 
     public static final String ARG_TOUCH_POSITION_X = "touchX";
     public static final String ARG_TOUCH_POSITION_Y = "touchY";
+
     SearchResultDetailFragment detailFragment;
 
     @Override

@@ -26,6 +26,8 @@ import de.geeksfactory.opacclient.objects.SearchResult;
 import de.geeksfactory.opacclient.utils.BitmapUtils;
 import de.geeksfactory.opacclient.utils.ErrorReporter;
 
+import static de.geeksfactory.opacclient.frontend.SearchResultDetailFragment.ARG_IS_META_SEARCH;
+
 /**
  * An activity representing a list of SearchResults. This activity has different presentations for
  * handset and tablet-size devices. On handsets, the activity presents a list of items, which when
@@ -205,6 +207,7 @@ public class SearchResultListActivity extends OpacActivity implements
                         smallCover);
                 detailIntent.putExtra(SearchResultDetailActivity.ARG_TOUCH_POSITION_X, touchX);
                 detailIntent.putExtra(SearchResultDetailActivity.ARG_TOUCH_POSITION_Y, touchY);
+                detailIntent.putExtra(ARG_IS_META_SEARCH, isMetaSearch());
                 @SuppressWarnings("unchecked")
                 ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(
                         this,
@@ -231,6 +234,10 @@ public class SearchResultListActivity extends OpacActivity implements
     @Override
     public boolean isTwoPane() {
         return twoPane;
+    }
+
+    protected boolean isMetaSearch() {
+        return getIntent().getBooleanExtra(ARG_IS_META_SEARCH, false);
     }
 
     public class ReloadOldPageTask extends AsyncTask<Void, Void, SearchRequestResult> {

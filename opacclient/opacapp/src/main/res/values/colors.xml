@@ -41,5 +41,6 @@
     <color name="adaptive_icon_bg">#ffffff</color>
     <color name="popup_bg">#ffe5e5e5</color>
     <color name="background">#fffafafa</color>
+    <color name="recyclerview_divider_color">#eeeeee</color>
 
 </resources>

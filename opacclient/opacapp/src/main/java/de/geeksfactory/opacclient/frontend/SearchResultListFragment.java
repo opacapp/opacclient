@@ -214,6 +214,7 @@ public class SearchResultListFragment extends CustomListFragment {
                 return false;
             }
         });
+
     }
 
     protected boolean wasSearchAlreadyPerformed() {
@@ -256,7 +257,6 @@ public class SearchResultListFragment extends CustomListFragment {
 
     protected void listItemClicked(int position, View clickedView, SearchResult searchResult) {
         setActivatedPosition(position);
-
         // Notify the active callbacks interface (the activity, if the
         // fragment is attached to one) that an item has been selected.
         callbacks.onItemSelected(searchResult, clickedView.findViewById(R.id.ivCover), touchPositionX, touchPositionY);
@@ -296,6 +296,7 @@ public class SearchResultListFragment extends CustomListFragment {
     public void setSearchResult(final SearchRequestResult searchresult) {
         for (SearchResult result : searchresult.getResults()) {
             result.setPage(searchresult.getPage_index());
+            result.setLibraryIdent(app.getLibrary().getIdent());
         }
         if (searchresult.getTotal_result_count() >= 0) {
             showSearchResultCountInActionbar(searchresult.getTotal_result_count());
@@ -312,6 +313,7 @@ public class SearchResultListFragment extends CustomListFragment {
         } catch (OpacClient.LibraryRemovedException ignored) {
 
         }
+
         adapter = new ResultsAdapterEndless(getActivity(), searchresult,
                 new OnLoadMoreListener() {
                     @Override

@@ -348,4 +348,5 @@
     <string name="prolong_due_confirm">Wirklich alle fälligen Medien verlängern? In manchen Bibliotheken können für manche Medien Gebühren anfallen.</string>
     <string name="doing_prolong_due">Verlängerbare fällige Medien werden verlängert…</string>
     <string name="prolong_due_no_items">Es gibt keine verlängerbaren fälligen Medien.</string>
+    <string name="search_detail_created_account">Ein anonymes Konto wurde für dich angelegt.</string>
 </resources>

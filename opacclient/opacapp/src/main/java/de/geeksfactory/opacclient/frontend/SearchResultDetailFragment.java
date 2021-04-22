@@ -41,6 +41,7 @@ import com.google.android.material.appbar.CollapsingToolbarLayout;
 
 import org.joda.time.LocalDate;
 import org.joda.time.format.DateTimeFormat;
+import org.json.JSONException;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
@@ -69,6 +70,7 @@ import de.geeksfactory.opacclient.objects.Copy;
 import de.geeksfactory.opacclient.objects.CoverHolder;
 import de.geeksfactory.opacclient.objects.Detail;
 import de.geeksfactory.opacclient.objects.DetailedItem;
+import de.geeksfactory.opacclient.objects.Library;
 import de.geeksfactory.opacclient.objects.SearchResult;
 import de.geeksfactory.opacclient.storage.AccountDataSource;
 import de.geeksfactory.opacclient.storage.PreferenceDataSource;
@@ -95,6 +97,7 @@ public class SearchResultDetailFragment extends Fragment
      */
     public static final String ARG_ITEM_ID = "item_id";
     public static final String ARG_ITEM_LIBRARY_IDENT = "item_library_ident";
+    public static final String ARG_IS_META_SEARCH = "is_meta_search";
 
     public static final String ARG_ITEM_NR = "item_nr";
     public static final String ARG_ITEM_COVER_BITMAP = "item_cover_bitmap";
@@ -131,6 +134,7 @@ public class SearchResultDetailFragment extends Fragment
      */
     private DetailedItem item;
     private String libraryIdent;
+    private Account currentAccout;
     private String id;
     private Integer nr;
     private OpacClient app;
@@ -221,16 +225,19 @@ public class SearchResultDetailFragment extends Fragment
     }
 
     private void load(String libraryIdent, int nr, String id) {
-        OpacApi apiToUse = app.getApiForLibraryIdent(libraryIdent);
+        this.libraryIdent = libraryIdent;
+        this.id = id;
+        this.nr = nr;
 
-        if(apiToUse == null) {
+        OpacApi apiToUse;
+        try {
+            apiToUse = getCurrentApi();
+        } catch (OpacClient.LibraryRemovedException e) {
             return;
         }
 
         setProgress(true, true);
-        this.libraryIdent = libraryIdent;
-        this.id = id;
-        this.nr = nr;
+
         ft = new FetchTask(apiToUse, nr, id);
         ft.execute();
     }
@@ -257,8 +264,8 @@ public class SearchResultDetailFragment extends Fragment
         super.onViewCreated(view, savedInstanceState);
         if (item != null) {
             display();
-        } else if (argumentIdAvailable() || argumentNrAvailable()) {
-            load(getArgumentLibraryIdent(), getArgumentNr(), getArgumentId());
+        } else if (argumentLibraryIdentAvailable() && (argumentIdAvailable() || argumentNrAvailable())) {
+            load(getLibraryIdent(), getArgumentNr(), getArgumentId());
         }
     }
 
@@ -270,12 +277,12 @@ public class SearchResultDetailFragment extends Fragment
         return getArguments().containsKey(ARG_ITEM_NR);
     }
 
-    private String getArgumentLibraryIdent() {
-        if(getArguments().containsKey(ARG_ITEM_LIBRARY_IDENT)) {
-            return getArguments().getString(ARG_ITEM_LIBRARY_IDENT);
-        } else {
-            return ""; //allow backward compatibility, in free opac app libraryIdent is not needed
-        }
+    private boolean argumentLibraryIdentAvailable() {
+        return getArguments().containsKey(ARG_ITEM_LIBRARY_IDENT);
+    }
+
+    private String getLibraryIdent() {
+        return getArguments().getString(ARG_ITEM_LIBRARY_IDENT);
     }
 
     private String getArgumentId() {
@@ -529,7 +536,7 @@ public class SearchResultDetailFragment extends Fragment
                                         AccountEditActivity.class);
                                 intent.putExtra(
                                         AccountEditActivity.EXTRA_ACCOUNT_ID,
-                                        app.getAccount().getId());
+                                        getCurrentAccount().getId());
                                 startActivity(intent);
                             }
                         });
@@ -582,7 +589,7 @@ public class SearchResultDetailFragment extends Fragment
             }
             OpacApi api;
             try {
-                api = app.getApi();
+                api = getCurrentApi();
             } catch (OpacClient.LibraryRemovedException e) {
                 return;
             }
@@ -603,7 +610,7 @@ public class SearchResultDetailFragment extends Fragment
             menu.findItem(R.id.action_tocollection).setVisible(false);
         }
 
-        String bib = app.getLibrary().getIdent();
+        String bib = getLibraryIdent();
         StarDataSource data = new StarDataSource(getActivity());
         String _id = id;
         if (item != null) {
@@ -630,7 +637,7 @@ public class SearchResultDetailFragment extends Fragment
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
 
-        final String bib = app.getLibrary().getIdent();
+        final String bib = getLibraryIdent();
         if (item.getItemId() == R.id.action_reservation) {
             reservationStart();
             return true;
@@ -669,7 +676,7 @@ public class SearchResultDetailFragment extends Fragment
                     public void onClick(DialogInterface dialog, int di) {
                         OpacApi api = null;
                         try {
-                            api = app.getApi();
+                            api = getCurrentApi();
                         } catch (OpacClient.LibraryRemovedException e) {
                             return;
                         }
@@ -928,7 +935,7 @@ public class SearchResultDetailFragment extends Fragment
                                         AccountEditActivity.class);
                                 intent.putExtra(
                                         AccountEditActivity.EXTRA_ACCOUNT_ID,
-                                        app.getAccount().getId());
+                                        getCurrentAccount().getId());
                                 startActivity(intent);
                             }
                         });
@@ -942,7 +949,7 @@ public class SearchResultDetailFragment extends Fragment
         }
         OpacApi api = null;
         try {
-            api = app.getApi();
+            api = getCurrentApi();
         } catch (OpacClient.LibraryRemovedException e) {
             return;
         }
@@ -979,8 +986,7 @@ public class SearchResultDetailFragment extends Fragment
         }
 
         AccountDataSource data = new AccountDataSource(getActivity());
-        final List<Account> accounts = data.getAccountsWithPassword(app
-                .getLibrary().getIdent());
+        final List<Account> accounts = data.getAccountsWithPassword(getLibraryIdent());
         if (accounts.size() == 0) {
             dialog_no_credentials();
         } else if (accounts.size() > 1
@@ -1004,7 +1010,7 @@ public class SearchResultDetailFragment extends Fragment
                 @Override
                 public void onItemClick(AdapterView<?> parent, View view,
                                         int position, long id) {
-                    if (accounts.get(position).getId() != app.getAccount()
+                    if (accounts.get(position).getId() != getCurrentAccount()
                             .getId() || account_switched) {
 
                         if (SearchResultDetailFragment.this.id == null
@@ -1016,7 +1022,7 @@ public class SearchResultDetailFragment extends Fragment
                                     R.string.accchange_sorry, Toast.LENGTH_LONG)
                                     .show();
                         } else {
-                            if (app.getAccount().getId() != accounts.get(position).getId()) {
+                            if (getCurrentAccount().getId() != accounts.get(position).getId()) {
                                 app.setAccount(accounts.get(position).getId());
                             }
                             Intent intent = new Intent(getActivity(),
@@ -1054,13 +1060,20 @@ public class SearchResultDetailFragment extends Fragment
     public void reservationDo() {
         final SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(getActivity());
         OpacApi api;
+        Library library;
         try {
-            api = app.getApi();
+            api = getCurrentApi();
+            library = app.getLibrary(getLibraryIdent());
         } catch (OpacClient.LibraryRemovedException e) {
             return;
+        } catch (JSONException e) {
+            return;
+        } catch (IOException e) {
+            return;
         }
+
         if (sp.getBoolean("reservation_fee_warning_ignore", false) ||
-                app.getLibrary().isSuppressFeeWarnings() ||
+                library.isSuppressFeeWarnings() ||
                 (api.getSupportFlags() & OpacApi.SUPPORT_FLAG_WARN_RESERVATION_FEES) > 0) {
             reservationPerform();
         } else {
@@ -1102,7 +1115,7 @@ public class SearchResultDetailFragment extends Fragment
             @Override
             public void onSuccess(MultiStepResult result) {
                 AccountDataSource adata = new AccountDataSource(getActivity());
-                adata.invalidateCachedAccountData(app.getAccount());
+                adata.invalidateCachedAccountData(getCurrentAccount());
                 if (result.getMessage() != null) {
                     AlertDialog.Builder builder = new AlertDialog.Builder(
                             getActivity());
@@ -1163,8 +1176,7 @@ public class SearchResultDetailFragment extends Fragment
 
     protected void bookingStart() {
         AccountDataSource data = new AccountDataSource(getActivity());
-        final List<Account> accounts = data.getAccountsWithPassword(app
-                .getLibrary().getIdent());
+        final List<Account> accounts = data.getAccountsWithPassword(getLibraryIdent());
         if (accounts.size() == 0) {
             dialog_no_credentials();
         } else if (accounts.size() > 1) {
@@ -1182,7 +1194,7 @@ public class SearchResultDetailFragment extends Fragment
                 @Override
                 public void onItemClick(AdapterView<?> parent, View view,
                                         int position, long id) {
-                    if (app.getAccount().getId() != accounts.get(position).getId()) {
+                    if (getCurrentAccount().getId() != accounts.get(position).getId()) {
                         app.setAccount(accounts.get(position).getId());
                     }
                     bookingDo();
@@ -1216,7 +1228,7 @@ public class SearchResultDetailFragment extends Fragment
                     return;
                 }
                 AccountDataSource adata = new AccountDataSource(getActivity());
-                adata.invalidateCachedAccountData(app.getAccount());
+                adata.invalidateCachedAccountData(getCurrentAccount());
                 Intent intent = new Intent(getActivity(), app.getMainActivity());
                 intent.putExtra(MainActivity.EXTRA_FRAGMENT, "account");
                 getActivity().startActivity(intent);
@@ -1246,6 +1258,62 @@ public class SearchResultDetailFragment extends Fragment
             }
         });
         msrhBooking.start();
+    }
+
+    private OpacApi getCurrentApi() throws OpacClient.LibraryRemovedException {
+        if(!isMetaSearch()) {
+            // if we come from the normal 1-library search
+            // we use the Api from app.getApi() (because there we started the search)
+            return app.getApi();
+        } else {
+            // if we come from the MetaSearch
+            // we use the Api from api repository. These apis can be obtained from app.getMetaSearchApi()
+            OpacApi api = app.getApiFromMetaSearch(libraryIdent);
+            return api;
+        }
+    }
+
+    private Account getCurrentAccount() {
+        Log.d("opacLog", "getCurrentAccount called");
+        if(!isMetaSearch()) {
+            // if we come from the normal 1-library search
+            // we use the Account from app.getAccount() (because there we started the search)
+            return app.getAccount();
+        } else {
+            if(currentAccout == null) {
+                obtainCurrentAccount();
+            }
+
+            return currentAccout;
+        }
+    }
+
+    private void obtainCurrentAccount() {
+        // if we come from the MetaSearch
+        // we check if there exists an account for the given libraryIdent
+        currentAccout = app.getAccountByLibrary(getLibraryIdent());
+
+        if(currentAccout == null) {
+            Log.d("opacLog", "creating one");
+            // if not we create one (without password)
+            app.createAccountForLibrary(getActivity(), getLibraryIdent());
+
+            // notify user
+            showToastCreatedAccount();
+
+            currentAccout = app.getAccountByLibrary(getLibraryIdent());
+        } else {
+            Log.d("opacLog", "could find one");
+        }
+    }
+
+    private void showToastCreatedAccount() {
+        getActivity().runOnUiThread(() -> Toast.makeText(getContext(), getString(R.string.search_detail_created_account), Toast.LENGTH_LONG).show());
+    }
+
+    private boolean isMetaSearch() {
+        boolean isMetaSearch = getActivity().getIntent().getBooleanExtra(ARG_IS_META_SEARCH, false);
+        return isMetaSearch;
     }
 
     /**
@@ -1291,10 +1359,11 @@ public class SearchResultDetailFragment extends Fragment
                 if (id != null && !id.equals("")) {
                     SharedPreferences sp = PreferenceManager
                             .getDefaultSharedPreferences(getActivity());
+                    Log.d("opacLog", "--");
                     String homebranch = sp.getString(
                             OpacClient.PREF_HOME_BRANCH_PREFIX
-                                    + app.getAccount().getId(), null);
-
+                                    + getCurrentAccount().getId(), null);
+                    Log.d("opacLog", "--");
                     if (getActivity().getIntent().hasExtra("reservation")
                             && getActivity().getIntent().getBooleanExtra(
                             "reservation", false)) {
@@ -1384,8 +1453,8 @@ public class SearchResultDetailFragment extends Fragment
         @Override
         protected ReservationResult doInBackground(Void... voids) {
             try {
-                return app.getApi().reservation(item,
-                        app.getAccount(), useraction, selection);
+                return getCurrentApi().reservation(item,
+                        getCurrentAccount(), useraction, selection);
             } catch (IOException e) {
                 publishProgress(e, "ioerror");
             } catch (Exception e) {
@@ -1435,8 +1504,8 @@ public class SearchResultDetailFragment extends Fragment
         @Override
         protected BookingResult doInBackground(Void... voids) {
             try {
-                return ((EbookServiceApi) app.getApi()).booking(
-                        item, app.getAccount(), useraction, selection);
+                return ((EbookServiceApi) getCurrentApi()).booking(
+                        item, getCurrentAccount(), useraction, selection);
             } catch (IOException | OpacClient.LibraryRemovedException e) {
                 publishProgress(e, "ioerror");
             } catch (Exception e) {
@@ -1488,8 +1557,8 @@ public class SearchResultDetailFragment extends Fragment
                             .getDefaultSharedPreferences(getActivity());
                     String homebranch = sp.getString(
                             OpacClient.PREF_HOME_BRANCH_PREFIX
-                                    + app.getAccount().getId(), null);
-                    app.getApi().getResultById(id, homebranch);
+                                    + getCurrentAccount().getId(), null);
+                    getCurrentApi().getResultById(id, homebranch);
                     return 0;
                 } else {
                     ErrorReporter.handleException(

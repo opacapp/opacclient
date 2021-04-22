@@ -232,6 +232,16 @@ public class OpacClient extends Application {
         return api;
     }
 
+    public long createAccountForLibrary(Context activity, String libraryIdent) {
+        AccountDataSource data = new AccountDataSource(activity);
+
+        Account acc = new Account();
+        acc.setLibrary(libraryIdent);
+        acc.setLabel(getString(R.string.default_account_name));
+
+        return data.addAccount(acc);
+    }
+
     public Account getAccount() {
         if (account != null) {
             if (sp.getLong(PREF_SELECTED_ACCOUNT, 0) == account.getId()) {
@@ -241,6 +251,17 @@ public class OpacClient extends Application {
         AccountDataSource data = new AccountDataSource(this);
         account = data.getAccount(sp.getLong(PREF_SELECTED_ACCOUNT, 0));
         return account;
+    }
+
+    public Account getAccountByLibrary(String libraryIdent) {
+        AccountDataSource data = new AccountDataSource(this);
+        List<Account> accounts = data.getAllAccounts(libraryIdent);
+
+        if(accounts.size() > 0) {
+            return accounts.get(0);
+        }
+
+        return null;
     }
 
     public void setAccount(long id) {
@@ -432,12 +453,9 @@ public class OpacClient extends Application {
         return true;
     }
 
-    public OpacApi getApiForLibraryIdent(String libraryIdent) {
-        try {
-            //in open source version we always only use the current selected library
-            return getApi();
-        } catch (de.geeksfactory.opacclient.OpacClient.LibraryRemovedException e) {
-            return null;
-        }
+    public OpacApi getApiFromMetaSearch(String libraryIdent) throws LibraryRemovedException {
+        // in open source version there is no meta search
+        // we always only use the current selected library
+        return getApi();
     }
 }
