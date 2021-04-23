@@ -1274,7 +1274,6 @@ public class SearchResultDetailFragment extends Fragment
     }
 
     private Account getCurrentAccount() {
-        Log.d("opacLog", "getCurrentAccount called");
         if(!isMetaSearch()) {
             // if we come from the normal 1-library search
             // we use the Account from app.getAccount() (because there we started the search)
@@ -1294,16 +1293,14 @@ public class SearchResultDetailFragment extends Fragment
         currentAccout = app.getAccountByLibrary(getLibraryIdent());
 
         if(currentAccout == null) {
-            Log.d("opacLog", "creating one");
             // if not we create one (without password)
             app.createAccountForLibrary(getActivity(), getLibraryIdent());
 
             // notify user
             showToastCreatedAccount();
 
+            // and use it in this fragment
             currentAccout = app.getAccountByLibrary(getLibraryIdent());
-        } else {
-            Log.d("opacLog", "could find one");
         }
     }
 
@@ -1359,11 +1356,9 @@ public class SearchResultDetailFragment extends Fragment
                 if (id != null && !id.equals("")) {
                     SharedPreferences sp = PreferenceManager
                             .getDefaultSharedPreferences(getActivity());
-                    Log.d("opacLog", "--");
                     String homebranch = sp.getString(
                             OpacClient.PREF_HOME_BRANCH_PREFIX
                                     + getCurrentAccount().getId(), null);
-                    Log.d("opacLog", "--");
                     if (getActivity().getIntent().hasExtra("reservation")
                             && getActivity().getIntent().getBooleanExtra(
                             "reservation", false)) {
