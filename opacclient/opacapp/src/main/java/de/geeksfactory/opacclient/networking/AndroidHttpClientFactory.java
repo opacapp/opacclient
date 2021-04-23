@@ -62,7 +62,7 @@ public class AndroidHttpClientFactory extends HttpClientFactory {
                                            boolean allCipherSuites) {
         OkHttpClient.Builder client =
                 super.getOkHttpClientBuilder(customssl, tls_only, allCipherSuites,
-                        Build.VERSION.SDK_INT == 24);
+                        Build.VERSION.SDK_INT == 24, null);
         int cacheSize = 50 * 1024 * 1024; // 50MB
         client.cache(new Cache(OpacClient.context.getCacheDir(), cacheSize));
         return DebugTools.prepareHttpClient(client).build();

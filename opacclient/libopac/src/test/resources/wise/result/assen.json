@@ -1,0 +1,3402 @@
+{
+  "actual": {
+    "drilldowns": [],
+    "sorting": {
+      "sortkey": "relevantie",
+      "sortorder": "desc"
+    }
+  },
+  "version": "1.0",
+  "paging": {
+    "amount": 10,
+    "total": "337",
+    "perpage": "10",
+    "offset": "0"
+  },
+  "sortings": [
+    {
+      "orders": {
+        "value": [
+          {
+            "value": "desc",
+            "label": "WCP-BACKEND__SORTORDER-DESCENDING"
+          }
+        ],
+        "code": "sortorder"
+      },
+      "value": "relevantie",
+      "label": "WCP-BACKEND__SORTBY-RELEVANCE"
+    },
+    {
+      "orders": {
+        "value": [
+          {
+            "value": "desc",
+            "label": "WCP-BACKEND__SORTORDER-DESCENDING"
+          },
+          {
+            "value": "asc",
+            "label": "WCP-BACKEND__SORTORDER-ASCENDING"
+          }
+        ],
+        "code": "sortorder"
+      },
+      "value": "populariteit",
+      "label": "WCP-BACKEND__SORTBY-POPULARITY"
+    },
+    {
+      "orders": {
+        "value": [
+          {
+            "value": "asc",
+            "label": "WCP-BACKEND__SORTORDER-ASCENDING"
+          },
+          {
+            "value": "desc",
+            "label": "WCP-BACKEND__SORTORDER-DESCENDING"
+          }
+        ],
+        "code": "sortorder"
+      },
+      "value": "titel",
+      "label": "WCP-BACKEND__SORTBY-TITLE"
+    },
+    {
+      "orders": {
+        "value": [
+          {
+            "value": "asc",
+            "label": "WCP-BACKEND__SORTORDER-ASCENDING"
+          },
+          {
+            "value": "desc",
+            "label": "WCP-BACKEND__SORTORDER-DESCENDING"
+          }
+        ],
+        "code": "sortorder"
+      },
+      "value": "auteur",
+      "label": "WCP-BACKEND__SORTBY-AUTHOR"
+    },
+    {
+      "orders": {
+        "value": [
+          {
+            "value": "desc",
+            "label": "WCP-BACKEND__SORTORDER-DESCENDING"
+          },
+          {
+            "value": "asc",
+            "label": "WCP-BACKEND__SORTORDER-ASCENDING"
+          }
+        ],
+        "code": "sortorder"
+      },
+      "value": "datum",
+      "label": "WCP-BACKEND__SORTBY-DATE"
+    }
+  ],
+  "backend": "wise",
+  "params": {},
+  "drilldowns": [
+    {
+      "order": 99,
+      "filters": [
+        {
+          "amount": "253",
+          "value": "BOE",
+          "label": "Boek"
+        },
+        {
+          "amount": "74",
+          "value": "DVD",
+          "label": "DVD-Video"
+        },
+        {
+          "amount": "4",
+          "value": "GLB",
+          "label": "GROTE LETTER"
+        },
+        {
+          "amount": "3",
+          "value": "Film",
+          "label": "Film"
+        },
+        {
+          "amount": "2",
+          "value": "Website",
+          "label": "Website"
+        },
+        {
+          "amount": "1",
+          "value": "GBK",
+          "label": "Luisterboek"
+        }
+      ],
+      "label": "WCP-BACKEND__DRILLDOWNS-MEDIUMSOORT",
+      "code": "wf_medium_srt"
+    },
+    {
+      "order": 99,
+      "filters": [
+        {
+          "amount": "195",
+          "value": "3",
+          "label": "Volwassen Informatief"
+        },
+        {
+          "amount": "96",
+          "value": "2",
+          "label": "Volwassen Verhalend"
+        },
+        {
+          "amount": "37",
+          "value": "4",
+          "label": "Jeugd Verhalend"
+        },
+        {
+          "amount": "10",
+          "value": "5",
+          "label": "Jeugd Informatief"
+        }
+      ],
+      "label": "WCP-BACKEND__DRILLDOWNS-TYPING",
+      "code": "wf_typering"
+    },
+    {
+      "order": 99,
+      "filters": [
+        {
+          "amount": "40",
+          "value": "TH",
+          "label": "Thriller"
+        },
+        {
+          "amount": "30",
+          "value": "OO",
+          "label": "Oorlog"
+        },
+        {
+          "amount": "30",
+          "value": "PS",
+          "label": "Psychologisch "
+        },
+        {
+          "amount": "13",
+          "value": "HI",
+          "label": "Historisch"
+        },
+        {
+          "amount": "13",
+          "value": "SO",
+          "label": "Sociale problematiek"
+        },
+        {
+          "amount": "12",
+          "value": "DE",
+          "label": "Detective"
+        },
+        {
+          "amount": "12",
+          "value": "FA",
+          "label": "Familie"
+        },
+        {
+          "amount": "12",
+          "value": "PO",
+          "label": "Politiek verhaal"
+        },
+        {
+          "amount": "9",
+          "value": "RO",
+          "label": "Romantisch"
+        },
+        {
+          "amount": "6",
+          "value": "SP",
+          "label": "Spionage"
+        },
+        {
+          "amount": "5",
+          "value": "BI",
+          "label": "Biografie"
+        },
+        {
+          "amount": "4",
+          "value": "DI",
+          "label": "Dierenleven"
+        },
+        {
+          "amount": "3",
+          "value": "HU",
+          "label": "Humoristisch"
+        },
+        {
+          "amount": "3",
+          "value": "PR",
+          "label": "Protestants milieu"
+        },
+        {
+          "amount": "3",
+          "value": "RK",
+          "label": "Rooms-katholiek milieu"
+        },
+        {
+          "amount": "3",
+          "value": "SK",
+          "label": "Sprookjes"
+        },
+        {
+          "amount": "3",
+          "value": "VH",
+          "label": "Verhalenbundel"
+        },
+        {
+          "amount": "2",
+          "value": "FE",
+          "label": "Feministische verhalen"
+        },
+        {
+          "amount": "2",
+          "value": "KI",
+          "label": "Kinderleven"
+        },
+        {
+          "amount": "2",
+          "value": "SC",
+          "label": "Schoolverhaal"
+        },
+        {
+          "amount": "2",
+          "value": "SF",
+          "label": "Science fiction"
+        },
+        {
+          "amount": "2",
+          "value": "ST",
+          "label": "Stripverhaal"
+        },
+        {
+          "amount": "1",
+          "value": "AV",
+          "label": "Avonturenverhaal"
+        },
+        {
+          "amount": "1",
+          "value": "ER",
+          "label": "Erotische verhalen"
+        },
+        {
+          "amount": "1",
+          "value": "KE",
+          "label": "Kerstverhaal"
+        },
+        {
+          "amount": "1",
+          "value": "PA",
+          "label": "Paasverhaal"
+        },
+        {
+          "amount": "1",
+          "value": "RA",
+          "label": "Rassenvraagstuk"
+        },
+        {
+          "amount": "1",
+          "value": "SB",
+          "label": "Streek- en boeren"
+        },
+        {
+          "amount": "1",
+          "value": "SR",
+          "label": "Sport"
+        },
+        {
+          "amount": "1",
+          "value": "VZ",
+          "label": "Verzet"
+        }
+      ],
+      "label": "WCP-BACKEND__DRILLDOWNS-GENRE",
+      "code": "wf_genre_rub"
+    },
+    {
+      "order": 3,
+      "filters": [
+        {
+          "amount": "263",
+          "value": "DUT",
+          "label": "Nederlands"
+        },
+        {
+          "amount": "34",
+          "value": "ENG",
+          "label": "Engels"
+        },
+        {
+          "amount": "24",
+          "value": "GER",
+          "label": "Duits"
+        },
+        {
+          "amount": "15",
+          "value": "FRE",
+          "label": "Frans"
+        },
+        {
+          "amount": "6",
+          "value": "ITA",
+          "label": "Italiaans"
+        },
+        {
+          "amount": "5",
+          "value": "MUL",
+          "label": "Meerdere talen"
+        },
+        {
+          "amount": "2",
+          "value": "SWE",
+          "label": "Zweeds"
+        },
+        {
+          "amount": "1",
+          "value": "DAN",
+          "label": "Deens"
+        },
+        {
+          "amount": "1",
+          "value": "GSW",
+          "label": "Zwitserduits"
+        },
+        {
+          "amount": "1",
+          "value": "HEB",
+          "label": "Hebreews"
+        },
+        {
+          "amount": "1",
+          "value": "HUN",
+          "label": "Hongaars"
+        },
+        {
+          "amount": "1",
+          "value": "JPN",
+          "label": "Japans"
+        },
+        {
+          "amount": "1",
+          "value": "LIN",
+          "label": "Lingala"
+        },
+        {
+          "amount": "1",
+          "value": "PER",
+          "label": "Perzisch, modern (Farsi)"
+        },
+        {
+          "amount": "1",
+          "value": "SPA",
+          "label": "Spaans"
+        }
+      ],
+      "label": "WCP-BACKEND__DRILLDOWNS-LANGUAGE",
+      "code": "wf_taal"
+    },
+    {
+      "order": 99,
+      "filters": [
+        {
+          "amount": "4",
+          "value": "National Geographic reisgids",
+          "label": "National Geographic reisgids"
+        },
+        {
+          "amount": "3",
+          "value": "Cossee century",
+          "label": "Cossee century"
+        },
+        {
+          "amount": "3",
+          "value": "Grote letter bibliotheek",
+          "label": "Grote letter bibliotheek"
+        },
+        {
+          "amount": "3",
+          "value": "Rainbow pocketboeken",
+          "label": "Rainbow pocketboeken"
+        },
+        {
+          "amount": "3",
+          "value": "Toeristische gids",
+          "label": "Toeristische gids"
+        },
+        {
+          "amount": "2",
+          "value": "Capitool reisgidsen",
+          "label": "Capitool reisgidsen"
+        },
+        {
+          "amount": "2",
+          "value": "De collectie",
+          "label": "De collectie"
+        },
+        {
+          "amount": "2",
+          "value": "Lumière series",
+          "label": "Lumière series"
+        },
+        {
+          "amount": "2",
+          "value": "Michel Junior-Katalog ...",
+          "label": "Michel Junior-Katalog ..."
+        },
+        {
+          "amount": "2",
+          "value": "Trotter",
+          "label": "Trotter"
+        },
+        {
+          "amount": "1",
+          "value": "100%",
+          "label": "100%"
+        },
+        {
+          "amount": "1",
+          "value": "360° reizen",
+          "label": "360° reizen"
+        },
+        {
+          "amount": "1",
+          "value": "ANWB extra",
+          "label": "ANWB extra"
+        },
+        {
+          "amount": "1",
+          "value": "Atlantis ongezonken",
+          "label": "Atlantis ongezonken"
+        },
+        {
+          "amount": "1",
+          "value": "Buchfinken. HAVO/VWO",
+          "label": "Buchfinken. HAVO/VWO"
+        },
+        {
+          "amount": "1",
+          "value": "Capitool compact",
+          "label": "Capitool compact"
+        },
+        {
+          "amount": "1",
+          "value": "Capitool reisgidsen top 10",
+          "label": "Capitool reisgidsen top 10"
+        },
+        {
+          "amount": "1",
+          "value": "Coolman en ik",
+          "label": "Coolman en ik"
+        },
+        {
+          "amount": "1",
+          "value": "Cossee essay",
+          "label": "Cossee essay"
+        },
+        {
+          "amount": "1",
+          "value": "Crime series",
+          "label": "Crime series"
+        },
+        {
+          "amount": "1",
+          "value": "De leeslijst : tien Nederlandse klassiekers",
+          "label": "De leeslijst : tien Nederlandse klassiekers"
+        },
+        {
+          "amount": "1",
+          "value": "Dominicus reeks",
+          "label": "Dominicus reeks"
+        },
+        {
+          "amount": "1",
+          "value": "Eagle : de tweekoppige adelaar",
+          "label": "Eagle : de tweekoppige adelaar"
+        },
+        {
+          "amount": "1",
+          "value": "Elsevier. Speciale editie",
+          "label": "Elsevier. Speciale editie"
+        },
+        {
+          "amount": "1",
+          "value": "Geschenk",
+          "label": "Geschenk"
+        },
+        {
+          "amount": "1",
+          "value": "Gouden boekjes",
+          "label": "Gouden boekjes"
+        },
+        {
+          "amount": "1",
+          "value": "Groene gids weekend",
+          "label": "Groene gids weekend"
+        },
+        {
+          "amount": "1",
+          "value": "Heimat Trilogie",
+          "label": "Heimat Trilogie"
+        },
+        {
+          "amount": "1",
+          "value": "Het Mysterium",
+          "label": "Het Mysterium"
+        },
+        {
+          "amount": "1",
+          "value": "KiWi",
+          "label": "KiWi"
+        },
+        {
+          "amount": "1",
+          "value": "Lebowski book of the month",
+          "label": "Lebowski book of the month"
+        },
+        {
+          "amount": "1",
+          "value": "Lees-mij!",
+          "label": "Lees-mij!"
+        },
+        {
+          "amount": "1",
+          "value": "LoveStory",
+          "label": "LoveStory"
+        },
+        {
+          "amount": "1",
+          "value": "Ludwig Licht-kwartet",
+          "label": "Ludwig Licht-kwartet"
+        },
+        {
+          "amount": "1",
+          "value": "Maaike & Domenico",
+          "label": "Maaike & Domenico"
+        },
+        {
+          "amount": "1",
+          "value": "Mannen van de wereld",
+          "label": "Mannen van de wereld"
+        },
+        {
+          "amount": "1",
+          "value": "Marco Polo",
+          "label": "Marco Polo"
+        },
+        {
+          "amount": "1",
+          "value": "Merian live!",
+          "label": "Merian live!"
+        },
+        {
+          "amount": "1",
+          "value": "Monografieën van Nederlandse fotografen",
+          "label": "Monografieën van Nederlandse fotografen"
+        },
+        {
+          "amount": "1",
+          "value": "Oorzaak & gevolg",
+          "label": "Oorzaak & gevolg"
+        },
+        {
+          "amount": "1",
+          "value": "Op wereldreis met Ben en Polo",
+          "label": "Op wereldreis met Ben en Polo"
+        },
+        {
+          "amount": "1",
+          "value": "Parel pockets",
+          "label": "Parel pockets"
+        },
+        {
+          "amount": "1",
+          "value": "Pasolini collection",
+          "label": "Pasolini collection"
+        },
+        {
+          "amount": "1",
+          "value": "Quality film collection",
+          "label": "Quality film collection"
+        },
+        {
+          "amount": "1",
+          "value": "Ravn reeks",
+          "label": "Ravn reeks"
+        },
+        {
+          "amount": "1",
+          "value": "Rosa & co",
+          "label": "Rosa & co"
+        },
+        {
+          "amount": "1",
+          "value": "Sniper-serie",
+          "label": "Sniper-serie"
+        },
+        {
+          "amount": "1",
+          "value": "Streetwise",
+          "label": "Streetwise"
+        },
+        {
+          "amount": "1",
+          "value": "The century trilogy",
+          "label": "The century trilogy"
+        },
+        {
+          "amount": "1",
+          "value": "The cruelty",
+          "label": "The cruelty"
+        },
+        {
+          "amount": "1",
+          "value": "The house of crime",
+          "label": "The house of crime"
+        },
+        {
+          "amount": "1",
+          "value": "Thriller",
+          "label": "Thriller"
+        },
+        {
+          "amount": "1",
+          "value": "Tien Nederlandse klassiekers",
+          "label": "Tien Nederlandse klassiekers"
+        },
+        {
+          "amount": "1",
+          "value": "Time to momo",
+          "label": "Time to momo"
+        },
+        {
+          "amount": "1",
+          "value": "Verboden-voor-ouders",
+          "label": "Verboden-voor-ouders"
+        },
+        {
+          "amount": "1",
+          "value": "Verder kijken",
+          "label": "Verder kijken"
+        },
+        {
+          "amount": "1",
+          "value": "Wandelgidsen",
+          "label": "Wandelgidsen"
+        },
+        {
+          "amount": "1",
+          "value": "Wereldoorlog II, de grote slagen",
+          "label": "Wereldoorlog II, de grote slagen"
+        },
+        {
+          "amount": "1",
+          "value": "Wereldsteden",
+          "label": "Wereldsteden"
+        },
+        {
+          "amount": "1",
+          "value": "XL",
+          "label": "XL"
+        },
+        {
+          "amount": "1",
+          "value": "Young & quality films",
+          "label": "Young & quality films"
+        },
+        {
+          "amount": "1",
+          "value": "Zwarte beertjes",
+          "label": "Zwarte beertjes"
+        }
+      ],
+      "label": "WCP-BACKEND__DRILLDOWNS-SERIES",
+      "code": "wf_reeks_serie"
+    },
+    {
+      "volatile": 1,
+      "order": 99,
+      "filters": [
+        {
+          "amount": "4",
+          "value": "Bomann, Corina",
+          "label": "Bomann, Corina"
+        },
+        {
+          "amount": "4",
+          "value": "Caris, Lilian",
+          "label": "Caris, Lilian"
+        },
+        {
+          "amount": "4",
+          "value": "Schippers, Elly",
+          "label": "Schippers, Elly"
+        },
+        {
+          "amount": "3",
+          "value": "Christiane F.",
+          "label": "Christiane F."
+        },
+        {
+          "amount": "3",
+          "value": "Danes, Claire",
+          "label": "Danes, Claire"
+        },
+        {
+          "amount": "3",
+          "value": "Döblin, Alfred",
+          "label": "Döblin, Alfred"
+        },
+        {
+          "amount": "3",
+          "value": "Fallada, Hans",
+          "label": "Fallada, Hans"
+        },
+        {
+          "amount": "3",
+          "value": "Fitzek, Sebastian",
+          "label": "Fitzek, Sebastian"
+        },
+        {
+          "amount": "3",
+          "value": "Gerretzen, Ellen",
+          "label": "Gerretzen, Ellen"
+        },
+        {
+          "amount": "3",
+          "value": "Glanfield, Jenny",
+          "label": "Glanfield, Jenny"
+        },
+        {
+          "amount": "3",
+          "value": "Hauth-Grubben, Goverdien",
+          "label": "Hauth-Grubben, Goverdien"
+        },
+        {
+          "amount": "3",
+          "value": "Kerr, Philip",
+          "label": "Kerr, Philip"
+        },
+        {
+          "amount": "3",
+          "value": "Nes, Liesbeth van",
+          "label": "Nes, Liesbeth van"
+        },
+        {
+          "amount": "3",
+          "value": "Patinkin, Mandy",
+          "label": "Patinkin, Mandy"
+        },
+        {
+          "amount": "3",
+          "value": "Peters, Maria",
+          "label": "Peters, Maria"
+        }
+      ],
+      "label": "WCP-BACKEND__DRILLDOWNS-AUTHOR",
+      "code": "wf_auteur_facet"
+    },
+    {
+      "volatile": 1,
+      "order": 99,
+      "filters": [
+        {
+          "amount": "52",
+          "value": "Berlijn",
+          "label": "Berlijn"
+        },
+        {
+          "amount": "36",
+          "value": "Wereldoorlog II",
+          "label": "Wereldoorlog II"
+        },
+        {
+          "amount": "27",
+          "value": "Duitsland",
+          "label": "Duitsland"
+        },
+        {
+          "amount": "27",
+          "value": "Reisgidsen",
+          "label": "Reisgidsen"
+        },
+        {
+          "amount": "16",
+          "value": "Verhalen",
+          "label": "Verhalen"
+        },
+        {
+          "amount": "7",
+          "value": "Jodenvervolging",
+          "label": "Jodenvervolging"
+        },
+        {
+          "amount": "6",
+          "value": "Nederland",
+          "label": "Nederland"
+        },
+        {
+          "amount": "5",
+          "value": "20e eeuw",
+          "label": "20e eeuw"
+        },
+        {
+          "amount": "5",
+          "value": "DDR",
+          "label": "DDR"
+        },
+        {
+          "amount": "5",
+          "value": "Europa",
+          "label": "Europa"
+        },
+        {
+          "amount": "5",
+          "value": "Geschiedenis",
+          "label": "Geschiedenis"
+        },
+        {
+          "amount": "5",
+          "value": "Homoseksuele mannen",
+          "label": "Homoseksuele mannen"
+        },
+        {
+          "amount": "5",
+          "value": "Waargebeurd",
+          "label": "Waargebeurd"
+        },
+        {
+          "amount": "4",
+          "value": "Biografieën",
+          "label": "Biografieën"
+        },
+        {
+          "amount": "4",
+          "value": "Hitler, Adolf",
+          "label": "Hitler, Adolf"
+        }
+      ],
+      "label": "WCP-BACKEND__DRILLDOWNS-SUBJECT",
+      "code": "wf_onderwerp"
+    },
+    {
+      "order": 2,
+      "filters": [
+        {
+          "amount": "1",
+          "value": "[2021-01-01T00:00:00Z TO 2021-01-01T00:00:00Z+1YEAR]",
+          "label": "2021"
+        },
+        {
+          "amount": "23",
+          "value": "[2020-01-01T00:00:00Z TO 2020-01-01T00:00:00Z+1YEAR]",
+          "label": "2020"
+        },
+        {
+          "amount": "31",
+          "value": "[2019-01-01T00:00:00Z TO 2019-01-01T00:00:00Z+1YEAR]",
+          "label": "2019"
+        },
+        {
+          "amount": "38",
+          "value": "[2018-01-01T00:00:00Z TO 2018-01-01T00:00:00Z+1YEAR]",
+          "label": "2018"
+        },
+        {
+          "amount": "47",
+          "value": "[2017-01-01T00:00:00Z TO 2017-01-01T00:00:00Z+1YEAR]",
+          "label": "2017"
+        },
+        {
+          "amount": "37",
+          "value": "[2016-01-01T00:00:00Z TO 2016-01-01T00:00:00Z+1YEAR]",
+          "label": "2016"
+        },
+        {
+          "amount": "155",
+          "value": "[* TO 2016-01-01T00:00:00Z]",
+          "label": "2016 >"
+        }
+      ],
+      "label": "WCP-BACKEND__DRILLDOWNS-PUBYEAR",
+      "code": "wf_pubjaar"
+    }
+  ],
+  "timing": {},
+  "objects": [
+    {
+      "field_display_order": [
+        "auteur",
+        "onderwerp",
+        "cwisenr",
+        "tt_info",
+        "momkeys",
+        "titel",
+        "pubjaar",
+        "reeks_serie",
+        "typering",
+        "materiaal",
+        "pim",
+        "vestcatgrp",
+        "ovrg_aut",
+        "siso",
+        "icon_media",
+        "medium_srt",
+        "t1_hoog",
+        "t1_midden",
+        "bron_naam",
+        "origine",
+        "origin_id",
+        "detail_type",
+        "detail_uri",
+        "id"
+      ],
+      "version": "2.0",
+      "backend": "wise",
+      "availability": [],
+      "fields": {
+        "detail_type": {
+          "content": [
+            {
+              "value": "detail"
+            }
+          ],
+          "label": "detail_type"
+        },
+        "momkeys": {
+          "content": {
+            "value": "lid=2018072629;ppn=416723632;isbn=9789057678400;key=1164821;"
+          },
+          "label": "momkeys"
+        },
+        "ovrg_aut": {
+          "content": [
+            {
+              "value": "Hoogen, Vincent van den",
+              "code": "31409644"
+            },
+            {
+              "value": "Harms, Laurence",
+              "code": "41313027"
+            }
+          ],
+          "label": "medewerker"
+        },
+        "medium_srt": {
+          "content": {
+            "value": "BOE",
+            "label": "Boek"
+          },
+          "label": "medium"
+        },
+        "auteur": {
+          "content": [
+            {
+              "value": "Ours, Maartje van",
+              "label": "Ours, Maartje van",
+              "code": "40660277"
+            }
+          ],
+          "label": "auteur"
+        },
+        "bron_naam": {
+          "content": [
+            {
+              "value": "wise"
+            }
+          ],
+          "label": "bron_naam"
+        },
+        "reeks_serie": {
+          "content": [
+            {
+              "value": "Time to momo",
+              "label": "Time to momo",
+              "code": "1768764240"
+            }
+          ],
+          "label": "reeks/serie"
+        },
+        "cwisenr": {
+          "content": [
+            {
+              "value": "10008998"
+            }
+          ],
+          "label": "cwisenr"
+        },
+        "t1_hoog": {
+          "content": [
+            {
+              "value": "Time to momo Berlijn"
+            }
+          ],
+          "label": "t1_hoog"
+        },
+        "materiaal": {
+          "content": [
+            {
+              "value": "IV"
+            }
+          ],
+          "label": "materiaal"
+        },
+        "titel": {
+          "content": {
+            "value": "Time to momo Berlijn"
+          },
+          "label": "titel"
+        },
+        "id": {
+          "content": {
+            "value": "1164821"
+          },
+          "label": "id"
+        },
+        "pim": {
+          "content": [
+            {
+              "value": "18"
+            }
+          ],
+          "label": "pim"
+        },
+        "icon_media": {
+          "content": {
+            "value": "book",
+            "label": "Boek"
+          },
+          "label": "icon_media"
+        },
+        "t1_midden": {
+          "content": [
+            {
+              "value": "Berlijn"
+            }
+          ],
+          "label": "t1_midden"
+        },
+        "typering": {
+          "content": [
+            {
+              "value": "2"
+            }
+          ],
+          "label": "typering"
+        },
+        "origin_id": {
+          "content": [
+            {
+              "value": "1164821"
+            }
+          ],
+          "label": "origin_id"
+        },
+        "vestcatgrp": {
+          "content": [
+            {
+              "value": 0
+            }
+          ],
+          "label": "vestcatgrp"
+        },
+        "tt_info": {
+          "content": {
+            "value": "Deze oorspronkelijk Nederlandstalige reisgids in zakformaat over Berlijn heeft een nieuw uiterlijk gekregen en heet geen 100% meer maar 'Time to momo'. Aan ..."
+          },
+          "label": "beschrijving"
+        },
+        "siso": {
+          "content": [
+            {
+              "value": "996.3   Duitsland",
+              "code": "1765847665"
+            }
+          ],
+          "label": "siso"
+        },
+        "origine": {
+          "content": {
+            "value": "wise"
+          },
+          "label": "origine"
+        },
+        "pubjaar": {
+          "content": {
+            "label": "2018"
+          },
+          "label": "pubjaar"
+        },
+        "onderwerp": {
+          "content": [
+            {
+              "value": "Berlijn",
+              "label": "Berlijn",
+              "code": "7798507"
+            },
+            {
+              "value": "Reisgidsen",
+              "label": "Reisgidsen",
+              "code": "7797390"
+            }
+          ],
+          "label": "onderwerp"
+        },
+        "detail_uri": {
+          "content": [
+            {
+              "value": "?sid=414baf2f-729b-4191-a8a7-9919af9b25ef;vestnr=9585;prt=INTERNET;fmt=json;var=portal;event=odetail;backend=wise;oid=1164821"
+            }
+          ],
+          "label": "detail_uri"
+        }
+      },
+      "controls": [
+        {
+          "params": {
+            "titcode": "1164821",
+            "event": "favadd"
+          },
+          "label": "WCP-BACKEND__TITLE-CONTROL-FAVLIST-ADD",
+          "type": "mark"
+        },
+        {
+          "params": {
+            "titcode": "1164821",
+            "event": "rsrvrqn"
+          },
+          "label": "WCP-BACKEND__TITLE-CONTROL-RESERVE",
+          "type": "acquire"
+        }
+      ],
+      "editions": [],
+      "labels": []
+    },
+    {
+      "field_display_order": [
+        "auteur",
+        "onderwerp",
+        "cwisenr",
+        "tt_info",
+        "momkeys",
+        "titel",
+        "pubjaar",
+        "reeks_serie",
+        "typering",
+        "materiaal",
+        "pim",
+        "vestcatgrp",
+        "ovrg_aut",
+        "siso",
+        "icon_media",
+        "medium_srt",
+        "t1_hoog",
+        "t1_midden",
+        "bron_naam",
+        "origine",
+        "origin_id",
+        "detail_type",
+        "detail_uri",
+        "id"
+      ],
+      "version": "2.0",
+      "backend": "wise",
+      "availability": [],
+      "fields": {
+        "detail_type": {
+          "content": [
+            {
+              "value": "detail"
+            }
+          ],
+          "label": "detail_type"
+        },
+        "momkeys": {
+          "content": {
+            "value": "lid=2014483720;ppn=383945984;isbn=9789059566071;key=968785;"
+          },
+          "label": "momkeys"
+        },
+        "ovrg_aut": {
+          "content": [
+            {
+              "value": "Strijbos, Eric",
+              "code": "7495961"
+            }
+          ],
+          "label": "medewerker"
+        },
+        "medium_srt": {
+          "content": {
+            "value": "BOE",
+            "label": "Boek"
+          },
+          "label": "medium"
+        },
+        "auteur": {
+          "content": [
+            {
+              "value": "Sullivan, Paul",
+              "label": "Sullivan, Paul",
+              "code": "13877950"
+            }
+          ],
+          "label": "auteur"
+        },
+        "bron_naam": {
+          "content": [
+            {
+              "value": "wise"
+            }
+          ],
+          "label": "bron_naam"
+        },
+        "reeks_serie": {
+          "content": [
+            {
+              "value": "Wandelgidsen",
+              "label": "Wandelgidsen",
+              "code": "34155736"
+            }
+          ],
+          "label": "reeks/serie"
+        },
+        "cwisenr": {
+          "content": [
+            {
+              "value": "8874552"
+            }
+          ],
+          "label": "cwisenr"
+        },
+        "t1_hoog": {
+          "content": [
+            {
+              "value": "Wandelgids Berlijn"
+            }
+          ],
+          "label": "t1_hoog"
+        },
+        "materiaal": {
+          "content": [
+            {
+              "value": "IV"
+            }
+          ],
+          "label": "materiaal"
+        },
+        "titel": {
+          "content": {
+            "value": "Wandelgids Berlijn"
+          },
+          "label": "titel"
+        },
+        "id": {
+          "content": {
+            "value": "968785"
+          },
+          "label": "id"
+        },
+        "pim": {
+          "content": [
+            {
+              "value": "18"
+            }
+          ],
+          "label": "pim"
+        },
+        "icon_media": {
+          "content": {
+            "value": "book",
+            "label": "Boek"
+          },
+          "label": "icon_media"
+        },
+        "t1_midden": {
+          "content": [
+            {
+              "value": "Berlijn"
+            }
+          ],
+          "label": "t1_midden"
+        },
+        "typering": {
+          "content": [
+            {
+              "value": "2"
+            }
+          ],
+          "label": "typering"
+        },
+        "origin_id": {
+          "content": [
+            {
+              "value": "968785"
+            }
+          ],
+          "label": "origin_id"
+        },
+        "vestcatgrp": {
+          "content": [
+            {
+              "value": 0
+            }
+          ],
+          "label": "vestcatgrp"
+        },
+        "tt_info": {
+          "content": {
+            "value": "Gidsje voor de toerist die Berlijn te voet wil ontdekken. Het gidsje bevat geen routebeschrijvingen die de wandelaar via uitgestippelde trajecten langs ..."
+          },
+          "label": "beschrijving"
+        },
+        "siso": {
+          "content": [
+            {
+              "value": "996.3   Duitsland",
+              "code": "1765847665"
+            }
+          ],
+          "label": "siso"
+        },
+        "origine": {
+          "content": {
+            "value": "wise"
+          },
+          "label": "origine"
+        },
+        "pubjaar": {
+          "content": {
+            "label": "2015"
+          },
+          "label": "pubjaar"
+        },
+        "onderwerp": {
+          "content": [
+            {
+              "value": "Wandeltochten",
+              "label": "Wandeltochten",
+              "code": "7808748"
+            },
+            {
+              "value": "Berlijn",
+              "label": "Berlijn",
+              "code": "7798507"
+            }
+          ],
+          "label": "onderwerp"
+        },
+        "detail_uri": {
+          "content": [
+            {
+              "value": "?sid=414baf2f-729b-4191-a8a7-9919af9b25ef;vestnr=9585;prt=INTERNET;fmt=json;var=portal;event=odetail;backend=wise;oid=968785"
+            }
+          ],
+          "label": "detail_uri"
+        }
+      },
+      "controls": [
+        {
+          "params": {
+            "titcode": "968785",
+            "event": "favadd"
+          },
+          "label": "WCP-BACKEND__TITLE-CONTROL-FAVLIST-ADD",
+          "type": "mark"
+        },
+        {
+          "params": {
+            "titcode": "968785",
+            "event": "rsrvrqn"
+          },
+          "label": "WCP-BACKEND__TITLE-CONTROL-RESERVE",
+          "type": "acquire"
+        }
+      ],
+      "editions": [],
+      "labels": []
+    },
+    {
+      "field_display_order": [
+        "auteur",
+        "onderwerp",
+        "cwisenr",
+        "tt_info",
+        "momkeys",
+        "titel",
+        "pubjaar",
+        "reeks_serie",
+        "typering",
+        "materiaal",
+        "pim",
+        "vestcatgrp",
+        "ovrg_aut",
+        "siso",
+        "icon_media",
+        "medium_srt",
+        "t1_hoog",
+        "bron_naam",
+        "origine",
+        "origin_id",
+        "detail_type",
+        "detail_uri",
+        "id"
+      ],
+      "version": "2.0",
+      "backend": "wise",
+      "availability": [],
+      "fields": {
+        "detail_type": {
+          "content": [
+            {
+              "value": "detail"
+            }
+          ],
+          "label": "detail_type"
+        },
+        "momkeys": {
+          "content": {
+            "value": "lid=2019083051;ppn=422213659;isbn=9789044753899;key=1209969;"
+          },
+          "label": "momkeys"
+        },
+        "ovrg_aut": {
+          "content": [
+            {
+              "value": "Middelbeek, Emmy",
+              "code": "7403499"
+            }
+          ],
+          "label": "medewerker"
+        },
+        "medium_srt": {
+          "content": {
+            "value": "BOE",
+            "label": "Boek"
+          },
+          "label": "medium"
+        },
+        "auteur": {
+          "content": [
+            {
+              "value": "Buddée, Gisela",
+              "label": "Buddée, Gisela",
+              "code": "16623398"
+            }
+          ],
+          "label": "auteur"
+        },
+        "bron_naam": {
+          "content": [
+            {
+              "value": "wise"
+            }
+          ],
+          "label": "bron_naam"
+        },
+        "reeks_serie": {
+          "content": [
+            {
+              "value": "Merian live!",
+              "label": "Merian live!",
+              "code": "32729605"
+            }
+          ],
+          "label": "reeks/serie"
+        },
+        "cwisenr": {
+          "content": [
+            {
+              "value": "10227397"
+            }
+          ],
+          "label": "cwisenr"
+        },
+        "t1_hoog": {
+          "content": [
+            {
+              "value": "Berlijn"
+            }
+          ],
+          "label": "t1_hoog"
+        },
+        "materiaal": {
+          "content": [
+            {
+              "value": "IV"
+            }
+          ],
+          "label": "materiaal"
+        },
+        "titel": {
+          "content": {
+            "value": "Berlijn"
+          },
+          "label": "titel"
+        },
+        "id": {
+          "content": {
+            "value": "1209969"
+          },
+          "label": "id"
+        },
+        "pim": {
+          "content": [
+            {
+              "value": "18"
+            }
+          ],
+          "label": "pim"
+        },
+        "icon_media": {
+          "content": {
+            "value": "book",
+            "label": "Boek"
+          },
+          "label": "icon_media"
+        },
+        "typering": {
+          "content": [
+            {
+              "value": "2"
+            }
+          ],
+          "label": "typering"
+        },
+        "origin_id": {
+          "content": [
+            {
+              "value": "1209969"
+            }
+          ],
+          "label": "origin_id"
+        },
+        "vestcatgrp": {
+          "content": [
+            {
+              "value": 0
+            }
+          ],
+          "label": "vestcatgrp"
+        },
+        "tt_info": {
+          "content": {
+            "value": "Deeltje uit een kleurrijke serie goedkope reisgidsen voor de stad Berlijn. Voorin worden de bekendste toppers genoemd om te bezoeken of te doen. Daarna ..."
+          },
+          "label": "beschrijving"
+        },
+        "siso": {
+          "content": [
+            {
+              "value": "996.3   Duitsland",
+              "code": "1765847665"
+            }
+          ],
+          "label": "siso"
+        },
+        "origine": {
+          "content": {
+            "value": "wise"
+          },
+          "label": "origine"
+        },
+        "pubjaar": {
+          "content": {
+            "label": "2019"
+          },
+          "label": "pubjaar"
+        },
+        "onderwerp": {
+          "content": [
+            {
+              "value": "Berlijn",
+              "label": "Berlijn",
+              "code": "7798507"
+            },
+            {
+              "value": "Reisgidsen",
+              "label": "Reisgidsen",
+              "code": "7797390"
+            }
+          ],
+          "label": "onderwerp"
+        },
+        "detail_uri": {
+          "content": [
+            {
+              "value": "?sid=414baf2f-729b-4191-a8a7-9919af9b25ef;vestnr=9585;prt=INTERNET;fmt=json;var=portal;event=odetail;backend=wise;oid=1209969"
+            }
+          ],
+          "label": "detail_uri"
+        }
+      },
+      "controls": [
+        {
+          "params": {
+            "titcode": "1209969",
+            "event": "favadd"
+          },
+          "label": "WCP-BACKEND__TITLE-CONTROL-FAVLIST-ADD",
+          "type": "mark"
+        },
+        {
+          "params": {
+            "titcode": "1209969",
+            "event": "rsrvrqn"
+          },
+          "label": "WCP-BACKEND__TITLE-CONTROL-RESERVE",
+          "type": "acquire"
+        }
+      ],
+      "editions": [],
+      "labels": []
+    },
+    {
+      "field_display_order": [
+        "auteur",
+        "onderwerp",
+        "cwisenr",
+        "tt_info",
+        "momkeys",
+        "titel",
+        "pubjaar",
+        "reeks_serie",
+        "typering",
+        "materiaal",
+        "pim",
+        "vestcatgrp",
+        "ovrg_aut",
+        "siso",
+        "icon_media",
+        "medium_srt",
+        "t1_hoog",
+        "bron_naam",
+        "origine",
+        "origin_id",
+        "detail_type",
+        "detail_uri",
+        "id"
+      ],
+      "version": "2.0",
+      "backend": "wise",
+      "availability": [],
+      "fields": {
+        "detail_type": {
+          "content": [
+            {
+              "value": "detail"
+            }
+          ],
+          "label": "detail_type"
+        },
+        "momkeys": {
+          "content": {
+            "value": "lid=2017472571;ppn=413571750;isbn=9789021568225;key=1172079;"
+          },
+          "label": "momkeys"
+        },
+        "ovrg_aut": {
+          "content": [
+            {
+              "value": "Adenis, Pierre",
+              "code": "33986427"
+            },
+            {
+              "value": "Reusink, Frans",
+              "code": "12130438"
+            }
+          ],
+          "label": "medewerker"
+        },
+        "medium_srt": {
+          "content": {
+            "value": "BOE",
+            "label": "Boek"
+          },
+          "label": "medium"
+        },
+        "auteur": {
+          "content": [
+            {
+              "value": "Simonis, Damien",
+              "label": "Simonis, Damien",
+              "code": "10786265"
+            }
+          ],
+          "label": "auteur"
+        },
+        "bron_naam": {
+          "content": [
+            {
+              "value": "wise"
+            }
+          ],
+          "label": "bron_naam"
+        },
+        "reeks_serie": {
+          "content": [
+            {
+              "value": "National Geographic reisgids",
+              "label": "National Geographic reisgids",
+              "code": "26199954"
+            }
+          ],
+          "label": "reeks/serie"
+        },
+        "cwisenr": {
+          "content": [
+            {
+              "value": "10026285"
+            }
+          ],
+          "label": "cwisenr"
+        },
+        "t1_hoog": {
+          "content": [
+            {
+              "value": "Berlijn"
+            }
+          ],
+          "label": "t1_hoog"
+        },
+        "materiaal": {
+          "content": [
+            {
+              "value": "IV"
+            }
+          ],
+          "label": "materiaal"
+        },
+        "titel": {
+          "content": {
+            "value": "Berlijn"
+          },
+          "label": "titel"
+        },
+        "id": {
+          "content": {
+            "value": "1172079"
+          },
+          "label": "id"
+        },
+        "pim": {
+          "content": [
+            {
+              "value": "18"
+            }
+          ],
+          "label": "pim"
+        },
+        "icon_media": {
+          "content": {
+            "value": "book",
+            "label": "Boek"
+          },
+          "label": "icon_media"
+        },
+        "typering": {
+          "content": [
+            {
+              "value": "2"
+            }
+          ],
+          "label": "typering"
+        },
+        "origin_id": {
+          "content": [
+            {
+              "value": "1172079"
+            }
+          ],
+          "label": "origin_id"
+        },
+        "vestcatgrp": {
+          "content": [
+            {
+              "value": 0
+            }
+          ],
+          "label": "vestcatgrp"
+        },
+        "tt_info": {
+          "content": {
+            "value": "Deze mooi uitgevoerde reisgids over Berlijn biedt vooral veel informatie over de cultuur en geschiedenis van deze stad. Na een algemene cultuurhistorische ..."
+          },
+          "label": "beschrijving"
+        },
+        "siso": {
+          "content": [
+            {
+              "value": "996.3   Duitsland",
+              "code": "1765847665"
+            }
+          ],
+          "label": "siso"
+        },
+        "origine": {
+          "content": {
+            "value": "wise"
+          },
+          "label": "origine"
+        },
+        "pubjaar": {
+          "content": {
+            "label": "2018"
+          },
+          "label": "pubjaar"
+        },
+        "onderwerp": {
+          "content": [
+            {
+              "value": "Berlijn",
+              "label": "Berlijn",
+              "code": "7798507"
+            },
+            {
+              "value": "Reisgidsen",
+              "label": "Reisgidsen",
+              "code": "7797390"
+            }
+          ],
+          "label": "onderwerp"
+        },
+        "detail_uri": {
+          "content": [
+            {
+              "value": "?sid=414baf2f-729b-4191-a8a7-9919af9b25ef;vestnr=9585;prt=INTERNET;fmt=json;var=portal;event=odetail;backend=wise;oid=1172079"
+            }
+          ],
+          "label": "detail_uri"
+        }
+      },
+      "controls": [
+        {
+          "params": {
+            "titcode": "1172079",
+            "event": "favadd"
+          },
+          "label": "WCP-BACKEND__TITLE-CONTROL-FAVLIST-ADD",
+          "type": "mark"
+        },
+        {
+          "params": {
+            "titcode": "1172079",
+            "event": "rsrvrqn"
+          },
+          "label": "WCP-BACKEND__TITLE-CONTROL-RESERVE",
+          "type": "acquire"
+        }
+      ],
+      "editions": [],
+      "labels": []
+    },
+    {
+      "field_display_order": [
+        "auteur",
+        "onderwerp",
+        "cwisenr",
+        "tt_info",
+        "momkeys",
+        "titel",
+        "pubjaar",
+        "reeks_serie",
+        "typering",
+        "materiaal",
+        "pim",
+        "vestcatgrp",
+        "ovrg_aut",
+        "siso",
+        "icon_media",
+        "medium_srt",
+        "t1_hoog",
+        "bron_naam",
+        "origine",
+        "origin_id",
+        "detail_type",
+        "detail_uri",
+        "id"
+      ],
+      "version": "2.0",
+      "backend": "wise",
+      "availability": [],
+      "fields": {
+        "detail_type": {
+          "content": [
+            {
+              "value": "detail"
+            }
+          ],
+          "label": "detail_type"
+        },
+        "momkeys": {
+          "content": {
+            "value": "lid=2017042721;ppn=408698055;isbn=9783829756310;key=1087319;"
+          },
+          "label": "momkeys"
+        },
+        "ovrg_aut": {
+          "content": [
+            {
+              "value": "Gussen, Michiel",
+              "code": "18518701"
+            },
+            {
+              "value": "Harmans, Gerard M.L.",
+              "code": "7354444"
+            }
+          ],
+          "label": "medewerker"
+        },
+        "medium_srt": {
+          "content": {
+            "value": "BOE",
+            "label": "Boek"
+          },
+          "label": "medium"
+        },
+        "auteur": {
+          "content": [
+            {
+              "value": "Berger, Christine",
+              "label": "Berger, Christine",
+              "code": "24439354"
+            }
+          ],
+          "label": "auteur"
+        },
+        "bron_naam": {
+          "content": [
+            {
+              "value": "wise"
+            }
+          ],
+          "label": "bron_naam"
+        },
+        "reeks_serie": {
+          "content": [
+            {
+              "value": "Marco Polo",
+              "label": "Marco Polo",
+              "code": "33118191"
+            }
+          ],
+          "label": "reeks/serie"
+        },
+        "cwisenr": {
+          "content": [
+            {
+              "value": "9733492"
+            }
+          ],
+          "label": "cwisenr"
+        },
+        "t1_hoog": {
+          "content": [
+            {
+              "value": "Berlijn"
+            }
+          ],
+          "label": "t1_hoog"
+        },
+        "materiaal": {
+          "content": [
+            {
+              "value": "IV"
+            }
+          ],
+          "label": "materiaal"
+        },
+        "titel": {
+          "content": {
+            "value": "Berlijn"
+          },
+          "label": "titel"
+        },
+        "id": {
+          "content": {
+            "value": "1087319"
+          },
+          "label": "id"
+        },
+        "pim": {
+          "content": [
+            {
+              "value": "18"
+            }
+          ],
+          "label": "pim"
+        },
+        "icon_media": {
+          "content": {
+            "value": "book",
+            "label": "Boek"
+          },
+          "label": "icon_media"
+        },
+        "typering": {
+          "content": [
+            {
+              "value": "2"
+            }
+          ],
+          "label": "typering"
+        },
+        "origin_id": {
+          "content": [
+            {
+              "value": "1087319"
+            }
+          ],
+          "label": "origin_id"
+        },
+        "vestcatgrp": {
+          "content": [
+            {
+              "value": 0
+            }
+          ],
+          "label": "vestcatgrp"
+        },
+        "tt_info": {
+          "content": {
+            "value": "De bekende Marco-Polo reisgidsen zijn in 2012 in een nieuw jasje gestoken. De compacte gidsjes, gewijd aan de meest populaire toeristische bestemmingen, zijn ..."
+          },
+          "label": "beschrijving"
+        },
+        "siso": {
+          "content": [
+            {
+              "value": "996.3   Duitsland",
+              "code": "1765847665"
+            }
+          ],
+          "label": "siso"
+        },
+        "origine": {
+          "content": {
+            "value": "wise"
+          },
+          "label": "origine"
+        },
+        "pubjaar": {
+          "content": {
+            "label": "2017"
+          },
+          "label": "pubjaar"
+        },
+        "onderwerp": {
+          "content": [
+            {
+              "value": "Berlijn",
+              "label": "Berlijn",
+              "code": "7798507"
+            },
+            {
+              "value": "Reisgidsen",
+              "label": "Reisgidsen",
+              "code": "7797390"
+            }
+          ],
+          "label": "onderwerp"
+        },
+        "detail_uri": {
+          "content": [
+            {
+              "value": "?sid=414baf2f-729b-4191-a8a7-9919af9b25ef;vestnr=9585;prt=INTERNET;fmt=json;var=portal;event=odetail;backend=wise;oid=1087319"
+            }
+          ],
+          "label": "detail_uri"
+        }
+      },
+      "controls": [
+        {
+          "params": {
+            "titcode": "1087319",
+            "event": "favadd"
+          },
+          "label": "WCP-BACKEND__TITLE-CONTROL-FAVLIST-ADD",
+          "type": "mark"
+        },
+        {
+          "params": {
+            "titcode": "1087319",
+            "event": "rsrvrqn"
+          },
+          "label": "WCP-BACKEND__TITLE-CONTROL-RESERVE",
+          "type": "acquire"
+        }
+      ],
+      "editions": [],
+      "labels": []
+    },
+    {
+      "field_display_order": [
+        "onderwerp",
+        "cwisenr",
+        "tt_info",
+        "momkeys",
+        "titel",
+        "pubjaar",
+        "reeks_serie",
+        "typering",
+        "materiaal",
+        "pim",
+        "vestcatgrp",
+        "ovrg_aut",
+        "siso",
+        "icon_media",
+        "medium_srt",
+        "t1_hoog",
+        "t1_midden",
+        "bron_naam",
+        "origine",
+        "origin_id",
+        "detail_type",
+        "detail_uri",
+        "id"
+      ],
+      "version": "2.0",
+      "backend": "wise",
+      "availability": [],
+      "fields": {
+        "detail_type": {
+          "content": [
+            {
+              "value": "detail"
+            }
+          ],
+          "label": "detail_type"
+        },
+        "momkeys": {
+          "content": {
+            "value": "lid=2014494945;ppn=396059899;isbn=9789401423830;key=992393;"
+          },
+          "label": "momkeys"
+        },
+        "ovrg_aut": {
+          "content": [
+            {
+              "value": "Maes, Valérie",
+              "code": "30369326"
+            },
+            {
+              "value": "Georgen, Annabelle",
+              "code": "39605984"
+            },
+            {
+              "value": "Delouvy, Isabelle",
+              "code": "39249390"
+            }
+          ],
+          "label": "medewerker"
+        },
+        "medium_srt": {
+          "content": {
+            "value": "BOE",
+            "label": "Boek"
+          },
+          "label": "medium"
+        },
+        "bron_naam": {
+          "content": [
+            {
+              "value": "wise"
+            }
+          ],
+          "label": "bron_naam"
+        },
+        "reeks_serie": {
+          "content": [
+            {
+              "value": "Groene gids weekend",
+              "label": "Groene gids weekend",
+              "code": "32649055"
+            }
+          ],
+          "label": "reeks/serie"
+        },
+        "cwisenr": {
+          "content": [
+            {
+              "value": "8948865"
+            }
+          ],
+          "label": "cwisenr"
+        },
+        "t1_hoog": {
+          "content": [
+            {
+              "value": "Berlijn"
+            }
+          ],
+          "label": "t1_hoog"
+        },
+        "materiaal": {
+          "content": [
+            {
+              "value": "IV"
+            }
+          ],
+          "label": "materiaal"
+        },
+        "titel": {
+          "content": {
+            "value": "Berlijn"
+          },
+          "label": "titel"
+        },
+        "id": {
+          "content": {
+            "value": "992393"
+          },
+          "label": "id"
+        },
+        "pim": {
+          "content": [
+            {
+              "value": "18"
+            }
+          ],
+          "label": "pim"
+        },
+        "icon_media": {
+          "content": {
+            "value": "book",
+            "label": "Boek"
+          },
+          "label": "icon_media"
+        },
+        "t1_midden": {
+          "content": [
+            {
+              "value": "De groene reisgids weekend Berlijn"
+            },
+            {
+              "value": "Weekend Berlijn"
+            }
+          ],
+          "label": "t1_midden"
+        },
+        "typering": {
+          "content": [
+            {
+              "value": "2"
+            }
+          ],
+          "label": "typering"
+        },
+        "origin_id": {
+          "content": [
+            {
+              "value": "992393"
+            }
+          ],
+          "label": "origin_id"
+        },
+        "vestcatgrp": {
+          "content": [
+            {
+              "value": 0
+            }
+          ],
+          "label": "vestcatgrp"
+        },
+        "tt_info": {
+          "content": {
+            "value": "De reisgidsen uit de reeks 'Groene Reisgids weekend' sluiten qua opzet en vormgeving aan bij de klassieke 'Groene Gidsen' van Michelin, maar focussen op ..."
+          },
+          "label": "beschrijving"
+        },
+        "siso": {
+          "content": [
+            {
+              "value": "996.3   Duitsland",
+              "code": "1765847665"
+            }
+          ],
+          "label": "siso"
+        },
+        "origine": {
+          "content": {
+            "value": "wise"
+          },
+          "label": "origine"
+        },
+        "pubjaar": {
+          "content": {
+            "label": "2015"
+          },
+          "label": "pubjaar"
+        },
+        "onderwerp": {
+          "content": [
+            {
+              "value": "Berlijn",
+              "label": "Berlijn",
+              "code": "7798507"
+            },
+            {
+              "value": "Reisgidsen",
+              "label": "Reisgidsen",
+              "code": "7797390"
+            }
+          ],
+          "label": "onderwerp"
+        },
+        "detail_uri": {
+          "content": [
+            {
+              "value": "?sid=414baf2f-729b-4191-a8a7-9919af9b25ef;vestnr=9585;prt=INTERNET;fmt=json;var=portal;event=odetail;backend=wise;oid=992393"
+            }
+          ],
+          "label": "detail_uri"
+        }
+      },
+      "controls": [
+        {
+          "params": {
+            "titcode": "992393",
+            "event": "favadd"
+          },
+          "label": "WCP-BACKEND__TITLE-CONTROL-FAVLIST-ADD",
+          "type": "mark"
+        },
+        {
+          "params": {
+            "titcode": "992393",
+            "event": "rsrvrqn"
+          },
+          "label": "WCP-BACKEND__TITLE-CONTROL-RESERVE",
+          "type": "acquire"
+        }
+      ],
+      "editions": [],
+      "labels": []
+    },
+    {
+      "field_display_order": [
+        "auteur",
+        "onderwerp",
+        "cwisenr",
+        "tt_info",
+        "momkeys",
+        "titel",
+        "pubjaar",
+        "reeks_serie",
+        "typering",
+        "materiaal",
+        "pim",
+        "vestcatgrp",
+        "ovrg_aut",
+        "siso",
+        "icon_media",
+        "medium_srt",
+        "t1_hoog",
+        "bron_naam",
+        "origine",
+        "origin_id",
+        "detail_type",
+        "detail_uri",
+        "id"
+      ],
+      "version": "2.0",
+      "backend": "wise",
+      "availability": [],
+      "fields": {
+        "detail_type": {
+          "content": [
+            {
+              "value": "detail"
+            }
+          ],
+          "label": "detail_type"
+        },
+        "momkeys": {
+          "content": {
+            "value": "lid=2014461967;ppn=395479916;isbn=9789401423151;key=992394;"
+          },
+          "label": "momkeys"
+        },
+        "ovrg_aut": {
+          "content": [
+            {
+              "value": "Peeters, Mireille",
+              "code": "32052102"
+            },
+            {
+              "value": "Page, Olivier",
+              "code": "36437129"
+            }
+          ],
+          "label": "medewerker"
+        },
+        "medium_srt": {
+          "content": {
+            "value": "BOE",
+            "label": "Boek"
+          },
+          "label": "medium"
+        },
+        "auteur": {
+          "content": [
+            {
+              "value": "Gloaguen, Philippe",
+              "label": "Gloaguen, Philippe",
+              "code": "7183906"
+            }
+          ],
+          "label": "auteur"
+        },
+        "bron_naam": {
+          "content": [
+            {
+              "value": "wise"
+            }
+          ],
+          "label": "bron_naam"
+        },
+        "reeks_serie": {
+          "content": [
+            {
+              "value": "Trotter",
+              "label": "Trotter",
+              "code": "33980042"
+            }
+          ],
+          "label": "reeks/serie"
+        },
+        "cwisenr": {
+          "content": [
+            {
+              "value": "8948866"
+            }
+          ],
+          "label": "cwisenr"
+        },
+        "t1_hoog": {
+          "content": [
+            {
+              "value": "Berlijn"
+            }
+          ],
+          "label": "t1_hoog"
+        },
+        "materiaal": {
+          "content": [
+            {
+              "value": "IV"
+            }
+          ],
+          "label": "materiaal"
+        },
+        "titel": {
+          "content": {
+            "value": "Berlijn"
+          },
+          "label": "titel"
+        },
+        "id": {
+          "content": {
+            "value": "992394"
+          },
+          "label": "id"
+        },
+        "pim": {
+          "content": [
+            {
+              "value": "18"
+            }
+          ],
+          "label": "pim"
+        },
+        "icon_media": {
+          "content": {
+            "value": "book",
+            "label": "Boek"
+          },
+          "label": "icon_media"
+        },
+        "typering": {
+          "content": [
+            {
+              "value": "2"
+            }
+          ],
+          "label": "typering"
+        },
+        "origin_id": {
+          "content": [
+            {
+              "value": "992394"
+            }
+          ],
+          "label": "origin_id"
+        },
+        "vestcatgrp": {
+          "content": [
+            {
+              "value": 0
+            }
+          ],
+          "label": "vestcatgrp"
+        },
+        "tt_info": {
+          "content": {
+            "value": "Deze 'Trotter'-reisgids over Berlijn wil vooral basisinformatie bieden en is dan ook sober uitgevoerd in tweekleurendruk zonder foto's. Na beknopte ..."
+          },
+          "label": "beschrijving"
+        },
+        "siso": {
+          "content": [
+            {
+              "value": "996.3   Duitsland",
+              "code": "1765847665"
+            }
+          ],
+          "label": "siso"
+        },
+        "origine": {
+          "content": {
+            "value": "wise"
+          },
+          "label": "origine"
+        },
+        "pubjaar": {
+          "content": {
+            "label": "2015"
+          },
+          "label": "pubjaar"
+        },
+        "onderwerp": {
+          "content": [
+            {
+              "value": "Berlijn",
+              "label": "Berlijn",
+              "code": "7798507"
+            },
+            {
+              "value": "Reisgidsen",
+              "label": "Reisgidsen",
+              "code": "7797390"
+            }
+          ],
+          "label": "onderwerp"
+        },
+        "detail_uri": {
+          "content": [
+            {
+              "value": "?sid=414baf2f-729b-4191-a8a7-9919af9b25ef;vestnr=9585;prt=INTERNET;fmt=json;var=portal;event=odetail;backend=wise;oid=992394"
+            }
+          ],
+          "label": "detail_uri"
+        }
+      },
+      "controls": [
+        {
+          "params": {
+            "titcode": "992394",
+            "event": "favadd"
+          },
+          "label": "WCP-BACKEND__TITLE-CONTROL-FAVLIST-ADD",
+          "type": "mark"
+        },
+        {
+          "params": {
+            "titcode": "992394",
+            "event": "rsrvrqn"
+          },
+          "label": "WCP-BACKEND__TITLE-CONTROL-RESERVE",
+          "type": "acquire"
+        }
+      ],
+      "editions": [],
+      "labels": []
+    },
+    {
+      "field_display_order": [
+        "auteur",
+        "onderwerp",
+        "cwisenr",
+        "tt_info",
+        "momkeys",
+        "titel",
+        "pubjaar",
+        "reeks_serie",
+        "typering",
+        "materiaal",
+        "pim",
+        "vestcatgrp",
+        "ovrg_aut",
+        "siso",
+        "icon_media",
+        "medium_srt",
+        "t1_hoog",
+        "bron_naam",
+        "origine",
+        "origin_id",
+        "detail_type",
+        "detail_uri",
+        "id"
+      ],
+      "version": "2.0",
+      "backend": "wise",
+      "availability": [],
+      "fields": {
+        "detail_type": {
+          "content": [
+            {
+              "value": "detail"
+            }
+          ],
+          "label": "detail_type"
+        },
+        "momkeys": {
+          "content": {
+            "value": "lid=2015121485;ppn=39159611X;isbn=9789021559544;key=995042;"
+          },
+          "label": "momkeys"
+        },
+        "ovrg_aut": {
+          "content": [
+            {
+              "value": "Adenis, Pierre",
+              "code": "33986427"
+            },
+            {
+              "value": "Reusink, Frans",
+              "code": "12130438"
+            }
+          ],
+          "label": "medewerker"
+        },
+        "medium_srt": {
+          "content": {
+            "value": "BOE",
+            "label": "Boek"
+          },
+          "label": "medium"
+        },
+        "auteur": {
+          "content": [
+            {
+              "value": "Simonis, Damien",
+              "label": "Simonis, Damien",
+              "code": "10786265"
+            }
+          ],
+          "label": "auteur"
+        },
+        "bron_naam": {
+          "content": [
+            {
+              "value": "wise"
+            }
+          ],
+          "label": "bron_naam"
+        },
+        "reeks_serie": {
+          "content": [
+            {
+              "value": "National Geographic reisgids",
+              "label": "National Geographic reisgids",
+              "code": "26199954"
+            }
+          ],
+          "label": "reeks/serie"
+        },
+        "cwisenr": {
+          "content": [
+            {
+              "value": "8960746"
+            }
+          ],
+          "label": "cwisenr"
+        },
+        "t1_hoog": {
+          "content": [
+            {
+              "value": "Berlijn"
+            }
+          ],
+          "label": "t1_hoog"
+        },
+        "materiaal": {
+          "content": [
+            {
+              "value": "IV"
+            }
+          ],
+          "label": "materiaal"
+        },
+        "titel": {
+          "content": {
+            "value": "Berlijn"
+          },
+          "label": "titel"
+        },
+        "id": {
+          "content": {
+            "value": "995042"
+          },
+          "label": "id"
+        },
+        "pim": {
+          "content": [
+            {
+              "value": "18"
+            }
+          ],
+          "label": "pim"
+        },
+        "icon_media": {
+          "content": {
+            "value": "book",
+            "label": "Boek"
+          },
+          "label": "icon_media"
+        },
+        "typering": {
+          "content": [
+            {
+              "value": "2"
+            }
+          ],
+          "label": "typering"
+        },
+        "origin_id": {
+          "content": [
+            {
+              "value": "995042"
+            }
+          ],
+          "label": "origin_id"
+        },
+        "vestcatgrp": {
+          "content": [
+            {
+              "value": 0
+            }
+          ],
+          "label": "vestcatgrp"
+        },
+        "tt_info": {
+          "content": {
+            "value": "Deze mooi uitgevoerde reisgids over Berlijn biedt vooral veel informatie over de cultuur en geschiedenis van deze stad. Na een algemene cultuurhistorische ..."
+          },
+          "label": "beschrijving"
+        },
+        "siso": {
+          "content": [
+            {
+              "value": "996.3   Duitsland",
+              "code": "1765847665"
+            }
+          ],
+          "label": "siso"
+        },
+        "origine": {
+          "content": {
+            "value": "wise"
+          },
+          "label": "origine"
+        },
+        "pubjaar": {
+          "content": {
+            "label": "2015"
+          },
+          "label": "pubjaar"
+        },
+        "onderwerp": {
+          "content": [
+            {
+              "value": "Berlijn",
+              "label": "Berlijn",
+              "code": "7798507"
+            },
+            {
+              "value": "Reisgidsen",
+              "label": "Reisgidsen",
+              "code": "7797390"
+            }
+          ],
+          "label": "onderwerp"
+        },
+        "detail_uri": {
+          "content": [
+            {
+              "value": "?sid=414baf2f-729b-4191-a8a7-9919af9b25ef;vestnr=9585;prt=INTERNET;fmt=json;var=portal;event=odetail;backend=wise;oid=995042"
+            }
+          ],
+          "label": "detail_uri"
+        }
+      },
+      "controls": [
+        {
+          "params": {
+            "titcode": "995042",
+            "event": "favadd"
+          },
+          "label": "WCP-BACKEND__TITLE-CONTROL-FAVLIST-ADD",
+          "type": "mark"
+        },
+        {
+          "params": {
+            "titcode": "995042",
+            "event": "rsrvrqn"
+          },
+          "label": "WCP-BACKEND__TITLE-CONTROL-RESERVE",
+          "type": "acquire"
+        }
+      ],
+      "editions": [],
+      "labels": []
+    },
+    {
+      "field_display_order": [
+        "auteur",
+        "onderwerp",
+        "cwisenr",
+        "tt_info",
+        "momkeys",
+        "titel",
+        "pubjaar",
+        "typering",
+        "materiaal",
+        "pim",
+        "vestcatgrp",
+        "ovrg_aut",
+        "siso",
+        "icon_media",
+        "medium_srt",
+        "t1_hoog",
+        "bron_naam",
+        "origine",
+        "origin_id",
+        "detail_type",
+        "detail_uri",
+        "id"
+      ],
+      "version": "2.0",
+      "backend": "wise",
+      "availability": [],
+      "fields": {
+        "detail_type": {
+          "content": [
+            {
+              "value": "detail"
+            }
+          ],
+          "label": "detail_type"
+        },
+        "momkeys": {
+          "content": {
+            "value": "lid=2014293578;ppn=377415014;isbn=9789023486183;key=927920;"
+          },
+          "label": "momkeys"
+        },
+        "ovrg_aut": {
+          "content": [
+            {
+              "value": "Sassen, Simone",
+              "code": "25227076"
+            }
+          ],
+          "label": "medewerker"
+        },
+        "medium_srt": {
+          "content": {
+            "value": "BOE",
+            "label": "Boek"
+          },
+          "label": "medium"
+        },
+        "auteur": {
+          "content": [
+            {
+              "value": "Nooteboom, Cees",
+              "label": "Nooteboom, Cees",
+              "code": "6874395"
+            }
+          ],
+          "label": "auteur"
+        },
+        "bron_naam": {
+          "content": [
+            {
+              "value": "wise"
+            }
+          ],
+          "label": "bron_naam"
+        },
+        "cwisenr": {
+          "content": [
+            {
+              "value": "8673785"
+            }
+          ],
+          "label": "cwisenr"
+        },
+        "t1_hoog": {
+          "content": [
+            {
+              "value": "Berlijn"
+            }
+          ],
+          "label": "t1_hoog"
+        },
+        "materiaal": {
+          "content": [
+            {
+              "value": "IV"
+            }
+          ],
+          "label": "materiaal"
+        },
+        "titel": {
+          "content": {
+            "value": "Berlijn"
+          },
+          "label": "titel"
+        },
+        "id": {
+          "content": {
+            "value": "927920"
+          },
+          "label": "id"
+        },
+        "pim": {
+          "content": [
+            {
+              "value": "18"
+            }
+          ],
+          "label": "pim"
+        },
+        "icon_media": {
+          "content": {
+            "value": "book",
+            "label": "Boek"
+          },
+          "label": "icon_media"
+        },
+        "typering": {
+          "content": [
+            {
+              "value": "2"
+            }
+          ],
+          "label": "typering"
+        },
+        "origin_id": {
+          "content": [
+            {
+              "value": "927920"
+            }
+          ],
+          "label": "origin_id"
+        },
+        "vestcatgrp": {
+          "content": [
+            {
+              "value": 0
+            }
+          ],
+          "label": "vestcatgrp"
+        },
+        "tt_info": {
+          "content": {
+            "value": "Impressies van Berlijn in 1989, 1999 en 2009."
+          },
+          "label": "beschrijving"
+        },
+        "siso": {
+          "content": [
+            {
+              "value": "996     Duitsland",
+              "code": "1765893516"
+            }
+          ],
+          "label": "siso"
+        },
+        "origine": {
+          "content": {
+            "value": "wise"
+          },
+          "label": "origine"
+        },
+        "pubjaar": {
+          "content": {
+            "label": "2014"
+          },
+          "label": "pubjaar"
+        },
+        "onderwerp": {
+          "content": [
+            {
+              "value": "Berlijn",
+              "label": "Berlijn",
+              "code": "7798507"
+            },
+            {
+              "value": "Verhalen",
+              "label": "Verhalen",
+              "code": "7797302"
+            }
+          ],
+          "label": "onderwerp"
+        },
+        "detail_uri": {
+          "content": [
+            {
+              "value": "?sid=414baf2f-729b-4191-a8a7-9919af9b25ef;vestnr=9585;prt=INTERNET;fmt=json;var=portal;event=odetail;backend=wise;oid=927920"
+            }
+          ],
+          "label": "detail_uri"
+        }
+      },
+      "controls": [
+        {
+          "params": {
+            "titcode": "927920",
+            "event": "favadd"
+          },
+          "label": "WCP-BACKEND__TITLE-CONTROL-FAVLIST-ADD",
+          "type": "mark"
+        },
+        {
+          "params": {
+            "titcode": "927920",
+            "event": "rsrvrqn"
+          },
+          "label": "WCP-BACKEND__TITLE-CONTROL-RESERVE",
+          "type": "acquire"
+        }
+      ],
+      "editions": [],
+      "labels": []
+    },
+    {
+      "field_display_order": [
+        "auteur",
+        "onderwerp",
+        "cwisenr",
+        "tt_info",
+        "momkeys",
+        "titel",
+        "pubjaar",
+        "reeks_serie",
+        "typering",
+        "materiaal",
+        "pim",
+        "vestcatgrp",
+        "ovrg_aut",
+        "siso",
+        "icon_media",
+        "medium_srt",
+        "t1_hoog",
+        "bron_naam",
+        "origine",
+        "origin_id",
+        "detail_type",
+        "detail_uri",
+        "id"
+      ],
+      "version": "2.0",
+      "backend": "wise",
+      "availability": [],
+      "fields": {
+        "detail_type": {
+          "content": [
+            {
+              "value": "detail"
+            }
+          ],
+          "label": "detail_type"
+        },
+        "momkeys": {
+          "content": {
+            "value": "lid=2002280325;ppn=197286577;isbn=9789054953272;key=166736;"
+          },
+          "label": "momkeys"
+        },
+        "ovrg_aut": {
+          "content": [
+            {
+              "value": "Bakker, Piet de",
+              "code": "12367811"
+            }
+          ],
+          "label": "medewerker"
+        },
+        "medium_srt": {
+          "content": {
+            "value": "BOE",
+            "label": "Boek"
+          },
+          "label": "medium"
+        },
+        "auteur": {
+          "content": [
+            {
+              "value": "Hatt, Christine",
+              "label": "Hatt, Christine",
+              "code": "16577748"
+            }
+          ],
+          "label": "auteur"
+        },
+        "bron_naam": {
+          "content": [
+            {
+              "value": "wise"
+            }
+          ],
+          "label": "bron_naam"
+        },
+        "reeks_serie": {
+          "content": [
+            {
+              "value": "Wereldsteden",
+              "label": "Wereldsteden",
+              "code": "1767616613"
+            }
+          ],
+          "label": "reeks/serie"
+        },
+        "cwisenr": {
+          "content": [
+            {
+              "value": "864680"
+            }
+          ],
+          "label": "cwisenr"
+        },
+        "t1_hoog": {
+          "content": [
+            {
+              "value": "Berlijn"
+            },
+            {
+              "value": "Berlin"
+            }
+          ],
+          "label": "t1_hoog"
+        },
+        "materiaal": {
+          "content": [
+            {
+              "value": "I"
+            },
+            {
+              "value": "I"
+            }
+          ],
+          "label": "materiaal"
+        },
+        "titel": {
+          "content": {
+            "value": "Berlijn"
+          },
+          "label": "titel"
+        },
+        "id": {
+          "content": {
+            "value": "166736"
+          },
+          "label": "id"
+        },
+        "pim": {
+          "content": [
+            {
+              "value": "18"
+            }
+          ],
+          "label": "pim"
+        },
+        "icon_media": {
+          "content": {
+            "value": "book",
+            "label": "Boek"
+          },
+          "label": "icon_media"
+        },
+        "typering": {
+          "content": [
+            {
+              "value": "5"
+            }
+          ],
+          "label": "typering"
+        },
+        "origin_id": {
+          "content": [
+            {
+              "value": "166736"
+            }
+          ],
+          "label": "origin_id"
+        },
+        "vestcatgrp": {
+          "content": [
+            {
+              "value": 0
+            }
+          ],
+          "label": "vestcatgrp"
+        },
+        "tt_info": {
+          "content": {
+            "value": "Naast de geschiedenis van Berlijn wordt ondermeer aandacht besteed aan architectuur, huisvesting, onderwijs, musea, misdaad, geloof en industrie. Met vele ..."
+          },
+          "label": "beschrijving"
+        },
+        "siso": {
+          "content": [
+            {
+              "value": "996.2   Duitsland",
+              "code": "1765847503"
+            }
+          ],
+          "label": "siso"
+        },
+        "origine": {
+          "content": {
+            "value": "wise"
+          },
+          "label": "origine"
+        },
+        "pubjaar": {
+          "content": {
+            "label": "2002"
+          },
+          "label": "pubjaar"
+        },
+        "onderwerp": {
+          "content": [
+            {
+              "value": "Duitsland",
+              "label": "Duitsland"
+            },
+            {
+              "value": "Steden",
+              "label": "Steden"
+            },
+            {
+              "value": "20e eeuw",
+              "label": "20e eeuw"
+            },
+            {
+              "value": "Bouwkunst",
+              "label": "Bouwkunst"
+            },
+            {
+              "value": "Parken en plantsoenen",
+              "label": "Parken en plantsoenen"
+            },
+            {
+              "value": "Woningbouw",
+              "label": "Woningbouw"
+            },
+            {
+              "value": "Onderwijs",
+              "label": "Onderwijs"
+            },
+            {
+              "value": "Geloof en filosofie",
+              "label": "Geloof en filosofie"
+            },
+            {
+              "value": "Handel",
+              "label": "Handel"
+            },
+            {
+              "value": "Industrieën",
+              "label": "Industrieën"
+            },
+            {
+              "value": "Misdaden",
+              "label": "Misdaden"
+            },
+            {
+              "value": "Verkeer en vervoer",
+              "label": "Verkeer en vervoer"
+            },
+            {
+              "value": "Winkels",
+              "label": "Winkels"
+            },
+            {
+              "value": "Voedsel",
+              "label": "Voedsel"
+            },
+            {
+              "value": "Hobby's en vrije tijd",
+              "label": "Hobby's en vrije tijd"
+            },
+            {
+              "value": "Museum",
+              "label": "Museum"
+            },
+            {
+              "value": "Feesten",
+              "label": "Feesten"
+            },
+            {
+              "value": "Beroemdheden",
+              "label": "Beroemdheden"
+            },
+            {
+              "value": "Vroeger",
+              "label": "Vroeger"
+            },
+            {
+              "value": "Berlijn",
+              "label": "Berlijn",
+              "code": "7798507"
+            }
+          ],
+          "label": "onderwerp"
+        },
+        "detail_uri": {
+          "content": [
+            {
+              "value": "?sid=414baf2f-729b-4191-a8a7-9919af9b25ef;vestnr=9585;prt=INTERNET;fmt=json;var=portal;event=odetail;backend=wise;oid=166736"
+            }
+          ],
+          "label": "detail_uri"
+        }
+      },
+      "controls": [
+        {
+          "params": {
+            "titcode": "166736",
+            "event": "favadd"
+          },
+          "label": "WCP-BACKEND__TITLE-CONTROL-FAVLIST-ADD",
+          "type": "mark"
+        },
+        {
+          "params": {
+            "titcode": "166736",
+            "event": "rsrvrqn"
+          },
+          "label": "WCP-BACKEND__TITLE-CONTROL-RESERVE",
+          "type": "acquire"
+        }
+      ],
+      "editions": [],
+      "labels": []
+    }
+  ],
+  "error": "",
+  "uris": {
+    "base": "?sid=414baf2f-729b-4191-a8a7-9919af9b25ef;catalog=default;backend=wise;var=portal;vcgrpt=0\r\n    ;offset=0;fmt=json;preset=all;sortkey=relevantie;sortorder=desc;event=osearch;vcgrpf=0;search_in=iets;qs=berlijn;amount=10;prt=INTERNET;vestnr=9585;"
+  },
+  "id": ""
+}

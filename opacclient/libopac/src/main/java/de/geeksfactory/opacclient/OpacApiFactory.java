@@ -43,6 +43,7 @@ import de.geeksfactory.opacclient.apis.TouchPoint;
 import de.geeksfactory.opacclient.apis.VuFind;
 import de.geeksfactory.opacclient.apis.WebOpacNet;
 import de.geeksfactory.opacclient.apis.WinBiap;
+import de.geeksfactory.opacclient.apis.Wise;
 import de.geeksfactory.opacclient.apis.Zones;
 import de.geeksfactory.opacclient.i18n.DummyStringProvider;
 import de.geeksfactory.opacclient.i18n.StringProvider;
@@ -166,6 +167,8 @@ public class OpacApiFactory {
             newApiInstance = new BIB2();
         } else if (lib.getApi().equals("test")) {
             newApiInstance = new TestApi();
+        } else if (lib.getApi().equals("wise")) {
+            newApiInstance = new Wise();
         } else {
             return null;
         }
