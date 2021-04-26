@@ -26,8 +26,6 @@ import de.geeksfactory.opacclient.objects.SearchResult;
 import de.geeksfactory.opacclient.utils.BitmapUtils;
 import de.geeksfactory.opacclient.utils.ErrorReporter;
 
-import static de.geeksfactory.opacclient.frontend.SearchResultDetailFragment.ARG_IS_META_SEARCH;
-
 /**
  * An activity representing a list of SearchResults. This activity has different presentations for
  * handset and tablet-size devices. On handsets, the activity presents a list of items, which when
@@ -190,6 +188,7 @@ public class SearchResultListActivity extends OpacActivity implements
             Intent detailIntent = new Intent(this,
                     SearchResultDetailActivity.class);
             detailIntent.putExtra(SearchResultDetailFragment.ARG_ITEM_NR, res.getNr());
+            detailIntent.putExtra(SearchResultDetailFragment.ARG_IS_META_SEARCH, isMetaSearch());
             if (res.getId() != null) {
                 detailIntent.putExtra(SearchResultDetailFragment.ARG_ITEM_ID,
                         res.getId());
@@ -207,7 +206,6 @@ public class SearchResultListActivity extends OpacActivity implements
                         smallCover);
                 detailIntent.putExtra(SearchResultDetailActivity.ARG_TOUCH_POSITION_X, touchX);
                 detailIntent.putExtra(SearchResultDetailActivity.ARG_TOUCH_POSITION_Y, touchY);
-                detailIntent.putExtra(ARG_IS_META_SEARCH, isMetaSearch());
                 @SuppressWarnings("unchecked")
                 ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(
                         this,
@@ -237,7 +235,7 @@ public class SearchResultListActivity extends OpacActivity implements
     }
 
     protected boolean isMetaSearch() {
-        return getIntent().getBooleanExtra(ARG_IS_META_SEARCH, false);
+        return getIntent().getBooleanExtra(SearchResultDetailFragment.ARG_IS_META_SEARCH, false);
     }
 
     public class ReloadOldPageTask extends AsyncTask<Void, Void, SearchRequestResult> {
