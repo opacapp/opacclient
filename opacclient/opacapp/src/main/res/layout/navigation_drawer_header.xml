@@ -115,7 +115,7 @@
                 android:layout_gravity="center_vertical"
                 android:contentDescription="@string/account_select"
                 android:src="@drawable/ic_arrow_drop_selector"
-                android:tint="#FFF"/>
+                app:tint="#FFF"/>
         </LinearLayout>
 
         </LinearLayout>
