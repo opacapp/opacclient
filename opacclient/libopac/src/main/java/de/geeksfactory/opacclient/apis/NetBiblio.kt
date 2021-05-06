@@ -13,6 +13,8 @@ import de.geeksfactory.opacclient.utils.jsonObject
 import de.geeksfactory.opacclient.utils.text
 import okhttp3.FormBody
 import okhttp3.HttpUrl
+import okhttp3.HttpUrl.Companion.toHttpUrl
+import okhttp3.HttpUrl.Companion.toHttpUrlOrNull
 import org.joda.time.format.DateTimeFormat
 import org.json.JSONException
 import org.json.JSONObject
@@ -479,7 +481,7 @@ open class NetBiblio : OkHttpBaseApi() {
         val lentDoc = paginatedGet("$opacUrl/account/circulations")
         val lent = lentDoc.map { parseItems(it, ::LentItem) }.flatten()
 
-        val builder = HttpUrl.parse("$opacUrl/account/renew")!!.newBuilder()
+        val builder = "$opacUrl/account/renew".toHttpUrl().newBuilder()
         lent.forEachIndexed { index, item ->
             if (item.prolongData != null) {
                 builder.addQueryParameter("selectedItems[$index]", item.prolongData)

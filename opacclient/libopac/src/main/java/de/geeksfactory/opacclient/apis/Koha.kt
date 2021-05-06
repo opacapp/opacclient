@@ -9,6 +9,8 @@ import de.geeksfactory.opacclient.utils.html
 import de.geeksfactory.opacclient.utils.text
 import okhttp3.FormBody
 import okhttp3.HttpUrl
+import okhttp3.HttpUrl.Companion.toHttpUrl
+import okhttp3.HttpUrl.Companion.toHttpUrlOrNull
 import org.joda.time.LocalDate
 import org.joda.time.LocalDateTime
 import org.joda.time.format.DateTimeFormat
@@ -121,7 +123,7 @@ open class Koha : OkHttpBaseApi() {
     }
 
     private fun searchUrl(query: List<SearchQuery>): HttpUrl.Builder {
-        val builder = HttpUrl.parse("$baseurl/cgi-bin/koha/opac-search.pl")!!.newBuilder()
+        val builder = "$baseurl/cgi-bin/koha/opac-search.pl".toHttpUrl().newBuilder()
         for (q in query) {
             if (q.value.isBlank()) continue
 
@@ -378,7 +380,7 @@ open class Koha : OkHttpBaseApi() {
             } else {
                 if (selectedCopy != null) {
                     body.add("reqtype_${item.id}", "Specific")
-                    body.add("checkitem_${item.id}", selectedCopy)
+                    body.add("checkitem_${item.id}", selectedCopy!!)
                     body.add("selecteditems", "${item.id}/$selectedCopy//")
                 } else {
                     val copies = doc.select(".copiesrow tr:has(td)")

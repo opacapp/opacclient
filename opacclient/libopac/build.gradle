@@ -12,23 +12,23 @@ targetCompatibility = JavaVersion.VERSION_1_8
 
 dependencies {
 // Kotlin
-    implementation 'org.jetbrains.kotlin:kotlin-stdlib:1.3.72'
+    implementation 'org.jetbrains.kotlin:kotlin-stdlib:1.4.10'
 
 // Other
     // Use older org.json version to have an environment equivalent to the android platform
     api 'org.json:json:20090211'
-    implementation 'org.jsoup:jsoup:1.8.3'
+    implementation 'org.jsoup:jsoup:1.13.1'
     implementation 'org.apache.httpcomponents:httpmime:4.5.12'
     api 'joda-time:joda-time:2.10.6'
-    api 'com.squareup.okhttp3:okhttp:3.12.12'
-    api 'com.squareup.okhttp3:okhttp-urlconnection:3.12.12'
+    api 'com.squareup.okhttp3:okhttp:4.9.1'
+    api 'com.squareup.okhttp3:okhttp-urlconnection:4.9.1'
     implementation 'net.sourceforge.streamsupport:streamsupport-cfuture:1.7.2'
 
 // Testing
     testImplementation 'junit:junit:4.13'
     testImplementation 'org.hamcrest:hamcrest:2.2'
     testImplementation 'org.hamcrest:hamcrest-library:2.2'
-    testImplementation 'org.mockito:mockito-core:1.10.19'
+    testImplementation 'org.mockito:mockito-core:3.8.0'
     testImplementation 'com.shazam:shazamcrest:0.11'
 }
 

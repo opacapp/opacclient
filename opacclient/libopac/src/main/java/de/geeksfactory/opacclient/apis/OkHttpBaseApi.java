@@ -54,9 +54,7 @@ public abstract class OkHttpBaseApi extends BaseApi {
         MediaType contentType = body.contentType();
 
         try {
-            Charset charset = Util.bomAwareCharset(source,
-                    contentType != null ? contentType.charset(Charset.forName(encoding)) :
-                            Charset.forName(encoding));
+            Charset charset = contentType != null ? contentType.charset(Charset.forName(encoding)) : Charset.forName(encoding);
             return source.readString(charset);
         } finally {
             Util.closeQuietly(source);
