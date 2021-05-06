@@ -41,6 +41,9 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ThreadPoolExecutor;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -86,6 +89,7 @@ public class OpenSearch extends OkHttpBaseApi implements OpacApi {
     protected Document searchResultDoc;
 
     protected static HashMap<String, SearchResult.MediaType> defaulttypes = new HashMap<>();
+    protected static ExecutorService threadPool = Executors.newFixedThreadPool(10);
 
     static {
         // icons
@@ -305,67 +309,53 @@ public class OpenSearch extends OkHttpBaseApi implements OpacApi {
     }
 
     protected CompletableFuture<Void> assignBestCover(final CoverHolder result,
-            final List<String> queue) {
-        if (queue.size() > 0) {
-            final String url = queue.get(0);
-            queue.remove(0);
-            if (url.startsWith("ajax|")) {
-                return assignAjaxCover(result, queue, url);
-            } else {
-                return asyncGet(url, false)
-                        .handle((response, throwable) -> {
-                            if (response != null) response.close();
-                            if (throwable == null && response != null) {
-                                result.setCover(url);
-                            } else {
-                                assignBestCover(result, queue).join();
-                            }
-                            return null;
-                        });
+                                                      final List<String> queue) {
+        CompletableFuture<Void> future = new CompletableFuture<>();
+        threadPool.submit(() -> {
+            for (String url : queue) {
+                if (url.startsWith("ajax|")) {
+                    if (assignAjaxCover(result, url)) {
+                        break;
+                    }
+                } else {
+                    try {
+                        if (httpHead(url, false).isSuccessful()) {
+                            result.setCover(url);
+                        }
+                        break;
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
             }
-        } else {
-            // we don't have any more URLs in the queue
-            CompletableFuture<Void> future = new CompletableFuture<>();
             future.complete(null);
-            return future;
-        }
+        });
+        return future;
     }
 
-    private CompletableFuture<Void> assignAjaxCover(CoverHolder result, List<String> queue,
-            String url) {
+    private boolean assignAjaxCover(CoverHolder result, String url) {
         String[] data = url.split("\\|");
         String ajaxUrl = data[1];
         String payload = data[2];
         try {
             JSONObject json = new JSONObject();
             json.put("data", payload);
-            return asyncPost(ajaxUrl, RequestBody.create(MEDIA_TYPE_JSON, json.toString()),
-                    false)
-                    .handle((response, throwable) -> {
-                        try {
-                            if (throwable == null) {
-                                JSONObject coverData = new JSONObject(response.body().string());
-                                String coverUrl =
-                                        coverData.getJSONObject("d").getString("CoverUrl");
-                                if (coverUrl.startsWith("data")) {
-                                    byte[] bytes = Base64.decode(
-                                            coverUrl.substring(coverUrl.indexOf(",") + 1));
-                                    result.setCoverBitmap(bytes);
-                                } else if (!coverData.getJSONObject("d").isNull("CoverUrl")) {
-                                    result.setCover(coverUrl);
-                                } else {
-                                    assignBestCover(result, queue).join();
-                                }
-                            } else {
-                                assignBestCover(result, queue).join();
-                            }
-                        } catch (JSONException | IOException e) {
-                            assignBestCover(result, queue).join();
-                        }
-                        return null;
-                    });
-        } catch (JSONException e) {
-            return assignBestCover(result, queue);
+            String body = httpPost(ajaxUrl, RequestBody.create(MEDIA_TYPE_JSON, json.toString()), getDefaultEncoding());
+            JSONObject coverData = new JSONObject(body);
+            String coverUrl =
+                    coverData.getJSONObject("d").getString("CoverUrl");
+            if (coverUrl.startsWith("data")) {
+                byte[] bytes = Base64.decode(
+                        coverUrl.substring(coverUrl.indexOf(",") + 1));
+                result.setCoverBitmap(bytes);
+                return true;
+            } else if (!coverData.getJSONObject("d").isNull("CoverUrl")) {
+                result.setCover(coverUrl);
+                return true;
+            }
+            return false;
+        } catch (JSONException | IOException e) {
+            return false;
         }
     }
 
@@ -413,7 +403,7 @@ public class OpenSearch extends OkHttpBaseApi implements OpacApi {
 
             Element catalogueContent =
                     element.select(".catalogueContent, .oclc-searchmodule-mediumview-content, .oclc-searchmodule-comprehensiveitemview-content, .oclc-searchmodule-dependentitemview-content")
-                           .first();
+                            .first();
             // Media Type
             if (catalogueContent.select("#spanMediaGrpIcon, .spanMediaGrpIcon").size() > 0) {
                 String mediatype = catalogueContent.select("#spanMediaGrpIcon, .spanMediaGrpIcon").attr("class");
@@ -523,11 +513,11 @@ public class OpenSearch extends OkHttpBaseApi implements OpacApi {
                 try {
                     if (ebook) {
                         data.put("portalId", restInfo.portalId).put("itemid", ekzid)
-                            .put("language", culture);
+                                .put("language", culture);
                     } else {
                         data.put("portalId", restInfo.portalId).put("mednr", result.getId())
-                            .put("culture", culture).put("requestCopyData", false)
-                            .put("branchFilter", "");
+                                .put("culture", culture).put("requestCopyData", false)
+                                .put("branchFilter", "");
                     }
                     RequestBody entity = RequestBody.create(MEDIA_TYPE_JSON, data.toString());
 
@@ -602,8 +592,8 @@ public class OpenSearch extends OkHttpBaseApi implements OpacApi {
             try {
                 URIBuilder uriBuilder = new URIBuilder(baseUrl);
                 url = uriBuilder.setPath(url)
-                                .build()
-                                .normalize().toString();
+                        .build()
+                        .normalize().toString();
             } catch (URISyntaxException e) {
                 e.printStackTrace();
             }
@@ -715,7 +705,7 @@ public class OpenSearch extends OkHttpBaseApi implements OpacApi {
                 previous 4 pages, so we will click links until it gets to the correct page.
             */
             Elements pageLinks = doc.select("span[id$=DataPager1]").first()
-                                    .select("a[id*=LinkButtonPageN], span[id*=LabelPageN]");
+                    .select("a[id*=LinkButtonPageN], span[id*=LabelPageN]");
             int from = Integer.valueOf(pageLinks.first().text());
             int to = Integer.valueOf(pageLinks.last().text());
             Element linkToClick;
@@ -743,8 +733,8 @@ public class OpenSearch extends OkHttpBaseApi implements OpacApi {
 
             FormElement form = (FormElement) doc.select("form").first();
             MultipartBody data = formData(form, null).addFormDataPart("__EVENTTARGET", matcher.group(1))
-                                                     .addFormDataPart("__EVENTARGUMENT", matcher.group(2))
-                                                     .build();
+                    .addFormDataPart("__EVENTARGUMENT", matcher.group(2))
+                    .build();
 
             String postUrl = form.attr("abs:action");
 
@@ -788,12 +778,12 @@ public class OpenSearch extends OkHttpBaseApi implements OpacApi {
         // Title and Subtitle
         item.setTitle(doc.select(
                 "span[id$=LblShortDescriptionValue], span[id$=LblTitleValue], .oclc-override-heading")
-                         .text());
+                .text());
         String subtitle = doc.select("span[id$=LblSubTitleValue]").text();
         if (subtitle.equals("") && doc.select("span[id$=LblShortDescriptionValue]").size() > 0) {
             // Subtitle detection for Bern
             Element next = doc.select("span[id$=LblShortDescriptionValue]").first().parent()
-                              .nextElementSibling();
+                    .nextElementSibling();
             if (next.select("span").size() == 0) {
                 subtitle = next.text().trim();
             }
@@ -870,7 +860,7 @@ public class OpenSearch extends OkHttpBaseApi implements OpacApi {
             String value =
                     doc.select("div[id$=CatalogueContent] .oclc-searchmodule-detail-annotation, " +
                             "div[id$=CatalogueContent] .oclc-module-header ~ div")
-                       .text();
+                            .text();
             item.addDetail(new Detail(name, value));
         }
 
@@ -998,13 +988,13 @@ public class OpenSearch extends OkHttpBaseApi implements OpacApi {
 
     @Override
     public ReservationResult reservation(DetailedItem item, Account account,
-            int useraction, String selection) throws IOException {
+                                         int useraction, String selection) throws IOException {
         return null;
     }
 
     @Override
     public ProlongResult prolong(String media, Account account, int useraction,
-            String selection) throws IOException {
+                                 String selection) throws IOException {
         return null;
     }
 
@@ -1016,13 +1006,13 @@ public class OpenSearch extends OkHttpBaseApi implements OpacApi {
 
     @Override
     public ProlongAllResult prolongMultiple(List<String> media,
-            Account account, int useraction, String selection) throws IOException {
+                                            Account account, int useraction, String selection) throws IOException {
         return null;
     }
 
     @Override
     public CancelResult cancel(String media, Account account, int useraction,
-            String selection) throws IOException, OpacErrorException {
+                               String selection) throws IOException, OpacErrorException {
         return null;
     }
 
