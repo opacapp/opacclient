@@ -814,6 +814,16 @@ public class OpenSearch extends OkHttpBaseApi implements OpacApi {
             item.setCollectionId(doc.select("a[id$=HyperLinkParent]").first().attr("href"));
         }
 
+        // Description
+        if (doc.select("div[id$=CatalogueContent]").size() > 0) {
+            String name = doc.select("div[id$=CatalogueContent] .oclc-module-header").text();
+            String value =
+                    doc.select("div[id$=CatalogueContent] .oclc-searchmodule-detail-annotation, " +
+                            "div[id$=CatalogueContent] .oclc-module-header ~ div")
+                            .text();
+            item.addDetail(new Detail(name, value));
+        }
+
         // Details
         String DETAIL_SELECTOR =
                 "div[id$=CatalogueDetailView] .spacingBottomSmall:has(span+span)," +
@@ -826,7 +836,7 @@ public class OpenSearch extends OkHttpBaseApi implements OpacApi {
                         "div[id$=divLinks]:has(span)";
         for (Element detail : doc.select(DETAIL_SELECTOR)) {
             // skip screen reader only-tags
-            if (detail.attr("style").contains("display:none")) continue;
+            if (detail.attr("style").contains("display:none") || detail.hasClass("oclc-screen-reader-only")) continue;
 
             String name = detail.select("span").get(0).text().replace(": ", "");
             String value = "";
@@ -848,19 +858,12 @@ public class OpenSearch extends OkHttpBaseApi implements OpacApi {
                     }
                     i++;
                 }
+                if (value.trim().equals("")) {
+                    continue;
+                }
             } else {
                 value = detail.select("span, a").get(1).text();
             }
-            item.addDetail(new Detail(name, value));
-        }
-
-        // Description
-        if (doc.select("div[id$=CatalogueContent]").size() > 0) {
-            String name = doc.select("div[id$=CatalogueContent] .oclc-module-header").text();
-            String value =
-                    doc.select("div[id$=CatalogueContent] .oclc-searchmodule-detail-annotation, " +
-                            "div[id$=CatalogueContent] .oclc-module-header ~ div")
-                            .text();
             item.addDetail(new Detail(name, value));
         }
 
@@ -976,6 +979,8 @@ public class OpenSearch extends OkHttpBaseApi implements OpacApi {
                 return "signature";
             case "Barcode":
                 return "barcode";
+            case "Bereich":
+                return "department";
             default:
                 return null;
         }
