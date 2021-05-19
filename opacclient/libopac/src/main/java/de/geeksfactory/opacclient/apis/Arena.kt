@@ -327,11 +327,15 @@ open class Arena : OkHttpBaseApi() {
         val loansDoc = httpGet("$opacUrl/protected/loans", ENCODING).html
         val internalError = OpacApi.ProlongResult(OpacApi.MultiStepResult.Status.ERROR, stringProvider.getString(StringProvider.INTERNAL_ERROR))
 
-        val row = loansDoc.select("tr:has(.arena-record-id:contains($media)").first()
+        val row = loansDoc.select("tr:has(.arena-record-id:contains($media))").first()
                 ?: return internalError
 
-        val js = row.select(".arena-renewal-status input[type=submit]").first()["onclick"]
-        val url = Regex("window\\.location\\.href='([^']+)'").find(js)?.groups?.get(1)?.value
+        val btn = row.select(".arena-renewal-status input[type=submit]").first()
+        if (btn == null) {
+            val error = row.select(".arena-renewal-status")
+            return OpacApi.ProlongResult(OpacApi.MultiStepResult.Status.ERROR, error.text)
+        }
+        val url = Regex("window\\.location\\.href='([^']+)'").find(btn["onclick"])?.groups?.get(1)?.value
                 ?: return internalError
 
         val doc = httpGet(url, ENCODING).html
