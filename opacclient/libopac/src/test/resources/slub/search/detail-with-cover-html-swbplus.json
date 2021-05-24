@@ -1,0 +1,68 @@
+{
+  "record": {
+    "format": "Buch",
+    "title": "Ivor Horton's beginning Java",
+    "contributor": [
+      "Horton, Ivor [Autor/In]"
+    ],
+    "publisher": [
+      "Indianapolis, Ind. Wiley 2011 "
+    ],
+    "ispartof": [],
+    "identifier": [
+      "9780470404140",
+      "0470404140"
+    ],
+    "language": [
+      "Englisch"
+    ],
+    "subject": [
+      "Java (Computer program language)"
+    ],
+    "description": "",
+    "status": "",
+    "rvk": ""
+  },
+  "id": "0-1613557620",
+  "oa": 0,
+  "thumbnail": "",
+  "links": [
+    {
+      "uri": "http://swbplus.bsz-bw.de/bsz352428775cov.htm",
+      "note": "",
+      "material": "Cover"
+    }
+  ],
+  "linksRelated": [
+    {
+      "uri": "http://swbplus.bsz-bw.de/bsz352428775cov.htm",
+      "hostLabel": "",
+      "note": "",
+      "material": "Cover"
+    }
+  ],
+  "linksAccess": [],
+  "linksGeneral": [],
+  "references": [],
+  "copies": [
+    {
+      "barcode": "32942813",
+      "location": "Bereichsbibliothek DrePunct",
+      "location_code": "zell9",
+      "sublocation": "Freihand",
+      "shelfmark": "ST 250 J35 H823(7)",
+      "mediatype": "B",
+      "3d": "ST 250 J35 H823(7)",
+      "3d_link": "https://3d.slub-dresden.de/viewer?project_id=3&search_key=ST%20250%20J35%20H823(7)&language=de&search_context1=zell9&search_context2=FH1&exemplar_id=32942813",
+      "issue": "",
+      "colorcode": "1",
+      "statusphrase": "Ausleihbar",
+      "link": "",
+      "status": "N",
+      "duedate": "",
+      "vormerken": "0",
+      "bestellen": "0"
+    }
+  ],
+  "parts": {}
+}
