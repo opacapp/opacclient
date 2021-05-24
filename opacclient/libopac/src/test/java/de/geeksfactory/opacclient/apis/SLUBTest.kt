@@ -64,6 +64,7 @@ import org.mockito.Mockito.*
         SLUBSearchFieldsMockTest::class,
         SLUBGetResultByIdMockTest::class,
         SLUBProlongMockTest::class,
+        SLUBProlongMultipleMockTest::class,
         SLUBCancelMockTest::class
 )
 class SLUBAllTests
@@ -978,6 +979,86 @@ class SLUBProlongMockTest(@Suppress("unused") private val name: String,
                         OpacApi.ProlongResult(OpacApi.MultiStepResult.Status.OK, "Ihr Verlängerungswunsch wurde gesendet."),
                         null,
                         null
+                )
+        )
+    }
+}
+
+@RunWith(Parameterized::class)
+class SLUBProlongMultipleMockTest(@Suppress("unused") private val name: String,
+                                  private val media: List<String>,
+                                  private val expectedRequestBody: RequestBody,
+                                  private val response: String?,
+                                  private val expectedResult: OpacApi.ProlongAllResult) : BaseHtmlTest() {
+    private val slub = spy(SLUB::class.java)
+
+    init {
+        slub.init(Library().apply {
+            data = JSONObject().apply {
+                put("baseurl", "https://test.de")
+                put("illrenewurl", "https://test-renew.de")
+            }
+        }, HttpClientFactory("test"))
+    }
+
+    private val account = Account().apply {
+        name = "123456"
+        password = "x"
+    }
+
+    @Test
+    fun testProlong() {
+        doReturn(response).`when`(slub).httpPost(Matchers.any(), Matchers.any(), Matchers.any())
+        val actualResult = slub.prolongMultiple(media, account, 0, null)
+        assertThat(actualResult, sameBeanAs(expectedResult))
+        verify(slub).httpPost(eq("https://test.de/mein-konto/"), argThat(sameBeanAs(expectedRequestBody)), eq("UTF-8"))
+    }
+
+    companion object {
+        @JvmStatic
+        @Parameterized.Parameters(name = "{0}")
+        fun data() = listOf(
+                arrayOf("Local items",
+                        listOf("B\t20148242", "B\t12345678"),
+                        FormBody.Builder()
+                                .add("type", "1")
+                                .add("tx_slubaccount_account[controller]", "API")
+                                .add("tx_slubaccount_account[action]", "renew")
+                                .add("tx_slubaccount_account[username]", "123456")
+                                .add("tx_slubaccount_account[password]", "x")
+                                .add("tx_slubaccount_account[renewals][0]", "20148242")
+                                .add("tx_slubaccount_account[renewals][1]", "12345678")
+                                .build(),
+                        """{"status":"1","arguments":{"controller":"API","action":"renew","username":"123456","renewals":["20148242","12345678"]}}""",
+                        OpacApi.ProlongAllResult(OpacApi.MultiStepResult.Status.OK)
+                ),
+                arrayOf("Interlibrary loan and local items",
+                        listOf("B\t20148242", "FL\t12022302N", "B\t12345678"),
+                        FormBody.Builder()
+                                .add("type", "1")
+                                .add("tx_slubaccount_account[controller]", "API")
+                                .add("tx_slubaccount_account[action]", "renew")
+                                .add("tx_slubaccount_account[username]", "123456")
+                                .add("tx_slubaccount_account[password]", "x")
+                                .add("tx_slubaccount_account[renewals][0]", "20148242")
+                                .add("tx_slubaccount_account[renewals][1]", "12345678")
+                                .build(),
+                        """{"status":"1","arguments":{"controller":"API","action":"renew","username":"123456","renewals":["20148242","12345678"]}}""",
+                        OpacApi.ProlongAllResult(OpacApi.MultiStepResult.Status.OK, "renew_ill_separately")
+                ),
+                arrayOf("API renew error",
+                        listOf("B\t20148242"),
+                        FormBody.Builder()
+                                .add("type", "1")
+                                .add("tx_slubaccount_account[controller]", "API")
+                                .add("tx_slubaccount_account[action]", "renew")
+                                .add("tx_slubaccount_account[username]", "123456")
+                                .add("tx_slubaccount_account[password]", "x")
+                                .add("tx_slubaccount_account[renewals][0]", "20148242")
+                                .build(),
+                        """{"status":"1","arguments":{"controller":"API","action":"renew","username":"123456","renewals":["20148242","12345678"]},
+                           "APIError":{"status":0,"message":"20148242: Verlängerung nicht möglich"}}""",
+                        OpacApi.ProlongAllResult(OpacApi.MultiStepResult.Status.OK, "20148242: Verlängerung nicht möglich")
                 )
         )
     }
