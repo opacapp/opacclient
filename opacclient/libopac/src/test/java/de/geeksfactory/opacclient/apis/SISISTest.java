@@ -48,7 +48,7 @@ public class SISISTest extends BaseHtmlTest {
 
         doAnswer(invocation -> {
             String accountBase = "https://opac.erfurt.de/webOPACClient/userAccount.do?";
-            String url = invocation.getArgumentAt(0, String.class);
+            String url = invocation.getArgument(0);
             if (url.equals(accountBase + "methodToCall=showAccount&typ=1")) {
                 return html;
             } else if (url
