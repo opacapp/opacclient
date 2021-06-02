@@ -511,6 +511,7 @@ public class MainActivity extends OpacActivity
             rightFragment = new SearchResultDetailFragment();
             Bundle args = new Bundle();
             args.putString(SearchResultDetailFragment.ARG_ITEM_ID, mNr);
+            args.putString(SearchResultDetailFragment.ARG_ITEM_LIBRARY_IDENT, app.getLibrary().getIdent());
             rightFragment.setArguments(args);
 
             // Insert the fragment
@@ -520,6 +521,7 @@ public class MainActivity extends OpacActivity
         } else {
             Intent intent = new Intent(this, SearchResultDetailActivity.class);
             intent.putExtra(SearchResultDetailFragment.ARG_ITEM_ID, mNr);
+            intent.putExtra(SearchResultDetailFragment.ARG_ITEM_LIBRARY_IDENT, app.getLibrary().getIdent());
             startActivity(intent);
         }
     }
