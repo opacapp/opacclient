@@ -1360,7 +1360,7 @@ public class Adis extends OkHttpBaseApi implements OpacApi {
             if (tr.select("a").size() == 1) {
                 if (tr.select("a").first().absUrl("href").contains("sp=SZA")) {
                     alink = tr.select("a").first().absUrl("href");
-                    anum = Integer.parseInt(tr.child(0).text().trim());
+                    anum = Integer.parseInt(tr.child(0).text().replaceAll("[^\\d]", "").trim());
                 }
             }
         }
@@ -1437,7 +1437,7 @@ public class Adis extends OkHttpBaseApi implements OpacApi {
                             tr.select("a").text(),
                             tr.select("a").first().absUrl("href"),
                     });
-                    rnum += Integer.parseInt(tr.child(0).text().trim());
+                    rnum += Integer.parseInt(tr.child(0).text().replaceAll("[^\\d]", "").trim());
                 }
             }
         }
