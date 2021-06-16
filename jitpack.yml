@@ -1,0 +1,2 @@
+install:
+  - ./gradlew clean -Pgroup=$GROUP -Pversion=$VERSION -xtest -xlint :libopac:build publishToMavenLocal
