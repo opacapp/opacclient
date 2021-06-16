@@ -1,2 +1,4 @@
+before_install:
+  - cd opacclient
 install:
   - ./gradlew clean -Pgroup=$GROUP -Pversion=$VERSION -xtest -xlint :libopac:build publishToMavenLocal
