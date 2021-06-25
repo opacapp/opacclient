@@ -41,9 +41,7 @@ import org.junit.runners.Parameterized
 import org.junit.runners.Suite
 import org.mockito.AdditionalMatchers.or
 import org.mockito.ArgumentMatcher
-import org.mockito.Matchers
-import org.mockito.Matchers.argThat
-import org.mockito.Matchers.eq
+import org.mockito.hamcrest.MockitoHamcrest.argThat
 import org.mockito.Mockito.*
 
 
@@ -518,7 +516,7 @@ class SLUBAccountMockTest(@Suppress("unused") private val name: String,
 
     @Test
     fun testCheckAccountData() {
-        doReturn(response).`when`(slub).httpPost(Matchers.any(), Matchers.any(), Matchers.any())
+        doReturn(response).`when`(slub).httpPost(any(), any(), any())
         if (expectedException != null) {
             val thrown = assertThrows(expectedExceptionMsg, expectedException
             ) { slub.requestAccount(account, "", null) }
@@ -575,13 +573,13 @@ class SLUBReservationMockTest(@Suppress("unused") private val name: String,
     @Test
     fun testReservation() {
         if (responsePickup != null) {
-            doReturn(responsePickup).`when`(slub).httpPost(Matchers.any(),
-                    argThat(IsRequestBodyWithAction("pickup")), Matchers.any())
+            doReturn(responsePickup).`when`(slub).httpPost(any(),
+                    argThat(IsRequestBodyWithAction("pickup")), any())
         }
         if (responseReserveOrRequest != null) {
-            doReturn(responseReserveOrRequest).`when`(slub).httpPost(Matchers.any(),
+            doReturn(responseReserveOrRequest).`when`(slub).httpPost(any(),
                     or(argThat(IsRequestBodyWithAction("stackRequest")),
-                            argThat(IsRequestBodyWithAction("reserve"))), Matchers.any())
+                            argThat(IsRequestBodyWithAction("reserve"))), any())
         }
 
         val result = slub.reservation(item, account, useraction, selection)
@@ -763,10 +761,10 @@ class SLUBAccountValidateMockTest : BaseHtmlTest() {
     @Test
     fun testCheckAccountData() {
         val response = "{\"status\":\"1\",\"message\":\"credentials_are_valid\"}"
-        doReturn(response).`when`(slub).httpPost(Matchers.any(), Matchers.any(), Matchers.any())
+        doReturn(response).`when`(slub).httpPost(any(), any(), any())
 
         slub.checkAccountData(account)
-        verify(slub).httpPost(Matchers.any(), argThat(IsRequestBodyWithAction("validate")), Matchers.any())
+        verify(slub).httpPost(any(), argThat(IsRequestBodyWithAction("validate")), any())
     }
 }
 
@@ -791,7 +789,7 @@ class SLUBSearchMockTest(@Suppress("unused") private val name: String,
 
     @Test
     fun testSearch() {
-        doReturn(response).`when`(slub).httpGet(Matchers.any(), Matchers.any())
+        doReturn(response).`when`(slub).httpGet(any(), any())
         if (expectedException != null) {
             val thrown = assertThrows(expectedExceptionMsg, expectedException
             ) { slub.search(query) }
@@ -864,7 +862,7 @@ class SLUBGetResultByIdMockTest : BaseHtmlTest() {
 
     @Test
     fun testJSONError() {
-        doReturn("xxx").`when`(slub).httpGet(Matchers.any(), Matchers.any())
+        doReturn("xxx").`when`(slub).httpGet(any(), any())
         val thrown = assertThrows(null, OpacApi.OpacErrorException::class.java
         ) { slub.getResultById("id/0", null) }
         assertTrue(thrown!!.message!!.contains("search returned malformed JSON object:"))
@@ -872,7 +870,7 @@ class SLUBGetResultByIdMockTest : BaseHtmlTest() {
 
     @Test
     fun testIdIdentifier() {
-        doReturn(mockGetResponse).`when`(slub).httpGet(Matchers.any(), Matchers.any())
+        doReturn(mockGetResponse).`when`(slub).httpGet(any(), any())
         val actual = slub.getResultById("id/123", null)
         verify(slub).httpGet("https://test.de/id/123/?type=1369315142&tx_find_find%5Bformat%5D=data&tx_find_find%5Bdata-format%5D=app", "UTF-8")
         verify(slub, never()).httpHead(any(), anyBoolean())
@@ -881,8 +879,8 @@ class SLUBGetResultByIdMockTest : BaseHtmlTest() {
 
     @Test
     fun testBcIdentifier() {
-        doReturn(mockHeadResponse).`when`(slub).httpHead(Matchers.any(), Matchers.anyBoolean())
-        doReturn(mockGetResponse).`when`(slub).httpGet(Matchers.any(), Matchers.any())
+        doReturn(mockHeadResponse).`when`(slub).httpHead(any(), anyBoolean())
+        doReturn(mockGetResponse).`when`(slub).httpGet(any(), any())
         val actual = slub.getResultById("bc/456", null)
         verify(slub).httpHead(eq("https://test.de/bc/456/"), eq(false))
         verify(slub).httpGet("https://test.de/id/123/?type=1369315142&tx_find_find%5Bformat%5D=data&tx_find_find%5Bdata-format%5D=app", "UTF-8")
@@ -891,8 +889,8 @@ class SLUBGetResultByIdMockTest : BaseHtmlTest() {
 
     @Test
     fun testRsnIdentifier() {
-        doReturn(mockHeadResponse).`when`(slub).httpHead(Matchers.any(), Matchers.anyBoolean())
-        doReturn(mockGetResponse).`when`(slub).httpGet(Matchers.any(), Matchers.any())
+        doReturn(mockHeadResponse).`when`(slub).httpHead(any(), anyBoolean())
+        doReturn(mockGetResponse).`when`(slub).httpGet(any(), any())
         val actual = slub.getResultById("rsn/456", null)
         verify(slub).httpHead(eq("https://test.de/rsn/456/"), eq(false))
         verify(slub).httpGet("https://test.de/id/123/?type=1369315142&tx_find_find%5Bformat%5D=data&tx_find_find%5Bdata-format%5D=app", "UTF-8")
@@ -901,8 +899,8 @@ class SLUBGetResultByIdMockTest : BaseHtmlTest() {
 
     @Test
     fun testLibeorIdentifier() {
-        doReturn(mockHeadResponse).`when`(slub).httpHead(Matchers.any(), Matchers.anyBoolean())
-        doReturn(mockGetResponse).`when`(slub).httpGet(Matchers.any(), Matchers.any())
+        doReturn(mockHeadResponse).`when`(slub).httpHead(any(), anyBoolean())
+        doReturn(mockGetResponse).`when`(slub).httpGet(any(), any())
         val actual = slub.getResultById("http://slubdd.de/katalog?libero_mab456", null)
         verify(slub).httpHead(eq("http://slubdd.de/katalog?libero_mab456"), eq(false))
         verify(slub).httpGet("https://test.de/id/123/?type=1369315142&tx_find_find%5Bformat%5D=data&tx_find_find%5Bdata-format%5D=app", "UTF-8")
@@ -912,7 +910,7 @@ class SLUBGetResultByIdMockTest : BaseHtmlTest() {
     @Test
     fun testLegacyIdentifier() {
         // id without prefix, e.g. from old favorites list
-        doReturn(mockGetResponse).`when`(slub).httpGet(Matchers.any(), Matchers.any())
+        doReturn(mockGetResponse).`when`(slub).httpGet(any(), any())
         val actual = slub.getResultById("123", null)
         verify(slub).httpGet("https://test.de/id/123/?type=1369315142&tx_find_find%5Bformat%5D=data&tx_find_find%5Bdata-format%5D=app", "UTF-8")
         verify(slub, never()).httpHead(any(), anyBoolean())
@@ -947,7 +945,7 @@ class SLUBProlongMockTest(@Suppress("unused") private val name: String,
 
     @Test
     fun testProlong() {
-        doReturn(response).`when`(slub).httpPost(Matchers.any(), Matchers.any(), Matchers.any())
+        doReturn(response).`when`(slub).httpPost(any(), any(), any())
         if (expectedException != null) {
             val thrown = assertThrows(expectedExceptionMsg, expectedException
             ) { slub.prolong(media, account, 0, null) }
@@ -1023,7 +1021,7 @@ class SLUBProlongMultipleMockTest(@Suppress("unused") private val name: String,
 
     @Test
     fun testProlong() {
-        doReturn(response).`when`(slub).httpPost(Matchers.any(), Matchers.any(), Matchers.any())
+        doReturn(response).`when`(slub).httpPost(any(), any(), any())
         val actualResult = slub.prolongMultiple(media, account, 0, null)
         assertThat(actualResult, sameBeanAs(expectedResult))
         verify(slub).httpPost(eq("https://test.de/mein-konto/"), argThat(sameBeanAs(expectedRequestBody)), eq("UTF-8"))
@@ -1110,7 +1108,7 @@ class SLUBCancelMockTest(@Suppress("unused") private val name: String,
                 .add("tx_slubaccount_account[password]", "x")
                 .add("tx_slubaccount_account[delete][0]", media)
                 .build()
-        doReturn(response).`when`(slub).httpPost(Matchers.any(), Matchers.any(), Matchers.any())
+        doReturn(response).`when`(slub).httpPost(any(), any(), any())
         val actualResult = slub.cancel(media, account, 0, null)
         assertThat(actualResult, sameBeanAs(expectedResult))
         verify(slub).httpPost(eq("https://test.de/mein-konto/"), argThat(sameBeanAs(expectedRequestBody)), eq("UTF-8"))
@@ -1150,7 +1148,7 @@ class SLUBSearchFieldsMockTest : BaseHtmlTest() {
     @Test
     fun testParseSearchFields() {
         val html = readResource("/slub/SLUB Dresden Startseite.html")
-        doReturn(html).`when`(slub).httpGet(Matchers.any(), Matchers.any())
+        doReturn(html).`when`(slub).httpGet(any(), any())
 
         val searchFields = slub.parseSearchFields()
         assertEquals(10, searchFields.filterIsInstance(TextSearchField::class.java).size)
@@ -1158,10 +1156,10 @@ class SLUBSearchFieldsMockTest : BaseHtmlTest() {
     }
 }
 
-class IsRequestBodyWithAction(private val action: String) : ArgumentMatcher<RequestBody>() {
-    override fun matches(arg: Any): Boolean {
+class IsRequestBodyWithAction(private val action: String) : ArgumentMatcher<RequestBody> {
+    override fun matches(arg: RequestBody?): Boolean {
         val fb = arg as FormBody?
-        for (i in 0 until (fb?.size() ?: 0)) {
+        for (i in 0 until (fb?.size ?: 0)) {
             if (fb!!.value(i) == action)
                 return true
         }
