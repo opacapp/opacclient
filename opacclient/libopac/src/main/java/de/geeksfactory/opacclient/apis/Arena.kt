@@ -324,7 +324,7 @@ open class Arena : OkHttpBaseApi() {
 
     override fun prolong(media: String, account: Account, useraction: Int, selection: String?): OpacApi.ProlongResult {
         login(account)
-        val loansDoc = httpGet("$opacUrl/protected/loans", ENCODING).html
+        val loansDoc = httpGet("$opacUrl/protected/my-account/overview", ENCODING).html
         val internalError = OpacApi.ProlongResult(OpacApi.MultiStepResult.Status.ERROR, stringProvider.getString(StringProvider.INTERNAL_ERROR))
 
         val row = loansDoc.select("tr:has(.arena-record-id:contains($media))").first()
@@ -360,17 +360,23 @@ open class Arena : OkHttpBaseApi() {
     }
 
     override fun cancel(media: String, account: Account, useraction: Int, selection: String?): OpacApi.CancelResult {
-        val resDoc = httpGet("$opacUrl/protected/reservations", ENCODING).html
+        val resDoc = httpGet("$opacUrl/protected/my-account/overview", ENCODING).html
         val internalError = OpacApi.CancelResult(OpacApi.MultiStepResult.Status.ERROR,
                 stringProvider.getString(StringProvider.INTERNAL_ERROR))
 
         val record = resDoc.select(".arena-record-container:has(.arena-record-id:contains($media)")
                 .first() ?: return internalError
-        // find the URL that needs to be called to select the item
-        val url = record.select(".arena-select-item a").first()?.attr("href")
 
-        val selectedDoc = httpGet(url, ENCODING).html
-        val cancelUrl = selectedDoc.select(".arena-delete").first().attr("href")
+        val checkbox = record.select("input[type=checkbox]").first() ?: return internalError
+
+        val url = Regex("wicketAjaxPost\\('([^']+)'").find(checkbox["onclick"])?.groups?.get(1)?.value
+                ?: return internalError
+
+        val formData = FormBody.Builder()
+        formData.add(checkbox["name"], "on")
+        httpPost(url, formData.build(), ENCODING).html
+
+        val cancelUrl = resDoc.select(".portlet-myReservations .arena-header a.arena-delete").first()?.attr("href")
         val resultDoc = httpGet(cancelUrl, ENCODING).html
         val errorPanel = resultDoc.select(".feedbackPanelWARNING").first()
         if (errorPanel != null) {
@@ -383,21 +389,18 @@ open class Arena : OkHttpBaseApi() {
     override fun account(account: Account): AccountData {
         login(account)
 
-        val profileDoc = httpGet("$opacUrl/protected/profile", ENCODING).html
-        val feesDoc = httpGet("$opacUrl/protected/debts", ENCODING).html
-        val loansDoc = httpGet("$opacUrl/protected/loans", ENCODING).html
-        val reservationsDoc = httpGet("$opacUrl/protected/reservations", ENCODING).html
+        val profileDoc = httpGet("$opacUrl/protected/my-account/overview", ENCODING).html
 
         return AccountData(account.id).apply {
-            pendingFees = parseFees(feesDoc)
-            lent = parseLent(loansDoc)
-            reservations = parseReservations(reservationsDoc)
+            pendingFees = parseFees(profileDoc)
+            lent = parseLent(profileDoc)
+            reservations = parseReservations(profileDoc)
             //validUntil = parseValidUntil(profileDoc)
         }
     }
 
     internal fun parseReservations(doc: Document): List<ReservedItem> {
-        return doc.select(".arena-record").map {  record ->
+        return doc.select(".portlet-myReservations .arena-record").map {  record ->
             ReservedItem().apply {
                 id = record.select(".arena-record-id").first().text
                 title = record.select(".arena-record-title").first()?.text
