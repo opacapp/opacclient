@@ -101,9 +101,13 @@ open class Arena : OkHttpBaseApi() {
     protected open fun parseSearch(doc: Document, page: Int = 1): SearchRequestResult {
         searchDoc = doc
 
-        val countRegex = Regex("\\d+-\\d+ (?:von|of|av) (\\d+)")
-        val count = countRegex.find(doc.select(".arena-record-counter").text)?.groups?.get(1)?.value?.toInt()
-                ?: 0
+        val count = if (doc.select("meta[name=WT.oss_r]").size > 0) {
+            Integer.parseInt(doc.select("meta[name=WT.oss_r]").first().attr("content"))
+        } else {
+            val countRegex = Regex("\\d+-\\d+ (?:von|of|av) (\\d+)")
+            countRegex.find(doc.select(".arena-record-counter").text)?.groups?.get(1)?.value?.toInt()
+                    ?: 0
+        }
         val coverAjaxUrls = getAjaxUrls(doc)
 
         val results = doc.select(".arena-record").map{ record ->
