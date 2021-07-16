@@ -384,6 +384,17 @@ public class OpenAccountScraper extends OpenSearch {
             doc = Jsoup.parse(html);
             doc.setBaseUri(postUrl);
 
+            String message = doc.select(
+                    "[id$=ucExtensionFailedMessagePopupView_LblPopupMessage], " +
+                            "[id$=messagePopup_lblMessage]")
+                                .text().trim();
+            if (message.length() > 1 &&
+                    (message.equals("Ihre Verlängerung wurde erfolgreich durchgeführt.") ||
+                    message.equals("Ihre Verlängerung wurde durchgeführt."))) {
+                // Early out, maybe fixes Frankenthal
+                return new ProlongResult(MultiStepResult.Status.OK, message);
+            }
+
             ProlongResult res = new ProlongResult(MultiStepResult.Status.CONFIRMATION_NEEDED);
             List<String[]> details = new ArrayList<>();
             if (doc.select(
