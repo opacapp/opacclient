@@ -321,6 +321,9 @@ public class SearchResultListFragment extends CustomListFragment {
                             throws Exception {
                         SearchRequestResult res = app.getApi().searchGetPage(
                                 page);
+                        for (SearchResult result : res.getResults()) {
+                            result.setLibraryIdent(app.getLibrary().getIdent());
+                        }
                         setLastLoadedPage(page);
 
                         return res;
@@ -348,9 +351,9 @@ public class SearchResultListFragment extends CustomListFragment {
                     public void updateResultCount(int resultCount) {
                         /*
                          * When IOpac finds more than 200 results, the real
-						 * result count is not known until the second page is
-						 * loaded
-						 */
+                         * result count is not known until the second page is
+                         * loaded
+                         */
                         if (resultCount >= 0 && getActivity() != null) {
                             showSearchResultCountInActionbar(resultCount);
                         }

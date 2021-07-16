@@ -166,6 +166,8 @@ public class SearchResultListActivity extends OpacActivity implements
             }
             if (res.getLibraryIdent() != null) {
                 arguments.putString(SearchResultDetailFragment.ARG_ITEM_LIBRARY_IDENT, res.getLibraryIdent());
+            } else {
+                arguments.putString(SearchResultDetailFragment.ARG_ITEM_LIBRARY_IDENT, app.getLibrary().getIdent());
             }
             if (res.getCoverBitmap() != null) {
                 arguments.putParcelable(SearchResultDetailFragment.ARG_ITEM_COVER_BITMAP,
