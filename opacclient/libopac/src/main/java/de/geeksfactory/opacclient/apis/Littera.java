@@ -93,8 +93,8 @@ public class Littera extends OkHttpSearchOnlyApi {
     protected List<SearchQuery> lastQuery;
 
     @Override
-    public void init(Library library, HttpClientFactory httpClientFactory) {
-        super.init(library, httpClientFactory);
+    public void init(Library library, HttpClientFactory httpClientFactory, boolean debug) {
+        super.init(library, httpClientFactory, debug);
         try {
             this.opac_url = library.getData().getString("baseurl");
         } catch (JSONException e) {

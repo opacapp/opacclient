@@ -34,8 +34,9 @@ import okhttp3.FormBody;
 public class PicaLBS extends Pica {
     private String lbsUrl;
 
-    public void init(Library lib, HttpClientFactory httpClientFactory) {
-        super.init(lib, httpClientFactory);
+    @Override
+    public void init(Library lib, HttpClientFactory httpClientFactory, boolean debug) {
+        super.init(lib, httpClientFactory, debug);
         this.lbsUrl = data.optString("lbs_url", this.opac_url);
     }
 

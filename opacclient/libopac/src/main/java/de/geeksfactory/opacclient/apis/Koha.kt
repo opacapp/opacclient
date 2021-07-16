@@ -34,8 +34,8 @@ open class Koha : OkHttpBaseApi() {
     protected val ENCODING = "UTF-8"
     protected var searchQuery: List<SearchQuery>? = null
 
-    override fun init(library: Library, factory: HttpClientFactory) {
-        super.init(library, factory)
+    override fun init(library: Library, factory: HttpClientFactory, debug: Boolean) {
+        super.init(library, factory, debug)
         baseurl = library.data.getString("baseurl")
     }
 

@@ -80,6 +80,11 @@ public class OpacApiFactory {
         return create(lib, sp, hcf, lang, null);
     }
 
+    public static OpacApi create(Library lib, StringProvider sp, HttpClientFactory hcf,
+            String lang, ReportHandler reportHandler) {
+        return create(lib, sp, hcf, lang, reportHandler, false);
+    }
+
     /**
      * Creates an {@link OpacApi} instance for accessing the given {@link Library}
      *
@@ -91,7 +96,7 @@ public class OpacApiFactory {
      * @return a new {@link OpacApi} instance
      */
     public static OpacApi create(Library lib, StringProvider sp, HttpClientFactory hcf,
-            String lang, ReportHandler reportHandler) {
+            String lang, ReportHandler reportHandler, boolean debug) {
         OpacApi newApiInstance;
         if (lib.getApi().equals("bibliotheca")) {
             newApiInstance = new Bibliotheca();
@@ -156,7 +161,7 @@ public class OpacApiFactory {
         } else {
             return null;
         }
-        newApiInstance.init(lib, hcf);
+        newApiInstance.init(lib, hcf, debug);
         newApiInstance.setStringProvider(sp);
         newApiInstance.setReportHandler(reportHandler);
         if (lang != null) newApiInstance.setLanguage(lang);

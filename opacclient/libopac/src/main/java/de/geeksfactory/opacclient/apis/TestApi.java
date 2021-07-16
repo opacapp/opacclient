@@ -45,7 +45,7 @@ public class TestApi extends ApacheBaseApi {
     }
 
     @Override
-    public void init(Library library, HttpClientFactory httpClientFactory) {
+    public void init(Library library, HttpClientFactory httpClientFactory, boolean debug) {
         this.library = library;
 
         makeSearchResult("Kurz", null, false);
@@ -65,7 +65,7 @@ public class TestApi extends ApacheBaseApi {
         makeSearchResult("Kurz", image, true);
         makeSearchResult("Weit hinten, hinter den Wortbergen, fern der Länder", image, true);
 
-        super.init(library, httpClientFactory);
+        super.init(library, httpClientFactory, debug);
     }
 
     @Override

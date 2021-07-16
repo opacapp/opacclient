@@ -232,8 +232,8 @@ public class OpenSearch extends OkHttpBaseApi implements OpacApi {
     protected static final String NO_MOBILE = "?nomo=1";
 
     @Override
-    public void init(Library lib, HttpClientFactory httpClientFactory) {
-        super.init(lib, httpClientFactory);
+    public void init(Library lib, HttpClientFactory httpClientFactory, boolean debug) {
+        super.init(lib, httpClientFactory, debug);
 
         this.data = lib.getData();
         try {
@@ -324,7 +324,9 @@ public class OpenSearch extends OkHttpBaseApi implements OpacApi {
                         }
                         break;
                     } catch (Exception e) {
-                        e.printStackTrace();
+                        if (debug) {
+                            e.printStackTrace();
+                        }
                     }
                 }
             }
@@ -547,13 +549,17 @@ public class OpenSearch extends OkHttpBaseApi implements OpacApi {
                                     break;
                             }
                         } catch (JSONException | IOException e) {
-                            e.printStackTrace();
+                            if (debug) {
+                                e.printStackTrace();
+                            }
                         }
                         body.close();
                         return null;
                     }));
                 } catch (JSONException e) {
-                    e.printStackTrace();
+                    if (debug) {
+                        e.printStackTrace();
+                    }
                 }
             }
 

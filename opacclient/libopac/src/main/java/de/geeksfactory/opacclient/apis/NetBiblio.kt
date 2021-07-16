@@ -31,8 +31,8 @@ open class NetBiblio : OkHttpBaseApi() {
     protected var lang = "en"
     protected var searchResultId: String? = null
 
-    override fun init(library: Library, http_client_factory: HttpClientFactory?) {
-        super.init(library, http_client_factory)
+    override fun init(library: Library, http_client_factory: HttpClientFactory?, debug: Boolean) {
+        super.init(library, http_client_factory, debug)
         try {
             this.opacUrl = library.data["baseurl"] as String
         } catch (e: JSONException) {

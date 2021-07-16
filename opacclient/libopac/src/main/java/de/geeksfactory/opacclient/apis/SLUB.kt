@@ -111,8 +111,8 @@ open class SLUB : OkHttpBaseApi() {
             "zell9" to "Bereichsbibliothek Drepunct"
     )
 
-    override fun init(library: Library, factory: HttpClientFactory) {
-        super.init(library, factory)
+    override fun init(library: Library, factory: HttpClientFactory, debug: Boolean) {
+        super.init(library, factory, debug)
         baseurl = library.data.getString("baseurl")
         illRenewUrl = library.data.getString("illrenewurl")
     }

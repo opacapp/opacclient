@@ -36,13 +36,14 @@ public abstract class ApacheBaseApi extends BaseApi {
      * Initializes HTTP client and String Provider
      */
     @Override
-    public void init(Library library, HttpClientFactory http_client_factory) {
+    public void init(Library library, HttpClientFactory http_client_factory, boolean debug) {
         http_client = http_client_factory.getNewApacheHttpClient(
                 library.getData().optBoolean("customssl", false),
                 library.getData().optBoolean("customssl_tls_only", true),
                 library.getData().optBoolean("customssl_all_ciphersuites", false),
                 library.getData().optBoolean("disguise", false));
         this.library = library;
+        this.debug = debug;
         stringProvider = new DummyStringProvider();
     }
 

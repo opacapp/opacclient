@@ -274,8 +274,8 @@ public class SISIS extends OkHttpBaseApi implements OpacApi {
     }
 
     @Override
-    public void init(Library lib, HttpClientFactory httpClientFactory) {
-        super.init(lib, httpClientFactory);
+    public void init(Library lib, HttpClientFactory httpClientFactory, boolean debug) {
+        super.init(lib, httpClientFactory, debug);
         this.data = lib.getData();
 
         try {

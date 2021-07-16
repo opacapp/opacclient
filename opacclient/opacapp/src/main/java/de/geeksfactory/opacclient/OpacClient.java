@@ -206,7 +206,8 @@ public class OpacClient extends Application {
         currentLang = getResources().getConfiguration().locale.getLanguage();
         return OpacApiFactory
                 .create(lib, new AndroidStringProvider(), new AndroidHttpClientFactory(),
-                        currentLang, new WebserviceReportHandler(getApplicationContext()));
+                        currentLang, new WebserviceReportHandler(getApplicationContext()),
+                        BuildConfig.DEBUG);
     }
 
     private OpacApi initApi(Library lib) throws LibraryRemovedException {

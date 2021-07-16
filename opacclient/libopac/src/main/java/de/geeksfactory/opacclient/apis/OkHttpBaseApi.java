@@ -35,7 +35,7 @@ public abstract class OkHttpBaseApi extends BaseApi {
      * Initializes HTTP client and String Provider
      */
     @Override
-    public void init(Library library, HttpClientFactory http_client_factory) {
+    public void init(Library library, HttpClientFactory http_client_factory, boolean debug) {
         this.http_client_factory = http_client_factory;
         http_client = http_client_factory.getNewOkHttpClient(
                 library.getData().optBoolean("customssl", false),
@@ -44,6 +44,7 @@ public abstract class OkHttpBaseApi extends BaseApi {
         );
         http_client.dispatcher().setMaxRequestsPerHost(10);
         this.library = library;
+        this.debug = debug;
         stringProvider = new DummyStringProvider();
     }
 

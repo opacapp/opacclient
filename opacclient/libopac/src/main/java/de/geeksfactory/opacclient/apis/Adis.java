@@ -540,8 +540,8 @@ public class Adis extends OkHttpBaseApi implements OpacApi {
     }
 
     @Override
-    public void init(Library library, HttpClientFactory httpClientFactory) {
-        super.init(library, httpClientFactory);
+    public void init(Library library, HttpClientFactory httpClientFactory, boolean debug) {
+        super.init(library, httpClientFactory, debug);
         this.library = library;
         this.data = library.getData();
         try {

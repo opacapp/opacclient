@@ -27,8 +27,8 @@ open class Arena : OkHttpBaseApi() {
     protected val ENCODING = "UTF-8"
     protected var searchDoc: Document? = null
 
-    override fun init(library: Library, factory: HttpClientFactory) {
-        super.init(library, factory)
+    override fun init(library: Library, factory: HttpClientFactory, debug: Boolean) {
+        super.init(library, factory, debug)
         opacUrl = library.data.getString("baseurl")
     }
 

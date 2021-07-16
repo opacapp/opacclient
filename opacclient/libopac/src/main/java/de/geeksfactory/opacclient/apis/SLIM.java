@@ -68,8 +68,8 @@ public class SLIM extends OkHttpBaseApi {
     }
 
     @Override
-    public void init(Library library, HttpClientFactory httpClientFactory) {
-        super.init(library, httpClientFactory);
+    public void init(Library library, HttpClientFactory httpClientFactory, boolean debug) {
+        super.init(library, httpClientFactory, debug);
         this.library = library;
         this.data = library.getData();
         this.opac_url = data.optString("baseurl", "");
