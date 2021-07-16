@@ -1075,10 +1075,10 @@ public class OpenSearch extends OkHttpBaseApi implements OpacApi {
         // More criteria
         Element moreHeader = null;
         if (module.select("table").size() == 1) {
-            moreHeader = module.select("span[id$=LblMoreCriterias]").parents().select("tr").first();
+            moreHeader = module.select("[id$=LblMoreCriterias]").parents().select("tr").first();
         } else {
             // Newer OPEN, e.g. Erlangen
-            moreHeader = module.select("span[id$=LblMoreCriterias]").first();
+            moreHeader = module.select("[id$=LblMoreCriterias]").first();
         }
         if (moreHeader != null) {
             Elements siblings = moreHeader.siblingElements();
@@ -1091,7 +1091,7 @@ public class OpenSearch extends OkHttpBaseApi implements OpacApi {
                     Element input = tr.select("input[type=text]").first();
                     TextSearchField field = new TextSearchField();
                     field.setId(input.attr("name"));
-                    field.setDisplayName(tr.select("span[id*=Lbl]").first().text());
+                    field.setDisplayName(tr.select("[id*=Lbl]").first().text());
                     field.setData(notSelectable);
                     if (tr.text().contains("nur Ziffern")) field.setNumber(true);
                     fields.add(field);
@@ -1101,14 +1101,14 @@ public class OpenSearch extends OkHttpBaseApi implements OpacApi {
 
                     TextSearchField field1 = new TextSearchField();
                     field1.setId(input1.attr("name"));
-                    field1.setDisplayName(tr.select("span[id*=Lbl]").first().text());
+                    field1.setDisplayName(tr.select("[id*=Lbl]").first().text());
                     field1.setData(notSelectable);
                     if (tr.text().contains("nur Ziffern")) field1.setNumber(true);
                     fields.add(field1);
 
                     TextSearchField field2 = new TextSearchField();
                     field2.setId(input2.attr("name"));
-                    field2.setDisplayName(tr.select("span[id*=Lbl]").first().text());
+                    field2.setDisplayName(tr.select("[id*=Lbl]").first().text());
                     field2.setData(notSelectable);
                     field2.setHalfWidth(true);
                     if (tr.text().contains("nur Ziffern")) field2.setNumber(true);
@@ -1117,7 +1117,7 @@ public class OpenSearch extends OkHttpBaseApi implements OpacApi {
                     Element select = tr.select("select").first();
                     DropdownSearchField dropdown = new DropdownSearchField();
                     dropdown.setId(select.attr("name"));
-                    dropdown.setDisplayName(tr.select("span[id*=Lbl]").first().text());
+                    dropdown.setDisplayName(tr.select("[id*=Lbl]").first().text());
                     List<DropdownSearchField.Option> values = new ArrayList<>();
                     for (Element option : select.select("option")) {
                         DropdownSearchField.Option opt =
@@ -1130,7 +1130,7 @@ public class OpenSearch extends OkHttpBaseApi implements OpacApi {
                     Element checkbox = tr.select("input[type=checkbox]").first();
                     CheckboxSearchField field = new CheckboxSearchField();
                     field.setId(checkbox.attr("name"));
-                    field.setDisplayName(tr.select("span[id*=Lbl]").first().text());
+                    field.setDisplayName(tr.select("[id*=Lbl]").first().text());
                     fields.add(field);
                 }
             }
