@@ -45,6 +45,7 @@
     <string name="doing_download">Download-Informationen werden abgerufen</string>
     <string name="reader_needed">Um die E-Book-Datei zu lesen, benötigen Sie eine weitere App, z.B. Aldiko. Klicken Sie auf Ignorieren, wenn Sie bereits eine solche App haben. Diese Meldung erscheint dann nicht wieder. Klicken Sie auf Download, um in den Play Store zu gelangen und Aldiko herunterzuladen.</string>
     <string name="reader_needed_overdrive">Um dieses Medium zu öffnen, benötigen Sie eine weitere App, z.B. die OverDrive-App. Klicken Sie auf Ignorieren, wenn Sie bereits eine solche App haben. Diese Meldung erscheint dann nicht wieder. Klicken Sie auf Download, um in den Play Store zu gelangen und OverDrive herunterzuladen.</string>
+    <string name="reader_needed_onleihe">Um dieses Medium zu öffnen, empfehlen wir die Onleihe-App. Wenn Sie diese noch nicht installiert haben, versuchen wir sie für Sie zu installieren.</string>
     <string name="reader_needed_ignore">Ignorieren</string>
     <string name="doing_prolong_all">Medien, die verlängert werden können, werden verlängert…</string>
     <string name="prolong_all_confirm">Wirklich alle Medien (die verlängert werden können) verlängern? In manchen Bibliotheken können für manche Medien Gebühren anfallen.</string>

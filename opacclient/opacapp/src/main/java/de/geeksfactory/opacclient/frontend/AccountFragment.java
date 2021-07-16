@@ -823,7 +823,61 @@ public class AccountFragment extends Fragment implements
             public void onSuccess(MultiStepResult res) {
                 final EbookServiceApi.DownloadResult result = (EbookServiceApi.DownloadResult) res;
                 if (result.getUrl() != null) {
-                    if (result.getUrl().contains("acsm") || (a.contains("overdrive") && !result.getUrl().contains("epub-sample") && (result.getUrl().contains(".odm") || result.getUrl().contains(".epub")))) {
+                    if (result.getUrl().contains("onleihe")) {
+                        AlertDialog.Builder builder = new AlertDialog.Builder(
+                                getActivity());
+                        builder.setMessage(R.string.reader_needed_onleihe)
+                               .setCancelable(true)
+                               .setNeutralButton(R.string.reader_needed_ignore,
+                                       new DialogInterface.OnClickListener() {
+                                           @Override
+                                           public void onClick(
+                                                   DialogInterface dialog, int id) {
+                                               Intent i = new Intent(
+                                                       Intent.ACTION_VIEW);
+                                               i.setData(Uri.parse(result.getUrl()));
+                                               startActivity(i);
+                                           }
+                                       })
+                               .setPositiveButton(R.string.accept,
+                                       new DialogInterface.OnClickListener() {
+                                           @Override
+                                           public void onClick(
+                                                   DialogInterface dialog, int id) {
+                                               dialog.dismiss();
+                                               String reader = "de.etecture.ekz.onleihe";
+                                               String[] download_clients = new String[]{
+                                                       reader
+                                               };
+                                               boolean found = false;
+                                               PackageManager pm = getActivity().getPackageManager();
+                                               for (String i : download_clients) {
+                                                   try {
+                                                       pm.getPackageInfo(i, 0);
+                                                       found = true;
+                                                   } catch (NameNotFoundException e) {
+                                                   }
+                                               }
+                                               if (!found) {
+                                                   Intent i = new Intent(
+                                                           Intent.ACTION_VIEW,
+                                                           Uri.parse(
+                                                                   "market://details?id=" +
+                                                                           reader));
+                                                   startActivity(i);
+                                               } else {
+                                                   Intent launchIntent = pm.getLaunchIntentForPackage(reader);
+                                                   if (launchIntent != null) {
+                                                       startActivity(launchIntent);
+                                                   }
+                                               }
+                                           }
+                                       });
+                        AlertDialog alert = builder.create();
+                        alert.show();
+                        return;
+
+                    } else if (result.getUrl().contains("acsm") || (a.contains("overdrive") && !result.getUrl().contains("epub-sample") && (result.getUrl().contains(".odm") || result.getUrl().contains(".epub")))) {
                         String[] download_clients = new String[]{
                                 "com.android.aldiko", "com.aldiko.android",
                                 "com.bluefirereader",
