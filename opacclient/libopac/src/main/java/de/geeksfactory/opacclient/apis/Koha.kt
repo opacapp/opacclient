@@ -501,7 +501,11 @@ open class Koha : OkHttpBaseApi() {
         accountData.pendingFees = parseFees(feesDoc)
 
         if (doc.select(".alert").size > 0) {
-            accountData.warning = doc.select(".alert").html()
+            val warning = doc.select(".alert").clone()
+            for (w in warning.select("a")) {
+                w.attr("href", w.absUrl("href"))
+            }
+            accountData.warning = warning.html()
         }
 
         return accountData
@@ -585,6 +589,7 @@ open class Koha : OkHttpBaseApi() {
                 .add("userid", account.name)
                 .add("password", account.password)
         val doc = Jsoup.parse(httpPost("$baseurl/cgi-bin/koha/opac-user.pl", formBody.build(), ENCODING))
+        doc.setBaseUri("$baseurl/cgi-bin/koha/opac-user.pl")
         if (doc.select(".alert").size > 0 && doc.select("#opac-auth").size > 0) {
             throw OpacApi.OpacErrorException(doc.select(".alert").text())
         }

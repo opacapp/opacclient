@@ -1153,6 +1153,7 @@ public class AccountFragment extends Fragment implements
             if (accountData.getWarning() != null && accountData.getWarning().length() > 1) {
                 tvWarning.setVisibility(View.VISIBLE);
                 tvWarning.setText(Html.fromHtml(accountData.getWarning()));
+                tvWarning.setMovementMethod(LinkMovementMethod.getInstance());
             } else {
                 tvWarning.setVisibility(View.GONE);
             }
