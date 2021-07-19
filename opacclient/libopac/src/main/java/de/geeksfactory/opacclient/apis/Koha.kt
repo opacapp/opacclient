@@ -501,7 +501,7 @@ open class Koha : OkHttpBaseApi() {
         accountData.pendingFees = parseFees(feesDoc)
 
         if (doc.select(".alert").size > 0) {
-            accountData.warning = doc.select(".alert").text
+            accountData.warning = doc.select(".alert").html()
         }
 
         return accountData
