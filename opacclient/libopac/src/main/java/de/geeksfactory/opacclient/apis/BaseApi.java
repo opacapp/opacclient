@@ -107,8 +107,7 @@ public abstract class BaseApi implements OpacApi {
 
     /**
      * Library branch to search in. The user is able to select from multiple options, generated from
-     * the MetaData you store in the MetaDataSource you get in {@link #init(Library,
-     * HttpClientFactory)}.
+     * the MetaData you store in the MetaDataSource you get in {@link #init(Library, HttpClientFactory, boolean)}.
      *
      * This is only used internally to construct search fields.
      */
@@ -184,8 +183,7 @@ public abstract class BaseApi implements OpacApi {
 
     /**
      * Item category (like "book" or "CD"). The user is able to select from multiple options,
-     * generated from the MetaData you store in the MetaDataSource you get in {@link #init(Library,
-     * HttpClientFactory)}.
+     * generated from the MetaData you store in the MetaDataSource you get in {@link #init(Library, HttpClientFactory, boolean)}.
      *
      * This is only used internally to construct search fields.
      */
