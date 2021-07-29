@@ -53,20 +53,16 @@ processTestResources.dependsOn copyTestResources
 
 
 ext {
-    bintrayOrga = 'opacapp'
-    bintrayRepo = 'libs'
-    bintrayName = 'libopac'
-
-    publishedGroupId = 'net.opacapp'
+    publishedGroupId = 'com.github.opacapp'
     libraryName = 'OPAC communication adapter'
-    artifact = 'libopac'
+    artifact = 'opacclient'
 
     libraryDescription = "A library to access the data from various library OPACs"
 
     siteUrl = 'https://github.com/opacapp/opacclient'
     gitUrl = 'https://github.com/opacapp/opacclient.git'
 
-    libraryVersion = '6.3.9-beta1'
+    libraryVersion = '6.3.9-beta2'
 
     developerId = 'opacapp'
     developerName = 'Web Opac App'
