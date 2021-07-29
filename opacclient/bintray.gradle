@@ -1,7 +1,8 @@
 apply plugin: 'maven-publish'
 
 version = libraryVersion
-group = 'net.opacapp'
+group = 'com.github.opacapp'
+artifact = 'opacclient'
 
 // Bintray
 Properties properties = new Properties()
