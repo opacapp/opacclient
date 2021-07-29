@@ -53,16 +53,20 @@ processTestResources.dependsOn copyTestResources
 
 
 ext {
-    publishedGroupId = 'com.github.opacapp'
+    bintrayOrga = 'opacapp'
+    bintrayRepo = 'libs'
+    bintrayName = 'libopac'
+
+    publishedGroupId = 'net.opacapp'
     libraryName = 'OPAC communication adapter'
-    artifact = 'opacclient'
+    artifact = 'libopac'
 
     libraryDescription = "A library to access the data from various library OPACs"
 
     siteUrl = 'https://github.com/opacapp/opacclient'
     gitUrl = 'https://github.com/opacapp/opacclient.git'
 
-    libraryVersion = '6.3.9-beta2'
+    libraryVersion = '6.3.9-beta1'
 
     developerId = 'opacapp'
     developerName = 'Web Opac App'
@@ -73,6 +77,7 @@ ext {
     allLicenses = ["MIT"]
 }
 
+apply from: '../bintray.gradle'
 repositories {
     mavenCentral()
 }
