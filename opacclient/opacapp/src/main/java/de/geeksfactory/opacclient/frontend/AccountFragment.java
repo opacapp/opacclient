@@ -828,7 +828,15 @@ public class AccountFragment extends Fragment implements
                                 getActivity());
                         builder.setMessage(R.string.reader_needed_onleihe)
                                .setCancelable(true)
-                               .setNeutralButton(R.string.reader_needed_ignore,
+                               .setNegativeButton(R.string.cancel,
+                                       new DialogInterface.OnClickListener() {
+                                           @Override
+                                           public void onClick(
+                                                   DialogInterface dialog, int id) {
+                                               dialog.cancel();
+                                           }
+                                       })
+                               .setNeutralButton(R.string.reader_needed_browser,
                                        new DialogInterface.OnClickListener() {
                                            @Override
                                            public void onClick(
