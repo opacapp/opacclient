@@ -207,7 +207,7 @@ public class OpacClient extends Application {
         return OpacApiFactory
                 .create(lib, new AndroidStringProvider(), new AndroidHttpClientFactory(),
                         currentLang, new WebserviceReportHandler(getApplicationContext()),
-                        BuildConfig.DEBUG);
+                        BuildConfig.DEBUG, CoverDownloadStrategy.ASYNCHRONOUS);
     }
 
     private OpacApi initApi(Library lib) throws LibraryRemovedException {

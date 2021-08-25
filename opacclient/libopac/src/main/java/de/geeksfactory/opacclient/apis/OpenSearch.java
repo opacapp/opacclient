@@ -43,10 +43,10 @@ import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.concurrent.ThreadPoolExecutor;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import de.geeksfactory.opacclient.CoverDownloadStrategy;
 import de.geeksfactory.opacclient.i18n.StringProvider;
 import de.geeksfactory.opacclient.networking.HttpClientFactory;
 import de.geeksfactory.opacclient.networking.NotReachableException;
@@ -231,6 +231,12 @@ public class OpenSearch extends OkHttpBaseApi implements OpacApi {
      */
     protected static final String NO_MOBILE = "?nomo=1";
 
+    protected CoverDownloadStrategy coverDownloadStrategy = CoverDownloadStrategy.SYNCHRONOUS;
+
+    public OpenSearch (CoverDownloadStrategy coverDownloadStrategy) {
+        this.coverDownloadStrategy = coverDownloadStrategy;
+    }
+
     @Override
     public void init(Library lib, HttpClientFactory httpClientFactory, boolean debug) {
         super.init(lib, httpClientFactory, debug);
@@ -392,15 +398,17 @@ public class OpenSearch extends OkHttpBaseApi implements OpacApi {
         Elements elements = doc.select("div[id$=divMedium], div[id$=divComprehensiveItem], div[id$=divDependentCatalogue]");
         List<SearchResult> results = new ArrayList<>();
         int i = 0;
-        List<CompletableFuture<Void>> futures = new ArrayList<>();
+        List<CompletableFuture<Void>> futuresToWaitFor = new ArrayList<>();
         for (Element element : elements) {
             final SearchResult result = new SearchResult();
             // Cover
             if (element.select("input[id$=mediumImage]").size() > 0) {
                 result.setCover(element.select("input[id$=mediumImage]").first().attr("src"));
-            } else if (element.select("img[id$=CoverView_Image]").size() > 0) {
-
-                assignBestCover(result, getCoverUrlList(element.select("img[id$=CoverView_Image]").first()));
+            } else if (coverDownloadStrategy != CoverDownloadStrategy.NEVER && element.select("img[id$=CoverView_Image]").size() > 0) {
+                CompletableFuture<Void> f = assignBestCover(result, getCoverUrlList(element.select("img[id$=CoverView_Image]").first()));
+                if (coverDownloadStrategy == CoverDownloadStrategy.SYNCHRONOUS) {
+                    futuresToWaitFor.add(f);
+                }
             }
 
             Element catalogueContent =
@@ -523,7 +531,7 @@ public class OpenSearch extends OkHttpBaseApi implements OpacApi {
                     }
                     RequestBody entity = RequestBody.create(MEDIA_TYPE_JSON, data.toString());
 
-                    futures.add(asyncPost(url, entity, false).handle((response, throwable) -> {
+                    futuresToWaitFor.add(asyncPost(url, entity, false).handle((response, throwable) -> {
                         if (throwable != null) return null;
                         ResponseBody body = response.body();
                         try {
@@ -566,7 +574,7 @@ public class OpenSearch extends OkHttpBaseApi implements OpacApi {
             result.setNr(i);
             results.add(result);
         }
-        CompletableFuture.allOf(futures.toArray(new CompletableFuture[futures.size()])).join();
+        CompletableFuture.allOf(futuresToWaitFor.toArray(new CompletableFuture[futuresToWaitFor.size()])).join();
 
         return new SearchRequestResult(results, totalCount, page);
     }
@@ -801,8 +809,11 @@ public class OpenSearch extends OkHttpBaseApi implements OpacApi {
         // Cover
         if (doc.select("input[id$=mediumImage]").size() > 0) {
             item.setCover(doc.select("input[id$=mediumImage]").attr("src"));
-        } else if (doc.select("img[id$=CoverView_Image]").size() > 0) {
-            assignBestCover(item, getCoverUrlList(doc.select("img[id$=CoverView_Image]").first()));
+        } else if (coverDownloadStrategy != CoverDownloadStrategy.NEVER && doc.select("img[id$=CoverView_Image]").size() > 0) {
+            CompletableFuture<Void> f = assignBestCover(item, getCoverUrlList(doc.select("img[id$=CoverView_Image]").first()));
+            if (coverDownloadStrategy == CoverDownloadStrategy.SYNCHRONOUS) {
+                f.join();
+            }
         }
 
         // ID

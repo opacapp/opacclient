@@ -85,6 +85,11 @@ public class OpacApiFactory {
         return create(lib, sp, hcf, lang, reportHandler, false);
     }
 
+    public static OpacApi create(Library lib, StringProvider sp, HttpClientFactory hcf,
+            String lang, ReportHandler reportHandler, boolean debug) {
+        return create(lib, sp, hcf, lang, reportHandler, debug, CoverDownloadStrategy.SYNCHRONOUS);
+    }
+
     /**
      * Creates an {@link OpacApi} instance for accessing the given {@link Library}
      *
@@ -93,10 +98,13 @@ public class OpacApiFactory {
      * @param hcf  the {@link HttpClientFactory} to use
      * @param lang the preferred language as a ISO-639-1 code, see
      * {@link OpacApi#setLanguage(String)}
+     * @param debug turn on debug mode (if supported by library system)
+     * @param coverDownloadStrategy how to download covers (if supported by library system)
      * @return a new {@link OpacApi} instance
      */
     public static OpacApi create(Library lib, StringProvider sp, HttpClientFactory hcf,
-            String lang, ReportHandler reportHandler, boolean debug) {
+            String lang, ReportHandler reportHandler, boolean debug,
+            CoverDownloadStrategy coverDownloadStrategy) {
         OpacApi newApiInstance;
         if (lib.getApi().equals("bibliotheca")) {
             newApiInstance = new Bibliotheca();
@@ -140,9 +148,9 @@ public class OpacApiFactory {
             newApiInstance = new TouchPoint();
         } else if (lib.getApi().equals("open")) {
             if (lib.isAccountSupported() && lib.isSupportContract()) {
-                newApiInstance = new OpenAccountScraper();
+                newApiInstance = new OpenAccountScraper(coverDownloadStrategy);
             } else {
-                newApiInstance = new OpenSearch();
+                newApiInstance = new OpenSearch(coverDownloadStrategy);
             }
         } else if (lib.getApi().equals("koha")) {
             newApiInstance = new Koha();

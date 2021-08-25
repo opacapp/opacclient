@@ -23,6 +23,7 @@ import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import de.geeksfactory.opacclient.CoverDownloadStrategy;
 import de.geeksfactory.opacclient.i18n.StringProvider;
 import de.geeksfactory.opacclient.objects.Account;
 import de.geeksfactory.opacclient.objects.AccountData;
@@ -51,6 +52,10 @@ public class OpenAccountScraper extends OpenSearch {
     private static final int BASE_ACTION = 10;
     private static final int ACTION_COPY = BASE_ACTION;
     private static final int ACTION_PICKUP_BRANCH = BASE_ACTION + 1;
+
+    public OpenAccountScraper (CoverDownloadStrategy coverDownloadStrategy) {
+        super(coverDownloadStrategy);
+    }
 
     @Override
     public ReservationResult reservation(DetailedItem item, Account account, int useraction,
