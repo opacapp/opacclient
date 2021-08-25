@@ -10,6 +10,25 @@
     <uses-permission android:name="android.permission.NFC"/>
     <uses-permission android:name="android.permission.WAKE_LOCK"/>
 
+    <queries>
+        <package android:name="de.etecture.ekz.onleihe" />
+        <package android:name="com.google.zxing.client.android" />
+        <package android:name="com.srowen.bs.android" />
+        <package android:name="com.srowen.bs.android.simple" />
+        <package android:name="de.t_dankworth.secscanqr" />
+        <package android:name="la.droid.qr" />
+        <package android:name="la.droid.qr.priva" />
+        <package android:name="com.android.aldiko" />
+        <package android:name="com.aldiko.android" />
+        <package android:name="com.bluefirereader" />
+        <package android:name="com.mantano.reader.android.lite" />
+        <package android:name="com.overdrive.mobile.android.mediaconsole" />
+        <package android:name="com.datalogics.dlreader" />
+        <package android:name="com.mantano.reader.android.normal" />
+        <package android:name="com.mantano.reader.android" />
+        <package android:name="com.neosoar" />
+    </queries>
+
     <uses-feature
         android:name="android.hardware.nfc"
         android:required="false"/>

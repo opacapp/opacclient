@@ -4,12 +4,12 @@ apply plugin: 'com.android.application'
 apply plugin: 'jacoco'
 
 android {
-    compileSdkVersion 29
+    compileSdkVersion 30
 
     defaultConfig {
         applicationId "de.geeksfactory.opacclient"
         minSdkVersion 15
-        targetSdkVersion 29
+        targetSdkVersion 30
         versionCode 228
         versionName "6.3.8"
 
