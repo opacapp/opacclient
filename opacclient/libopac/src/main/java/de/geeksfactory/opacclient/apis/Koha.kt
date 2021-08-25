@@ -124,10 +124,17 @@ open class Koha : OkHttpBaseApi() {
 
     private fun searchUrl(query: List<SearchQuery>): HttpUrl.Builder {
         val builder = "$baseurl/cgi-bin/koha/opac-search.pl".toHttpUrl().newBuilder()
+        var yearFrom = ""
+        var yearTo = ""
+
         for (q in query) {
             if (q.value.isBlank()) continue
 
-            if (q.searchField is TextSearchField || q.searchField is BarcodeSearchField) {
+            if (q.searchField.id == "limit-copydate-from") {
+                yearFrom = q.value
+            } else if (q.searchField.id == "limit-copydate-to") {
+                yearTo = q.value
+            } else if (q.searchField is TextSearchField || q.searchField is BarcodeSearchField) {
                 builder.addQueryParameter("idx", q.key)
                 builder.addQueryParameter("q", q.value)
             } else if (q.searchField is DropdownSearchField) {
@@ -143,6 +150,11 @@ open class Koha : OkHttpBaseApi() {
                 }
             }
         }
+
+        if (yearFrom.isNotBlank() || yearTo.isNotBlank()) {
+            builder.addQueryParameter("limit-copydate", "$yearFrom-$yearTo")
+        }
+        
         return builder
     }
 
@@ -204,6 +216,31 @@ open class Koha : OkHttpBaseApi() {
             }
         }
 
+        // year from to
+        val yearrange = doc.select("#limit-copydate").first()
+        var yearField = emptyList<SearchField>()
+        if (yearrange != null) {
+            yearField = listOf(
+                    TextSearchField().apply {
+                        id = "limit-copydate-from"
+                        displayName = yearrange.parent().select("legend").text()
+                        meaning = SearchField.Meaning.YEAR
+                        isFreeSearch = false
+                        isNumber = true
+                        isAdvanced = false
+                    },
+                    TextSearchField().apply {
+                        id = "limit-copydate-to"
+                        displayName = yearrange.parent().select("legend").text()
+                        meaning = SearchField.Meaning.YEAR
+                        isFreeSearch = false
+                        isNumber = true
+                        isAdvanced = false
+                        isHalfWidth = true
+                    }
+            )
+        }
+
         // available checkbox
         val available = doc.select("#available-items").first()
         var availableCheckbox = emptyList<SearchField>()
@@ -216,7 +253,7 @@ open class Koha : OkHttpBaseApi() {
             )
         }
 
-        return listOf(freeSearchField) + textFields + filterFields + dropdownFields + availableCheckbox
+        return listOf(freeSearchField) + textFields + filterFields + dropdownFields + yearField + availableCheckbox
     }
 
     override fun searchGetPage(page: Int): SearchRequestResult {
