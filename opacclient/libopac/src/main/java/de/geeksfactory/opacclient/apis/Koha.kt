@@ -186,9 +186,10 @@ open class Koha : OkHttpBaseApi() {
         }
 
         // dropdown fields
-        val dropdowns = doc.select("legend + label + select")
-        val dropdownFields = dropdowns.map { dropdown ->
-            val title = dropdown.previousElementSibling().previousElementSibling().text.removeSuffix(":")
+        val dropdowns = doc.select("legend + label + select, legend + p:has(label + select)")
+        val dropdownFields = dropdowns.map { match ->
+            val title = match.parent().select("legend").first().text.removeSuffix(":")
+            val dropdown = match.parent().select("select").first()
             DropdownSearchField().apply {
                 id = title  // input["name"] is almost testalways "limit", so we can't use it as an ID
                 displayName = title
