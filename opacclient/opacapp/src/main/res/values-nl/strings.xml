@@ -334,6 +334,25 @@
     <string name="load_covers_mobile_data_on">Omslagafbeeldingen worden geladen en indien beschikbaar weergegeven</string>
     <string name="load_covers_mobile_data_off">Omslagafbeeldingen alleen over WiFi laden</string>
     <string name="account_ptr_hint">U kunt ook naar beneden vegen om de gegevens te vernieuwen.</string>
-    <string name="support_policy_hint">We bieden geen gratis ondersteuning van de app voor het gebruik in deze bibliotheek, problemen die in de toekomst kunnen optreden zullen waarschijnlijk niet worden opgelost.</string>
+    <string name="support_policy_hint">We bieden geen gratis ondersteuning van de app voor het gebruik in deze bibliotheek, problemen die in de toekomst kunnen optreden zullen daarom mogelijkerwijs niet worden opgelost.</string>
     <string name="support_policy_more_info">meer info</string>
+    <string name="search_scope">Zoekbereik</string>
+    <string name="available">Aanwezig</string>
+    <string name="hold_allowed">Reserveren mogelijk</string>
+    <string name="reference">Alleen inkijken, niet lenen</string>
+    <string name="on_hold">Gereserveerd</string>
+    <string name="on_loan">Uitgeleend</string>
+    <string name="on_order">Is besteld</string>
+    <string name="not_available">Niet beschikbaar</string>
+    <string name="ACTIVE">In behandeling</string>
+    <string name="CLOSED">Afgehandeld</string>
+    <string name="IN_TRANSPORT">In behandeling</string>
+    <string name="RECEIVED">Staat klaar</string>
+    <string name="RETURNED_TO_BRANCH">Terug bij vestiging</string>
+    <string name="UNKNOWN">Onbekend</string>
+    <string name="pick_up_at_home">Ophalen bij thuis vestiging?</string>
+    <string name="other_branch">Andere vestiging</string>
+    <string name="alt_location">Alternatieve ophaallocatie</string>
+    <string name="cost_queue">Reserverings kosten en/of wachtrij</string>
+    <string name="pickup_location">Ophalen op andere locatie</string>
 </resources>

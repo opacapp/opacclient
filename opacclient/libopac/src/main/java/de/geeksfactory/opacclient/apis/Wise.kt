@@ -1,5 +1,6 @@
 package de.geeksfactory.opacclient.apis
 
+import de.geeksfactory.opacclient.i18n.StringProvider
 import de.geeksfactory.opacclient.networking.HttpClientFactory
 import de.geeksfactory.opacclient.networking.NotReachableException
 import de.geeksfactory.opacclient.objects.*
@@ -15,8 +16,6 @@ import okhttp3.Response
 import org.json.JSONArray
 import org.json.JSONException
 import org.json.JSONObject
-import java.time.LocalDate
-import java.time.ZoneOffset
 import java.util.*
 import javax.crypto.Mac
 import javax.crypto.spec.SecretKeySpec
@@ -99,38 +98,8 @@ open class Wise : OkHttpBaseApi() {
             "BOE" to SearchResult.MediaType.BOOK
     )
 
-    private val mediatypes2 = mapOf(
-//            null to SearchResult.MediaType.UNKNOWN
-            "CD" to SearchResult.MediaType.CD,
-            "DVD" to SearchResult.MediaType.DVD,
-            "DVR" to SearchResult.MediaType.GAME_CONSOLE,
-            "CSP" to SearchResult.MediaType.GAME_CONSOLE,
-            "GBK" to SearchResult.MediaType.AUDIOBOOK,
-            "BOE" to SearchResult.MediaType.BOOK
-    )
-
-    private val itemstatuses = mapOf(
-            "available" to "Aanwezig",
-            "hold_allowed" to "Reserveren mogelijk",
-            "reference" to "Alleen inkijken, niet lenen",
-            "on_hold" to "Gereserveerd",
-            "on_loan" to "Uitgeleend",
-            "on_order" to "Is besteld",
-            "not_available" to "Niet beschikbaar",
-            "unknown" to "Niet beschikbaar"
-    )
-
-    private val holdstatuses = mapOf(
-            "ACTIVE" to "In behandeling",
-            "CLOSED" to "Afgehandeld",
-            "IN_TRANSPORT" to "In behandeling",
-            "LOANED" to "Uitgeleend",
-            "MESSAGE_SENT" to "Staat voor u klaar",
-            "RECIEVED" to "Staat klaar",
-            "RECEIVED" to "Staat klaar",
-            "RETURNED_TO_BRANCH" to "Terug bij vestiging",
-            "UNKNOWN" to "Onbekend"
-    )
+    private var itemstatuses: Map<String, String>? = null
+    private var holdstatuses: Map<String, String>? = null
 
     override fun init(library: Library, factory: HttpClientFactory) {
         http_interceptor = WiseKeyInterceptor()
@@ -154,9 +123,44 @@ open class Wise : OkHttpBaseApi() {
         }
     }
 
+    override fun setStringProvider(stringProvider: StringProvider?) {
+        this.stringProvider = stringProvider
+        initStatuses()
+    }
+
+    private fun initStatuses( ) {
+        itemstatuses = mapOf(
+                "available" to stringProvider.getString("available"),
+                "hold_allowed" to stringProvider.getString("hold_allowed"),
+                "reference" to stringProvider.getString("reference"),
+                "on_hold" to stringProvider.getString("on_hold"),
+                "on_loan" to stringProvider.getString("on_loan"),
+                "on_order" to stringProvider.getString("on_order"),
+                "not_available" to stringProvider.getString("not_available"),
+                "unknown" to stringProvider.getString("not_available")
+        )
+
+
+        holdstatuses = mapOf(
+                "ACTIVE" to stringProvider.getString("ACTIVE"),
+                "CLOSED" to stringProvider.getString("CLOSED"),
+                "IN_TRANSPORT" to stringProvider.getString("IN_TRANSPORT"),
+                "LOANED" to stringProvider.getString("on_loan"),
+                "MESSAGE_SENT" to stringProvider.getString("reservation_ready"),
+                "RECIEVED" to stringProvider.getString("RECEIVED"),
+                "RECEIVED" to stringProvider.getString("RECEIVED"),
+                "RETURNED_TO_BRANCH" to stringProvider.getString("RETURNED_TO_BRANCH"),
+                "UNKNOWN" to stringProvider.getString("UNKNOWN")
+        )
+    }
 
     override fun prolongAll(account: Account?, useraction: Int, selection: String?): OpacApi.ProlongAllResult {
         TODO("Not yet implemented")
+    }
+
+    override fun prolongMultiple(media: MutableList<String>?, account: Account?, useraction: Int, selection: String?): OpacApi.ProlongAllResult {
+//        TODO("Not yet implemented")
+        return OpacApi.ProlongAllResult(OpacApi.MultiStepResult.Status.UNSUPPORTED)
     }
 
 
@@ -271,34 +275,34 @@ open class Wise : OkHttpBaseApi() {
     override fun parseSearchFields(): List<SearchField> {
         if (!initialised) start()
 
-        val freeSearchField = BarcodeSearchField("search","Suchen", false,false,"")
+        val freeSearchField = BarcodeSearchField("search", stringProvider.getString("nav_search"), false,false,"")
         val ietsTitelOrAuteur = DropdownSearchField().apply {
             id = "searchScope"
-            displayName = "Zoeken op"
+            displayName = stringProvider.getString("search_scope")
             dropdownValues = listOf(
-                    DropdownSearchField.Option("iets", "Alles"),
-                    DropdownSearchField.Option("titel", "Titel"),
-                    DropdownSearchField.Option("auteur", "Auteur"))
+                    DropdownSearchField.Option("iets", stringProvider.getString("all")),
+                    DropdownSearchField.Option("titel", stringProvider.getString("title")),
+                    DropdownSearchField.Option("auteur", stringProvider.getString("author")))
             isAdvanced = false
         }
 
 
         val materiaal = DropdownSearchField().apply {
             id = "materiaal"
-            displayName = "Materiaal"
+            displayName = stringProvider.getString("mediatype")
             dropdownValues = listOf(
-                    DropdownSearchField.Option("", "Alles"),
-                    DropdownSearchField.Option("BOE", "Boek"),
-                    DropdownSearchField.Option("GBK", "Luisterboek"),
-                    DropdownSearchField.Option("CD", "CD"),
-                    DropdownSearchField.Option("DVD", "DVD")
+                    DropdownSearchField.Option("", stringProvider.getString("all")),
+                    DropdownSearchField.Option("BOE", stringProvider.getString("mediatype_book")),
+                    DropdownSearchField.Option("GBK", stringProvider.getString("mediatype_audiobook")),
+                    DropdownSearchField.Option("CD", stringProvider.getString("mediatype_cd")),
+                    DropdownSearchField.Option("DVD", stringProvider.getString("mediatype_dvd"))
             )
             isAdvanced = false
         }
         if ( searchLocations.size > 1 ) {
             val locations = DropdownSearchField().apply {
                 id = "location"
-                displayName = "Locatie"
+                displayName = stringProvider.getString("location")
                 dropdownValues = searchLocations.map { (first, last) -> DropdownSearchField.Option(first, last)  }
                 isAdvanced = false
             }
@@ -328,7 +332,7 @@ open class Wise : OkHttpBaseApi() {
         val copys: List<Copy> = searchLocations.map { branchCatGroup -> getCopies(id,homebranch, branchCatGroup.first)}.fold(emptyList<Copy>()){
             u, v -> listOf(u,v).flatten()
         }
-        val firstItem = if (copys.isEmpty()) null else copys.filter { copy -> copy.status == itemstatuses["available"] }.firstOrNull()
+        val firstItem = if (copys.isEmpty()) null else copys.filter { copy -> copy.status == itemstatuses!!["available"] }.firstOrNull()
         val di = DetailedItem().apply {
             title = getFieldValue(fields.getJSONObject("titel"))
             cover = getImgUrl(getFieldValue(fields.optJSONObject("momkeys")),260)
@@ -385,7 +389,7 @@ open class Wise : OkHttpBaseApi() {
             for(copy in copyList) {
                 if ( copy.barcode.equals(copyAvail["itemId"].toString())) {
                     val availStatus = (copyAvail["availabilityStatus"] as String).toLowerCase(Locale.getDefault())
-                    copy.status = itemstatuses[availStatus] ?: itemstatuses["unknown"]
+                    copy.status = itemstatuses!![availStatus] ?: itemstatuses!!["unknown"]
                 }
             }
         }
@@ -398,8 +402,8 @@ open class Wise : OkHttpBaseApi() {
         if (useraction == 0 && selection == null) {
             return OpacApi.ReservationResult(OpacApi.MultiStepResult.Status.SELECTION_NEEDED).apply {
                 actionIdentifier = OpacApi.ReservationResult.ACTION_USER
-                message = "Ophalen bij thuis vestiging?"
-                this.selection = listOf(hashMapOf("key" to "Y","value" to "Ja"), hashMapOf("key" to "N","value" to "Andere vestiging"))
+                message = stringProvider.getString("pick_up_at_home")
+                this.selection = listOf(hashMapOf("key" to "Y","value" to "Ja"), hashMapOf("key" to "N","value" to stringProvider.getString("other_branch")))
             }
         } else if (useraction == OpacApi.ReservationResult.ACTION_USER) {
             val prepHold =  httpGet("$baseurl/restapi/patron/${auth!!.patronSystemId}/library/${auth!!.libraryId}/preparehold/${item.id}/branch/$homeBranch", ENCODING).jsonObject
@@ -415,7 +419,7 @@ open class Wise : OkHttpBaseApi() {
                 return OpacApi.ReservationResult(OpacApi.MultiStepResult.Status.SELECTION_NEEDED).apply {
                     actionIdentifier = OpacApi.ReservationResult.ACTION_BRANCH
                     this.selection = plListOfMaps.sortedBy { a -> a.get("value")}
-                    message = "Alternatieve ophaallocatie"
+                    message = stringProvider.getString("alt_location")
                 }
             }
             val costs = prepHold.getDouble("reservationCost")
@@ -433,7 +437,7 @@ open class Wise : OkHttpBaseApi() {
             return OpacApi.ReservationResult(OpacApi.MultiStepResult.Status.CONFIRMATION_NEEDED).apply {
                 actionIdentifier = OpacApi.ReservationResult.ACTION_CONFIRMATION
                 details = listOf( arrayOf("Kosten", costs.toString()), arrayOf("Wachtrij positie", queue))
-                message = "Reserverings kosten en/of wachtrij"
+                message = stringProvider.getString("cost_queue")
             }
 
         } else if (useraction == OpacApi.ReservationResult.ACTION_BRANCH) {
@@ -446,7 +450,7 @@ open class Wise : OkHttpBaseApi() {
             return OpacApi.ReservationResult(OpacApi.MultiStepResult.Status.CONFIRMATION_NEEDED).apply {
                 actionIdentifier = OpacApi.ReservationResult.ACTION_CONFIRMATION
                 details = listOf(arrayOf("Ophaallocatie", selection.split(":")[2]), arrayOf("Kosten", costs.toString()), arrayOf("Wachtrij positie", queue))
-                message = "Ophalen op andere locatie"
+                message = stringProvider.getString("pickup_location")
             }
         } else if (useraction == OpacApi.ReservationResult.ACTION_CONFIRMATION) {
             // Do reservation at pickup  branch with possible fees
@@ -496,7 +500,7 @@ open class Wise : OkHttpBaseApi() {
                 mediaType = mediatypes[item.getString("medium")]
                 cover = getImgUrl(item.getString("momkeys").replace(';', '&'))
                 branch = item.getString("pickupLocationName")
-                status = holdstatuses[item.getString("holdStatus").toUpperCase(Locale.getDefault())] ?: holdstatuses["UNKNOWN"]
+                status = holdstatuses!![item.getString("holdStatus").toUpperCase(Locale.getDefault())] ?: holdstatuses!!["UNKNOWN"]
                 if (item.getBoolean("cancelAllowed")) cancelData = id
                 dbId = item.getLong("itemId")
                 if (item.getBoolean("awaitingPickup")) readyDate = org.joda.time.LocalDate.parse(item.getString("holdDueDate"))
@@ -512,7 +516,7 @@ open class Wise : OkHttpBaseApi() {
             id = item.getString("bibliographicRecordId") + ":" + item.getString("itemId") // combine title id and copy id
             title = item.getString("title")
             author = item.getString("author")
-            mediaType = mediatypes2[item.getString("medium")]
+            mediaType = mediatypes[item.getString("medium")]
             cover = getImgUrl(item.getString("momkeys").replace(';', '&'))
             lendingBranch = item.getString("branchId")
             // TODO cache branch names
