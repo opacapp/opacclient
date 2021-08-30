@@ -10,8 +10,8 @@ import de.geeksfactory.opacclient.searchfields.SearchField
 import de.geeksfactory.opacclient.searchfields.SearchQuery
 import de.geeksfactory.opacclient.utils.jsonObject
 import okhttp3.Interceptor
-import okhttp3.MediaType
-import okhttp3.RequestBody
+import okhttp3.MediaType.Companion.toMediaTypeOrNull
+import okhttp3.RequestBody.Companion.toRequestBody
 import okhttp3.Response
 import org.json.JSONArray
 import org.json.JSONException
@@ -101,9 +101,9 @@ open class Wise : OkHttpBaseApi() {
     private var itemstatuses: Map<String, String>? = null
     private var holdstatuses: Map<String, String>? = null
 
-    override fun init(library: Library, factory: HttpClientFactory) {
+    override fun init(library: Library, factory: HttpClientFactory, debug: Boolean) {
         http_interceptor = WiseKeyInterceptor()
-        super.init(library, factory)
+        super.init(library, factory, debug)
         libraryData = library.data
         homeBranch = library.libraryId
         baseurl = libraryData.getString("baseurl")
@@ -221,10 +221,8 @@ open class Wise : OkHttpBaseApi() {
         val page = pagina -1
         val response = httpPost(
                 "$baseurl/cgi-bin/bx.pl",
-                RequestBody.create(
-                        MediaType.parse("application/x-www-form-urlencoded"),
-                        "prt=INTERNET&var=portal&vestnr=$homeBranch&fmt=json&search_in=$scope&amount=$AMOUNT&catalog=default&event=osearch" +
-                                "&preset=all&offset=${page*AMOUNT}$mediaTypeQS&qs=$queryString&vcgrpf=0&backend=wise&vcgrpt=$vcgrpt"),
+                ("prt=INTERNET&var=portal&vestnr=$homeBranch&fmt=json&search_in=$scope&amount=$AMOUNT&catalog=default&event=osearch" +
+                        "&preset=all&offset=${page*AMOUNT}$mediaTypeQS&qs=$queryString&vcgrpf=0&backend=wise&vcgrpt=$vcgrpt").toRequestBody("application/x-www-form-urlencoded".toMediaTypeOrNull()),
                 ENCODING, false)
 
         val json = JSONObject(response)
@@ -429,7 +427,7 @@ open class Wise : OkHttpBaseApi() {
 
             if ( costs < 0.000001 && queue == "") {
                 // Do reservation own branch free at costs
-                val jsonData = RequestBody.create(MEDIA_TYPE_JSON,"{\"bibliographicRecordId\": \"${item.id}\", \"pickupLocationBranchId\":\"$homeBranch\", \"holdParameters\":\"$holdParameters\" }")
+                val jsonData = "{\"bibliographicRecordId\": \"${item.id}\", \"pickupLocationBranchId\":\"$homeBranch\", \"holdParameters\":\"$holdParameters\" }".toRequestBody(MEDIA_TYPE_JSON)
                 httpPost("$baseurl/restapi/patron/${auth!!.patronSystemId}/library/${auth!!.libraryId}/hold",jsonData, ENCODING).jsonObject
 
                 return OpacApi.ReservationResult(OpacApi.MultiStepResult.Status.OK)
@@ -454,7 +452,7 @@ open class Wise : OkHttpBaseApi() {
             }
         } else if (useraction == OpacApi.ReservationResult.ACTION_CONFIRMATION) {
             // Do reservation at pickup  branch with possible fees
-            val jsonData = RequestBody.create(MEDIA_TYPE_JSON,"{\"bibliographicRecordId\": \"${item.id}\", \"pickupLocationBranchId\":\"$pickupBranch\", \"holdParameters\":\"$holdParameters\" }")
+            val jsonData = "{\"bibliographicRecordId\": \"${item.id}\", \"pickupLocationBranchId\":\"$pickupBranch\", \"holdParameters\":\"$holdParameters\" }".toRequestBody(MEDIA_TYPE_JSON)
             httpPost("$baseurl/restapi/patron/${auth!!.patronSystemId}/library/${auth!!.libraryId}/hold",jsonData, ENCODING).jsonObject
 
             return OpacApi.ReservationResult(OpacApi.MultiStepResult.Status.OK)
@@ -469,7 +467,9 @@ open class Wise : OkHttpBaseApi() {
 
     override fun prolong(media: String?, account: Account?, useraction: Int, selection: String?): OpacApi.ProlongResult {
         val itemId = media!!.split(":")[1]
-        httpPost("$baseurl/restapi/patron/${auth!!.patronSystemId}/item/${itemId}/loanrenewal", RequestBody.create(MEDIA_TYPE_JSON, "{}"),ENCODING).jsonObject
+        httpPost("$baseurl/restapi/patron/${auth!!.patronSystemId}/item/${itemId}/loanrenewal",
+                "{}".toRequestBody(MEDIA_TYPE_JSON),
+                ENCODING).jsonObject
         return OpacApi.ProlongResult(OpacApi.MultiStepResult.Status.OK)
     }
 
@@ -540,7 +540,7 @@ open class Wise : OkHttpBaseApi() {
     }
 
     fun login(account: Account) : Authentication {
-        val jsonData = RequestBody.create(MEDIA_TYPE_JSON,"{\"username\": \"${account.name}\", \"password\":\"${account.password}\" }")
+        val jsonData = "{\"username\": \"${account.name}\", \"password\":\"${account.password}\" }".toRequestBody(MEDIA_TYPE_JSON)
         val authenicateCall = httpPost("$baseurl/restapi/patron/authentication",jsonData, ENCODING)
 
         val response = JSONObject(authenicateCall)
