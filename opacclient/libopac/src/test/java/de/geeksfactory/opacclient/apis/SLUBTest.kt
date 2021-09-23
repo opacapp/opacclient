@@ -482,7 +482,7 @@ class SLUBMiscellaneousTests : BaseHtmlTest() {
                 put("baseurl", "https://test.de")
                 put("illrenewurl", "https://test-renew.de")
             }
-        }, HttpClientFactory("test"))
+        }, HttpClientFactory("test"), false)
     }
 
     @Test
@@ -506,7 +506,7 @@ class SLUBAccountMockTest(@Suppress("unused") private val name: String,
                 put("baseurl", "https://test.de")
                 put("illrenewurl", "https://test-renew.de")
             }
-        }, HttpClientFactory("test"))
+        }, HttpClientFactory("test"), false)
     }
 
     private val account = Account().apply {
@@ -562,7 +562,7 @@ class SLUBReservationMockTest(@Suppress("unused") private val name: String,
                 put("baseurl", "https://test.de")
                 put("illrenewurl", "https://test-renew.de")
             }
-        }, HttpClientFactory("test"))
+        }, HttpClientFactory("test"), false)
     }
 
     private val account = Account().apply {
@@ -750,7 +750,7 @@ class SLUBAccountValidateMockTest : BaseHtmlTest() {
                 put("baseurl", "test")
                 put("illrenewurl", "https://test-renew.de")
             }
-        }, HttpClientFactory("test"))
+        }, HttpClientFactory("test"), false)
     }
 
     private val account = Account().apply {
@@ -784,7 +784,7 @@ class SLUBSearchMockTest(@Suppress("unused") private val name: String,
                 put("baseurl", "https://test.de")
                 put("illrenewurl", "https://test-renew.de")
             }
-        }, HttpClientFactory("test"))
+        }, HttpClientFactory("test"), false)
     }
 
     @Test
@@ -857,7 +857,7 @@ class SLUBGetResultByIdMockTest : BaseHtmlTest() {
                 put("baseurl", "https://test.de")
                 put("illrenewurl", "https://test-renew.de")
             }
-        }, HttpClientFactory("test"))
+        }, HttpClientFactory("test"), false)
     }
 
     @Test
@@ -935,7 +935,7 @@ class SLUBProlongMockTest(@Suppress("unused") private val name: String,
                 put("baseurl", "https://test.de")
                 put("illrenewurl", "https://test-renew.de")
             }
-        }, HttpClientFactory("test"))
+        }, HttpClientFactory("test"), false)
     }
 
     private val account = Account().apply {
@@ -1011,7 +1011,7 @@ class SLUBProlongMultipleMockTest(@Suppress("unused") private val name: String,
                 put("baseurl", "https://test.de")
                 put("illrenewurl", "https://test-renew.de")
             }
-        }, HttpClientFactory("test"))
+        }, HttpClientFactory("test"), false)
     }
 
     private val account = Account().apply {
@@ -1090,7 +1090,7 @@ class SLUBCancelMockTest(@Suppress("unused") private val name: String,
                 put("baseurl", "https://test.de")
                 put("illrenewurl", "https://test-renew.de")
             }
-        }, HttpClientFactory("test"))
+        }, HttpClientFactory("test"), false)
     }
 
     private val account = Account().apply {
@@ -1142,7 +1142,7 @@ class SLUBSearchFieldsMockTest : BaseHtmlTest() {
                 put("baseurl", "test")
                 put("illrenewurl", "https://test-renew.de")
             }
-        }, HttpClientFactory("test"))
+        }, HttpClientFactory("test"), false)
     }
 
     @Test

@@ -53,6 +53,10 @@ public class OpenAccountScraper extends OpenSearch {
     private static final int ACTION_COPY = BASE_ACTION;
     private static final int ACTION_PICKUP_BRANCH = BASE_ACTION + 1;
 
+    public OpenAccountScraper () {
+        super(CoverDownloadStrategy.SYNCHRONOUS);
+    }
+
     public OpenAccountScraper (CoverDownloadStrategy coverDownloadStrategy) {
         super(coverDownloadStrategy);
     }

@@ -233,6 +233,10 @@ public class OpenSearch extends OkHttpBaseApi implements OpacApi {
 
     protected CoverDownloadStrategy coverDownloadStrategy = CoverDownloadStrategy.SYNCHRONOUS;
 
+    public OpenSearch () {
+        this(CoverDownloadStrategy.SYNCHRONOUS);
+    }
+
     public OpenSearch (CoverDownloadStrategy coverDownloadStrategy) {
         this.coverDownloadStrategy = coverDownloadStrategy;
     }

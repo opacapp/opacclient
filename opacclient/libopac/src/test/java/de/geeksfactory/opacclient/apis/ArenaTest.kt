@@ -24,7 +24,7 @@ class ArenaSearchTest : BaseHtmlTest() {
             data = JSONObject().apply {
                 put("baseurl", "https://arena.stabi-ludwigsburg.de/web/arena")
             }
-        }, HttpClientFactory("test"))
+        }, HttpClientFactory("test"), false)
     }
 
     @Test
@@ -76,7 +76,7 @@ class ArenaAccountTest(private val file: String) : BaseHtmlTest() {
             data = JSONObject().apply {
                 put("baseurl", "https://arena.stabi-beispielburg.de/web/arena")
             }
-        }, HttpClientFactory("OpacTest/1.0"))
+        }, HttpClientFactory("OpacTest/1.0"), false)
     }
 
     @Test

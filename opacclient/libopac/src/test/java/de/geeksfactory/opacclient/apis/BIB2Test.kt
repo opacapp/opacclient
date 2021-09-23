@@ -30,7 +30,7 @@ class BIB2Test : BaseHtmlTest() {
             data = JSONObject().apply {
                 put("baseurl", "bib2.test")
             }
-        }, HttpClientFactory("test"))
+        }, HttpClientFactory("test"), false)
     }
 
     @Test

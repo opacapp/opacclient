@@ -154,7 +154,7 @@ open class Koha : OkHttpBaseApi() {
         if (yearFrom.isNotBlank() || yearTo.isNotBlank()) {
             builder.addQueryParameter("limit-copydate", "$yearFrom-$yearTo")
         }
-        
+
         return builder
     }
 
