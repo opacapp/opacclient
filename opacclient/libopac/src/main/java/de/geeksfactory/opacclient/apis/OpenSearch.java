@@ -873,7 +873,7 @@ public class OpenSearch extends OkHttpBaseApi implements OpacApi {
                         value += ", ";
                     }
                     value += a.text().trim();
-                    if (a.text().contains("ffnen") || a.text().contains("klicken")
+                    if (a.text().contains("ffnen") || a.text().contains("Download") || a.text().contains("klicken")
                             || a.text().contains("content sample")) {
                         value += " " + a.attr("href");
                     }
