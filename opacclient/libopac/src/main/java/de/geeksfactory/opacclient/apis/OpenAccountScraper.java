@@ -782,7 +782,7 @@ public class OpenAccountScraper extends OpenSearch {
                 int i = 0;
                 for (Element th : row.select("th")) {
                     String th_html = th.html();
-                    if (th_html.contains("Sort$Title")) {
+                    if (th_html.contains("Sort$Title") || th_html.contains("Titel")) {
                         colmap.put("title", i);
                     } else if (th_html.contains("Sort$Author")) {
                         colmap.put("author", i);
