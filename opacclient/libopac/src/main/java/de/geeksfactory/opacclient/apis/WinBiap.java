@@ -464,6 +464,11 @@ public class WinBiap extends OkHttpBaseApi implements OpacApi {
             }
         }
 
+        Element divibib = doc.select(".btn-divibib").first();
+        if (divibib != null) {
+            item.addDetail(new Detail(divibib.text(), divibib.attr("href")));
+        }
+
         DateTimeFormatter fmt = DateTimeFormat.forPattern("dd.MM.yyyy").withLocale(Locale.GERMAN);
 
         trs = doc.select(".detailCopies .tableCopies > tbody > tr:not(.headerCopies)");
