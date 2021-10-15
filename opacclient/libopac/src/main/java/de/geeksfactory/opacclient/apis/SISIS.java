@@ -111,6 +111,7 @@ public class SISIS extends OkHttpBaseApi implements OpacApi {
         defaulttypes.put("13", MediaType.CD);
         defaulttypes.put("CD", MediaType.CD);
         defaulttypes.put("DVD", MediaType.DVD);
+        defaulttypes.put("dvd-video", MediaType.DVD);
         defaulttypes.put("14", MediaType.CD);
         defaulttypes.put("15", MediaType.DVD);
         defaulttypes.put("16", MediaType.CD);
@@ -143,6 +144,13 @@ public class SISIS extends OkHttpBaseApi implements OpacApi {
         defaulttypes.put("97", MediaType.EBOOK);
         defaulttypes.put("99", MediaType.EBOOK);
         defaulttypes.put("EB", MediaType.EBOOK);
+        defaulttypes.put("online-ressource", MediaType.EBOOK);
+        defaulttypes.put("online-ressource1", MediaType.EBOOK);
+        defaulttypes.put("online-ressource2", MediaType.EBOOK);
+        defaulttypes.put("online-ressource3", MediaType.EBOOK);
+        defaulttypes.put("online-ressource4", MediaType.EBOOK);
+        defaulttypes.put("online-ressource5", MediaType.EBOOK);
+        defaulttypes.put("online-ressource6", MediaType.EBOOK);
         defaulttypes.put("ebook", MediaType.EBOOK);
         defaulttypes.put("buch01", MediaType.BOOK);
         defaulttypes.put("buch02", MediaType.PACKAGE_BOOKS);
@@ -166,6 +174,7 @@ public class SISIS extends OkHttpBaseApi implements OpacApi {
         defaulttypes.put("eText", MediaType.EDOC );
         defaulttypes.put("eVideo", MediaType.EVIDEO );
         defaulttypes.put("Ausleihgerät", MediaType.DEVICE );
+        defaulttypes.put("mac", MediaType.DEVICE );
         defaulttypes.put("Kinderbuch", MediaType.BOOK );
         defaulttypes.put("Schallplatte", MediaType.LP_RECORD );
         defaulttypes.put("Medienkombination", MediaType.PACKAGE );
