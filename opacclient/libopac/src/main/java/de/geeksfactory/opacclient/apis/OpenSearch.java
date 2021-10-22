@@ -412,6 +412,8 @@ public class OpenSearch extends OkHttpBaseApi implements OpacApi {
                 CompletableFuture<Void> f = assignBestCover(result, getCoverUrlList(element.select("img[id$=CoverView_Image]").first()));
                 if (coverDownloadStrategy == CoverDownloadStrategy.SYNCHRONOUS) {
                     futuresToWaitFor.add(f);
+                } else {
+                    result.setCoverFuture(f);
                 }
             }
 
@@ -817,6 +819,8 @@ public class OpenSearch extends OkHttpBaseApi implements OpacApi {
             CompletableFuture<Void> f = assignBestCover(item, getCoverUrlList(doc.select("img[id$=CoverView_Image]").first()));
             if (coverDownloadStrategy == CoverDownloadStrategy.SYNCHRONOUS) {
                 f.join();
+            } else {
+                item.setCoverFuture(f);
             }
         }
 

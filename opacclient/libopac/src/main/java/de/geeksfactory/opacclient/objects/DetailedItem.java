@@ -24,6 +24,7 @@ package de.geeksfactory.opacclient.objects;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java8.util.concurrent.CompletableFuture;
 
 /**
  * Object representing all details of a media item
@@ -34,6 +35,7 @@ public class DetailedItem implements CoverHolder {
     private List<Detail> details = new ArrayList<>();
     private List<Copy> copies = new ArrayList<>();
     private List<Volume> volumes = new ArrayList<>();
+    private CompletableFuture<Void> coverFuture = null;
     private String cover;
     private String title;
     private SearchResult.MediaType mediaType;
@@ -170,7 +172,7 @@ public class DetailedItem implements CoverHolder {
      * @param volumes List of child items available
      * @see #addVolume(Volume)
      */
-    public void setVolumes(List<Volume> volumes) { 
+    public void setVolumes(List<Volume> volumes) {
         this.volumes = volumes;
     }
 
@@ -322,5 +324,13 @@ public class DetailedItem implements CoverHolder {
      */
     public void setMediaType(SearchResult.MediaType mediaType) {
         this.mediaType = mediaType;
+    }
+
+    public CompletableFuture<Void> getCoverFuture() {
+        return coverFuture;
+    }
+
+    public void setCoverFuture(CompletableFuture<Void> coverFuture) {
+        this.coverFuture = coverFuture;
     }
 }

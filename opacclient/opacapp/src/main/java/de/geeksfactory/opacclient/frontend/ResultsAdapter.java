@@ -152,10 +152,7 @@ public class ResultsAdapter extends ArrayAdapter<SearchResult> {
         return bindSearchResultToView(item, view, getContext());
     }
 
-    public static View bindSearchResultToView(SearchResult item, View view, Context context) {
-        TextView tv = (TextView) view.findViewById(R.id.tvResult);
-        tv.setText(Html.fromHtml(item.getInnerhtml()));
-
+    private static void setCover(SearchResult item, View view, Context context) {
         ImageView ivCover = view.findViewById(R.id.ivCover);
         ImageView ivType = view.findViewById(R.id.ivType);
 
@@ -199,8 +196,23 @@ public class ResultsAdapter extends ArrayAdapter<SearchResult> {
             ivCover.setVisibility(View.INVISIBLE);
             ivType.setVisibility(View.GONE);
         }
-        ImageView ivStatus = view.findViewById(R.id.ivStatus);
+    }
 
+    public static View bindSearchResultToView(SearchResult item, View view, Context context) {
+        TextView tv = (TextView) view.findViewById(R.id.tvResult);
+        tv.setText(Html.fromHtml(item.getInnerhtml()));
+
+        setCover(item, view, context);
+        if (item.getCoverFuture() != null) {
+            item.getCoverFuture().thenRun(new Runnable() {
+                @Override
+                public void run() {
+                    setCover(item, view, context);
+                }
+            });
+        }
+
+        ImageView ivStatus = view.findViewById(R.id.ivStatus);
         if (item.getStatus() != null) {
             ivStatus.setVisibility(View.VISIBLE);
             switch (item.getStatus()) {

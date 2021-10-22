@@ -22,6 +22,7 @@
 package de.geeksfactory.opacclient.objects;
 
 import java.util.List;
+import java8.util.concurrent.CompletableFuture;
 
 import de.geeksfactory.opacclient.searchfields.SearchQuery;
 
@@ -38,6 +39,7 @@ public class SearchResult implements CoverHolder {
     private Status status;
     private byte[] coverBitmap;
     private String cover;
+    private CompletableFuture<Void> coverFuture = null;
     private int page;
     private List<SearchQuery> childQuery;
     private String libraryIdent;
@@ -231,6 +233,14 @@ public class SearchResult implements CoverHolder {
      */
     public String getLibraryIdent() {
         return libraryIdent;
+    }
+
+    public CompletableFuture<Void> getCoverFuture() {
+        return coverFuture;
+    }
+
+    public void setCoverFuture(CompletableFuture<Void> coverFuture) {
+        this.coverFuture = coverFuture;
     }
 
     @Override
