@@ -1148,8 +1148,13 @@ public class OpenSearch extends OkHttpBaseApi implements OpacApi {
                 } else if (tr.select("input[type=checkbox]").size() == 1) {
                     Element checkbox = tr.select("input[type=checkbox]").first();
                     CheckboxSearchField field = new CheckboxSearchField();
+                    String label = tr.select("[id*=Lbl]").first().text();
+                    Element label2 = checkbox.parent().select("label").first();
+                    if (label2 != null) {
+                        label += ": " + label2.text();
+                    }
                     field.setId(checkbox.attr("name"));
-                    field.setDisplayName(tr.select("[id*=Lbl]").first().text());
+                    field.setDisplayName(label);
                     fields.add(field);
                 }
             }
