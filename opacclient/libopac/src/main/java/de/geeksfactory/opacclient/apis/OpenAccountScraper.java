@@ -965,7 +965,14 @@ public class OpenAccountScraper extends OpenSearch {
         }
 
         CompletableFuture.allOf(futures.toArray(new CompletableFuture[0])).join();
-        fetchProlongability(copyIds, doc, account);
+        if (data.optBoolean("account_skip_prolongability", false)) {
+            for (Map.Entry<String, LentItem> p : copyIds.entrySet()) {
+                p.getValue().setProlongData(p.getKey());
+                p.getValue().setRenewable(true);
+            }
+        } else  {
+            fetchProlongability(copyIds, doc, account);
+        }
     }
 
     public void fetchProlongability(Map<String, LentItem> copyIds,
