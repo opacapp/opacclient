@@ -307,7 +307,8 @@ public class Adis extends OkHttpBaseApi implements OpacApi {
                            .val(query.getValue());
                     } else {
                         doc.select("select#SUCH01_" + dropdownTextCount).val(query.getKey());
-                        doc.select("input#FELD01_" + dropdownTextCount).val(query.getValue());
+                        doc.select("input#FELD01_" + dropdownTextCount
+                                + ", input[data-fld=FELD01_" + dropdownTextCount + "]").val(query.getValue());
                     }
                 }
 
@@ -1360,7 +1361,7 @@ public class Adis extends OkHttpBaseApi implements OpacApi {
             if (tr.select("a").size() == 1) {
                 if (tr.select("a").first().absUrl("href").contains("sp=SZA")) {
                     alink = tr.select("a").first().absUrl("href");
-                    anum = Integer.parseInt(tr.child(0).text().trim());
+                    anum = Integer.parseInt(tr.child(0).text().replaceAll("[^\\d]", "").trim());
                 }
             }
         }
@@ -1437,7 +1438,7 @@ public class Adis extends OkHttpBaseApi implements OpacApi {
                             tr.select("a").text(),
                             tr.select("a").first().absUrl("href"),
                     });
-                    rnum += Integer.parseInt(tr.child(0).text().trim());
+                    rnum += Integer.parseInt(tr.child(0).text().replaceAll("[^\\d]", "").trim());
                 }
             }
         }
@@ -1705,6 +1706,24 @@ public class Adis extends OkHttpBaseApi implements OpacApi {
         Document doc = getAdvancedSearchDoc();
 
         List<SearchField> fields = new ArrayList<>();
+
+        // Save data so that the search() function knows that this
+        // is not a selectable search field
+        JSONObject selectableData = new JSONObject();
+        selectableData.put("selectable", false);
+
+        // free search field (exists e.g. in HfM Karlsruhe)
+        Element freeSearchField = doc.select("input[data-fld=THEMA2_1]").first();
+        if (freeSearchField != null) {
+            TextSearchField field = new TextSearchField();
+            field.setId(freeSearchField.id());
+            field.setFreeSearch(true);
+            field.setDisplayName(freeSearchField.parent().select("label").text());
+            field.setHint("");
+            field.setData(selectableData);
+            fields.add(field);
+        }
+
         // dropdown to select which field you want to search in
         Elements searchoptions = doc.select("#SUCH01_1 option");
         if (searchoptions.size() == 0 && doc.select("input[fld=FELD01_1]").size() > 0) {
@@ -1727,11 +1746,6 @@ public class Adis extends OkHttpBaseApi implements OpacApi {
 
             fieldIds.add(field.getId());
         }
-
-        // Save data so that the search() function knows that this
-        // is not a selectable search field
-        JSONObject selectableData = new JSONObject();
-        selectableData.put("selectable", false);
 
         for (Element row : doc.select("div[id~=F\\d+], .search-adv-source")) {
             if (row.select("input[type=text]").size() == 1
