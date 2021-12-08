@@ -226,7 +226,7 @@ open class Lissy : OkHttpBaseApi() {
             }
 
             val img = doc.select("table")[1].select("img").first()
-            if (!img.attr("src").contains(".gif")) {
+            if (!img.attr("src").contains("empty.")) {
                 cover = img.absUrl("src")
             }
         }
