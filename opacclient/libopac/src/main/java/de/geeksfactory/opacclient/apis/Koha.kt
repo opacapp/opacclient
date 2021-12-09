@@ -449,6 +449,18 @@ open class Koha : OkHttpBaseApi() {
         } else if (reserveMode == "single") {
             body.add("biblionumbers", "")
             body.add("selecteditems", "")
+
+            // The following is required eg in Neustadt_Holstein. Apparently, there is some kind
+            // of copy selection *and* pickup location selection, and the options are different
+            // whether or not JavaScript is enabled. Further research is required. For
+            // Neustadt_Holstein it doesn't really matter since there's only one real location, so
+            // we just add the default selected one.
+            doc.select("input[type=radio][checked]").forEach {
+                body.add(it.attr("name"), it.attr("value"))
+            }
+            doc.select("option[selected]").forEach {
+                body.add(it.parent().attr("name"), it.attr("value"))
+            }
         } else if (doc.select(".holdrow .alert").size > 0) {
             return OpacApi.ReservationResult(OpacApi.MultiStepResult.Status.ERROR,
                     doc.select(".holdrow .alert").text().trim())
