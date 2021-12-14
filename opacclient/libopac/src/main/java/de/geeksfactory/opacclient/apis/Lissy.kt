@@ -221,6 +221,12 @@ open class Lissy : OkHttpBaseApi() {
             if (!img.attr("src").contains("empty.")) {
                 cover = img.absUrl("src")
             }
+
+            td.select("a").forEach { a ->
+                addDetail(Detail(a.text, a.absUrl("href")))
+            }
+
+            id = "null"  // This is a hack to make sure SearchResultDetailFragment does not override it but StarredFragment still ignores it…
         }
     }
 
@@ -317,6 +323,7 @@ open class Lissy : OkHttpBaseApi() {
     }
 
     override fun reservation(item: DetailedItem, account: Account, useraction: Int, selection: String?): OpacApi.ReservationResult {
+        // Not supported since it's probably very hard to get the session management right and find the correct item
         TODO()
     }
 
@@ -417,8 +424,8 @@ open class Lissy : OkHttpBaseApi() {
         return OpacApi.CancelResult(OpacApi.MultiStepResult.Status.OK, msg?.text())
     }
 
-    override fun getShareUrl(id: String?, title: String?): String {
-        TODO()
+    override fun getShareUrl(id: String?, title: String?): String? {
+        return null
     }
 
     override fun getSupportFlags(): Int {
