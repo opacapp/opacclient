@@ -26,6 +26,7 @@ import de.geeksfactory.opacclient.apis.Bibliotheca;
 import de.geeksfactory.opacclient.apis.Heidi;
 import de.geeksfactory.opacclient.apis.IOpac;
 import de.geeksfactory.opacclient.apis.Koha;
+import de.geeksfactory.opacclient.apis.Lissy;
 import de.geeksfactory.opacclient.apis.Littera;
 import de.geeksfactory.opacclient.apis.NetBiblio;
 import de.geeksfactory.opacclient.apis.OpacApi;
@@ -154,6 +155,8 @@ public class OpacApiFactory {
             }
         } else if (lib.getApi().equals("koha")) {
             newApiInstance = new Koha();
+        } else if (lib.getApi().equals("lissy")) {
+            newApiInstance = new Lissy();
         } else if (lib.getApi().equals("netbiblio")) {
             newApiInstance = new NetBiblio();
         } else if (lib.getApi().equals("slub")) {
