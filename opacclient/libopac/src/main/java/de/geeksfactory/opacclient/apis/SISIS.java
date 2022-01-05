@@ -1539,6 +1539,8 @@ public class SISIS extends OkHttpBaseApi implements OpacApi {
         if (doc.getElementsByClass("error").size() > 0) {
             throw new OpacErrorException(doc.getElementsByClass("error").get(0)
                                             .text());
+        } else if (doc.select("#CommitPasswordBean").size() > 0) {
+            throw new OpacErrorException(doc.select("#CommitPasswordBean .text").text());
         }
 
         logged_in = System.currentTimeMillis();
