@@ -1014,13 +1014,18 @@ public class OpenAccountScraper extends OpenSearch {
 
         int[] version = getOpenVersion(doc);
 
+        String userName = account.getName();
+        if (doc.select("input[type=hidden][name$=PatronRndId]").size() > 0) {
+            userName = doc.select("input[type=hidden][name$=PatronRndId]").first().attr("value");
+        }
+
         if (version[0] == 7 && version[1] >= 1 || version[0] > 7) {
             // from OPEN 7.1, we can use one HTTP request to fetch prolongability of all items
             try {
                 JSONObject postdata = new JSONObject();
                 postdata.put("portalId", portalId)
                         .put("copyIds", join(",", copyIds.keySet()))
-                        .put("userName", account.getName())
+                        .put("userName", userName)
                         .put("localResourceFile",
                                 "~/DesktopModules/OCLC.OPEN.PL.DNN" +
                                         ".PatronAccountModule/App_LocalResources" +
@@ -1061,7 +1066,7 @@ public class OpenAccountScraper extends OpenSearch {
                 try {
                     postdata.put("portalId", portalId)
                             .put("copyId", copyid)
-                            .put("userName", account.getName())
+                            .put("userName", userName)
                             .put("localResourceFile",
                                     "~/DesktopModules/OCLC.OPEN.PL.DNN" +
                                             ".PatronAccountModule/App_LocalResources" +
