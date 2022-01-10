@@ -7,7 +7,7 @@ package de.geeksfactory.opacclient.utils;
  */
 @SuppressWarnings({"CaughtExceptionImmediatelyRethrown", "UnusedAssignment"})
 public class Base64 {
-    
+
 /* ********  P U B L I C   F I E L D S  ******** */
 
 
@@ -60,8 +60,8 @@ public class Base64 {
      * href="http://www.faqs.org/qa/rfcc-1940.html">http://www.faqs.org/qa/rfcc-1940.html</a>.
      */
     public final static int ORDERED = 32;
-    
-    
+
+
 /* ********  P R I V A T E   F I E L D S  ******** */
 
 
@@ -92,7 +92,7 @@ public class Base64 {
     private final static byte WHITE_SPACE_ENC = -5; // Indicates white space in encoding
     private final static byte EQUALS_SIGN_ENC = -1; // Indicates equals sign in encoding
 
-	
+
 /* ********  S T A N D A R D   B A S E 6 4   A L P H A B E T  ******** */
 
     /**
@@ -151,7 +151,7 @@ public class Base64 {
             -9, -9, -9, -9, -9, -9, -9, -9, -9, -9, -9, -9         // Decimal 244 - 255
     };
 
-	
+
 /* ********  U R L   S A F E   B A S E 6 4   A L P H A B E T  ******** */
 
     /**
@@ -278,7 +278,7 @@ public class Base64 {
             -9, -9, -9, -9, -9, -9, -9, -9, -9, -9, -9, -9         // Decimal 244 - 255
     };
 
-	
+
 /* ********  D E T E R M I N E   W H I C H   A L H A B E T  ******** */
 
 
@@ -317,10 +317,10 @@ public class Base64 {
             return _STANDARD_DECODABET;
         }
     }    // end getAlphabet
-    
 
-    
-    
+
+
+
 /* ********  E N C O D I N G   M E T H O D S  ******** */
 
     /**
@@ -366,7 +366,7 @@ public class Base64 {
 
         byte[] ALPHABET = getAlphabet(options);
 
-        //           1         2         3  
+        //           1         2         3
         // 01234567890123456789012345678901 Bit position
         // --------000000001111111122222222 Array position from threeBytes
         // --------|    ||    ||    ||    | Six bit groups to index ALPHABET
@@ -841,11 +841,11 @@ public class Base64 {
         }   // end else: don't compress
 
     }   // end encodeBytesToBytes
-    
 
-    
-    
-    
+
+
+
+
 /* ********  D E C O D I N G   M E T H O D S  ******** */
 
 
@@ -1044,7 +1044,7 @@ public class Base64 {
                 throw new java.io.IOException(String.format(
                         "Bad Base64 input character decimal %d in array position %d",
                         ((int) source[i]) & 0xFF, i));
-            }   // end else: 
+            }   // end else:
         }   // each input character
 
         byte[] out = new byte[outBuffPosn];
@@ -1075,7 +1075,7 @@ public class Base64 {
      * @param options encode options such as URL_SAFE
      * @return the decoded data
      * @throws java.io.IOException  if there is an error
-     * @throws NullPointerException if <tt>s</tt> is null
+     * @throws NullPointerException if <code>s</code> is null
      * @since 1.4
      */
     public static byte[] decode(String s, int options) throws java.io.IOException {
@@ -1149,7 +1149,7 @@ public class Base64 {
 
 
     /**
-     * Attempts to decode Base64 data and deserialize a Java Object within. Returns <tt>null</tt> if
+     * Attempts to decode Base64 data and deserialize a Java Object within. Returns <code>null</code> if
      * there was an error.
      *
      * @param encodedObject The Base64 data to decode
@@ -1167,8 +1167,8 @@ public class Base64 {
 
 
     /**
-     * Attempts to decode Base64 data and deserialize a Java Object within. Returns <tt>null</tt> if
-     * there was an error. If <tt>loader</tt> is not null, it will be the class loader used when
+     * Attempts to decode Base64 data and deserialize a Java Object within. Returns <code>null</code> if
+     * there was an error. If <code>loader</code> is not null, it will be the class loader used when
      * deserializing.
      *
      * @param encodedObject The Base64 data to decode
@@ -1420,7 +1420,7 @@ public class Base64 {
     }   // end encodeFromFile
 
     /**
-     * Reads <tt>infile</tt> and encodes it to <tt>outfile</tt>.
+     * Reads <code>infile</code> and encodes it to <code>outfile</code>.
      *
      * @param infile  Input file
      * @param outfile Output file
@@ -1445,12 +1445,12 @@ public class Base64 {
                 out.close();
             } catch (Exception ex) {
             }
-        }   // end finally    
+        }   // end finally
     }   // end encodeFileToFile
 
 
     /**
-     * Reads <tt>infile</tt> and decodes it to <tt>outfile</tt>.
+     * Reads <code>infile</code> and decodes it to <code>outfile</code>.
      *
      * @param infile  Input file
      * @param outfile Output file
@@ -1475,15 +1475,15 @@ public class Base64 {
                 out.close();
             } catch (Exception ex) {
             }
-        }   // end finally    
+        }   // end finally
     }   // end decodeFileToFile
-    
-    
+
+
     /* ********  I N N E R   C L A S S   I N P U T S T R E A M  ******** */
 
 
     /**
-     * A {@link Base64.InputStream} will read data from another <tt>java.io.InputStream</tt>, given
+     * A {@link Base64.InputStream} will read data from another <code>java.io.InputStream</code>, given
      * in the constructor, and encode/decode to/from Base64 notation on the fly.
      *
      * @see Base64
@@ -1506,7 +1506,7 @@ public class Base64 {
         /**
          * Constructs a {@link Base64.InputStream} in DECODE mode.
          *
-         * @param in the <tt>java.io.InputStream</tt> from which to read data.
+         * @param in the <code>java.io.InputStream</code> from which to read data.
          * @since 1.3
          */
         public InputStream(java.io.InputStream in) {
@@ -1525,7 +1525,7 @@ public class Base64 {
          *
          * Example: <code>new Base64.InputStream( in, Base64.DECODE )</code>
          *
-         * @param in      the <tt>java.io.InputStream</tt> from which to read data.
+         * @param in      the <code>java.io.InputStream</code> from which to read data.
          * @param options Specified options
          * @see Base64#ENCODE
          * @see Base64#DECODE
@@ -1611,7 +1611,7 @@ public class Base64 {
                     else {
                         // Must have broken out from above.
                         throw new java.io.IOException("Improperly padded Base64 input.");
-                    }   // end 
+                    }   // end
 
                 }   // end else: decode
             }   // end else: get data
@@ -1681,17 +1681,17 @@ public class Base64 {
         }   // end read
 
     }   // end inner class InputStream
-    
-    
-    
-    
-    
-    
+
+
+
+
+
+
     /* ********  I N N E R   C L A S S   O U T P U T S T R E A M  ******** */
 
 
     /**
-     * A {@link Base64.OutputStream} will write data to another <tt>java.io.OutputStream</tt>, given
+     * A {@link Base64.OutputStream} will write data to another <code>java.io.OutputStream</code>, given
      * in the constructor, and encode/decode to/from Base64 notation on the fly.
      *
      * @see Base64
@@ -1713,7 +1713,7 @@ public class Base64 {
         /**
          * Constructs a {@link Base64.OutputStream} in ENCODE mode.
          *
-         * @param out the <tt>java.io.OutputStream</tt> to which data will be written.
+         * @param out the <code>java.io.OutputStream</code> to which data will be written.
          * @since 1.3
          */
         public OutputStream(java.io.OutputStream out) {
@@ -1732,7 +1732,7 @@ public class Base64 {
          *
          * Example: <code>new Base64.OutputStream( out, Base64.ENCODE )</code>
          *
-         * @param out     the <tt>java.io.OutputStream</tt> to which data will be written.
+         * @param out     the <code>java.io.OutputStream</code> to which data will be written.
          * @param options Specified options.
          * @see Base64#ENCODE
          * @see Base64#DECODE
