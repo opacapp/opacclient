@@ -252,10 +252,10 @@ public class AccountDataSource {
         item.setFormat(cursor.getString(4));
         item.setId(cursor.getString(5));
         item.setStatus(cursor.getString(6));
-        String mediatype = cursor.getString(cursor.getColumnIndex("mediatype"));
+        String mediatype = cursor.getString(cursor.getColumnIndexOrThrow("mediatype"));
         item.setMediaType(mediatype != null ? SearchResult.MediaType.valueOf(mediatype) : null);
-        item.setCover(cursor.getString(cursor.getColumnIndex("cover")));
-        item.setCoverBitmap(cursor.getBlob(cursor.getColumnIndex("coverBitmap")));
+        item.setCover(cursor.getString(cursor.getColumnIndexOrThrow("cover")));
+        item.setCoverBitmap(cursor.getBlob(cursor.getColumnIndexOrThrow("coverBitmap")));
     }
 
     private ContentValues lentItemToContentValues(LentItem item, long accountId) {

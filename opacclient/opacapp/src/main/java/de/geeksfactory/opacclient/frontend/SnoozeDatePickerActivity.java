@@ -28,10 +28,6 @@ public class SnoozeDatePickerActivity extends Activity
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        // close notification drawer
-        Intent it = new Intent(Intent.ACTION_CLOSE_SYSTEM_DIALOGS);
-        sendBroadcast(it);
-
         dt = DateTime.now();
         new DatePickerDialog(this, R.style.Theme_AppCompat_Light_Dialog, this, dt.getYear(),
                 dt.getMonthOfYear() - 1, // Joda time has 1-based months
