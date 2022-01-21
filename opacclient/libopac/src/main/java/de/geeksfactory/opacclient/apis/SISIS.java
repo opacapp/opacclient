@@ -443,8 +443,8 @@ public class SISIS extends OkHttpBaseApi implements OpacApi {
                 haslink = true;
                 try {
                     List<NameValuePair> anyurl = URLEncodedUtils.parse(
-                            new URI(node.attr("href").replace(" ", "%20")
-                                    .replace("&amp;", "&")), ENCODING);
+                            new URI(cleanUrl(node.attr("href").replace(" ", "%20")
+                                    .replace("&amp;", "&"))), ENCODING);
                     for (NameValuePair nv : anyurl) {
                         if (nv.getName().equals("identifier")) {
                             identifier = nv.getValue();
