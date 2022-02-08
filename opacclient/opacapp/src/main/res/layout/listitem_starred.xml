@@ -8,6 +8,49 @@
                 android:padding="5dp">
 
     <ImageView
+        android:id="@+id/ivMediaType"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:layout_alignParentLeft="true"
+        android:layout_centerVertical="true"
+        android:contentDescription="@string/mediatype"
+        tools:src="@drawable/type_book"/>
+
+    <TextView
+        android:id="@+id/tvTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_toRightOf="@id/ivMediaType"
+        android:layout_toLeftOf="@id/tvStatus"
+        android:padding="5dp"
+        tools:text="Harry Potter and the Philosopher's stone"
+        android:textColor="?android:attr/textColorPrimary"
+        android:textAppearance="?android:attr/textAppearanceMedium"/>
+
+    <TextView
+        android:id="@+id/tvStatus"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_toLeftOf="@id/ivDelete"
+        android:textSize="14sp"
+        android:padding="5dp"
+        android:textColor="?android:attr/textColorHighlight"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        tools:text="2/2/22"/>
+
+    <ImageView
+        android:id="@+id/ivStatus"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toLeftOf="@id/ivDelete"
+        android:layout_centerVertical="true"
+        android:contentDescription="@string/status"
+        app:srcCompat="@drawable/status_light_green_check"
+        tools:ignore="MissingPrefix"/>
+
+    <ImageView
         android:id="@+id/ivDelete"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -17,23 +60,5 @@
         app:srcCompat="@drawable/ic_delete_24dp"
         tools:ignore="MissingPrefix"
         tools:src="@drawable/ic_delete_24dp"/>
-
-    <ImageView
-        android:id="@+id/ivMediaType"
-        android:layout_width="48dp"
-        android:layout_height="48dp"
-        android:layout_alignParentLeft="true"
-        android:layout_centerVertical="true"
-        android:contentDescription="@string/mediatype"/>
-
-    <TextView
-        android:id="@+id/tvTitle"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerVertical="true"
-        android:layout_toLeftOf="@id/ivDelete"
-        android:layout_toRightOf="@id/ivMediaType"
-        android:padding="5dp"
-        android:textAppearance="?android:attr/textAppearanceMedium"/>
 
 </RelativeLayout>

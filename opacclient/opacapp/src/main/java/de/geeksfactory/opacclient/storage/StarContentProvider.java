@@ -45,6 +45,18 @@ public class StarContentProvider extends ContentProvider {
             + STAR_MIME_POSTFIX;
     private StarDatabase database;
 
+    public static final String BRANCH_TYPE = "branch";
+    public static final Uri BRANCH_URI = Uri.parse(BASE_URI + BRANCH_TYPE);
+
+    public static final String STAR_BRANCH_TYPE = "starbranch";
+    public static final Uri STAR_BRANCH_URI = Uri.parse(BASE_URI + STAR_BRANCH_TYPE);
+
+    public static final String STAR_BRANCH_JOIN_BRANCH_TYPE = "starbranch_branch";
+    public static final Uri STAR_BRANCH_JOIN_BRANCH_URI = Uri.parse(BASE_URI + STAR_BRANCH_JOIN_BRANCH_TYPE);
+
+    public static final String STAR_JOIN_STAR_BRANCH_TYPE = "star_starbranch";
+    public static final Uri STAR_JOIN_STAR_BRANCH_URI = Uri.parse(BASE_URI + STAR_JOIN_STAR_BRANCH_TYPE);
+
     private static Mime getTypeMime(Uri uri) {
         if (!AUTHORITY.equals(uri.getAuthority())
                 && !uri.getAuthority().startsWith("de.opacapp.")
@@ -63,6 +75,42 @@ public class StarContentProvider extends ContentProvider {
                     return Mime.STAR_DIR;
                 case 2:
                     return Mime.STAR_ITEM;
+                default:
+                    return null;
+            }
+        } else if (BRANCH_TYPE.equals(type)) {
+            switch (segments.size()) {
+                case 1:
+                    return Mime.BRANCH_DIR;
+                case 2:
+                    return Mime.BRANCH_ITEM;
+                default:
+                    return null;
+            }
+        } else if (STAR_BRANCH_TYPE.equals(type)) {
+            switch (segments.size()) {
+                case 1:
+                    return Mime.STAR_BRANCH_DIR;
+                case 2:
+                    return Mime.STAR_BRANCH_ITEM;
+                default:
+                    return null;
+            }
+        } else if (STAR_BRANCH_JOIN_BRANCH_TYPE.equals(type)) {
+            switch (segments.size()) {
+                case 1:
+                    return Mime.STAR_BRANCH_JOIN_BRANCH_DIR;
+                case 2:
+                    return Mime.STAR_BRANCH_JOIN_BRANCH_ITEM;
+                default:
+                    return null;
+            }
+        } else if (STAR_JOIN_STAR_BRANCH_TYPE.equals(type)) {
+            switch (segments.size()) {
+                case 1:
+                    return Mime.STAR_JOIN_STAR_BRANCH_DIR;
+                case 2:
+                    return Mime.STAR_JOIN_STAR_BRANCH_ITEM;
                 default:
                     return null;
             }
@@ -105,6 +153,14 @@ public class StarContentProvider extends ContentProvider {
                 rowsAffected = deleteInDatabase(StarDatabase.STAR_TABLE,
                         StarDatabase.STAR_WHERE_ID, selectionForUri(uri));
                 break;
+            case STAR_BRANCH_DIR:
+                rowsAffected = deleteInDatabase(StarDatabase.STAR_BRANCH_TABLE,
+                        selection, selectionArgs);
+                break;
+            case STAR_BRANCH_ITEM:
+                rowsAffected = deleteInDatabase(StarDatabase.STAR_BRANCH_TABLE,
+                        "id = ?", selectionForUri(uri));
+                break;
             default:
                 rowsAffected = 0;
                 break;
@@ -128,6 +184,16 @@ public class StarContentProvider extends ContentProvider {
         switch (getTypeMime(uri)) {
             case STAR_DIR:
                 id = insertIntoDatabase(StarDatabase.STAR_TABLE, values);
+                itemUri = ContentUris.withAppendedId(uri, id);
+                notifyUri(uri);
+                break;
+            case BRANCH_DIR:
+                id = insertIntoDatabase(StarDatabase.BRANCH_TABLE, values);
+                itemUri = ContentUris.withAppendedId(uri, id);
+                notifyUri(uri);
+                break;
+            case STAR_BRANCH_DIR:
+                id = insertIntoDatabase(StarDatabase.STAR_BRANCH_TABLE, values);
                 itemUri = ContentUris.withAppendedId(uri, id);
                 notifyUri(uri);
                 break;
@@ -163,6 +229,27 @@ public class StarContentProvider extends ContentProvider {
                         StarDatabase.STAR_WHERE_ID, selectionForUri(uri), null,
                         null, sortOrder);
                 break;
+            case BRANCH_DIR:
+                cursor = queryDatabase(StarDatabase.BRANCH_TABLE, projection,
+                        selection, selectionArgs, null, null, sortOrder);
+                break;
+            case STAR_BRANCH_JOIN_BRANCH_DIR:
+                cursor = queryDatabase(StarDatabase.BRANCH_TABLE + " INNER JOIN "
+                                + StarDatabase.STAR_BRANCH_TABLE + " ON "
+                                + StarDatabase.BRANCH_TABLE + ".id = "
+                                + StarDatabase.STAR_BRANCH_TABLE + ".id_branch"
+                        , projection,
+                        selection, selectionArgs, "name", "count >0", sortOrder);
+                break;
+            case STAR_JOIN_STAR_BRANCH_DIR:
+                String table = StarDatabase.STAR_TABLE + " LEFT JOIN "
+                        + StarDatabase.STAR_BRANCH_TABLE + " ON "
+                        + StarDatabase.STAR_TABLE + ".id = "
+                        + StarDatabase.STAR_BRANCH_TABLE + ".id_star";
+                cursor = queryDatabase(table
+                        , projection,
+                        selection, selectionArgs, "starred.id", null, sortOrder);
+                break;
             default:
                 return null;
         }
@@ -189,6 +276,10 @@ public class StarContentProvider extends ContentProvider {
                 rowsAffected = updateInDatabase(StarDatabase.STAR_TABLE, values,
                         StarDatabase.STAR_WHERE_ID, selectionForUri(uri));
                 break;
+            case BRANCH_DIR:
+                rowsAffected = updateInDatabase(StarDatabase.BRANCH_TABLE, values,
+                        StarDatabase.BRANCH_WHERE_ID, selectionArgs);
+                break;
             default:
                 rowsAffected = 0;
                 break;
@@ -209,6 +300,10 @@ public class StarContentProvider extends ContentProvider {
     }
 
     private enum Mime {
-        STAR_ITEM, STAR_DIR
+        STAR_ITEM, STAR_DIR,
+        BRANCH_ITEM, BRANCH_DIR,
+        STAR_BRANCH_ITEM, STAR_BRANCH_DIR,
+        STAR_BRANCH_JOIN_BRANCH_ITEM, STAR_BRANCH_JOIN_BRANCH_DIR,
+        STAR_JOIN_STAR_BRANCH_ITEM, STAR_JOIN_STAR_BRANCH_DIR
     }
 }

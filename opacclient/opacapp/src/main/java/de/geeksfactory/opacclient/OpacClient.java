@@ -59,6 +59,7 @@ import de.geeksfactory.opacclient.frontend.LibraryListActivity;
 import de.geeksfactory.opacclient.frontend.MainActivity;
 import de.geeksfactory.opacclient.frontend.MainPreferenceActivity;
 import de.geeksfactory.opacclient.frontend.SearchResultListActivity;
+import de.geeksfactory.opacclient.frontend.StarredFragment;
 import de.geeksfactory.opacclient.i18n.AndroidStringProvider;
 import de.geeksfactory.opacclient.networking.AndroidHttpClientFactory;
 import de.geeksfactory.opacclient.objects.Account;
@@ -394,6 +395,12 @@ public class OpacClient extends Application {
         GooglePlayTools.updateSecurityProvider(getApplicationContext());
 
         sp = PreferenceManager.getDefaultSharedPreferences(this);
+
+        // Starred-Preferences: reset for keys which should not survive a restart
+        SharedPreferences.Editor editor = sp.edit();
+        editor.remove(StarredFragment.STATE_ACTIVATED_POSITION);
+        editor.remove(StarredFragment.STATE_FILTER_BRANCH);
+        editor.apply();
 
         if (BuildConfig.SENTRY_DSN != null) {
             SentryAndroid.init(this, options -> {
