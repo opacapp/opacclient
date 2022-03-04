@@ -95,6 +95,36 @@ open class Arena : OkHttpBaseApi() {
             }
         }.build()
         val doc = httpPost(searchForm["action"], formData, ENCODING).html
+
+        if (doc.select(".arena-record").size == 0) {
+            // If there is only exactly one result, we are redirected directly to the result with
+            // javascript and need to simulate a fake result list
+
+            val scripts = doc.select("script").map { it.html() }
+            val regex = Regex("location.replace\\(['\"]([^\"']+)[\"']\\)")
+            var redirectTo: String? = null
+            scripts.forEach { script ->
+                regex.findAll(script).forEach { match ->
+                    redirectTo = match.groups[1]!!.value.replace("\\x3d", "=").replace("\\x26", "&")
+                }
+            }
+            if (redirectTo != null) {
+                val newDoc = httpGet(redirectTo, ENCODING).html
+                val details = newDoc.select(".arena-catalogue-detail")
+                val results = listOf(SearchResult().apply {
+                    val title = details.select(".arena-detail-title span").last().text
+                    val year = details.select(".arena-detail-year .arena-value").first()?.text
+                    val author = details.select(".arena-detail-author .arena-value").map { it.text }.joinToString(", ")
+
+                    innerhtml = "<b>$title</b><br>$author ${year ?: ""}"
+                    id = details.select(".arena-record-id").first().text
+                    cover = details.select(".arena-detail-cover").first()?.absUrl("src")
+
+                })
+                return SearchRequestResult(results, 1, 1)
+            }
+        }
+
         return parseSearch(doc)
     }
 
@@ -188,6 +218,7 @@ open class Arena : OkHttpBaseApi() {
 
     override fun searchGetPage(page: Int): SearchRequestResult {
         val doc = searchDoc ?: throw NotReachableException()
+
         val pageLinks = doc.select(".arena-record-navigation").first()
                 .select(".arena-page-number > a, .arena-page-number > span")
 
