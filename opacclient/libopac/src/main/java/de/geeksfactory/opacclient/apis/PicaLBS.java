@@ -189,7 +189,9 @@ public class PicaLBS extends Pica {
             String returndate =
                     extractAccountInfo(tr, "Returndate", "ausgeliehen bis",
                             "Ausleihfrist", "Leihfristende");
-            item.setDeadline(parseDate(returndate));
+            if (returndate != null) {
+                item.setDeadline(parseDate(returndate));
+            }
 
             StringBuilder status = new StringBuilder();
 
