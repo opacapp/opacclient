@@ -67,7 +67,6 @@ public class PicaLBS extends Pica {
                     res.setMessage(doc.select(".error, font[color=red]").text());
                     return res;
                 }
-                System.out.println(doc.text());
                 List<Connection.KeyVal> keyVals =
                         ((FormElement) doc.select("#opacVolumesForm").first()).formData();
                 FormBody.Builder params = new FormBody.Builder();
@@ -79,9 +78,14 @@ public class PicaLBS extends Pica {
                     ReservationResult res = new ReservationResult(MultiStepResult.Status.ERROR);
                     res.setMessage(doc.select(".error").text());
                     return res;
-                } else if (doc.select(".info").text().contains("Reservation saved")
-                        || doc.select(".info").text().contains("vorgemerkt")) {
+                } else if (doc.select(".info, .alertmessage").text().contains("Reservation saved")
+                        || doc.select(".info, .alertmessage").text().contains("vorgemerkt")
+                        || doc.select(".info, .alertmessage").text().contains("erfolgt")) {
                     return new ReservationResult(MultiStepResult.Status.OK);
+                } else if (doc.select(".alertmessage").size() > 0) {
+                    ReservationResult res = new ReservationResult(MultiStepResult.Status.ERROR);
+                    res.setMessage(doc.select(".alertmessage").text());
+                    return res;
                 } else {
                     ReservationResult res = new ReservationResult(MultiStepResult.Status.ERROR);
                     res.setMessage(stringProvider.getString(StringProvider.UNKNOWN_ERROR));
