@@ -179,13 +179,16 @@ public class Adis extends OkHttpBaseApi implements OpacApi {
         return doc;
     }
 
-    @Override
-    public void start() throws IOException {
+    private void _start() throws IOException, OpacErrorException {
         try {
             s_requestCount = -1;
             s_exts = null;
             s_service = null;
             Document doc = htmlGet(opac_url + "?" + data.getString("startparams"));
+
+            if (doc.select(".msgpage").size() > 0) {
+                throw new OpacErrorException(doc.select(".msgpage").text());
+            }
 
             Pattern padSid = Pattern
                     .compile(".*;jsessionid=([0-9A-Fa-f]+)[^0-9A-Fa-f].*");
@@ -250,6 +253,15 @@ public class Adis extends OkHttpBaseApi implements OpacApi {
         super.start();
     }
 
+    @Override
+    public void start() throws IOException {
+        try {
+            _start();
+        } catch (OpacErrorException e) {
+            throw new IOException("Failed to start");
+        }
+    }
+
     private Document getAdvancedSearchDoc() throws IOException {
         if (advancedSearchFormBody != null) {
             return htmlPost(opac_url + ";jsessionid=" + s_sid, advancedSearchFormBody);
@@ -267,7 +279,7 @@ public class Adis extends OkHttpBaseApi implements OpacApi {
     @Override
     public SearchRequestResult search(List<SearchQuery> queries)
             throws IOException, OpacErrorException {
-        start();
+        _start();
         // TODO: There are also libraries with a different search form,
         // s_exts=SS2 instead of s_exts=SS6
         // e.g. munich. Treat them differently!
@@ -1125,7 +1137,11 @@ public class Adis extends OkHttpBaseApi implements OpacApi {
         String alink = null;
         Document doc;
 
-        start();
+        try {
+            _start();
+        } catch (OpacErrorException e) {
+            return new ProlongResult(Status.ERROR, e.getMessage());
+        }
         try {
             doc = login(account);
         } catch (OpacErrorException e) {
@@ -1204,7 +1220,11 @@ public class Adis extends OkHttpBaseApi implements OpacApi {
             String selection) throws IOException {
         String alink = null;
         Document doc;
-        start();
+        try {
+            _start();
+        } catch (OpacErrorException e) {
+            return new ProlongAllResult(Status.ERROR, e.getMessage());
+        }
         try {
             doc = login(account);
         } catch (OpacErrorException e) {
@@ -1284,7 +1304,7 @@ public class Adis extends OkHttpBaseApi implements OpacApi {
         String rlink = null;
         Document doc;
         rlink = media.split("\\|")[1].replace("requestCount=", "fooo=");
-        start();
+        _start();
         try {
             doc = login(account);
         } catch (OpacErrorException e) {
@@ -1365,7 +1385,7 @@ public class Adis extends OkHttpBaseApi implements OpacApi {
     @Override
     public AccountData account(Account account) throws IOException,
             JSONException, OpacErrorException {
-        start();
+        _start();
 
         Document doc = login(account);
 
@@ -1499,8 +1519,8 @@ public class Adis extends OkHttpBaseApi implements OpacApi {
             if (rdoc.select("#Toolbar_0").size() > 0) {
                 form.add(new BasicNameValuePair("$Toolbar_0.x", "1"));
                 form.add(new BasicNameValuePair("$Toolbar_0.y", "1"));
-            } else if (rdoc.select("input[value=Abbrechen]").size() > 0) {
-                Element button = rdoc.select("input[value=Abbrechen]").first();
+            } else if (rdoc.select("input[value=Abbrechen], input[value*=Übersicht]").size() > 0) {
+                Element button = rdoc.select("input[value=Abbrechen], input[value*=Übersicht]").first();
                 form.add(new BasicNameValuePair(button.attr("name"), button.attr("value")));
             }
             htmlPost(opac_url + ";jsessionid=" + s_sid, form);
@@ -1732,8 +1752,8 @@ public class Adis extends OkHttpBaseApi implements OpacApi {
 
     @Override
     public List<SearchField> parseSearchFields() throws IOException,
-            JSONException {
-        start();
+            JSONException, OpacErrorException {
+        _start();
 
         Document doc = getAdvancedSearchDoc();
 
@@ -1901,9 +1921,9 @@ public class Adis extends OkHttpBaseApi implements OpacApi {
     @Override
     public void checkAccountData(Account account) throws IOException,
             JSONException, OpacErrorException {
-        start();
+        _start();
 
-        Document doc = login(account);
+        login(account);
     }
 
     @Override
