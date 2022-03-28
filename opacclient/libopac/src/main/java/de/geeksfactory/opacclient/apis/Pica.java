@@ -620,6 +620,7 @@ public abstract class Pica extends OkHttpBaseApi implements OpacApi {
                             reservation.put("multi", multipleCopies);
                             reservation.put("link", _extract_url(a));
                             reservation.put("desc", location);
+                            reservation.put("status", detail);
                             reservationInfo.put(reservation);
                         } catch (JSONException e1) {
                             e1.printStackTrace();

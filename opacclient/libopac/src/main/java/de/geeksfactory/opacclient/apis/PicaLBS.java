@@ -12,8 +12,10 @@ import org.jsoup.nodes.FormElement;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 
 import de.geeksfactory.opacclient.i18n.StringProvider;
 import de.geeksfactory.opacclient.networking.HttpClientFactory;
@@ -45,13 +47,21 @@ public class PicaLBS extends Pica {
             int useraction, String selection) throws IOException {
         try {
             JSONArray json = new JSONArray(item.getReservation_info());
-            if (json.length() != 1) {
-                // TODO: This case is not implemented, don't know if it is possible with LBS
-                ReservationResult res = new ReservationResult(MultiStepResult.Status.ERROR);
-                res.setMessage(stringProvider.getString(StringProvider.INTERNAL_ERROR));
+            if (json.length() != 1 && selection == null) {
+
+                ReservationResult res = new ReservationResult(MultiStepResult.Status.SELECTION_NEEDED);
+                res.setActionIdentifier(ReservationResult.ACTION_BRANCH);
+                List<Map<String, String>> selections = new ArrayList<>();
+                for (int i = 0; i < json.length(); i++) {
+                    Map<String, String> selopt = new HashMap<>();
+                    selopt.put("key", String.valueOf(i));
+                    selopt.put("value", json.getJSONObject(i).getString("desc") + " (" + json.getJSONObject(i).getString("status") + ")");
+                    selections.add(selopt);
+                }
+                res.setSelection(selections);
                 return res;
             } else {
-                String url = json.getJSONObject(0).getString("link");
+                String url = json.getJSONObject(selection == null ? 0 : Integer.parseInt(selection)).getString("link");
                 Document doc = Jsoup.parse(httpGet(url, getDefaultLBSEncoding()));
 
                 if (doc.select("#opacVolumesForm").size() == 0) {
