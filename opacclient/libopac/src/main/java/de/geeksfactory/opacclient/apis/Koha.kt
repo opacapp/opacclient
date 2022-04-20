@@ -617,15 +617,26 @@ open class Koha : OkHttpBaseApi() {
     }
 
     private fun parseDate(col: Element): LocalDate? {
-        val select = col.select("span[title]").first() ?: return null
-        val isoformat = select.attr("title").replace(" ", "T")
-        // example: <span title="2018-11-02T23:59:00">
-        // or <span title="2018-11-02 23:59:00">
-        if (isoformat.startsWith("0000-00-00")) {
-            return null
-        } else {
-            return LocalDateTime(isoformat).toLocalDate()
+        val select = col.select("span[title]").first()
+        if (select != null) {
+            // example: <span title="2018-11-02T23:59:00">
+            // or <span title="2018-11-02 23:59:00">
+            val isoformat = select.attr("title").replace(" ", "T")
+            if (isoformat.startsWith("0000-00-00")) {
+                return null
+            } else {
+                return LocalDateTime(isoformat).toLocalDate()
+            }
+        } else if (col.hasAttr("data-order")) {
+            // example: <td class="date_due sorting_1" data-order="2022-05-07 23:59:00">
+            val isoformat = col.attr("data-order").replace(" ", "T")
+            if (isoformat.startsWith("0000-00-00")) {
+                return null
+            } else {
+                return LocalDateTime(isoformat).toLocalDate()
+            }
         }
+        return null
     }
 
     override fun checkAccountData(account: Account) {
