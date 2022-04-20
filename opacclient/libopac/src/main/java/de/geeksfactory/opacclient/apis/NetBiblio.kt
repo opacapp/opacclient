@@ -547,9 +547,7 @@ open class NetBiblio : OkHttpBaseApi() {
             }
 
             val feesString = overview.select("a[href$=fees]").first()?.text
-            pendingFees = if (feesString != null) {
-                Regex("\\(([^\\)]+)\\)").find(feesString)?.groups?.get(1)?.value
-            } else null
+            pendingFees = feesString
             validUntil = overview.select(
                     ".wo-list-label:contains(Abonnement (Ende)) + .wo-list-content, " +
                             ".wo-list-label:contains(Subscription (end)) + .wo-list-content," +
