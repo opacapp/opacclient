@@ -280,14 +280,14 @@ open class Koha : OkHttpBaseApi() {
             title = titleElem.ownText()
             this.id = doc.select(".unapi-id").first()["title"].removePrefix("koha:biblionumber:")
 
-            if (doc.select("h5.author, span.results_summary").size > 0) {
+            if (doc.select("h5.author, span.author, span.results_summary").size > 0) {
                 // LMSCloud
-                doc.select("h5.author, span.results_summary").forEach { row ->
+                doc.select("h5.author, span.author, span.results_summary").forEach { row ->
                     // remove "Read more" link
                     row.select(".truncable-txt-readmore").remove()
 
                     // go through the details
-                    if (row.tagName() == "h5" || row.select("> span.label").size > 0) {
+                    if (row.tagName() == "h5" || row.hasClass("author") || row.select("> span.label").size > 0) {
                         // just one detail on this line
                         val title = row.text.split(":").first().trim()
                         val value = row.text.split(":").drop(1).joinToString(":").trim()
@@ -319,10 +319,12 @@ open class Koha : OkHttpBaseApi() {
             val mediatypeImg = doc.select(".materialtype").first()?.attr("src")?.split("/")?.last()?.removeSuffix(".png")
             mediaType = mediatypes[mediatypeImg]
 
-            cover = doc.select("#bookcover img").first()?.attr("src")
+            cover = doc.select("#bookcover img").first {
+                !it.parent().parent().hasClass("contentsamplelink")
+            }?.attr("src")
 
             val df = DateTimeFormat.forPattern("dd.MM.yyyy")
-            copies = doc.select(".holdingst > tbody > tr").map { row ->
+            copies = doc.select(".holdingst > tbody > tr, #holdingst > tbody > tr").map { row ->
                 Copy().apply {
                     for (td in row.select("td")) {
                         row.select(".branch-info-tooltip").remove()
