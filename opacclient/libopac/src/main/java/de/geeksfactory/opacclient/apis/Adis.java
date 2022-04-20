@@ -1717,7 +1717,7 @@ public class Adis extends OkHttpBaseApi implements OpacApi {
                         .attr("value")));
             }
         }
-        Element inputSend = doc.select("input[type=submit][value=Anmelden]").first();
+        Element inputSend = doc.select("input[type=submit][value=Anmelden], input[type=submit][value=Anmeldung abschicken]").first();
         if (inputSend == null) {
             inputSend = doc.select("input[type=submit]").first();
         }
