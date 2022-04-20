@@ -182,6 +182,7 @@ public class Bibliotheca extends OkHttpBaseApi {
                         JSONObject params = new JSONObject();
                         params.put("stichtit", "stich");
                         addData.put("additional_params", params);
+                        addData.put("meaning", "free_search");
                         tf.setData(addData);
                     }
                     if (radios.size() == 2 && radios.get(1).attr("value").equals("titel")) {
