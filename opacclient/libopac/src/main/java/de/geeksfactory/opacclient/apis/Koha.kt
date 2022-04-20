@@ -508,11 +508,22 @@ open class Koha : OkHttpBaseApi() {
 
     override fun prolongAll(account: Account, useraction: Int, selection: String?): OpacApi.ProlongAllResult {
         var doc = login(account)
-        var borrowernumber = doc.select("input[name=borrowernumber]").first()?.attr("value")
 
-        doc = Jsoup.parse(httpGet("$baseurl/cgi-bin/koha/opac-renew.pl?from=opac_user&borrowernumber=$borrowernumber", ENCODING))
+        if (doc.select("#renewall[method=post]").size > 0) {
+            // LMSCloud post-2022
+            val formBody = FormBody.Builder()
+            for (i in doc.select("#renewall input")) {
+                formBody.add(i.attr("name"), i.attr("value"))
+            }
+
+            doc = Jsoup.parse(httpPost("$baseurl/cgi-bin/koha/opac-renew.pl", formBody.build(), ENCODING))
+        } else {
+            // LMSCloud pre-2022
+            val borrowernumber = doc.select("input[name=borrowernumber]").first()?.attr("value")
+            doc = Jsoup.parse(httpGet("$baseurl/cgi-bin/koha/opac-renew.pl?from=opac_user&borrowernumber=$borrowernumber", ENCODING))
+        }
         val label = doc.select(".blabel").first()
-        if (label != null && label.hasClass("label-success")) {
+        if (label != null && doc.select(".label-success").size > 0) {
             return OpacApi.ProlongAllResult(OpacApi.MultiStepResult.Status.OK)
         } else {
             return OpacApi.ProlongAllResult(OpacApi.MultiStepResult.Status.ERROR, label?.text()
@@ -624,7 +635,7 @@ open class Koha : OkHttpBaseApi() {
             // example: <span title="2018-11-02T23:59:00">
             // or <span title="2018-11-02 23:59:00">
             val isoformat = select.attr("title").replace(" ", "T")
-            if (isoformat.startsWith("0000-00-00")) {
+            if (isoformat.isBlank() || isoformat.startsWith("0000-00-00")) {
                 return null
             } else {
                 return LocalDateTime(isoformat).toLocalDate()
@@ -632,7 +643,7 @@ open class Koha : OkHttpBaseApi() {
         } else if (col.hasAttr("data-order")) {
             // example: <td class="date_due sorting_1" data-order="2022-05-07 23:59:00">
             val isoformat = col.attr("data-order").replace(" ", "T")
-            if (isoformat.startsWith("0000-00-00")) {
+            if (isoformat.isBlank() || isoformat.startsWith("0000-00-00")) {
                 return null
             } else {
                 return LocalDateTime(isoformat).toLocalDate()
