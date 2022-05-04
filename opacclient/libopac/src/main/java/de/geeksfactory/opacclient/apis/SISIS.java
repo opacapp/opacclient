@@ -1258,14 +1258,25 @@ public class SISIS extends OkHttpBaseApi implements OpacApi {
             }
 
             if (doc.select("#CirculationForm .textrot").size() >= 1 && !confirmedFees) {
-                String errmsg = doc.select("#CirculationForm .textrot").get(0).text();
-                ReservationResult result = new ReservationResult(
-                        Status.CONFIRMATION_NEEDED);
-                List<String[]> details = new ArrayList<>();
-                details.add(new String[]{"", errmsg});
-                result.setDetails(details);
-                confirmingFees = true;
-                return result;
+                Element textrot = doc.select("#CirculationForm .textrot").get(0);
+                /*
+                Germering:
+                <span class="textrot">Diese Vormerkung wird am</span>
+                &nbsp;
+                <input type="text" name="ablaufdatum" maxlength="10" size="10" value="21.06.2030" readonly="readonly" style="width:7em;" />
+                &nbsp;
+                <span class="textrot">automatisch gel&ouml;scht.</span>
+                 */
+                if (!textrot.nextElementSibling().tagName().equals("input")) {
+                    String errmsg = textrot.text();
+                    ReservationResult result = new ReservationResult(
+                            Status.CONFIRMATION_NEEDED);
+                    List<String[]> details = new ArrayList<>();
+                    details.add(new String[]{"", errmsg});
+                    result.setDetails(details);
+                    confirmingFees = true;
+                    return result;
+                }
             }
 
             if (doc.select("input[name=expressorder]").size() > 0) {
