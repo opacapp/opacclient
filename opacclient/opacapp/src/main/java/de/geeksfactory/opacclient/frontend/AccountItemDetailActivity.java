@@ -3,6 +3,7 @@ package de.geeksfactory.opacclient.frontend;
 import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.Resources;
 import android.os.Build;
 import android.os.Bundle;
 import android.text.Html;
@@ -12,6 +13,8 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ScrollView;
+
+import java.util.Locale;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -216,7 +219,11 @@ public class AccountItemDetailActivity extends AppCompatActivity {
         int id = context.getResources().getIdentifier("mediatype_"
                         + mediaType.toString().toLowerCase(), "string",
                 context.getPackageName());
-        return context.getResources().getString(id);
+        try {
+            return context.getResources().getString(id);
+        } catch (Resources.NotFoundException e) {
+            return mediaType.toString().toLowerCase();
+        }
     }
 
     public static CharSequence getFormat(AccountItem item, Context context) {

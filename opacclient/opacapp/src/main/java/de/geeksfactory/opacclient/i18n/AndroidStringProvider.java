@@ -21,6 +21,8 @@
  */
 package de.geeksfactory.opacclient.i18n;
 
+import android.content.res.Resources;
+
 import de.geeksfactory.opacclient.OpacClient;
 import de.geeksfactory.opacclient.objects.SearchResult;
 
@@ -49,9 +51,13 @@ public class AndroidStringProvider implements StringProvider {
 
     @Override
     public String getMediaTypeName(SearchResult.MediaType mediaType) {
-        int id = OpacClient.context.getResources().getIdentifier("mediatype_"
-                        + mediaType.toString().toLowerCase(), "string",
-                OpacClient.context.getPackageName());
-        return OpacClient.context.getResources().getString(id);
+        try {
+            int id = OpacClient.context.getResources().getIdentifier("mediatype_"
+                            + mediaType.toString().toLowerCase(), "string",
+                    OpacClient.context.getPackageName());
+            return OpacClient.context.getResources().getString(id);
+        } catch (Resources.NotFoundException e) {
+            return mediaType.toString().toLowerCase();
+        }
     }
 }
