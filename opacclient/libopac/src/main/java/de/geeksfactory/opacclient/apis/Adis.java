@@ -1650,12 +1650,18 @@ public class Adis extends OkHttpBaseApi implements OpacApi {
                 }
             } else {
                 // Format "Autor: Titel - Verlag - ISBN:... #Nummer", z.B. Fernleihe in Berlin
+                // sometimes "[Format]#Autor: Titel - Verlag - ISBN:... #Nummer", z.B. Fernleihe in Berlin
                 String[] split = text.split("#");
                 String[] aut_tit = split[0].split(": ");
-                item.setAuthor(aut_tit[0].replaceFirst("([^:;\n]+)[:;\n](.*)$", "$1").trim());
+                if (split[0].trim().startsWith("[") && split[0].trim().endsWith("]")) {
+                    aut_tit = split[1].split(": ");
+                }
                 if (aut_tit.length > 1) {
+                    item.setAuthor(aut_tit[0].replaceFirst("([^:;\n]+)[:;\n](.*)$", "$1").trim());
                     item.setTitle(
                             aut_tit[1].replaceFirst("([^:;\n]+)[:;\n](.*)$", "$1").trim());
+                } else {
+                    item.setTitle(aut_tit[0]);
                 }
                 //Is always the last one...
                 String id = split[split.length - 1];
