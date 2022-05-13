@@ -14,6 +14,7 @@ import de.geeksfactory.opacclient.objects.Library;
 import java8.util.concurrent.CompletableFuture;
 import okhttp3.Call;
 import okhttp3.Callback;
+import okhttp3.Interceptor;
 import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -30,6 +31,7 @@ public abstract class OkHttpBaseApi extends BaseApi {
     public OkHttpClient http_client;
     public HttpClientFactory http_client_factory;
     protected boolean httpLoggingEnabled = true;
+    public Interceptor http_interceptor;
 
     /**
      * Initializes HTTP client and String Provider
@@ -40,7 +42,9 @@ public abstract class OkHttpBaseApi extends BaseApi {
         http_client = http_client_factory.getNewOkHttpClient(
                 library.getData().optBoolean("customssl", false),
                 library.getData().optBoolean("customssl_tls_only", true),
-                library.getData().optBoolean("customssl_all_ciphersuites", false)
+                library.getData().optBoolean("customssl_all_ciphersuites", false),
+                false,
+                http_interceptor
         );
         http_client.dispatcher().setMaxRequestsPerHost(10);
         this.library = library;
@@ -361,6 +365,17 @@ public abstract class OkHttpBaseApi extends BaseApi {
     public String httpPost(String url, RequestBody data)
             throws IOException {
         return httpPost(url, data, getDefaultEncoding(), false);
+    }
+
+    public void httpDelete(String url) throws IOException {
+        Request.Builder requestbuilder = new Request.Builder()
+                .url(cleanUrl(url))
+                .header("Accept", "*/*")
+                .header("User-Agent", getUserAgent());
+
+        Request request = requestbuilder.delete().build();
+
+        Response response = http_client.newCall(request).execute();
     }
 
     public void setHttpLoggingEnabled(boolean httpLoggingEnabled) {

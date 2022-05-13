@@ -37,6 +37,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.CookieManager;
 import java.net.CookiePolicy;
+import java.net.Proxy;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.security.KeyManagementException;
@@ -162,7 +163,7 @@ public class HttpClientFactory {
 
     public OkHttpClient getNewOkHttpClient(boolean customssl, boolean tls_only,
                                            boolean allCipherSuites) {
-        return getOkHttpClientBuilder(customssl, tls_only, allCipherSuites, false).build();
+        return getOkHttpClientBuilder(customssl, tls_only, allCipherSuites, false, null).build();
     }
 
     /**
@@ -177,12 +178,21 @@ public class HttpClientFactory {
                                            boolean allCipherSuites,
                                            boolean ellipticCurvesWorkaround) {
         return getOkHttpClientBuilder(customssl, tls_only, allCipherSuites,
-                ellipticCurvesWorkaround).build();
+                ellipticCurvesWorkaround, null).build();
+    }
+
+    public OkHttpClient getNewOkHttpClient(boolean customssl, boolean tls_only,
+            boolean allCipherSuites,
+            boolean ellipticCurvesWorkaround,
+            Interceptor interceptor) {
+        return getOkHttpClientBuilder(customssl, tls_only, allCipherSuites,
+                ellipticCurvesWorkaround, interceptor).build();
     }
 
     protected OkHttpClient.Builder getOkHttpClientBuilder(boolean customssl, boolean tls_only,
                                                           boolean allCipherSuites,
-                                                          boolean ellipticCurvesWorkaround) {
+                                                          boolean ellipticCurvesWorkaround,
+                                                          Interceptor interceptor) {
         OkHttpClient.Builder builder = new OkHttpClient.Builder();
 
         CookieManager cookieManager = new CookieManager();
@@ -193,6 +203,8 @@ public class HttpClientFactory {
         builder.connectTimeout(60, TimeUnit.SECONDS);
         builder.readTimeout(60, TimeUnit.SECONDS);
         builder.writeTimeout(60, TimeUnit.SECONDS);
+        builder.proxy(Proxy.NO_PROXY);
+        if (interceptor != null) builder.addInterceptor(interceptor);
 
         if (customssl && ssl_store_path != null) {
             try {

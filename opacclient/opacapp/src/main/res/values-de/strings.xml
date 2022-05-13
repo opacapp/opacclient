@@ -351,4 +351,5 @@
     <string name="doing_prolong_due">Verlängerbare fällige Medien werden verlängert…</string>
     <string name="prolong_due_no_items">Es gibt keine verlängerbaren fälligen Medien.</string>
     <string name="search_detail_created_account">Ein anonymes Konto wurde für dich angelegt.</string>
+    <string name="search_scope">Suchbereich</string>
 </resources>

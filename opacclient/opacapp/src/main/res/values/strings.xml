@@ -349,5 +349,23 @@
     <string name="doing_prolong_due">Renewable due media are being renewed…</string>
     <string name="prolong_due_no_items">There are no renewable due items.</string>
     <string name="search_detail_created_account">An anonymous account was created for your.</string>
-
+    <string name="search_scope">Search scope</string>
+    <string name="available">Available</string>
+    <string name="hold_allowed">Hold allowed</string>
+    <string name="reference">Only for reference</string>
+    <string name="on_hold">On hold</string>
+    <string name="on_loan">On loan</string>
+    <string name="on_order">On order</string>
+    <string name="not_available">Not available</string>
+    <string name="ACTIVE">Active</string>
+    <string name="CLOSED">Closed</string>
+    <string name="IN_TRANSPORT">In transport</string>
+    <string name="RECEIVED">Received</string>
+    <string name="RETURNED_TO_BRANCH">Returned to branch</string>
+    <string name="UNKNOWN">Unknown</string>
+    <string name="pick_up_at_home">Pick up at home branch?</string>
+    <string name="other_branch">Different branch</string>
+    <string name="alt_location">Alternative pickup location</string>
+    <string name="cost_queue">Reservation costs and/or queue</string>
+    <string name="pickup_location">Pickup at different location</string>
 </resources>
