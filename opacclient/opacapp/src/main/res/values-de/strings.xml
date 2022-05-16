@@ -178,6 +178,7 @@
         <item quantity="other">%d Suchergebnisse</item>
     </plurals>
     <string name="share_starred">Exportieren</string>
+    <string name="filter_starred">Filtern</string>
     <string name="export_account">Als Text teilen</string>
     <string name="geolocate">Finde Bibliotheken in meiner Nähe</string>
     <string name="geolocate_progress">Standort wird ermittelt…</string>
@@ -351,4 +352,29 @@
     <string name="doing_prolong_due">Verlängerbare fällige Medien werden verlängert…</string>
     <string name="prolong_due_no_items">Es gibt keine verlängerbaren fälligen Medien.</string>
     <string name="search_detail_created_account">Ein anonymes Konto wurde für dich angelegt.</string>
+    <string name="starred_refresh_branches">Status aktualisieren</string>
+    <string name="starred_filter_no_branch">Ohne Zweigstelle</string>
+    <string name="starred_filter_no_branch_count">Ohne Zweigstelle (%1$d)</string>
+    <string name="starred_header_branch">%1$d Medien in %2$s</string>
+    <string name="starred_header">%1d Medien</string>
+    <string name="starred_remove_all">Alle löschen</string>
+    <string name="starred_remove_all_ok">Ja</string>
+    <string name="starred_update_branch_success">Bei %1$d  Medien wurden der Status aktualisiert</string>
+    <string name="starred_update_branch_fail">Fehler beim Aktualisieren der Stati (%1$s)</string>
+    <string name="starred_filter_all">Alle</string>
+    <string name="starred_without_branch">%1d Medien ohne Zweigstelle</string>
+    <string name="starred_remove_all_sure">Alle löschen?</string>
+    <string name="starred_up_to_date">Der Status ist aktuell</string>
+    <plurals name="starred_age_minutes">
+        <item quantity="one">Der Status ist eine Minute alt.</item>
+        <item quantity="other">Der Status ist %d Minuten alt.</item>
+    </plurals>
+    <plurals name="starred_age_hours">
+        <item quantity="one">Der Status ist eine Stunde alt.</item>
+        <item quantity="other">Der Status ist %d Stunden alt.</item>
+    </plurals>
+    <plurals name="starred_age_days">
+        <item quantity="one">Der Status ist einen Tag alt.</item>
+        <item quantity="other">Der Status ist %d Tage alt.</item>
+    </plurals>
 </resources>

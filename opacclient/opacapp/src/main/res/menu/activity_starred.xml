@@ -3,6 +3,38 @@
       xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
+        android:id="@+id/action_filter"
+        android:icon="@drawable/baseline_filter_list_24"
+        app:showAsAction="ifRoom"
+        android:title="@string/filter_starred">
+        <!-- leeres (sub) menu für Branches -->
+        <menu>
+            <item
+                android:id="@+id/action_filter_all"
+                android:visible="true"
+                android:checkable="false"
+                android:checked="false"
+                android:title="@string/starred_filter_all">
+            </item>
+            <item
+                android:id="@+id/action_filter_no_branch"
+                android:visible="true"
+                android:checkable="false"
+                android:checked="false"
+                android:title="@string/starred_filter_no_branch">
+            </item>
+            <!--
+            <group android:id="@+id/group_filter"
+                android:checkableBehavior="single">
+                <item
+                    android:id="@+id/action_filter_branch"
+                    android:visible="false">
+                </item>
+            </group>
+            -->
+        </menu>
+    </item>
+    <item
         android:id="@+id/action_export"
         android:icon="@drawable/ic_share_toolbar_24dp"
         app:showAsAction="ifRoom"
@@ -17,6 +49,17 @@
         android:id="@+id/action_import_from_storage"
         app:showAsAction="never"
         android:title="@string/import_starred_from_storage">
+    </item>
+    <item
+        android:id="@+id/action_remove_all"
+        app:showAsAction="never"
+        android:title="@string/starred_remove_all">
+    </item>
+    <item
+        android:id="@+id/action_refresh_branches"
+        android:icon="@drawable/ic_baseline_autorenew_24"
+        app:showAsAction="never"
+        android:title="@string/starred_refresh_branches">
     </item>
 
 </menu>

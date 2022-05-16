@@ -38,6 +38,7 @@ import de.geeksfactory.opacclient.R;
 import de.geeksfactory.opacclient.barcode.BarcodeScanIntegrator;
 import de.geeksfactory.opacclient.objects.Account;
 import de.geeksfactory.opacclient.objects.LentItem;
+import de.geeksfactory.opacclient.objects.SearchResult;
 import de.geeksfactory.opacclient.reminder.Alarm;
 import de.geeksfactory.opacclient.reminder.ReminderBroadcastReceiver;
 import de.geeksfactory.opacclient.searchfields.SearchField;
@@ -506,12 +507,11 @@ public class MainActivity extends OpacActivity
     }
 
     @Override
-    public void showDetail(String mNr) {
+    public void showDetail(String mNr, SearchResult.MediaType mediaType) {
         if (isTablet()) {
             rightFragment = new SearchResultDetailFragment();
             Bundle args = new Bundle();
             args.putString(SearchResultDetailFragment.ARG_ITEM_ID, mNr);
-            args.putString(SearchResultDetailFragment.ARG_ITEM_LIBRARY_IDENT, app.getLibrary().getIdent());
             rightFragment.setArguments(args);
 
             // Insert the fragment
@@ -521,7 +521,10 @@ public class MainActivity extends OpacActivity
         } else {
             Intent intent = new Intent(this, SearchResultDetailActivity.class);
             intent.putExtra(SearchResultDetailFragment.ARG_ITEM_ID, mNr);
-            intent.putExtra(SearchResultDetailFragment.ARG_ITEM_LIBRARY_IDENT, app.getLibrary().getIdent());
+            if (mediaType!= null) {
+                intent.putExtra(SearchResultDetailFragment.ARG_ITEM_MEDIATYPE,
+                        mediaType.toString());
+            }
             startActivity(intent);
         }
     }

@@ -849,7 +849,7 @@ public class SearchResultDetailFragment extends Fragment
                         star.remove(star.getItemByTitle(bib, title));
                         item.setIcon(R.drawable.ic_star_0_white_24dp);
                     } else {
-                        star.star(null, title, bib, getItem().getMediaType());
+                        star.star(null, title, bib, getItem().getMediaType(), getItem().getCopies());
                         Toast toast = Toast.makeText(getActivity(),
                                 getString(R.string.starred), Toast.LENGTH_SHORT);
                         toast.show();
@@ -863,7 +863,7 @@ public class SearchResultDetailFragment extends Fragment
                     star.remove(star.getItem(bib, id));
                     item.setIcon(R.drawable.ic_star_0_white_24dp);
                 } else {
-                    star.star(id, title, bib, getItem().getMediaType());
+                    star.star(id, title, bib, getItem().getMediaType(), getItem().getCopies());
                     Toast toast = Toast.makeText(getActivity(),
                             getString(R.string.starred), Toast.LENGTH_SHORT);
                     toast.show();
