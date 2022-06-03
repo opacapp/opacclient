@@ -1267,7 +1267,7 @@ public class SISIS extends OkHttpBaseApi implements OpacApi {
                 &nbsp;
                 <span class="textrot">automatisch gel&ouml;scht.</span>
                  */
-                if (!textrot.nextElementSibling().tagName().equals("input")) {
+                if (textrot.nextElementSibling() != null && !textrot.nextElementSibling().tagName().equals("input")) {
                     String errmsg = textrot.text();
                     ReservationResult result = new ReservationResult(
                             Status.CONFIRMATION_NEEDED);
