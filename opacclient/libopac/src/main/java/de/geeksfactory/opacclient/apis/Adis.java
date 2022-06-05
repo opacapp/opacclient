@@ -223,6 +223,7 @@ public class Adis extends OkHttpBaseApi implements OpacApi {
             if (!accountFormOldstyle) {
                 List<NameValuePair> nvpairs_a = new ArrayList(s_pageform);
                 nvpairs_a.add(new BasicNameValuePair("$ScriptButton_hidden", "BK"));
+                nvpairs_a.add(new BasicNameValuePair("selected", "ZTEXT       *SBK"));
                 accountFormBody = nvpairs_a;
             }
 
