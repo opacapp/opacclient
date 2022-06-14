@@ -114,6 +114,19 @@ public abstract class CoverDownloadTask extends AsyncTask<Void, Integer, CoverHo
     }
 
     protected byte[] getImage() throws IOException {
+        if (item.getCover().contains(".ekz.de/")) {
+            /*
+            This is a workaround after the cyber-attack on EKZ in 2022. Lots of libraries include
+            images from EKZ, but cover.ekz.de is just not responding for months and eating up loads
+            of loading time in the app. To limit the effect, we apply a strict timeout.
+
+            We'd be interested in applying that timeout to covers generally, but unfortunately
+            we can't set the timeout for individual requests, just for new http client classes, and
+            for the general case, we need to use the same client as the API class since *some*
+            systems require us to send proper cookies for covers.
+             */
+            return getImageOkHttpClient(new AndroidHttpClientFactory().getNewOkHttpClient(false, false, false, 3));
+        }
         try {
             OpacApi api = ((OpacClient) context.getApplicationContext()).getApi();
             if (api instanceof ApacheBaseApi) {

@@ -180,9 +180,20 @@ public class HttpClientFactory {
                 ellipticCurvesWorkaround).build();
     }
 
-    protected OkHttpClient.Builder getOkHttpClientBuilder(boolean customssl, boolean tls_only,
-                                                          boolean allCipherSuites,
-                                                          boolean ellipticCurvesWorkaround) {
+    protected OkHttpClient.Builder getOkHttpClientBuilder(
+            boolean customssl, boolean tls_only,
+            boolean allCipherSuites,
+            boolean ellipticCurvesWorkaround
+    ) {
+        return getOkHttpClientBuilder(customssl, tls_only, allCipherSuites, ellipticCurvesWorkaround, 60);
+    }
+
+    protected OkHttpClient.Builder getOkHttpClientBuilder(
+            boolean customssl, boolean tls_only,
+            boolean allCipherSuites,
+            boolean ellipticCurvesWorkaround,
+            int timeout
+    ) {
         OkHttpClient.Builder builder = new OkHttpClient.Builder();
 
         CookieManager cookieManager = new CookieManager();
@@ -190,9 +201,9 @@ public class HttpClientFactory {
         builder.cookieJar(new JavaNetCookieJar(cookieManager));
 
         builder.addNetworkInterceptor(new CustomRedirectInterceptor());
-        builder.connectTimeout(60, TimeUnit.SECONDS);
-        builder.readTimeout(60, TimeUnit.SECONDS);
-        builder.writeTimeout(60, TimeUnit.SECONDS);
+        builder.connectTimeout(timeout, TimeUnit.SECONDS);
+        builder.readTimeout(timeout, TimeUnit.SECONDS);
+        builder.writeTimeout(timeout, TimeUnit.SECONDS);
 
         if (customssl && ssl_store_path != null) {
             try {
@@ -215,7 +226,7 @@ public class HttpClientFactory {
                 builder.sslSocketFactory(sf, trustManager);
 
                 List<ConnectionSpec> connectionSpecs = new ArrayList<ConnectionSpec>();
-                
+
                 if (ellipticCurvesWorkaround) {
                     // fallback for Bug in Android 7.0 where only elliptic curve prime256v1 can
                     // be used -> retry with a cipher suite without elliptic curves

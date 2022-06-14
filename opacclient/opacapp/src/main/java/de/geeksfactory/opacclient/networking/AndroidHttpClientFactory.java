@@ -67,4 +67,14 @@ public class AndroidHttpClientFactory extends HttpClientFactory {
         client.cache(new Cache(OpacClient.context.getCacheDir(), cacheSize));
         return DebugTools.prepareHttpClient(client).build();
     }
+
+    public OkHttpClient getNewOkHttpClient(boolean customssl, boolean tls_only,
+            boolean allCipherSuites, int timeout) {
+        OkHttpClient.Builder client =
+                super.getOkHttpClientBuilder(customssl, tls_only, allCipherSuites,
+                        Build.VERSION.SDK_INT == 24, timeout);
+        int cacheSize = 50 * 1024 * 1024; // 50MB
+        client.cache(new Cache(OpacClient.context.getCacheDir(), cacheSize));
+        return DebugTools.prepareHttpClient(client).build();
+    }
 }
