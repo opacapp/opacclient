@@ -9,6 +9,7 @@ import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.util.EntityUtils;
+import org.json.JSONObject;
 
 import java.io.IOException;
 import java.util.HashSet;
@@ -146,6 +147,12 @@ public abstract class CoverDownloadTask extends AsyncTask<Void, Integer, CoverHo
     protected CoverHolder doInBackground(Void... voids) {
 
         if (item.getCover() != null && item.getCoverBitmap() == null) {
+            JSONObject data = ((OpacClient) context.getApplicationContext()).getLibrary().getData();
+            if (data.optBoolean("disable_covers", false)) {
+                item.setCoverBitmap(null);
+                item.setCover(null);
+                return item;
+            }
             try {
                 if (width == 0 && height == 0) {
                     // Use default
