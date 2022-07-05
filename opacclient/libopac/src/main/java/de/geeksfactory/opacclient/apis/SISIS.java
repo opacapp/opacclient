@@ -46,8 +46,10 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
+import java.util.function.Predicate;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 import de.geeksfactory.opacclient.apis.OpacApi.MultiStepResult.Status;
 import de.geeksfactory.opacclient.i18n.StringProvider;
@@ -1737,7 +1739,7 @@ public class SISIS extends OkHttpBaseApi implements OpacApi {
                 return;
             }
 
-            item.setTitle(tr.child(1).select("strong").text().trim());
+            item.setTitle(tr.child(1).select("strong").stream().filter(element -> !element.parent().tagName().toLowerCase(Locale.ROOT).equals("a")).map(Element::text).collect(Collectors.joining(" ")).trim());
             try {
                 String[] rowsplit1 = tr.child(1).html().split("<br[ /]*>");
                 String[] rowsplit2 = tr.child(2).html().split("<br[ /]*>");
