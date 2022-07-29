@@ -319,7 +319,7 @@ open class Koha : OkHttpBaseApi() {
             val mediatypeImg = doc.select(".materialtype").first()?.attr("src")?.split("/")?.last()?.removeSuffix(".png")
             mediaType = mediatypes[mediatypeImg]
 
-            cover = doc.select("#bookcover img").first {
+            cover = doc.select("#bookcover img").firstOrNull {
                 !it.parent().parent().hasClass("contentsamplelink")
             }?.attr("src")
 
