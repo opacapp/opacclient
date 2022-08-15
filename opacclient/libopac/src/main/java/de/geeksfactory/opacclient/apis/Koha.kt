@@ -83,7 +83,8 @@ open class Koha : OkHttpBaseApi() {
         }
 
         val countText = doc.select("#numresults").first().text
-        val totalResults = Regex("\\d+").findAll(countText).last().value.toInt()
+        val totalResults = Regex("\\d+").findAll(countText).lastOrNull()?.value?.toInt()
+            ?: return SearchRequestResult(emptyList(), -1, page)
 
         val results = doc.select(".searchresults table tr").map { row ->
 
