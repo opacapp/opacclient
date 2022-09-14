@@ -297,7 +297,7 @@ open class NetBiblio : OkHttpBaseApi() {
                                 continue
                             }
                             when (type) {
-                                "", "Stockwerk" -> {
+                                "", "Stockwerk", "Abteilung" -> {
                                     when (lastType) {
                                         "Aktueller Standort", "Standorte", "Standort" -> {
                                             // Bern: multiple location columns
@@ -308,7 +308,13 @@ open class NetBiblio : OkHttpBaseApi() {
                                     }
                                 }
                                 "Bibliothek" -> branch = content
-                                "Aktueller Standort", "Standorte", "Standort" -> location = content
+                                "Aktueller Standort", "Standorte", "Standort" -> {
+                                    if (location != null) {
+                                        location += " · $content"
+                                    } else {
+                                        location = content
+                                    }
+                                }
                                 "Signatur", "Call number", "Cote" -> shelfmark = content
                                 "Verfügbarkeit", "Disposability", "Disponsibilité" -> status = content
                                 "Fälligkeitsdatum", "Due date", "Date d'échéance" ->
