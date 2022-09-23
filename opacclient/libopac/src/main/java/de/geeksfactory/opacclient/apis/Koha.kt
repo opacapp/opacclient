@@ -377,7 +377,9 @@ open class Koha : OkHttpBaseApi() {
 
     var reservationFeeConfirmed = false
     var selectedCopy: String? = null
+    var selectedBranch: String? = null
     val ACTION_ITEM = 101
+    val ACTION_BRANCH = 102
 
     override fun reservation(item: DetailedItem, account: Account, useraction: Int, selection: String?): OpacApi.ReservationResult {
         try {
@@ -393,6 +395,7 @@ open class Koha : OkHttpBaseApi() {
             }
             OpacApi.MultiStepResult.ACTION_CONFIRMATION -> reservationFeeConfirmed = true
             ACTION_ITEM -> selectedCopy = selection
+            ACTION_BRANCH -> selectedBranch = selection
         }
 
         var doc = httpGet("$baseurl/cgi-bin/koha/opac-reserve.pl?biblionumber=${item.id}", ENCODING).html
@@ -405,12 +408,33 @@ open class Koha : OkHttpBaseApi() {
             }
         }
 
+        if (doc.select("select[name=branch]").size > 0) {
+            if (selectedBranch == null && doc.select("select[name=branch] option").size > 1) {
+                return OpacApi.ReservationResult(
+                    OpacApi.MultiStepResult.Status.SELECTION_NEEDED,
+                    doc.select(".branch label").text).apply {
+                    actionIdentifier = ACTION_BRANCH
+                    setSelection(doc.select("select[name=branch] option").map { opt ->
+                        HashMap<String, String>().apply {
+                            put("key", opt.`val`())
+                            put("value", opt.text())
+                        }
+                    })
+                }
+            } else if (doc.select("select[name=branch] option").size == 1) {
+                selectedBranch = doc.select("select[name=branch] option").first().`val`()
+            }
+        }
+
         val body = FormBody.Builder()
         body.add("place_reserve", "1")
         val reserveMode = doc.select("input[name=reserve_mode]").`val`()
         body.add("reserve_mode", reserveMode)  // can be "single" or "multi"
         body.add("single_bib", item.id)
         body.add("expiration_date_${item.id}", "")
+        if (selectedBranch != null) {
+            body.add("branch", selectedBranch!!)
+        }
         val checkboxes = doc.select("input[name=checkitem_${item.id}]")
         if (checkboxes.size > 0) {
             body.add("biblionumbers", "${item.id}/")
@@ -430,14 +454,14 @@ open class Koha : OkHttpBaseApi() {
                     }
                     if (copies.size > 0 && activeCopies.isEmpty()) {
                         return OpacApi.ReservationResult(
-                                OpacApi.MultiStepResult.Status.ERROR,
-                                stringProvider.getString(StringProvider.NO_COPY_RESERVABLE)
+                            OpacApi.MultiStepResult.Status.ERROR,
+                            stringProvider.getString(StringProvider.NO_COPY_RESERVABLE)
                         )
                     }
                     // copy selection
                     return OpacApi.ReservationResult(
-                            OpacApi.MultiStepResult.Status.SELECTION_NEEDED,
-                            doc.select(".copiesrow caption").text).apply {
+                        OpacApi.MultiStepResult.Status.SELECTION_NEEDED,
+                        doc.select(".copiesrow caption").text).apply {
                         actionIdentifier = ACTION_ITEM
                         setSelection(activeCopies.map { row ->
                             HashMap<String, String>().apply {
@@ -466,7 +490,7 @@ open class Koha : OkHttpBaseApi() {
             }
         } else if (doc.select(".holdrow .alert").size > 0) {
             return OpacApi.ReservationResult(OpacApi.MultiStepResult.Status.ERROR,
-                    doc.select(".holdrow .alert").text().trim())
+                doc.select(".holdrow .alert").text().trim())
         }
 
         if (!reservationFeeConfirmed && doc.select(".alert").size > 0) {
@@ -474,7 +498,7 @@ open class Koha : OkHttpBaseApi() {
             val message = alert.text
             if (alert.id() == "reserve_fee") {
                 val res = OpacApi.ReservationResult(
-                        OpacApi.MultiStepResult.Status.CONFIRMATION_NEEDED)
+                    OpacApi.MultiStepResult.Status.CONFIRMATION_NEEDED)
                 res.details = arrayListOf(arrayOf(message))
                 return res
             }
