@@ -275,7 +275,7 @@ open class Koha : OkHttpBaseApi() {
         return parseDetail(doc)
     }
 
-    private fun parseDetail(doc: Document): DetailedItem {
+    protected fun parseDetail(doc: Document): DetailedItem {
         return DetailedItem().apply {
             val titleElem = doc.select("h1.title, #opacxslt h2").first()
             title = titleElem.ownText()
