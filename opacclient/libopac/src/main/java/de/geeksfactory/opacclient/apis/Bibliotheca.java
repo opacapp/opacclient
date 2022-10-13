@@ -33,6 +33,7 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Comment;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
+import org.jsoup.nodes.Node;
 import org.jsoup.nodes.TextNode;
 import org.jsoup.select.Elements;
 
@@ -454,11 +455,13 @@ public class Bibliotheca extends OkHttpBaseApi {
             } catch (Exception e) {
             }
             try {
-                if (tr.child(1).childNode(0) instanceof Comment) {
-                    Comment c = (Comment) tr.child(1).childNode(0);
-                    String comment = c.getData().trim();
-                    String id = comment.split(": ")[1];
-                    sr.setId(id);
+                for (Node td: tr.childNodes()) {
+                    if (td.childNode(0) instanceof Comment) {
+                        Comment c = (Comment) td.childNode(0);
+                        String comment = c.getData().trim();
+                        String id = comment.split(": ")[1];
+                        sr.setId(id);
+                    }
                 }
             } catch (Exception e) {
                 e.printStackTrace();
