@@ -80,13 +80,13 @@
     <plurals name="notif_ticker">
         <item quantity="one">U %d titulu se blíží datum vrácení!</item>
         <item quantity="few">U %d titulů se blíží datum vrácení!</item>
-        <item quantity="other">U %d titulů se blíží datum vrácení!</item>
+        <item quantity="many">U %d titulů se blíží datum vrácení!</item>
     </plurals>
     <string name="notif_title">Lhůta vrácení titulů se přiblížila</string>
     <plurals name="notif_ticker_expired">
         <item quantity="one">Lhůta vrácení %d titulu vypršela!</item>
         <item quantity="few">Lhůta vrácení %d titulů vypršela!</item>
-        <item quantity="other">Lhůta vrácení %d titulů vypršela!</item>
+        <item quantity="many">Lhůta vrácení %d titulů vypršela!</item>
     </plurals>
     <string name="notif_title_expired">Lhůta vrácení titulů vypršela</string>
     <string name="notif_snooze">Později</string>
