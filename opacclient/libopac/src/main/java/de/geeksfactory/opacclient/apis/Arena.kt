@@ -435,7 +435,7 @@ open class Arena : OkHttpBaseApi() {
     }
 
     internal fun parseReservations(doc: Document): List<ReservedItem> {
-        return doc.select(".portlet-myReservations .arena-record").map {  record ->
+        val thisPage = doc.select(".portlet-myReservations .arena-record").map {  record ->
             ReservedItem().apply {
                 id = record.select(".arena-record-id").first().text
                 title = record.select(".arena-record-title").first()?.text
@@ -448,11 +448,17 @@ open class Arena : OkHttpBaseApi() {
                 cancelData = id
             }
         }
+        if (doc.select(".portlet-myReservations a.arena-navigation-arrow .arena-record-right").size > 0) {
+            val nextPage = doc.select(".portlet-myReservations a.arena-navigation-arrow .arena-record-right").parents().select("a.arena-navigation-arrow").first().absUrl("href");
+            val nextPageDoc = httpGet(nextPage, ENCODING).html
+            return thisPage + parseReservations(nextPageDoc)
+        }
+        return thisPage
     }
 
     internal fun parseLent(doc: Document): List<LentItem> {
         val df = DateTimeFormat.forPattern("dd.MM.yy")
-        return doc.select("#loansTable > tbody > tr").map {  tr ->
+        val thisPage = doc.select("#loansTable > tbody > tr").map {  tr ->
             LentItem().apply {
                 id = tr.select(".arena-record-id").first().text
                 title = tr.select(".arena-record-title").first()?.text
@@ -466,6 +472,12 @@ open class Arena : OkHttpBaseApi() {
                 status = tr.select(".arena-renewal-status-message").first()?.text
             }
         }
+        if (doc.select(".portlet-myLoans a.arena-navigation-arrow .arena-record-right").size > 0) {
+            val nextPage = doc.select(".portlet-myLoans a.arena-navigation-arrow .arena-record-right").parents().select("a.arena-navigation-arrow").first().absUrl("href");
+            val nextPageDoc = httpGet(nextPage, ENCODING).html
+            return thisPage + parseLent(nextPageDoc)
+        }
+        return thisPage
     }
 
     internal fun parseFees(feesDoc: Document): String? {
