@@ -81,6 +81,7 @@ public class BiBer1992 extends OkHttpBaseApi {
     final private int numOfResultsPerPage = 20;
     protected boolean newStyleReservations = false;
     protected boolean reservationsId1First = false;
+    protected String reservationsLocationField = "ID1";
     private String opacUrl = "";
     private String opacDir = "opac"; // sometimes also "opax"
     private String opacSuffix = ".C"; // sometimes also ".S"
@@ -759,8 +760,9 @@ public class BiBer1992 extends OkHttpBaseApi {
                     .val().length() > 4;
 
             for (Element input : doc.select("input, select")) {
-                if ("ID1".equals(input.attr("name"))) {
+                if ("ID1".equals(input.attr("name")) || "ID2".equals(input.attr("name"))) {
                     reservationsId1First = true;
+                    reservationsLocationField = input.attr("name");
                     break;
                 } else if ("FUNC".equals(input.attr("name")) ||
                         "vors".equals(input.attr("value"))) {
@@ -769,7 +771,7 @@ public class BiBer1992 extends OkHttpBaseApi {
                 }
             }
 
-            Elements optionsElements = doc.select("select[name=ID1] option");
+            Elements optionsElements = doc.select("select[name=" + reservationsLocationField + "] option");
             if (optionsElements.size() > 0) {
                 List<Map<String, String>> options = new ArrayList<>();
                 for (Element option : optionsElements) {
@@ -802,7 +804,7 @@ public class BiBer1992 extends OkHttpBaseApi {
             formData.add("LANG", "de");
             formData.add("BENUTZER", account.getName());
             formData.add("PASSWORD", account.getPassword());
-            if (reservationsId1First) formData.add("ID1", selection.split(":")[0]);
+            if (reservationsId1First) formData.add(reservationsLocationField, selection.split(":")[0]);
             formData.add("FUNC", "vors");
             if (opacDir.contains("opax")) {
                 formData.add(resinfo.replace(
@@ -813,7 +815,7 @@ public class BiBer1992 extends OkHttpBaseApi {
             if (newStyleReservations) {
                 formData.addEncoded("ID11", selection.split(":")[1]);
             }
-            if (!reservationsId1First) formData.add("ID1", selection.split(":")[0]);
+            if (!reservationsId1First) formData.add(reservationsLocationField, selection.split(":")[0]);
 
             String html = httpPost(
                     opacUrl + "/" + opacDir + "/setreserv" + opacSuffix,
