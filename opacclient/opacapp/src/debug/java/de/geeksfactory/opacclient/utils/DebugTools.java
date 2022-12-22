@@ -1,6 +1,7 @@
 package de.geeksfactory.opacclient.utils;
 
 import android.app.Application;
+import android.os.Build;
 
 import com.facebook.flipper.android.AndroidFlipperClient;
 import com.facebook.flipper.android.utils.FlipperUtils;
@@ -21,7 +22,7 @@ public class DebugTools {
     public static void init(Application app) {
         SoLoader.init(app, false);
 
-        if (BuildConfig.DEBUG && FlipperUtils.shouldEnableFlipper(app)) {
+        if (BuildConfig.DEBUG && FlipperUtils.shouldEnableFlipper(app) && Build.VERSION.SDK_INT > Build.VERSION_CODES.LOLLIPOP_MR1) {
             final FlipperClient client = AndroidFlipperClient.getInstance(app);
             client.addPlugin(new InspectorFlipperPlugin(app, DescriptorMapping.withDefaults()));
             networkPlugin = new NetworkFlipperPlugin();
@@ -33,7 +34,10 @@ public class DebugTools {
     }
 
     public static OkHttpClient.Builder prepareHttpClient(OkHttpClient.Builder builder) {
-
-        return builder.addNetworkInterceptor(new FlipperOkhttpInterceptor(networkPlugin));
+        if (networkPlugin != null) {
+            return builder.addNetworkInterceptor(new FlipperOkhttpInterceptor(networkPlugin));
+        } else {
+            return builder;
+        }
     }
 }
