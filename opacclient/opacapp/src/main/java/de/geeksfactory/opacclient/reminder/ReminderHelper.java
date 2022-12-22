@@ -183,8 +183,14 @@ public class ReminderHelper {
                 Intent i = new Intent(app, ReminderBroadcastReceiver.class);
                 i.setAction(ReminderBroadcastReceiver.ACTION_SHOW_NOTIFICATION);
                 i.putExtra(ReminderBroadcastReceiver.EXTRA_ALARM_ID, alarm.id);
-                PendingIntent pi = PendingIntent
-                        .getBroadcast(app, (int) alarm.id, i, PendingIntent.FLAG_UPDATE_CURRENT);
+                PendingIntent pi = null;
+                if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.S) {
+                    pi = PendingIntent
+                            .getBroadcast(app, (int) alarm.id, i, PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_MUTABLE);
+                } else {
+                    pi = PendingIntent
+                            .getBroadcast(app, (int) alarm.id, i, PendingIntent.FLAG_UPDATE_CURRENT);
+                }
                 // If the alarm's timestamp is in the past, AlarmManager will trigger it
                 // immediately.
                 setExact(alarmManager, AlarmManager.RTC_WAKEUP, alarm.notificationTime.getMillis(),

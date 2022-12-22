@@ -180,18 +180,32 @@ public class ReminderBroadcastReceiver extends BroadcastReceiver {
         Intent deleteIntent = new Intent(context, ReminderBroadcastReceiver.class);
         deleteIntent.setAction(ReminderBroadcastReceiver.ACTION_NOTIFICATION_DELETED);
         deleteIntent.putExtra(ReminderBroadcastReceiver.EXTRA_ALARM_ID, alarm.id);
-        PendingIntent deletePendingIntent = PendingIntent
-                .getBroadcast(context, (int) alarm.id, deleteIntent,
-                        PendingIntent.FLAG_UPDATE_CURRENT);
+        PendingIntent deletePendingIntent = null;
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.S) {
+            deletePendingIntent = PendingIntent
+                    .getBroadcast(context, (int) alarm.id, deleteIntent,
+                            PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_MUTABLE);
+        } else {
+            deletePendingIntent = PendingIntent
+                    .getBroadcast(context, (int) alarm.id, deleteIntent,
+                            PendingIntent.FLAG_UPDATE_CURRENT);
+        }
         builder.setDeleteIntent(deletePendingIntent);
 
         // Intent for snooze button
         Intent snoozeIntent = new Intent(context, ReminderBroadcastReceiver.class);
         snoozeIntent.setAction(ReminderBroadcastReceiver.ACTION_NOTIFICATION_SNOOZE);
         snoozeIntent.putExtra(ReminderBroadcastReceiver.EXTRA_ALARM_ID, alarm.id);
-        PendingIntent snoozePendingIntent = PendingIntent
-                .getBroadcast(context, (int) alarm.id, snoozeIntent,
-                        PendingIntent.FLAG_UPDATE_CURRENT);
+        PendingIntent snoozePendingIntent = null;
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.S) {
+            snoozePendingIntent = PendingIntent
+                    .getBroadcast(context, (int) alarm.id, snoozeIntent,
+                            PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_MUTABLE);
+        } else {
+            snoozePendingIntent = PendingIntent
+                    .getBroadcast(context, (int) alarm.id, snoozeIntent,
+                            PendingIntent.FLAG_UPDATE_CURRENT);
+        }
         builder.addAction(R.drawable.ic_action_alarms, context.getString(R.string.notif_snooze),
                 snoozePendingIntent);
 
@@ -199,9 +213,16 @@ public class ReminderBroadcastReceiver extends BroadcastReceiver {
         Intent notAgainIntent = new Intent(context, ReminderBroadcastReceiver.class);
         notAgainIntent.setAction(ReminderBroadcastReceiver.ACTION_NOTIFICATION_DONT_REMIND_AGAIN);
         notAgainIntent.putExtra(ReminderBroadcastReceiver.EXTRA_ALARM_ID, alarm.id);
-        PendingIntent notAgainPendingIntent = PendingIntent
-                .getBroadcast(context, (int) alarm.id, notAgainIntent,
-                        PendingIntent.FLAG_UPDATE_CURRENT);
+        PendingIntent notAgainPendingIntent = null;
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.S) {
+            notAgainPendingIntent = PendingIntent
+                    .getBroadcast(context, (int) alarm.id, notAgainIntent,
+                            PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_MUTABLE);
+        } else {
+            notAgainPendingIntent = PendingIntent
+                    .getBroadcast(context, (int) alarm.id, notAgainIntent,
+                            PendingIntent.FLAG_UPDATE_CURRENT);
+        }
         builder.addAction(R.drawable.ic_action_delete,
                 context.getString(R.string.notif_dont_remind_again), notAgainPendingIntent);
 
@@ -209,9 +230,16 @@ public class ReminderBroadcastReceiver extends BroadcastReceiver {
         Intent clickIntent = new Intent(context, ReminderBroadcastReceiver.class);
         clickIntent.setAction(ReminderBroadcastReceiver.ACTION_NOTIFICATION_CLICK);
         clickIntent.putExtra(ReminderBroadcastReceiver.EXTRA_ALARM_ID, alarm.id);
-        PendingIntent clickPendingIntent = PendingIntent
-                .getBroadcast(context, (int) alarm.id, clickIntent,
-                        PendingIntent.FLAG_UPDATE_CURRENT);
+        PendingIntent clickPendingIntent = null;
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.S) {
+            clickPendingIntent = PendingIntent
+                    .getBroadcast(context, (int) alarm.id, clickIntent,
+                            PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_MUTABLE);
+        } else {
+            clickPendingIntent = PendingIntent
+                    .getBroadcast(context, (int) alarm.id, clickIntent,
+                            PendingIntent.FLAG_UPDATE_CURRENT);
+        }
         builder.setContentIntent(clickPendingIntent);
 
 

@@ -217,7 +217,7 @@ public class MainActivity extends OpacActivity
             if (nfc_capable) {
                 mAdapter = android.nfc.NfcAdapter.getDefaultAdapter(this);
                 nfcIntent = PendingIntent.getActivity(this, 0,
-                        new Intent(this, getClass()).addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP), 0);
+                        new Intent(this, getClass()).addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP), PendingIntent.FLAG_MUTABLE);
                 IntentFilter ndef = new IntentFilter(android.nfc.NfcAdapter.ACTION_TECH_DISCOVERED);
                 try {
                     ndef.addDataType("*/*");

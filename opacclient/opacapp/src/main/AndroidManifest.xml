@@ -56,6 +56,7 @@
 
         <activity
             android:name="de.geeksfactory.opacclient.frontend.MainActivity"
+            android:exported="true"
             android:label="@string/launcher_name"
             android:theme="@style/Theme.Opacapp.NoActionBar.WithDrawer">
             <intent-filter>
