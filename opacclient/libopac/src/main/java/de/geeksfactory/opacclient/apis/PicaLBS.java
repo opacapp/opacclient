@@ -360,7 +360,7 @@ public class PicaLBS extends Pica {
         // check if already logged in
         String html = httpGet(lbsUrl + "/LBS_WEB/borrower/borrower.htm",
                 getDefaultLBSEncoding(), true);
-        if (!html.contains("Login") && !html.equals("") && !html.contains("Systemfehler") &&
+        if (!html.contains("class=\"error\"") && !html.contains("Login") && !html.equals("") && !html.contains("Systemfehler") &&
                 !html.contains("nicht aktiv gewesen")) {
             return;
         }
