@@ -1025,8 +1025,7 @@ public class Bibliotheca extends OkHttpBaseApi {
             start();
         }
 
-        String html = httpGet(opac_url + "/index.asp?kontofenster=start",
-                "ISO-8859-1");
+        String html = httpGet(opac_url + "/index.asp?kontofenster=start", getDefaultEncoding());
         Document doc = Jsoup.parse(html);
         if (doc.select("input[name=AUSWEIS]").size() > 0) {
             // Login vonnöten
@@ -1040,7 +1039,7 @@ public class Bibliotheca extends OkHttpBaseApi {
             formData.add("kontofenster", "true");
             formData.add("target", "konto");
             formData.add("type", "K");
-            html = httpPost(opac_url + "/index.asp", formData.build(), "ISO-8859-1", true);
+            html = httpPost(opac_url + "/index.asp", formData.build(), getDefaultEncoding(), true);
             doc = Jsoup.parse(html);
         }
         if (doc.getElementsByClass("kontomeldung").size() == 1) {
@@ -1275,7 +1274,7 @@ public class Bibliotheca extends OkHttpBaseApi {
         formData.add("B1", "weiter");
         formData.add("target", "konto");
         formData.add("type", "K");
-        String html = httpPost(opac_url + "/index.asp", formData.build(), "ISO-8859-1");
+        String html = httpPost(opac_url + "/index.asp", formData.build(), getDefaultEncoding());
         Document doc = Jsoup.parse(html);
         if (doc.select(".kontomeldung").size() > 0) {
             throw new OpacErrorException(doc.select(".kontomeldung").text());
@@ -1310,5 +1309,9 @@ public class Bibliotheca extends OkHttpBaseApi {
     public Set<String> getSupportedLanguages() throws IOException {
         // TODO Auto-generated method stub
         return null;
+    }
+
+    protected String getDefaultEncoding() {
+        return data.optString("encoding", "ISO-8859-1");
     }
 }
