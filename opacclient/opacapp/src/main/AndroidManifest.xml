@@ -123,6 +123,7 @@
         <activity
             android:name="de.geeksfactory.opacclient.frontend.SearchResultListActivity"
             android:label="@string/title_searchresult_list"
+            android:exported="false"
             android:parentActivityName="de.geeksfactory.opacclient.frontend.MainActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
@@ -149,6 +150,7 @@
         </activity>
         <activity
             android:name="de.geeksfactory.opacclient.frontend.LibraryListActivity"
+            android:exported="false"
             android:label="@string/title_activity_library_list"
             android:launchMode="singleTop">
             <intent-filter>
@@ -173,7 +175,8 @@
             android:name="de.geeksfactory.opacclient.webservice.LibraryConfigUpdateService"
             android:exported="false"></service>
 
-        <receiver android:name="de.geeksfactory.opacclient.reminder.ReminderBootBroadcastReceiver">
+        <receiver android:name="de.geeksfactory.opacclient.reminder.ReminderBootBroadcastReceiver"
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
                 <action android:name="android.intent.action.MY_PACKAGE_REPLACED" />
