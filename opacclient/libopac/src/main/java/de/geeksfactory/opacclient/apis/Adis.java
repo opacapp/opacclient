@@ -15,6 +15,7 @@ import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -1565,8 +1566,23 @@ public class Adis extends OkHttpBaseApi implements OpacApi {
                 ReservedItem item = new ReservedItem();
                 String text = tr.child(colmap.get("title")).html();
                 text = Jsoup.parse(text.replaceAll("(?i)<br[^>]*>", ";")).text();
+                String[] split = text.split(";");
+
+                // Process media type prefix
+                // Format: "[Media Type]"
+                split[0] = split[0].trim();
+                if (split[0].startsWith("[") && split[0].endsWith("]")) {
+                    // set media type
+                    String mediaType = split[0].substring(1, split[0].length() - 1);
+                    if (types.containsKey(mediaType)) {
+                        item.setMediaType(types.get(mediaType));
+                    }
+
+                    // remove media type from array
+                    split = Arrays.copyOfRange(split, 1, split.length);
+                }
+
                 if (split_title_author) {
-                    String[] split = text.split(";");
                     String[] authorAndTitle = split[0].split("[:/]");
 
                     for (int j = 0; j < authorAndTitle.length; j++) {
@@ -1637,6 +1653,20 @@ public class Adis extends OkHttpBaseApi implements OpacApi {
 
             String[] split = Jsoup.parse(tr.child(3).html().replaceAll("(?i)<br[^>]*>", "##")).text().split("##");
 
+            // Process media type prefix
+            // Format: "[Media Type]"
+            split[0] = split[0].trim();
+            if (split[0].startsWith("[") && split[0].endsWith("]")) {
+                // set media type
+                String mediaType = split[0].substring(1, split[0].length() - 1);
+                if (types.containsKey(mediaType)) {
+                    item.setMediaType(types.get(mediaType));
+                }
+
+                // remove media type from array
+                split = Arrays.copyOfRange(split, 1, split.length);
+            }
+
             if (split[0].contains(" / ")) {
                 // Format "Titel / Autor ##Sig##Nr", z.B. normale Ausleihe in Berlin
 
@@ -1660,11 +1690,7 @@ public class Adis extends OkHttpBaseApi implements OpacApi {
                 }
             } else {
                 // Format "Autor: Titel - Verlag - ISBN:... ##Nummer", z.B. Fernleihe in Berlin
-                // sometimes "[Format]##Autor: Titel - Verlag - ISBN:... ##Nummer", z.B. Fernleihe in Berlin
                 String[] authorAndTitle = split[0].split(":", 2);
-                if (split[0].trim().startsWith("[") && split[0].trim().endsWith("]")) {
-                    authorAndTitle = split[1].split(":", 2);
-                }
 
                 for (int i = 0; i < authorAndTitle.length; i++) {
                     authorAndTitle[i] = authorAndTitle[i].replaceFirst("([^:;\n]+)[:;\n](.*)$", "$1").trim();
