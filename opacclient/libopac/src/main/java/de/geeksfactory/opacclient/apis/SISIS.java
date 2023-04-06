@@ -446,7 +446,7 @@ public class SISIS extends OkHttpBaseApi implements OpacApi {
                 try {
                     List<NameValuePair> anyurl = URLEncodedUtils.parse(
                             new URI(cleanUrl(node.attr("href").replace(" ", "%20")
-                                    .replace("&amp;", "&"))), ENCODING);
+                                    .replace("&amp;", "&").split("#")[0])), ENCODING);
                     for (NameValuePair nv : anyurl) {
                         if (nv.getName().equals("identifier")) {
                             identifier = nv.getValue();
