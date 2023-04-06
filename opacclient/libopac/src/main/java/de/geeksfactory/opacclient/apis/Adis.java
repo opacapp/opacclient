@@ -15,6 +15,7 @@ import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -1565,12 +1566,32 @@ public class Adis extends OkHttpBaseApi implements OpacApi {
                 ReservedItem item = new ReservedItem();
                 String text = tr.child(colmap.get("title")).html();
                 text = Jsoup.parse(text.replaceAll("(?i)<br[^>]*>", ";")).text();
+                String[] split = text.split(";");
+
+                // Process media type prefix
+                // Format: "[Media Type]"
+                split[0] = split[0].trim();
+                if (split[0].startsWith("[") && split[0].endsWith("]")) {
+                    // set media type
+                    String mediaType = split[0].substring(1, split[0].length() - 1);
+                    if (types.containsKey(mediaType)) {
+                        item.setMediaType(types.get(mediaType));
+                    }
+
+                    // remove media type from array
+                    split = Arrays.copyOfRange(split, 1, split.length);
+                }
+
                 if (split_title_author) {
-                    String[] split = text.split("[:/;\n]");
-                    item.setTitle(split[0].replaceFirst("([^:;\n]+)[:;\n](.*)$", "$1").trim());
-                    if (split.length > 1) {
-                        item.setAuthor(
-                                split[1].replaceFirst("([^:;\n]+)[:;\n](.*)$", "$1").trim());
+                    String[] authorAndTitle = split[0].split("[:/]");
+
+                    for (int j = 0; j < authorAndTitle.length; j++) {
+                        authorAndTitle[j] = authorAndTitle[j].replaceFirst("([^:;\n]+)[:;\n](.*)$", "$1").trim();
+                    }
+
+                    item.setTitle(authorAndTitle[0]);
+                    if (authorAndTitle.length > 1) {
+                        item.setAuthor(authorAndTitle[1]);
                     }
                 } else {
                     item.setTitle(text);
@@ -1629,39 +1650,57 @@ public class Adis extends OkHttpBaseApi implements OpacApi {
         DateTimeFormatter fmt = DateTimeFormat.forPattern("dd.MM.yyyy").withLocale(Locale.GERMAN);
         for (Element tr : adoc.select(".rTable_div tbody tr")) {
             LentItem item = new LentItem();
-            String text = Jsoup.parse(tr.child(3).html().replaceAll("(?i)<br[^>]*>", "#"))
-                               .text();
-            if (text.contains(" / ")) {
-                // Format "Titel / Autor #Sig#Nr", z.B. normale Ausleihe in Berlin
-                String[] split = text.split("[/#\n]");
-                String title = split[0];
-                //Is always the last one, but some libraries don't show it
-                //(only Title/Author#Signature)
-                if (split.length > 3) {
+
+            String[] split = Jsoup.parse(tr.child(3).html().replaceAll("(?i)<br[^>]*>", "##")).text().split("##");
+
+            // Process media type prefix
+            // Format: "[Media Type]"
+            split[0] = split[0].trim();
+            if (split[0].startsWith("[") && split[0].endsWith("]")) {
+                // set media type
+                String mediaType = split[0].substring(1, split[0].length() - 1);
+                if (types.containsKey(mediaType)) {
+                    item.setMediaType(types.get(mediaType));
+                }
+
+                // remove media type from array
+                split = Arrays.copyOfRange(split, 1, split.length);
+            }
+
+            if (split[0].contains(" / ")) {
+                // Format "Titel / Autor ##Sig##Nr", z.B. normale Ausleihe in Berlin
+
+                // Id is always the last one, but some libraries don't show it
+                // (only Title/Author##Signature)
+                if (split.length > 2) {
                     String id = split[split.length - 1];
                     item.setId(id);
                 }
+
+                String[] titleAndAuthor = split[0].split("/", 2);
+
+                String title = titleAndAuthor[0];
                 if (split_title_author) {
                     title = title.replaceFirst("([^:;\n]+)[:;\n](.*)$", "$1");
                 }
                 item.setTitle(title.trim());
-                if (split.length > 1) {
-                    item.setAuthor(split[1].replaceFirst("([^:;\n]+)[:;\n](.*)$", "$1").trim());
+
+                if (titleAndAuthor.length > 1) {
+                    item.setAuthor(titleAndAuthor[1].replaceFirst("([^:;\n]+)[:;\n](.*)$", "$1").trim());
                 }
             } else {
-                // Format "Autor: Titel - Verlag - ISBN:... #Nummer", z.B. Fernleihe in Berlin
-                // sometimes "[Format]#Autor: Titel - Verlag - ISBN:... #Nummer", z.B. Fernleihe in Berlin
-                String[] split = text.split("#");
-                String[] aut_tit = split[0].split(": ");
-                if (split[0].trim().startsWith("[") && split[0].trim().endsWith("]")) {
-                    aut_tit = split[1].split(": ");
+                // Format "Autor: Titel - Verlag - ISBN:... ##Nummer", z.B. Fernleihe in Berlin
+                String[] authorAndTitle = split[0].split(":", 2);
+
+                for (int i = 0; i < authorAndTitle.length; i++) {
+                    authorAndTitle[i] = authorAndTitle[i].replaceFirst("([^:;\n]+)[:;\n](.*)$", "$1").trim();
                 }
-                if (aut_tit.length > 1) {
-                    item.setAuthor(aut_tit[0].replaceFirst("([^:;\n]+)[:;\n](.*)$", "$1").trim());
-                    item.setTitle(
-                            aut_tit[1].replaceFirst("([^:;\n]+)[:;\n](.*)$", "$1").trim());
+
+                if (authorAndTitle.length > 1) {
+                    item.setAuthor(authorAndTitle[0]);
+                    item.setTitle(authorAndTitle[1]);
                 } else {
-                    item.setTitle(aut_tit[0]);
+                    item.setTitle(authorAndTitle[0]);
                 }
                 //Is always the last one...
                 String id = split[split.length - 1];
