@@ -2,7 +2,9 @@ package de.geeksfactory.opacclient.frontend;
 
 import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
+import android.app.NotificationManager;
 import android.app.PendingIntent;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
@@ -13,10 +15,14 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import androidx.preference.PreferenceManager;
+
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Toast;
 
+import org.joda.time.DateTime;
+import org.joda.time.format.PeriodFormat;
 import org.json.JSONException;
 
 import java.io.IOException;
@@ -34,6 +40,8 @@ import androidx.core.content.ContextCompat;
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
+
+import de.geeksfactory.opacclient.BuildConfig;
 import de.geeksfactory.opacclient.R;
 import de.geeksfactory.opacclient.barcode.BarcodeScanIntegrator;
 import de.geeksfactory.opacclient.objects.Account;
@@ -178,6 +186,17 @@ public class MainActivity extends OpacActivity
                 if (alarm == null) {
                     throw new DataIntegrityException("Unknown alarm ID " + alid + " received.");
                 }
+
+                SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+                if (prefs.getBoolean("notification_repeat", true)) {
+                    ReminderBroadcastReceiver.snooze(adata, alarm, ReminderBroadcastReceiver.calculateSnoozeDuration(alarm));
+                } else {
+                    ReminderBroadcastReceiver.finished(adata, alarm);
+                }
+
+                NotificationManager notificationManager = (NotificationManager) this.getSystemService(Context.NOTIFICATION_SERVICE);
+                notificationManager.cancel((int) alarm.id);
+
                 List<LentItem> items = adata.getLentItems(alarm.media);
                 if (items.size() > 0) {
                     long firstAccount = items.get(0).getAccount();

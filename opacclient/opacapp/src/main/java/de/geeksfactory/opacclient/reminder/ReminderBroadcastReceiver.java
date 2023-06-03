@@ -36,8 +36,6 @@ public class ReminderBroadcastReceiver extends BroadcastReceiver {
     public static final String EXTRA_ALARM_ID = "alarmId";
     public static final String ACTION_SHOW_NOTIFICATION = "show";
     public static final String ACTION_NOTIFICATION_DELETED = "deleted";
-    public static final String ACTION_NOTIFICATION_SNOOZE = "snooze";
-    public static final String ACTION_NOTIFICATION_CLICK = "click";
     public static final String ACTION_NOTIFICATION_DONT_REMIND_AGAIN = "dontremindagain";
     public static final String NOTIFICATION_CHANNEL_REMINDER = "reminder";
     private static final String LOG_TAG = "ReminderBroadcastRcvr";
@@ -86,12 +84,6 @@ public class ReminderBroadcastReceiver extends BroadcastReceiver {
                 break;
             case ACTION_NOTIFICATION_DELETED:
                 notificationDeleted();
-                break;
-            case ACTION_NOTIFICATION_SNOOZE:
-                notificationSnooze();
-                break;
-            case ACTION_NOTIFICATION_CLICK:
-                notificationClick();
                 break;
             case ACTION_NOTIFICATION_DONT_REMIND_AGAIN:
                 notificationDontRemindAgain();
@@ -193,17 +185,18 @@ public class ReminderBroadcastReceiver extends BroadcastReceiver {
         builder.setDeleteIntent(deletePendingIntent);
 
         // Intent for snooze button
-        Intent snoozeIntent = new Intent(context, ReminderBroadcastReceiver.class);
-        snoozeIntent.setAction(ReminderBroadcastReceiver.ACTION_NOTIFICATION_SNOOZE);
-        snoozeIntent.putExtra(ReminderBroadcastReceiver.EXTRA_ALARM_ID, alarm.id);
+        Intent snoozeIntent = new Intent(context, SnoozeDatePickerActivity.class);
+        snoozeIntent.putExtra(EXTRA_ALARM_ID, alarm.id);
+        snoozeIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+
         PendingIntent snoozePendingIntent = null;
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.S) {
             snoozePendingIntent = PendingIntent
-                    .getBroadcast(context, (int) alarm.id, snoozeIntent,
+                    .getActivity(context, (int) alarm.id, snoozeIntent,
                             PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_MUTABLE);
         } else {
             snoozePendingIntent = PendingIntent
-                    .getBroadcast(context, (int) alarm.id, snoozeIntent,
+                    .getActivity(context, (int) alarm.id, snoozeIntent,
                             PendingIntent.FLAG_UPDATE_CURRENT);
         }
         builder.addAction(R.drawable.ic_action_alarms, context.getString(R.string.notif_snooze),
@@ -227,17 +220,18 @@ public class ReminderBroadcastReceiver extends BroadcastReceiver {
                 context.getString(R.string.notif_dont_remind_again), notAgainPendingIntent);
 
         // Intent for when notification is clicked
-        Intent clickIntent = new Intent(context, ReminderBroadcastReceiver.class);
-        clickIntent.setAction(ReminderBroadcastReceiver.ACTION_NOTIFICATION_CLICK);
-        clickIntent.putExtra(ReminderBroadcastReceiver.EXTRA_ALARM_ID, alarm.id);
+        Intent clickIntent = new Intent(context, ((OpacClient) context.getApplicationContext()).getMainActivity());
+        clickIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        clickIntent.putExtra(EXTRA_ALARM_ID, alarm.id);
+
         PendingIntent clickPendingIntent = null;
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.S) {
             clickPendingIntent = PendingIntent
-                    .getBroadcast(context, (int) alarm.id, clickIntent,
+                    .getActivity(context, (int) alarm.id, clickIntent,
                             PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_MUTABLE);
         } else {
             clickPendingIntent = PendingIntent
-                    .getBroadcast(context, (int) alarm.id, clickIntent,
+                    .getActivity(context, (int) alarm.id, clickIntent,
                             PendingIntent.FLAG_UPDATE_CURRENT);
         }
         builder.setContentIntent(clickPendingIntent);
@@ -259,19 +253,19 @@ public class ReminderBroadcastReceiver extends BroadcastReceiver {
 
     private void notificationDeleted() {
         if (prefs.getBoolean("notification_repeat", true)) {
-            snooze(calculateSnoozeDuration());
+            snooze(adata, alarm, calculateSnoozeDuration(alarm));
         } else {
-            finished();
+            finished(adata, alarm );
         }
     }
 
-    private void finished() {
+    public static void finished(AccountDataSource adata, Alarm alarm) {
         if (BuildConfig.DEBUG) Log.i(LOG_TAG, "alarm finished");
         alarm.finished = true;
         adata.updateAlarm(alarm);
     }
 
-    private ReadablePeriod calculateSnoozeDuration() {
+    public static ReadablePeriod calculateSnoozeDuration(Alarm alarm) {
         // we assume that the average library closes at 6 PM on the day the item expires
         Duration timeLeft = new Duration(alarm.deadline.toDateTime(new LocalTime(18, 0)),
                 DateTime.now());
@@ -286,14 +280,7 @@ public class ReminderBroadcastReceiver extends BroadcastReceiver {
         }
     }
 
-    private void notificationSnooze() {
-        Intent intent = new Intent(context, SnoozeDatePickerActivity.class);
-        intent.putExtra(EXTRA_ALARM_ID, alarm.id);
-        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        context.startActivity(intent);
-    }
-
-    private void snooze(ReadablePeriod duration) {
+    public static void snooze(AccountDataSource adata, Alarm alarm, ReadablePeriod duration) {
         if (BuildConfig.DEBUG) {
             Log.i(LOG_TAG, "snoozing notification for " + PeriodFormat.wordBased().print(duration));
         }
@@ -302,25 +289,8 @@ public class ReminderBroadcastReceiver extends BroadcastReceiver {
         adata.updateAlarm(alarm);
     }
 
-    private void notificationClick() {
-        if (prefs.getBoolean("notification_repeat", true)) {
-            snooze(calculateSnoozeDuration());
-        } else {
-            finished();
-        }
-        Intent intent = new Intent(context,
-                ((OpacClient) context.getApplicationContext()).getMainActivity());
-        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        intent.putExtra(EXTRA_ALARM_ID, alarm.id);
-        context.startActivity(intent);
-
-        NotificationManager notificationManager = (NotificationManager) context
-                .getSystemService(Context.NOTIFICATION_SERVICE);
-        notificationManager.cancel((int) alarm.id);
-    }
-
     private void notificationDontRemindAgain() {
-        finished();
+        finished(adata, alarm);
         NotificationManager notificationManager = (NotificationManager) context
                 .getSystemService(Context.NOTIFICATION_SERVICE);
         notificationManager.cancel((int) alarm.id);
