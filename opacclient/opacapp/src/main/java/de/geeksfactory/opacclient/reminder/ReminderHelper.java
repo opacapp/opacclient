@@ -210,6 +210,7 @@ public class ReminderHelper {
     @SuppressWarnings("SameParameterValue")
     private void setAlmostExact(AlarmManager am, int type, long triggerAtMillis,
             PendingIntent operation) {
+        triggerAtMillis = Math.max(System.currentTimeMillis(), triggerAtMillis);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
             am.setWindow(type, triggerAtMillis, 15 * 60 * 1000, operation);
         } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
