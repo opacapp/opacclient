@@ -193,8 +193,7 @@ public class ReminderHelper {
                 }
                 // If the alarm's timestamp is in the past, AlarmManager will trigger it
                 // immediately.
-                setAlmostExact(alarmManager, AlarmManager.RTC_WAKEUP, System.currentTimeMillis(), //alarm.notificationTime.getMillis(),
-                        pi);
+                setAlmostExact(alarmManager, AlarmManager.RTC_WAKEUP, alarm.notificationTime.getMillis(), pi);
                 Log.i("OpacClient",
                         "scheduling setAlmostExact for " +
                                 DateTimeFormat.shortDateTime().print(alarm.notificationTime));
