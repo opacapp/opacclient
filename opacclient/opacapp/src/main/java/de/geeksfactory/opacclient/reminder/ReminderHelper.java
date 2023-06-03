@@ -193,8 +193,11 @@ public class ReminderHelper {
                 }
                 // If the alarm's timestamp is in the past, AlarmManager will trigger it
                 // immediately.
-                setAlmostExact(alarmManager, AlarmManager.RTC_WAKEUP, alarm.notificationTime.getMillis(),
+                setAlmostExact(alarmManager, AlarmManager.RTC_WAKEUP, System.currentTimeMillis(), //alarm.notificationTime.getMillis(),
                         pi);
+                Log.i("OpacClient",
+                        "scheduling setAlmostExact for " +
+                                DateTimeFormat.shortDateTime().print(alarm.notificationTime));
             }
         }
     }
@@ -209,7 +212,7 @@ public class ReminderHelper {
     private void setAlmostExact(AlarmManager am, int type, long triggerAtMillis,
             PendingIntent operation) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-            am.setWindow(type, triggerAtMillis, triggerAtMillis + 15 * 60 * 1000, operation);
+            am.setWindow(type, triggerAtMillis, 15 * 60 * 1000, operation);
         } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
             am.setExact(type, triggerAtMillis, operation);
         } else {
