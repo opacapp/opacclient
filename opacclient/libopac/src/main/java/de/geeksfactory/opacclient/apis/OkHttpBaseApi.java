@@ -74,9 +74,14 @@ public abstract class OkHttpBaseApi extends BaseApi {
      */
     public String httpGet(String url, String encoding, boolean ignore_errors) throws
             IOException {
+        return httpGet(url, encoding, ignore_errors, null);
+    }
+
+    public String httpGet(String url, String encoding, boolean ignore_errors, String accept) throws
+            IOException {
         Request request = new Request.Builder()
                 .url(cleanUrl(url))
-                .header("Accept", "*/*")
+                .header("Accept", accept != null ? accept : "*/*")
                 .header("User-Agent", getUserAgent())
                 .build();
 
