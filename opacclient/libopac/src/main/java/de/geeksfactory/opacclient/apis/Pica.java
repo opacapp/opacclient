@@ -531,16 +531,24 @@ public abstract class Pica extends OkHttpBaseApi implements OpacApi {
                 continue;
             }
             if (title.contains(":")) {
-                title = title.substring(0, title.indexOf(":")); // remove colon
+                title = title.substring(0, title.indexOf(":")).strip(); // remove colon
             }
-            result.addDetail(new Detail(title, detail));
 
-            if (element.select("a").size() == 1 &&
-                    !element.select("a").get(0).text().trim().equals("")) {
-                String url = element.select("a").first().absUrl("href");
-                if (!url.startsWith(opac_url)) {
-                    result.addDetail(
-                            new Detail(stringProvider.getString(StringProvider.LINK), url));
+            if (title.equals("Mehr zum Titel")) {
+                for (Element a : element.select("a")) {
+                    result.addDetail(new Detail(a.text(), a.absUrl("href")));
+                }
+            } else {
+
+                result.addDetail(new Detail(title, detail));
+
+                if (element.select("a").size() == 1 &&
+                        !element.select("a").get(0).text().trim().equals("")) {
+                    String url = element.select("a").first().absUrl("href");
+                    if (!url.startsWith(opac_url)) {
+                        result.addDetail(
+                                new Detail(stringProvider.getString(StringProvider.LINK), url));
+                    }
                 }
             }
 
