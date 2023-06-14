@@ -593,8 +593,12 @@ public abstract class Pica extends OkHttpBaseApi implements OpacApi {
                         || title.contains("Shelf mark")) {
                     copy.setShelfmark(detail);
                 } else if (title.contains("Anmerkung")) {
-                    location += " (" + detail + ")";
-                } else if (title.contains("Link")) {
+                    if (location.length() > 1) {
+                        location += " (" + detail + ")";
+                    } else {
+                        result.addDetail(new Detail(title.replace(":", "").trim(), detail));
+                    }
+                } else if (title.contains("Link") || title.contains("Volltext")) {
                     result.addDetail(new Detail(title.replace(":", "").trim(), detail));
                 } else if (title.contains("Status")
                         || title.contains("Ausleihinfo")
