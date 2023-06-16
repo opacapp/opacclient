@@ -580,6 +580,8 @@ public abstract class Pica extends OkHttpBaseApi implements OpacApi {
                 if (title.contains("Standort")
                         || title.contains("Vorhanden in")
                         || title.contains("Location")) {
+                    element.select("a[id=vscout]").remove();  // Link to navigation in eg. HAWK
+                    detail = element.text().trim();
                     location += detail;
                 } else if (title.contains("Sonderstandort")) {
                     location += " - " + detail;
