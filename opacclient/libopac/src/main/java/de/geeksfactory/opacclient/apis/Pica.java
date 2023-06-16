@@ -698,10 +698,23 @@ public abstract class Pica extends OkHttpBaseApi implements OpacApi {
                                                 matcher.group(2) + "&LAN=" + matcher.group(4) +
                                                 "&USR=" + matcher.group(3) + "&PPN=" + result.getId(),
                                         getDefaultEncoding(), false, "application/json"));
-                        JSONArray copies = jsonObject.getJSONObject("copies").getJSONArray("copy");
+
+                        JSONArray copies;
+                        try {
+                            copies = jsonObject.getJSONObject("copies").getJSONArray("copy");
+                        } catch (JSONException e) {
+                            copies = new JSONArray();
+                            copies.put(jsonObject.getJSONObject("copies").getJSONObject("copy"));
+                        }
+
                         for (int copyi = 0; copyi < copies.length(); copyi++) {
                             JSONObject jsonCopy = copies.getJSONObject(copyi);
-                            JSONObject jsonVolume = jsonCopy.optJSONObject("volumes").optJSONObject("volume");
+                            JSONObject jsonVolume;
+                            try {
+                                jsonVolume = jsonCopy.optJSONObject("volumes").getJSONObject("volume");
+                            } catch (JSONException e) {
+                                jsonVolume = jsonCopy.optJSONObject("volumes").getJSONArray("volume").getJSONObject(0);
+                            }
                             for (Copy copyy : result.getCopies()) {
                                 if (copyy.getBarcode().equals(jsonCopy.getString("@epn"))) {
                                     copy = copyy;
@@ -717,13 +730,18 @@ public abstract class Pica extends OkHttpBaseApi implements OpacApi {
                                 copy.setReturnDate(fmt.parseLocalDate(jsonVolume.getString("loanperiod")));
                             }
                             if (jsonCopy.has("messages") && jsonCopy.getJSONObject("messages").has("message")) {
-                                copy.setStatus(copy.getStatus() + " / " + jsonCopy.getJSONObject("messages").getString("message"));
+                                try {
+                                    copy.setStatus(copy.getStatus() + " / " + jsonCopy.getJSONObject("messages").getString("message"));
+                                } catch (JSONException e) {
+                                    copy.setStatus(copy.getStatus() + " / " + jsonCopy.getJSONObject("messages").getJSONArray("message").getString(0));
+                                }
                             }
                             if (jsonCopy.has("actionurl")) {
                                 JSONObject reservation = new JSONObject();
                                 reservation.put("multi", true);
                                 reservation.put("link", jsonCopy.get("actionurl"));
-                                reservation.put("desc", copy.getLocation());
+                                reservation.put("desc", copy.getBranch() != null ? copy.getBranch() : copy.getLocation());
+                                reservation.put("status", copy.getStatus());
                                 reservationInfo.put(reservation);
                                 result.setReservable(true);
                             }
