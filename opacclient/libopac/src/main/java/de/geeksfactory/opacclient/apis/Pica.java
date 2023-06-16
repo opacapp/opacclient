@@ -716,7 +716,7 @@ public abstract class Pica extends OkHttpBaseApi implements OpacApi {
                                 jsonVolume = jsonCopy.optJSONObject("volumes").getJSONArray("volume").getJSONObject(0);
                             }
                             for (Copy copyy : result.getCopies()) {
-                                if (copyy.getBarcode().equals(jsonCopy.getString("@epn"))) {
+                                if (jsonCopy.getString("@epn").equals(copyy.getBarcode())) {
                                     copy = copyy;
                                     break;
                                 }
