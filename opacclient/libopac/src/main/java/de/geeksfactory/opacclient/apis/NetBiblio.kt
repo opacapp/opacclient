@@ -168,7 +168,7 @@ open class NetBiblio : OkHttpBaseApi() {
         val resultcountElem = doc.select(".wo-grid-meta-resultcount").first()
                 ?: return SearchRequestResult(emptyList(), 0, page)
         val countText = resultcountElem.text
-        val totalCount = Regex("\\d+").findAll(countText).last().value.toInt()
+        val totalCount = Regex("\\d+").findAll(countText.replace("'", "")).last().value.toInt()
 
         // status of eBooks is fetched via AJAX
         val divibibStatus = getDivibibStatus(doc)
