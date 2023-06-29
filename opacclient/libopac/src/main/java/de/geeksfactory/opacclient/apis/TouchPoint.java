@@ -747,8 +747,8 @@ public class TouchPoint extends OkHttpBaseApi implements OpacApi {
             // newer versions (e.g. Chemnitz) use divs instead of tables
             boolean table = copiesDoc.select(".data tr th").size() > 0;
 
-            for (Element th : copiesDoc.select(table ? ".data tr th" : ".data div.d-none > div")) {
-                if (th.text().contains("Zweigstelle")) {
+            for (Element th : copiesDoc.select(table ? ".data tr th" : ".data div.d-none > div, .data > div:first-child > div.row:first-child > div")) {
+                if (th.text().contains("Zweigstelle") || th.text().contains("Campus")) {
                     table_keys.add("branch");
                 } else if (th.text().contains("Status") || th.text().contains("Leihstatus")) {
                     table_keys.add("status");
@@ -761,7 +761,7 @@ public class TouchPoint extends OkHttpBaseApi implements OpacApi {
                 }
             }
             for (Element tr : copiesDoc
-                    .select(table ? ".data tr:has(td)" : ".data > div > div:not(.d-none)")) {
+                    .select(table ? ".data tr:has(td)" : ".data > div > div:not(.d-none):not(:first-child)")) {
                 Copy copy = new Copy();
                 int i = 0;
                 for (Element td : tr.select(table ? "td" : "> div")) {
@@ -770,7 +770,9 @@ public class TouchPoint extends OkHttpBaseApi implements OpacApi {
                     }
                     i++;
                 }
-                result.addCopy(copy);
+                if (copy.notEmpty()) {
+                    result.addCopy(copy);
+                }
             }
         }
 
