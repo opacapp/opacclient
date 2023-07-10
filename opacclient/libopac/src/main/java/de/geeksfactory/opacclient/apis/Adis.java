@@ -224,6 +224,7 @@ public class Adis extends OkHttpBaseApi implements OpacApi {
             if (!accountFormOldstyle) {
                 List<NameValuePair> nvpairs_a = new ArrayList(s_pageform);
                 nvpairs_a.add(new BasicNameValuePair("$ScriptButton_hidden", "BK"));
+                nvpairs_a.add(new BasicNameValuePair("selected", "ZTEXT       *SBK"));
                 accountFormBody = nvpairs_a;
             }
 
@@ -1844,7 +1845,7 @@ public class Adis extends OkHttpBaseApi implements OpacApi {
             fieldIds.add(field.getId());
         }
 
-        for (Element row : doc.select("div[id~=F\\d+], .search-adv-source")) {
+        for (Element row : doc.select("div[id~=F\\d+], .search-adv-source, .field-library")) {
             if (row.select("input[type=text]").size() == 1
                     && row.select("input, select").first().tagName()
                           .equals("input")) {
