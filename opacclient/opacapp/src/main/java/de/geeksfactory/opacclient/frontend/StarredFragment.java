@@ -133,9 +133,9 @@ public class StarredFragment extends Fragment implements
                     if (fields != null) {
                         SearchField title_field = null, free_field = null;
                         for (SearchField field : fields) {
-                            if (field.getMeaning() == Meaning.TITLE) {
+                            if (field.getMeaning() == Meaning.TITLE && title_field == null) {
                                 title_field = field;
-                            } else if (field.getMeaning() == Meaning.FREE) {
+                            } else if (field.getMeaning() == Meaning.FREE && free_field == null) {
                                 free_field = field;
                             } else if (field.getMeaning() == Meaning.HOME_BRANCH) {
                                 query.add(new SearchQuery(field, sp.getString(
