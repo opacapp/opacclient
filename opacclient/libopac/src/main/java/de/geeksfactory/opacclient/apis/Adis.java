@@ -1844,7 +1844,7 @@ public class Adis extends OkHttpBaseApi implements OpacApi {
             fieldIds.add(field.getId());
         }
 
-        for (Element row : doc.select("div[id~=F\\d+], .search-adv-source")) {
+        for (Element row : doc.select("div[id~=F\\d+], .search-adv-source, .field-library")) {
             if (row.select("input[type=text]").size() == 1
                     && row.select("input, select").first().tagName()
                           .equals("input")) {
