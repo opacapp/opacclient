@@ -792,7 +792,7 @@ public class IOpac extends OkHttpBaseApi implements OpacApi {
     static void parseMediaList(List<LentItem> media, Document doc, JSONObject data) {
         if (doc.select("a[name=AUS]").size() == 0) return;
 
-        Elements copytrs = doc.select("a[name=AUS] ~ table, a[name=AUS] ~ form table").first()
+        Elements copytrs = doc.select("a[name=AUS] ~ table, a[name=AUS] ~ form table, a[name=AUS] ~ div form table, #ReaderAccount_LoanInfo_Wrapper form table").first()
                               .select("tr");
         doc.setBaseUri(data.optString("baseurl"));
 
@@ -892,7 +892,7 @@ public class IOpac extends OkHttpBaseApi implements OpacApi {
 
     static void parseResList(List<ReservedItem> media, Document doc, JSONObject data) {
         if (doc.select("a[name=RES]").size() == 0) return;
-        Elements copytrs = doc.select("a[name=RES] ~ table:contains(Titel)").first().select("tr");
+        Elements copytrs = doc.select("a[name=RES] ~ table:contains(Titel), a[name=RES] ~ div table:contains(Titel)").first().select("tr");
         doc.setBaseUri(data.optString("baseurl"));
         DateTimeFormatter fmt = DateTimeFormat.forPattern("dd.MM.yyyy").withLocale(Locale.GERMAN);
 
