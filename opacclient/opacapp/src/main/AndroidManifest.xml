@@ -85,8 +85,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name="de.geeksfactory.opacclient.frontend.WelcomeActivity"
-            android:label="@string/app_name"></activity>
+            android:name="de.geeksfactory.opacclient.frontend.WelcomeActivity" />
         <activity
             android:name="de.geeksfactory.opacclient.frontend.AccountEditActivity"
             android:label="@string/accounts_edit"
@@ -176,7 +175,7 @@
 
         <service
             android:name="de.geeksfactory.opacclient.webservice.LibraryConfigUpdateService"
-            android:exported="false"></service>
+            android:exported="false" />
 
         <receiver android:name="de.geeksfactory.opacclient.reminder.ReminderBootBroadcastReceiver"
             android:exported="true">

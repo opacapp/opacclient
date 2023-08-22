@@ -9,7 +9,7 @@ android {
     defaultConfig {
         applicationId "de.geeksfactory.opacclient"
         minSdkVersion 15
-        targetSdkVersion 31
+        targetSdkVersion 33
         versionCode 243
         versionName "6.4.13"
 
