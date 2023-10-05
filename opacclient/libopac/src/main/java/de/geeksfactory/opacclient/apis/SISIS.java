@@ -415,7 +415,7 @@ public class SISIS extends OkHttpBaseApi implements OpacApi {
             throw new OpacErrorException(doc.select(".error").text().trim());
         } else if (doc.select(".nohits").size() > 0) {
             throw new OpacErrorException(doc.select(".nohits").text().trim());
-        } else if (doc.select(".box-header h2, #nohits, .hitlist h1").text()
+        } else if (doc.select(".box-header h2, #nohits, .hitlist h1, .hitlistacq h1").text()
                       .contains("keine Treffer")) {
             return new SearchRequestResult(new ArrayList<SearchResult>(), 0, 1,
                     1);
@@ -423,8 +423,8 @@ public class SISIS extends OkHttpBaseApi implements OpacApi {
 
         int results_total = -1;
 
-        String resultnumstr = doc.select(".box-header h2, .hitlist h1, #middle h1").first().text();
-        if (resultnumstr.contains("(2/1)") || resultnumstr.contains(" 1/1")) {
+        String resultnumstr = doc.select(".box-header h2, .hitlist h1, .hitlistacq h1, #middle h1").first().text();
+        if (resultnumstr.contains("(1/1)") || resultnumstr.contains(" 1/1")) {
             throw new SingleResultFound();
         } else if (resultnumstr.contains("(")) {
             results_total = Integer.parseInt(resultnumstr.replaceAll(
@@ -434,10 +434,10 @@ public class SISIS extends OkHttpBaseApi implements OpacApi {
                     ".*: ([0-9]+)$", "$1"));
         }
 
-        Elements table = doc.select("table.data tbody tr, .hitlist .container-fluid .row");
+        Elements table = doc.select("table.data tbody tr, .hitlist .container-fluid .row, .hitlistacq .container-fluid .row");
         identifier = null;
 
-        Elements links = doc.select("table.data a, .hitlist .row a");
+        Elements links = doc.select("table.data a, .hitlist .row a, .hitlistacq .row a");
         boolean haslink = false;
         for (int i = 0; i < links.size(); i++) {
             Element node = links.get(i);
