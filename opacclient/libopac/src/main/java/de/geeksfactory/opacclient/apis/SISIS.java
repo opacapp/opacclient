@@ -423,8 +423,8 @@ public class SISIS extends OkHttpBaseApi implements OpacApi {
 
         int results_total = -1;
 
-        String resultnumstr = doc.select(".box-header h2, .hitlist h1").first().text();
-        if (resultnumstr.contains("(1/1)") || resultnumstr.contains(" 1/1")) {
+        String resultnumstr = doc.select(".box-header h2, .hitlist h1, #middle h1").first().text();
+        if (resultnumstr.contains("(2/1)") || resultnumstr.contains(" 1/1")) {
             throw new SingleResultFound();
         } else if (resultnumstr.contains("(")) {
             results_total = Integer.parseInt(resultnumstr.replaceAll(
