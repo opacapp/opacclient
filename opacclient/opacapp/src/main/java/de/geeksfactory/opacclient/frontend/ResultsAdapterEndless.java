@@ -39,6 +39,7 @@ public class ResultsAdapterEndless extends EndlessAdapter {
     private int page = 1;
     private int maxPage;
     private boolean endReached = false;
+    private int seenEmpty = 0;
     private int resultCount;
     private List<SearchResult> itemsToAppend;
 
@@ -76,10 +77,13 @@ public class ResultsAdapterEndless extends EndlessAdapter {
 
     @Override
     protected boolean cacheInBackground() throws Exception {
-        if (page < maxPage || getWrappedAdapter().getCount() < resultCount || (resultCount == -1 && objects.size() > 0 && !endReached)) {
+        if (seenEmpty < 3 && (page < maxPage || getWrappedAdapter().getCount() < resultCount || (resultCount == -1 && objects.size() > 0 && !endReached))) {
             page++;
             SearchRequestResult result = listener.onLoadMore(page);
             itemsToAppend = result.getResults();
+            if (itemsToAppend.size() == 0) {
+                seenEmpty += 1;
+            }
 
 			/* When IOpac finds more than 200 results, the real result count is
             not known until the second page is loaded */
