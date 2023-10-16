@@ -912,20 +912,18 @@ public class SISIS extends OkHttpBaseApi implements OpacApi {
         if (detailtr != null) {
             for (Node node : detailtr.childNodes()) {
                 if (node instanceof Element) {
-                    if (((Element) node).tagName().equals("div")) {
-                        if (((Element) node).select("strong").size() == 1 && ((Element) node).children().select("div").size() == 1) {
-                            text = ((Element) node).children().select("div").first().text();
-                            title = ((Element) node).select("strong").first().text();
-                            if (text.contains("hier klicken") || title.contains("Link:")) {
-                                text = ((Element) node).select("div a").first().attr("href");
-                            }
-                            result.addDetail(new Detail(
-                                    title,
-                                    text
-                            ));
-                            title = "";
-                            text = "";
+                    if (((Element) node).tagName().equals("div") && (((Element) node).select("strong").size() == 1 && ((Element) node).children().select("div").size() == 1)) {
+                        text = ((Element) node).children().select("div").first().text();
+                        title = ((Element) node).select("strong").first().text();
+                        if (text.contains("hier klicken") || title.contains("Link:")) {
+                            text = ((Element) node).select("div a").first().attr("href");
                         }
+                        result.addDetail(new Detail(
+                                title,
+                                text
+                        ));
+                        title = "";
+                        text = "";
                     } else if (((Element) node).tagName().equals("strong")) {
                         if (!text.equals("") && !title.equals("")) {
                             result.addDetail(new Detail(title.trim(), text.trim()));
