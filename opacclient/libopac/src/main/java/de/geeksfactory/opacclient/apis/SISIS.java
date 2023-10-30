@@ -1576,6 +1576,10 @@ public class SISIS extends OkHttpBaseApi implements OpacApi {
             throw new OpacErrorException(doc.select("#CommitPasswordBean .text").text());
         }
 
+        if (doc.select("#passwortaenderung").size() > 0) {
+            throw new OpacErrorException(stringProvider.getString(StringProvider.PLEASE_CHANGE_PASSWORD));
+        }
+
         logged_in = System.currentTimeMillis();
         logged_in_as = acc;
 
@@ -1844,6 +1848,7 @@ public class SISIS extends OkHttpBaseApi implements OpacApi {
         List<LentItem> medien = new ArrayList<>();
         Document doc = Jsoup.parse(html);
         doc.setBaseUri(opac_url);
+
         parse_medialist(medien, doc, 1, data);
 
         // additional pages
