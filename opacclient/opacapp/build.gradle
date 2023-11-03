@@ -10,8 +10,8 @@ android {
         applicationId "de.geeksfactory.opacclient"
         minSdkVersion 15
         targetSdkVersion 33
-        versionCode 243
-        versionName "6.4.13"
+        versionCode 244
+        versionName "6.4.14"
 
         multiDexEnabled true
         vectorDrawables.useSupportLibrary = true
