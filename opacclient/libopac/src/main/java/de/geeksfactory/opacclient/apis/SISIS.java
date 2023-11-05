@@ -1814,7 +1814,7 @@ public class SISIS extends OkHttpBaseApi implements OpacApi {
     @Override
     public String getPendingAccountFees(Account account)
             throws IOException, JSONException, OpacErrorException {
-        start(); // TODO: Is this necessary?
+        start();
 
         if (!login(account)) {
             return null;
