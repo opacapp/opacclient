@@ -83,6 +83,7 @@ public abstract class OkHttpBaseApi extends BaseApi {
                 .url(cleanUrl(url))
                 .header("Accept", accept != null ? accept : "*/*")
                 .header("User-Agent", getUserAgent())
+                .header("Accept-Language", "*")
                 .build();
 
         try {
