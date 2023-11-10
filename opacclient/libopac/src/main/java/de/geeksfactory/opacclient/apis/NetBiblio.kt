@@ -565,7 +565,7 @@ open class NetBiblio : OkHttpBaseApi() {
 
     internal fun <I : AccountItem> parseItems(doc: Document, constructor: () -> I, ready: Boolean = false): List<I> {
         val table = doc.select(".wo-grid-table").first() ?: return emptyList()
-        val cols = table.select("> thead > tr > th").map { it.text.trim() }
+        val cols = table.select("> thead > tr > *").map { it.text.trim() }
         val rows = table.select("> tbody > tr")
 
         val df = DateTimeFormat.forPattern("dd.MM.yyyy")
