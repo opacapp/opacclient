@@ -352,7 +352,7 @@ public class OpenSearch extends OkHttpBaseApi implements OpacApi {
         try {
             JSONObject json = new JSONObject();
             json.put("data", payload);
-            String body = httpPost(ajaxUrl, RequestBody.create(MEDIA_TYPE_JSON, json.toString()), getDefaultEncoding());
+            String body = httpPost(ajaxUrl, RequestBody.create(MEDIA_TYPE_JSON, json.toString()), getDefaultEncoding(), false, 1);
             JSONObject coverData = new JSONObject(body);
             String coverUrl =
                     coverData.getJSONObject("d").getString("CoverUrl");

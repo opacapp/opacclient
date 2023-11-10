@@ -606,6 +606,16 @@ public class OpenAccountScraper extends OpenSearch {
     }
 
     public String httpPost(String url, RequestBody data,
+                           String encoding, boolean ignore_errors, Integer timeout)
+            throws IOException {
+        // Strict transport security, e.g. for Erlangen
+        if (opac_url.startsWith("https://") && url.startsWith("http://")) {
+            url = url.replace("http://", "https://");
+        }
+        return super.httpPost(url, data, encoding, ignore_errors, timeout);
+    }
+
+    public String httpPost(String url, RequestBody data,
             String encoding, boolean ignore_errors)
             throws IOException {
         // Strict transport security, e.g. for Erlangen

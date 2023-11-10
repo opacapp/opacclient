@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.io.InterruptedIOException;
 import java.net.UnknownHostException;
 import java.nio.charset.Charset;
+import java.util.concurrent.TimeUnit;
 
 import de.geeksfactory.opacclient.i18n.DummyStringProvider;
 import de.geeksfactory.opacclient.networking.HttpClientFactory;
@@ -173,11 +174,12 @@ public abstract class OkHttpBaseApi extends BaseApi {
      * @param data          POST data to send
      * @param encoding      Expected encoding of the response body
      * @param ignore_errors If true, status codes above 400 do not raise an exception
+     * @param timeout       ``null`` for default
      * @return Answer content
      * @throws NotReachableException Thrown when server returns a HTTP status code greater or equal
      *                               than 400.
      */
-    public String httpPost(String url, RequestBody data, String encoding, boolean ignore_errors)
+    public String httpPost(String url, RequestBody data, String encoding, boolean ignore_errors, Integer timeout)
             throws IOException {
         Request.Builder requestbuilder = new Request.Builder()
                 .url(cleanUrl(url))
@@ -190,7 +192,13 @@ public abstract class OkHttpBaseApi extends BaseApi {
         Request request = requestbuilder.post(data).build();
 
         try {
-            Response response = http_client.newCall(request).execute();
+            OkHttpClient c = timeout != null ? http_client.newBuilder()
+                    .callTimeout(timeout, TimeUnit.SECONDS)
+                    .readTimeout(timeout, TimeUnit.SECONDS)
+                    .connectTimeout(timeout, TimeUnit.SECONDS)
+                    .writeTimeout(timeout, TimeUnit.SECONDS)
+                    .build() : http_client;
+            Response response = c.newCall(request).execute();
 
             if (!ignore_errors && response.code() >= 400) {
                 throw new NotReachableException(response.message());
@@ -355,6 +363,12 @@ public abstract class OkHttpBaseApi extends BaseApi {
         if (httpLoggingEnabled) {
             e.printStackTrace();
         }
+    }
+
+
+    public String httpPost(String url, RequestBody data,
+                           String encoding, boolean ignore_errors) throws IOException {
+        return httpPost(url, data, encoding, ignore_errors, null);
     }
 
 
