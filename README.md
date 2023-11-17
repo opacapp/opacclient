@@ -1,6 +1,6 @@
 ![Screenshot](https://raw.githubusercontent.com/opacapp/opacclient/master/img/github_banner.png)
 
-Web Opac App [![Build Status](https://travis-ci.org/opacapp/opacclient.svg?branch=master)](https://travis-ci.org/opacapp/opacclient)
+Web Opac App
 ============
 
 Android client for public libraries. See [opacapp.net](http://opacapp.net) for details.
@@ -9,6 +9,14 @@ Android client for public libraries. See [opacapp.net](http://opacapp.net) for d
 <img src="https://f-droid.org/badge/get-it-on.png" alt="Get it on F-Droid" height="100"/></a>
 <a href="https://play.google.com/store/apps/details?id=de.geeksfactory.opacclient" target="_blank">
 <img src="https://play.google.com/intl/en_us/badges/images/generic/en-play-badge.png" alt="Get it on Google Play" height="100"/></a>
+
+Deprecated
+----------
+
+**This project will be end-of-life on 2024-06-30. Before that, we will still issue releases with significant bugfixes that affect our customers. After this, no more changes to this repository are planned and the app will be removed from the Play Store.**
+
+More info on https://opac.app/en/
+
 
 Features
 --------
