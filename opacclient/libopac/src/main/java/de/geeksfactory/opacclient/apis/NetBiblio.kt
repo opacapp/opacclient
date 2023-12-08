@@ -282,7 +282,7 @@ open class NetBiblio : OkHttpBaseApi() {
                 }
             }
 
-            val copyCols = doc.select(".wo-grid-table > thead > tr > th").map { it.text.trim() }
+            val copyCols = doc.select(".wo-grid-table > thead > tr > th, .wo-grid-table > thead > tr > td").map { it.text.trim() }
             val df = DateTimeFormat.forPattern("dd.MM.yyyy")
             copies = doc.select(".wo-grid-table > tbody > tr").map { row ->
                 Copy().apply {
