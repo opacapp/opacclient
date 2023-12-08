@@ -316,7 +316,7 @@ open class NetBiblio : OkHttpBaseApi() {
                                     }
                                 }
                                 "Signatur", "Call number", "Cote" -> shelfmark = content
-                                "Verfügbarkeit", "Disposability", "Disponsibilité" -> status = content
+                                "Verfügbarkeit", "Availability", "Disposability", "Disponsibilité" -> status = content
                                 "Fälligkeitsdatum", "Due date", "Date d'échéance" ->
                                     returnDate = if (content.isEmpty()) {
                                         null
