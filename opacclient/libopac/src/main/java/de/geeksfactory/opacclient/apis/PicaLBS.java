@@ -266,7 +266,7 @@ public class PicaLBS extends Pica {
 
     private static LocalDate parseDate(String date) {
         try {
-            if (date.matches("\\d\\d.\\d\\d.\\d\\d\\d\\d")) {
+            if (date.matches("\\d\\d\\.\\d\\d\\.\\d\\d\\d\\d")) {
                 return DateTimeFormat.forPattern("dd.MM.yyyy").withLocale(Locale.GERMAN)
                         .parseLocalDate(date);
             } else if (date.matches("\\d\\d/\\d\\d/\\d\\d\\d\\d")) {
