@@ -1583,10 +1583,10 @@ public class Adis extends OkHttpBaseApi implements OpacApi {
                 }
 
                 if (split_title_author) {
-                    String[] authorAndTitle = split[0].split("[:/]");
+                    String[] authorAndTitle = split[0].split("[:/] ");
 
                     for (int j = 0; j < authorAndTitle.length; j++) {
-                        authorAndTitle[j] = authorAndTitle[j].replaceFirst("([^:;\n]+)[:;\n](.*)$", "$1").trim();
+                        authorAndTitle[j] = authorAndTitle[j].replaceFirst("([^:;\n]+)[:;\n] (.*)$", "$1").trim();
                     }
 
                     item.setTitle(authorAndTitle[0]);
@@ -1677,7 +1677,7 @@ public class Adis extends OkHttpBaseApi implements OpacApi {
                     item.setId(id);
                 }
 
-                String[] titleAndAuthor = split[0].split("/", 2);
+                String[] titleAndAuthor = split[0].split(" / ", 2);
 
                 String title = titleAndAuthor[0];
                 if (split_title_author) {
@@ -1690,10 +1690,10 @@ public class Adis extends OkHttpBaseApi implements OpacApi {
                 }
             } else {
                 // Format "Autor: Titel - Verlag - ISBN:... ##Nummer", z.B. Fernleihe in Berlin
-                String[] authorAndTitle = split[0].split(":", 2);
+                String[] authorAndTitle = split[0].split(": ", 2);
 
                 for (int i = 0; i < authorAndTitle.length; i++) {
-                    authorAndTitle[i] = authorAndTitle[i].replaceFirst("([^:;\n]+)[:;\n](.*)$", "$1").trim();
+                    authorAndTitle[i] = authorAndTitle[i].replaceFirst("([^:;\n]+)[:;\n] (.*)$", "$1").trim();
                 }
 
                 if (authorAndTitle.length > 1) {
