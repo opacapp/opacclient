@@ -12,6 +12,8 @@ import de.geeksfactory.opacclient.utils.get
 import de.geeksfactory.opacclient.utils.html
 import de.geeksfactory.opacclient.utils.text
 import okhttp3.FormBody
+import org.joda.time.LocalDate
+import org.joda.time.Period
 import org.joda.time.format.DateTimeFormat
 import org.jsoup.nodes.Document
 import org.jsoup.nodes.Element
@@ -348,6 +350,8 @@ open class Arena : OkHttpBaseApi() {
             formData.add(input["name"], input["value"])
         }
         formData.add("branch", selection)
+        val dtf = DateTimeFormat.forPattern("dd.MM.yy")
+        formData.add("validToDateContainer:validToDate:date", dtf.print(LocalDate().plus(Period.days(2 * 365))))
         val resultDoc = httpPost(form["action"], formData.build(), ENCODING).html
 
         val errorPanel = resultDoc.select(".feedbackPanelWARNING, .feedbackPanelERROR").first()
