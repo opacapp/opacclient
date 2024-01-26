@@ -350,7 +350,7 @@ open class Arena : OkHttpBaseApi() {
         formData.add("branch", selection)
         val resultDoc = httpPost(form["action"], formData.build(), ENCODING).html
 
-        val errorPanel = resultDoc.select(".feedbackPanelWARNING").first()
+        val errorPanel = resultDoc.select(".feedbackPanelWARNING, .feedbackPanelERROR").first()
         if (errorPanel != null) {
             return OpacApi.ReservationResult(OpacApi.MultiStepResult.Status.ERROR, errorPanel.text)
         } else {
