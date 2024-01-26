@@ -333,6 +333,7 @@ open class Arena : OkHttpBaseApi() {
         if (selection == null) {
             return OpacApi.ReservationResult(OpacApi.MultiStepResult.Status.SELECTION_NEEDED).apply {
                 actionIdentifier = OpacApi.ReservationResult.ACTION_BRANCH
+                message = form.select(".arena-reservation-branch label.arena-field").text
                 this.selection = form.select(".arena-select").first().select("option").map { option ->
                     hashMapOf(
                             "key" to option["value"],
