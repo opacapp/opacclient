@@ -22,6 +22,8 @@ import org.apache.http.NameValuePair;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.utils.URLEncodedUtils;
 import org.apache.http.message.BasicNameValuePair;
+import org.joda.time.LocalDate;
+import org.joda.time.Period;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 import org.json.JSONException;
@@ -1242,8 +1244,12 @@ public class SISIS extends OkHttpBaseApi implements OpacApi {
             action = "order";
         }
 
+        final DateTimeFormatter dtf = DateTimeFormat.forPattern("yyyy-MM-dd");
+        final String expirydate = dtf.print(new LocalDate().plus(Period.days(359)));
+
         if (useraction == MultiStepResult.ACTION_CONFIRMATION && !confirmingFees) {
             FormBody.Builder fb = new FormBody.Builder(Charset.forName(getDefaultEncoding()))
+                    .add("ablaufdatum", expirydate)
                     .add("methodToCall", action)
                     .add("CSId", CSId);
             String html = httpPost(opac_url + "/" + action + ".do", fb.build(), ENCODING);
@@ -1279,8 +1285,8 @@ public class SISIS extends OkHttpBaseApi implements OpacApi {
                 }
             }
 
-            if (doc.select("#CirculationForm .textrot").size() >= 1 && !confirmedFees) {
-                Element textrot = doc.select("#CirculationForm .textrot").get(0);
+            if (doc.select("#CirculationForm .textrot:not(#dateError)").size() >= 1 && !confirmedFees) {
+                Element textrot = doc.select("#CirculationForm .textrot:not(#dateError)").get(0);
                 /*
                 Germering:
                 <span class="textrot">Diese Vormerkung wird am</span>
@@ -1289,7 +1295,7 @@ public class SISIS extends OkHttpBaseApi implements OpacApi {
                 &nbsp;
                 <span class="textrot">automatisch gel&ouml;scht.</span>
                  */
-                if (textrot.nextElementSibling() != null && !textrot.nextElementSibling().tagName().equals("input")) {
+                if (textrot.nextElementSibling() != null && !(textrot.nextElementSibling().tagName().equals("input") || textrot.nextElementSibling().children().select("input").size() > 0)) {
                     String errmsg = textrot.text();
                     ReservationResult result = new ReservationResult(
                             Status.CONFIRMATION_NEEDED);
@@ -1305,6 +1311,7 @@ public class SISIS extends OkHttpBaseApi implements OpacApi {
                 FormBody.Builder fb = new FormBody.Builder(Charset.forName(getDefaultEncoding()))
                         .add(branch_inputfield, selection)
                         .add("methodToCall", action)
+                        .add("ablaufdatum", expirydate)
                         .add("CSId", CSId)
                         .add("expressorder", " ");
                 html = httpPost(opac_url + "/" + action + ".do", fb.build(), ENCODING);
@@ -1334,6 +1341,7 @@ public class SISIS extends OkHttpBaseApi implements OpacApi {
         } else if (useraction == ReservationResult.ACTION_BRANCH) {
             FormBody.Builder fb = new FormBody.Builder(Charset.forName(getDefaultEncoding()))
                     .add(branch_inputfield, selection)
+                    .add("ablaufdatum", expirydate)
                     .add("methodToCall", action)
                     .add("CSId", CSId);
 
@@ -1359,7 +1367,7 @@ public class SISIS extends OkHttpBaseApi implements OpacApi {
                 && doc.select("input[type=button]").size() >= 2) {
             List<String[]> details = new ArrayList<>();
             for (String row : doc.select("#CirculationForm p").first().html()
-                                 .split("<br>")) {
+                                 .split("<br[^>]+>")) {
                 Document frag = Jsoup.parseBodyFragment(row);
                 if (frag.text().contains(":")) {
                     String[] split = frag.text().split(":");
