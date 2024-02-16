@@ -60,6 +60,7 @@
     <string name="report_sent">Bericht gesendet. Vielen Dank!</string>
     <string name="report_error">Bericht konnte nicht gesendet werden.</string>
     <string name="notifications">Benachrichtigungen</string>
+    <string name="notification_permission">Wir benötigen bei dieser Android-Version Ihre Berechtigung, um Ihnen Benachrichtigungen senden zu dürfen.</string>
     <string name="notification_service">Ablaufende Medien</string>
     <string name="notification_service_desc">Benachrichtigung, wenn ein Medium abgegeben werden muss (keine Garantie)</string>
     <string name="notification_service_wifionly">Nur über WLAN</string>

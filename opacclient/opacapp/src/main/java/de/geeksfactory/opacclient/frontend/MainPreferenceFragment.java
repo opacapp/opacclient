@@ -18,12 +18,14 @@
  */
 package de.geeksfactory.opacclient.frontend;
 
+import android.Manifest;
 import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.text.format.DateUtils;
@@ -32,6 +34,7 @@ import com.google.android.material.snackbar.Snackbar;
 
 import org.joda.time.DateTime;
 
+import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
@@ -55,6 +58,7 @@ import de.geeksfactory.opacclient.webservice.LibraryConfigUpdateService;
 public class MainPreferenceFragment extends PreferenceFragmentCompat {
 
     public static final String TAG_DIALOG = "dialog";
+    public static final int PERM_NOTIF = 12345;
     protected Activity context;
 
     @SuppressWarnings("SameReturnValue") // Plus Edition compatibility
@@ -100,6 +104,19 @@ public class MainPreferenceFragment extends PreferenceFragmentCompat {
                     boolean enabled = (Boolean) newValue;
                     new ReminderHelper((OpacClient) getActivity().getApplication())
                             .updateAlarms(enabled);
+                    if (enabled) {
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                            if (ActivityCompat.checkSelfPermission(getActivity(),
+                                    Manifest.permission.POST_NOTIFICATIONS) !=
+                                    PackageManager.PERMISSION_GRANTED) {
+                                ActivityCompat.requestPermissions(
+                                        requireActivity(),
+                                        new String[]{Manifest.permission.POST_NOTIFICATIONS},
+                                        PERM_NOTIF
+                                );
+                            }
+                        }
+                    }
                     return true;
                 }
             });

@@ -1,7 +1,9 @@
 package de.geeksfactory.opacclient.frontend;
 
+import android.Manifest;
 import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
+import android.app.Activity;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
@@ -10,10 +12,14 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.IntentFilter.MalformedMimeTypeException;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+
+import androidx.annotation.MainThread;
+import androidx.core.app.ActivityCompat;
 import androidx.preference.PreferenceManager;
 
 import android.util.Log;
@@ -260,6 +266,40 @@ public class MainActivity extends OpacActivity
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             getWindow().setExitTransition(null);
         }
+
+        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(this);
+        Activity activity = this;
+        if (sp.getBoolean("notification_service", false) && Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            if (ActivityCompat.checkSelfPermission(this,
+                    Manifest.permission.POST_NOTIFICATIONS) !=
+                    PackageManager.PERMISSION_GRANTED) {
+                AlertDialog.Builder builder = new AlertDialog.Builder(this);
+                builder.setMessage(R.string.notification_permission)
+                       .setCancelable(true)
+                       .setNegativeButton(R.string.cancel,
+                               new DialogInterface.OnClickListener() {
+                                   @Override
+                                   public void onClick(DialogInterface d, int id) {
+                                       d.cancel();
+                                   }
+                               })
+                       .setPositiveButton(R.string.confirm,
+                               new DialogInterface.OnClickListener() {
+                                   @Override
+                                   public void onClick(DialogInterface d, int id) {
+                                       d.dismiss();
+                                       ActivityCompat.requestPermissions(
+                                               activity,
+                                               new String[]{Manifest.permission.POST_NOTIFICATIONS},
+                                               12345
+                                       );
+                                   }
+                               });
+                AlertDialog alert = builder.create();
+                alert.show();
+            }
+        }
+
 
         PreferenceDataSource prefs = new PreferenceDataSource(this);
         if (System.currentTimeMillis() - prefs.getLastLibraryConfigUpdateTry() > 24 * 3600 * 1000) {
