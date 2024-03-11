@@ -854,7 +854,7 @@ public class SISIS extends OkHttpBaseApi implements OpacApi {
 
         if (doc.select(".aw_teaser_title, .results-teaser > tbody > tr > td > h1, #middle h2").size() > 0) {
             result.setTitle(
-                    doc.select(".aw_teaser_title, .results-teaser > tbody > tr > td > h1, #middle h2").first()
+                    doc.select(".aw_teaser_title, .results-teaser > tbody > tr > td > h1, #middle h2").last()
                        .text().trim());
         } else if (doc.select(".data td strong").size() > 0) {
             result.setTitle(doc.select(".data td strong").first().text().trim());
