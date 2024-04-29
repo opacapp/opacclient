@@ -1,8 +1,16 @@
+default:
+  image: 
+    name: runmymind/docker-android-sdk
+    entrypoint: [""]
+
 lint:
-    script:
-        - cd opacclient
-        - sed -i "s/.*versionName .*/        versionName \"git-${CI_BUILD_REF}\"/g" opacapp/build.gradle
-        - GRADLE_USER_HOME=/cache ANDROID_HOME=/android-sdk-linux ./gradlew lint test assembleGooglePlayServicesDebug
-    except:
-        - android-studio-library
+  script:
+    - cd opacclient
+    - sed -i "s/.*versionName .*/        versionName \"git-${CI_BUILD_REF}\"/g" opacapp/build.gradle
+    - ./gradlew --no-daemon lint test assembleGooglePlayServicesDebug
+  variables:
+    GRADLE_USER_HOME: /cache
+    ANDROID_HOME: /android-sdk-linux
+  except:
+    - android-studio-library
 
