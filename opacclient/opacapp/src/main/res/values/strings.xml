@@ -342,8 +342,8 @@
     <string name="load_covers_mobile_data_on">Cover images will be loaded and displayed if available</string>
     <string name="load_covers_mobile_data_off">Cover images will only be loaded on WiFi</string>
     <string name="account_ptr_hint">You can also pull down the list to refresh the data.</string>
-    <string name="support_policy_hint">We provide no free support for use of this library in the
-        app, problems that may occur in the future will probably not be fixed.</string>
+    <string name="support_policy_hint">This app is no longer under development and will no longer receive updates. It\'s been a great 12 years, thank you all.</string>
+    <string name="support_policy_hint_support">This app is no longer under development and will no longer receive updates. We recommend the app mobilOPAC instead, which offers similar functionality for many libraries.</string>
     <string name="support_policy_more_info">more info</string>
     <string name="prolong_due">Renew due items</string>
     <string name="prolong_due_confirm">Really renew all due items? In some libraries this might cause fees.</string>

@@ -343,9 +343,8 @@
     <string name="load_covers_mobile_data_on">Buchcover werden geladen und angezeigt, wenn verfügbar</string>
     <string name="load_covers_mobile_data_off">Buchcover werden nur über WLAN geladen</string>
     <string name="account_ptr_hint">Sie können auch die Liste nach unten ziehen, um die Daten neu zu laden.</string>
-    <string name="support_policy_hint">Für die Nutzung dieser Bibliothek in der App gibt es
-        keinen kostenfreien Support, eventuelle zukünftige Fehler werden wahrscheinlich nicht
-        behoben.</string>
+    <string name="support_policy_hint">Diese App wird nicht mehr gepflegt und wird keine Updates mehr erhalten. Vielen Dank allen Nutzern für 12 ereignisreiche Jahre. </string>
+    <string name="support_policy_hint_support">This wird nicht mehr gepflegt und wird keine Updates mehr erhalten. Wir empfehlen alternativ die App mobilOPAC, die für viele Bibliotheken ähnliche Funktionen anbietet.</string>
     <string name="support_policy_more_info">mehr Infos</string>
     <string name="prolong_due">Fällige Medien verlängern</string>
     <string name="prolong_due_confirm">Wirklich alle fälligen Medien verlängern? In manchen Bibliotheken können für manche Medien Gebühren anfallen.</string>

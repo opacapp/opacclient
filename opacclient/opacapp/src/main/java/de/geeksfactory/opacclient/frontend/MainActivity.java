@@ -25,6 +25,7 @@ import androidx.preference.PreferenceManager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import org.joda.time.DateTime;
@@ -499,34 +500,34 @@ public class MainActivity extends OpacActivity
 
 
     private void supportPolicyHint() {
-        Account account = app.getAccount();
-        if (!app.getLibrary().isSupportContract() && !account.isSupportPolicyHintSeen()) {
+        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(MainActivity.this);
+        String pkey_time = "notice_support";
+        if (System.currentTimeMillis() - sp.getLong(pkey_time, 0) > 24 * 60 * 60 * 1000) {
             findViewById(R.id.support_policy_hint).setVisibility(View.VISIBLE);
+
+            if (app.getLibrary().isSupportContract()) {
+                ((TextView) findViewById(R.id.tvSupportHint)).setText(R.string.support_policy_hint_support);
+            } else {
+                ((TextView) findViewById(R.id.tvSupportHint)).setText(R.string.support_policy_hint);
+            }
+
             findViewById(R.id.btMoreInfo).setOnClickListener(v -> {
                 Intent websiteIntent = new Intent(Intent.ACTION_VIEW);
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2) {
-                    // Chrome custom tabs
-                    Bundle extras = new Bundle();
-                    extras.putBinder("android.support.customtabs.extra.SESSION", null);
-                    extras.putInt("android.support.customtabs.extra.TOOLBAR_COLOR",
-                            ContextCompat.getColor(this, R.color.primary_red));
-                    websiteIntent.putExtras(extras);
-                }
 
-                String url = "https://opac.app/en/support-policy/";
-                String languageCode = Locale.getDefault().getLanguage().toLowerCase();
-                if (Arrays.asList("de", "en", "fr").contains(languageCode)) {
-                    url = String.format("https://opac.app/%s/support-policy/", languageCode);
+                String url;
+                if (app.getLibrary().isSupportContract()) {
+                    url = "https://play.google.com/store/apps/details?id=de.subkom.mobilopac";
+                } else {
+                    url = "https://opac.app/";
                 }
-
                 websiteIntent.setData(Uri.parse(url));
                 startActivity(websiteIntent);
-
             });
             findViewById(R.id.btGotIt).setOnClickListener(v -> {
+                sp.edit()
+                  .putLong(pkey_time, System.currentTimeMillis())
+                  .apply();
                 findViewById(R.id.support_policy_hint).setVisibility(View.GONE);
-                account.setSupportPolicyHintSeen(true);
-                new AccountDataSource(this).update(account);
             });
         } else {
             findViewById(R.id.support_policy_hint).setVisibility(View.GONE);

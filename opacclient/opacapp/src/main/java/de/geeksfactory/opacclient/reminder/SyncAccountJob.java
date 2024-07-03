@@ -25,6 +25,7 @@ import androidx.preference.PreferenceManager;
 import android.util.Log;
 
 import org.joda.time.DateTime;
+import org.joda.time.Days;
 import org.joda.time.Hours;
 import org.json.JSONException;
 
@@ -171,8 +172,8 @@ public class SyncAccountJob extends Worker {
         PreferenceDataSource prefs = new PreferenceDataSource(getApplicationContext());
         if (prefs.getLastLibraryConfigUpdate() != null
                 && prefs.getLastLibraryConfigUpdate()
-                        .isAfter(DateTime.now().minus(Hours.ONE))) {
-            Log.d(TAG, "Do not run updateLibraryConfig as last run was less than an hour ago.");
+                        .isAfter(DateTime.now().minus(Days.days(3)))) {
+            Log.d(TAG, "Do not run updateLibraryConfig as last run was less than three days ago.");
             return;
         }
 
