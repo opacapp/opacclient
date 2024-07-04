@@ -13,7 +13,7 @@ Android client for public libraries. See [opacapp.net](http://opacapp.net) for d
 Deprecated
 ----------
 
-**This project will be end-of-life on 2024-06-30. Before that, we will still issue releases with significant bugfixes that affect our customers. After this, no more changes to this repository are planned and the app will be removed from the Play Store.**
+**This project is end-of-life as of 2024-06-30. No more changes to this repository are planned and the app will no longer receive updates.**
 
 More info on https://opac.app/en/
 
