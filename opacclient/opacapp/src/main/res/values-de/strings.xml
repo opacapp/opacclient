@@ -235,7 +235,7 @@
     <string name="meta_run_check">Synchronisierungsdienst ausführen</string>
     <string name="version">Version</string>
     <string name="website">Website</string>
-    <string name="website_url">www.opacapp.de</string>
+    <string name="website_url">www.opac.app</string>
     <string name="developer">Entwickler</string>
     <string name="feedback">Feedback</string>
     <string name="support">Support</string>
@@ -289,7 +289,7 @@
     <string name="notification_repeat">Benachrichtigungen wiederholen</string>
     <string name="update_info_title">Happy Birthday Opac App!</string>
     <string name="update_info_text">Diesen Mai wurde die Opac App stolze fünf Jahre alt. Wir feiern den Geburtstag mit einem modernisierten Logo und möchten uns für all das Feedback über die Jahre bedanken.</string>
-    <string name="update_info_text_second">Wenn du uns helfen willst, die App weiter betreiben zu können, sprich deine Bibliothek an: Wenn sie die Plus-Edition unserer App kauft, ermöglicht sie uns damit die langfristige Weiterentwicklung und schaltet nützliche Funktionen frei. Mehr Details gibt es auf unserer Website www.opacapp.de.</string>
+    <string name="update_info_text_second">Wenn du uns helfen willst, die App weiter betreiben zu können, sprich deine Bibliothek an: Wenn sie die Plus-Edition unserer App kauft, ermöglicht sie uns damit die langfristige Weiterentwicklung und schaltet nützliche Funktionen frei. Mehr Details gibt es auf unserer Website www.opac.app.</string>
     <string name="accountdata_export_header">Kontodaten von %1$s am %2$s</string>
     <string name="accountdata_title">Titel</string>
     <string name="accountdata_author">Autor</string>

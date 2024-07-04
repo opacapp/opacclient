@@ -51,23 +51,12 @@ public class AboutFragment extends PreferenceFragmentCompat {
                     }
                 });
 
-        findPreference("support").setOnPreferenceClickListener(
-                new Preference.OnPreferenceClickListener() {
-                    @Override
-                    public boolean onPreferenceClick(Preference preference) {
-                        Intent i = new Intent(Intent.ACTION_VIEW);
-                        i.setData(Uri.parse(getString(R.string.support_url)));
-                        startActivity(i);
-                        return false;
-                    }
-                });
-
         findPreference("source").setOnPreferenceClickListener(
                 new Preference.OnPreferenceClickListener() {
                     @Override
                     public boolean onPreferenceClick(Preference preference) {
                         Intent i = new Intent(Intent.ACTION_VIEW, Uri
-                                .parse("http://github.com/raphaelm/opacclient"));
+                                .parse("http://github.com/opacapp/opacclient"));
                         startActivity(i);
                         return false;
                     }

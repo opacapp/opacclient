@@ -14,12 +14,6 @@
             android:summary="@string/website_url"
             android:title="@string/website"/>
     </PreferenceCategory>
-    <PreferenceCategory android:title="@string/support">
-        <Preference
-            android:key="support"
-			android:summary="@string/support_url"
-            android:title="@string/support"/>
-    </PreferenceCategory>
     <PreferenceCategory android:title="@string/other">
         <Preference
             android:key="thanks"
